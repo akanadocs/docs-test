@@ -1,0 +1,259 @@
+<!-- catalog script -->
+<script>
+    function catalog(div)
+    {
+        var i = 0, snClasses = [];
+
+        // Get the value of the sc query string (if present)
+        var scParam = $.url().param('sc') || '';
+        // if there is an sc query string, then filter the pages down
+        switch(scParam) {
+            case "":
+                filtered_pages = unsorted_pages_prod_cat.pages.filter(function(a) {
+                    return (a.nc == '');
+                });
+                break;
+            case "undefined":
+                var filtered_pages = unsorted_pages_prod_cat.pages.filter(function(a) {
+                    return (a.nc == '' && a.sc == '');
+                });
+                break;
+            default:
+                var filtered_pages = unsorted_pages_prod_cat.pages.filter(function(a) {
+                    return (a.nc == '' && a.sc == scParam);
+                });
+        }
+
+        // Build a new page title if there is a SubNavClass
+        var title = '{{ page.title }}';
+        if (scParam != '') {
+            switch ('{{ page.product }}') {
+                case ("ag"):
+                    title = "API Gateway";
+                    break;
+                case ("cm"):
+                    title = "Community Manager";
+                    break;
+                case ("lm"):
+                    title = "Lifecycle Manager";
+                    break;
+                case ("sp"):
+                    title = "Product Platform";
+                    break;
+                default:
+                    title = "Miscellaneous";        
+            }
+            switch ('{{ page.category }}') {
+                case "gs":
+                    title += " - Getting Started";
+                    break;
+                case "learn":
+                    title += " - Learning";
+                    break;
+                case "ref":
+                    title += " - Reference";
+                    break;
+            }
+            if (scParam == "undefined") {
+                title += " - Miscellaneous";
+            } else {
+                title += " - " + scParam;
+            }
+        }
+
+        // Build a sorted by weight first, then alphabetically, list of all the pages in the product/category combination
+        // that do not have no_catalog (nc) set and do not have a subnav class
+    	var pages = filtered_pages.filter(function(a) {
+            return (a.sc == '');
+        }).sort(function CustomSort(a, b) {
+    		if ( ! a["w"] ) { a["w"] = 1000 ;}
+    		if ( ! b["w"] ) { b["w"] = 1000 ;}
+    		var weighta = a['w'];
+    		var weightb = b['w'];
+    		if(weighta != weightb){
+    			return (weighta - weightb);
+    		}
+    		else{
+    			return (a.t.localeCompare(b.t));
+    		}
+    	});
+
+        // Build a sorted by weight first, then alphabetically, list of all the pages in the product/category combination
+        // that do not have no_catalog (nc) set and DO have a subnav class
+        var snpages = filtered_pages.filter(function(a) {
+            return (a.sc != '');
+        }).sort(function CustomSort(a, b) {
+            if ( ! a["w"] ) { a["w"] = 1000 ;}
+            if ( ! b["w"] ) { b["w"] = 1000 ;}
+            var weighta = a['w'];
+            var weightb = b['w'];
+            if(weighta != weightb){
+                return (weighta - weightb);
+            }
+            else{
+                return (a.nt.localeCompare(b.nt));
+            }
+        });
+
+        // Get the list of subnav classes
+        for (; i < snpages.length; i++) {
+            if (snClasses.indexOf(snpages[i].sc) < 0) {
+                snClasses.push(snpages[i].sc);
+            }
+        }
+        snClasses.sort();
+
+        // If we have pages with subnav-class then process these first
+        if ( snpages.length > 0 ) {
+            // There are pages with subnav, so we will build a set of subheadings
+
+            // Create the empty catalog
+            var ObjUl = $('<ul></ul>').hide();
+            ObjUl.addClass("soa-ui-dc-content-catalog-items");
+
+            // Iterate through the sub-nav-classes
+            for (i = 0; i < snClasses.length; i++)
+            {
+                // If there are more than one sub-nav-classes add the subnav-header for this class
+                if (snClasses.length > 1) {
+                    var Objli = $('<li></li>');
+                    Objli.addClass("soa-ui-dc-content-catalog-subheading");
+                    var ObjliH3 = $('<h3></h3>');
+                    ObjliH3.text(snClasses[i]);
+                    Objli.append(ObjliH3);
+                    ObjUl.append(Objli);
+                }
+
+                // Get the pages for this class
+                var classsnpages = snpages.filter(function(a) {
+                    return (a.sc == snClasses[i]);
+                });
+
+                for (j = 0; j < classsnpages.length; j++)
+                {
+                    var Objli = $('<li></li>');
+                    var Obja = $('<a></a>');
+                    var ObjAvDiv = $('<div></div>');
+                    var ObjDetDiv = $('<div></div>');
+                    var ObjSecDiv = $('<div></div>');
+                    var ObjDetDivH4 = $('<h4></h4>');
+                    var ObjAvDivH4 = $('<h4></h4>');
+                    var ObjP = $('<p></p>');
+
+                    ObjAvDivH4.addClass("soa-ui-dc-icon-imgtxt soa-ui-dc-document-type");
+                    if (classsnpages[j].ty == 'pdf') {
+                        ObjAvDivH4.addClass("soa-ui-dc-icon-pdf");
+                    } else {
+                        ObjAvDivH4.addClass("soa-ui-dc-icon-document");
+                    }
+                    ObjAvDivH4.text("Document");
+                    ObjAvDiv.append(ObjAvDivH4);
+                    ObjAvDiv.addClass("soa-ui-dc-avatar-box");
+
+                    if ( "{{ site.baseurl }}" ) {
+                        Obja.attr("href", "{{ site.baseurl }}".concat(classsnpages[j].u) );
+                    } else {
+                        Obja.attr("href", classsnpages[j].u );
+                    }
+                    if (classsnpages[j].ty == 'pdf') {
+                        Obja.attr("target", "_blank");
+                    }
+                    Obja.html(classsnpages[j].t.replace(/\&amp;nbsp;/gi, " "));
+                    ObjDetDivH4.append(Obja);
+                    ObjDetDivH4.addClass("soa-ui-dc-section-header");
+
+                    ObjP.addClass("soa-ui-dc-section-paragraph");
+                    ObjP.html(classsnpages[j].d.replace(/\&amp;nbsp;/gi, " "));
+
+                    ObjSecDiv.append(ObjDetDivH4);
+                    ObjSecDiv.append(ObjP);
+                    ObjSecDiv.addClass("soa-ui-dc-section");
+                    ObjDetDiv.append(ObjSecDiv);
+                    ObjDetDiv.addClass("soa-ui-dc-details-box");
+
+                    Objli.addClass("soa-ui-dc-content-catalog-item soa-ui-dc-2col-with-avatar soa-ui-dc-clearthis");
+
+                    Objli.append(ObjAvDiv);
+                    Objli.append(ObjDetDiv);
+
+                    ObjUl.append(Objli);
+                }
+                $(div).append(ObjUl);
+            }
+        }
+        // Once we're done with the pages with subnav-class we can process the pages that don't have it
+        if ( pages.length > 0 ) {
+            var ObjUl = $('<ul></ul>').hide();
+            ObjUl.addClass("soa-ui-dc-content-catalog-items");
+
+            // If there are subnav classes in play then add the subnav-header for this class
+            if (snClasses.length > 0) {
+                var Objli = $('<li></li>');
+                Objli.addClass("soa-ui-dc-content-catalog-subheading");
+                var ObjliH3 = $('<h3></h3>');
+                ObjliH3.text("Miscellaneous");
+                Objli.append(ObjliH3);
+                ObjUl.append(Objli);
+            }
+
+            for (i = 0; i < pages.length; i++)
+            {
+                var Objli = $('<li></li>');
+                var Obja = $('<a></a>');
+                var ObjAvDiv = $('<div></div>');
+                var ObjDetDiv = $('<div></div>');
+                var ObjSecDiv = $('<div></div>');
+                var ObjDetDivH4 = $('<h4></h4>');
+                var ObjAvDivH4 = $('<h4></h4>');
+                var ObjP = $('<p></p>');
+
+                ObjAvDivH4.addClass("soa-ui-dc-icon-imgtxt soa-ui-dc-document-type");
+                if (pages[i].ty == 'pdf') {
+                    ObjAvDivH4.addClass("soa-ui-dc-icon-pdf");
+                } else {
+                    ObjAvDivH4.addClass("soa-ui-dc-icon-document");
+                }
+                ObjAvDivH4.text("Document");
+                ObjAvDiv.append(ObjAvDivH4);
+                ObjAvDiv.addClass("soa-ui-dc-avatar-box");
+
+                if ( "{{ site.baseurl }}" ) {
+                    Obja.attr("href", "{{ site.baseurl }}".concat(pages[i].u) );
+                } else {
+                    Obja.attr("href", pages[i].u );
+                }
+                if (pages[i].ty == 'pdf') {
+                    Obja.attr("target", "_blank");
+                }
+                Obja.html(pages[i].t.replace(/\&amp;nbsp;/gi, " "));
+                ObjDetDivH4.append(Obja);
+                ObjDetDivH4.addClass("soa-ui-dc-section-header");
+
+                ObjP.addClass("soa-ui-dc-section-paragraph");
+                ObjP.html(pages[i].d.replace(/\&amp;nbsp;/gi, " "));
+
+                ObjSecDiv.append(ObjDetDivH4);
+                ObjSecDiv.append(ObjP);
+                ObjSecDiv.addClass("soa-ui-dc-section");
+                ObjDetDiv.append(ObjSecDiv);
+                ObjDetDiv.addClass("soa-ui-dc-details-box");
+
+                Objli.addClass("soa-ui-dc-content-catalog-item soa-ui-dc-2col-with-avatar soa-ui-dc-clearthis");
+
+                Objli.append(ObjAvDiv);
+                Objli.append(ObjDetDiv);
+
+                ObjUl.append(Objli);
+            }
+            $(div).append(ObjUl);
+        }
+        return title;
+    }
+    $(document).ready(function() {
+        var title = catalog(".soa-ui-dc-content-catalog");
+        $(".soa-ui-dc-content-catalog").find("ul").show();
+        $("#top").replaceWith("<h2 id=\"top\">" + title + "</h2>");
+        // $(".soa-ui-dc-container-main-content > div > p").replaceWith("<p>New content</p>");
+    });
+</script>
+<!-- End catalog script -->

@@ -1,0 +1,101 @@
+<!-- Homepage column script 
+  Generates an unordered list of linked titles with icons for a given product & category combination
+  prod: the product code (cm, ag, lm)
+  cat: the category code (gs, learn, ref)
+  limit: the maximum number of entries to include in the list (0 means no limit)
+-->
+<script>
+  function prod_cat_col(column, prod, cat, limit)
+    {
+        var pages = unsorted_pages_all.filter(function(a) {
+          return (a.nn == '' && a.p == prod && a.c == cat);
+        }).sort(function CustomSort(a, b) {
+          if ( ! a["w"] ) { a["w"] = 1000 ;}
+          if ( ! b["w"] ) { b["w"] = 1000 ;}
+          var weighta = a['w'];
+          var weightb = b['w'];
+          if(weighta != weightb){
+              return (weighta - weightb);
+          }
+          else{
+              return (a.nt.localeCompare(b.nt));
+          }
+        });
+
+        // if there is no limit, or the limit is more than we have
+        if ( limit == 0 || limit >= pages.length ) {
+          // set the limit to the size of the array
+          limit = pages.length;
+        } 
+
+        var ObjUl = $('<ul></ul>').hide();
+        ObjUl.addClass("soa-ui-dc-detail-column-items");
+
+        for (i = 0; i < limit; i++)
+        {
+          var Objli = $('<li></li>');
+          var Obja = $('<a></a>');
+          var Objp = $('<p></p>');
+
+          Objli.attr("role", "menuitem");
+
+          if ( "{{ site.baseurl }}" ) {
+              Obja.attr("href", "{{ site.baseurl }}".concat(pages[i].u) );
+          } else {
+            Obja.attr("href", pages[i].u );
+          }
+
+          if ( pages[i].ty == 'pdf' ) {
+            Obja.addClass("soa-ui-dc-detail-column-item-link soa-ui-dc-icon soa-ui-dc-icon-pdf-17px");
+            Obja.attr("target", "_blank");
+          } else {
+            Obja.addClass("soa-ui-dc-detail-column-item-link soa-ui-dc-icon soa-ui-dc-icon-document-20px");
+          }
+
+          Objli.addClass("soa-ui-dc-detail-column-item");
+          if (pages[i].nt) {
+            Obja.html(pages[i].nt.replace("&amp;nbsp;", " "));
+          } else {
+            Obja.html(pages[i].t.replace("&amp;nbsp;", " "));
+          }
+          Objli.append(Obja);
+
+          ObjUl.append(Objli);
+        }
+        // Add a more link if there are more objects
+        if (limit != pages.length) {
+          var Objli = $('<li></li>');
+          var Obja = $('<a></a>');
+          Objli.addClass("soa-ui-dc-detail-column-item");
+          Obja.addClass("soa-ui-dc-detail-column-item-link soa-ui-dc-icon soa-ui-dc-icon-action-light");
+          var url = "";
+          switch (cat)
+          {
+          case "learn":
+            category = "/learning.html";
+            break;
+          case "ref":
+            category = "/reference.html";
+            break;
+          case "gs":
+            category = "/getting-started.html";
+          }
+          if ( "{{ site.baseurl }}" ) {
+              Obja.attr("href", "{{ site.baseurl }}".concat("/").concat(prod).concat(category) );
+          } else {
+            Obja.attr("href", "/".concat(prod.concat(category)) );
+          }
+          Obja.html("More");
+          Objli.append(Obja);
+          ObjUl.append(Objli);
+        }
+        $(column).append(ObjUl);
+    }
+    $(document).ready(function() {
+        $(".soa-ui-dc-detail-column").each(function() {
+            var item = $(this);
+            prod_cat_col(this, item.data("prod"), item.data("cat"), item.data("limit"));
+        }).find("ul").show();
+    });
+</script>
+<!-- End homepage column script -->

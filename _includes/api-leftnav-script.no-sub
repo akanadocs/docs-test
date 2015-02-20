@@ -1,0 +1,62 @@
+<!-- left nav script -->
+<script>
+    function leftnav()
+    {
+        var pages = unsorted_pages_prod_cat.filter(function(a) {
+            return (a.nn == 'api' && a.sn == 'false');
+        }).sort(function CustomSort(a, b) {
+            if ( ! a["w"] ) { a["w"] = 1000 ;}
+            if ( ! b["w"] ) { b["w"] = 1000 ;}
+            var weighta = a['w'];
+            var weightb = b['w'];
+            if(weighta != weightb){
+                return (weighta - weightb);
+            }
+            else{
+                return (a.nt.localeCompare(b.nt));
+            }
+        });
+        var ObjUl = $('<ul></ul>');
+        ObjUl.addClass("soa-ui-dc-container-main-left-nav soa-ui-dc-container-main-left-nav-inner");
+
+        for (i = 0; i < pages.length; i++)
+        {
+            var Objli = $('<li></li>');
+            var Obja = $('<a></a>');
+            var Objp = $('<p></p>');
+
+            Objli.attr("role", "menuitem");
+
+            if ( pages[i].u == '{{ page.url }}' ) {
+                Obja.addClass("soa-ui-dc-container-main-left-nav-item-selected soa-ui-dc-container-main-left-nav-item-link");
+            } else {
+                Obja.addClass("soa-ui-dc-container-main-left-nav-item-link");
+            }
+
+            if ( "{{ site.baseurl }}" ) {
+                Obja.attr("href", "{{ site.baseurl }}".concat(pages[i].u) );
+            } else {
+                Obja.attr("href", pages[i].u );
+            }
+            if ( pages[i].type == 'pdf' ) {
+                Obja.attr("target", "_blank");
+            }
+            if (pages[i].nt) {
+                Obja.html(pages[i].nt.replace("&nbsp;", " "));
+            } else {
+                Obja.html(pages[i].t.replace("&nbsp;", " "));
+            }
+
+            Objli.addClass("soa-ui-dc-container-main-left-nav-item");
+            Objli.append(Obja);
+
+            ObjUl.append(Objli);
+        }
+        $('.soa-ui-dc-container-main-left').append(ObjUl);
+    }
+    $(document).ready(function() {
+        leftnav();
+        $(".soa-ui-dc-container-main-left").find("ul").show();
+    });
+</script>
+<!-- End left nav script -->

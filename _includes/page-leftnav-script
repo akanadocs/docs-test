@@ -1,0 +1,270 @@
+<!-- left nav script -->
+<script>
+	function leftnav()
+    {
+        var i = 0, snClasses = [];
+        var pages = unsorted_pages_prod_cat.pages.filter(function(a) {
+            return (a.nn != 'true' && a.nn != 'api' && a.sc == '');
+        }).sort(function CustomSort(a, b) {
+            if ( ! a["w"] ) { a["w"] = 1000 ;}
+            if ( ! b["w"] ) { b["w"] = 1000 ;}
+            var weighta = a['w'];
+            var weightb = b['w'];
+            if(weighta != weightb){
+                return (weighta - weightb);
+            }
+            else{
+                return (a.nt.localeCompare(b.nt));
+            }
+        });
+        var snpages = unsorted_pages_prod_cat.pages.filter(function(a) {
+            return (a.nn != 'true' && a.nn != 'api' && a.sc != '');
+        }).sort(function CustomSort(a, b) {
+            if ( ! a["w"] ) { a["w"] = 1000 ;}
+            if ( ! b["w"] ) { b["w"] = 1000 ;}
+            var weighta = a['w'];
+            var weightb = b['w'];
+            if(weighta != weightb){
+                return (weighta - weightb);
+            }
+            else{
+                return (a.nt.localeCompare(b.nt));
+            }
+        });
+
+        // Get the value of the sc query string (if present)
+        var scParam = $.url().param('sc') || 'null';
+
+        if (snpages.length == 0) {
+            var ObjUl = $('<ul></ul>').hide();
+            ObjUl.addClass("soa-ui-dc-container-main-left-nav");
+
+            for (i = 0; i < pages.length; i++)
+            {
+                var Objli = $('<li></li>');
+                var Obja = $('<a></a>');
+                var Objp = $('<p></p>');
+
+                Objli.attr("role", "menuitem");
+
+                if ( pages[i].u == '{{ page.url }}' ) {
+                    Obja.addClass("soa-ui-dc-container-main-left-nav-item-selected soa-ui-dc-container-main-left-nav-item-link");
+                } else {
+                    Obja.addClass("soa-ui-dc-container-main-left-nav-item-link");
+                }
+
+                if ( "{{ site.baseurl }}" ) {
+                    Obja.attr("href", "{{ site.baseurl }}".concat(pages[i].u) );
+                } else {
+                    Obja.attr("href", pages[i].u );
+                }
+                if ( pages[i].ty == 'pdf' ) {
+                    Obja.attr("target", "_blank");
+                }
+                if (pages[i].nt) {
+                    Obja.html(pages[i].nt.replace("&amp;nbsp;", " "));
+                } else {
+                    Obja.html(pages[i].t.replace("&amp;nbsp;", " "));
+                }
+
+                Objli.addClass("soa-ui-dc-container-main-left-nav-item");
+                Objli.append(Obja);
+
+                ObjUl.append(Objli);
+            }
+            $('.soa-ui-dc-container-main-left').append(ObjUl);
+        } else {
+            for (; i < snpages.length; i++) {
+                if (snClasses.indexOf(snpages[i].sc) < 0) {
+                    snClasses.push(snpages[i].sc);
+                }
+            }
+            snClasses.sort();
+
+            var ObjUl = $('<ul></ul>').hide();
+            ObjUl.addClass("soa-ui-dc-container-main-left-nav");
+
+            // Iterate through the sub-nav-classes
+            for (i = 0; i < snClasses.length; i++)
+            {
+                // Get the subnav for this class
+                var classsnpages = snpages.filter(function(a) {
+                    return (a.sc == snClasses[i]);
+                });
+
+                var ObjInnerUl = $('<ul></ul>');
+                ObjInnerUl.addClass("soa-ui-dc-container-main-left-nav soa-ui-dc-container-main-left-nav-inner");
+                for (j = 0; j < classsnpages.length; j++)
+                {
+                    var ObjInnerli = $('<li></li>');
+                    var ObjInnera = $('<a></a>');
+                    var ObjInnerp = $('<p></p>');
+
+                    ObjInnerli.attr("role", "menuitem");
+
+                    if ( classsnpages[j].u == '{{ page.url }}' ) {
+                        ObjInnera.addClass("soa-ui-dc-container-main-left-nav-item-selected soa-ui-dc-container-main-left-nav-item-link");
+                    } else {
+                        ObjInnera.addClass("soa-ui-dc-container-main-left-nav-item-link");
+                    }
+
+                    if ( "{{ site.baseurl }}" ) {
+                        ObjInnera.attr("href", "{{ site.baseurl }}".concat(classsnpages[j].u) );
+                    } else {
+                        ObjInnera.attr("href", classsnpages[j].u );
+                    }
+                    if ( classsnpages[j].ty == 'pdf' ) {
+                        ObjInnera.attr("target", "_blank");
+                    }
+                    if (classsnpages[j].nt) {
+                        ObjInnera.html(classsnpages[j].nt.replace("&amp;nbsp;", " "));
+                    } else {
+                        ObjInnera.html(classsnpages[j].t.replace("&amp;nbsp;", " "));
+                    }
+
+                    ObjInnerli.addClass("soa-ui-dc-container-main-left-nav-item");
+                    ObjInnerli.append(ObjInnera);
+                    ObjInnerUl.append(ObjInnerli);          
+                }
+
+                var Objli = $('<li></li>');
+                var Obja = $('<a></a>');
+                var Objp = $('<p></p>');
+
+                if ( ('{{ page.sub-nav-class }}' == snClasses[i]) || (scParam == snClasses[i]) ) {
+                    Objli.addClass("soa-ui-dc-container-main-left-nav-item-selected");
+                }
+
+                Obja.addClass("soa-ui-dc-container-main-left-nav-item-link");
+
+                // Construct the URL for the subnav heading entry link
+                var subnavLink = "";
+
+                // Start with the product
+                if ( "{{ site.baseurl }}" ) {
+                    subnavLink = "{{ site.baseurl }}/".concat('{{ page.product }}');
+                } else {
+                    subnavLink = "/".concat('{{ page.product }}');
+                }
+                // Add the category
+                switch ( '{{ page.category }}' ) {
+                    case "gs":
+                        subnavLink += "/getting-started.html";
+                        break;
+                    case "learn":
+                        subnavLink += "/learning.html";
+                        break;
+                    case "ref":
+                        subnavLink += "/reference.html";
+                        break;
+                }
+                // And put the subnav-class as a query param
+                subnavLink += "?sc=" + snClasses[i];
+                Obja.attr("href", subnavLink);
+
+                Obja.html(snClasses[i]);
+
+                Objli.addClass("soa-ui-dc-container-main-left-nav-item");
+
+                Objli.append(Obja);
+
+                if (classsnpages.length > 0) {
+                    Objli.append(ObjInnerUl);
+                }
+
+                ObjUl.append(Objli);
+            }
+            // And now add the miscellaneous (uncategorized) entries
+            var ObjInnerUl = $('<ul></ul>');
+            ObjInnerUl.addClass("soa-ui-dc-container-main-left-nav soa-ui-dc-container-main-left-nav-inner");
+            for (j = 0; j < pages.length; j++)
+            {
+                var ObjInnerli = $('<li></li>');
+                var ObjInnera = $('<a></a>');
+                var ObjInnerp = $('<p></p>');
+
+                ObjInnerli.attr("role", "menuitem");
+
+                if ( pages[j].u == '{{ page.url }}' ) {
+                    ObjInnera.addClass("soa-ui-dc-container-main-left-nav-item-selected soa-ui-dc-container-main-left-nav-item-link");
+                } else {
+                    ObjInnera.addClass("soa-ui-dc-container-main-left-nav-item-link");
+                }
+
+                if ( "{{ site.baseurl }}" ) {
+                    ObjInnera.attr("href", "{{ site.baseurl }}".concat(pages[j].u) );
+                } else {
+                    ObjInnera.attr("href", pages[j].u );
+                }
+                if ( pages[j].ty == 'pdf' ) {
+                    ObjInnera.attr("target", "_blank");
+                }
+                if (pages[j].nt) {
+                    ObjInnera.html(pages[j].nt.replace("&amp;nbsp;", " "));
+                } else {
+                    ObjInnera.html(pages[j].t.replace("&amp;nbsp;", " "));
+                }
+
+                ObjInnerli.addClass("soa-ui-dc-container-main-left-nav-item");
+                ObjInnerli.append(ObjInnera);
+                ObjInnerUl.append(ObjInnerli);          
+            }
+
+            var Objli = $('<li></li>');
+            var Obja = $('<a></a>');
+            var Objp = $('<p></p>');
+
+            if ( ('{{ page.sub-nav-class }}' == '' && '{{ page.layout }}' == 'page') ||
+                (scParam == "undefined") ) {
+                Objli.addClass("soa-ui-dc-container-main-left-nav-item-selected");
+            }
+
+            Obja.addClass("soa-ui-dc-container-main-left-nav-item-link");
+
+            // Construct the URL for the subnav heading entry link
+            var subnavLink = "";
+
+            // Start with the product
+            if ( "{{ site.baseurl }}" ) {
+                subnavLink = "{{ site.baseurl }}/".concat('{{ page.product }}');
+            } else {
+                subnavLink = "/".concat('{{ page.product }}');
+            }
+            // Add the category
+            switch ( '{{ page.category }}' ) {
+                case "gs":
+                    subnavLink += "/getting-started.html";
+                    break;
+                case "learn":
+                    subnavLink += "/learning.html";
+                    break;
+                case "ref":
+                    subnavLink += "/reference.html";
+                    break;
+            }
+            // And put the subnav-class as a query param
+            subnavLink += "?sc=" + snClasses[i];
+            Obja.attr("href", subnavLink);
+
+            Obja.html("Miscellaneous");
+
+            Objli.addClass("soa-ui-dc-container-main-left-nav-item");
+
+            Objli.append(Obja);
+
+            if (pages.length > 0) {
+                Objli.append(ObjInnerUl);
+            }
+
+            ObjUl.append(Objli);
+
+            $('.soa-ui-dc-container-main-left').append(ObjUl);
+        }
+    }
+    $(document).ready(function() {
+        leftnav();
+        $(".soa-ui-dc-container-main-left").find("ul").first().show();
+        $(".soa-ui-dc-container-main").removeClass("soa-ui-dc-before-load");
+    });
+</script>
+<!-- End left nav script -->
