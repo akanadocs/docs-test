@@ -1,7 +1,7 @@
 ---
 layout: apipage
 title: Log In | Login Service | Enterprise API Platform API
-description:  Allows a registered user to log in, returning an authentication cookie that is used to make authenticated calls via the&nbsp;Enterprise API Platform. The cookie is valid for 25 minutes. To renew it, use the <span class="apidoc_code"><a href="m_login_renewToken.htm">POST&nbsp;/api/login/renewToken</a></span> method.
+description: Allows a user to log in, returning an authentication cookie that is used to make authenticated calls via the&nbsp;Enterprise API Platform. The cookie is valid for 25 minutes. To renew it, use the <span class="apidoc_code"><a href="m_login_renewToken.htm">POST&nbsp;/api/login/renewToken</a></span> operation.
 product: cm
 category: ref
 nav-title: Log In 
@@ -16,9 +16,13 @@ no-catalog: true
 <!-- InstanceEndEditable -->
 
 <!-- InstanceBeginEditable name="Intro_AuthRoles" -->
-<p><!-- #BeginLibraryItem "/Library/desc_login_.lbi" -->
-Allows a registered user to log in, returning an authentication cookie that is used to make authenticated calls via the&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->. The cookie is valid for 25 minutes. To renew it, use the <span class="apidoc_code"><a href="m_login_renewToken.htm">POST&nbsp;/api/login/renewToken</a></span> method.<!-- #EndLibraryItem --></p>
-<p class="apidoc_note"><strong>Note</strong>: If the response includes the pendingAgreements parameter, the user must accept any pending legal agreements, using the <a href="../legals/m_legals_acceptAgreement.htm">POST&nbsp;/api/legals/agreements</a> operation, before the login process is complete. </p>
+<p><!-- #BeginLibraryItem "/Library/desc_login_.lbi" -->Allows a user to log in, returning an authentication cookie that is used to make authenticated calls via the&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->. The cookie is valid for 25 minutes. To renew it, use the <span class="apidoc_code"><a href="m_login_renewToken.htm">POST&nbsp;/api/login/renewToken</a></span> operation.<!-- #EndLibraryItem --></p>
+<p>When a new user is logging in for the first time, depending on platform configuration, there might be tasks that the user must complete. The login operation checks whether any of those tasks are pending. If there are one or more pending tasks, the response specifies the next task to be completed. When all tasks are complete, login is complete. Pending tasks are prioritized as follows:</p>
+<ol>
+  <li>Changing the password (this requirement can be specified by the Site Admin when adding a user by invoking the <span class="apidoc_code"><a href="../users/m_users_addUser.htm">POST&nbsp;/api/users</a></span> operation). To complete this task using the API, invoke the <span class="apidoc_code"><a href="../users/m_users_modifyPassword.htm">PUT&nbsp;/api/users/{UserID}/password</a></span> operation.</li>
+  <li>Accepting the platform legal agreement. To complete this task using the API, invoke the <span class="apidoc_code"><a href="../legals/m_legals_acceptAgreement.htm">POST&nbsp;/api/legals/agreements</a></span> operation.</li>
+  <li>Providing answers to security challenge questions. To complete this task using the API, invoke the <span class="apidoc_code"><a href="../users/m_users_saveChallenges.htm">PUT&nbsp;/api/users/{UserID}/challenges</a></span> operation.</li>
+</ol>
 <p id="id_roles"><strong>Authorization Roles/Permissions: </strong>To complete this operation successfully, a user must be registered on the platform.</p>
 <!-- InstanceEndEditable --><!-- #BeginLibraryItem "/Library/_whatdoyouwanttoreadabout.lbi" -->
 <p>This topic includes the following sections:</p>
@@ -75,7 +79,7 @@ Content-Type: application/json; charset=UTF-8</pre>
 
 <!-- InstanceBeginEditable name="Request Headers" -->
 <h3 id="requestheaders">Request Headers</h3>
-<p>For general information on request header values, refer to <a href="../Ref_API_Reference.htm#ref_httprequestheaders">HTTP Request Headers</a>.</p>
+<p>For general information on request header values, refer to <a href="../Ref_HTTPHeaders.htm#ref_httprequestheaders">HTTP Request Headers</a>.</p>
 <table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
   <thead>
     <tr>
@@ -85,11 +89,11 @@ Content-Type: application/json; charset=UTF-8</pre>
   </thead>
   <tbody>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#acceptheader">Accept</a></td>
+      <td><a href="../Ref_HTTPHeaders.htm#acceptheader">Accept</a></td>
       <td><strong>application/json</strong></td>
     </tr>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#contenttype_request">Content-Type</a></td>
+      <td><a href="../Ref_HTTPHeaders.htm#contenttype_request">Content-Type</a></td>
       <td><strong>application/json</strong></td>
     </tr>
     </tbody>
@@ -137,39 +141,66 @@ Content-Type: application/json; charset=UTF-8</pre>
 <h5>Sample response headers</h5>
 <pre>HTTP/1.1 200 OK
 Content-Type: application/json
-Expires: Fri, 17-Oct-2014 16:17:17</pre>
+Expires: Tue, 10 Feb 2015 18:57:30 GMT</pre>
 <h5>Sample response body #1</h5>
-<p id="id_samplerequest2">The example below shows a LoginRequest object returned when a user signs in. There are no pending notifications for this user, and a fresh authorization token is returned. The authToken and csrfToken values include line breaks for display purposes.</p>
+<p id="id_sampleresponse_1">In the example below, the Site Admin added the user (using the <span class="apidoc_code"><a href="../users/m_users_addUser.htm">POST&nbsp;/api/users</a></span> operation) and the user is now logging in for the first time. The Site Admin specified that the user must change password on first login (<strong>ForcePasswordChangeOnLogin</strong> parameter in the Add User operation); therefore, change password is listed as a pending task. Tokens have been abbreviated.</p>
+<p>To change the password, invoke the <span class="apidoc_code"><a href="../users/m_users_modifyPassword.htm">PUT&nbsp;/api/users/{UserID}/password</a></span> operation.</p>
 <pre>{
-  "userName" : "JaneMead",
-  "avatarURL" : "http://&lt;hostname&gt;/api/users/e437a7ea-108f-498e-9065-afd3776b2a08.acmepayments/avatar",
-  "csrfToken" : "TokenID%3D91edcc0b-5615-11e4-afdf-dcd0d86970d7%2CexpirationTime%3D1413562937125%2CUserFDN%3De437a7ea-
-108f-498e-9065-afd3776b2a08%252Eacmepayments%2Csig%3DRYicJkbNgpoXR9zP7IbU3mWIpP_BYSR90iiYTurEy1leVFElsd-eb1BJELIEaE3Fs
-_A9N2hRFBd55CilhF1bJYJMNIfboJHxiRarart56K09E8ty0GlDCu_xG_3qHM5lCclPCCL-OaLj-rT0kuPpXVl5G8_A5y3lhTjbPtJDeNI",
-  "loginDomainID" : "siteusers.acmepayments",
-  "authToken" : "TokenID%3D91edcc0b-5615-11e4-afdf-dcd0d86970d7%2Cclaimed_id%3Durn%3Aacmepayments%3Auser%3Aacmepayments
-%3Ae437a7ea-108f-498e-9065-afd3776b2a08%2CissueTime%3D1413561137106%2CexpirationTime%3D1413562937054%2CAttributes
-Included%3Dfalse%2CUserFDN%3De437a7ea-108f-498e-9065-afd3776b2a08%25acmepaymentsre%2CUserName%3DJaneMead%2Csig%3DLyoF
-GHZSsmCL9fTsvR1eNSvuedVl0bfdojmPYVVAifFVubFt0xOEUkMwsQ65eMhdYysULES9D-Ni0dTiHMJxV5Vc7Rcl_vDn9CveCWvXrySdqdYeC4OXqg7QN
-xjEiMYRA3dZGQ2QZbO2oMwuApFRSxHN_0tbCVGmWQxOiBpGZ04",
-  "userFDN" : "e437a7ea-108f-498e-9065-afd3776b2a08.acmepayments",
+  "loginDomainID" : "siteusers.acmepaymentscorp",
+  "pendingTasks" : [ "change.password" ],
+  "loginState" : "login.inprocess",
+  "avatarURL" : "http://&lt;hostname&gt;/api/users/1d75a0e7-b805-4152-baa0-2f9978711d6e.acmepaymentscorp/avatar",
+  "pendingAgreements" : [ "signupagrmtv1.acmepaymentscorp" ],
+  "pendingNotifications" : 0,
   "status" : "success",
-  "pendingNotifications" : 0
+  "authToken" : "TokenID%3Db9c33882-b17b-11e4-9313-842dced0891f%2Cclaimed_id%3Durn%3Aacmepaymentscorp%3Auser%3Aacmepaymentscorp...",
+  "userName" : "PhilipPirrip",
+  "userFDN" : "1d75a0e7-b805-4152-baa0-2f9978711d6e.acmepaymentscorp",
+  "csrfToken" : "TokenID%3Db9c33882-b17b-11e4-9313-842dced0891f%2CexpirationTime%3D1423612368384%2CUserFDN%3D1d75a0e7-b805-4152-baa0..."
 }</pre>
 <h5>Sample response body #2</h5>
-<p id="id_samplerequest_2">The example below shows a scenario where the user must accept a pending legal agreement. Until the legal agreement is accepted, the login process isn't complete. This example also includes avatarURL since the user has specified a custom avatar.</p>
+<p id="id_sampleresponse_2">The example below shows a scenario where the user must accept a pending legal agreement. Until the legal agreement is accepted, the login process isn't complete. Tokens have been abbreviated.</p>
 <p>If there is a pending legal agreement, you must invoke the <span class="apidoc_code"><a href="../legals/m_legals_acceptAgreement.htm">POST&nbsp;/api/legals/agreements</a></span> operation, part of the Legals service, so that the user can accept the legal agreement and complete the login process.</p>
 <pre>{
-  &quot;userName&quot;: &quot;JaneSaoirse&quot;,
-  &quot;authToken&quot;: &quot;TokenID%3D03c789e1-7f61-11e2-9935-a554e25a5b7c%2Cclaimed_id%3Durn%3Aacme%3Auser%3Aacmepayments%3A
-user10002%2CissueTime%3D1361806545094%2CexpirationTime%3D1361808342650%2CAttributesIncluded%3Dfalse%2CUserFDN%3D
-user10002%252Eopen%2CHasPendingAgreements%3Dtrue%2CUserName%3DJaneSaoirse%2Csig%3DoWKUdvg32YdqILd_2QCto9RVqBLn8UmT
-KAnXu1UgPOHA0t31dIKw4TafxLNMmC-GFekkPhvNti4vUimqP-5e5gnf1H0bkLcXKQLT1131R6Cx9MX3ue9z6z-jmD6QesLRkWXwzRkBrb-wLerHn
-Blx_Tnr9p3g-SrPA7pPirmpADA&quot;,
-  &quot;userFDN&quot;: &quot;user10002.acmepayments&quot;,
-  &quot;avatarURL&quot; : &quot;<!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://&lt;hostname&gt;/api/<!-- #EndLibraryItem -->users/522320b9-cb6b-495d-ae07-e4b3bfdb3f6a.acmepayments/avatar&quot;
-&quot;pendingNotifications&quot;: 0,
-  &quot;pendingAgreements&quot;: [&quot;signupagrmtv2.acmepayments&quot;]
+  "loginDomainID" : "siteusers.acmepaymentscorp",
+  "pendingTasks" : [ "force.accept.agreements" ],
+  "loginState" : "login.inprocess",
+  "avatarURL" : "http://&lt;hostname&gt;/api/users/1d75a0e7-b805-4152-baa0-2f9978711d6e.acmepaymentscorp/avatar",
+  "pendingAgreements" : [ "signupagrmtv1.acmepaymentscorp" ],
+  "pendingNotifications" : 0,
+  "status" : "success",
+  "authToken" : "TokenID%3Daa9d3dae-b17c-11e4-9313-842dced0891f%2Cclaimed_id%3Durn%3Aacmepaymentscorp%3Auser%3Aacmepaymentscorp...",
+  "userName" : "PhilipPirrip1",
+  "userFDN" : "1d75a0e7-b805-4152-baa0-2f9978711d6e.acmepaymentscorp",
+  "csrfToken" : "TokenID%3Daa9d3dae-b17c-11e4-9313-842dced0891f%2CexpirationTime%3D1423612772466%2CUserFDN%3D1d75a0e7-b805-4152-baa0-..."
+}</pre>
+<h5>Sample response body #3</h5>
+<p id="id_sampleresponse_3">In the example below, login is not yet complete because the user must provide answers to the security challenge questions. Tokens have been abbreviated.</p>
+<p>To complete this task using the API, invoke the <span class="apidoc_code"><a href="../users/m_users_saveChallenges.htm">PUT&nbsp;/api/users/{UserID}/challenges</a></span> operation.</p>
+<pre>{
+  "loginDomainID" : "siteusers.acmepaymentscorp",
+  "pendingTasks" : [ "collect.security.question.answers" ],
+  "loginState" : "login.inprocess",
+  "avatarURL" : "http://&lt;hostname&gt;/api/users/1d75a0e7-b805-4152-baa0-2f9978711d6e.acmepaymentscorp/avatar",
+  "pendingNotifications" : 0,
+  "status" : "success",
+  "authToken" : "TokenID%3Df912140b-b17c-11e4-9313-842dced0891f%2Cclaimed_id%3Durn%3Aacmepaymentscorp%3Auser%3Aacmepaymentscorp...",
+  "userName" : "PhilipPirrip1",
+  "userFDN" : "1d75a0e7-b805-4152-baa0-2f9978711d6e.acmepaymentscorp",
+  "csrfToken" : "TokenID%3Df912140b-b17c-11e4-9313-842dced0891f%2CexpirationTime%3D1423612904093%2CUserFDN%3D1d75a0e7..."
+}</pre>
+<h5>Sample response body #4</h5>
+<p id="id_sampleresponse_4">The example below shows a LoginRequest object returned when a user has completed all pending tasks, or when a user signs in under normal circumstances; there are no pending tasks, just a simple login. Tokens have been abbreviated.</p>
+<pre>{
+  "loginDomainID" : "siteusers.acmepaymentscorp",
+  "loginState" : "login.complete",
+  "avatarURL" : "http://&lt;hostname&gt;/api/users/1d75a0e7-b805-4152-baa0-2f9978711d6e.acmepaymentscorp/avatar",
+  "pendingNotifications" : 0,
+  "status" : "success",
+  "authToken" : "TokenID%3D6c062ded-b17d-11e4-9313-842dced0891f%2Cclaimed_id%3Durn%3Aacmepaymentscorp%3Auser%3Aacmepaymentscorp...",
+  "userName" : "PhilipPirrip1",
+  "userFDN" : "1d75a0e7-b805-4152-baa0-2f9978711d6e.acmepaymentscorp",
+  "csrfToken" : "TokenID%3D6c062ded-b17d-11e4-9313-842dced0891f%2CexpirationTime%3D1423613096951%2CUserFDN%3D1d75a0e7-b805-4152-b..."
 }</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 <!-- InstanceEndEditable -->
@@ -177,7 +208,7 @@ Blx_Tnr9p3g-SrPA7pPirmpADA&quot;,
 
 <!-- InstanceBeginEditable name="Response Headers" -->
 <h3 id="responseheaders">Response Headers</h3>
-<p>For general information on response header values, refer to <a href="../Ref_API_Reference.htm#ref_httpresponseheaders">HTTP Response Headers</a>.</p>
+<p>For general information on response header values, refer to <a href="../Ref_HTTPHeaders.htm#ref_httpresponseheaders">HTTP Response Headers</a>.</p>
 <table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
   <thead>
     <tr bgcolor="#DDDDDD">
@@ -187,7 +218,7 @@ Blx_Tnr9p3g-SrPA7pPirmpADA&quot;,
   </thead>
   <tbody>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#contenttype_response">Content-Type</a></td>
+      <td><a href="../Ref_HTTPHeaders.htm#contenttype_response">Content-Type</a></td>
       <td><!-- #BeginLibraryItem "/Library/hdrval_appjson.lbi" --><strong>application/json</strong><!-- #EndLibraryItem --></td>
     </tr>
   </tbody>
@@ -230,13 +261,13 @@ Blx_Tnr9p3g-SrPA7pPirmpADA&quot;,
   </thead>
   <tbody>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#http500">500</a></td>
+      <td><a href="../Ref_HTTPStatusCodes.htm#http500">500</a></td>
       <td>An error occurred processing the call. </td>
     </tr>
   </tbody>
 </table>
 <!-- InstanceEndEditable -->
-<p><a href="../Ref_API_Reference.htm#ref_errormessages">Full list of&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;API error messages.</a></p>
+<p><a href="../Ref_ErrorMessages.htm">More information about&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;API error messages.</a></p>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 
 

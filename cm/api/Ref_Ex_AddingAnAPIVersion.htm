@@ -42,75 +42,178 @@ no-catalog: true
       <li>URL: <strong><span class="apidoc_div_codeendpoint"><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://&lt;hostname&gt;/api/<!-- #EndLibraryItem --></span>apis/{APIID}versions</strong></li>
       <li>Accept header: <strong>application/json</strong></li>
       <li>Content-Type header: <strong>application/json</strong></li>
+      <li>CSRF header: include it if needed. If you are not sure whether it's needed or not, refer to <a href="Ref_CSRFPreventionOnThePlatform.htm#checking_if_csrf_is_required">CSRF Prevention on the Platform</a>.</li>
       <li>Request Body  (Key values are: valid <strong>APIID</strong>, and for the new version, <strong>Name</strong>, <strong>Description</strong>, and <strong>SandboxEndpoint</strong>; for Endpoints, <strong>CName</strong> and <strong>URI</strong>, and for <strong>target API</strong> (<a href="Ref_Glossary_CommunityPlatform.htm#gl_targeturl">target URL</a>),<strong> URI</strong>:
-        <pre>{
-    &quot;APIID&quot; : &quot;MyAPIID&quot;,
-    &quot;Name&quot; : &quot;My Version 2&quot;,
-    &quot;Description&quot; : &quot;My Version 2 Description&quot;,
-    &quot;Type&quot; : &quot;shttp&quot;,
-    &quot;DefaultProfile&quot; : &quot;Any in and out&quot;,
-    &quot;Tag&quot; : [ ],
-    &quot;SandboxEndpoint&quot; : &quot;http://my-proxy-api-cname:9901/&quot;,
-    &quot;Operations&quot; : {
-      &quot;Operation&quot; : [ {
-        &quot;Name&quot; : &quot;Default_Operation&quot;,
-        &quot;Method&quot; : &quot;GET&quot;,
-        &quot;Path&quot; : &quot;/{path:.+|}&quot;,
-        &quot;InputContentType&quot; : &quot;*/*&quot;,
-        &quot;OutputContentType&quot; : &quot;*/*&quot;,
-        &quot;FaultContentType&quot; : &quot;*/*&quot;,
-        &quot;Input&quot; : [ {
-          &quot;Name&quot; : &quot;path&quot;,
-          &quot;Type&quot; : &quot;path&quot;
-        } ]
-      } ]
+        <pre>
+ { 
+    "APIID":"MyAPIID",
+    "Name":"Version 2",
+    "Description":"Major update.",
+    "Type":"shttp",
+    "DefaultProfile":"Any in and out",
+    "Tag":[ 
+      "payments",
+      "ACME"
+    ],
+    "ProductionEndpoint":"http://acme-payments-api.10.1.20.137:9901/",
+    "SandboxEndpoint":"http://acme-payments-api.10.1.20.137:9901/",
+    "Operations":{ 
+      "Operation":[ 
+        { 
+          "Method":"GET",
+          "Path":"/payments/{paymentid}",
+          "Input":[ 
+            { 
+              "Name":"paymentid",
+              "Type":"path"
+            }
+          ],
+          "InputContentType":"*/*",
+          "OutputContentType":"*/*",
+          "FaultContentType":"*/*",
+          "Name":"getPayment"
+        },
+        { 
+          "Method":"GET",
+          "Path":"/payments/payments",
+          "Input":[ 
+
+          ],
+          "InputContentType":"*/*",
+          "OutputContentType":"*/*",
+          "FaultContentType":"*/*",
+          "Name":"listPayments"
+        },
+        { 
+          "Method":"POST",
+          "Path":"/payments",
+          "Input":[ 
+
+          ],
+          "InputContentType":"*/*",
+          "OutputContentType":"*/*",
+          "FaultContentType":"*/*",
+          "Name":"addPayment"
+        },
+        { 
+          "Method":"DELETE",
+          "Path":"/{path:.+|}",
+          "Input":[ 
+            { 
+              "Name":"path",
+              "Type":"path"
+            }
+          ],
+          "InputContentType":"*/*",
+          "OutputContentType":"*/*",
+          "FaultContentType":"*/*",
+          "Name":"deletePayment"
+        }
+      ]
     },
-    &quot;Endpoints&quot; : {
-      &quot;Endpoint&quot; : [ {
-        &quot;CName&quot; : &quot;my-proxy-api-cname&quot;,
-        &quot;Category&quot; : &quot;Sandbox&quot;,
-        &quot;Uri&quot; : &quot;http://my-proxy-api-cname:9901/&quot;,
-        &quot;ConnectionProperties&quot; : [ ]
-      } ]
+    "Endpoints":{ 
+      "Endpoint":[ 
+        { 
+          "Uri":"http://acme-payments-api.10.1.20.137:9901/",
+          "Category":"Production",
+          "CName":"acme-payments-api.10.1.20.137",
+          "DeploymentZoneRule":"1b16623b-1609-4664-9900-06f8441bdefault-http0"
+        },
+        { 
+          "Uri":"http://acme-payments-api.10.1.20.137:9901/",
+          "Category":"Sandbox",
+          "CName":"acme-payments-api.10.1.20.137",
+          "DeploymentZoneRule":"1b16623b-1609-4664-9900-06f8441bdefault-http0"
+        }
+      ]
     },
-    &quot;Policies&quot; : {
-      &quot;Policy&quot; : [ ]
-    },
-    &quot;TargetAPI&quot; : {
-      &quot;Type&quot; : &quot;shttp&quot;,
-      &quot;DefaultProfile&quot; : &quot;Any in and out&quot;,
-      &quot;Endpoints&quot; : {
-        &quot;Endpoint&quot; : [ {
-          &quot;Category&quot; : &quot;Sandbox&quot;,
-          &quot;Uri&quot; : &quot;http://www.mytargeturl.com&quot;,
-          &quot;ConnectionProperties&quot; : [ ]
-        } ]
+    "TargetAPI":{ 
+      "Endpoints":{ 
+        "Endpoint":[ 
+          { 
+            "Uri":"http://www.acmepayments.com/api",
+            "Category":"Production"
+          },
+          { 
+            "Uri":"http://www.acmepayments.com/apisb",
+            "Category":"Sandbox"
+          }
+        ]
       },
-      &quot;Operations&quot; : {
-        &quot;Operation&quot; : [ {
-          &quot;Name&quot; : &quot;Default_Operation&quot;,
-          &quot;Method&quot; : &quot;GET&quot;,
-          &quot;Path&quot; : &quot;/{path:.+|}&quot;,
-          &quot;InputContentType&quot; : &quot;*/*&quot;,
-          &quot;OutputContentType&quot; : &quot;*/*&quot;,
-          &quot;FaultContentType&quot; : &quot;*/*&quot;,
-          &quot;Input&quot; : [ {
-            &quot;Name&quot; : &quot;path&quot;,
-            &quot;Type&quot; : &quot;path&quot;
-          } ]
-        } ]
+      "Type":"shttp",
+      "Operations":{ 
+        "Operation":[ 
+          { 
+            "Method":"GET",
+            "Path":"/payments/{paymentid}",
+            "Input":[ 
+              { 
+                "Name":"paymentid",
+                "Type":"path"
+              }
+            ],
+            "InputContentType":"*/*",
+            "OutputContentType":"*/*",
+            "FaultContentType":"*/*",
+            "Name":"getPayment"
+          },
+          { 
+            "Method":"GET",
+            "Path":"/payments/payments",
+            "Input":[ 
+
+            ],
+            "InputContentType":"*/*",
+            "OutputContentType":"*/*",
+            "FaultContentType":"*/*",
+            "Name":"listPayments"
+          },
+          { 
+            "Method":"POST",
+            "Path":"/payments",
+            "Input":[ 
+
+            ],
+            "InputContentType":"*/*",
+            "OutputContentType":"*/*",
+            "FaultContentType":"*/*",
+            "Name":"addPayment"
+          },
+          { 
+            "Method":"DELETE",
+            "Path":"/payments/{paymentid}",
+            "Input":[ 
+              { 
+                "Name":"paymentid",
+                "Type":"path"
+              }
+            ],
+            "InputContentType":"*/*",
+            "OutputContentType":"*/*",
+            "FaultContentType":"*/*",
+            "Name":"deletePayment"
+          }
+        ]
       },
-      &quot;Policies&quot; : {
-       &quot;Policy&quot; : [ ]
-      }
+      "Policies":{ 
+        "Policy":[ 
+
+        ]
+      },
+      "DefaultProfile":"Any in and out"
     },
-    &quot;Visibility&quot; : &quot;Public&quot;,
-    &quot;State&quot; : &quot;com.soa.api.state.open&quot;,
-    &quot;ProductionEndpointAccessAutoApproved&quot; : true,
-    &quot;SandboxEndpointAccessAutoApproved&quot; : true,
-    &quot;SandboxAnonymousAccessAllowed&quot; : false,
-    &quot;ProductionAnonymousAccessAllowed&quot; : false,
-    &quot;ResourceLevelPermissionsSupported&quot; : false
+    "Visibility":"Public",
+    "State":"com.soa.api.state.open",
+    "ProductionEndpointAccessAutoApproved":false,
+    "SandboxEndpointAccessAutoApproved":true,
+    "SandboxAnonymousAccessAllowed":false,
+    "ProductionAnonymousAccessAllowed":false,
+    "ResourceLevelPermissionsSupported":true,
+    "Policies":{ 
+      "Policy":[ 
+
+      ]
+    }
   }</pre>
       </li>
       </ul>

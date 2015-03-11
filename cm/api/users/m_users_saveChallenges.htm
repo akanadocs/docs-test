@@ -18,6 +18,8 @@ no-catalog: true
 <!-- InstanceBeginEditable name="Intro_AuthRoles" -->
 <p><!-- #BeginLibraryItem "/Library/desc_saveChallenges_Users.lbi" -->
 Adds or updates information about the security <a href="../Ref_Glossary_CommunityPlatform.htm#gl_challengequestion">challenge questions</a> and answers for a specific user.<!-- #EndLibraryItem --></p>
+<p>Note that if constraints are set for the answers to the security challenge questions, the answers must meet the constraints or the request will fail.</p>
+<p>To check what security questions are valid, and what constraints are set, you can run the <span class="apidoc_code"><a href="../businesses/m_businesses_getChallenges.htm">GET&nbsp;/api/businesses/{BusinessID}/challenges</a></span> operation. If no constraints are returned, none are set.</p>
 <p id="id_roles"><strong>Authorization Roles/Permissions: </strong><a href="../Ref_AuthorizationRolesOnThePlatform.htm#authroles_authorizeduser">Authorized User</a> or <a href="../Ref_AuthorizationRolesOnThePlatform.htm#authroles_siteadmin">Site Admin</a>.</p>
 <!-- InstanceEndEditable --><!-- #BeginLibraryItem "/Library/_whatdoyouwanttoreadabout.lbi" -->
 <p>This topic includes the following sections:</p>
@@ -57,57 +59,33 @@ Adds or updates information about the security <a href="../Ref_Glossary_Communit
 <h3 id="samplerequest">Sample Request</h3>
 <p id="id_samplerequest">The example below shows a request to update the security questions and answers for the specified user.</p>
 <p><strong>Request URL</strong></p>
-<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://&lt;hostname&gt;/api/<!-- #EndLibraryItem -->users/eceffbe3-3386-495b-80d3-7526f0eb0edc.acmepayments/challenges</pre>
+<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://&lt;hostname&gt;/api/<!-- #EndLibraryItem -->users/eceffbe3-3386-495b-80d3-7526f0eb0edc.acmepaymentscorp/challenges</pre>
 <p><strong>Sample request headers</strong></p>
-<pre>X-Csrf-Token_acmepayments
+<pre>X-Csrf-Token_acmepaymentscorp
 Accept: application/vnd.soa.v72+json
-Content-Type: application/vnd.soa.v72+json
-<!-- #BeginLibraryItem "/Library/hdr_xcsrf.lbi" -->X-Csrf-Token_&lt;tenant&gt;: &lt;TokenID&gt;<!-- #EndLibraryItem --></pre>
+Content-Type: application/vnd.soa.v72+json<!-- #BeginLibraryItem "/Library/hdr_xcsrf.lbi" -->
+X-Csrf-Token_{tenant}: &lt;TokenID&gt;<!-- #EndLibraryItem --></pre>
 <p><strong>Sample request body: application/vnd.soa.v72+json</strong></p>
-<pre>{
-  "UserIdentificationChallenge":[
-    {
-      "UserID":"eceffbe3-3386-495b-80d3-7526f0eb0edc.acmepaymentscorp",
-      "ChallengeCode":"com.soa.challenge.question.color",
-      "ChallengeQuestion":"What is your favorite color?",
-      "Answer":"Blue"
-    },
-    {
-      "UserID":"eceffbe3-3386-495b-80d3-7526f0eb0edc.acmepaymentscorp",
-      "ChallengeCode":"com.soa.challenge.question.pet",
-      "ChallengeQuestion":"What is the name of your pet?",
-      "Answer":"Bucktastic"
-    },
-    {
-      "UserID":"eceffbe3-3386-495b-80d3-7526f0eb0edc.acmepaymentscorp",
-      "ChallengeCode":"com.soa.challenge.question.city.birth",
-      "ChallengeQuestion":"What is the city of your birth?",
-      "Answer":"Manchester"
-    }
-  ]
-}</pre>
+<pre>{<br />  &quot;UserIdentificationChallenge&quot; : [ {<br />    &quot;UserID&quot; : &quot;9e4351af-c642-4992-89e0-262a9bfaf223.acmepaymentscorp&quot;,<br />    &quot;ChallengeCode&quot; : &quot;com.soa.challenge.question.city.birth&quot;,<br />    &quot;Answer&quot; : &quot;Dubai&quot;<br />  }, {<br />    &quot;UserID&quot; : &quot;9e4351af-c642-4992-89e0-262a9bfaf223.acmepaymentscorp&quot;,<br />    &quot;ChallengeCode&quot; : &quot;com.soa.challenge.question.color&quot;,<br />    &quot;Answer&quot; : &quot;Blue&quot;<br />  }, {<br />    &quot;UserID&quot; : &quot;9e4351af-c642-4992-89e0-262a9bfaf223.acmepaymentscorp&quot;,<br />    &quot;ChallengeCode&quot; : &quot;com.soa.challenge.question.pet&quot;,<br />    &quot;Answer&quot; : &quot;Bucktastic&quot;<br />  } ]<br />}</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 <p><strong>Sample request body: application/vnd.soa.v72+xml</strong></p>
 <pre>
-&lt;?xml version="1.0" encoding=&quot;UTF-8&quot;?&gt;
+&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
 &lt;UserIdentificationChallenges xmlns="http://soa.com/xsd/user/1.0" xmlns:ns2="http://soa.com/xsd/business/1.0"&gt;
   &lt;UserIdentificationChallenge&gt;
-    &lt;UserID&gt;eceffbe3-3386-495b-80d3-7526f0eb0edc.acmepaymentscorp&lt;/UserID&gt;
+    &lt;UserID&gt;9e4351af-c642-4992-89e0-262a9bfaf223.acmepaymentscorp&lt;/UserID&gt;
+    &lt;ChallengeCode&gt;com.soa.challenge.question.city.birth&lt;/ChallengeCode&gt;
+    &lt;Answer&gt;Dubai&lt;/Answer&gt;
+  &lt;/UserIdentificationChallenge&gt;
+  &lt;UserIdentificationChallenge&gt;
+    &lt;UserID&gt;9e4351af-c642-4992-89e0-262a9bfaf223.acmepaymentscorp&lt;/UserID&gt;
     &lt;ChallengeCode&gt;com.soa.challenge.question.color&lt;/ChallengeCode&gt;
-    &lt;ChallengeQuestion&gt;What is your favorite color?&lt;/ChallengeQuestion&gt;
     &lt;Answer&gt;Blue&lt;/Answer&gt;
   &lt;/UserIdentificationChallenge&gt;
   &lt;UserIdentificationChallenge&gt;
-    &lt;UserID&gt;eceffbe3-3386-495b-80d3-7526f0eb0edc.acmepaymentscorp&lt;/UserID&gt;
+    &lt;UserID&gt;9e4351af-c642-4992-89e0-262a9bfaf223.acmepaymentscorp&lt;/UserID&gt;
     &lt;ChallengeCode&gt;com.soa.challenge.question.pet&lt;/ChallengeCode&gt;
-    &lt;ChallengeQuestion&gt;What is the name of your pet?&lt;/ChallengeQuestion&gt;
     &lt;Answer&gt;Bucktastic&lt;/Answer&gt;
-  &lt;/UserIdentificationChallenge&gt;
-  &lt;UserIdentificationChallenge&gt;
-    &lt;UserID&gt;eceffbe3-3386-495b-80d3-7526f0eb0edc.acmepaymentscorp&lt;/UserID&gt;
-    &lt;ChallengeCode&gt;com.soa.challenge.question.city.birth&lt;/ChallengeCode&gt;
-    &lt;ChallengeQuestion&gt;What is the city of your birth?&lt;/ChallengeQuestion&gt;
-    &lt;Answer&gt;Manchester&lt;/Answer&gt;
   &lt;/UserIdentificationChallenge&gt;
 &lt;/UserIdentificationChallenges&gt;</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
@@ -116,7 +94,7 @@ Content-Type: application/vnd.soa.v72+json
 
 <!-- InstanceBeginEditable name="Request Headers" -->
 <h3 id="requestheaders">Request Headers</h3>
-<p>For general information on request header values, refer to <a href="../Ref_API_Reference.htm#ref_httprequestheaders">HTTP Request Headers</a>.</p>
+<p>For general information on request header values, refer to <a href="../Ref_HTTPHeaders.htm#ref_httprequestheaders">HTTP Request Headers</a>.</p>
 <table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
   <thead>
     <tr>
@@ -126,12 +104,16 @@ Content-Type: application/vnd.soa.v72+json
   </thead>
   <tbody>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#acceptheader">Accept</a></td>
+      <td><a href="../Ref_HTTPHeaders.htm#acceptheader">Accept</a></td>
       <td><!-- #BeginLibraryItem "/Library/hdrval_appjson_72.lbi" --><strong>application/vnd.soa.v72+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml_72.lbi" --><strong>application/vnd.soa.v72+xml</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml.lbi" --><strong>application/xml</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson.lbi" --><strong>application/json</strong><!-- #EndLibraryItem --></td>
     </tr>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#contenttype_request">Content-Type</a></td>
+      <td><a href="../Ref_HTTPHeaders.htm#contenttype_request">Content-Type</a></td>
       <td><!-- #BeginLibraryItem "/Library/hdrval_appjson_72.lbi" --><strong>application/vnd.soa.v72+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml_72.lbi" --><strong>application/vnd.soa.v72+xml</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml.lbi" --><strong>application/xml</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson.lbi" --><strong>application/json</strong><!-- #EndLibraryItem --></td>
+    </tr>
+    <tr>
+      <td><a href="../Ref_HTTPHeaders.htm#csrf_token_request">X-Csrf-Token_{fedmemberID}</a></td>
+      <td>The CSRF prevention header; may or may not be required, depending on platform settings. See <a href="../Ref_CSRFPreventionOnThePlatform.htm">CSRF Prevention on the Platform</a>.</td>
     </tr>
   </tbody>
 </table>
@@ -164,8 +146,9 @@ Content-Type: application/vnd.soa.v72+json
       <td>Body</td>
       <td><a href="../obj/o_users_UserIdentificationChallenges.htm">UserIdentificationChallenges</a></td>
       <td>Required</td>
-      <td><!-- #BeginLibraryItem "/Library/o_users_UserIdentificationChallenges.lbi" -->
-Contains information about one or more user identification challenge questions applicable to a specific user, and in some cases the answers also.<!-- #EndLibraryItem --></td>
+      <td><p><!-- #BeginLibraryItem "/Library/o_users_UserIdentificationChallenges.lbi" -->
+        Contains information about one or more user identification challenge questions applicable to a specific user, and in some cases the answers also.<!-- #EndLibraryItem --></p>
+        <p><strong>Note</strong>: The answers to the challenge questions must meet any restrictions that are placed on them. Otherwise, the request will fail. If you are not sure what the restrictions are, you can run the <span class="apidoc_code"><a href="../businesses/m_businesses_getChallenges.htm">GET&nbsp;/api/businesses/{BusinessID}/challenges</a></span> operation. The rules are returned in the response.</p></td>
     </tr>
   </tbody>
 </table>
@@ -186,50 +169,30 @@ Contains information about one or more user identification challenge questions a
 <p><strong>Sample response headers: application/vnd.soa.v72+json</strong></p>
 <pre>Status Code: 200 OK
 Content-Type: application/vnd.soa.v72+json
-Expires: Thu, 11 Sep 2014 15:05:16 GMT</pre>
+Expires:  Tue, 06 Jan 2015 14:43:08 GMT</pre>
 <p><strong>Sample response body: application/vnd.soa.v72+json</strong></p>
-<pre>{
-  "UserIdentificationChallenge" : [ {
-    "UserID" : "eceffbe3-3386-495b-80d3-7526f0eb0edc.acmepaymentscorp",
-    "ChallengeCode" : "com.soa.challenge.question.color",
-    "ChallengeQuestion" : "What is your favorite color?",
-    "Answer" : "Blue"
-  }, {
-    "UserID" : "eceffbe3-3386-495b-80d3-7526f0eb0edc.acmepaymentscorp",
-    "ChallengeCode" : "com.soa.challenge.question.pet",
-    "ChallengeQuestion" : "What is the name of your pet?",
-    "Answer" : "Bucktastic"
-  }, {
-    "UserID" : "eceffbe3-3386-495b-80d3-7526f0eb0edc.acmepaymentscorp",
-    "ChallengeCode" : "com.soa.challenge.question.city.birth",
-    "ChallengeQuestion" : "What is the city of your birth?",
-    "Answer" : "Manchester"
-  } ]
-}</pre>
+<pre>{<br />  &quot;UserIdentificationChallenge&quot; : [ {<br />    &quot;UserID&quot; : &quot;9e4351af-c642-4992-89e0-262a9bfaf223.acmepaymentscorp&quot;,<br />    &quot;ChallengeCode&quot; : &quot;com.soa.challenge.question.city.birth&quot;,<br />    &quot;Answer&quot; : &quot;Dubai&quot;<br />  }, {<br />    &quot;UserID&quot; : &quot;9e4351af-c642-4992-89e0-262a9bfaf223.acmepaymentscorp&quot;,<br />    &quot;ChallengeCode&quot; : &quot;com.soa.challenge.question.color&quot;,<br />    &quot;Answer&quot; : &quot;Blue&quot;<br />  }, {<br />    &quot;UserID&quot; : &quot;9e4351af-c642-4992-89e0-262a9bfaf223.acmepaymentscorp&quot;,<br />    &quot;ChallengeCode&quot; : &quot;com.soa.challenge.question.pet&quot;,<br />    &quot;Answer&quot; : &quot;Bucktastic&quot;<br />  } ]<br />}</pre>
 <p><strong>Sample response headers: application/vnd.soa.v72+xml</strong></p>
 <pre>Status Code: 200 OK
 Content-Type: application/vnd.soa.v72+xml
-Expires: Thu, 11 Sep 2014 15:11:00 GMT</pre>
+Expires:  Tue, 06 Jan 2015 14:43:45 GMT</pre>
 <p><strong>Sample response body: application/vnd.soa.v72+xml</strong></p>
-<pre>&lt;?xml version="1.0" encoding=&quot;UTF-8&quot;?&gt;
+<pre>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
 &lt;UserIdentificationChallenges xmlns="http://soa.com/xsd/user/1.0" xmlns:ns2="http://soa.com/xsd/business/1.0"&gt;
   &lt;UserIdentificationChallenge&gt;
-    &lt;UserID&gt;eceffbe3-3386-495b-80d3-7526f0eb0edc.acmepaymentscorp&lt;/UserID&gt;
+    &lt;UserID&gt;9e4351af-c642-4992-89e0-262a9bfaf223.acmepaymentscorp&lt;/UserID&gt;
+    &lt;ChallengeCode&gt;com.soa.challenge.question.city.birth&lt;/ChallengeCode&gt;
+    &lt;Answer&gt;Dubai&lt;/Answer&gt;
+  &lt;/UserIdentificationChallenge&gt;
+  &lt;UserIdentificationChallenge&gt;
+    &lt;UserID&gt;9e4351af-c642-4992-89e0-262a9bfaf223.acmepaymentscorp&lt;/UserID&gt;
     &lt;ChallengeCode&gt;com.soa.challenge.question.color&lt;/ChallengeCode&gt;
-    &lt;ChallengeQuestion&gt;What is your favorite color?&lt;/ChallengeQuestion&gt;
     &lt;Answer&gt;Blue&lt;/Answer&gt;
   &lt;/UserIdentificationChallenge&gt;
   &lt;UserIdentificationChallenge&gt;
-    &lt;UserID&gt;eceffbe3-3386-495b-80d3-7526f0eb0edc.acmepaymentscorp&lt;/UserID&gt;
+    &lt;UserID&gt;9e4351af-c642-4992-89e0-262a9bfaf223.acmepaymentscorp&lt;/UserID&gt;
     &lt;ChallengeCode&gt;com.soa.challenge.question.pet&lt;/ChallengeCode&gt;
-    &lt;ChallengeQuestion&gt;What is the name of your pet?&lt;/ChallengeQuestion&gt;
     &lt;Answer&gt;Bucktastic&lt;/Answer&gt;
-  &lt;/UserIdentificationChallenge&gt;
-  &lt;UserIdentificationChallenge&gt;
-    &lt;UserID&gt;eceffbe3-3386-495b-80d3-7526f0eb0edc.acmepaymentscorp&lt;/UserID&gt;
-    &lt;ChallengeCode&gt;com.soa.challenge.question.city.birth&lt;/ChallengeCode&gt;
-    &lt;ChallengeQuestion&gt;What is the city of your birth?&lt;/ChallengeQuestion&gt;
-    &lt;Answer&gt;Manchester&lt;/Answer&gt;
   &lt;/UserIdentificationChallenge&gt;
 &lt;/UserIdentificationChallenges&gt;</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
@@ -238,7 +201,7 @@ Expires: Thu, 11 Sep 2014 15:11:00 GMT</pre>
 
 <!-- InstanceBeginEditable name="Response Headers" -->
 <h3 id="responseheaders">Response Headers</h3>
-<p>For general information on response header values, refer to <a href="../Ref_API_Reference.htm#ref_httpresponseheaders">HTTP Response Headers</a>.</p>
+<p>For general information on response header values, refer to <a href="../Ref_HTTPHeaders.htm#ref_httpresponseheaders">HTTP Response Headers</a>.</p>
 <table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
   <thead>
     <tr bgcolor="#DDDDDD">
@@ -248,7 +211,7 @@ Expires: Thu, 11 Sep 2014 15:11:00 GMT</pre>
   </thead>
   <tbody>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#contenttype_response">Content-Type</a></td>
+      <td><a href="../Ref_HTTPHeaders.htm#contenttype_response">Content-Type</a></td>
       <td><!-- #BeginLibraryItem "/Library/hdrval_appjson_72.lbi" --><strong>application/vnd.soa.v72+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml_72.lbi" --><strong>application/vnd.soa.v72+xml</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml.lbi" --><strong>application/xml</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson.lbi" --><strong>application/json</strong><!-- #EndLibraryItem --></td>
     </tr>
   </tbody>
@@ -290,20 +253,25 @@ Contains information about one or more user identification challenge questions a
       <th width="80%">Value</th>
     </tr>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#http401">401</a></td>
+      <td><a href="../Ref_HTTPStatusCodes.htm#http400">400</a></td>
+      <td>Bad request: Returned if the client sends invalid parameters or body content.
+        For example, you might get this response if you send malformed XML in your request, or if you use the wrong HTTP verb.</td>
+    </tr>
+    <tr>
+      <td><a href="../Ref_HTTPStatusCodes.htm#http401">401</a></td>
       <td><!-- #BeginLibraryItem "/Library/401_CSRF.lbi" -->
-Unauthorized. For example, you would get this response if you didn't include the custom <a href="../Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_fedmemberID</a> header in the request, or if it was invalid or expired.<!-- #EndLibraryItem --></td>
+        Unauthorized. For example, you would get this response if you didn't include the custom <a href="../Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_{fedmemberID}</a> header in the request, or if it was invalid or expired.<!-- #EndLibraryItem --></td>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#http500">500</a></td>
+      <td><a href="../Ref_HTTPStatusCodes.htm#http500">500</a></td>
       <td>An error occurred processing the call. </td>
     </tr>
   </tbody>
 </table>
 <!-- InstanceEndEditable -->
-<p><a href="../Ref_API_Reference.htm#ref_errormessages">Full list of&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;API error messages.</a></p>
+<p><a href="../Ref_ErrorMessages.htm">More information about&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;API error messages.</a></p>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 
 

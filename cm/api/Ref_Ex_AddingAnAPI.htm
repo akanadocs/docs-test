@@ -43,98 +43,183 @@ no-catalog: true
       <li>URL: <strong><span class="apidoc_div_codeendpoint"><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://&lt;hostname&gt;/api/<!-- #EndLibraryItem --></span>apis</strong></li>
       <li>Accept header:<strong>application/json</strong></li>
       <li>Content-Type header: <strong>application/json</strong></li>
+      <li>CSRF header: include it if needed. If you are not sure whether it's needed or not, refer to <a href="Ref_CSRFPreventionOnThePlatform.htm#checking_if_csrf_is_required">CSRF Prevention on the Platform</a>.</li>
       <li>Request Body (Key values are: API <strong>Name</strong> and <strong>Description</strong>, <strong>Version Name</strong> and <strong>Description</strong>, <strong>endpoint URI</strong> (<a href="Ref_Glossary_CommunityPlatform.htm#gl_targeturl">target URL</a>), and, for Proxy API,  <strong>endpoint URI</strong> (<a href="Ref_Glossary_CommunityPlatform.htm#gl_cname">CNAME</a>) in the Endpoints node):
-        <pre>{
-  "Name":"MyAPIName",
-  "Description":"My API Description",
-  "Visibility":"Public",
-  "PictureID":"",
-  "APIVersion":{
-    "Visibility":"Public",
-    "Name":"My API Version 1",
-    "ResourceLevelPermissionsSupported":false,
-    "Description":"My API Version 1 Description",
-    "TargetAPI":{
-      "Endpoints":{
-        "Endpoint":[
-          {
-            "Uri":"http://www.mytargeturl.com",
-            "Category":"Sandbox"
+        <pre>{ 
+  &quot;Name&quot;:&quot;ACME Payments API&quot;,
+  &quot;Description&quot;:&quot;Payments API for ACME customers.&quot;,
+  &quot;Visibility&quot;:&quot;Public&quot;,
+  &quot;PictureID&quot;:&quot;&quot;,
+  &quot;APIVersion&quot;:{ 
+    &quot;Visibility&quot;:&quot;Public&quot;,
+    &quot;Name&quot;:&quot;1&quot;,
+    &quot;ResourceLevelPermissionsSupported&quot;:true,
+    &quot;Description&quot;:&quot;First version&quot;,
+    &quot;TargetAPI&quot;:{ 
+      &quot;Endpoints&quot;:{ 
+        &quot;Endpoint&quot;:[ 
+          { 
+            &quot;Uri&quot;:&quot;http://www.acmepayments.com/apisb&quot;,
+            &quot;Category&quot;:&quot;Sandbox&quot;
+          },
+          { 
+            &quot;Uri&quot;:&quot;http://www.acmepayments.com/api&quot;,
+            &quot;Category&quot;:&quot;Production&quot;
           }
         ]
       },
-      "Type":"shttp",
-      "Operations":{
-        "Operation":[
-          {
-            "Method":"GET",
-            "Path":"/{path:.+|}",
-            "Input":[
-              {
-                "Name":"path",
-                "Type":"path"
+      &quot;Type&quot;:&quot;shttp&quot;,
+      &quot;Operations&quot;:{ 
+        &quot;Operation&quot;:[ 
+          { 
+            &quot;Method&quot;:&quot;GET&quot;,
+            &quot;Path&quot;:&quot;/payments/{paymentid}&quot;,
+            &quot;Input&quot;:[ 
+              { 
+                &quot;Name&quot;:&quot;paymentid&quot;,
+                &quot;Type&quot;:&quot;path&quot;
               }
             ],
-            "InputContentType":"*/*",
-            "OutputContentType":"*/*",
-            "FaultContentType":"*/*",
-            "Name":"Default_Operation"
+            &quot;InputContentType&quot;:&quot;*/*&quot;,
+            &quot;OutputContentType&quot;:&quot;*/*&quot;,
+            &quot;FaultContentType&quot;:&quot;*/*&quot;,
+            &quot;Name&quot;:&quot;getPayment&quot;
+          },
+          { 
+            &quot;Method&quot;:&quot;GET&quot;,
+            &quot;Path&quot;:&quot;/payments/payments&quot;,
+            &quot;Input&quot;:[ 
+
+            ],
+            &quot;InputContentType&quot;:&quot;*/*&quot;,
+            &quot;OutputContentType&quot;:&quot;*/*&quot;,
+            &quot;FaultContentType&quot;:&quot;*/*&quot;,
+            &quot;Name&quot;:&quot;listPayments&quot;
+          },
+          { 
+            &quot;Method&quot;:&quot;POST&quot;,
+            &quot;Path&quot;:&quot;/payments&quot;,
+            &quot;Input&quot;:[ 
+
+            ],
+            &quot;InputContentType&quot;:&quot;*/*&quot;,
+            &quot;OutputContentType&quot;:&quot;*/*&quot;,
+            &quot;FaultContentType&quot;:&quot;*/*&quot;,
+            &quot;Name&quot;:&quot;addPayment&quot;
+          },
+          { 
+            &quot;Method&quot;:&quot;DELETE&quot;,
+            &quot;Path&quot;:&quot;/payments/{paymentid}&quot;,
+            &quot;Input&quot;:[ 
+              { 
+                &quot;Name&quot;:&quot;paymentid&quot;,
+                &quot;Type&quot;:&quot;path&quot;
+              }
+            ],
+            &quot;InputContentType&quot;:&quot;*/*&quot;,
+            &quot;OutputContentType&quot;:&quot;*/*&quot;,
+            &quot;FaultContentType&quot;:&quot;*/*&quot;,
+            &quot;Name&quot;:&quot;deletePayment&quot;
           }
         ]
       },
-      "Policies":{
-        "Policy":[
+      &quot;Policies&quot;:{ 
+        &quot;Policy&quot;:[ 
 
         ]
       },
-      "DefaultProfile":"Any in and out"
+      &quot;DefaultProfile&quot;:&quot;Any in and out&quot;
     },
-    "Endpoints":{
-      "Endpoint":[
-        {
-          "Uri":"http://my-proxy-api-cname:9901/",
-          "Category":"Sandbox",
-          "CName":"my-proxy-api-cname",
-          "DeploymentZoneRule":"1b16623b-1609-4664-9900-06f8441bdefault-http0"
+    &quot;Endpoints&quot;:{ 
+      &quot;Endpoint&quot;:[ 
+        { 
+          &quot;Uri&quot;:&quot;http://acme-payments-api.10.1.20.137:9901/&quot;,
+          &quot;Category&quot;:&quot;Production&quot;,
+          &quot;CName&quot;:&quot;acme-payments-api.10.1.20.137&quot;,
+          &quot;DeploymentZoneRule&quot;:&quot;1b16623b-1609-4664-9900-06f8441bdefault-http0&quot;
+        },
+        { 
+          &quot;Uri&quot;:&quot;http://acme-payments-api.10.1.20.137:9901/&quot;,
+          &quot;Category&quot;:&quot;Sandbox&quot;,
+          &quot;CName&quot;:&quot;acme-payments-api.10.1.20.137&quot;,
+          &quot;DeploymentZoneRule&quot;:&quot;1b16623b-1609-4664-9900-06f8441bdefault-http0&quot;
         }
       ]
     },
-    "Operations":{
-      "Operation":[
-        {
-          "Method":"GET",
-          "Path":"/{path:.+|}",
-          "Input":[
-            {
-              "Name":"path",
-              "Type":"path"
+    &quot;Operations&quot;:{ 
+      &quot;Operation&quot;:[ 
+        { 
+          &quot;Method&quot;:&quot;GET&quot;,
+          &quot;Path&quot;:&quot;/payments/{paymentid}&quot;,
+          &quot;Input&quot;:[ 
+            { 
+              &quot;Name&quot;:&quot;paymentid&quot;,
+              &quot;Type&quot;:&quot;path&quot;
             }
           ],
-          "InputContentType":"*/*",
-          "OutputContentType":"*/*",
-          "FaultContentType":"*/*",
-          "Name":"Default_Operation"
+          &quot;InputContentType&quot;:&quot;*/*&quot;,
+          &quot;OutputContentType&quot;:&quot;*/*&quot;,
+          &quot;FaultContentType&quot;:&quot;*/*&quot;,
+          &quot;Name&quot;:&quot;getPayment&quot;
+        },
+        { 
+          &quot;Method&quot;:&quot;GET&quot;,
+          &quot;Path&quot;:&quot;/payments/payments&quot;,
+          &quot;Input&quot;:[ 
+
+          ],
+          &quot;InputContentType&quot;:&quot;*/*&quot;,
+          &quot;OutputContentType&quot;:&quot;*/*&quot;,
+          &quot;FaultContentType&quot;:&quot;*/*&quot;,
+          &quot;Name&quot;:&quot;listPayments&quot;
+        },
+        { 
+          &quot;Method&quot;:&quot;POST&quot;,
+          &quot;Path&quot;:&quot;/payments&quot;,
+          &quot;Input&quot;:[ 
+
+          ],
+          &quot;InputContentType&quot;:&quot;*/*&quot;,
+          &quot;OutputContentType&quot;:&quot;*/*&quot;,
+          &quot;FaultContentType&quot;:&quot;*/*&quot;,
+          &quot;Name&quot;:&quot;addPayment&quot;
+        },
+        { 
+          &quot;Method&quot;:&quot;DELETE&quot;,
+          &quot;Path&quot;:&quot;/{path:.+|}&quot;,
+          &quot;Input&quot;:[ 
+            { 
+              &quot;Name&quot;:&quot;path&quot;,
+              &quot;Type&quot;:&quot;path&quot;
+            }
+          ],
+          &quot;InputContentType&quot;:&quot;*/*&quot;,
+          &quot;OutputContentType&quot;:&quot;*/*&quot;,
+          &quot;FaultContentType&quot;:&quot;*/*&quot;,
+          &quot;Name&quot;:&quot;deletePayment&quot;
         }
       ]
     },
-    "Type":"shttp",
-    "ProductionEndpoint":null,
-    "SandboxEndpoint":"http://my-proxy-api-cname:9901/",
-    "Tag":[
-
+    &quot;Type&quot;:&quot;shttp&quot;,
+    &quot;ProductionEndpoint&quot;:&quot;http://acme-payments-api.10.1.20.137:9901/&quot;,
+    &quot;SandboxEndpoint&quot;:&quot;http://acme-payments-api.10.1.20.137:9901/&quot;,
+    &quot;Tag&quot;:[ 
+      &quot;ACME&quot;,
+      &quot;payments&quot;,
+      &quot;&quot;
     ],
-    "Policies":{
-      "Policy":[
+    &quot;Policies&quot;:{ 
+      &quot;Policy&quot;:[ 
 
       ]
     },
-    "DefaultProfile":"Any in and out",
-    "ProductionAnonymousAccessAllowed":false,
-    "SandboxAnonymousAccessAllowed":false,
-    "ProductionEndpointAccessAutoApproved":true,
-    "SandboxEndpointAccessAutoApproved":true
-  }
-}</pre></li>
+    &quot;DefaultProfile&quot;:&quot;Any in and out&quot;,
+    &quot;ProductionAnonymousAccessAllowed&quot;:false,
+    &quot;SandboxAnonymousAccessAllowed&quot;:false,
+    &quot;ProductionEndpointAccessAutoApproved&quot;:false,
+    &quot;SandboxEndpointAccessAutoApproved&quot;:true
+  }}</pre>
+      </li>
     </ul>
   </li>
   <li>You should get an HTTP 200 response, with the full API object.Take the APIID and APIVersionID returned in the response object; you will use these later.</li>

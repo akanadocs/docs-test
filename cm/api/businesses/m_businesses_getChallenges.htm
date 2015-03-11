@@ -17,7 +17,9 @@ no-catalog: true
 
 <!-- InstanceBeginEditable name="Intro_AuthRoles" -->
 <p><!-- #BeginLibraryItem "/Library/desc_getChallenges_Business.lbi" -->Returns information about the security <a href="../Ref_Glossary_CommunityPlatform.htm#gl_challengequestion">challenge questions</a> set up for a business.<!-- #EndLibraryItem --></p>
+
 <p id="id_roles"><strong>Authorization Roles/Permissions: </strong>Must have read permission for the business information.</p>
+<p class="apidoc_note"><strong>Note</strong>: The CSRF header is not required for this operation even when CSRF prevention is turned on in the platform.</p>
 <!-- InstanceEndEditable --><!-- #BeginLibraryItem "/Library/_whatdoyouwanttoreadabout.lbi" -->
 <p>This topic includes the following sections:</p>
 <table width="600" border="0" cellspacing="0" cellpadding="2">
@@ -56,10 +58,10 @@ no-catalog: true
 <h3 id="samplerequest">Sample Request</h3>
 <p id="id_samplerequest">The example below shows a request for the challenges for the specified business</p>
 <p><strong>Request URL</strong></p>
-<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://&lt;hostname&gt;/api/<!-- #EndLibraryItem -->api/businesses/tenantbusiness.acmepayments/challenges</pre>
+<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://&lt;hostname&gt;/api/<!-- #EndLibraryItem -->api/businesses/tenantbusiness.acmepaymentscorp/challenges</pre>
 <p><strong>Sample request headers</strong></p>
-<pre>Accept: application/vnd.soa.v72+json
-<!-- #BeginLibraryItem "/Library/hdr_xcsrf.lbi" -->X-Csrf-Token_&lt;tenant&gt;: &lt;TokenID&gt;<!-- #EndLibraryItem --></pre>
+<pre>Accept: application/json
+</pre>
 <p><strong>Sample request body</strong></p>
 <p>Not applicable.</p>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
@@ -68,7 +70,7 @@ no-catalog: true
 
 <!-- InstanceBeginEditable name="Request Headers" -->
 <h3 id="requestheaders">Request Headers</h3>
-<p>For general information on request header values, refer to <a href="../Ref_API_Reference.htm#ref_httprequestheaders">HTTP Request Headers</a>.</p>
+<p>For general information on request header values, refer to <a href="../Ref_HTTPHeaders.htm#ref_httprequestheaders">HTTP Request Headers</a>.</p>
 <table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
   <thead>
     <tr>
@@ -78,7 +80,7 @@ no-catalog: true
   </thead>
   <tbody>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#acceptheader">Accept</a></td>
+      <td><a href="../Ref_HTTPHeaders.htm#acceptheader">Accept</a></td>
       <td><!-- #BeginLibraryItem "/Library/hdrval_appxml.lbi" --><strong>application/xml</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson.lbi" --><strong>application/json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson_71.lbi" --><strong>application/vnd.soa.v71+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson_72.lbi" --><strong>application/vnd.soa.v72+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml_71.lbi" --><strong>application/vnd.soa.v71+xml</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml_72.lbi" --><strong>application/vnd.soa.v72+xml</strong><!-- #EndLibraryItem --></td>
     </tr>
   </tbody>
@@ -125,9 +127,9 @@ no-catalog: true
 <p id="id_sampleresponse">The sample response below shows successful completion of this operation. There are four challenge questions.</p>
 <p><strong>Sample response headers: application/json</strong></p>
 <pre>Status Code: 200 OK
-Content-Type: application/vnd.soa.v72+json
-Expires: Mon, 08 Sep 2014 11:52:34 GMT</pre>
-<p><strong>Sample response body: application/vnd.soa.v72+json</strong></p>
+Content-Type: application/json
+Expires: Mon,  Fri, 06 Feb 2015 14:20:01 GMT</pre>
+<p><strong>Sample response body: application/json</strong></p>
 <pre>{
   "Challenge" : [ {
     "ChallengeCode" : "com.soa.challenge.question.city.birth",
@@ -140,20 +142,44 @@ Expires: Mon, 08 Sep 2014 11:52:34 GMT</pre>
     "ChallengeQuestion" : "Who was your first employer?"
   }, {
     "ChallengeCode" : "com.soa.challenge.question.pet",
-    "ChallengeQuestion" : "What is the name of your pet?"
+    "ChallengeQuestion" : "What is the name of your pet?",
+    "MinimumLength" : 2,
+    "MaximumLength" : 50,
+    "MinimumAlphaCount" : 2,
+    "MaximumAlphaCount" : 50,
+    "MinimumNumberCount" : 0,
+    "MaximumNumberCount" : 50,
+    "MinimumUpperCaseLetterCount" : 1,
+    "MinimumSpecialCharacterCount" : 0,
+    "CanContainSpaces" : true
   } ]
 }</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 <p><strong>Sample response headers: application/vnd.soa.v72+xml</strong></p>
 <pre>Status Code: 200 OK
 Content-Type: application/vnd.soa.v72+xml
-Expires: Thu, 11 Sep 2014 14:02:56 GMT</pre>
-<p><strong>Sample response body: XML</strong></p>
-<pre>&lt;?xml version="1.0" encoding=&quot;UTF-8&quot;?&gt;
-&lt;Challenges xmlns="http://soa.com/xsd/business/1.0" xmlns:ns2="http://soa.com/xsd/legals/1.0" xmlns:ns3="http://soa.com/xsd/dnmodel/1.0" xmlns:ns4="http://soa.com/xsd/api/1.0"&gt;
+Expires: Fri, 06 Feb 2015 14:21:25 GMT</pre>
+<p><strong>Sample response body: application/vnd.soa.v72+xml</strong></p>
+<pre>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;Challenges xmlns="http://soa.com/xsd/business/1.0" xmlns:ns2="http://soa.com/xsd/legals/1.0" 
+xmlns:ns3="http://soa.com/xsd/dnmodel/1.0" xmlns:ns4="http://soa.com/xsd/api/1.0"&gt;
   &lt;Challenge&gt;
     &lt;ChallengeCode&gt;com.soa.challenge.question.city.birth&lt;/ChallengeCode&gt;
     &lt;ChallengeQuestion&gt;What is the city of your birth?&lt;/ChallengeQuestion&gt;
+  &lt;/Challenge&gt;
+  &lt;Challenge&gt;
+    &lt;ChallengeCode&gt;com.soa.challenge.question.pet&lt;/ChallengeCode&gt;
+    &lt;ChallengeQuestion&gt;What is the name of your pet?&lt;/ChallengeQuestion&gt;
+    &lt;MinimumLength&gt;2&lt;/MinimumLength&gt;
+    &lt;MaximumLength&gt;50&lt;/MaximumLength&gt;
+    &lt;MinimumAlphaCount&gt;2&lt;/MinimumAlphaCount&gt;
+    &lt;MaximumAlphaCount&gt;50&lt;/MaximumAlphaCount&gt;
+    &lt;MinimumNumberCount&gt;0&lt;/MinimumNumberCount&gt;
+    &lt;MaximumNumberCount&gt;50&lt;/MaximumNumberCount&gt;
+    &lt;MinimumUpperCaseLetterCount&gt;1&lt;/MinimumUpperCaseLetterCount&gt;
+    &lt;MinimumSpecialCharacterCount&gt;0&lt;/MinimumSpecialCharacterCount&gt;
+    &lt;CanContainSpaces&gt;true&lt;/CanContainSpaces&gt;
+    &lt;IsCaseSensitive&gt;true&lt;/IsCaseSensitive&gt;
   &lt;/Challenge&gt;
   &lt;Challenge&gt;
     &lt;ChallengeCode&gt;com.soa.challenge.question.color&lt;/ChallengeCode&gt;
@@ -163,10 +189,6 @@ Expires: Thu, 11 Sep 2014 14:02:56 GMT</pre>
     &lt;ChallengeCode&gt;com.soa.challenge.question.employer&lt;/ChallengeCode&gt;
     &lt;ChallengeQuestion&gt;Who was your first employer?&lt;/ChallengeQuestion&gt;
   &lt;/Challenge&gt;
-  &lt;Challenge&gt;
-    &lt;ChallengeCode&gt;com.soa.challenge.question.pet&lt;/ChallengeCode&gt;
-    &lt;ChallengeQuestion&gt;What is the name of your pet?&lt;/ChallengeQuestion&gt;
-  &lt;/Challenge&gt;
 &lt;/Challenges&gt;</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 <!-- InstanceEndEditable -->
@@ -174,7 +196,7 @@ Expires: Thu, 11 Sep 2014 14:02:56 GMT</pre>
 
 <!-- InstanceBeginEditable name="Response Headers" -->
 <h3 id="responseheaders">Response Headers</h3>
-<p>For general information on response header values, refer to <a href="../Ref_API_Reference.htm#ref_httpresponseheaders">HTTP Response Headers</a>.</p>
+<p>For general information on response header values, refer to <a href="../Ref_HTTPHeaders.htm#ref_httpresponseheaders">HTTP Response Headers</a>.</p>
 <table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
   <thead>
     <tr bgcolor="#DDDDDD">
@@ -184,7 +206,7 @@ Expires: Thu, 11 Sep 2014 14:02:56 GMT</pre>
   </thead>
   <tbody>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#contenttype_response">Content-Type</a></td>
+      <td><a href="../Ref_HTTPHeaders.htm#contenttype_response">Content-Type</a></td>
       <td><!-- #BeginLibraryItem "/Library/hdrval_appxml.lbi" --><strong>application/xml</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson.lbi" --><strong>application/json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson_71.lbi" --><strong>application/vnd.soa.v71+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson_72.lbi" --><strong>application/vnd.soa.v72+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml_71.lbi" --><strong>application/vnd.soa.v71+xml</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml_72.lbi" --><strong>application/vnd.soa.v72+xml</strong><!-- #EndLibraryItem --></td>
     </tr>
   </tbody>
@@ -224,20 +246,16 @@ Expires: Thu, 11 Sep 2014 14:02:56 GMT</pre>
       <th width="20%">Item</th>
       <th width="80%">Value</th>
     </tr>
-    <tr>
-      <td><a href="../Ref_API_Reference.htm#http401">401</a></td>
-      <td><!-- #BeginLibraryItem "/Library/401_CSRF.lbi" --> Unauthorized. For example, you would get this response if you didn't include the custom <a href="../Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_fedmemberID</a> header in the request, or if it was invalid or expired.<!-- #EndLibraryItem --></td>
-    </tr>
   </thead>
   <tbody>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#http500">500</a></td>
+      <td><a href="../Ref_HTTPStatusCodes.htm#http500">500</a></td>
       <td>An error occurred processing the call. </td>
     </tr>
   </tbody>
 </table>
 <!-- InstanceEndEditable -->
-<p><a href="../Ref_API_Reference.htm#ref_errormessages">Full list of&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;API error messages.</a></p>
+<p><a href="../Ref_ErrorMessages.htm">More information about&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;API error messages.</a></p>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 
 

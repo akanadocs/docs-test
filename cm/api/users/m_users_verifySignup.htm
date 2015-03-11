@@ -1,7 +1,7 @@
 ---
 layout: apipage
 title: Verify Signup | Users Service | Enterprise API Platform API
-description:  Returns information about the <a href="../Ref_Glossary_CommunityPlatform.htm#gl_signupcode">signup code</a> or where in the signup process the user is.
+description: Returns information about the <a href="../Ref_Glossary_CommunityPlatform.htm#gl_code_user_signup">signup code</a> or where in the signup process the user is.
 product: cm
 category: ref
 nav-title: Verify Signup 
@@ -16,12 +16,11 @@ no-catalog: true
 <!-- InstanceEndEditable -->
 
 <!-- InstanceBeginEditable name="Intro_AuthRoles" -->
-<p><!-- #BeginLibraryItem "/Library/desc_verifySignup.lbi" --><!-- #BeginLibraryItem "/Library/desc_verifySignup.lbi" -->
-Returns information about the <a href="../Ref_Glossary_CommunityPlatform.htm#gl_signupcode">signup code</a> or where in the signup process the user is.<!-- #EndLibraryItem --><!-- #EndLibraryItem --></p>
+<p><!-- #BeginLibraryItem "/Library/desc_verifySignup.lbi" -->Returns information about the <a href="../Ref_Glossary_CommunityPlatform.htm#gl_code_user_signup">signup code</a> or where in the signup process the user is.<!-- #EndLibraryItem --></p>
 <p>There are two main scenarios for this operation:</p>
 <ul>
-  <li>The operation sends a signup code from a signup email. The user is signing in via a signup code sent in a notification email.</li>
-  <li>The operation sends no signup code (signupCode=). In this case, the currently authenticated third-party user (for example, a Google or Facebook user) is authenticated by the third-party user and the user's registration details, as recorded in the specified Google or Facebook account, are returned in a cookie. If there is no signup code, the operation looks for the cookie showing that the user was authenticated by a third-party provider.</li>
+  <li>The operation sends a signup code from a signup email. The user is signing in via a signup code sent in a notification email as a result of self-registration.</li>
+  <li>The operation sends no signup code (signupCode=). In this case, the currently authenticated third-party user (for example, a Google or Facebook user) is authenticated by the third-party authentication provider, and then the user's registration details, as recorded in the specified Google or Facebook account, are returned in a cookie. If there is no signup code, the operation looks for the cookie showing that the user was authenticated by a third-party provider.</li>
 </ul>
 <p class="apidoc_note"><strong>Note</strong>: If the specified signupCode has expired, this API triggers a  new   email to the user (as if the signupUser API was called).</p>
 <p id="id_roles"><strong>Authorization Roles/Permissions: </strong>None required</p>
@@ -60,7 +59,36 @@ Returns information about the <a href="../Ref_Glossary_CommunityPlatform.htm#gl_
 
 
 <!-- InstanceBeginEditable name="Sample Request" -->
-<h3 id="samplerequest">Sample Request #1</h3>
+<h3 id="samplerequest_2">Sample Request #1</h3>
+<p>The sample request URL below shows this operation in action when the user is signing up in the platform, without using third-party credentials. A legal agreement is in place, so the user must accept the legal agreement in order to activate the user account.</p>
+<p><strong>Request URL</strong></p>
+<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://&lt;hostname&gt;/api/<!-- #EndLibraryItem -->users/verifySignup</pre>
+<p><strong>Sample request body</strong></p>
+<pre>{
+  "FirstName":"Margaret",
+  "LastName":"James",
+  "Email":"margaret.james@acmepaymentscorp.com",
+  "Password":"Margaret23",
+  "AcceptedAgreementID":[
+    "signupagrmtv1.acmepaymentscorp"
+  ]
+}</pre>
+<h3 id="samplerequest_2">Sample Request #2</h3>
+<p>The sample request URL below shows this operation in action when the user already initiated signup as in #2 above, and then received the signup code in the invitation email. The request includes the signup code which is needed to complete the registration process.</p>
+<p><strong>Request URL</strong></p>
+<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://&lt;hostname&gt;/api/<!-- #EndLibraryItem -->users/verifySignup?signupCode=NJs0DoC
+6jQpqikI8KcQzg9qV2l48yAw3we5iFtgNKsGkpvsOpPmAaBcpKjFYkv5w</pre>
+<p><strong>Sample request body</strong></p>
+<pre>{
+  "FirstName":"Margaret",
+  "LastName":"James",
+  "Email":"margaret.james@acmepaymentscorp.com",
+  "Password":"Margaret23",
+  "AcceptedAgreementID":[
+    "signupagrmtv1.acmepaymentscorp"
+  ]
+}</pre>
+<h3 id="samplerequest">Sample Request #3</h3>
 <p id="id_samplerequest">The example below shows a sample request when the user is signing up using Facebook credentials.</p>
 <p><strong>Request URL</strong></p>
 <pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://&lt;hostname&gt;/api/<!-- #EndLibraryItem -->users/verifySignup?signupCode=</pre>
@@ -68,22 +96,17 @@ Returns information about the <a href="../Ref_Glossary_CommunityPlatform.htm#gl_
 <pre>POST&nbsp;/api/users/verifySignup HTTP/1.1
 Host: &lt;hostname&gt;
 Accept: */*
-Content-Type: application/x-www-form-urlencoded; charset=UTF-8
-<!-- #BeginLibraryItem "/Library/hdr_xcsrf.lbi" -->X-Csrf-Token_&lt;tenant&gt;: &lt;TokenID&gt;<!-- #EndLibraryItem --></pre>
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8<!-- #BeginLibraryItem "/Library/hdr_xcsrf.lbi" -->
+X-Csrf-Token_{tenant}: &lt;TokenID&gt;<!-- #EndLibraryItem --></pre>
 <p><strong>Sample request body</strong></p>
 <p>None.</p>
-<h3 id="samplerequest_2">Sample Request #2</h3>
-<p>The sample request URL below shows this operation in action when the user is signing up in the platform, without using third-party credentials.</p>
-<p><strong>Request URL</strong></p>
-<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://&lt;hostname&gt;/api/<!-- #EndLibraryItem -->users/verifySignup?signupCode=NJs0DoC
-6jQpqikI8KcQzg9qV2l48yAw3we5iFtgNKsGkpvsOpPmAaBcpKjFYkv5w</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 <!-- InstanceEndEditable -->
 
 
 <!-- InstanceBeginEditable name="Request Headers" -->
 <h3 id="requestheaders">Request Headers</h3>
-<p>For general information on request header values, refer to <a href="../Ref_API_Reference.htm#ref_httprequestheaders">HTTP Request Headers</a>.</p>
+<p>For general information on request header values, refer to <a href="../Ref_HTTPHeaders.htm#ref_httprequestheaders">HTTP Request Headers</a>.</p>
 <table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
   <thead>
     <tr>
@@ -93,12 +116,16 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
   </thead>
   <tbody>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#acceptheader">Accept</a></td>
+      <td><a href="../Ref_HTTPHeaders.htm#acceptheader">Accept</a></td>
       <td><!-- #BeginLibraryItem "/Library/hdrval_appjson.lbi" --><strong>application/json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson_71.lbi" --><strong>application/vnd.soa.v71+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson_72.lbi" --><strong>application/vnd.soa.v72+json</strong><!-- #EndLibraryItem --></td>
     </tr>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#contenttype_request">Content-Type</a></td>
+      <td><a href="../Ref_HTTPHeaders.htm#contenttype_request">Content-Type</a></td>
       <td><!-- #BeginLibraryItem "/Library/hdrval_urlencoded.lbi" --><strong>application/x-www-form-urlencoded</strong><!-- #EndLibraryItem --></td>
+    </tr>
+    <tr>
+      <td><a href="../Ref_HTTPHeaders.htm#csrf_token_request">X-Csrf-Token_{fedmemberID}</a></td>
+      <td>The CSRF prevention header; may or may not be required, depending on platform settings. See <a href="../Ref_CSRFPreventionOnThePlatform.htm">CSRF Prevention on the Platform</a>.</td>
     </tr>
     </tbody>
 </table>
@@ -145,20 +172,24 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
 <p><strong>Sample response headers</strong></p>
 <pre>HTTP/1.1 200 OK
-Date: Mon, 17 Sep 2012 17:31:13 GMT
+Date: Mon, 05 Jan 2015 15:50:44 GMT
 Content-Type: application/json</pre>
 
-<p><strong>Sample response body #1: local user</strong></p>
+<p><strong>Sample response body #1: local user initiating signup</strong></p>
 <pre>{
-  "userID" : "user10015.acmepayments",
-  "authIdentifier" : "http://www.facebook.com/1320222673",
-  "lastName" : "Smith",
-  "firstName" : "Mary",
   "expired" : false,
-  "emailAddress" : "msmith&amp;acmepayments.com",
-  "pendingNotifications" : 0,
-  "state" : "pending_validation"
+  "signupStatus" : "user.signup.confirm.email",
+  "emailAddress" : "margaret.james@acmepaymentscorp.com",
+  "state" : "pending_validation",
+  "firstName" : "Margaret",
+  "lastName" : "James",
+  "userName" : "MargaretJames",
+  "userID" : "913a0a0f-772c-45cf-95cc-c0fdbf1a028a.acmepaymentscorp",
+  "domainName" : "Local Domain",
+  "profileName" : "MargaretJames",
+  "authIdentifier" : ""
 }</pre>
+
 <p><strong>Sample response body #2: Google user</strong></p>
 <pre>
 {
@@ -167,10 +198,10 @@ Content-Type: application/json</pre>
   "lastName" : "Saoirse",
   "profileName" : "JaneSaoirse",
   "authIdentifier" : "https://www.google.com/accounts/o8/id?id=ABtOawmwsKSET12y0r0CcKJ1YGMvEO5i0QWy-VA",
-  "userID" : "5ce44adc-0e9b-4685-9137-5456696f3c91.acmepayments",
+  "userID" : "5ce44adc-0e9b-4685-9137-5456696f3c91.acmepaymentscorp",
   "userName" : "https://www.google.com/accounts/o8/id?id=ABtOawmwsKSET12y0r0CcKJ1YGMvEO5i0QWy-VA",
   "pendingNotifications" : 0,
-  "pendingAgreements" : [ "signupagrmtv1.acmepayments" ],
+  "pendingAgreements" : [ "signupagrmtv1.acmepaymentscorp" ],
   "emailAddress" : "janesaoirse@gmail.com",
   "domainName" : "GoogleAutomation",
   "expired" : false
@@ -181,7 +212,7 @@ Content-Type: application/json</pre>
 
 <!-- InstanceBeginEditable name="Response Headers" -->
 <h3 id="responseheaders">Response Headers</h3>
-<p>For general information on response header values, refer to <a href="../Ref_API_Reference.htm#ref_httpresponseheaders">HTTP Response Headers</a>.</p>
+<p>For general information on response header values, refer to <a href="../Ref_HTTPHeaders.htm#ref_httpresponseheaders">HTTP Response Headers</a>.</p>
 <table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
   <thead>
     <tr bgcolor="#DDDDDD">
@@ -191,7 +222,7 @@ Content-Type: application/json</pre>
   </thead>
   <tbody>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#contenttype_response">Content-Type</a></td>
+      <td><a href="../Ref_HTTPHeaders.htm#contenttype_response">Content-Type</a></td>
       <td><!-- #BeginLibraryItem "/Library/hdrval_appjson.lbi" --><strong>application/json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson_71.lbi" --><strong>application/vnd.soa.v71+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson_72.lbi" --><strong>application/vnd.soa.v72+json</strong><!-- #EndLibraryItem --></td>
     </tr>
   </tbody>
@@ -232,24 +263,24 @@ Content-Type: application/json</pre>
       <th width="80%">Value</th>
     </tr>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#http401">401</a></td>
+      <td><a href="../Ref_HTTPStatusCodes.htm#http401">401</a></td>
       <td><!-- #BeginLibraryItem "/Library/401_CSRF.lbi" -->
-Unauthorized. For example, you would get this response if you didn't include the custom <a href="../Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_fedmemberID</a> header in the request, or if it was invalid or expired.<!-- #EndLibraryItem --></td>
+Unauthorized. For example, you would get this response if you didn't include the custom <a href="../Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_{fedmemberID}</a> header in the request, or if it was invalid or expired.<!-- #EndLibraryItem --></td>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#http404">404</a></td>
+      <td><a href="../Ref_HTTPStatusCodes.htm#http404">404</a></td>
       <td>The resource could not be found.</td>
     </tr>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#http500">500</a></td>
+      <td><a href="../Ref_HTTPStatusCodes.htm#http500">500</a></td>
       <td>An error occurred processing the call. </td>
     </tr>
     </tbody>
 </table>
 <!-- InstanceEndEditable -->
-<p><a href="../Ref_API_Reference.htm#ref_errormessages">Full list of&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;API error messages.</a></p>
+<p><a href="../Ref_ErrorMessages.htm">More information about&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;API error messages.</a></p>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 
 

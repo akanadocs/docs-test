@@ -24,7 +24,7 @@ nav-title: Policy List
 <a name="policies_fulllist"></a>
 <h5>Default List of Policies Available in Add/Edit API</h5>
 <p>If you don't have additional policies enabled in Policy Manager, the policies below are available in Community Manager in the Add/Edit API wizard.</p>
-<table cellspacing="0px" class="doctable" style="width: 98%;">
+<table width="100%" cellspacing="0px" class="doctable" style="width: 98%;">
 <thead>
   <tr>
     <th width="20%">Policy Name</th>
@@ -49,9 +49,21 @@ nav-title: Policy List
   </tr>
   <tr class="t1row">
     <td>OAuthSecurity</td>
-    <td><p>A Community Manager policy that enables API authorization using OAuth  2.0. It uses the OAuth configuration assigned to an API when enforcing OAuth tokens in a received request.</p>
-      <p>For more information, see <a href="http://docs.soa.com/ag/cm_policies/using_oauth_security_policy.htm" target="_blank">Using the OAuth Security Policy</a>.</p></td>
-  </tr>
+    <td><p>A Community Manager policy that enables API authorization using OAuth 2.0. It uses the OAuth configuration assigned to an API when enforcing OAuth tokens in a received request.</p>
+      <p>For more information, see <a href="http://docs.soa.com/ag/cm_policies/using_oauth_security_policy.htm" target="_blank">Using the OAuth Security Policy</a>.</p>
+      <p>There is an additional sub-policy to the OAuth Security policy, TokenTransformation, which you can use to ensure that the the OAuth bearer token is relayed to the downstream service, rather than being stripped off from the request message after validation by the API Gateway. You can use this for scenarios where the target endpoint needs access to the original OAuth token that the API Gateway validated. The <strong>transform</strong> attribute of this policy determines whether to strip the headers or pass them through to the next hop. The possible values of this attribute are <strong>strip</strong> and <strong>pass-through</strong>.</p>
+<p>An example of the  policy configuration with the nested sub-policy tag is shown below.</p>
+<pre>
+&lt;wsp:Policy Name=&quot;OAuthSecurity&quot; Description=&quot;OAuthSecurity policy uses OAuth
+configuration assigned to an API when enforcing OAuth tokens in the received request.&quot;
+xmlns:wsp=&quot;http://schemas.xmlsoap.org/ws/2004/09/policy&quot;&gt;
+  &lt;goap:OAuthSecurity xmlns:goap=&quot;http://federatedgovernance.org/policy/oauth&quot;&gt;
+    &lt;wsp:Policy&gt;
+      &lt;goap:TokenTransformation transform=&quot;strip&quot;/&gt;
+    &lt;/wsp:Policy&gt;
+  &lt;/goap:OAuthSecurity&gt;
+&lt;/wsp:Policy&gt; </pre></td>
+</tr>
 </tbody>
 </table>
 <p><a href="#top">Back to top</a></p>
@@ -160,7 +172,7 @@ nav-title: Policy List
 
 <a name="policies_service_level"></a>
 <h5>Additional Service-Level Policies Available in Policy Manager</h5>
-<p>Defines conditions for measuring and reporting performance of a specific xontract. Each policy is composed of a &quot;Rule&quot; and &quot;Access Interval.&quot; Rules represent the conditions you define to measure and report performance of a service contract. When a defined system condition matches a defined rule, an alert is raised.</p>
+<p>Defines conditions for measuring and reporting performance of a specific contract. Each policy is composed of a &quot;Rule&quot; and &quot;Access Interval.&quot; Rules represent the conditions you define to measure and report performance of a service contract. When a defined system condition matches a defined rule, an alert is raised.</p>
 <table cellspacing="0px" class="doctable" style="width: 98%;">
 <thead>
   <tr>
@@ -209,3 +221,4 @@ nav-title: Policy List
 
 
 
+</div>

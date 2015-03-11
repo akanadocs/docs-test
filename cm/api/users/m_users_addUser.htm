@@ -1,7 +1,7 @@
 ---
 layout: apipage
 title: Add User | Users Service | Enterprise API Platform API
-description: Adds a new user to the platform.
+description: Allows the Site Admin to add a new user to the platform.
 product: cm
 category: ref
 nav-title: Add User 
@@ -16,7 +16,9 @@ no-catalog: true
 <!-- InstanceEndEditable -->
 
 <!-- InstanceBeginEditable name="Intro_AuthRoles" -->
-<p><!-- #BeginLibraryItem "/Library/desc_addUser.lbi" -->Adds a new user to the platform.<!-- #EndLibraryItem --></p>
+<p><!-- #BeginLibraryItem "/Library/desc_addUser.lbi" -->Allows the Site Admin to add a new user to the platform.<!-- #EndLibraryItem --></p>
+<p class="apidoc_note"><strong>Note</strong>: When the Site Admin adds the user, an email notification is generated and sent to the user. The notification contains a link, which includes a registration code. The user can click this link to complete the signup process via the user interface. This step can be done via the API by invoking the <span class="apidoc_code"><a href="../login/m_login_validateRegistrationCode.htm">POST&nbsp;/api/login/validateRegistrationCode</a></span> operation.</p>
+<p>If the default user workflow is in use, when the user logs in for the first time, a notification is sent to Site Admins and also to API Admins for any APIs the user is associated with (for example, if the user was automatically added to an app team via custom workflow, any APIs the app is associated with).</p>
 
 <p id="id_roles"><strong>Authorization Roles/Permissions: </strong><a href="../Ref_AuthorizationRolesOnThePlatform.htm#authroles_siteadmin">Site Admin</a> only.</p>
 
@@ -60,13 +62,14 @@ no-catalog: true
 <p><strong>Request URL</strong></p>
 <pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://&lt;hostname&gt;/api/<!-- #EndLibraryItem -->users</pre>
 <p><strong>Sample request headers</strong></p>
-<pre>Accept: text/plain
-<!-- #BeginLibraryItem "/Library/hdr_xcsrf.lbi" -->X-Csrf-Token_&lt;tenant&gt;: &lt;TokenID&gt;<!-- #EndLibraryItem --></pre>
+<pre>Accept: application/json
+Content-Type: application/json<!-- #BeginLibraryItem "/Library/hdr_xcsrf.lbi" -->
+X-Csrf-Token_{tenant}: &lt;TokenID&gt;<!-- #EndLibraryItem --></pre>
 <p><strong>Sample request body</strong></p>
 <pre>{
   "FirstName":"Jonathan",
   "LastName":"Swift",
-  "Email":"jswift@acmepayments.com",
+  "Email":"jswift@acmepaymentscorp.com",
   "Password":"Jonathan23"
 }</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
@@ -75,7 +78,7 @@ no-catalog: true
 
 <!-- InstanceBeginEditable name="Request Headers" -->
 <h3 id="requestheaders">Request Headers</h3>
-<p>For general information on request header values, refer to <a href="../Ref_API_Reference.htm#ref_httprequestheaders">HTTP Request Headers</a>.</p>
+<p>For general information on request header values, refer to <a href="../Ref_HTTPHeaders.htm#ref_httprequestheaders">HTTP Request Headers</a>.</p>
 <table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
   <thead>
     <tr>
@@ -85,12 +88,16 @@ no-catalog: true
   </thead>
   <tbody>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#acceptheader">Accept</a></td>
-      <td><!-- #BeginLibraryItem "/Library/hdrval_textplain.lbi" --><strong>text/plain</strong><!-- #EndLibraryItem --></td>
+      <td><a href="../Ref_HTTPHeaders.htm#acceptheader">Accept</a></td>
+      <td><!-- #BeginLibraryItem "/Library/hdrval_appjson.lbi" --><strong>application/json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml.lbi" --><strong>application/xml</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson_71.lbi" --><strong>application/vnd.soa.v71+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson_72.lbi" --><strong>application/vnd.soa.v72+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml_71.lbi" --><strong>application/vnd.soa.v71+xml</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml_72.lbi" --><strong>application/vnd.soa.v72+xml</strong><!-- #EndLibraryItem --></td>
     </tr>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#contenttype_request">Content-Type</a></td>
+      <td><a href="../Ref_HTTPHeaders.htm#contenttype_request">Content-Type</a></td>
       <td><!-- #BeginLibraryItem "/Library/hdrval_appjson.lbi" --><strong>application/json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson_71.lbi" --><strong>application/vnd.soa.v71+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson_72.lbi" --><strong>application/vnd.soa.v72+json</strong><!-- #EndLibraryItem --></td>
+    </tr>
+    <tr>
+      <td><a href="../Ref_HTTPHeaders.htm#csrf_token_request">X-Csrf-Token_{fedmemberID}</a></td>
+      <td>The CSRF prevention header; may or may not be required, depending on platform settings. See <a href="../Ref_CSRFPreventionOnThePlatform.htm">CSRF Prevention on the Platform</a>.</td>
     </tr>
   </tbody>
 </table>
@@ -116,8 +123,9 @@ no-catalog: true
       <td>Body</td>
       <td><a href="../obj/o_users_User.htm">User</a></td>
       <td><a href="../obj/o_users_User.htm">Required</a></td>
-      <td><!-- #BeginLibraryItem "/Library/o_users_User.lbi" -->
-Contains information about an&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;user.<!-- #EndLibraryItem --></td>
+      <td><p><!-- #BeginLibraryItem "/Library/o_users_User.lbi" -->Contains information about a platform user.<!-- #EndLibraryItem --></p>
+        <p>FirstName, LastName, and Email are required. If Password is not specified, the platform auto-generates a password.</p>
+        <p>If needed, specify ForcePasswordChangeOnLogin to force the user to choose a new password.</p></td>
       </tr>
   </tbody>
 </table>
@@ -127,7 +135,7 @@ Contains information about an&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformNam
 
 <!-- InstanceBeginEditable name="Response Description" -->
 <h3 id="response">Response</h3>
-<p id="id_successstatement">If successful, this operation returns HTTP status code 200, with the UserID of the new user in the response message.</p>
+<p id="id_successstatement">If successful, this operation returns HTTP status code 200, with information about the new user.</p>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 <!-- InstanceEndEditable -->
 
@@ -135,12 +143,39 @@ Contains information about an&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformNam
 <!-- InstanceBeginEditable name="Sample Response" -->
 <h3 id="sampleresponse">Sample Response</h3>
 <p id="id_sampleresponse">The sample response below shows successful completion of this operation.</p>
-<p><strong>Sample response headers</strong></p>
+<p><strong>Sample response headers: application/json</strong></p>
 <pre>Status Code: 200 OK
-Content-Type: text/plain
-Expires: Mon, 17 Mar 2014 15:25:35 GMT</pre>
-<p><strong>Sample response body:</strong></p>
-<pre>4b4e3f3d-db1b-4b60-a285-91f050877c34.acmepayments</pre>
+Content-Type:  application/json
+Expires: Mon, 05 Jan 2015 11:38:45 GMT</pre>
+<p><strong>Sample response body: application/json</strong></p>
+<pre>{
+  "UserID" : "a8f8cf91-34b9-43d0-b8ed-c8c4b83bdc7c.acmepaymentscorp",
+  "FirstName" : "Jonathan",
+  "LastName" : "Swift",
+  "Password" : "Jonathan23",
+  "Email" : "jswift@acmepaymentscorp.com",
+  "Language" : [ ],
+  "Technology" : [ ],
+  "AvatarProvider" : "com.soa.imageprovider.type.default",
+  "State" : "registered",
+  "AcceptedAgreementID" : [ ]
+}</pre>
+<p><strong>Sample response headers: application/xml</strong></p>
+<pre>Status Code: 200 OK
+Content-Type:  application/xml
+Expires: Mon, 05 Jan 2015 11:46:03 GMT</pre>
+<p><strong>Sample response body: application/xml</strong></p>
+<pre>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;User xmlns="http://soa.com/xsd/user/1.0" xmlns:ns2="http://soa.com/xsd/business/1.0"&gt;
+  &lt;UserID&gt;23d8650b-3646-41fc-b538-3d27717ea55d.acmepaymentscorp&lt;/UserID&gt;
+  &lt;FirstName&gt;Jonathan&lt;/FirstName&gt;
+  &lt;LastName&gt;Swift&lt;/LastName&gt;
+  &lt;Password&gt;Jonathan23&lt;/Password&gt;
+  &lt;Email&gt;jswift@acmepaymentscorp.com&lt;/Email&gt;
+  &lt;AvatarProvider&gt;com.soa.imageprovider.type.default&lt;/AvatarProvider&gt;
+  &lt;State&gt;registered&lt;/State&gt;
+&lt;/User&gt;
+</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 
 <!-- InstanceEndEditable -->
@@ -148,7 +183,7 @@ Expires: Mon, 17 Mar 2014 15:25:35 GMT</pre>
 
 <!-- InstanceBeginEditable name="Response Headers" -->
 <h3 id="responseheaders">Response Headers</h3>
-<p>For general information on response header values, refer to <a href="../Ref_API_Reference.htm#ref_httpresponseheaders">HTTP Response Headers</a>.</p>
+<p>For general information on response header values, refer to <a href="../Ref_HTTPHeaders.htm#ref_httpresponseheaders">HTTP Response Headers</a>.</p>
 <table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
   <thead>
     <tr bgcolor="#DDDDDD">
@@ -158,8 +193,8 @@ Expires: Mon, 17 Mar 2014 15:25:35 GMT</pre>
   </thead>
   <tbody>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#contenttype_response">Content-Type</a></td>
-      <td><!-- #BeginLibraryItem "/Library/hdrval_textplain.lbi" --><strong>text/plain</strong><!-- #EndLibraryItem --></td>
+      <td><a href="../Ref_HTTPHeaders.htm#contenttype_response">Content-Type</a></td>
+      <td><!-- #BeginLibraryItem "/Library/hdrval_appjson.lbi" --><strong>application/json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml.lbi" --><strong>application/xml</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson_71.lbi" --><strong>application/vnd.soa.v71+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml_71.lbi" --><strong>application/vnd.soa.v71+xml</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson_72.lbi" --><strong>application/vnd.soa.v72+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml_72.lbi" --><strong>application/vnd.soa.v72+xml</strong><!-- #EndLibraryItem --></td>
     </tr>
   </tbody>
 </table>
@@ -179,9 +214,9 @@ Expires: Mon, 17 Mar 2014 15:25:35 GMT</pre>
   </thead>
   <tbody>
     <tr>
-      <td><a href="../Ref_IDsOnThePlatform.htm#id_userid">UserID</a></td>
-      <td>string</td>
-      <td><!-- #BeginLibraryItem "/Library/o_ID_UserID.lbi" --> The unique ID for a specific user.<!-- #EndLibraryItem --> In this case it is the ID of the new user.</td>
+      <td>User</td>
+      <td><a href="../obj/o_users_User.htm">User</a></td>
+      <td><!-- #BeginLibraryItem "/Library/o_users_User.lbi" -->Contains information about a platform user.<!-- #EndLibraryItem --></td>
     </tr>
   </tbody>
 </table>
@@ -199,24 +234,30 @@ Expires: Mon, 17 Mar 2014 15:25:35 GMT</pre>
       <th width="80%">Value</th>
     </tr>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#http401">401</a></td>
+      <td><a href="../Ref_HTTPStatusCodes.htm#http400">400</a></td>
+      <td>Bad request: Returned if the client sends invalid parameters or body content.
+        For example, you might get this response if you specified an incorrect content-type value for the request, or did not have the correct information in the request body (POST content).</td>
+    </tr>
+    <tr>
+      <td><a href="../Ref_HTTPStatusCodes.htm#http401">401</a></td>
       <td><!-- #BeginLibraryItem "/Library/401_CSRF.lbi" -->
-Unauthorized. For example, you would get this response if you didn't include the custom <a href="../Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_fedmemberID</a> header in the request, or if it was invalid or expired.<!-- #EndLibraryItem --></td>
+        Unauthorized. For example, you would get this response if you didn't include the custom <a href="../Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_{fedmemberID}</a> header in the request, or if it was invalid or expired.<!-- #EndLibraryItem --></td>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#http405">405</a></td>
-      <td><!-- #BeginLibraryItem "/Library/http_405.lbi" --> Method Not Allowed. For example, you might get this if you specified an invalid Accept header or omitted a required Content-Type header.<!-- #EndLibraryItem --></td>
+      <td><a href="../Ref_HTTPStatusCodes.htm#http405">405</a></td>
+      <td><p><!-- #BeginLibraryItem "/Library/http_405.lbi" --> Method Not Allowed. For example, you might get this if you specified an invalid Accept header or omitted a required Content-Type header.<!-- #EndLibraryItem --></p>
+        <p>You would also get this if you used the wrong HTTP verb, such as PUT instead of POST.</p></td>
     </tr>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#http500">500</a></td>
+      <td><a href="../Ref_HTTPStatusCodes.htm#http500">500</a></td>
       <td>An error occurred processing the call. </td>
     </tr>
   </tbody>
 </table>
 <!-- InstanceEndEditable -->
-<p><a href="../Ref_API_Reference.htm#ref_errormessages">Full list of&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;API error messages.</a></p>
+<p><a href="../Ref_ErrorMessages.htm">More information about&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;API error messages.</a></p>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 
 

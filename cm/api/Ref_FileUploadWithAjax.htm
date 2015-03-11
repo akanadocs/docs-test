@@ -13,7 +13,7 @@ no-catalog: true
 
 <h2><a name="top"></a>File Upload with Ajax</h2>
 <p>This reference topic outlines how the platform addresses same-origin policy restrictions to accomplish file upload with <a href="Ref_Glossary_CommunityPlatform.htm#gl_ajax">Ajax</a>. It also illustrates use of the &quot;Wrap In HTML&quot; parameter in request messages and why you might see &quot;lorem ipsum&quot; text in the response HTML.</p>
-<p class="apidoc_note"><strong>Note</strong>: In any scenario where files are being uploaded, anti-virus protection is recommended. Anti-virus protection for the platform can be added by the System Admin in Policy Manager by setting up an </p>
+<p class="apidoc_note"><strong>Note</strong>: In any scenario where files are being uploaded, anti-virus protection is recommended. Anti-virus protection for the platform can be added by the System Admin in Policy Manager.</p>
 <p>It includes these sections:</p>
 <ul>
   <li><a href="#sameoriginpolicyrestrictions">Same-Origin Policy Restrictions</a></li>
@@ -36,8 +36,8 @@ no-catalog: true
 
 <h3><a name="wrapinhtmlparameter"></a>The &quot;Wrap In HTML&quot; Parameter</h3>
 <p>In order to work with the Same Origin security policy when uploading files, in file upload operations the platform passes  a <span class="apidoc_code">wrapInHTML</span> request query parameter. In the response, which is read programmatically, the API returns a script tag, with the security domain set, to an HTML iframe. The response is wrapped in HTML so that the iframe can read it. The HTML response is also padded to ensure it is readable to all browsers (see <a href="#browserlimitationworkaround">Browser Limitation Workaround</a> below). </p>
-<p>The sample request for the <span class="apidoc_code"><a href="apps/m_apps_addKeyInfo.htm">POST&nbsp;/api/apps/versions/{RuntimeID}/keyinfo</a></span> operation is an example of this, as shown below:</p>
-<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://&lt;hostname&gt;/api/<!-- #EndLibraryItem -->apps/versions/4iXro2Uxs2h4LviCshR9pK9w.acmepayments/keyinfo?<strong>wrapInHTML=true</strong></pre>
+<p>The sample request for the <span class="apidoc_code"><a href="apps/m_apps_saveKeyInfo.htm">POST&nbsp;/api/apps/versions/{RuntimeID}/keyinfo</a></span> operation is an example of this, as shown below:</p>
+<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://&lt;hostname&gt;/api/<!-- #EndLibraryItem -->apps/versions/4iXro2Uxs2h4LviCshR9pK9w.acmepaymentscorp/keyinfo?<strong>wrapInHTML=true</strong></pre>
 
 <p>Below is an example of code you can use to create the iframe:</p>
 <pre>&lt;iframe id="ifFileManager" style="width:100%;height:100%;" 
@@ -56,7 +56,7 @@ frameborder="0" src="/resources/global/upload.html?dynamic=true"&gt;&lt;/iframe&
 ornare eget luctus vel, porta id elit. Maecenas molestie, libero sit amet blandit faucibus, orci nisi aliquet nisi, 
 id mollis mauris ipsum a enim. Morbi lacus velit, placerat sit amet luctus eget, pulvinar a massa. Lorem ipsum dolor sit amet, 
 consectetur adipiscing elit. Morbi eleifend tincidunt pellentesque. Cras eu sapien massa, vitae rutrum sapien. Aenean id 
-condimentum sem. Suspendisse tempor luctus ipsum, vel metus."&gt;&lt;script type="text/javascript"&gt;document.domain='api.acmepayments.com';
+condimentum sem. Suspendisse tempor luctus ipsum, vel metus."&gt;&lt;script type="text/javascript"&gt;document.domain='api.acmepaymentscorp.com';
 &lt;/script&gt;&lt;/head&gt;&lt;body&gt;PersonService.wsdl,xsd0.xsd,xsd1.xsd,xsd10.xsd,xsd11.xsd,xsd12.xsd,xsd13.xsd,xsd14.xsd,xsd15.xsd,xsd2.xsd,
 xsd3.xsd,xsd4.xsd,xsd5.xsd,xsd6.xsd,xsd7.xsd,xsd8.xsd,xsd9.xsd&lt;/body&gt;&lt;/html&gt;</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
@@ -64,8 +64,8 @@ xsd3.xsd,xsd4.xsd,xsd5.xsd,xsd6.xsd,xsd7.xsd,xsd8.xsd,xsd9.xsd&lt;/body&gt;&lt;/
 
 
 <h3><a name="browserlimitationworkaround"></a>Browser Limitation Workaround</h3>
-<p>If an API call returns an error message that is less that 512K in size, and the user's browser is Internet Explorer, the IE &quot;Friendly Error Messages&quot; feature replaces the custom error page with a generic one. In order to make sure the custom error message is displayed for all users, regardless of browser, we add padding that increases the size to over 512K.</p>
-<p>For example, the response below is an HTTP status 200 success message. The &lt;meta&gt; tag includes padding to increase the size of the message to over 512K. This padding  is not displayed as part of the visible content of the HTML page, but ensures that the actual response message is relayed, rather than an Internet Explorer default page.</p>
+<p>If an API call returns an error message that is less that 512 bytes in size, and the user's browser is Internet Explorer, the IE &quot;Friendly Error Messages&quot; feature replaces the custom error page with a generic one. In order to make sure the custom error message is displayed for all users, regardless of browser, we add padding that increases the size to over 512 bytes.</p>
+<p>For example, the response below is an HTTP status 200 success message. The &lt;meta&gt; tag includes padding to increase the size of the message to over 512 bytes. This padding  is not displayed as part of the visible content of the HTML page, but ensures that the actual response message is relayed, rather than an Internet Explorer default page.</p>
 <pre>&lt;!DOCTYPE html&gt;
 &lt;html lang="en" status="200" statusText="success"&gt;
 &lt;head&gt;
@@ -87,15 +87,14 @@ eu sapien massa, vitae rutrum sapien. Aenean id condimentum sem. Suspendisse tem
 <h3><a name="operationssupportingfileupload"></a>Operations that Support File Upload</h3>
 
 <p>The file upload operations used by the platform support upload of several types of files; for example, avatar files for apps, APIs, users, or groups, or a WSDL ZIP file for an API.</p>
-<p>In general, any operations that support file upload use  the jQuery plug-in and the wrap in HTML parameter as explained above. These operations use <strong>multipart/form-data</strong> as the Content-Type in the request message. They include: </p>
+<p>In general, any operations that support file upload use  the jQuery plug-in and the wrap in HTML parameter as explained above. These operations use <strong>multipart/form-data</strong> as the Content-Type in the request message. Some examples are:: </p>
 <ul>
-  <li>Apps service, Add Key Info: <span class="apidoc_code"><a href="apps/m_apps_addKeyInfo.htm">POST&nbsp;/api/apps/versions/{RuntimeID}/keyinfo</a></span></li>
+  <li>Apps service, Save Key Info: <span class="apidoc_code"><a href="apps/m_apps_saveKeyInfo.htm">POST&nbsp;/api/apps/versions/{RuntimeID}/keyinfo</a></span></li>
   <li>Dropbox service, Read WSDL ZIP: <span class="apidoc_code"><a href="dropbox/m_dropbox_readWsdlZip.htm">POST&nbsp;/api/dropbox/wsdls</a></span></li>
   <li>Content service, Upload Content: <span class="apidoc_code"><a href="content/m_content_upload.htm">POST&nbsp;/content/upload</a></span></li>
 </ul>
 
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
-
 
 <h3 id="relatedtopics">Related Topics</h3><!-- #BeginLibraryItem "/Library/_RelatedTopics.lbi" -->
 <table width="700" border="0" cellspacing="0" cellpadding="2">

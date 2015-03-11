@@ -115,6 +115,14 @@ no-catalog: true
       </tr>
     <tr>
       <td><a href="#values_logininstructiontype">Login Instruction Types</a></td>
+      <td><a href="#values_workflow_objecttype">Workflow ObjectTypes</a></td>
+    </tr>
+    <tr>
+      <td><a href="#values_loginstate">Login State</a></td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td><a href="#values_loginstatus">Login Status</a></td>
       <td>&nbsp;</td>
     </tr>
   </tbody>
@@ -434,6 +442,7 @@ no-catalog: true
 
 
 <h3><a id="values_boarditemtypes"></a>Board Item Types</h3>
+<p>BoardItemType can be any of the below.</p>
 <p class="apidoc_note"><strong>Note</strong>: Although the user interface renders the names of Board item types in all caps, all operations should use the values exactly as shown below.</p>
 <table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
   <thead>
@@ -455,11 +464,11 @@ no-catalog: true
       <td>ContractRequest</td>
       <td>A request for a contract between an app and an API.</td>
       </tr>
-<!--    <tr>
+    <tr>
       <td>FollowRequest</td>
-      <td>A request to follow an app or API.</td>
+      <td>A request to follow a resource such as an app or API.</td>
     </tr>
--->    <tr>
+    <tr>
   <td>GroupMemberReq</td>
   <td>A group member invitation.</td>
   </tr>
@@ -765,6 +774,41 @@ no-catalog: true
 
 
 
+<h3><a id="values_loginstate"></a>Login State</h3>
+<p>The login operation returns the user's login state (loginState field) indicating where in the login process the user currently is. If there are tasks that must be completed for the user to be fully logged in, those are indicated by the value of the loginState field, and specified in the pendingTasks field. For example, the user might need to change the password, provide answers to security challenge questions, or accept the platform legal agreement. Valid values are shown below.</p>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="33%">Value</th>
+      <th width="67%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>login.complete</td>
+      <td>Login is fully complete with no pending tasks.</td>
+    </tr>
+    <tr>
+      <td>login.inprocess</td>
+      <td>Indicates that the user must complete one or more tasks before login is complete. Tasks are listed in the <a href="obj/o_login_LoginResponse.htm#login_pendingTasks">pendingTasks field of the LoginResponse object</a>.</td>
+    </tr>
+  </tbody>
+</table>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
+<h3><a id="values_loginstatus"></a>Login Status</h3>
+<p>The login status indicates the user's status in terms of login. There are three possible values:</p>
+<ul>
+  <li>Active</li>
+  <li>In-Active</li>
+  <li>Disabled</li>
+</ul>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
 <h3><a id="values_metrickey"></a>Metric Key Values</h3>
 <p>The metric key indicates the information type. It corresponds to the column name in the metrics  export file, if the information is exported.</p>
 <p>Possible values:</p>
@@ -960,7 +1004,7 @@ no-catalog: true
 
 
 <h3><a id="values_reporttype_license"></a>Report Type: License Report</h3>
-<p>Valid values for the <strong>ReportType</strong> parameter are shown in the table below.</p>
+<p>Valid values for the <strong>ReportType</strong> parameter (in the user interface, used in the License Report) are shown in the table below.</p>
 <table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
   <thead>
     <tr>
@@ -985,7 +1029,7 @@ no-catalog: true
 
 <h3><a id="values_resetstatus"></a>Reset Status Values (for password reset)</h3>
 <p>When a user is resetting the password, and security <a href="Ref_Glossary_CommunityPlatform.htm#gl_challengequestion">challenge questions</a> are in effect, the API tracks whether the user's answer to the security question was valid. If there are three incorrect answers, the user is locked out for 30 minutes. Reset status values, returned in the response are shown below.</p>
-<p>These are returned in the response for the <span class="apidoc_code"><a href="login/m_login_authenticateWithPasswordResetCode.htm">POST&nbsp;/api/login/authenticateWithPasswordResetCode</a></span> (authenticate with <a href="Ref_Glossary_CommunityPlatform.htm#gl_passwordresetcode">password reset code</a>) operation.</p>
+<p>These are returned in the response for the <span class="apidoc_code"><a href="login/m_login_authenticateWithPasswordResetCode.htm">POST&nbsp;/api/login/authenticateWithPasswordResetCode</a></span> (authenticate with <a href="Ref_Glossary_CommunityPlatform.htm#gl_code_passwordreset">password reset code</a>) operation.</p>
 <ul>
   <li>user.password.reset.valid.answer</li>
   <li>user.password.reset.invalid.challenge</li>
@@ -1010,6 +1054,7 @@ no-catalog: true
 
 
 <h3><a id="values_securitychallengequestions"></a>Security Challenge Questions</h3>
+
 <p>Depending on the platform's settings, one or more security challenge questions might be required as a security measure. On signup, the user chooses out of the questions offered, and provides answers which are stored securely in the database. The security challenge questions provide an added measure of security for certain operations relating to the user account, such as password reset, profile changes, and password change.</p>
 <p>The platform has certain default security questions; new questions can be added by the Business Admin. The default questions are shown below.</p>
 <table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
@@ -1311,11 +1356,14 @@ no-catalog: true
 
 
 <h3><a id="values_userstatus"></a>User Status</h3>
-<p>A user with Business Admin rights can enable or disable an existing user. A user who has been disabled no longer has access to the platform. After disabling a user's access, the Business Admin can enable it, which restores any access rights the user previously had.</p>
+<p>A user with Site Admin rights can enable or disable an existing user. A user who has been disabled no longer has access to the platform. After disabling a user's access, the Site Admin can enable it, which restores any access rights the user previously had.</p>
+<p>Similarly, the Site Admin can lock a user's account, or can unlock it if it was locked either by the Site Admin or because of failed password attempts.</p>
 <p>Valid values for <strong>UserStatus</strong> are as follows:</p>
 <ul>
   <li>com.soa.user.status.disabled</li>
   <li>com.soa.user.status.enabled</li>
+  <li>com.soa.user.status.locked</li>
+  <li>com.soa.user.status.unlocked</li>
 </ul>
 <p>For example, these values are used by the <span class="apidoc_code"><a href="users/m_users_changeStatus.htm">PUT&nbsp;/api/users/{UserID}/status</a></span> operation.</p>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
@@ -1323,13 +1371,14 @@ no-catalog: true
 
 
 <h3><a id="values_visibilitysettings"></a>Visibility Settings</h3>
-<p>Valid visibility values are generally Public or Limited. For details, see below.</p>
+<p>Visibility options vary according to the resource type. For details, see below.</p>
 <h4>Visibility for apps, APIs, or groups</h4>
-<p>For app, API, or group visibility, there are two valid values:<br />
+<p>For app, API, or group visibility, there are three valid values:<br />
 </p>
 <ul>
   <li>Public: everyone can see the app or API.</li>
   <li>Limited: an app is visible only to app team members; an API is visible only to API Administrators or Private API Group members.</li>
+  <li>com.soa.visibility.registered.users: platform users who are logged in.</li>
 </ul>
 <h4>Visibility for licenses and scopes</h4>
 <p>For licenses and scopes, there are two valid values:</p>
@@ -1341,7 +1390,7 @@ no-catalog: true
 <h4>Visibility for users</h4>
 <p>For users, visibility is always Public.</p>
 <p class="apidoc_note"><strong>Note</strong>: If an app has multiple versions, the visibility setting for the app is Private if at least one version is set to Private.</p>
-<p>For more information about visibility of apps, see <a href="Ref_API_Reference.htm#ref_publicandprivateapps">Public and Limited (Private) Apps</a>.</p>
+<p>For more information about visibility of apps, see <a href="Ref_PublicandPrivateApps.htm">Public and Limited (Private) Apps</a>.</p>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 
 
@@ -1350,7 +1399,9 @@ no-catalog: true
 <p>Valid workflow actions for various types of resources are shown in the tables below.</p>
 <p>For more information about workflow actions, including process flow diagrams, see <a href="Ref_ExecutingWorkflowActions.htm">Executing Workflow Actions</a>.</p>
 
-<h4><a id="values_workflowactions_groups_all"></a>All Groups: Valid Workflow Actions</h4><!-- #BeginLibraryItem "/Library/table_workflowactions_groups_all.lbi" --><table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+<h4><a id="values_workflowactions_groups_all"></a>All Groups: Valid Workflow Actions</h4>
+
+<!-- #BeginLibraryItem "/Library/table_workflowactions_groups_all.lbi" --><table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
 <thead>
     <tr>
     <th width="50%">Action</th>
@@ -1375,7 +1426,11 @@ no-catalog: true
       <td>group.membership.action.remove</td>
     </tr>
 </tbody>
-</table><!-- #EndLibraryItem --><h4><a id="values_workflowactions_groups_private"></a>Private API Groups and Independent Groups: Additional Workflow Actions</h4><!-- #BeginLibraryItem "/Library/table_workflowactions_groups_private.lbi" -->
+</table><!-- #EndLibraryItem -->
+
+<h4><a id="values_workflowactions_groups_private"></a>Private API Groups and Independent Groups: Additional Workflow Actions</h4>
+
+<!-- #BeginLibraryItem "/Library/table_workflowactions_groups_private.lbi" -->
 <table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
   <thead>
     <tr>
@@ -1397,8 +1452,11 @@ no-catalog: true
       <td>group.membership.action.make.member</td>
       </tr>
   </tbody>
-</table><!-- #EndLibraryItem --><h4><a id="values_workflowactions_tickets"></a>Tickets: Valid Workflow Actions</h4><!-- #BeginLibraryItem "/Library/table_workflowactions_tickets.lbi" -->
-<p>To perform any of the actions listed below, the user must be an app team member, author or submitter of the ticket, or API or Business Administrator. The Site Administrator can delete an action.</p>
+</table><!-- #EndLibraryItem -->
+
+<h4><a id="values_workflowactions_tickets"></a>Tickets: Valid Workflow Actions</h4>
+
+<!-- #BeginLibraryItem "/Library/table_workflowactions_tickets.lbi" --><p>To perform any of the actions listed below, the user must be an app team member, author or submitter of the ticket, or API or Business Administrator. The Site Administrator can delete an action.</p>
 <table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
   <thead>
     <tr>
@@ -1428,7 +1486,12 @@ no-catalog: true
       <td>ticket.action.edit.priority</td>
     </tr>
   </tbody>
-</table><!-- #EndLibraryItem --><h4><a id="values_workflowactions_contracts"></a>App/API Contracts: Valid Workflow Actions</h4><!-- #BeginLibraryItem "/Library/table_workflowactions_contracts.lbi" --><p>The Contracts workflow actions switch an app/API contract from one valid state to another. Again, the two conditions to be met are 1) the requestor is authorized to make the change, and 2) the change is valid for the specific contract. In order for the switch to be valid, the old state must be the current state of the object, and the new state must be a valid change.</p>
+</table><!-- #EndLibraryItem -->
+
+
+<h4><a id="values_workflowactions_contracts"></a>App/API Contracts: Valid Workflow Actions</h4>
+
+<!-- #BeginLibraryItem "/Library/table_workflowactions_contracts.lbi" --><p>The Contracts workflow actions switch an app/API contract from one valid state to another. Again, the two conditions to be met are 1) the requestor is authorized to make the change, and 2) the change is valid for the specific contract. In order for the switch to be valid, the old state must be the current state of the object, and the new state must be a valid change.</p>
 <table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
   <thead>
     <tr>
@@ -1466,13 +1529,133 @@ no-catalog: true
       <td>apicontract.action.resume</td>
     </tr>
   </tbody>
-</table><!-- #EndLibraryItem --><p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+</table><!-- #EndLibraryItem -->
+
+
+
+<h4><a id="values_workflowactions_discussions"></a>Discussions: Valid Workflow Actions</h4>
+
+<p>The Discussions workflow actions govern how discussions are managed on the platform.</p>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="50%">Description</th>
+      <th width="50%">Value</th>
+    </tr>
+    <tr>
+      <td>Approve</td>
+      <td>discussion.action.approve.publish</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Delete</td>
+      <td>discussion.action.delete</td>
+    </tr>
+    <tr>
+      <td>Reject</td>
+      <td>discussion.action.reject.publish</td>
+    </tr>
+    <tr>
+      <td>Resubmit</td>
+      <td>discussion.action.resubmit</td>
+    </tr>
+    <tr>
+      <td>Unpublish</td>
+      <td>discussion.action.unpublish</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<h4><a id="values_workflowactions_reviews"></a>Reviews: Valid Workflow Actions</h4>
+
+<p>The Reviews workflow actions govern how reviews are managed on the platform.</p>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="50%">Description</th>
+      <th width="50%">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Approve</td>
+      <td>review.action.approve.publish</td>
+    </tr>
+    <tr>
+      <td>Delete</td>
+      <td>review.action.delete</td>
+    </tr>
+    <tr>
+      <td>Reject</td>
+      <td>review.action.reject.publish</td>
+    </tr>
+    <tr>
+      <td>Resubmit</td>
+      <td>review.action.resubmit</td>
+    </tr>
+    <tr>
+      <td>Unpublish</td>
+      <td>review.action.unpublish</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h4><a id="values_workflowactions_comments"></a>Comments: Valid Workflow Actions</h4>
+
+<p>The Comments workflow actions govern how comments are managed on the platform.</p>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="50%">Description</th>
+      <th width="50%">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Approve</td>
+      <td>comment.action.approve.publish</td>
+      </tr>
+    <tr>
+      <td>Delete</td>
+      <td>comment.action.delete</td>
+      </tr>
+    <tr>
+      <td>Reject</td>
+      <td>comment.action.reject.publish</td>
+      </tr>
+  </tbody>
+</table>
+
+
+
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 
 
 
 <h3><a id="values_workflowstates"></a>Workflow States</h3>
 <p>The workflow state values depend on the workflow definition XML file. For details of workflow states for your specific installation, refer to the applicable XML file.</p>
 <p>In the user interface you can find the XML file. First check which workflow file is in use, in the applicable Administration / Config page (APIs, Apps, Tickets, and so forth). Then, go to Administration/Workflows and view or download the file.</p>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
+<h3><a id="values_workflow_objecttype"></a>Workflow ObjectTypes</h3>
+<p>For workflows, ObjectType is a type of resource to which a custom workflow can be applied. Valid values are:</p>
+<ul>
+  <li>oauth-grant</li>
+  <li>apicontract</li>
+  <li>grpmbrship</li>
+  <li>ticket</li>
+  <li>user</li>
+  <li>app-version</li>
+  <li>review</li>
+  <li>comment</li>
+  <li>discussion</li>
+</ul>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 
 

@@ -19,6 +19,7 @@ no-catalog: true
 <p><!-- #BeginLibraryItem "/Library/desc_modifyUser.lbi" -->
 Modifies information about a platform user. <!-- #EndLibraryItem --></p>
 <p class="apidoc_note"><strong>Note</strong>: If the platform business security settings are set so that a user cannot modify his/her email address, the authorized user cannot update the email address in the user interface or by running this operation. In that scenario, only the Site Admin can modify the user's email address. Business security settings are controlled using the <span class="apidoc_code"><a href="../businesses/m_businesses_saveSecuritySettings.htm">PUT&nbsp;/api/businesses/{BusinessID}/securitysettings</a></span> operation.</p>
+
 <p id="id_roles"><strong>Authorization Roles/Permissions: </strong><a href="../Ref_AuthorizationRolesOnThePlatform.htm#authroles_authorizeduser">Authorized User</a> or <a href="../Ref_AuthorizationRolesOnThePlatform.htm#authroles_siteadmin">Site Admin</a>.</p>
 
 <!-- InstanceEndEditable --><!-- #BeginLibraryItem "/Library/_whatdoyouwanttoreadabout.lbi" -->
@@ -59,29 +60,55 @@ Modifies information about a platform user. <!-- #EndLibraryItem --></p>
 <h3 id="samplerequest">Sample Request</h3>
 <p id="id_samplerequest">The example below shows a request to update the information for the specified user.</p>
 <p><strong>Request URL</strong></p>
-<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://&lt;hostname&gt;/api/<!-- #EndLibraryItem -->users/522320b9-cb6b-495d-ae07-e4b3bfdb3f6a.acmepayments</pre>
-<p><strong>Sample request headers</strong></p>
-<pre>PUT&nbsp;/api/users/522320b9-cb6b-495d-ae07-e4b3bfdb3f6a.acmepayments HTTP/1.1
+<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://&lt;hostname&gt;/api/<!-- #EndLibraryItem -->users/522320b9-cb6b-495d-ae07-e4b3bfdb3f6a.acmepaymentscorp</pre>
+<p><strong>Sample request headers #1</strong></p>
+<pre>PUT&nbsp;/api/users/522320b9-cb6b-495d-ae07-e4b3bfdb3f6a.acmepaymentscorp HTTP/1.1
 Host: &lt;hostname&gt;
-Accept: application/json, text/javascript, */*; q=0.01
-<!-- #BeginLibraryItem "/Library/hdr_xcsrf.lbi" -->X-Csrf-Token_&lt;tenant&gt;: &lt;TokenID&gt;<!-- #EndLibraryItem --></pre>
-<p><strong>Sample request body</strong></p>
+Accept: text/plain
+Content-Type: application/json<!-- #BeginLibraryItem "/Library/hdr_xcsrf.lbi" -->
+X-Csrf-Token_{tenant}: &lt;TokenID&gt;<!-- #EndLibraryItem --></pre>
+<p><strong>Sample request body #1</strong></p>
 <pre>{
-  "UserID" : "522320b9-cb6b-495d-ae07-e4b3bfdb3f6a.acmepayments",
-  "UserName" : "JaneSaoirse",
-  "FirstName" : "Jane",
-  "LastName" : "Saoirse",
-  "AuthIdentifier" : "urn:acmepayments:user:acmepayments:522320b9-cb6b-495d-ae07-e4b3bfdb3f6a",
+  "UserID" : "0601df93-aeb6-44be-ab0e-d6ed694a5aa8.acmepaymentscorp",
+  "UserName" : "JonathonSwift",
+  "FirstName" : "Jonathon",
+  "LastName" : "Swift",
+  "AuthIdentifier" : "urn:acmepaymentscorp:user:acmepaymentscorp:0601df93-aeb6-44be-ab0e-d6ed694a5aa8",
   "Visibility" : "0",
-  "Email" : "jane.saoirse@acmepayments.com",
+  "Email" : "jswift@acmepaymentscorp.com",
   "Title" : "",
   "Industry" : "",
   "Favorites" : "",
   "AvatarProvider" : "com.soa.imageprovider.type.default",
   "HasPicture" : false,
-  "AvatarURL" : "&lt;hostname&gt;/api/users/522320b9-cb6b-495d-ae07-e4b3bfdb3f6a.acmepayments/avatar",
-  "LastLoginDate" : "2014-10-16T17:24:27Z",
-  "ProfileName" : "JaneSaoirse"
+  "AvatarURL" : "http://&lt;hostname&gt;/api/users/0601df93-aeb6-44be-ab0e-d6ed694a5aa8.acmepaymentscorp/avatar",
+  "LastLoginDate" : "2015-01-09T17:36:16Z",
+  "ProfileName" : "JonathonSwift",
+  "UserIdentificationChallenges" : {
+    "UserIdentificationChallenge" : [ {
+      "UserID" : "0601df93-aeb6-44be-ab0e-d6ed694a5aa8.acmepaymentscorp",
+      "ChallengeCode" : "com.soa.challenge.question.city.birth",
+      "ChallengeQuestion" : "What is the city of your birth?"
+    }, {
+      "UserID" : "0601df93-aeb6-44be-ab0e-d6ed694a5aa8.acmepaymentscorp",
+      "ChallengeCode" : "com.soa.challenge.question.color",
+      "ChallengeQuestion" : "What is your favorite color?"
+    } ]
+  },
+  "LoginDomainID" : "siteusers.acmepaymentscorp"
+}</pre>
+<p><strong>Sample request headers #1</strong></p>
+<pre>PUT&nbsp;/api/users/522320b9-cb6b-495d-ae07-e4b3bfdb3f6a.acmepaymentscorp HTTP/1.1
+Host: &lt;hostname&gt;
+Accept: text/plain
+Content-Type: application/json<!-- #BeginLibraryItem "/Library/hdr_xcsrf.lbi" -->
+X-Csrf-Token_{tenant}: &lt;TokenID&gt;<!-- #EndLibraryItem --></pre>
+<p><strong>Sample request body #2: Site Admin modifies firstname and profile name</strong></p>
+<pre>{
+  "FirstName":"John",
+  "LastName":"Swift",
+  "ProfileName":"JohnSwift",
+  "Email":"jswift@acmepaymentscorp.com"
 }</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 <!-- InstanceEndEditable -->
@@ -89,7 +116,7 @@ Accept: application/json, text/javascript, */*; q=0.01
 
 <!-- InstanceBeginEditable name="Request Headers" -->
 <h3 id="requestheaders">Request Headers</h3>
-<p>For general information on request header values, refer to <a href="../Ref_API_Reference.htm#ref_httprequestheaders">HTTP Request Headers</a>.</p>
+<p>For general information on request header values, refer to <a href="../Ref_HTTPHeaders.htm#ref_httprequestheaders">HTTP Request Headers</a>.</p>
 <table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
   <thead>
     <tr>
@@ -99,12 +126,16 @@ Accept: application/json, text/javascript, */*; q=0.01
   </thead>
   <tbody>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#acceptheader">Accept</a></td>
+      <td><a href="../Ref_HTTPHeaders.htm#acceptheader">Accept</a></td>
       <td><!-- #BeginLibraryItem "/Library/hdrval_textplain.lbi" --><strong>text/plain</strong><!-- #EndLibraryItem --></td>
     </tr>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#contenttype_request">Content-Type</a></td>
+      <td><a href="../Ref_HTTPHeaders.htm#contenttype_request">Content-Type</a></td>
       <td><!-- #BeginLibraryItem "/Library/hdrval_appjson.lbi" --><strong>application/json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson_71.lbi" --><strong>application/vnd.soa.v71+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson_72.lbi" --><strong>application/vnd.soa.v72+json</strong><!-- #EndLibraryItem --></td>
+    </tr>
+    <tr>
+      <td><a href="../Ref_HTTPHeaders.htm#csrf_token_request">X-Csrf-Token_{fedmemberID}</a></td>
+      <td>The CSRF prevention header; may or may not be required, depending on platform settings. See <a href="../Ref_CSRFPreventionOnThePlatform.htm">CSRF Prevention on the Platform</a>.</td>
     </tr>
   </tbody>
 </table>
@@ -138,8 +169,7 @@ The unique ID for a specific user.<!-- #EndLibraryItem --></td>
       <td>Body</td>
       <td><a href="../obj/o_users_User.htm">User</a></td>
       <td>Required</td>
-      <td><p><!-- #BeginLibraryItem "/Library/o_users_User.lbi" -->
-        Contains information about an&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;user.<!-- #EndLibraryItem --></p>
+      <td><p><!-- #BeginLibraryItem "/Library/o_users_User.lbi" -->Contains information about a platform user.<!-- #EndLibraryItem --></p>
         <p>The sent object includes the information that's being modified.</p></td>
     </tr>
   </tbody>
@@ -161,9 +191,9 @@ The unique ID for a specific user.<!-- #EndLibraryItem --></td>
 <p><strong>Sample response headers</strong></p>
 <pre>HTTP/1.1 200 OK
 Content-Type: text/plain
-Date: Thu, 16 Oct 2014 12:32:50 GMT</pre>
+Date: Fri, 09 Jan 2015 13:02:10 GMT</pre>
 <p><strong>Sample response body</strong></p>
-<pre>522320b9-cb6b-495d-ae07-e4b3bfdb3f6a.acmepayments</pre>
+<pre>0601df93-aeb6-44be-ab0e-d6ed694a5aa8.acmepaymentscorp</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 
 <!-- InstanceEndEditable -->
@@ -171,7 +201,7 @@ Date: Thu, 16 Oct 2014 12:32:50 GMT</pre>
 
 <!-- InstanceBeginEditable name="Response Headers" -->
 <h3 id="responseheaders">Response Headers</h3>
-<p>For general information on response header values, refer to <a href="../Ref_API_Reference.htm#ref_httpresponseheaders">HTTP Response Headers</a>.</p>
+<p>For general information on response header values, refer to <a href="../Ref_HTTPHeaders.htm#ref_httpresponseheaders">HTTP Response Headers</a>.</p>
 <table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
   <thead>
     <tr bgcolor="#DDDDDD">
@@ -181,7 +211,7 @@ Date: Thu, 16 Oct 2014 12:32:50 GMT</pre>
   </thead>
   <tbody>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#contenttype_response">Content-Type</a></td>
+      <td><a href="../Ref_HTTPHeaders.htm#contenttype_response">Content-Type</a></td>
       <td><!-- #BeginLibraryItem "/Library/hdrval_textplain.lbi" --><strong>text/plain</strong><!-- #EndLibraryItem --></td>
     </tr>
   </tbody>
@@ -202,7 +232,7 @@ Date: Thu, 16 Oct 2014 12:32:50 GMT</pre>
   </thead>
   <tbody>
     <tr>
-      <td>Response</td>
+      <td><a href="../Ref_IDsOnThePlatform.htm#id_userid">UserID</a></td>
       <td>string</td>
       <td>The UserID of the user whose information has been modified.</td>
     </tr>
@@ -222,24 +252,24 @@ Date: Thu, 16 Oct 2014 12:32:50 GMT</pre>
       <th width="80%">Value</th>
     </tr>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#http401">401</a></td>
+      <td><a href="../Ref_HTTPStatusCodes.htm#http401">401</a></td>
       <td><!-- #BeginLibraryItem "/Library/401_CSRF.lbi" -->
-Unauthorized. For example, you would get this response if you didn't include the custom <a href="../Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_fedmemberID</a> header in the request, or if it was invalid or expired.<!-- #EndLibraryItem --></td>
+Unauthorized. For example, you would get this response if you didn't include the custom <a href="../Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_{fedmemberID}</a> header in the request, or if it was invalid or expired.<!-- #EndLibraryItem --></td>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#http405">405</a></td>
+      <td><a href="../Ref_HTTPStatusCodes.htm#http405">405</a></td>
       <td><!-- #BeginLibraryItem "/Library/http_405.lbi" --> Method Not Allowed. For example, you might get this if you specified an invalid Accept header or omitted a required Content-Type header.<!-- #EndLibraryItem --></td>
     </tr>
     <tr>
-      <td><a href="../Ref_API_Reference.htm#http500">500</a></td>
+      <td><a href="../Ref_HTTPStatusCodes.htm#http500">500</a></td>
       <td>An error occurred processing the call. </td>
     </tr>
   </tbody>
 </table>
 <!-- InstanceEndEditable -->
-<p><a href="../Ref_API_Reference.htm#ref_errormessages">Full list of&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;API error messages.</a></p>
+<p><a href="../Ref_ErrorMessages.htm">More information about&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;API error messages.</a></p>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 
 
