@@ -98,7 +98,7 @@ no-catalog: true
 <p><em>Note: When specifying an <a href="site_admin_domains.htm#what_is_the_authorization_server_url_for_the_platform">Authorization Server URL</a> in the platform, it's important to verify that the client application is authorized to use the grant type that the OAuth Provider is configured to support. </em></p>
 <ol>
   <li>Select an OAuth version. Version 2.0 and 1.0a are supported.</li>
-  <li>Specify the required endpoint URL's for each OAuth version
+  <li>Specify the required endpoint URLs for each OAuth version
     <ul>
       <li>Click <a href="#what_are_the_oauth_20_endpoints_and_how_do_they_work">here</a> for information on OAuth 2.0 endpoints.</li>
       <li>Click <a href="#what_are_the_oauth_10a_endpoints">here</a> for information on OAuth 1.0a endpoints.</li>
@@ -126,7 +126,7 @@ no-catalog: true
 <a name="whats_the_difference_between_an_oauth_provider_and_a_3rd_party_provider"></a><h3>What's the difference between an OAuth Provider and a Third-Party Provider?</h3>
 <p>An Identity Provider is a central OAuth-enabled provider that provides both user  authentication and user authorization. Using the <strong>API OAuth</strong> function, you can select a pre-defined OAuth Provider or a third-party provider:</p>
 <ul>
-  <li><em>OAuth Provider</em>&#8212;If you select a pre-defined OAuth Provider the configuration will be applied to the Proxy API only<em>.</em> Pre-defined providers are filtered to contain OAuth versions, grants, policies, and resource mapping information that relate to specific OAuth use cases. Tokens issued by this OAuth Provider could be validated by all agents from SOA Software.<br />
+  <li><em>OAuth Provider</em>&#8212;If you select a pre-defined OAuth Provider the configuration will be applied to the Proxy API only<em>.</em> Pre-defined providers are filtered to contain OAuth versions, grants, policies, and resource mapping information that relate to specific OAuth use cases. Tokens issued by this OAuth Provider could be validated by all agents from Akana.<br />
     <strong>Note</strong>: OAuth providers are set up by the Site Admin in Administration / Domains / OAuth Provider. If the OAuth provider you need is not on the drop-down list, contact your Site Admin.</li>
   <li><em>3rd Party Provider</em>&#8212;Choose this option if the physical endpoint will be authorizing the OAuth requests. The app still needs to send the OAuth token as part of the request, but the platform passes the token through to the physical endpoint. This allows us to support the API in the Dev Console so that apps can test against it. Provide all the information needed based on OAuth version and security configuration a specific API supports.</li>
 </ul>
@@ -333,7 +333,7 @@ no-catalog: true
 
 
 <a name="what_is_an_authorization_server_client_authentication_policy"></a><h3>What is an Authorization Server Client Authentication Policy?</h3>
-<p>If you are using the SOA Software Network Director as the Authentication Server specified in your OAuth configuration, the platform provides a series of client authentication policies that can be used to authenticate the client's credentials:</p>
+<p>If you are using the Akana Network Director as the Authentication Server specified in your OAuth configuration, the platform provides a series of client authentication policies that can be used to authenticate the client's credentials:</p>
 <ul>
   <li><strong>Basic Authentication</strong>&#8212;Basic authentication requires that users provide a valid user name and password to access content. All major browsers support this authentication method and it works across firewalls and proxy servers. The disadvantage of Basic authentication is that it transmits passwords across the network using weak encryption. You should use Basic authentication only when you know that the connection between the client and the server is secure.</li>
   <li><strong>HTTPs 2-Way Authentication</strong>&#8212;Two-way authentication requires that both the client and server authenticate each other with certificates.</li>
@@ -397,10 +397,11 @@ OAuth_Scope: Wall
 OAuth_Properties: Prop1=Prop1Value
 OAuth_TokenType: MAC
 OAuth_version: 2.0
-OAuth_ResourceOwnerDomain: MyOpenIDProvider
+OAuth_ResourceOwnerDomain: MyOpenIDConnectProvider
+OAuth_ResourceOwnerUserInfo: first_name=Jane,title=Ms,sub=jmead,$EMAIL="jane.mead@acmepaymentscorp.com",
+$LASTNAME=Mead,email="jane.mead@acmepaymentscorp.com",family_name=Mead,mobile=99999999999
 OAuth_ResourceOwnerUID: https://www.google.com/accounts/o8/id?id=AItOawkXDyU8_9K2CEYmXxhZshHC080Eq7FIHXY
-OAuth_Signature_Method: HMACSHA256
-</pre>
+OAuth_Signature_Method: HMACSHA256</pre>
 <p>For details about the headers, what they mean, and valid values, see the table below.</p>
 <table cellspacing="0px" class="doctable" style="width: 98%;">
   <thead>
@@ -432,15 +433,19 @@ OAuth_Signature_Method: HMACSHA256
     </tr>
     <tr class="t1row">
       <td>OAuth_ResourceOwnerDomain</td>
-      <td>The domain that the OAuth resource owner belongs to. This domain is selected as the Resource Owner (End User) domain when configuring OAuth Provider in the platform.</td>
+      <td>The domain that the OAuth resource owner belongs to. This domain is selected as the Resource Owner (End User) domain when configuring the OAuth Provider in the platform.</td>
     </tr>
     <tr class="t2row">
+      <td>OAuth_ResourceOwnerUserInfo</td>
+      <td>Details of the Resource Owner User Attributes.</td>
+    </tr>
+    <tr class="t1row">
       <td>OAuth_ResourceOwnerUID</td>
       <td>The resource owner's unique ID, given by the resource owner domain.</td>
     </tr>
-    <tr class="t1row">
+    <tr class="t2row">
       <td>OAuth_Signature_Method</td>
-      <td><p>The signature method used in the request message to signing the oauth token, indicating the strength of the security used in the request message. This applies only for OAuth 1.0a tokens and OAuth 2.0 MAC token. Example: HMACSHA256. We support the following OAuth signature methods:</p>
+      <td><p>The signature method used in the request message for signing the oauth token, indicating the strength of the security used in the request message. This applies only for OAuth 1.0a tokens and OAuth 2.0 MAC token. Example: HMACSHA256. We support the following OAuth signature methods:</p>
         <ul class="apidoctable_ul">
           <li>HmacSHA1/hmac-sha1/hmac-sha-1</li>
           <li>HMACSHA256/hmac-sha-256/sha-256</li>

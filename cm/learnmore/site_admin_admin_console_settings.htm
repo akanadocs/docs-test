@@ -16,7 +16,7 @@ no-catalog: true
 <p>When you install Community Manager, some additional settings become available in the Configuration section of Policy Manager. This document provides information you can use to customize these settings for your installation.</p>
 <p>Note that although the configuration settings in Community Manager apply to the developer portal, the Admin Console settings apply only to the container, not the entire deployment. In some cases, configuration settings might need to be set differently in specific containers based on factors such as the Community Manager features installed in the container and the container's network access.</p>
 <p>The Site Admin for the developer portal might not have access to the Admin Console for the container; if you do not have access, work with the deployment operator and/or Administrator to change the configuration properties as needed.</p>
-<p>For general information regarding the SOA Software Administration Console, please refer to the applicable online help.</p>
+<p>For general information regarding the Akana Administration Console, please refer to the applicable online help.</p>
 <p>For information about the configuration settings defined by the Community Manager Site Admin within the developer portal, refer to the <a href="site_admin_config.htm">Site Admin help, Config section</a>.</p>
 
 <div class = "divider1"></div>
@@ -26,8 +26,8 @@ no-catalog: true
 
 
 <ol class="table_of_contents">
-  <li><a href="#cm_settings_navigation">How do I get to the Community Manager Configuration Settings in the SOA Software Administration Console?</a></li>
-  <li><a href="#cm_settings_explanation">What are the Community Manager Configuration Settings in the SOA Software Administration Console?</a></li>
+  <li><a href="#cm_settings_navigation">How do I get to the Community Manager Configuration Settings in the Akana Administration Console?</a></li>
+  <li><a href="#cm_settings_explanation">What are the Community Manager Configuration Settings in the Akana Administration Console?</a></li>
 </ol>
 
 
@@ -37,11 +37,11 @@ no-catalog: true
 
 
 <a name="cm_settings_navigation"></a>
-<h3>How do I get to the Community Manager Configuration Settings in the SOA Software Administration Console?</h3>
+<h3>How do I get to the Community Manager Configuration Settings in the Akana Administration Console?</h3>
 <p>To modify the Community Manager settings in the Admin Console, you must be a Policy Manager Site Admin.</p>
 <h5>To navigate to the CM configuration settings:</h5>
 <ol>
-<li>Log in to the SOA Software Administration Console.</li>
+<li>Log in to the Akana Administration Console.</li>
 <li>Click the <strong>Configuration</strong> tab.</li>
 <li>On the left, under Configuration Categories, scroll down to find the applicable category.</li>
 <li>Change the values as needed, and then click <strong>Apply Changes</strong>.</li>
@@ -51,7 +51,7 @@ no-catalog: true
 
 
 <a name="cm_settings_explanation"></a>
-<h3>What are the Community Manager Configuration Settings in the SOA Software Administration Console?</h3>
+<h3>What are the Community Manager Configuration Settings in the Akana Administration Console?</h3>
 <p>The configuration settings allow you to set values for the specific container. They are in these categories:</p>
 <ul>
   <li><a href="#com_soa_api_security">com.soa.api.security</a></li>
@@ -59,12 +59,14 @@ no-catalog: true
   <li><a href="#com_soa_atmosphere_console">com.soa.atmosphere.console</a></li>
   <li><a href="#com_soa_atmosphere_forwardproxy">com.soa.atmosphere.forwardproxy</a></li>
   <li><a href="#com_soa_oauth">com.soa.oauth</a></li>
+  <li><a href="#com_soa_oauth_provider">com.soa.oauth.provider</a></li>
 </ul>
 <p>Some of the settings are explained below.</p>
 
 
+
 <h4><a name="com_soa_api_security"></a>com.soa.api.security</h4>
-<p>When the request comes in, the API Security Policy validates whether the request has the correct security values. To do that, it must retrieve the app’s shared secret or certificate. This policy caches the app’s shared secret, app certificate, or both; these configuration properties manage the caching of these values.</p>
+<p>When the request comes in, the API Security Policy validates whether the request has the correct security values. To do that, it must retrieve the app's shared secret or certificate. This policy caches the app's shared secret, app certificate, or both; these configuration properties manage the caching of these values.</p>
 <dl>
 <dt>com.soa.api.security.cache.expirationPeriod</dt>
 <dd>Indicates how long an app's shared secret, certificate, or both are stored in the cache, once they are retrieved, if they are not used again. When the expiration time has passed, if the values were not used again, they are removed from the local cache.</dd>
@@ -138,9 +140,28 @@ no-catalog: true
 
 
 <h4><a name="com_soa_oauth"></a>com.soa.oauth</h4>
+<p>Indicates settings applicable when the platform is used as an OAuth Resource Server.</p>
+<p><strong>Note</strong>: These caching properties are node-specific. In a load balancing environment, the properties must be applied individually to each container. Each Network Director has a local cache, and the cache settings apply to that container property only. You must change the property on each Network Director container. The same property is applicable to all containers but must be manually applied on each container.</p>
 <dl>
+<dt>com.soa.oauth.resourceserver.grant.cacheMaxCapacity</dt>
+<dd>Maximum cache size for OAuth Resource Server grants. See note above re cache settings.</dd>
+<dt>com.soa.oauth.resourceserver.grant.expirationPeriod</dt>
+<dd>Expiration period for OAuth Resource Server grants.</dd>
+<dt>com.soa.oauth.resourceserver.grant.refreshTime</dt>
+<dd>Refresh time for OAuth Resource Server grants: the length of time for which a refresh token is valid.</dd>
+</dl>
+
+
+<h4><a name="com_soa_oauth_provider"></a>com.soa.oauth.provider</h4>
+<dl>
+<dt>com.soa.oauth.provider.config.allowedClockSkewInSecondsForJWT</dt>
+<dd>Indicates the allowable clock skew value, in seconds, for <a href="basics_glossary.htm#gl_jsonwebkey">JSON web key</a> tokens.</dd>
 <dt><a name="com_soa_oauth_provider_jwk_validityinseconds" id="com_soa_oauth_provider_jwk_validityinseconds"></a>com.soa.oauth.provider.jwk.validityInSeconds</dt>
-<dd>When asymmetric signature keys are used to sign ID tokens, the keys are rolled over by periodically adding new keys to the JWK Set. By default, All JSON Web Keys that SOA Software’s OpenID Connect provider create will have a validity of 24 hours (86400 seconds). This setting allows you to modify the validity period.</dd>
+<dd>When asymmetric signature keys are used to sign ID tokens, the keys are rolled over by periodically adding new keys to the JWK Set. By default, All JSON Web Keys that the developer portal's OpenID Connect provider create will have a validity of 24 hours (86400 seconds). This setting allows you to modify the validity period.</dd>
+<dt>com.soa.oauth.provider.config.maxRedirectURLLength</dt>
+<dd>Indicates the maximum allowable length of a redirect URL when the platform is used as an OAuth Resource Server.</dd>
+<dt>com.soa.oauth.provider.config.rsaJwkKeySize</dt>
+<dd>Indicates the RSA JSON Web Key size when the platform is used as an OAuth Resource Server.</dd>
 </dl>
 
 <p><a href="#top">Back to top</a></p>
