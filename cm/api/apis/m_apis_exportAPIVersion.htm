@@ -48,7 +48,7 @@ no-catalog: true
 
 <h3 id="endpoint">URL</h3>
 <!-- InstanceBeginEditable name="URL" -->
-<pre class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://&lt;hostname&gt;/api/<!-- #EndLibraryItem -->apis/versions/{APIVersionID}/package[?][migration.export.include.apis=true][&migration.pki.export=true][&migration.export.include.resources=true]
+<pre class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->apis/versions/{APIVersionID}/package[?][migration.export.include.apis=true][&migration.pki.export=true][&migration.export.include.resources=true]
 [&migration.export.include.api.connections=true][&migration.export.include.api.admins=true][&migration.export.include.policies=true][&migration.operationalpolicy.export=true]
 [&migration.qospolicy.export=true][&migration.compliancepolicy.export=true][&migration.export.include.scopes=true][&migration.export.include.licenses=true]
 [&migration.export.include.apps=true][&migration.app.pki.export=true][&migration.export.include.app.team=true][&migration.export.include.feature.customization.settings=true]
@@ -63,19 +63,19 @@ no-catalog: true
 <p id="id_samplerequest">The example below shows a request to export the information for the specified API version.</p>
 <p><strong>Request URL #1</strong></p>
 <p>With no options selected</p>
-<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://&lt;hostname&gt;/api/<!-- #EndLibraryItem -->apis/versions/07990ae3-f77a-422a-9286-6a38d6aaa91b.acmepaymentscorp/package?
-exportVersion=current&amp;wrapInHTML=true&amp;document.domain=&lt;hostname&gt;</pre>
+<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->apis/versions/07990ae3-f77a-422a-9286-6a38d6aaa91b.acmepaymentscorp/package?
+exportVersion=current&amp;wrapInHTML=true&amp;document.domain={hostname}</pre>
 <p><strong>Request URL #2</strong></p>
 <p>With all options selected.</p>
-<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://&lt;hostname&gt;/api/<!-- #EndLibraryItem -->apis/versions/07990ae3-f77a-422a-9286-6a38d6aaa91b.acmepaymentscorp/package?exportVersion=current&amp;migration.operationalpolicy.export=true
+<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->apis/versions/07990ae3-f77a-422a-9286-6a38d6aaa91b.acmepaymentscorp/package?exportVersion=current&amp;migration.operationalpolicy.export=true
 &amp;migration.qospolicy.export=true&amp;migration.pki.export=true&amp;migration.export.include.api.admins=true&amp;migration.export.include.api.connections=true
-&amp;migration.export.include.scopes=true&amp;migration.export.include.resources=true&amp;wrapInHTML=true&amp;document.domain=&lt;hostname&gt;&amp;download=true</pre>
+&amp;migration.export.include.scopes=true&amp;migration.export.include.resources=true&amp;wrapInHTML=true&amp;document.domain={hostname}&amp;download=true</pre>
 <p><strong>Sample request headers</strong></p>
 <pre>GET /api/apis/versions/07990ae3-f77a-422a-9286-6a38d6aaa91b.acmepaymentscorp/package?exportVersion=current
 &wrapInHTML=true&document.domain=acmepaymentscorp HTTP/1.1
-Host: &lt;hostname&gt;
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8<!-- #BeginLibraryItem "/Library/hdr_xcsrf.lbi" -->
-X-Csrf-Token_{tenant}: &lt;TokenID&gt;<!-- #EndLibraryItem --></pre>
+Host: {hostname}
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+<!-- #BeginLibraryItem "/Library/hdr_xcsrf.lbi" -->X-Csrf-Token_{tenant}: {TokenID}<!-- #EndLibraryItem --></pre>
 <p><strong>Sample request body</strong></p>
 <p>Not applicable.</p>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
@@ -135,7 +135,7 @@ X-Csrf-Token_{tenant}: &lt;TokenID&gt;<!-- #EndLibraryItem --></pre>
       <td>Query</td>
       <td>string</td>
       <td>Optional</td>
-      <td>The document domain (normally the same as the &lt;hostname&gt; value).</td>
+      <td>The document domain (normally the same as the {hostname} value).</td>
     </tr>
     <tr>
       <td>download</td>
@@ -212,6 +212,16 @@ X-Csrf-Token_{tenant}: &lt;TokenID&gt;<!-- #EndLibraryItem --></pre>
             <strong>Note</strong>: The user's relationship to the API is exported, not the actual user resource; in order for the relationship to be preserved in the target environment, the user must exist in the target environment when import is done. If not: a) create and invite the user, b) create the user and re-import, or c) invite a different user.</li>
         </ul></td>
     </tr>
+    <tr>
+      <td>migration.export.include.services</td>
+      <td>Query</td>
+      <td>boolean</td>
+      <td>Optional</td>
+      <td><p>If not specified, or specified with value <strong>true</strong>, include in export file:</p>
+        <ul class="apidoctable_ul">
+          <li>API Implementation Services</li>
+        </ul></td>
+    </tr>
   </tbody>
 </table>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
@@ -282,7 +292,8 @@ Content-Disposition: attachment;filename="apiversion-export.zip"</pre>
     </tr>
     <tr>
       <td><a href="../Ref_HTTPStatusCodes.htm#http401">401</a></td>
-      <td><!-- #BeginLibraryItem "/Library/401_CSRF.lbi" --> Unauthorized. For example, you would get this response if you didn't include the custom <a href="../Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_{fedmemberID}</a> header in the request, or if it was invalid or expired.<!-- #EndLibraryItem --></td>
+      <td><!-- #BeginLibraryItem "/Library/401_CSRF.lbi" -->
+Unauthorized. For example, you would get this response if you didn't include the custom <a href="../Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_{fedmemberID}</a> header in the request, when it was required by the platform settings; or you included an invalid or expired value for this header.<!-- #EndLibraryItem --></td>
     </tr>
   </thead>
   <tbody>

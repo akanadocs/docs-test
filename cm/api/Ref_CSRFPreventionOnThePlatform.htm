@@ -1,7 +1,7 @@
 ---
 layout: apipage
 title: CSRF Prevention on the Platform | Reference Material | Enterprise API Platform API
-description: The platform includes a CSRF prevention feature that adds a layer of protection against malicious <a href="Ref_Glossary_CommunityPlatform.htm#gl_csrf_attack">CSRF</a> attacks.
+description: The platform offers a CSRF prevention feature that adds a layer of protection against malicious <a href="Ref_Glossary_CommunityPlatform.htm#gl_csrf_attack">CSRF</a> attacks.
 product: cm
 category: ref
 nav-title: CSRF Prevention on the Platform 
@@ -12,9 +12,41 @@ no-catalog: true
 ---
 
 <h2><a name="top"></a>CSRF Prevention on the Platform</h2>
-<p>The platform includes a CSRF prevention feature that adds a layer of protection against malicious <a href="Ref_Glossary_CommunityPlatform.htm#gl_csrf_attack">CSRF</a> attacks.</p>
+<p>The platform offers a CSRF prevention feature that adds a layer of protection against malicious <a href="Ref_Glossary_CommunityPlatform.htm#gl_csrf_attack">CSRF</a> attacks.</p>
 <p>A CSRF attack leverages the fact that the authorized user has already authenticated, and that the cookie is stored in the user's browser. The CSRF prevention feature requires an additional value, a CSRF token, to be sent in the request. If the CSRF token is not present, the request is rejected as unauthorized.</p>
-<p>The CSRF header can be sent in any of several ways. Different ways are better in different scenarios, as shown in the table below.</p>
+<p>This topic includes:</p>
+<ul>
+  <li><a href="#checking_if_csrf_is_required">Checking if CSRF Is Required: Platform Settings</a></li>
+  <li><a href="#getting_the_csrf_cookie_value">Getting the CSRF Cookie Value</a></li>
+  <li><a href="#sending_the_csrf_token">Sending the CSRF Token</a></li>
+</ul>
+
+
+
+<h3><a name="checking_if_csrf_is_required"></a>Checking if CSRF Is Required: Platform Settings</h3>
+<p>If the platform security settings relating to CSRF are turned off, the CSRF token is not returned at login. If either of the two settings is turned on, the CSRF token is returned. It is always returned as a cookie.</p>
+<p>In case you are not sure whether the CSRF header is required in your implementation, here are two ways you can check:</p>
+<ul>
+  <li>Run a POST, PUT, or DELETE operation in a web client such as RESTClient. If you get an HTTP <a href="Ref_HTTPStatusCodes.htm#http401">401</a> status code in response, you know the CSRF header is needed. If you do get a 401, check a GET operation also.</li>
+  <li>Check the platform's security settings by running the <span class="apidoc_code"><a href="businesses/m_businesses_getBusinessSettings.htm">GET&nbsp;/api/businesses/{BusinessID}/settings</a></span> operation. Include the optional parameter for business security settings: <span class="apidoc_code">?IncludeSecuritySettings=true</span>. Check whether either or both of these two settings are enabled:
+    <ul>
+      <li>ReadRequestCSRFSupport</li>
+      <li>WriteRequestCSRFSupport</li>
+    </ul>
+  </li>
+  </ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3><a name="getting_the_csrf_cookie_value"></a>Getting the CSRF Cookie Value</h3>
+<p>If the developer portal is configured to require a CSRF token, the CSRF value is generated as a result of successful login, and is sent to the browser as a cookie, along with the standard <a href="Ref_Cookies.htm#cookie_atmoauthtoken">AtmoAuthToken</a> cookie. If the AtmoAuthToken cookie is renewed, the CSRF token is renewed at the same time, using the <span class="apidoc_code"><a href="login/m_login_renewToken.htm">POST&nbsp;/api/login/renewToken</a></span> operation.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3><a name="sending_the_csrf_token"></a>Sending the CSRF Token</h3>
+<p>The CSRF token can be sent in any of several ways. Different ways are better in different scenarios, as shown in the table below.</p>
 <table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
   <thead>
     <tr>
@@ -46,7 +78,7 @@ no-catalog: true
   </tbody>
 </table>
 <p>An authorized app developer can get the CSRF value from the cookie, after authenticating, and can then compose and send the custom header, parameter, or part name with the request message.</p>
-<p>The header is the <a href="Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_{fedmemberID}</a> header. If this is used, the app must take the value in the <a href="Ref_Glossary_CommunityPlatform.htm#gl_csrf_tokencookie">Csrf-Token cookie</a> and send it as the value for the X-Csrf-Token_{fedmemberID} header in the following scenarios:</p>
+<p>The header is the <a href="Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_{fedmemberID}</a> header. If this is required, based on platform settings, the app must take the value in the <a href="Ref_Glossary_CommunityPlatform.htm#gl_csrf_tokencookie">Csrf-Token cookie</a> and send it as the value for the X-Csrf-Token_{fedmemberID} header in the following scenarios (depending on which settings are enabled):</p>
 <ul>
   <li>All POST operations</li>
   <li>All PUT operations</li>
@@ -68,18 +100,6 @@ no-catalog: true
   <li>Get the value from the Csrf-Token cookie for the authenticated Community Manager user.</li>
   <li>Send the exact same value in the <a href="Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_{fedmemberID}</a> header for the request message.</li>
 </ol>
-<p><a href="#top">Back to top</a></p>
-<h3><a name="checking_if_csrf_is_required"></a>Checking If CSRF Is Required</h3>
-<p>If you are not sure whether the CSRF header is required in your implementation, here are two ways you can check:</p>
-<ul>
-  <li>Run a POST, PUT, or DELETE operation in a web client such as RESTClient. If you get an HTTP <a href="Ref_HTTPStatusCodes.htm#http401">401</a> status code in response, you know the CSRF header is needed. If you do get a 401, check a GET operation also.</li>
-  <li>Check the platform's security settings by running the <span class="apidoc_code"><a href="businesses/m_businesses_getBusinessSettings.htm">GET&nbsp;/api/businesses/{BusinessID}/settings</a></span> operation. Include the optional parameter for business security settings: <span class="apidoc_code">?IncludeSecuritySettings=true</span>. Check whether either or both of these two settings are enabled:
-    <ul>
-      <li>ReadRequestCSRFSupport</li>
-      <li>WriteRequestCSRFSupport</li>
-    </ul>
-  </li>
-  </ul>
 <p><a href="#top">Back to top</a></p>
 
 

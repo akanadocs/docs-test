@@ -1,7 +1,7 @@
 ---
 layout: apipage
 title: List API Versions | APIs Service | Enterprise API Platform API
-description:  Returns a list of API versions for all APIs. 
+description:  Returns information about API versions for all APIs, in the form of an RSS channel.
 product: cm
 category: ref
 nav-title: List API Versions 
@@ -16,7 +16,8 @@ no-catalog: true
 
 <!-- InstanceBeginEditable name="Intro_AuthRoles" -->
 <p><!-- #BeginLibraryItem "/Library/desc_listAPIVersions.lbi" -->
-Returns a list of API versions for all APIs.<!-- #EndLibraryItem --> </p>
+Returns information about API versions for all APIs, in the form of an RSS channel.<!-- #EndLibraryItem --></p>
+<p><span class="apidoc_code">GET&nbsp;/api/apis/versions</span> (this operation) with text/xml or application/json content-type returns API version information in the form of an RSS channel; <span class="apidoc_code"><a href="m_apis_listAllAPIVersions.htm">GET&nbsp;/api/apis/versions</a></span> returns it as a JSON or XML object. Both operations return the same information; only the structure/format is different.</p>
 <p class="apidoc_note"><strong>Note</strong>: this operation might return a large amount of content. If you want to view versions for a specific API, use the <span class="apidoc_code"><a href="m_apis_getAPIVersions.htm">GET&nbsp;apis/{APIID}/versions</a></span> operation instead.</p>
 <p id="id_roles"><strong>Authorization Roles/Permissions</strong>: <!-- #BeginLibraryItem "/Library/roles_none.lbi" -->
 Anyone can use this operation; login is not required. <!-- #EndLibraryItem -->However, the results that are returned are restricted based on the user's access rights. For example, Private APIs that the user doesn't have access to are not returned.</p>
@@ -48,7 +49,7 @@ Anyone can use this operation; login is not required. <!-- #EndLibraryItem -->Ho
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 
 <h3 id="endpoint">URL</h3>
-<!-- InstanceBeginEditable name="URL" --><pre class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://&lt;hostname&gt;/api/<!-- #EndLibraryItem -->apis/versions</pre><!-- InstanceEndEditable -->
+<!-- InstanceBeginEditable name="URL" --><pre class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->apis/versions</pre><!-- InstanceEndEditable -->
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 
 
@@ -56,15 +57,15 @@ Anyone can use this operation; login is not required. <!-- #EndLibraryItem -->Ho
 <h3 id="samplerequest">Sample Request</h3>
 <p id="id_samplerequest">The first example below shows a request for all available versions. The second example shows a request for versions that are currently in an Open state.</p>
 <p><strong>Request URL #1</strong></p>
-<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://&lt;hostname&gt;/api/<!-- #EndLibraryItem -->apis/versions</pre>
+<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->apis/versions</pre>
 <p><strong>Request URL #2</strong></p>
-<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://&lt;hostname&gt;/api/<!-- #EndLibraryItem -->apis/versions?state=com.soa.api.state.open</pre>
+<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->apis/versions?state=com.soa.api.state.open</pre>
 <p><strong>Sample request headers</strong></p>
 <pre>GET&nbsp;/api/apis/versions HTTP/1.1
-Accept: application/json, text/xml<!-- #BeginLibraryItem "/Library/hdr_xcsrf.lbi" -->
-X-Csrf-Token_{tenant}: &lt;TokenID&gt;<!-- #EndLibraryItem --></pre>
+Accept: application/json, text/xml
+<!-- #BeginLibraryItem "/Library/hdr_xcsrf.lbi" -->X-Csrf-Token_{tenant}: {TokenID}<!-- #EndLibraryItem --></pre>
 <p><strong>Sample request body</strong></p>
-<p>None.</p>
+<p>Not applicable.</p>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 <!-- InstanceEndEditable -->
 
@@ -108,11 +109,7 @@ X-Csrf-Token_{tenant}: &lt;TokenID&gt;<!-- #EndLibraryItem --></pre>
       <td>Query</td>
       <td>string</td>
       <td>Optional</td>
-      <td><p>If a state is specified, only APIs in that state are returned. Possible values:</p>
-        <ul class="apidoctable_ul">
-          <li>com.soa.api.state.open</li>
-          <li>           com.soa.api.state.closed</li>
-        </ul>
+      <td><p>If a state is specified, only APIs in that state are returned. For valid values, see <a href="../Ref_Values.htm#values_apistate">API States</a>.</p>
         <p>If this parameter is not specified, all matching results are returned.</p></td>
     </tr>
   </tbody>
@@ -356,10 +353,10 @@ Content-Type: application/json</pre>
   "version": "1.0"
 }</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
-<p><strong>Sample response headers: XML</strong></p>
+<p><strong>Sample response headers: application/xml</strong></p>
 <pre>Status Code: 200 OK
 Content-Type: text/xml</pre>
-<p><a id="rss_apis_xml"></a><strong>Sample response body: XML</strong></p>
+<p><a id="rss_apis_xml"></a><strong>Sample response body: application/xml</strong></p>
 <pre>&lt;?xml version="1.0" encoding=&quot;UTF-8&quot;?&gt;
 &lt;rss xmlns:ns2="http://soa.com/xsd/rss/1.0" xmlns:ns3="http://soa.com/xsd/comment/1.0" 
 xmlns:ns4="http://soa.com/xsd/user/1.0" xmlns:ns5="http://a9.com/-/spec/opensearch/1.1/" 
@@ -576,7 +573,8 @@ The response body is in the form of an RSS channel, and includes the items liste
     </tr>
     <tr>
       <td><a href="../Ref_HTTPStatusCodes.htm#http401">401</a></td>
-      <td><!-- #BeginLibraryItem "/Library/401_CSRF.lbi" --> Unauthorized. For example, you would get this response if you didn't include the custom <a href="../Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_{fedmemberID}</a> header in the request, or if it was invalid or expired.<!-- #EndLibraryItem --></td>
+      <td><!-- #BeginLibraryItem "/Library/401_CSRF.lbi" -->
+Unauthorized. For example, you would get this response if you didn't include the custom <a href="../Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_{fedmemberID}</a> header in the request, when it was required by the platform settings; or you included an invalid or expired value for this header.<!-- #EndLibraryItem --></td>
     </tr>
   </thead>
   <tbody>
