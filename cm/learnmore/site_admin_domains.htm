@@ -270,7 +270,7 @@ no-catalog: true
       <li> On the left, click <strong>APIs &amp; Auth</strong> and then click <strong>Credentials</strong>.</li>
       <li>In the <strong>OAuth</strong> section, click <strong>Create New Client ID</strong>.</li>
       <li>Make sure Application Type is <strong>Web Application</strong>. </li>
-      <li>In the Authorized Redirect URI field, enter the applicable redirect URI. For a login domain, enter: &lt;protocol&gt;://&lt;hostname&gt;/api/login/ssoLogin. For example: https://www.example.com/api.ssoLogin. For other types of domain, refer to the table at <a href="#what_value_should_i_use_for_the_redirect_uri_for_my_google_connector_domain">What value should I use for Redirect URI for my Google Connector domain?</a> below. Google requires that the redirect URL is a public URL.</li>
+      <li>In the Authorized Redirect URI field, enter the applicable redirect URI. For a login domain, enter: {protocol}://{hostname}/api/login/ssoLogin. For example: https://www.example.com/api.ssoLogin. For other types of domain, refer to the table at <a href="#what_value_should_i_use_for_the_redirect_uri_for_my_google_connector_domain">What value should I use for Redirect URI for my Google Connector domain?</a> below. Google requires that the redirect URL is a public URL.</li>
     </ol>
   </li>
   <li>Save the values on the Google website and also have them available for the next step, setting up your Google Connector domain in Community Manager. See <a href="#configure_domain_google">To set up a Google Connector domain in Community Manager</a> below.</li>
@@ -341,11 +341,11 @@ no-catalog: true
 <tbody>
   <tr class="t2row">
     <td>Community Manager Login</td>
-    <td>&lt;CMConsoleAddress&gt;/api/login/ssoLogin</td>
+    <td>{CMConsoleAddress}/api/login/ssoLogin</td>
   </tr>
   <tr class="t1row">
     <td>OAuth Provider Resource Owner domain</td>
-    <td>&lt;OAuthProviderAuthorizationServer&gt;/oauth/auz/grants/provider/authcomplete</td>
+    <td>{OAuthProviderAuthorizationServer}/oauth/auz/grants/provider/authcomplete</td>
   </tr>
 </tbody>
 </table>
@@ -634,7 +634,8 @@ no-catalog: true
 <h5><a name="p_https_cert_setup"></a>To set up the PingFederate server certificate in Policy Manager</h5>
 <ol>
   <li>Add the issuer of the PingFederate server certificate in the platform trust store.   In Policy Manager: Console &gt; Configure &gt; Security &gt; Certificates &gt; Trusted CA Certificates tab. This step is needed so that Community Manager will trust the PingFederate authorization server endpoints. Note that when you upload the certificate, it generally takes a couple of minutes to take effect. Allow some time after uploading the certificates before setting up the domain in Community Manager.</li>
-  <li>In the Community Manager container, add the PingFederate server certificate in the <span class="apidoc_code">Jre/lib/security/cacerts</span> folder.</li>
+  <li>On the Community Manager container, add the PingFederate server certificate to the container's JVM cacerts file, located in <span class="apidoc_code">jre/lib/security/cacerts</span>, via the <strong>keytool</strong> command. Follow the example given below, replacing the {PINGFEDERATE_CERT_NAME} and {PINGFEDERATE_CERT_LOCATION} variables with the correct values for your implementation (and removing the curly brackets):
+    <pre>keytool -keystore cacerts -importcert -alias {PINGFEDERATE_CERT_NAME} -file {PINGFEDERATE_CERT_LOCATION}</pre></li>
   <li>Restart the container so that the above change goes into effect.</li>
 </ol>
 <h4><a name="pf_config_3_cm"></a>3: Community Manager Configuration</h4>
@@ -646,7 +647,7 @@ no-catalog: true
   <li>Click <strong>Add Domain</strong>. The <strong>Select Domain Type</strong> drop-down menu displays.</li>
   <li>Select <strong>PingFederate Provider</strong> and then click <strong>Select</strong>. The <em>Add Connector Domain</em> wizard opens.</li>
   <li><strong>Details</strong> page: Specify values for Name and Description and then click <strong>Next</strong>.</li>
-  <li><strong>Provider Details</strong> page: Enter the base URL from the PingFederate server setup's Federation Info system settings; for example, https://&lt;hostname&gt;:&lt;port&gt;/&lt;basepath&gt;. The base URL is used to construct the OpenID Connect Well-Known Configuration URL to read the PingFederate OAuth 2.0 provider configuration. If PingFederate is expecting HTTPS connections, make sure you've added the issuer of the PingFederate server certificate in the platform trust store. Click <strong>Next</strong>.</li>
+  <li><strong>Provider Details</strong> page: Enter the base URL from the PingFederate server setup's Federation Info system settings; for example, https://{hostname}:{port}/{basepath}. The base URL is used to construct the OpenID Connect Well-Known Configuration URL to read the PingFederate OAuth 2.0 provider configuration. If PingFederate is expecting HTTPS connections, make sure you've added the issuer of the PingFederate server certificate in the platform trust store. Click <strong>Next</strong>.</li>
   <li><strong>Provider Details</strong> page: Enter the following values:
     <ul>
       <li><strong>Client ID</strong>: The unique identifier that you specified when you created the OAuth client for this platform within PingFederate.</li>
