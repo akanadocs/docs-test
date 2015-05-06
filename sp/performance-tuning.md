@@ -89,9 +89,9 @@ To get the maximum open files count allowed for the entire system:
 cat /proc/sys/fs/file-max
 ```
 
-This value must be significantly higher than 100000 so that there are plenty of file handles available for the Container user account.
+This value must be significantly higher than 100000 (this defaults to  so that there are plenty of file handles available for the Container user account.
 
-After checking the system limits, you need to set the limits for the Container user account. To get the maximum open files count allowed for the user, log in as the user running the container process and:
+After checking the system limits, you need to set the limits for the Container user account. To get the maximum open files count allowed for the user, log in as the user running the container process [SOAUSERACCOUNT] and:
 
 ```
 ulimit -n
@@ -100,7 +100,8 @@ ulimit -n
 To change this limit, edit the /etc/security/limits.conf file and make the following changes or add the following lines, respectively: 
 
 ```
-echo 100000 > /proc/sys/fs/file-max
+[SOAUSERACCOUNT]           soft    nofile          100000
+[SOAUSERACCOUNT]           hard    nofile          100000
 ```
 
 **Scope**: All Containers
