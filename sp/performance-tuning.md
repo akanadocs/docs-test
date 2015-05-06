@@ -35,6 +35,7 @@ Akana Performance Tuning Guide
 		<li><a href="#auto-search">Disabling auto-search</a></li>
 		<li><a href="#require-metrics-policy">Internal service metrics calculations</a></li>
 		<li><a href="#usage-writer">Configuring the Usage Writer</a></li>
+		<li><a href="#preloading">Preloading invoked services</a></li>
 	</ol>
 </ol>
 
