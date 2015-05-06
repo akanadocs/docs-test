@@ -52,11 +52,11 @@ Akana has futher provided the ability to split certain features that would typic
 
 There are currently teo features that can be split up this way:
 
-* The 'SOA Software Policy Manager Services' feature is comprised of three seperate sub-ordinate features:
+* The 'SOA Software Policy Manager Services' feature is comprised of three separate sub-ordinate features:
   * SOA Software Managed Services - Installs the Policy Manager system services
   * SOA Software Security Services - Installs Policy Manager security-related services
   * SOA Software Scheduled Jobs - Installs a series of system background jobs that are executed by the Policy Manager job scheduler
-* The 'SOA Software Community Manager' feature is comprised of two seperate sub-ordinate features:
+* The 'SOA Software Community Manager' feature is comprised of two separate sub-ordinate features:
   * SOA Software Community Manager Scheduled Jobs - This feature enables Community Manager scheduled jobs on the container
   * SOA Software Community Manager APIs - This feature deploys Community Manager APIs in the container
 
