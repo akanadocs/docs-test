@@ -18,8 +18,8 @@ Akana Performance Tuning Guide
 	<li><a href="#introduction">Introduction</a></li>
 	<li><a href="#deployment-architecture">Deployment Architecture</a></li>
 	<ol>
-		<li><a href="#install-features-on-separate-containers">Install Features on separate containers</a></li>
-		<li><a href="#separating-policy-manager-features">Separating Policy Manager Services, Scheduled Jobs and Security Services </a></li>
+		<li><a href="#install-features-on-separate-containers">Installing features on separate containers</a></li>
+		<li><a href="#separating-policy-manager-features">Splitting features into smaller, subordinate features</a></li>
 	</ol>
 	<li><a href="#config-setting">Configuration Settings</a></li>
 	<ol>
@@ -39,18 +39,18 @@ This document describes the performance tuning parameters for Akana’s API Gate
 ### <a name="deployment-architecture"></a>Deployment Architecture
 There are several optional deployment choices that can improve the performance of the product.
 
-#### <a name="install-features-on-separate-containers"></a>Install Features on separate containers
+#### <a name="install-features-on-separate-containers"></a>Installing features on separate containers
 API traffic and Internal and External Web traffic should be handled on separate containers to facilitate the independent scaling of these capabilities. To this end, the 'SOA Software Network Director', 'SOA Software Community Manager' and 'SOA Software Policy Manager Console' features should be installed on different containers. 
 
 You may also want to dedicate containers for the 'SOA Software Policy Manager Services' feature. This feature provides the backend APIs to support the Network Directors and is often installed in the same containers as the 'SOA Software Policy Manager Console' and/or 'SOA Software Community Manager' features. The decision to install it on its own container can be driven by security requirements (e.g. network topology) or the minimization of load on the Web traffic containers. 
 
 ![Admin Console](images/hardening-admin-console.png "Admin Console")
 
-#### <a name="separating-policy-manager-features"></a>Separating Policy Manager Services, Scheduled Jobs and Security Services
+#### <a name="separating-policy-manager-features"></a>Splitting features into smaller, subordinate features
 
 Akana has futher provided the ability to split certain features that would typically be installed on a single container into sub-ordinate features that can be installed on separate containers.
 
-There are currently teo features that can be split up this way:
+There are currently two features that can be split up this way:
 
 * The 'SOA Software Policy Manager Services' feature is comprised of three separate sub-ordinate features:
   * SOA Software Managed Services - Installs the Policy Manager system services
