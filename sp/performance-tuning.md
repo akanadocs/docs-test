@@ -40,13 +40,15 @@ This document describes the performance tuning parameters for Akana’s API Gate
 There are several optional deployment choices that can improve the performance of the product.
 
 #### <a name="install-features-on-separate-containers"></a>Install Features on separate containers
-API traffic processing should be handled separately from Web traffic and Admin traffic. To this end, the Network Director should not be installed on the same container as Community Manager, or Policy Manager features:
+API traffic and Internal and External Web traffic should be handled on separate containers to facilitate the independent scaling of these capabilities. To this end, the 'SOA Software Network Director', 'SOA Software Community Manager' and 'SOA Software Policy Manager Console' features should be installed on different containers. 
+
+You may also want to dedicate containers for the 'SOA Software Policy Manager Services' feature. This feature provides the backend APIs to support the Network Directors and is often installed in the same containers as the 'SOA Software Policy Manager Console' and/or 'SOA Software Community Manager' features. The decision to install it on its own container can be driven by security requirements (e.g. network topology) or the minimization of load on the Web traffic containers. 
 
 ![Admin Console](images/hardening-admin-console.png "Admin Console")
 
 #### <a name="separating-policy-manager-features"></a>Separating Policy Manager Services, Scheduled Jobs and Security Services
 
-Akana has provided the ability to split certain features that would typically be installed on a single container into sub-ordinate features that can be installed on separate containers.
+Akana has futher provided the ability to split certain features that would typically be installed on a single container into sub-ordinate features that can be installed on separate containers.
 
 There are currently teo features that can be split up this way:
 
