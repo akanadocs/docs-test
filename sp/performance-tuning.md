@@ -48,7 +48,7 @@ You may also want to dedicate containers for the 'SOA Software Policy Manager Se
 
 #### <a name="separating-policy-manager-features"></a>Splitting features into smaller, subordinate features
 
-Akana has futher provided the ability to split certain features that would typically be installed on a single container into sub-ordinate features that can be installed on separate containers.
+Akana has further provided the ability to split certain features that would typically be installed on a single container into sub-ordinate features that can be installed on separate containers.
 
 There are currently two features that can be split up this way:
 
@@ -63,7 +63,7 @@ There are currently two features that can be split up this way:
 **Notes:**
 
 1. All Schedule jobs features should be in the same container. This means that 'SOA Software Scheduled Jobs' and 'SOA Software Community Manager Scheduled Jobs' must be installed together into containers. Installing any one scheduled job feature will start the Quartz scheduler and could cause it to run all schedule jobs resulting in failures.
-2. The Community Manager theme feaures (e.g. 'SOA Software Community Manager Simple Developer Theme' and 'SOA Software Community Manager Default Theme') must be installed together with the 'SOA Software Community Manager APIs' feature into containers. 
+2. The Community Manager theme features (e.g. 'SOA Software Community Manager Simple Developer Theme' and 'SOA Software Community Manager Default Theme') must be installed together with the 'SOA Software Community Manager APIs' feature into containers. 
 
 
 
@@ -120,14 +120,14 @@ In the Policy Manager Console, navigate to the appropriate container and select 
 
 The only parameter that is typically modified is 'Maximum' It should be set to a value high enough to support the number of concurrent connections. This is different depending on the features installed in each container:
 
-* SOA Software Network Director - this value is typically the same as the maxTotal value set in the client connection pool. This is because the Network Director is a proxy and the ratio of inbound to outbound conenctions is typically 1:1.
+* SOA Software Network Director - this value is typically the same as the maxTotal value set in the client connection pool. This is because the Network Director is a proxy and the ratio of inbound to outbound connections is typically 1:1.
 * SOA Software Community Manager (specifically the 'SOA Software Community Manager APIs' feature) - this value should be set based on the number of hits per second. **A general rule of thumb is to assume a minimum of 1 thread for every 10 concurrent users.**
 * SOA Software Policy Manager Console - this value should be set to the number of concurrent active users of the Policy Manager user interface.
 * SOA Software Policy Manager Services (specifically the 'SOA Software Managed Services' feature) - this value should only be changed on rare occasions where there are a very large number of Network Directors in the environment. **A good rule of thumb is 10 threads per Network Director.**
 
 #### <a name="client-connection-pool"></a>Configuring the client connection pool
 
-The client connection pool controls the number of simulataneous outbound connections from the container. It typically only requires tuning in the Network Director.
+The client connection pool controls the number of simultaneous outbound connections from the container. It typically only requires tuning in the Network Director.
 
 The maximum number of connections required in the pool is determined by two factors:
 
