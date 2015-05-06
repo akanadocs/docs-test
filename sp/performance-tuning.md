@@ -58,11 +58,6 @@ There are currently teo features that can be split up this way:
   * SOA Software Community Manager Scheduled Jobs - This feature enables Community Manager scheduled jobs on the container
   * SOA Software Community Manager APIs - This feature deploys Community Manager APIs in the container
 
-**Notes:**
-
-1. All Schedule jobs features should be in the same container. This means that 'SOA Software Scheduled Jobs' and 'SOA Software Community Manager Scheduled Jobs' must be installed together into containers. Installing any one scheduled job feature will start the Quartz scheduler and could cause it to run all schedule jobs resulting in failures.
-2. The Community Manager theme feaures (e.g. 'SOA Software Community Manager Simple Developer Theme' and 'SOA Software Community Manager Default Theme') must be installed together with the 'SOA Software Community Manager APIs' feature into containers. 
-
 
 
 ### <a name="config-setting"></a>Configuration Settings
