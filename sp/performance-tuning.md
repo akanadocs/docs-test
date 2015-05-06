@@ -24,7 +24,7 @@ Akana Performance Tuning Guide
 	<li><a href="#config-setting">Configuration Settings</a></li>
 	<ol>
 		<li><a href="#os-file-handles">Configuring OS File Handles</a></li>
-		<li><a href="#jre-memory">Configuring the JRE memory settings</a></li>
+		<li><a href="#jre-memory">Configuring the JVM memory settings</a></li>
 		<li><a href="#listener-connection-pool">Configuring the container listeners</a></li>
 		<li><a href="#client-connection-pool">Configuring the client connection pool</a></li>
 	</ol>
@@ -93,9 +93,16 @@ echo "fs.file-max= 100000" >> /etc/sysctl.conf
 
 **Scope**: All Containers
 
-#### <a name="jre-memory"></a>Configuring the JRE memory settings
+#### <a name="jre-memory"></a>Configuring the JVM memory settings
 
-To support long passwords when importing PKI from Java Keystores, you will need to install the Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files. This is dependent on the JRE version being used and is available from Oracle. To install, copy the US_export_policy.jar and local_policy.jar files to the /lib/security directory for the JRE. 
+Generally we do not advise changing the JVM memory settings. A better approach is to install more containers and load-balance across them. This is due to the overhead incurred in managing the increased memory. The container ships with the following defaults:
+
+* For 32 bit machines: -Xmx1024M -XX:MaxPermSize=192M
+* For 64 bit machines: -Xmx2048M -XX:MaxPermSize=256M
+
+These settings are defined in the startup batch or shell scripts in the /bin directory.
+
+If you decide to increase the JVM memory settings anyway, always increase the MaxPermSize in proportion to the memory allocated and do not exceed 4096M. e.g. -Xmx4096M -XX:MaxPermSize=512M
 
 **Scope**: All Containers
 
