@@ -205,13 +205,11 @@ The Usage Writer is an in-memory queue and batch writing mechanism to store usag
 
 **Scope**: 
 
-1. Network Director Containers that are writing usage to the database. See:
-```
+1. Network Director Containers that are writing usage to the database. See:```
 com.soa.monitor.usage -> 
 usage.database.writer.enabled=true
 ```
-2. In the case that the Remote Usage Writer is used, Containers running the 'SOA Software Managed Services' feature, which is subordinate to the 'SOA Software Policy Manager Services' feature.
-```
+2. In the case that the Remote Usage Writer is used by the Network Director (see setting below), you would configure the Usage Writer on containers running the 'SOA Software Managed Services' feature, which is subordinate to the 'SOA Software Policy Manager Services' feature.```
 com.soa.monitor.usage -> 
 usage.remote.writer.enabled=true
 ```
