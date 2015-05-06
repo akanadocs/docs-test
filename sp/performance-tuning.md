@@ -208,14 +208,23 @@ The Usage Writer is an in-memory queue and batch writing mechanism to store usag
 1. Network Director Containers that are writing usage to the database. (```com.soa.monitor.usage -> usage.database.writer.enabled=true```)
 2. In the case that the Remote Usage Writer is used by the Network Director (```com.soa.monitor.usage -> usage.remote.writer.enabled=true```), you would configure the Usage Writer on containers running the 'SOA Software Managed Services' feature, which is subordinate to the 'SOA Software Policy Manager Services' feature.
 
-The most important parameter controlling the Usage Writer is:
+The most important parameters controlling the Usage Writer are:
+
 ```
-com.soa.monitor.usage -> 
+com.soa.monitor.usage ->
 usage.queue.capacity=10000
+
+com.soa.monitor.usage ->
+usage.batch.writer.usageBatchSize=50
+
+com.soa.monitor.usage ->
+usage.batch.writer.writeInterval
 ``` 
 
-This property is the one that in most cases causes issues with high volumes of traffic. The default setting is 10000. If you use the default batch size of 50 we will store up to 500000 usage records in memory. If each record has two recorded messages, the queue will contain 1,000,000 messages and the memory footprint could be significant. We recommend you try various sizes and to determine how much memory the JVM consumes. 
+The 'com.soa.monitor.usage' property is the one that in most cases causes issues with high volumes of traffic. If the Usage Writer cannot write to the database quickly enough, the usage queue will fill up over time. If each record has two recorded messages of 5kB each, the queue will occupy 100MB of memory. To avoid the queue from filling up the following actions can be taken:
 
-When you have the correct queue settings for the amount of memory you want to consume with a particular JVM if you feel you still need to process more requests, you can either speed up the database or add an additional Network Director (if the Network Director is connecting to the database directly (default)) or another Policy Manager instance (if the remote usage writer is being used).
+1. Improving database write performance
+2. Adding additional Network Directors (if the Network Director is connecting to the database directly (default)) or additional Policy Manager instances (if the remote usage writer is being used).
+2. Increasing the usageBatchSize by small increments 
+3. Decreasing the writeInterval by small decrements
 
-
