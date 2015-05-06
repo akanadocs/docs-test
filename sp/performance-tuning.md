@@ -82,7 +82,7 @@ This section covers settings in the product related to performance tuning.
 
 #### <a name="os-file-handles"></a>Configuring OS File Handles
 
-On *nix operating systems, every inbound and outbound connection is assigned a file handle. By default, some systems have a small number of file handles assigned (e.g. 1024) which is insufficient. We recommend setting the number of file handles to a minimum of 100000. Configuring this differs between operating systems so you should consult with your SysAdmin. The following steps are for RedHat systems:
+On *nix operating systems, every inbound and outbound connection is assigned a file handle (descriptor). By default, some systems have a small number of file handles assigned (e.g. 1024) which is insufficient. We recommend setting the number of file handles to a minimum of 100000. Configuring this differs between operating systems so you should consult with your SysAdmin. The following steps are for RedHat systems:
 
 To get the maximum open files count allowed for the entire system:
 
@@ -90,12 +90,20 @@ To get the maximum open files count allowed for the entire system:
 cat /proc/sys/fs/file-max
 ```
 
-This value must be significantly higher than 100000 (this defaults to  so that there are plenty of file handles available for the Container user account.
-
-After checking the system limits, you need to set the limits for the Container user account. To get the maximum open files count allowed for the user, log in as the user running the container process [SOAUSERACCOUNT] and:
+This value must be significantly higher than 100000 (if not, consult the OS documentation) so that there are plenty of file handles available for the Container user account. You can check to see how many file handles are currently being used by checking:
 
 ```
-ulimit -n
+$ cat /proc/sys/fs/file-nr
+1154    133     8192
+```
+
+The first column gives you an idea how much file handles are currently used.
+
+After checking the system limits, you need to set the limits for the container user account [SOAUSERACCOUNT]. To get the maximum open files count allowed for the user, log in as the container user account and:
+
+```
+$ ulimit -n
+1024
 ```
 
 To change this limit, edit the /etc/security/limits.conf file and make the following changes or add the following lines, respectively: 
@@ -232,3 +240,14 @@ The 'com.soa.monitor.usage' property is the one that in most cases causes issues
 2. Increasing the usageBatchSize by small increments 
 3. Decreasing the writeInterval by small decrements
 
+#### <a name="preloading"></a>Preloading invoked services
+
+During normal Network Director operation, the downstream API/service endpoints are loaded only upon first invocation. This is done to save memory and lower startup time, but incurs an overhead in the first invocation of an API. If the number of APIs/Services is less than 100, you can preload all the downstream endpoint on startup.
+
+**Scope**: Network Director Containers
+
+In the admin console, configure the following:
+```
+com.soa.vs.engine -> 
+vs.capability.metadata.preloadInvokedServices=true
+```
