@@ -83,22 +83,24 @@ This section covers settings in the product related to performance tuning.
 
 On *nix operating systems, every inbound and outbound connection is assigned a file handle. By default, some systems have a small number of file handles assigned (e.g. 1024) which is insufficient. We recommend setting the number of file handles to a minimum of 100000. Configuring this differs between operating systems so you should consult with your SysAdmin. The following steps are for RedHat systems:
 
-To get the maximum open files count allowed:
+To get the maximum open files count allowed for the entire system:
 
 ```
 cat /proc/sys/fs/file-max
 ```
 
-To set the maximum open files count allowed:
+This value must be significantly higher than 100000 so that there are plenty of file handles available for the Container user account.
+
+After checking the system limits, you need to set the limits for the Container user account. To get the maximum open files count allowed for the user, log in as the user running the container process and:
+
+```
+ulimit -n
+```
+
+To change this limit, edit the /etc/security/limits.conf file and make the following changes or add the following lines, respectively: 
 
 ```
 echo 100000 > /proc/sys/fs/file-max
-```
-
-To make the change permanent, add or change the following line in the file /etc/sysctl.conf. This file is used during the boot process.
-
-```
-echo "fs.file-max= 100000" >> /etc/sysctl.conf
 ```
 
 **Scope**: All Containers
