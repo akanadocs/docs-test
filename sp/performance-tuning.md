@@ -20,6 +20,7 @@ Akana Performance Tuning Guide
 	<ol>
 		<li><a href="#install-features-on-separate-containers">Installing features on separate containers</a></li>
 		<li><a href="#separating-policy-manager-features">Splitting features into smaller, subordinate features</a></li>
+		<li><a href="#data-archiving">Data archiving</a></li>
 	</ol>
 	<li><a href="#config-setting">Configuration Settings</a></li>
 	<ol>
@@ -27,6 +28,13 @@ Akana Performance Tuning Guide
 		<li><a href="#jre-memory">Configuring the JVM memory settings</a></li>
 		<li><a href="#listener-connection-pool">Configuring the container listeners</a></li>
 		<li><a href="#client-connection-pool">Configuring the client connection pool</a></li>
+	</ol>
+	<li><a href="#less-important-settings">Less Important Settings</a></li>
+	<ol>
+		<li><a href="#gif-metrics">Calculating GIF metrics</a></li>
+		<li><a href="#auto-search">Disabling auto-search</a></li>
+		<li><a href="#require-metrics-policy">Internal service metrics calculations</a></li>
+		<li><a href="#usage-writer">Configuring the Usage Writer</a></li>
 	</ol>
 </ol>
 
@@ -121,7 +129,7 @@ In the Policy Manager Console, navigate to the appropriate container and select 
 The only parameter that is typically modified is 'Maximum' It should be set to a value high enough to support the number of concurrent connections. This is different depending on the features installed in each container:
 
 * SOA Software Network Director - this value is typically the same as the maxTotal value set in the client connection pool. This is because the Network Director is a proxy and the ratio of inbound to outbound connections is typically 1:1.
-* SOA Software Community Manager (specifically the 'SOA Software Community Manager APIs' feature) - this value should be set based on the number of hits per second. **A general rule of thumb is to assume a minimum of 1 thread for every 10 concurrent users.**
+* SOA Software Community Manager (specifically the 'SOA Software Community Manager APIs' feature) - this value should be set based on the number of hits per second. If the 'SOA Software Community Manager OAuth Provider' feature is installed, the number of hits to the OAuth server should also be accounted for. **A general rule of thumb is to assume a minimum of 1 thread for every 10 concurrent users.**
 * SOA Software Policy Manager Console - this value should be set to the number of concurrent active users of the Policy Manager user interface.
 * SOA Software Policy Manager Services (specifically the 'SOA Software Managed Services' feature) - this value should only be changed on rare occasions where there are a very large number of Network Directors in the environment. **A good rule of thumb is 10 threads per Network Director.**
 
@@ -147,3 +155,75 @@ http.connection.manager.maxTotal = 2000
 com.soa.http.client.core -> 
 http.connection.manager.defaultMaxPerRoute = 1500
 ```
+
+### <a name="less-important-settings"></a>Less important settings
+
+This section covers tuning parameters that are used less often. The default settings will work in the majority of environments.
+
+#### <a name="gif-metrics"></a>GIF metrics
+
+GIF (Governance Interoperability Framework) is a legacy UDDI standard for publishing metrics. By default this value is set to 'false' and the Policy Manager does not calculate these metrics, but this can be configured:
+
+**Scope**: Containers running the 'SOA Software Managed Services' feature, which is subordinate to the 'SOA Software Policy Manager Services' feature.
+
+In the admin console, configure the following:
+
+```
+com.soa.service.category -> 
+service.category.manager.transactional.loadGifMetrics = false
+```
+
+#### <a name="auto-search"></a>Disabling auto-search
+
+This property controls the behavior of the Policy Manager Console (Workbench Tab) when its loaded. By default this value is set to true and a search is executed to display all the APIs/Services in the system. If there are a large number of services this default search can take a while and should be disabled.
+
+**Scope**: Containers running the 'SOA Software Policy Manager Console' feature.
+
+In the admin console, configure the following:
+
+```
+com.soa.console -> 
+workbench.search.PerformAutoSearch=true
+```
+
+#### <a name="require-metrics-policy"></a>Internal service metrics calculations
+
+By default, the Policy Manager records performance metrics for its own internal services. This will add volumes of data to the database if not cleaned out regularly. If these metrics are not important, you can disable the default metrics collection (thereby requiring the explicit assignment of the metric policy) by setting the config parameter to 'true'. This setting is slightly counter-intuitive.
+
+**Scope**: Containers running the 'SOA Software Managed Services' feature, which is subordinate to the 'SOA Software Policy Manager Services' feature.
+
+In the admin console, configure the following:
+
+```
+com.soa.metrics -> 
+metrics.rollup.reporter.requireMetricsPolicy=true
+```
+
+#### <a name="usage-writer"></a>Configuring the Usage Writer
+
+The Usage Writer is an in-memory queue and batch writing mechanism to store usage data, recorded messages and metrics in the database. 
+
+**Scope**: 
+
+1. Network Director Containers that are writing usage to the database. See:
+```
+com.soa.monitor.usage -> 
+usage.database.writer.enabled=true
+```
+2. In the case that the Remote Usage Writer is used, Containers running the 'SOA Software Managed Services' feature, which is subordinate to the 'SOA Software Policy Manager Services' feature.
+```
+com.soa.monitor.usage -> 
+usage.remote.writer.enabled=true
+```
+
+The most important parameter controlling the Usage Writer is:
+```
+com.soa.monitor.usage -> 
+usage.queue.capacity=10000
+``` 
+
+This property is the one that in most cases causes issues with high volumes of traffic. The default setting is 10000. If you use the default batch size of 50 we will store up to 500000 usage records in memory. If each record has two recorded messages, the queue will contain 1,000,000 messages and the memory footprint could be significant. We recommend you try various sizes and to determine how much memory the JVM consumes. 
+
+When you have the correct queue settings for the amount of memory you want to consume with a particular JVM if you feel you still need to process more requests, you can either speed up the database or add an additional Network Director (if the Network Director is connecting to the database directly (default)) or another Policy Manager instance (if the remote usage writer is being used).
+
+
