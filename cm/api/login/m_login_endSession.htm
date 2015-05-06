@@ -1,0 +1,300 @@
+---
+layout: apipage
+title: End Sssion | Login Service | Enterprise API Platform API
+description:  Ends the current session for the user, either on user logout or on session timeout. If user is actively logging out, and had logged in via an external identity provider or remote tenant, this operation also initiates single logout with the external provider or remote tenant.
+product: cm
+category: ref
+nav-title: End Sssion 
+no-nav: api
+sub-nav: true
+sub-nav-class: login
+no-catalog: true
+---
+
+<!-- InstanceBeginEditable name="Heading" -->
+<h2><a name="top" id="top"></a>GET&nbsp;/api/login/endsession</h2>
+<!-- InstanceEndEditable -->
+
+<!-- InstanceBeginEditable name="Intro_AuthRoles" -->
+<p><!-- #BeginLibraryItem "/Library/desc_endSession.lbi" -->
+Ends the current session for the user, either on user logout or on session timeout. If user is actively logging out, and had logged in via an external identity provider or remote tenant, this operation also initiates single logout with the external provider or remote tenant.<!-- #EndLibraryItem --></p>
+<p>Used when the user initiates logout; also used by the developer portal user interface to log the user out when a session times out due to inactivity.</p>
+<p id="id_roles"><strong>Authorization Roles/Permissions: </strong>Must be the logged-in user.</p>
+<!-- InstanceEndEditable --><!-- #BeginLibraryItem "/Library/_whatdoyouwanttoreadabout.lbi" -->
+<p>This topic includes the following sections:</p>
+<table width="600" border="0" cellspacing="0" cellpadding="2">
+  <tr>
+    <td width="200"><ul>
+  <li><a href="#httpmethod">HTTP Method</a></li>
+  <li><a href="#endpoint">URL</a></li>
+  <li><a href="#samplerequest">Sample Request</a></li>
+  <li><a href="#requestheaders">Request Headers</a></li>
+  <li><a href="#requestparameters">Request Parameters</a></li>
+</ul>
+</td>
+    <td width="400"><ul>
+  <li><a href="#response">Response</a></li>
+  <li><a href="#sampleresponse">Sample Response</a></li>
+  <li><a href="#responseheaders">Response Headers</a></li>
+  <li><a href="#responsebody">Response Body</a></li>
+  <li><a href="#errorcodes">Error Codes/Messages</a></li>
+</ul>
+</td>
+  </tr>
+</table><!-- #EndLibraryItem --><h3 id="httpmethod">HTTP Method</h3>
+<!-- InstanceBeginEditable name="HTTP Method" -->
+<p class="httpverb">GET</p>
+<!-- InstanceEndEditable -->
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+<h3 id="endpoint">URL</h3>
+<!-- InstanceBeginEditable name="URL" -->
+<pre class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->login/endsession</pre>
+<!-- InstanceEndEditable -->
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+<!-- InstanceBeginEditable name="Sample Request" -->
+<h3 id="samplerequest">Sample Request</h3>
+<p id="id_samplerequest">The example below shows a request for ending the session, initiated by the user; for example, the user clicks the <strong>Log Out</strong> button in the developer portal.</p>
+<p><strong>Request URL</strong></p>
+<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->endsession</pre>
+<p><strong>Sample request headers</strong></p>
+<pre>GET http://{hostname}/api/login/endsession  HTTP/1.0
+Host: {hostname}
+Accept: application/json, text/javascript, */*; q=0.01</pre>
+<p><strong>Sample request body</strong></p>
+<p>Not applicable.</p>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Request Headers" -->
+<h3 id="requestheaders">Request Headers</h3>
+<p>For general information on request header values, refer to <a href="../Ref_HTTPHeaders.htm#ref_httprequestheaders">HTTP Request Headers</a>.</p>
+<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="../Ref_HTTPHeaders.htm#acceptheader">Accept</a></td>
+      <td><!-- #BeginLibraryItem "/Library/hdrval_appjson.lbi" --><strong>application/json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson_72.lbi" --><strong>application/vnd.soa.v72+json</strong><!-- #EndLibraryItem --></td>
+    </tr>
+  </tbody>
+</table>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Request Parameters" -->
+<h3 id="requestparameters">Request Parameters</h3>
+<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+  <thead>
+    <tr>
+      <th width="11%">Parameter</th>
+      <th width="9%">Parm Type</th>
+      <th width="11%">Data Type</th>
+      <th width="11%">Required</th>
+      <th width="58%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>returninstructions</td>
+      <td>returnInstructions</td>
+      <td>boolean</td>
+      <td>optional</td>
+      <td><p>Indicates if further information is needed for the user's logout.</p>
+        <p>For session timeout, this parameter is ignored. If the user logs out, and this parameter is included with a value of <strong>true</strong>, the platform returns a <strong>LogoutResponse</strong> JSON object with Relying Party logout information (<strong>IDPLogoutInfo</strong>) and logout information for each remote federation member (<strong>RPLogoutInfo</strong>).</p></td>
+    </tr>
+    <tr>
+      <td>event</td>
+      <td>event</td>
+      <td>string</td>
+      <td>optional</td>
+      <td>If the user's session times out due to inactivity, the developer portal sends this parameter with a value of <strong>session_timeout</strong>. If the event is a timeout, the operation logs the user out of the platform, removing any session cookies, but does not initiate SLO (single logout) with the identity provider, in scenarios where a third-party identity provider is used.</td>
+    </tr>
+    <tr>
+      <td>postlogouturl</td>
+      <td>postlogouturl</td>
+      <td>string</td>
+      <td>optional</td>
+      <td><p>Used with external domains that support SLO (for example, CA SiteMinder), to pass the developer portal home URL to the external domain so that the external domain can use this value to replace placeholders, if any exist, or to add a query parameter with this value in the configured logout URL in the external domain. This value determines where the user-agent is redirected after logout from the external domain is complete.</p>
+        <p>The URL must be URL-safe, using escape characters as needed. For example, instead of <strong>HTTP://</strong>, use <strong>http%3A%2F%2F</strong>.</p></td>
+    </tr>
+  </tbody>
+</table>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Response Description" -->
+<h3 id="response">Response</h3>
+<p id="id_successstatement">If successful, this operation returns HTTP status code 200, and the cookies are removed.</p>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Sample Response" -->
+<h3 id="sampleresponse">Sample Response</h3>
+<p id="id_sampleresponse">The sample responses below shows successful completion of this operation.</p>
+<p><strong>Sample response headers</strong></p>
+<pre>HTTP/1.1 200 OK
+Content-Type: application/json
+Expires: Wed, 22 Apr 2015 11:56:38 GMT
+Set-Cookie: Csrf-Token_acmepaymentscorp=none;path=/;expires=Wed, 22 Apr 2015 11:56:38 GMT
+AtmoAuthToken_acmepaymentscorp=none;path=/;expires=Wed, 22-Apr-2015 11:56:38 GMT;HttpOnly</pre>
+<p><strong>Sample response body #1</strong></p>
+<p>Returned for local logout. In this example, the user logged in locally, so there is no content in the response.</p>
+<pre>{<br />}</pre>
+<p><strong>Sample response body #2</strong></p>
+<p>Returned on session timeout in a federated scenario.</p>
+<pre>{ 
+  "RPLogoutInfo":[ 
+    { 
+      "location":"http://fedmember1.acmepaymentscorp.com/api/login/logout?atmoCallbackFn=?..",
+      "method":"GET"      
+    },
+    { 
+      "location":"http://fedmember2.acmepaymentscorp.com/api/login/logout?atmoCallbackFn=?..",
+      "method":"GET"
+    }
+  ] 
+}</pre>
+<p><strong>Sample response body #3</strong></p>
+<p>Returned on user logout in a federated scenario with IdPs, <strong>returninstructions</strong> = true.</p>
+<pre>{ 
+  "RPLogoutInfo":[ 
+    { 
+      "location":"http://acmepaymentscorp.com/api/login/logout?atmoCallbackFn=?..",
+      "method":"GET"
+    },
+    { 
+      "location":"http://acmepaymentscorp.com/api/login/logout?atmoCallbackFn=?..",
+      "method":"GET"
+    }
+  ],
+  "IDPLogoutInfo":{ 
+    "location":"http://idp.ssocircle.com/sso/SSOPost/metaAlias/ssocircle",
+    "method":"POST",
+    "params":[
+      {
+        "name":"SAMLRequest",
+        "value":"nVbbkqrIEn33Kzrcj0Y3F1HU2N0TxUUEAULt79%2B6YmTPnvFUlmatWrszK4..."
+      },
+      {
+        "name":"RelayState",
+        "value":"afVGUYLlhfkdsalVKLJflajsflWJDSGF..."
+      }
+      ],
+    "content-type":"application/x-www-form-urlencoded"
+  }
+}</pre>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Response Headers" -->
+<h3 id="responseheaders">Response Headers</h3>
+<p>For general information on response header values, refer to <a href="../Ref_HTTPHeaders.htm#ref_httpresponseheaders">HTTP Response Headers</a>.</p>
+<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+  <thead>
+    <tr bgcolor="#DDDDDD">
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="../Ref_HTTPHeaders.htm#contenttype_response">Content-Type</a></td>
+      <td><!-- #BeginLibraryItem "/Library/hdrval_appjson.lbi" --><strong>application/json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appjson_72.lbi" --><strong>application/vnd.soa.v72+json</strong><!-- #EndLibraryItem --></td>
+    </tr>
+  </tbody>
+</table>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Response Body" -->
+<h3 id="responsebody">Response Body</h3>
+<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+  <thead>
+    <tr bgcolor="#DDDDDD">
+      <th width="20%">Name</th>
+      <th width="15%">Type</th>
+      <th width="65%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LogoutResponse</td>
+      <td>LogoutResponse</td>
+      <td><p>Depending on the specific logout scenario, this object might be empty or might include information that might be needed by another tenant or by an external identity provider to perform single logout. Here are some scenarios:</p>
+        <p>If the session times out, the developer portal:</p>
+        <ul class="apidoctable_ul">
+          <li>Ignores the <strong>returninstructions</strong> parameter.</li>
+          <li>Ends the userâs session and expires the cookies (AtmoAuthToken, and possibly CSRF).</li>
+          <li>Returns the <strong>LogoutResponse</strong> JSON object with <strong>RPLogoutInfo</strong> for each remote federation member.</li>
+        </ul>
+        <p>If the user actively ends the session, the developer portal:</p>
+        <ul class="apidoctable_ul">
+          <li>Ends the userâs session and expires the cookies (AtmoAuthToken, and possibly CSRF).</li>
+          <li>If the <strong>returninstructions</strong> parameter is set to <strong>true</strong>, returns the <strong>LogoutResponse</strong> JSON object with <strong>IDPLogoutInfo</strong> if the user is logged in via a third-party provider and <strong>RPLogoutInfo</strong> for each remote federation member.</li>
+          <li>If the <strong>returninstructions</strong> parameter is set to <strong>false</strong>, redirects the user-agent if SLO needs to be performed at the IdP; otherwise, just returns an HTTP code 200.</li>
+          </ul>
+        <p>See sample responses above.</p></td>
+    </tr>
+  </tbody>
+</table>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<h3 id="errorcodes">Error Codes/Messages</h3>
+<p>If the call is unsuccessful an error code/message is returned. One or more examples of possible errors for this operation are shown below.</p>
+<!-- InstanceBeginEditable name="Error Messages" -->
+<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+  <thead>
+    <tr bgcolor="#DDDDDD">
+      <th width="20%">Item</th>
+      <th width="80%">Value</th>
+    </tr>
+    <tr>
+      <td><a href="../Ref_HTTPStatusCodes.htm#http400">400</a></td>
+      <td>Bad request: Returned if the client sends invalid parameters or body content.
+        For example, you might get this response if you didn't include the required headers.</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="../Ref_HTTPStatusCodes.htm#http500">500</a></td>
+      <td>An error occurred processing the call. </td>
+    </tr>
+  </tbody>
+</table>
+<!-- InstanceEndEditable -->
+<p><a href="../Ref_ErrorMessages.htm">More information about&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;API error messages.</a></p>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+<h3 id="relatedtopics">Related Topics</h3><!-- #BeginLibraryItem "/Library/_RelatedTopics.lbi" -->
+<table width="700" border="0" cellspacing="0" cellpadding="2">
+  <tr>
+    <td width="300"><ul>
+  <li><a href="../index.htm">Enterprise API Platform API: Overview</a></li>
+  <li><a href="../Ref_Glossary_CommunityPlatform.htm">Glossary of Terms</a></li>
+  <li><a href="../Ref_DocConventions.htm">Documentation Conventions</a></li>
+</ul>
+</td>
+    <td width="400"><ul>
+  <li><a href="../Ref_AuthenticationAndSecurity.htm">Authentication and Security</a></li>
+  <li><a href="../Ref_TroubleshootingAndSupport.htm">Troubleshooting and Support</a></li>
+  <li><a href="../Ref_API_Reference.htm">Enterprise API Platform API: Reference Material</a></li>
+</ul>
+</td>
+  </tr>
+</table><!-- #EndLibraryItem --><hr />
