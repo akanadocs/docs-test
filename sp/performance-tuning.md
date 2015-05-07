@@ -84,7 +84,7 @@ Over time, the data stored by the Policy Manager will need to be archived to pre
 2. Configuring the deleting of data in the admin console's 'com.soa.rollup.delete.old' category
 3. Utilizing CRON or similar scheduling framework to delete data directly in the database.
 
-The recommended approach is #3 above and more information can be provided by our support organization at mailto:support@akana.com
+The recommended approach is #3 above and more information can be provided by our support organization at support@akana.com
 
 
 ### <a name="config-setting"></a>Configuration Settings
