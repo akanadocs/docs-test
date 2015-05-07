@@ -113,6 +113,8 @@ To change this limit, edit the /etc/security/limits.conf file and make the follo
 [SOAUSERACCOUNT]           hard    nofile          100000
 ```
 
+After changing the limits.conf file, you will need to re-login for the setting to tale effect. Use ulimit -n to ensure that the value has changed.
+
 **Scope**: All Containers
 
 #### <a name="jre-memory"></a>Configuring the JVM memory settings
