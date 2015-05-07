@@ -29,13 +29,15 @@ Akana Performance Tuning Guide
 		<li><a href="#listener-connection-pool">Configuring the container listeners</a></li>
 		<li><a href="#client-connection-pool">Configuring the client connection pool</a></li>
 	</ol>
-	<li><a href="#less-important-settings">Less Important Settings</a></li>
+	<li><a href="#other-settings">Other Settings</a></li>
 	<ol>
 		<li><a href="#gif-metrics">Calculating GIF metrics</a></li>
 		<li><a href="#auto-search">Disabling auto-search</a></li>
 		<li><a href="#require-metrics-policy">Internal service metrics calculations</a></li>
 		<li><a href="#usage-writer">Configuring the Usage Writer</a></li>
 		<li><a href="#preloading">Preloading invoked services</a></li>
+		<li><a href="#contract-policy-cache">Contract policy cache</a></li>
+		<li><a href="#endpoint-cache">Endpoint cache</a></li>
 	</ol>
 </ol>
 
@@ -170,7 +172,7 @@ com.soa.http.client.core ->
 http.connection.manager.defaultMaxPerRoute = 1500
 ```
 
-### <a name="less-important-settings"></a>Less important settings
+### <a name="other-settings"></a>Other settings
 
 This section covers tuning parameters that are used less often. The default settings will work in the majority of environments.
 
@@ -249,7 +251,58 @@ During normal Network Director operation, the downstream API/service endpoints a
 **Scope**: Network Director Containers
 
 In the admin console, configure the following:
+
 ```
 com.soa.vs.engine -> 
 vs.capability.metadata.preloadInvokedServices=true
 ```
+
+#### <a name="contract-policy-cache"></a>Contract policy cache
+
+The Network Director caches the policies associated with the contract. This cache expires to save memory, but incurs an overhead in the first invocation of an API when the cache is reloaded.
+
+**Scope**: Network Director Containers
+
+In the admin console, configure the following:
+
+```
+com.soa.contract.enforcement -> 
+contract.handler.framework.idleExpiration=259200
+```
+Amount of seconds a contract that has not been authorized against will remain cached. The default value is 300, but it can be extended to something like 259200 (3 days)
+
+```
+com.soa.contract.enforcement -> 
+contract.handler.framework.maxRefreshInterval=900
+```
+
+Amount of seconds a contract should remain in the cache before requiring a refesh. The default value is 120, but can be extended to something like 900 (15 minutes) as long as the time taken to propagate contract policies is not a security or operational concern.
+
+#### <a name="endpoint-cache"></a>Endpoint cache
+
+The Network Director caches the endpoints associated with downstream APIs/Service. This cache expires to save memory, but incurs an overhead in the first invocation of an API when the cache is reloaded.
+
+**Scope**: Network Director Containers
+
+In the admin console, configure the following:
+
+```
+com.soa.jbi -> 
+lbha.endpoint.refresh.task.allowRemoval=false
+```
+If true, removes endpoints from the ache when inactive. The default value is true, but if there are not large numbers of inactive APIs/Services being managed, this value can be set to false.
+
+
+```
+com.soa.jbi -> 
+lbha.endpoint.refresh.task.expirationInterval=3600000
+```
+The time in milliseconds and endpoint can be inactive (not called) before it is removed from the router cache. The default value is 300000, but can be set to 3600000 (one hour). 
+
+```
+com.soa.jbi -> 
+lbha.endpoint.refresh.task.maxrefreshInterval=900000
+```
+The maximum amount of time in milliseconds before the refresh of endpoints. The default value is 60000, but can be extended to 900000 (15 minutes) as long as the time to propagate downstream endpoint changes is not a security or operational concern.
+
+
