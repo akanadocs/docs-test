@@ -76,6 +76,15 @@ There are currently two features that can be split up this way:
 1. All Schedule jobs features should be in the same container. This means that 'SOA Software Scheduled Jobs' and 'SOA Software Community Manager Scheduled Jobs' must be installed together into containers. Installing any one scheduled job feature will start the Quartz scheduler and could cause it to run all schedule jobs resulting in failures.
 2. The Community Manager theme features (e.g. 'SOA Software Community Manager Simple Developer Theme' and 'SOA Software Community Manager Default Theme') must be installed together with the 'SOA Software Community Manager APIs' feature into containers. 
 
+#### <a name="data-archiving"></a>Data archiving
+
+Over time, the data stored by the Policy Manager will need to be archived to prevent the database from growing to an unmanageable size. This is a critically important maintenance task that can be performed is three different ways:
+
+1. Exporting usage data from the user interface or via an API call
+2. Configuring the deleting of data in the admin console's 'com.soa.rollup.delete.old' category
+3. Utilizing CRON or similar scheduling framework to delete data directly in the database.
+
+The recommended approach is #3 above and more information can be provided by our support organization at mailto:support@akana.com
 
 
 ### <a name="config-setting"></a>Configuration Settings
