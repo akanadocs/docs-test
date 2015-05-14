@@ -63,7 +63,7 @@ API traffic processing should be handled separately from Web traffic and Admin t
 
 ![Admin Console](images/hardening-admin-console.png "Admin Console")
 
-#### <a name="install-internet-facing-and-administration-applications-on-separate-containers"></a>Install Internet-facing and administration applications on separate containers
+#### <a name="install-internet-facing-and-administration-applications-on-separate-containers"></a>Install Internet-facing and Administration Applications on Separate Containers
 
 There are two components to this:
 1.	The Community Manager should not be installed on the same container as Policy Manager Console
