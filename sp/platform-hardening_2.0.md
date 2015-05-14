@@ -30,8 +30,8 @@ SOA Software Platform Hardening Guide
 		<li><a href="#ignore-cookies">Configure the product to ignore downstream cookies</a></li>
 		<li><a href="#secure-cookies">Configure secure cookies</a></li>
 		<li><a href="#disabling-sslv3">Disabling SSLv3</a></li>
-		<li><a href="#restrict-cipher-suites">Restrict the cipher suites used/a></li>
-		<li><a href="#prevent-forward-proxying">Prevent Forward Proxying/a></li>
+		<li><a href="#restrict-cipher-suites">Restrict the cipher suites used</a></li>
+		<li><a href="#prevent-forward-proxying">Prevent Forward Proxying</a></li>
 		<li><a href="#nd-header-propagation">Header Propagation in Network Director</a></li>
 		<li><a href="#cm-header-propagation">Header Propagation in Community Manager Subsystem</a></li>
 		<li><a href="#credential-cache">Tune the API Security Credential Cache</a></li>
