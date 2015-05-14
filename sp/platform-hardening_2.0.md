@@ -18,6 +18,7 @@ SOA Software Platform Hardening Guide
 	<li><a href="#introduction">Introduction</a></li>
 	<li><a href="#deployment-architecture">Deployment Architecture</a></li>
 	<ol>
+		<li><a href="#install-internet-facing-and-administration-application-on-separate-containers">Install Internet-facing and Administration Applications on Separate Containers</a></li>
 		<li><a href="#install-network-director-on-a-separate-container">Install Network Director on a separate container</a></li>
 		<li><a href="#install-internet-facing-and-administration-applications-on-separate-containers">Install Internet-facing and administration applications on separate containers</a></li>
 		<li><a href="#configure-all-listeners-internal-and-external-as-htts-only">Configure all listeners, internal and external as HTTPS only</a></li>
@@ -28,10 +29,21 @@ SOA Software Platform Hardening Guide
 		<li><a href="#jre-unlimited-strength">Add the unlimited strength policy to the JDK</a></li>
 		<li><a href="#ignore-cookies">Configure the product to ignore downstream cookies</a></li>
 		<li><a href="#secure-cookies">Configure secure cookies</a></li>
+		<li><a href="#disabling-sslv3">Disabling SSLv3</a></li>
 		<li><a href="#restrict-cipher-suites">Restrict the cipher suites used/a></li>
+		<li><a href="#prevent-forward-proxying">Prevent Forward Proxying/a></li>
 		<li><a href="#nd-header-propagation">Header Propagation in Network Director</a></li>
 		<li><a href="#cm-header-propagation">Header Propagation in Community Manager Subsystem</a></li>
 		<li><a href="#credential-cache">Tune the API Security Credential Cache</a></li>
+		<li><a href="#configure-the-anti-virus-policy-to-scan-for-uploaded-files">Configure the Anti-virus Policy to scan for uploaded files</a></li>
+		<li><a href="#enabling-csrf-protection">Enabling CSRF protection</a></li>
+		<li><a href="#adding-xss-exclusions">Adding XSS exclusions</a></li>
+		<li><a href="#turning-off-user-account-enumeration">Turning off User Account Enumeration</a></li>
+		<li><a href="#configuring-challenge-questions-and-answers">Configuring Challenge Questions and Answers</a></li>
+		<li><a href="#disallowing-user-profile-modification">Disallowing User Profile Modification</a></li>
+		<li><a href="#configuring-account-login-rules">Configuring Account Login Rules</a></li>
+		<li><a href="#configuring-password-complexity-rules">Configuring Password Complexity Rules</a></li>
+		<li><a href="#configuring-x-frame-options-header">Configuring X-FRAME-OPTIONS Header</a></li>
 	</ol>
 </ol>
 
@@ -44,7 +56,9 @@ This document describes the best practices and configuration settings to harden 
 ### <a name="deployment-architecture"></a>Deployment Architecture
 There are several best practices that cover the deployment of the product in a hardened environment.
 
-#### <a name="install-network-director-on-a-separate-container"></a>Install Network Director on a separate container
+An external HSM keystore can be used in place of the out of the box Policy Manager keystore (database).  The configuration of Policy Manager with HSM is described in a separate document.
+
+#### <a name="install-network-director-on-a-separate-container"></a>Install Network Director on a Separate Container
 API traffic processing should be handled separately from Web traffic and Admin traffic. To this end, the Network Director should not be installed on the same container as Community Manager, or Policy Manager features:
 
 ![Admin Console](images/hardening-admin-console.png "Admin Console")
@@ -67,8 +81,6 @@ atmosphere.config.denyUserRoles=SiteAdmin,BusinessAdmin,ApiAdmin,System Administ
 #### <a name="configure-all-listeners-internal-and-external-as-htts-only"></a>Configure all listeners, internal and external as HTTPS only
 
 This is accomplished in two places in the product. Firstly, the listeners for the applications in the container are configured from within Policy Manager at Containers->[container_name]->Details->Inbound Listeners. Options for configuring port and PKI are available. Settings for two-way SSL mutual authentication are also available. It is recommended that either the “Accept client certificates” or “Require client certificates” be selected based on customer security requirements
-
-Secondly, when the container starts up, it supports an Admin application (/admin). The port and associated transport settings for the Admin application are configurable in the /instances/[container_name]/system.properties file for each container. To avoid any confusion with keys and certificates, it is recommended that the Admin application’s SSL settings be changed only after the main container listeners have been configured for SSL.
 
 **Scope**: All Containers
 
@@ -94,7 +106,7 @@ container.name=[container_name]
 
 Note above the *.secure syntax used for the settings.
 
-Once all of these SSL listener configurations have been validated, the container’s original HTTP listeners can be deleted using the Policy Manager Console. Note that when deleting HTTP listeners for a container running the Policy Manager Services feature, it is necessary to add that container listener’s X.509 certificate to the “bootstrap keystore” of all Network Director containers. More information on this configuration task can be found in the Support Knowledgebase.
+Secondly, the listeners for the applications in the container are configured from within Policy Manager at Containers->[container_name]->Details->Inbound Listeners. Options for configuring port and PKI are available.
 
 #### <a name="config-admin-sep-port"></a>Configure the Admin console (/admin) on a separate port
 
@@ -123,29 +135,6 @@ org.eclipse.jetty.servlet.SessionCookie=JSESSIONID_pm
 felix.shutdown.hook=false
 container.name=[container_name]
 ```
-
-In this configuration, the Admin console (/admin) would only be accessible via SSL on IP address 10.1.1.2, port 14443.
-It is further possible to eliminate exposing the Admin console (/admin) to the network at all. The Admin console can be configured so that it is only bound to the “localhost” address and not exposed outside the local system. To enable this configuration, modify the above properties to include these values:
-
-```
-com.soa.http.host.secure=127.0.0.1
-```
-
-The configuration file to restrict the Admin console access must be named:  *com.soa.admin.console.cfg*.  The contents of this file is as shown below.  The *admin.console.access.restricted* property must be set to *true* to restrict the Admin Console access.  The other two properties are optional depending on the specific security requirements.
-
-```
-# Set access to the Admin Console on the localhost interface only
-admin.console.localhost.only=false
-
-# Restrict the Admin Console access to the port and interface
-# defined in the system.properties
-admin.console.access.restricted=true
-
-# Hides the Admin domain from the Admin Console login
-admin.console.domain.enabled=true
-```
-
-The most common way of accessing the Admin console in this configuration is using SSH port tunneling.
 
 ### <a name="config-setting"></a>Configuration Settings
 
@@ -183,6 +172,14 @@ com.soa.transport.jetty ->
 session.manager.factory.secureCookies=true
 ```
 
+#### <a name="disabling-sslv3"></a>Disabling SSLv3
+This configures the product to disable SSLv3.
+**Scope**: All Containers
+
+In the admin console, configure the following:
+
+```com.soa.transport.jetty ->http.incoming.transport.config.enabledProtocols=SSLv2HELLO,TLSv1,TLSv1.1, TLSv1.2
+```
 #### <a name="restrict-cipher-suites"></a>Restrict the cipher suites used
 
 Use only stronger cipher suites for SSL
@@ -196,7 +193,12 @@ com.soa.transport.jetty ->
 http.incoming.transport.config.cipherSuites=SSL_RSA_WITH_RC4_128_MD5,SSL_RSA_WITH_RC4_128_SHA,TLS_RSA_WITH_AES_128_CBC_SHA,TLS_DHE_DSS_WITH_AES_128_CBC_SHA,SSL_RSA_WITH_3DES_EDE_CBC_SHA,SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA
 ```
 
-#### <a name="nd-header-propagation"></a>Header Propagation in Network Director
+#### <a name="prevent-forward-proxying"></a>Prevent Forward Proxying
+Prevent unauthenticated users from initiating arbitrary internal connections from the Community Manager portal.
+**Scope**: Community Manager ContainersIn the admin console, configure the following:
+
+```
+com.soa.atmosphere.forwardproxy ->forward.proxy.allowedHosts=<Network Director Host(s) and/or Load Balancer host>```Values are comma separated.#### <a name="nd-header-propagation"></a>Header Propagation in Network Director
 
 Prevent the automatic propagation of certain HTTP headers through the Network Director and also configure a translation of the X-Forwarded-Host header. 
 
@@ -239,3 +241,84 @@ com.soa.api.security ->
 com.soa.api.security.cache.expirationPeriod=3600000
 com.soa.api.security.cache.refreshTime=300000
 ```
+
+#### <a name="configure-the-anti-virus-policy-to-scan-for-uploaded-files"></a>Configure the Anti-virus Policy to scan for uploaded files
+The Anti-virus policy scans for files that are uploaded from the Community Manager Portal.
+**Scope**: All Community Manager Containers
+In the Policy Manager Console, create an Anti-Virus Operational Policy and configure the policy.
+
+![Create Anti Virus Policy](images/modify-av-policy.png "Create Anti Virus Policy")
+
+Attach this policy to the ConsoleResourceAPIService and the ContentAPIService in the SOA Software Policy Manager -> SOA Software Community Manager node in the Policy Manager Console Organization tree.  
+
+![Attach Anti Virus Policy](images/attach-av-policy.png "Attach Anti Virus Policy")
+
+#### <a name="enabling-csrf-protection"></a>Enabling CSRF Protection
+You can enable and disable CSRF protection in the Policy Manager and Community Manager User Interfaces.
+***Scope***:  All Community Manager and Policy Manager ContainersDue to the fact that Policy Manager is not Internet-facing, it is disabled by default. You can enable the CSRF protection in the Policy Manager in the admin console:
+
+```com.soa.console.csrf ->org.owasp.csrfguard.Enabled=true```
+In Community Manager, CSRF configuration can be found under Administration -> Config -> Security Settings:
+
+![Enable CSRF Support](images/enable-csrf-support.png "Enable CSRF Support")
+
+#### <a name="adding-xss-exclusions"></a>Adding XSS exclusions
+Cross-site-scripting (XSS) is an way to inject client-side script into Web pages viewed by other users. 
+***Scope***:  All Community Manager and Policy Manager Containers
+To configure any exceptions to the exclusion policy:
+
+```com.soa.console.xss ->exceptionURLs=[COMMA DELIMITED LIST]```
+To configure any new keywords that should be excluded:
+
+```com.soa.console.xss ->keywords=[COMMA DELIMITED LIST]```
+To turn XSS validation on/off:
+
+```com.soa.console.xss ->validate=[true|false]```
+
+#### <a name="turning-off-user-account-enumeration"></a>Turning off User Account Enumeration
+User Account Enumeration occurs when the Community Manager user interface provides direct feedback to a user during the signup and registration processes to the effect that a user account already exists or is already registered. If this is turned off, no useful feedback is provided to the user, minimizing the security risk, but decreasing usability.
+***Scope***:  All Community Manager Containers
+In Community Manager, User Account Enumeration configuration can be found under Administration -> Config -> Security Settings:
+
+![Allow User Enumeration](images/allow-user-enum.png "Allow User Enumeration")
+
+#### <a name="configuring-challenge-questions-and-answers"></a>Configuring Challenge Questions and Answers
+Challenge Questions/Answers are often required to increase security around password reset. When signing up to the platform, the user must provide the answer to one or more security questions, if the platform is set up to require them. The user's answers are stored in the database, and the user must answer one or more security questions on demand to perform certain functions such as resetting a password or changing the user profile.
+***Scope***:  All Community Manager Containers
+In Community Manager, the Challenge Questions/Answers configuration can be found under Administration -> Config -> Users:
+>Enforce Challenge Questions on Login -> EnabledAdditional settings can be found under Administration -> Config -> Security Settings:
+
+![Encrypt Challenge Answers](images/encrypt-challenge-answers.png "Encrypt Challenge Answers")
+
+Configuration of the actual questions available can be done via an [API call](http://docs.akana.com/cm/api/businesses/m_businesses_saveChallenges.htm) into the system.
+
+#### <a name="disallowing-user-profile-modification"></a>Disallowing User Profile Modification
+User Profile Modification permits a user access to their own profile for modification. In some circumstances, you may wish to prevent this (e.g. when user accounts are pre-provisioned).
+***Scope***:  All Community Manager Containers
+In Community Manager, User Profile Modification configuration can be found under Administration -> Config -> Security Settings:
+
+![User Profile Modification](images/user-profile-modification.png "User Profile Modification")#### <a name="configuring-account-login-rules"></a>Configuring Account Login Rules
+The account login rules may include many options regarding failure attempts allowed, account suspension times, auto-login, etc.
+***Scope***: Community Manager
+These login policies may be set via an [API call](http://docs.soa.com/cm/api/businesses/m_businesses_updateLoginPolicy.htm) into the system or a direct DB query. 
+If using a DB query, the syntax will be something like:
+
+```-- Login Rulesupdate LOGIN_RULES set MAXATTEMPTS=3, ATTEMPTSPERIOD=1, SUSPENSIONTIME=30, AUTO_LOGIN_EXT_DOMAIN=’com.soa.feature.enabled’ where TENANTID = (select TENANTID from TENANTS where FEDMEMBERID='[YOUR TENANT ID]');
+```
+
+#### <a name="configuring-password-complexity-rules"></a>Configuring Password Complexity Rules
+Password requirements (rules) may include many options regarding length, special characters, etc.
+***Scope***: Community Manager
+These password rules may be set via an [API call](http://docs.soa.com/cm/api/businesses/m_businesses_updatePasswordPolicy.htm) into the system or a direct DB query.
+If using a DB query, the syntax will be something like:
+
+```-- Password Rulesupdate PASSWORD_RULES set MINLENGTH=8, MAXLENGTH=20, MINLETTERS=1, MINNUMBERS=1, ALLOWEDSPECCHARS='%&_?#=-', CANCONTAINSPACES='N', ISCASESENSITIVE='N' where TENANTID = (select TENANTID from TENANTS where FEDMEMBERID='[YOUR TENANT ID]');```
+
+#### <a name="configuring-x-frame-options-header"></a>Configuring X-FRAME-OPTIONS Header
+The X-FRAME-OPTIONS header plays a role in determining if and how the user interface can be embedded within an iFrame in a 3rd party site. 
+***Scope***:  All Community Manager and Policy Manager ContainersTo configure Community Manager:
+
+```com.soa.atmosphere.console ->atmosphere.console.config.xFrameOptions=[DESIRED HEADER]```
+To configure Policy Manager:
+
+```com.soa.console.xss ->xFrameOptions=[DESIRED HEADER]```
