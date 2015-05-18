@@ -1,0 +1,150 @@
+---
+layout: page
+title: Registering a Container 
+description: Learn how register a container in Policy Manager 6.x and  7.x
+product: ag
+category: learn
+weight:	6
+sub-nav-class: Administration
+type: page
+nav-title: Registering a Container
+
+---
+
+<h2 name="top">Registering  a Container</h2>
+  <p>Learn how to register a container in Policy Manager 6.x and 7.x..</p>
+
+
+<a href="using_admin_console.htm" class="button secondary">Using Admin Console</a>
+<a href="managing_containers.htm" class="button secondary">Managing Containers</a>
+<p></p>
+
+
+  <div class = "divider1"></div>
+   <h3 style="color: gray;">Table of Contents</h3>
+
+   <ol class="table_of_contents">
+
+ <li><a href="#introduction">Introduction</a></li>
+ <li><a href="#prereques">Step 1: Prerequisites</a></li>
+
+ <li><a href="#container">Step 2: Configure Container (GUI / Silent)</a></li>
+  <li><a href="#install_featurs">Step 3: Install Features</a></li>
+ 
+
+
+  </ol>
+  <div class = "divider1"></div>
+
+
+
+<h3><a name="introduction">Introduction</a></h3>
+
+
+
+<p>The Configure Container Instance Wizard is used to define an OSGi container. This container type can support multiple features. GUI and Silent installation methods are provided. </p>
+<h3><a name="prereqs">Step 1: Prerequisites</a></h3>
+<ul class="usingOrderedList">
+  <li>Platform version 6.x or 7.x  must be installed.</li>
+</ul>
+<h3><a name="nd_container">Step 2: Configure Container (GUI / Silent)</a></h3>
+<h4>GUI Configuration</h4>
+<ol class="usingOrderedList">
+  <li>Launch the <em>Configure Container Instance Wizard. </em>Navigate to the  Platform release directory c:\&lt;release directory&gt;\bin and enter: <br>
+    <br>
+    - startup.bat configurator (Windows)<br>
+    - startup.sh configurator (UNIX)<br>
+  </li>
+  <li>Define the container (<strong>ND1</strong>) and Default Admin User.<br>
+    <br>
+  </li>
+  <li>On the <em>Instance Configuration Options</em> screen, select the<strong> Standalone </strong>deployment option. </li>
+  <li>On the <em>Default HTTP Listener</em> screen, set the default HTTP Port and Host IP Address for this instance. The listener configuration will be used as the Administration Console address.<br>
+    <br>
+    <img src="images/install_container_default_http_listener.jpg" width="471" height="407" /><br>
+    <br>
+    <ul class="usingOrderedList">
+      <li><strong>Port </strong> - Represents the default HTTP Port. </li>
+      <li><strong>Bind to all interfaces</strong> - The listener binds to the 0.0.0.0 address. &quot;localhost&quot; or any other valid IP for the machine can be used to connect to the client/browser.</li>
+      <li><strong>Bind to a specific interface </strong> - The selected host name is used to connect to the client/browser.</li>
+    </ul>
+    <p>The Default HTTP Listener information is used to compose the <em>Administration Console</em> URL as follows:<br>
+      <br>
+http://&lt;hostname&gt;:&lt;port&gt;/admin/</p>
+  <em>Note: The trailing forward slash is required in the Admin Console URL (i.e., admin/).<br>
+  </em><br>
+  </li>
+  <li>After the container has successfully started, launch the <em>Administration Console</em> using the following URL format http://[computer name]:[port]/ContextPath/admin/<br>
+    <br>
+    <u><strong>Example:</strong></u><br>
+    <br>
+    <a href="http://localhost:8080/TomcatAgent/admin/login.html">http://localhost:9900/nd1/admin/login.html</a><br>
+    After the <em>Administration Console</em> launches, navigate to the <em>Available Features</em> tab to install desired features, plug-ins, or tools. <br />
+    <br />
+    See <a href="http://docs.akana.com/ag/admin_console/using_admin_console.htm">Using the Administration Console</a>  for more information. 
+<br>
+  </li>
+</ol>
+<h4>Silent Configuration</h4>
+<p>The <em>Configure Container Instance Wizard</em> can be set up to run in an automated mode (i.e., silent). This is done by defining a properties file and pre-defining a set of property values to be used by the wizard<em> </em>to automatically configure a container instance.</p>
+<ol>
+  <li>Define a properties file (e.g., myprops.properties)</li>
+  <li>Add the following default content:<br>
+    <br>
+    container.instance.name=instancename<br>
+  credential.username = administrator<br>
+  credential.password = password<br>
+  default.host=localhost<br>
+  default.port=9900<br>
+  <br>
+  <u><strong>Base Properties</strong></u><br>
+  <br>
+The following properties are used for Standalone deployments. <br>
+<br>
+<ul class="usingOrderedList">
+  <li><strong>container.instance.name</strong> - Name of the Container.</li>
+  <li><strong>credential.username</strong> - Username for logging into the Administration Console.</li>
+  <li><strong>credential.password</strong> - Password for logging into the Administration Console.</li>
+  <li><strong>default.host</strong> - Host for the Container Instance.</li>
+  <li><strong>default.port</strong> - Port for the Container Instance.
+<br>
+<br>
+  </li>
+</ul>
+  </li>
+  <li>Run the silent configuration. The silent configuration file  accepts three system properties which together are used to perform a silent configuration:
+    </p>
+    <br>
+  
+    <ul class="usingOrderedList">
+      <li><strong>silent</strong> - If True, silent configuration will be performed)</li>
+      <li><strong>deploymentName</strong> - Standalone)</li>
+      <li><strong>properties</strong> - location on filesystem of property file to be used for configuration) <br>
+    <br>
+  </li>
+    </ul>
+  </li>
+  <li>Windows and UNIX script examples:<br>
+    <br>
+    <u><strong>Windows:</strong></u><br>
+    \&lt;release_directory&gt;\bin&gt;startup.bat configurator &quot;-D<strong>silent</strong>=true&quot; &quot;-D<strong>properties</strong>=C:/&lt;property file directory location&gt;/myprops.properties&quot;<br>
+    <br>
+    <u><strong>UNIX</strong></u><br>
+\&lt;release_directory&gt;\bin&gt;startup.sh configurator -D<strong>silent</strong>=true -D<strong>properties</strong>=/export/home/username/&lt;property file directory location&gt;\myprops.properties<br />
+<br />
+  </li>
+  <li>After the container has successfully started, launch the <em>Administration Console</em> using the following URL format http://[computer name]:[port]/ContextPath/admin/<br />
+    <br />
+    <u><strong>Example:</strong></u><br />
+    <br />
+    <a href="http://localhost:8080/TomcatAgent/admin/login.html">http://localhost:9900/nd1/admin/login.html</a><br />
+After the <em>Administration Console</em> launches, navigate to the <em>Available Features</em> tab to install desired features, plug-ins, or tools. <br />
+<br />
+See <a href="http://docs.akana.com/ag/admin_console/using_admin_console.htm">Using the Administration Console</a> for more information. </li>
+</ol>
+
+
+ <p><a href="#top">back to top</a> </p>
+
+
+<div class = "divider1"></div>
