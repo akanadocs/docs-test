@@ -253,17 +253,80 @@ There are several key phrases to search for within the platform logs. The follow
 
 This table explains what each of these log phrases mean:
 
-| Phrase/Pattern | Description | Severity | Resolution |
-| -------------- | ----------- |:--------:| ---------- |
-| OutOfMemoryError | This occurs when the platform runs out of memory due to a memory leak or high demand. The container typically becomes unresponsive. | Critical | 1) Take a thread dump <br> 2) Restart the container |
-| Cannot get a connection, pool exhausted | This is due to the DB connection pool in the in platform running out of connections due to high load. | Critical | 1) Check DB availability <br> 2) Increase pool size or add containers to the cluster (preferred)<br> 3) Restart the container |
-| Error in creating Prepared statement for the query | Database query execution error. | High | Check root cause in same log entry |
-| org.apache.lucene.store.jdbc.JdbcStoreException | Search index database error | High | 1) If the log includes the phrase like 'Duplicate entry [X] for [Y]', wait to see if it resolves itself. If it does not resolve itself, restart the container <br> 2) If the log includes the phrase 'Deadlock found when trying to get lock', it should resolve itself<br> 3) If the log includes the phrase 'No entry for [X] table index\_objects', wait to see if it resolves itself. If it does not resolve itself, force a reindex by truncating the INDEX\_OBJECTS, INDEX\_QUEUE and INDEX\_STATUS tables. Restart one of the Community Manager servers.|
-| Timeout waiting for idle object | Typically a full connection pool due to load | High | Increase pool size or add containers to the cluster (preferred) |
-| GC overhead limit exceeded | Critical | This is typically caused by a memory leak in the platform. The container typically becomes unresponsive. | Restart and report to support if not resolved |
-| Wsdl does not confirm to wsdl schema | Typically due to a malformed WSDL | Low | Inspect the log for the associated service key and correct the WSDL via the Policy Manager user interface |
-| Error encountered in WS-Security engine | Unknown error when a container is in a bad state | High | Restart and report to support if not resolved |
-| com.mysql.jdbc.exceptions.jdbc4.CommunicationsException | This is due to the DB going down or a network issue | Critical | Check DB availability |
-| Data truncation | Due to data being too large to fit in the DB | High | Contact Akana Support |
-| ERROR [DBStatementAndResultSetTracker] PreparedStatementTracker | This is due to poor DB performance issues | Critical | Check DB availability |
+<table>
+	<tr>
+		<th>Phrase/Pattern</th>
+		<th>Description</th>
+		<th>Severity</th>
+		<th>Resolution</th>
+	</tr>
+	<tr>
+		<td>OutOfMemoryError</td>
+		<td>This occurs when the platform runs out of memory due to a memory leak or high demand. The container typically becomes unresponsive.</td>
+		<td>Critical</td>
+		<td>1) Take a thread dump <br> 2) Restart the container</td>
+	</tr>
+
+<tr>
+		<td> Cannot get a connection, pool exhausted</td>
+		<td>This is due to the DB connection pool in the in platform running out of connections due to high load.</td>
+		<td>Critical</td>
+		<td>1) Check DB availability <br> 2) Increase pool size or add containers to the cluster (preferred)<br> 3) Restart the container |
+<tr>
+		<td> Error in creating Prepared statement for the query</td>
+		<td>Database query execution error. </td>
+		<td>High</td>
+		<td>Check root cause in same log entry |
+<tr>
+		<td>org.apache.lucene.store.jdbc.JdbcStoreException</td>
+		<td>Search index database error</td>
+		<td>High</td>
+		<td>1) If the log includes the phrase like 'Duplicate entry [X] for [Y]', wait to see if it resolves itself. If it does not resolve itself, restart the container <br> 2) If the log includes the phrase 'Deadlock found when trying to get lock', it should resolve itself<br> 3) If the log includes the phrase 'No entry for [X] table index\_objects', wait to see if it resolves itself. If it does not resolve itself, force a reindex by truncating the INDEX\_OBJECTS, INDEX\_QUEUE and INDEX\_STATUS tables. Restart one of the Community Manager servers.|
+<tr>
+		<td>Timeout waiting for idle object</td>
+		<td>Typically a full connection pool due to load </td>
+		<td>High </td>
+		<td>Increase pool size or add containers to the cluster (preferred)
+</tr>
+<tr>
+		<td>GC overhead limit exceeded </td>
+		<td>Critical </td>
+		<td>This is typically caused by a memory leak in the platform. The container typically becomes unresponsive. </td>
+		<td>Restart and report to support if not resolved 
+</tr>
+<tr>
+		<td>Wsdl does not confirm to wsdl schema </td>
+		<td>Typically due to a malformed WSDL </td>
+		<td>Low</td>
+		<td>Inspect the log for the associated service key and correct the WSDL via the Policy Manager user interface 
+</tr>
+
+<tr>
+		<td>Error encountered in WS-Security engine </td>
+		<td>Unknown error when a container is in a bad state</td>
+		<td>High</td>
+		<td>Restart and report to support if not resolved 
+</tr>
+
+<tr>
+		<td>com.mysql.jdbc.exceptions.jdbc4.CommunicationsException </td>
+		<td>This is due to the DB going down or a network issue</td>
+		<td>Critical</td>
+		<td>Check DB availability 
+</tr>
+
+<tr>
+		<td>Data truncation</td>
+		<td>Due to data being too large to fit in the DB</td>
+		<td>High</td>
+		<td>Contact Akana Support 
+</tr>
+
+<tr>
+		<td>ERROR [DBStatementAndResultSetTracker] PreparedStatementTracker</td>
+		<td>This is due to poor DB performance issues </td>
+		<td> Critical </td>
+		<td>Check DB availability 
+</tr>
+</table>
 
