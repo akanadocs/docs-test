@@ -130,7 +130,7 @@ MAILTO=prod_critical@yourcompany.com
 */5 * * * * /xxx/bin/db_monitor.sh
 ```
 
-The next sections will explain each of the metric or conditions that are determined in the above script.
+The next sections will explain each of the metrics or conditions that are determined in the above script.
 
 #### <a name="db-msg-queue"></a>Message queue
 
@@ -278,7 +278,7 @@ This table explains what each of these log phrases mean:
 		<td>High</td>
 		<td>Check root cause in same log entry |
 <tr>
-		<td>org.apache.lucene.store.jdbc.JdbcStoreException</td>
+		<td>org.apache.lucene.store.jdbc.<wbr>JdbcStoreException</td>
 		<td>Search index database error</td>
 		<td>High</td>
 		<td>1) If the log includes the phrase like 'Duplicate entry [X] for [Y]', wait to see if it resolves itself. If it does not resolve itself, restart the container <br> 2) If the log includes the phrase 'Deadlock found when trying to get lock', it should resolve itself<br> 3) If the log includes the phrase 'No entry for [X] table index\_objects', wait to see if it resolves itself. If it does not resolve itself, force a reindex by truncating the INDEX\_OBJECTS, INDEX\_QUEUE and INDEX\_STATUS tables. Restart one of the Community Manager servers.|
@@ -309,7 +309,7 @@ This table explains what each of these log phrases mean:
 </tr>
 
 <tr>
-		<td>com.mysql.jdbc.exceptions.jdbc4.CommunicationsException </td>
+		<td>com.mysql.jdbc.exceptions.jdbc4.<wbr>CommunicationsException </td>
 		<td>This is due to the DB going down or a network issue</td>
 		<td>Critical</td>
 		<td>Check DB availability 
