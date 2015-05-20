@@ -26,13 +26,6 @@ Akana Platform Monitoring Guide (Incomplete)
 		<li><a href="#db-connection-pool">Connection pool</a></li>
 	</ol>
 	<li><a href="#log-mon">Log Monitoring</a></li>
-	<ol>
-		<li><a href="#db-msg-queue">Message queue</a></li>
-		<li><a href="#db-idx-queue">Index queue</a></li>
-		<li><a href="#db-scheduler">Scheduler</a></li>
-		<li><a href="#db-fed">Federation Synchronization</a></li>
-		<li><a href="#db-connection-pool">Connection pool</a></li>
-	</ol>
 </ol>
 
 ### <a name="introduction"></a>Introduction
