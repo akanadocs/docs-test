@@ -10,7 +10,7 @@ type: page
 nav-title: Platform Hardening
 ---
 
-SOA Software Platform Hardening Guide
+Akana Platform Hardening Guide
 -------------------------------------
 
 <h3 style="color: grey;">Table of Contents</h3>
@@ -37,9 +37,9 @@ SOA Software Platform Hardening Guide
 
 ### <a name="introduction"></a>Introduction
 
-SOA Software is a recognized leader in API Management and SOA Governance Automation solutions.  Our platform-independent solution set includes the API Gateway, which is further broken down into Policy Manager, the centralized administration console, and Network Director, an intermediary that integrates with Policy Manager to provide high-performance, scalable API security and management capabilities. The solution also includes Community Manager, which provides a branded developer portal for the consumption of API by the developer.
+Akana is a recognized leader in API Management and SOA Governance Automation solutions.  Our platform-independent solution set includes the API Gateway, which is further broken down into Policy Manager, the centralized administration console, and Network Director, an intermediary that integrates with Policy Manager to provide high-performance, scalable API security and management capabilities. The solution also includes Community Manager, which provides a branded developer portal for the consumption of API by the developer.
 
-This document describes the best practices and configuration settings to harden SOA Software’s API Gateway and Community Manager products. This document is a supplement to SOA Software’s existing “Product Architecture” document showing recommendations for a typical large enterprise.
+This document describes the best practices and configuration settings to harden Akana’s API Gateway and Community Manager products. This document is a supplement to Akana’s existing “Product Architecture” document showing recommendations for a typical large enterprise.
 
 ### <a name="deployment-architecture"></a>Deployment Architecture
 There are several best practices that cover the deployment of the product in a hardened environment.

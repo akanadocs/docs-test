@@ -43,8 +43,6 @@ Akana Performance Tuning Guide
 
 ### <a name="introduction"></a>Introduction
 
-Akana is a recognized leader in API Management and SOA Governance Automation solutions.  Our platform-independent solution set includes the API Gateway, which is further broken down into Policy Manager, the centralized administration console, and Network Director, an intermediary that integrates with Policy Manager to provide high-performance, scalable API security and management capabilities. The solution also includes Community Manager, which provides a branded developer portal for the consumption of API by the developer.
-
 This document describes the performance tuning parameters for Akana’s API Gateway and Community Manager products. 
 
 ### <a name="deployment-architecture"></a>Deployment Architecture
