@@ -45,7 +45,7 @@ Tools like Nagios provide guidelines on configuring monitoring for the operating
 
 ```
 command[check_load]=/usr/local/nagios/libexec/check_load -w 15,10,5 -c 30,25,20
-command[check_disk]=/usr/local/nagios/libexec/check_disk -x /mnt/nfshare -w 20% -c 10% -e
+command[check_disk]=/usr/local/nagios/libexec/check_disk -w 20% -c 10% -e
 command[check_zombie_procs]=/usr/local/nagios/libexec/check_procs -w 5 -c 10 -s Z
 command[check_total_procs]=/usr/local/nagios/libexec/check_procs -w 150 -c 200
 command[check_swap]=/usr/local/nagios/libexec/check_swap -w 20 -c 10
@@ -122,6 +122,14 @@ elif [ $DB_STAT -ge 1 ]; then
   echo "Database monitor is OK";
 fi
 ```
+This script can be put in a CRON job, set to run every 5 minutes as follows:
+
+```
+# contab -l
+MAILTO=prod_critical@yourcompany.com
+*/5 * * * * /xxx/bin/db_monitor.sh
+```
+
 The next sections will explain each of the metric or conditions that are determined in the above script.
 
 #### <a name="db-msg-queue"></a>Message queue
