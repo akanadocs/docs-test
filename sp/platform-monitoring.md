@@ -53,7 +53,7 @@ command[check_swap]=/usr/local/nagios/libexec/check_swap -w 20 -c 10
 
 ### <a name="db-mon"></a>Database Monitoring
 
-There are several key operational / application metrics and conditions to monitor for on the platform database server. The following example script demonstrates how the most common monitors can be aggregated together and applied to a mySQL database server:
+There are several key operational / application metrics and conditions to monitor for on the platform database server. The example script below demonstrates how the most common monitors can be aggregated together and applied to a mySQL database server. Each one will be explained in more detail in the next section:
 
 ```
 #!/bin/bash
