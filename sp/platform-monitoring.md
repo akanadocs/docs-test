@@ -25,7 +25,14 @@ Akana Platform Monitoring Guide (Incomplete)
 		<li><a href="#db-fed">Federation Synchronization</a></li>
 		<li><a href="#db-connection-pool">Connection pool</a></li>
 	</ol>
-	
+	<li><a href="#log-mon">Log Monitoring</a></li>
+	<ol>
+		<li><a href="#db-msg-queue">Message queue</a></li>
+		<li><a href="#db-idx-queue">Index queue</a></li>
+		<li><a href="#db-scheduler">Scheduler</a></li>
+		<li><a href="#db-fed">Federation Synchronization</a></li>
+		<li><a href="#db-connection-pool">Connection pool</a></li>
+	</ol>
 </ol>
 
 ### <a name="introduction"></a>Introduction
@@ -220,4 +227,42 @@ result=`$sqlcmd "$query" | grep $DB_NAME | wc -l`
 [ $? -ne 0 ] && { echo "Cannot connect to database"; exit 1; }
 [ $result -ge 180 ] && ERROR_MSG=${ERROR_MSG}"Master database has $result sockets exhausted out of 180"
 ```
+
+### <a name="log-mon"></a>Log Monitoring
+
+There are several key phrases to search for within the platform logs. The following example script demonstrates how Nagios can be configured with a set of critical errors that can occur in the log:
+
+```
+@searches = ({
+  logfile => '/root/sm70/instances/@HNAME@/log/@HNAME@.log',
+  rotation => 'loglog0log1',
+  criticalpatterns => ['OutOfMemoryError',
+        'Cannot get a connection, pool exhausted',
+        'Error in creating Prepared statement for the query',
+        'org.apache.lucene.store.jdbc.JdbcStoreException',
+        'Timeout waiting for idle object',
+        'GC overhead limit exceeded',
+        'Wsdl does not confirm to wsdl schema',
+        'Error encountered in WS-Security engine',
+        'com.mysql.jdbc.exceptions.jdbc4.CommunicationsException',
+        'Data truncation',
+		 'ERROR [DBStatementAndResultSetTracker] PreparedStatementTracker' ]
+});
+```
+
+This table explains what each of these log phrases mean:
+
+| Phrase/Pattern | Description | Severity | Resolution |
+| -------------- | ----------- |:--------:| ---------- |
+| OutOfMemoryError | This occurs when the platform runs out of memory due to a memory leak or high demand. The container typically becomes unresponsive. | Critical | 1) Take a thread dump <br> 2) Restart the container |
+| Cannot get a connection, pool exhausted | This is due to the DB connection pool in the in platform running out of connections due to high load. | Critical | 1) Check DB availability <br> 2) Increase pool size or add containers to the cluster (preferred)<br> 3) Restart the container |
+| Error in creating Prepared statement for the query | Database query execution error. | High | Check root cause in same log entry |
+| org.apache.lucene.store.jdbc.JdbcStoreException | Search index database error | High | 1) If the log includes the phrase like 'Duplicate entry [X] for [Y]', wait to see if it resolves itself. If it does not resolve itself, restart the container <br> 2) If the log includes the phrase 'Deadlock found when trying to get lock', it should resolve itself<br> 3) If the log includes the phrase 'No entry for [X] table index\_objects', wait to see if it resolves itself. If it does not resolve itself, force a reindex by truncating the INDEX\_OBJECTS, INDEX\_QUEUE and INDEX\_STATUS tables. Restart one of the Community Manager servers.|
+| Timeout waiting for idle object | Typically a full connection pool due to load | High | Increase pool size or add containers to the cluster (preferred) |
+| GC overhead limit exceeded | Critical | This is typically caused by a memory leak in the platform. The container typically becomes unresponsive. | Restart and report to support if not resolved |
+| Wsdl does not confirm to wsdl schema | Typically due to a malformed WSDL | Low | Inspect the log for the associated service key and correct the WSDL via the Policy Manager user interface |
+| Error encountered in WS-Security engine | Unknown error when a container is in a bad state | High | Restart and report to support if not resolved |
+| com.mysql.jdbc.exceptions.jdbc4.CommunicationsException | This is due to the DB going down or a network issue | Critical | Check DB availability |
+| Data truncation | Due to data being too large to fit in the DB | High | Contact Akana Support |
+| ERROR [DBStatementAndResultSetTracker] PreparedStatementTracker | This is due to poor DB performance issues | Critical | Check DB availability |
 
