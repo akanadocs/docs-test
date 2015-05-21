@@ -243,7 +243,7 @@ There are several key phrases to search for within the platform logs. The follow
         'org.apache.lucene.store.jdbc.JdbcStoreException',
         'Timeout waiting for idle object',
         'GC overhead limit exceeded',
-        'Wsdl does not confirm to wsdl schema',
+        'Wsdl does not conform to wsdl schema',
         'Error encountered in WS-Security engine',
         'com.mysql.jdbc.exceptions.jdbc4.CommunicationsException',
         'Data truncation',
