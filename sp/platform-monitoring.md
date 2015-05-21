@@ -240,7 +240,11 @@ result=`$sqlcmd "$query" | grep $DB_NAME | wc -l`
 [ $result -ge 180 ] && ERROR_MSG=${ERROR_MSG}"Master database has $result sockets exhausted out of 180"
 ```
 
-**Resolution**: The database connection pool must be greater that all the connection pools of all the containers connecting to the database. The 
+**Resolution**: The number of connections that the database is willing to accept must be greater that all the connection pools of all the containers connecting to the database. For mySQL, add/edit the following line under [mysqld] in my.cnf:
+
+```
+max_connections=500
+```
 
 ### <a name="log-mon"></a>Log Monitoring
 
