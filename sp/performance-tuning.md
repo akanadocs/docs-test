@@ -20,7 +20,7 @@ Akana Performance Tuning Guide
 	<ol>
 		<li><a href="#install-features-on-separate-containers">Installing features on separate containers</a></li>
 		<li><a href="#separating-policy-manager-features">Splitting features into smaller, subordinate features</a></li>
-		<li><a href="#data-archiving">Data archiving</a></li>
+		<li><a href="#data-archiving">Database maintenance</a></li>
 	</ol>
 	<li><a href="#config-setting">Configuration Settings</a></li>
 	<ol>
@@ -74,7 +74,7 @@ There are currently two features that can be split up this way:
 1. All Schedule jobs features should be in the same container. This means that 'SOA Software Scheduled Jobs' and 'SOA Software Community Manager Scheduled Jobs' must be installed together into containers. Installing any one scheduled job feature will start the Quartz scheduler and could cause it to run all schedule jobs resulting in failures.
 2. The Community Manager theme features (e.g. 'SOA Software Community Manager Simple Developer Theme' and 'SOA Software Community Manager Default Theme') must be installed together with the 'SOA Software Community Manager APIs' feature into containers. 
 
-#### <a name="data-archiving"></a>Data archiving
+#### <a name="data-archiving"></a>Database maintenance
 
 Over time, the data stored by the Policy Manager will need to be archived to prevent the database from growing to an unmanageable size. This is a critically important maintenance task that can be performed is three different ways:
 
@@ -82,7 +82,7 @@ Over time, the data stored by the Policy Manager will need to be archived to pre
 2. Configuring the deleting of data in the admin console's 'com.soa.rollup.delete.old' category
 3. Utilizing CRON or similar scheduling framework to delete data directly in the database.
 
-The recommended approach is #3 above and more information can be provided by our support organization at support@akana.com
+The recommended approach is #3 above and more information can be found in the [Database Maintenance](database-maintenance.html) document.
 
 
 ### <a name="config-setting"></a>Configuration Settings
