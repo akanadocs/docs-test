@@ -167,7 +167,6 @@ date
 Once satisfied with the script, you can set up a cron job to execute it each night. For example, configuring cron to execute at 1am each morning as follows:
 
 ```
-# crontab -l
 0 1 * * * /xxx/bin/cleanup.sh
 ```
 
@@ -514,6 +513,5 @@ exit 0
 Once satisfied with the script, you can set up a cron job to execute it each night. For example, configuring cron to execute on Sunday morning at 1am as follows:
 
 ```
-# crontab -l
 0 1 * * 0 /xxx/bin/partition.sh
 ```

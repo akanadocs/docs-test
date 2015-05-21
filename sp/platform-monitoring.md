@@ -125,7 +125,6 @@ fi
 This script can be put in a cron job, set to run every 5 minutes as follows:
 
 ```
-# crontab -l
 MAILTO=prod_critical@yourcompany.com
 */5 * * * * /xxx/bin/db_monitor.sh
 ```
