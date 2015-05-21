@@ -250,7 +250,7 @@ There are several key phrases to search for within the platform logs. The follow
 		 'ERROR [DBStatementAndResultSetTracker] PreparedStatementTracker' ]
 });
 ```
-
+ 
 This table explains what each of these log phrases mean:
 
 <table>
