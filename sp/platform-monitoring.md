@@ -271,17 +271,23 @@ This table explains what each of these log phrases mean:
 		<td> Cannot get a connection, pool exhausted</td>
 		<td>This is due to the DB connection pool in the in platform running out of connections due to high load.</td>
 		<td>Critical</td>
-		<td>1) Check DB availability <br> 2) Increase pool size or add containers to the cluster (preferred)<br> 3) Restart the container |
+		<td>1) Check DB availability <br> 2) Increase pool size or add containers to the cluster (preferred)<br> 3) Restart the container </tr>
+
+
 <tr>
 		<td> Error in creating Prepared statement for the query</td>
 		<td>Database query execution error. </td>
 		<td>High</td>
-		<td>Check root cause in same log entry |
+		<td>Check root cause in same log entry </tr>
+
+
 <tr>
 		<td>org.apache.lucene.store.jdbc.<wbr>JdbcStoreException</td>
 		<td>Search index database error</td>
 		<td>High</td>
-		<td>1) If the log includes the phrase like 'Duplicate entry [X] for [Y]', wait to see if it resolves itself. If it does not resolve itself, restart the container <br> 2) If the log includes the phrase 'Deadlock found when trying to get lock', it should resolve itself<br> 3) If the log includes the phrase 'No entry for [X] table index\_objects', wait to see if it resolves itself. If it does not resolve itself, force a reindex by truncating the INDEX\_OBJECTS, INDEX\_QUEUE and INDEX\_STATUS tables. Restart one of the Community Manager servers.|
+		<td>1) If the log includes the phrase like 'Duplicate entry [X] for [Y]', wait to see if it resolves itself. If it does not resolve itself, restart the container <br> 2) If the log includes the phrase 'Deadlock found when trying to get lock', it should resolve itself<br> 3) If the log includes the phrase 'No entry for [X] table index_objects', wait to see if it resolves itself. If it does not resolve itself, force a reindex by truncating the INDEX_OBJECTS, INDEX_QUEUE and INDEX_STATUS tables. Restart one of the Community Manager servers.</tr>
+
+
 <tr>
 		<td>Timeout waiting for idle object</td>
 		<td>Typically a full connection pool due to load </td>
