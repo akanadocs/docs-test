@@ -20,6 +20,7 @@ Akana Platform Database Maintenance
 	<li><a href="#built-in">Using the built-in jobs</a></li>
 	<li><a href="#using-cron">Leveraging CRON to delete data</a></li>
 	<li><a href="#partitioning">Partitioning large data stores</a></li>
+	<li><a href="#partitioning-verylarge">Partitioning large data stores under load</a></li>
 </ol>
 
 ### <a name="introduction"></a>Introduction
@@ -95,17 +96,32 @@ monitoring.delete.usage.enable=false
 
 For higher throughput environments its better to offload the task to delete/archive data by simply executing scripts directly against the database using a CRON job. The following script (cleanup.sh) will delete all:
 
-* 5-second rollup data in MO_ROLLUPDATA older than 1 month
+* next-hop data in MO\_USAGE_NEXTHOP older than 1 month
+* usage messages in MO_USAGEMSGS older than 1 month
+* usage data in MO_USAGEDATA older than 1 month
+* next-hop data in MO\_USAGE_NEXTHOP older than 1 month
 * 15-minute rollup data in MO_ROLLUP15 older than 1 month
 * 15-minute rollup data in MO\_ROLL_ORG15 older than 1 month
 * 1-hour rollup data in MO\_ROLLUP_HOUR older than 3 months
 * 1-hour rollup data in MO\_ROLL\_ORG_H older than 3 months
 * 1-day rollup data in MO\_ROLLUP_DAY older than 1 year
 * 1-day rollup data in MO\_ROLL\_ORG_D older than 1 year
-* alerts in AM_ALERTS and AM_ALERTS_SLAS older than 1 month
+* alerts in AM\_ALERTS and AM\_ALERTS_SLAS older than 1 month
 
 ```
 PATH=$PATH:/usr/bin
+
+date
+mysql -u root -pmysqlpassword -D open -e "delete from MO_USAGE_NEXTHOP where REQUESTDTS < TIMESTAMPADD(MONTH, -1, now());"
+[ $? != 0 ] && exit 1
+
+date
+mysql -u root -pmysqlpassword -D open -e "delete from MO_USAGEMSGS where MSGCAPTUREDDTS < TIMESTAMPADD(MONTH, -1, now());"
+[ $? != 0 ] && exit 1
+
+date
+mysql -u root -pmysqlpassword -D open -e "delete from MO_USAGEDATA where REQUESTDTS < TIMESTAMPADD(MONTH, -1, now());"
+[ $? != 0 ] && exit 1
 
 date
 mysql -u xxx -pxxx -D dbname -e "delete from MO_ROLLUPDATA where ROLLUPDATAID < (select min(MAX_ID) from MO_STATUS) and INTVLSTARTDTS < TIMESTAMPADD(MONTH, -1, now());"
@@ -153,3 +169,271 @@ Once satisfied with the script, you can set up a CRON job to execute it each nig
 # crontab -l
 0 1 * * * /xxx/bin/cleanup.sh
 ```
+
+### <a name="partitioning"></a>Partitioning large data stores
+
+When the amount of data in the MO\_USAGE\_DATA, MO\_USAGEMSGS and MO\_USAGE_NEXTHOP tables climbs over 100 GB of data, the deletion of data takes too long and locks up the tables for concurrent write operations. To overcome this, it is highly recommended that you implement a partitioning strategy that allows you to simply drop an entire partition without incurring any performance overhead. 
+
+Partitioning is fairly complex. As a result, we recommend that you test this thoroughly before attempting it on a production system.
+
+**Note:** If the tables contain a large amount of data, the process of partitioning will be extremely time and resource intensive and will be virtually impossible to perform under load. Next the next section for the correct approach in these circumstances.
+
+
+#### Drop existing foreign keys and add new indexes ####
+
+Partitioning in mySQL does not support foreign key relationships. In addition, the partition key must be added to the primary key index:
+ 
+```
+ALTER TABLE MO_USAGE_NEXTHOP
+DROP FOREIGN KEY FK_NXTHOP_EVENTID,
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (NEXTHOPID, REQUESTDTS);
+
+ALTER TABLE MO_USAGEMSGS
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (EVENTID,SEQ,MSGCAPTUREDDTS),
+DROP FOREIGN KEY FK_USG_EVENTID;
+
+ALTER TABLE MO_USAGEDATA
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (USAGEDATAID, REQUESTDTS),
+DROP INDEX UI_USG_EVENTID,
+ADD INDEX NUI_USG_EVENTID(EVENTID),
+ADD INDEX NUI_USG_USAGEDATAID(USAGEDATAID);
+```
+
+#### Create partitions ####
+
+You would then create partitions, with the idea that each partition represents the deletion interval. In this example, you would be deleting data once a week and keeping a maximum of 8 weeks of data. The dates must also be changed to match the current time. The names of the partitions are arbitrary, but are used by the cleanup script.
+
+```
+ALTER TABLE MO_USAGE_NEXTHOP
+PARTITION BY RANGE (UNIX_TIMESTAMP(REQUESTDTS)) (
+     PARTITION p0000 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-04 00:00:00')),
+     PARTITION p0111 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-11 00:00:00')),
+     PARTITION p0118 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-18 00:00:00')),
+     PARTITION p0125 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-25 00:00:00')),
+     PARTITION p0201 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-01 00:00:00')),
+     PARTITION p0208 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-08 00:00:00')),
+     PARTITION p0215 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-15 00:00:00')),
+     PARTITION p0222 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-22 00:00:00')),
+     PARTITION future VALUES LESS THAN MAXVALUE
+);
+
+ALTER TABLE MO_USAGEMSGS
+PARTITION BY RANGE (UNIX_TIMESTAMP(MSGCAPTUREDDTS)) (
+     PARTITION p0000 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-04 00:00:00')),
+     PARTITION p0111 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-11 00:00:00')),
+     PARTITION p0118 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-18 00:00:00')),
+     PARTITION p0125 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-25 00:00:00')),
+     PARTITION p0201 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-01 00:00:00')),
+     PARTITION p0208 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-08 00:00:00')),
+     PARTITION p0215 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-15 00:00:00')),
+     PARTITION p0222 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-22 00:00:00')),
+     PARTITION future VALUES LESS THAN MAXVALUE
+);
+
+ALTER TABLE MO_USAGEDATA
+PARTITION BY RANGE (UNIX_TIMESTAMP(REQUESTDTS)) (
+     PARTITION p0000 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-04 00:00:00')),
+     PARTITION p0111 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-11 00:00:00')),
+     PARTITION p0118 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-18 00:00:00')),
+     PARTITION p0125 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-25 00:00:00')),
+     PARTITION p0201 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-01 00:00:00')),
+     PARTITION p0208 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-08 00:00:00')),
+     PARTITION p0215 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-15 00:00:00')),
+     PARTITION p0222 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-22 00:00:00')),
+     PARTITION future VALUES LESS THAN MAXVALUE
+);
+```
+
+### <a name="partitioning-verylarge"></a>Partitioning large data stores under load
+
+If the usage tables contain a large amount of data you will need to rename, rotate and transfer data from the existing tables to a new set of partitioned tables. 
+
+#### Step 1: Create new tables ####
+
+Firstly create new tables that will temporarily support the live system:
+
+```
+CREATE TABLE MO_USAGEMSGS_NEW (
+	EVENTID VARCHAR(41) NOT NULL,
+	SEQ INT NOT NULL,
+	MSGNAME VARCHAR(64) NOT NULL,
+	MSGCAPTUREDDTS TIMESTAMP DEFAULT 0 NOT NULL,
+	MSGCAPTUREDMILLIS INT NOT NULL,
+	MESSAGE LONGTEXT NOT NULL,
+	TYPE VARCHAR(10) NOT NULL,
+	ISCOMPLETEMESSAGE CHAR(1) NOT NULL,
+	TRANSPORTHEADERS VARCHAR(2048) NULL.
+	CONSTRAINT MO_USAGEMSGS_PK primary key (EVENTID,SEQ,MSGCAPTUREDDTS)
+
+) ROW_FORMAT=DYNAMIC Engine=InnoDB;
+
+CREATE INDEX NUI_MO_USGMSGS1 ON MO_USAGEMSGS_NEW(MSGCAPTUREDDTS);
+CREATE INDEX NUI_MO_USGMSGS2 ON MO_USAGEMSGS_NEW(MSGCAPTUREDDTS, MSGCAPTUREDMILLIS);
+
+CREATE TABLE MO_USAGEDATA_NEW (
+	USAGEDATAID BIGINT AUTO_INCREMENT NOT NULL,
+	EVENTID VARCHAR(41) NOT NULL,
+	PARENTEVENTID VARCHAR(41) NULL,
+	CLIENTHOST VARCHAR(255) NULL,
+	MPNAME VARCHAR(64) NOT NULL,
+	OPERATIONID INT NOT NULL,
+	SERVICEID INT NOT NULL,
+	ORGID INT NULL DEFAULT 0,
+	CONTRACTID INT NOT NULL,
+	BINDTEMPLATEID INT NOT NULL,
+	REQUSERNAME VARCHAR(128) NULL,
+	REQUESTDTS TIMESTAMP DEFAULT 0 NOT NULL,
+	REQUESTMILLIS INT NOT NULL,
+	RESPONSETIME INT NOT NULL,
+	REQMSGSIZE INT NOT NULL,
+	NMREQMSGSIZE INT NULL,
+	RESPMSGSIZE INT NULL,
+	NMRESPMSGSIZE INT NULL,
+	ERRCATEGORY INT NULL,
+	ERRMESSAGE VARCHAR(512) NULL,
+	ERRDETAILS VARCHAR(1024) NULL,
+	CREATEDTS TIMESTAMP DEFAULT 0 NOT NULL,
+	CREATEDMILLIS INT NOT NULL,
+	NEXTHOPURL VARCHAR(4000) NULL,
+	ISSOAPFLTBYMP INT NOT NULL,
+	ISSOAPFLTBYNEXTHOP INT NOT NULL,
+	LISTENERURL VARCHAR(4000) NULL,
+	NEXTHOPRESPTIME INT NULL,
+	APPUSERNAME VARCHAR(128) NULL,
+	OTHERUSERNAMES VARCHAR(512) NULL,
+	CUSTOMFIELD1 VARCHAR(256) NULL,
+	VERB VARCHAR(8) NULL,
+	STATUS_CODE VARCHAR(8) NULL,
+	CONSTRAINT MO_USAGEDATA_PK primary key (USAGEDATAID, REQUESTDTS)
+
+) ROW_FORMAT=DYNAMIC Engine=InnoDB;
+
+CREATE INDEX MO_USAGEDATA_PK1 ON MO_USAGEDATA_NEW(REQUESTDTS DESC,REQUESTMILLIS DESC);
+CREATE INDEX MO_USAGEDATA_PK2 ON MO_USAGEDATA_NEW(OPERATIONID);
+CREATE INDEX MO_USAGEDATA_PK3 ON MO_USAGEDATA_NEW(CONTRACTID);
+
+CREATE TABLE MO_USAGE_NEXTHOP_NEW (
+	NEXTHOPID BIGINT AUTO_INCREMENT NOT NULL,
+	EVENTID VARCHAR(41) NOT NULL,
+	URL VARCHAR(4000) NULL,
+	REQUESTDTS TIMESTAMP DEFAULT 0 NOT NULL,
+	CREATEDTS TIMESTAMP DEFAULT 0 NOT NULL,
+	RESPTIME BIGINT NULL,
+	CONSTRAINT MO_USG_NEXTHOP_PK primary key (NEXTHOPID)
+
+) ROW_FORMAT=DYNAMIC Engine=InnoDB;
+```
+
+**Note:** Table definitions might change based on product version. You should check to make sure that the definition above matches your table structure and alter it as necessary.
+
+#### Step 2: Switch the new tables with the old tables ####
+
+Rename the existing live tables to *\_BCK and replace them with the new, empty tables:
+
+```
+RENAME TABLE MO_USAGEMSGS TO MO_USAGEMSGS_BCK, MO_USAGEMSGS_NEW TO MO_USAGEMSGS;
+RENAME TABLE MO_USAGEDATA TO MO_USAGEDATA_BCK, MO_USAGEDATA_NEW TO MO_USAGEDATA;
+RENAME TABLE MO_USAGE_NEXTHOP TO MO_USAGE_NEXTHOP_BCK, MO_USAGE_NEXTHOP_NEW TO MO_USAGE_NEXTHOP;
+```
+
+#### Step 3: Drop existing foreign keys and add new indexes ####
+
+Alter the tables as shown in the previous chapter, but this time against the *_BCK tables. 
+
+**Note:** This may take several hours
+ 
+```
+ALTER TABLE MO_USAGE_NEXTHOP_BCK
+DROP FOREIGN KEY FK_NXTHOP_EVENTID,
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (NEXTHOPID, REQUESTDTS);
+
+ALTER TABLE MO_USAGEMSGS_BCK
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (EVENTID,SEQ,MSGCAPTUREDDTS),
+DROP FOREIGN KEY FK_USG_EVENTID;
+
+ALTER TABLE MO_USAGEDATA_BCK
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (USAGEDATAID, REQUESTDTS),
+DROP INDEX UI_USG_EVENTID,
+ADD INDEX NUI_USG_EVENTID(EVENTID),
+ADD INDEX NUI_USG_USAGEDATAID(USAGEDATAID);
+```
+
+#### Step 4: Create partitions ####
+
+You would then create partitions as shown in the previous chapter - once again against the *_BCK tables. The dates and intervals would be changed to suit your system.
+
+**Note:** This may take several hours
+
+```
+ALTER TABLE MO_USAGE_NEXTHOP_BCK
+PARTITION BY RANGE (UNIX_TIMESTAMP(REQUESTDTS)) (
+     PARTITION p0000 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-04 00:00:00')),
+     PARTITION p0111 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-11 00:00:00')),
+     PARTITION p0118 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-18 00:00:00')),
+     PARTITION p0125 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-25 00:00:00')),
+     PARTITION p0201 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-01 00:00:00')),
+     PARTITION p0208 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-08 00:00:00')),
+     PARTITION p0215 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-15 00:00:00')),
+     PARTITION p0222 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-22 00:00:00')),
+     PARTITION future VALUES LESS THAN MAXVALUE
+);
+
+ALTER TABLE MO_USAGEMSGS_BCK
+PARTITION BY RANGE (UNIX_TIMESTAMP(MSGCAPTUREDDTS)) (
+     PARTITION p0000 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-04 00:00:00')),
+     PARTITION p0111 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-11 00:00:00')),
+     PARTITION p0118 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-18 00:00:00')),
+     PARTITION p0125 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-25 00:00:00')),
+     PARTITION p0201 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-01 00:00:00')),
+     PARTITION p0208 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-08 00:00:00')),
+     PARTITION p0215 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-15 00:00:00')),
+     PARTITION p0222 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-22 00:00:00')),
+     PARTITION future VALUES LESS THAN MAXVALUE
+);
+
+ALTER TABLE MO_USAGEDATA_BCK
+PARTITION BY RANGE (UNIX_TIMESTAMP(REQUESTDTS)) (
+     PARTITION p0000 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-04 00:00:00')),
+     PARTITION p0111 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-11 00:00:00')),
+     PARTITION p0118 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-18 00:00:00')),
+     PARTITION p0125 VALUES LESS THAN (UNIX_TIMESTAMP('2015-01-25 00:00:00')),
+     PARTITION p0201 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-01 00:00:00')),
+     PARTITION p0208 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-08 00:00:00')),
+     PARTITION p0215 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-15 00:00:00')),
+     PARTITION p0222 VALUES LESS THAN (UNIX_TIMESTAMP('2015-02-22 00:00:00')),
+     PARTITION future VALUES LESS THAN MAXVALUE
+);
+```
+
+#### Step 5: Switch the partitioned tables back ####
+
+Now switch the partitioned tables (*_BCK) with the new tables you created in Step 1. This will return the original data tables to live.
+
+```
+RENAME TABLE MO_USAGEDATA TO MO_USAGEDATA2, MO_USAGEDATA_BCK TO MO_USAGEDATA;
+RENAME TABLE MO_USAGEMSGS TO MO_USAGEMSGS2, MO_USAGEMSGS_BCK TO MO_USAGEMSGS;
+RENAME TABLE MO_USAGE_NEXTHOP TO MO_USAGE_NEXTHOP2, MO_USAGE_NEXTHOP_BCK TO MO_USAGE_NEXTHOP;
+```
+
+#### Step 6: Merge data ####
+
+Due to the fact that you created a set of new tables to temporarily store live data while the partitioning was done, you need to merge the data from those tables back into the live tables so that it is not lost.
+
+```
+INSERT INTO MO_USAGE_NEXTHOP (EVENTID, URL, REQUESTDTS, CREATEDTS, RESPTIME) SELECT EVENTID, URL, REQUESTDTS, CREATEDTS, RESPTIME FROM MO_USAGE_NEXTHOP2 where REQUESTDTS between X and Y;
+
+INSERT INTO MO_USAGEDATA (EVENTID PARENTEVENTID CLIENTHOST MPNAME OPERATIONID SERVICEID ORGID CONTRACTID BINDTEMPLATEID REQUSERNAME REQUESTDTS REQUESTMILLIS RESPONSETIME REQMSGSIZE NMREQMSGSIZE RESPMSGSIZE NMRESPMSGSIZE ERRCATEGORY ERRMESSAGE ERRDETAILS CREATEDTS CREATEDMILLIS NEXTHOPURL ISSOAPFLTBYMP ISSOAPFLTBYNEXTHOP LISTENERURL NEXTHOPRESPTIME APPUSERNAME OTHERUSERNAMES CUSTOMFIELD1 VERB STATUS_CODE) SELECT EVENTID PARENTEVENTID CLIENTHOST MPNAME OPERATIONID SERVICEID ORGID CONTRACTID BINDTEMPLATEID REQUSERNAME REQUESTDTS REQUESTMILLIS RESPONSETIME REQMSGSIZE NMREQMSGSIZE RESPMSGSIZE NMRESPMSGSIZE ERRCATEGORY ERRMESSAGE ERRDETAILS CREATEDTS CREATEDMILLIS NEXTHOPURL ISSOAPFLTBYMP ISSOAPFLTBYNEXTHOP LISTENERURL NEXTHOPRESPTIME APPUSERNAME OTHERUSERNAMES CUSTOMFIELD1 VERB STATUS_CODE FROM MO_USAGEDATA2 where REQUESTDTS between X and Y;
+
+INSERT INTO MO_USAGEMSGS SELECT * FROM MO_USAGEMSGS2 where MSGCAPTUREDDTS between X and Y;
+
+```
+
+**Note:** Table definitions might change based on product version. You should check to make sure that the definition above matches your table structure and alter it as necessary.
+
+These scripts would be called several times with different values of X and Y where X and Y represents a small time interval like 6 hours. This keeps the merging of data discrete and less error-prone.
