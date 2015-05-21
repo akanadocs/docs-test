@@ -177,7 +177,7 @@ When the amount of data in the MO\_USAGE\_DATA, MO\_USAGEMSGS and MO\_USAGE_NEXT
 
 Partitioning is fairly complex. As a result, we recommend that you test this thoroughly before attempting it on a production system.
 
-**Note:** If the tables contain a large amount of data, the process of partitioning will be extremely time and resource intensive and will be virtually impossible to perform under load. Next the next section for the correct approach in these circumstances.
+**Note:** If the tables contain a large amount of data, the process of partitioning will be extremely time and resource intensive and will be virtually impossible to perform under load. Refer to the next section for the correct approach in these circumstances.
 
 
 #### Drop existing foreign keys and add new indexes ####
@@ -205,7 +205,7 @@ ADD INDEX NUI_USG_USAGEDATAID(USAGEDATAID);
 
 #### Create partitions ####
 
-You would then create partitions, with the idea that each partition represents the deletion interval. In this example, you would be deleting data once a week and keeping a maximum of 8 weeks of data. The dates must also be changed to match the current time. The names of the partitions are arbitrary, but are used by the cleanup script.
+You then create partitions, with the idea that each partition represents the deletion interval. In this example, you are deleting data once a week and keeping a maximum of 8 weeks of data. The dates must also be changed to match the current time. The names of the partitions are arbitrary, but are used by the cleanup script.
 
 ```
 ALTER TABLE MO_USAGE_NEXTHOP
@@ -367,7 +367,7 @@ ADD INDEX NUI_USG_USAGEDATAID(USAGEDATAID);
 
 #### Step 4: Create partitions ####
 
-You would then create partitions as shown in the previous chapter - once again against the *_BCK tables. The dates and intervals would be changed to suit your system.
+You then create partitions as shown in the previous chapter - this time against the *_BCK tables. The dates and intervals would be changed to suit your system.
 
 **Note:** This may take several hours
 
@@ -437,7 +437,7 @@ INSERT INTO MO_USAGEMSGS SELECT * FROM MO_USAGEMSGS2 where MSGCAPTUREDDTS betwee
 
 **Note:** Table definitions might change based on product version. You should check to make sure that the definition above matches your table structure and alter it as necessary.
 
-These scripts would be called several times with different values of X and Y where X and Y represents a small time interval like 6 hours. This keeps the merging of data discrete and less error-prone.
+These scripts would be called several times with different, incremental values of X and Y where X and Y represents a small time interval like 6 hours. This keeps the merging of data discrete and less error-prone.
 
 ### <a name="cron-partitions"></a>Leveraging CRON to drop and create partitions
 
@@ -511,9 +511,9 @@ $mysqlcmd "show create table MO_USAGEDATA\G" | grep PARTITION
 $mysqlcmd "show create table MO_USAGE_NEXTHOP\G" | grep PARTITION
 exit 0
 ```
-Once satisfied with the script, you can set up a CRON job to execute it each night. For example, configuring CRON to execute at 1am each morning as follows:
+Once satisfied with the script, you can set up a CRON job to execute it each night. For example, configuring CRON to execute on Sunday morning at 1am as follows:
 
 ```
 # crontab -l
-0 1 * * * /xxx/bin/partition.sh
+0 1 * * 0 /xxx/bin/partition.sh
 ```
