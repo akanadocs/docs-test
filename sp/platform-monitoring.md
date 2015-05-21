@@ -146,6 +146,8 @@ result=`$sqlcmd "$query"`
 [ "$result" -a $result -gt 10 ] && ERROR_MSG=${ERROR_MSG}"MSG_QUEUE is more than 10 in $db database: ${result}${NL}"
 ```
 
+**Resolution**: Inspect the container logs to see why emails are failing
+
 If an email continually fails delivery for some reason, this can be detected by inspecting the DELIVERYATTEMPTS field in the MSG_QUEUE table. This script will send an alert if more than 10 delivery attempts have been made:
 
 ```
@@ -156,6 +158,7 @@ if [ "$result" != "NULL" ];then
    [ $result -gt 10 ] && ERROR_MSG=${ERROR_MSG}"There are more than 10 retries in $db database DELIVERYATTEMPTS: ${result}${NL}"
 fi
 ```
+**Resolution**: Inspect the container logs to see why this particular email cannot be sent. 
 
 #### <a name="db-idx-queue"></a>Index queue
 
@@ -170,6 +173,8 @@ result=`$sqlcmd "$query"`
 [ $? -ne 0 ] && { echo "Cannot connect to database"; exit 1; }
 [ $result -gt 20 ] && ERROR_MSG=${ERROR_MSG}"INDEX_QUEUE is more than 20 in $db database: ${result}${NL}${NL}"
 ```
+
+**Resolution**: First check to see if the indexing job is stuck (next section). If not, inspect the logs to see if there is an error processing the object on the queue. Occasionally an error is caused when updating an index related to a deleted object. The only option is to delete the offending row from the table and send the logs to support@akana.com.
 
 #### <a name="db-scheduler"></a>Scheduler
 
@@ -190,6 +195,8 @@ result=`$sqlcmd "$query"`
 [ ! -z "$result" -a "$result" != "NULL" ] && ERROR_MSG=${ERROR_MSG}"There are acquired jobs in $db database:${NL}${result}${NL}";
 ```
 
+**Resolution**: Reset the relevant TIGGER_STATE to 'WAITING' in the SOA\_QRTZ\_TRIGGERS table
+
 It is often useful to know if a particular scheduled job has been executing for too long - this is often a sign of database contention or poor database maintenance. This script will send an alert if any scheduled job takes longer than 10 minutes:
 
 ```
@@ -198,6 +205,8 @@ result=`$sqlcmd "$query"`
 [ $? -ne 0 ] && { echo "Cannot connect to database"; exit 1; }
 [ ! -z "$result" -a "$result" != "NULL" ] && ERROR_MSG=${ERROR_MSG}"Below jobs are running for longer than 10 minutes in $db database:${NL}TRIGGER_NAME\tSTATE\tINSTANCE_NAME\tFIRED_TIME\tGMT${NL}${result}${NL}"
 ```
+
+**Resolution**: Inspect the thread dump to see if the the Quartz job is running. If it is not, delete the row from the SOA\_QRTZ\_FIRED\_TRIGGERS table and reset the relevant TIGGER_STATE to 'WAITING' in the SOA\_QRTZ\_TRIGGERS table.
 
 #### <a name="db-fed"></a>Federation Synchronization
 
@@ -215,6 +224,8 @@ if [ ! -z "$result" -a "$result" != "NULL" ];then
 fi
 ```
 
+**Resolution**: Contact Akana support at support@akana.com
+
 #### <a name="db-connection-pool"></a>Connection pool
 
 **Scope**: All products
@@ -228,6 +239,8 @@ result=`$sqlcmd "$query" | grep $DB_NAME | wc -l`
 [ $? -ne 0 ] && { echo "Cannot connect to database"; exit 1; }
 [ $result -ge 180 ] && ERROR_MSG=${ERROR_MSG}"Master database has $result sockets exhausted out of 180"
 ```
+
+**Resolution**: The database connection pool must be greater that all the connection pools of all the containers connecting to the database. The 
 
 ### <a name="log-mon"></a>Log Monitoring
 
@@ -285,9 +298,7 @@ This table explains what each of these log phrases mean:
 		<td>org.apache.lucene.store.jdbc.<wbr>JdbcStoreException</td>
 		<td>Search index database error</td>
 		<td>High</td>
-		<td>1) If the log includes the phrase like 'Duplicate entry [X] for [Y]', wait to see if it resolves itself. If it does not resolve itself, restart the container <br> 2) If the log includes the phrase 'Deadlock found when trying to get lock', it should resolve itself<br> 3) If the log includes the phrase 'No entry for [X] table index_objects', wait to see if it resolves itself. If it does not resolve itself, force a reindex by truncating the INDEX_OBJECTS, INDEX_QUEUE and INDEX_STATUS tables. Restart one of the Community Manager servers.</tr>
-
-
+		<td>1) If the log includes the phrase like 'Duplicate entry [X] for [Y]', wait to see if it resolves itself. If it does not resolve itself, restart the container <br> 2) If the log includes the phrase 'Deadlock found when trying to get lock', it should resolve itself<br> 3) If the log includes the phrase 'No entry for [X] table index_objects', wait to see if it resolves itself. If it does not resolve itself, force a reindex by truncating the INDEX_OBJECTS, INDEX_QUEUE and INDEX_STATUS tables. Restart one of the Community Manager servers.
 <tr>
 		<td>Timeout waiting for idle object</td>
 		<td>Typically a full connection pool due to load </td>

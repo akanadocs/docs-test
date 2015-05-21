@@ -113,15 +113,15 @@ For higher throughput environments its better to offload the task to delete/arch
 PATH=$PATH:/usr/bin
 
 date
-mysql -u root -pmysqlpassword -D open -e "delete from MO_USAGE_NEXTHOP where REQUESTDTS < TIMESTAMPADD(MONTH, -1, now());"
+mysql -u xxx -pxxx -D open -e "delete from MO_USAGE_NEXTHOP where REQUESTDTS < TIMESTAMPADD(MONTH, -1, now());"
 [ $? != 0 ] && exit 1
 
 date
-mysql -u root -pmysqlpassword -D open -e "delete from MO_USAGEMSGS where MSGCAPTUREDDTS < TIMESTAMPADD(MONTH, -1, now());"
+mysql -u xxx -pxxx -D open -e "delete from MO_USAGEMSGS where MSGCAPTUREDDTS < TIMESTAMPADD(MONTH, -1, now());"
 [ $? != 0 ] && exit 1
 
 date
-mysql -u root -pmysqlpassword -D open -e "delete from MO_USAGEDATA where REQUESTDTS < TIMESTAMPADD(MONTH, -1, now());"
+mysql -u xxx -pxxx -D open -e "delete from MO_USAGEDATA where REQUESTDTS < TIMESTAMPADD(MONTH, -1, now());"
 [ $? != 0 ] && exit 1
 
 date
