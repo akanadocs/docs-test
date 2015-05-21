@@ -10,7 +10,7 @@ type: page
 nav-title: Platform Monitoring
 ---
 
-Akana Platform Monitoring Guide (Incomplete)
+Akana Platform Monitoring Guide
 -------------------------------------
 
 <h3 style="color: grey;">Table of Contents</h3>
