@@ -122,7 +122,7 @@ elif [ $DB_STAT -ge 1 ]; then
   echo "Database monitor is OK";
 fi
 ```
-This script can be put in a CRON job, set to run every 5 minutes as follows:
+This script can be put in a cron job, set to run every 5 minutes as follows:
 
 ```
 # crontab -l

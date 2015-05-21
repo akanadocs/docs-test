@@ -18,10 +18,10 @@ Akana Platform Database Maintenance
 	<li><a href="#introduction">Introduction</a></li>
 	<li><a href="#data">Types of Volatile Data</a></li>
 	<li><a href="#built-in">Using the built-in jobs</a></li>
-	<li><a href="#using-cron">Leveraging CRON to delete data</a></li>
+	<li><a href="#using-cron">Leveraging cron to delete data</a></li>
 	<li><a href="#partitioning">Partitioning large data stores</a></li>
 	<li><a href="#partitioning-verylarge">Partitioning large data stores under load</a></li>
-	<li><a href="#cron-partitions">Leveraging CRON to drop and create partitions</a></li>
+	<li><a href="#cron-partitions">Leveraging cron to drop and create partitions</a></li>
 </ol>
 
 ### <a name="introduction"></a>Introduction
@@ -82,7 +82,7 @@ monitoring.delete.rollup.MO_ROLLUP15.unit=week
 monitoring.delete.rollup.MO_ROLLUP15.windowSize=1
 ```	
 
-**Note:** there is no scheduled job to delete/archive Alerts or any Community Manager data. This is best done using a CRON jobs as described in the next section.
+**Note:** there is no scheduled job to delete/archive Alerts or any Community Manager data. This is best done using a cron jobs as described in the next section.
 
 **Note:** to disable the built-in jobs for higher throughput environments, set all '*.enable' properties to false as follows:
 
@@ -93,9 +93,9 @@ monitoring.delete.rollup.MO_ROLL_ORG_H.enable=false
 monitoring.delete.usage.enable=false
 ```
 
-### <a name="using-cron"></a>Leveraging CRON to delete data
+### <a name="using-cron"></a>Leveraging cron to delete data
 
-For higher throughput environments its better to offload the task to delete/archive data by simply executing scripts directly against the database using a CRON job. The following script (cleanup.sh) will delete all:
+For higher throughput environments its better to offload the task to delete/archive data by simply executing scripts directly against the database using a cron job. The following script (cleanup.sh) will delete all:
 
 * next-hop data in MO\_USAGE_NEXTHOP older than 1 month
 * usage messages in MO_USAGEMSGS older than 1 month
@@ -164,7 +164,7 @@ date
 
 ```
 
-Once satisfied with the script, you can set up a CRON job to execute it each night. For example, configuring CRON to execute at 1am each morning as follows:
+Once satisfied with the script, you can set up a cron job to execute it each night. For example, configuring cron to execute at 1am each morning as follows:
 
 ```
 # crontab -l
@@ -439,7 +439,7 @@ INSERT INTO MO_USAGEMSGS SELECT * FROM MO_USAGEMSGS2 where MSGCAPTUREDDTS betwee
 
 These scripts would be called several times with different, incremental values of X and Y where X and Y represents a small time interval like 6 hours. This keeps the merging of data discrete and less error-prone.
 
-### <a name="cron-partitions"></a>Leveraging CRON to drop and create partitions
+### <a name="cron-partitions"></a>Leveraging cron to drop and create partitions
 
 The benefit of partitioning your data is that you can delete old data by simply dropping a partition. The downside of the approach is that you have to continually create new partitions for future data. The following script (partition.sh) shows how to drop and create partitions on a weekly basis:
 
@@ -511,7 +511,7 @@ $mysqlcmd "show create table MO_USAGEDATA\G" | grep PARTITION
 $mysqlcmd "show create table MO_USAGE_NEXTHOP\G" | grep PARTITION
 exit 0
 ```
-Once satisfied with the script, you can set up a CRON job to execute it each night. For example, configuring CRON to execute on Sunday morning at 1am as follows:
+Once satisfied with the script, you can set up a cron job to execute it each night. For example, configuring cron to execute on Sunday morning at 1am as follows:
 
 ```
 # crontab -l
