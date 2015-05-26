@@ -190,8 +190,10 @@ Partitioning is fairly complex. As a result, we recommend that you test this tho
 
 **Note:** If the tables contain a large amount of data, the process of partitioning will be extremely time and resource intensive and will be virtually impossible to perform under load. Refer to the next section for the correct approach in these circumstances.
 
+#### MySQL ####
 
-#### Drop existing foreign keys and add new indexes - MySQL ####
+
+##### Drop existing foreign keys, modify, and add new indexes #####
 
 Partitioning in mySQL does not support foreign key relationships. In addition, the partition key must be added to the primary key index:
  
@@ -214,7 +216,7 @@ ADD INDEX NUI_USG_EVENTID(EVENTID),
 ADD INDEX NUI_USG_USAGEDATAID(USAGEDATAID);
 ```
 
-#### Create partitions - MySQL ####
+##### Create partitions #####
 
 You then create partitions, with the idea that each partition represents the deletion interval. In this example, you are deleting data once a week and keeping a maximum of 8 weeks of data. The dates must also be changed to match the current time. The names of the partitions are arbitrary, but are used by the cleanup script.
 
@@ -259,7 +261,27 @@ PARTITION BY RANGE (TO_DAYS(REQUESTDTS)) (
 );
 ```
 
-#### Create partitions - Oracle ####
+#### Oracle ####
+
+
+##### Modify indexes #####
+
+Partitioning in mySQL does not support foreign key relationships. In addition, the partition key must be added to the primary key index:
+ 
+```
+ALTER TABLE MO_USAGE_NEXTHOP
+ADD CONSTRAINT MO_USAGE_NEXTHOP_PK primary key (NEXTHOPID, REQUESTDTS);
+
+ALTER TABLE MO_USAGEMSGS 
+ADD CONSTRAINT MO_USAGEMSGS_PK primary key (EVENTID,SEQ, MSGCAPTUREDDTS);
+
+ALTER TABLE MO_USAGEDATA
+ADD CONSTRAINT MO_USAGEDATA_PK primary key (USAGEDATAID, REQUESTDTS),
+ADD INDEX NUI_USG_USAGEDATAID(USAGEDATAID);
+
+```
+
+##### Create partitions #####
 
 Similar to the tables in the previous section, these scripts demonstrate how to partition Oracle tables:
 
