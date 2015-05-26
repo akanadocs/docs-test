@@ -58,8 +58,8 @@ There are several key tables that require regular maintenance:
 | Table Name| Description|
 | ------ | ------- |
 | BOARD_ITEMS |  stores the tickets, discussions and reviews
-| COMMENTS |  stores the comments on the board items above
-| COMMENT_MARKS | stores the 'like/thumbs-up' votes for the comments
+| COMMENTS |  stores the comments on the board items above (Has FK with BOARD_ITEMS with cascading delete)
+| COMMENT_MARKS | stores the 'like/thumbs-up' votes for the comments (Has FK with COMMENTS with cascading delete)
 
 
 ### <a name="built-in"></a>Using the built-in jobs
@@ -162,6 +162,18 @@ mysql -u xxx -pxxx -D dbname -e "delete from AM_ALERTS where SOURCEDTS < TIMESTA
 
 date
 
+```
+
+For Community Manager, there are additional tables such as the Boards (Forums) that you may want to clean up:
+
+```
+date
+mysql -u xxx -pxxx -D dbname -e "delete from BOARD_ITEM_ASSIGNMENTS where ITEMID in (select ITEMID from BOARD_ITEMS where ARCHIVABLE='Y' and CREATEDDTS < TIMESTAMPADD(YEAR, -1, now());"
+[ $? != 0 ] && exit 1
+
+date
+mysql -u xxx -pxxx -D dbname -e "delete from BOARD_ITEMS where ARCHIVABLE='Y' and CREATEDDTS < TIMESTAMPADD(YEAR, -1, now());"
+[ $? != 0 ] && exit 1
 ```
 
 Once satisfied with the script, you can set up a cron job to execute it each night. For example, configuring cron to execute at 1am each morning as follows:
