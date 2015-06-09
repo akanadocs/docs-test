@@ -12,7 +12,7 @@ no-nav: true
 no-catalog: true
 ---
 <h2 id="top">API Documentation Tagging</h2>
-<p>Learn how to tag your API documentation and restrict visibility of documentation files.</p>
+<p>Learn how to tag your API documentation to restrict visibility of documentation files.</p>
 <p><strong>Note</strong>: A full set of linked files and setup instructions is also available, as a ZIP file that you can customize, upload, and test. To get a copy of the doc tagging ZIP file, <a href="basics_support.htm#how_do_i_contact_technical_support">contact Technical Support</a>.</p>
 <div class = "divider1"></div>
 
@@ -50,6 +50,7 @@ no-catalog: true
 
   <li><a href="#what_does_metadata_xml_look_like">What does the metadata.xml file look like?</a></li>
   <li><a href="#what_does_an_entry_in_the_metadata_xml_file_look_like">What does an entry in the metadata.xml file look like?</a></li>
+  <li><a href="#docfilter_byapiversion">How do I use file-based tagging to define the API version a file applies to?</a></li>
   <li><a href="#docfilter_bylicense">How do I use file-based tagging to filter by license?</a></li>
   <li><a href="#docfilter_byscope">How do I use file-based tagging to filter by scope?</a></li>
   <li><a href="#docfilter_byoperation">How do I use file-based tagging to filter by operation?</a></li>
@@ -58,6 +59,8 @@ no-catalog: true
   <li><a href="#docfilter_bydocumenttype">How do I use file-based tagging to filter by file extension?</a></li>
   <li><a href="#docfilter_specificfile">How do I use file-based tagging to limit visibility of a specific file?</a></li>
   <li><a href="#docfilter_byapiversion">How do I use file-based tagging to filter by API version?</a></li>
+  <li><a href="#docfilter_operators">When I'm doing file-based tagging, can I use operators?</a></li>
+  <li><a href="#docfilter_regularexpressions">When I'm doing file-based tagging, what regular expressions can I use in metadata.xml?</a></li>
 </ol>
 
 
@@ -81,6 +84,17 @@ no-catalog: true
   <li><a href="#doctags_showforanonymoususer">How do I use content-based tagging to make content visible only to anonymous users?</a></li>
   <li><a href="#doctags_showforloggedinuser">How do I use content-based tagging to make content visible only to users who are logged in?</a></li>
   <li><a href="#using_multiple_tags">When I'm using content-based tagging, can I use multiple tags?</a></li>
+  <li><a href="#doctags_operators">When I'm doing content-based tagging, what operators can I use in my tags?</a></li>
+</ol>
+
+
+
+<h5 style="color: gray;"><a href="#h_streamlining">Streamlining Content-Based Doc Tagging:</a></h5>
+<ol class="table_of_contents">
+  <li><a href="#how_can_i_simplify_content_based_doc_tagging_updates_using_replacements_js">How can I simplify content-based doc tagging updates using the replacements.js file?</a></li>
+  <li><a href="#how_do_i_implement_the_replacements_js_file">How do I implement the replacements.js file?</a></li>
+  <li><a href="#where_do_i_store_the_replacements_js_file">Where do I store the replacements.js file?</a></li>
+  <li><a href="#how_do_i_implement_version_specific_documentation_in_simple_dev_theme">How do I implement version-specific API documentation in Simple Dev theme?</a></li>
 </ol>
 
 
@@ -89,16 +103,6 @@ no-catalog: true
 <ol class="table_of_contents">
   <li><a href="#how_do_i_test_my_api_documentation_tagging">How do I test my API documentation tagging?</a></li>
   <li><a href="#setup_doc_toc">How do I control the documentation Table of Contents?</a></li>
-</ol>
-
-
-
-<h5 style="color: gray;"><a href="#h_maintenance">Maintenance:</a></h5>
-<ol class="table_of_contents">
-  <li><a href="#how_can_i_simplify_content_based_doc_tagging_updates_using_replacements_js">How can I simplify file-based doc tagging updates using the replacements.js file?</a></li>
-  <li><a href="#how_do_i_implement_the_replacements_js_file">How do I implement the replacements.js file?</a></li>
-  <li><a href="#where_do_i_store_the_replacements_js_file">Where do I store the replacements.js file?</a></li>
-  <li><a href="#how_do_i_implement_version_specific_documentation_in_simple_dev_theme">How do I implement version-specific API documentation in Simple Dev theme?</a></li>
 </ol>
 
 
@@ -414,7 +418,7 @@ no-catalog: true
 </ul>
 <p>Some examples of the full metadata.xml file are shown below.</p>
 
-<h5><strong>Sample metadata.xml file #1</strong></h5>
+<h5><strong><a name="ex_metadata_xml_01"></a>Sample metadata.xml file #1</strong></h5>
 <p>The example below shows a simple <strong>metadata.xml</strong> file with one API version, 0157f427-0b07-4ae6-9ade-26f4ef3bcc71.acmepaymentscorp; one operation, addPayment; one scope, fullscope-public; and one license, Gold. There is one file within each tag.</p>
 <p>In this scenario, users will only see the link to a specific file if they have permission to the applicable API version, scope, operation, or license. Users who do not have the applicable visibility permissions will not see the links (and would not be able to access the files even if they had the URLs).</p>
 <p><strong>Note</strong>: In setting up your <strong>metadata.xml</strong> file, make sure you get the names of referenced objects, such as license, scope, or file names, exactly right. Make sure the case matches.</p>
@@ -550,9 +554,9 @@ no-catalog: true
 <a name="what_does_an_entry_in_the_metadata_xml_file_look_like"></a><h3>What does an entry in the metadata.xml file look like?</h3>
 <p>Each entry in the <strong>metadata.xml</strong> file has the following elements:</p>
 <ul>
-  <li>Optional: an &lt;APIVersionID&gt; tag that limits the rule to a specific version of the API. If an API version is not specified, &lt;metadata&gt; tags apply to all versions of the API.</li>
-  <li>Required: a &lt;target&gt; node that states which files are affected by the rule. There can be multiple &lt;target&gt; nodes but there must be at least one.</li>
-  <li>Required: A node that specifies the visibility rules that are applied to the file. This can be one of several types of nodes; for example, limiting visibility by role, license, scope, or operation. Operations are as specified for the API; scopes and licenses are as specified by the Business Admin. There can be more than one, but they must be of the same type.</li>
+  <li><strong>Optional</strong>: an &lt;APIVersionID&gt; tag that limits the rule to a specific version of the API. If an API version is not specified, &lt;metadata&gt; tags apply to all versions of the API.</li>
+  <li><strong>Required</strong>: a &lt;target&gt; node that states which files are affected by the rule. There can be multiple &lt;target&gt; nodes but there must be at least one.</li>
+  <li><strong>Required</strong>: A node that specifies the visibility rules that are applied to the file. This can be one of several types of nodes; for example, limiting visibility by role, license, scope, or operation. Operations are as specified for the API; scopes and licenses are as specified by the Business Admin. There can be more than one, but they must be of the same type.</li>
 </ul>
 
 <p>The sample file below has a single entry.</p>
@@ -564,6 +568,16 @@ no-catalog: true
     &lt;role name=&quot;InvitedUser&quot;/&gt;
   &lt;/roles&gt;
 &lt;/metadata&gt;</pre>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="docfilter_byapiversion"></a><h3>How do I use file-based tagging to define the API version a file applies to?</h3>
+<p>If you have a file that includes content for a specific API version, you can apply the &lt;APIVersionID&gt; tag.</p>
+<p>This tag is the primary way that the developer portal controls which API documents apply to which version. In Default Theme, when a user chooses to view documentation for a specific API version, the platform uses the API version tag to filter visibility so that the user only sees documentation that's applicable to the specified API version.</p>
+<p>An example is shown below. To see this line in context, see <a href="#ex_metadata_xml_01">Sample metadata.xml file #1</a>.</p>
+<pre>&lt;APIVersionID xmlns=&quot;http://soa.com/xsd/api/1.0&quot;&gt;0157f427-0b07-4ae6-9ade-26f4ef3bcc71.tenantid&lt;/APIVersionID&gt;
+</pre>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -660,7 +674,7 @@ no-catalog: true
 
 
 
-<h5>Multiple roles: visibility for either role</h5>
+<h5><a name="ex_filebased_multipleroles"></a>Multiple roles: visibility for either role</h5>
 <p>When using file-based tagging to restrict visibility by user role, you can also tag content for multiple roles. If the viewing user has <strong>one</strong> of the specified roles, the content is visible. An example is shown below.</p>
 <pre>&lt;metadata&gt;
   &lt;APIVersionID xmlns=&quot;http://soa.com/xsd/api/1.0&quot;&gt;0157f427-0b07-4ae6-9ade-26f4ef3bcc71.acmepaymentscorp&lt;/APIVersionID&gt;
@@ -682,7 +696,7 @@ no-catalog: true
 <pre>
 &lt;target&gt;.*\.html&lt;/target&gt;
 </pre>
-<h5>Example: HTML file extension, one role</h5>
+<h5><a name="ex_regularexpression01"></a>Example: HTML file extension, one role</h5>
 <p>The example below defines a rule that all .html files in the documents folder for this API version are only visible to invited users:</p>
 <pre>&lt;metadata&gt;
   &lt;target&gt;documents/*\.html&lt;/target&gt;
@@ -736,7 +750,8 @@ no-catalog: true
 
 
 <a name="docfilter_byapiversion"></a><h3>How do I use file-based tagging to filter by API version?</h3>
-<p>In addition to applying filters to all API documentation, you can further filter documentation for a specific version of the API by using the &lt;api:APIVersionID&gt; filter. You configure this filter by extracting the API Version ID plus tenant name (for example, 0157f427-0b07-4ae6-9ade-26f4ef3bcc71.acmepaymentscorp) from the <em>API &gt; Documents</em> URL of your platform. It's the ID that's after /versions/ in the path. In the example below, it's the second ID in the path.</p>
+<p>In addition to applying filters to all API documentation, you can further filter documentation for a specific version of the API by using the <strong>&lt;api:APIVersionID&gt;</strong> filter.</p>
+<p>You configure this filter by extracting the API Version ID plus tenant name (for example, <strong>0157f427-0b07-4ae6-9ade-26f4ef3bcc71.acmepaymentscorp</strong>) from the <em>API &gt; Documents</em> URL of your platform. It's the ID that's after /versions/ in the path. In the example below, it's the second ID in the path.</p>
 <p><strong>Example URL:</strong></p>
 <pre>https://{hostname}/api/69afe821-0660-4c78-a593-809535d6223f.acmepaymentscorp/versions/0157f427-0b07-4ae6-9ade-26f4ef3bcc71.acmepaymentscorp/documents</pre>
 
@@ -758,7 +773,7 @@ no-catalog: true
 </pre>
 
 
-<h5>Example: specific API version, specific file, specific operations</h5>
+<h5><a name="ex_filebased_multipleoperations"></a>Example: specific API version, specific file, specific operations</h5>
 <p>The example below limits visibility of all PDF files for the specified version to users with visibility of either of the specified operations:</p>
 <pre>
 &lt;metadata&gt;
@@ -772,6 +787,40 @@ no-catalog: true
   &lt;/operations&gt;
 &lt;/metadata&gt;
 </pre>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="docfilter_operators"></a><h3>When I'm doing file-based tagging, can I use operators?</h3>
+<p>The metadata.xml file does not support the use of operators.</p>
+<p>When using file-based tagging to restrict visibility by user role, you can tag content for multiple roles. If the viewing user has <strong>one</strong> of the specified roles, the content is visible.</p>
+<p>The same thing applies to tagging for multiple licenses, scopes, or operations.</p>
+<p>The metadata.xml file does not support the <strong>and</strong> operator. The default behavior is always <strong>or</strong>.</p>
+<p>For an example of tagging for multiple roles, see <a href="#ex_filebased_multipleroles">Multiple roles: visibility for either role</a>. For an example of tagging for multiple operations, see <a href="#ex_filebased_multipleoperations">Example: specific API version, specific file, specific operations</a>.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="docfilter_regularexpressions"></a><h3>When I'm doing file-based tagging, what regular expressions can I use in metadata.xml?</h3>
+<p>In some cases, you can use a regular expression to add flexibility in terms of the fileset that a rule in the <strong>metadata.xml</strong> file applies to.</p>
+<p>The table below shows regular expressions you can use.</p>
+<table cellspacing="0px" class="doctable" style="width: 98%;">
+  <thead>
+    <tr>
+      <th width="40%">This regular expression...</th>
+      <th width="60%">Does this...</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="t2row">
+      <td>*\</td>
+      <td><p>Applies the rule to all files matching the stated context. For example:</p>
+        <pre>api12345/*\.pdf</pre>
+        <p>The above applies the rule to all PDF files in the api12345 folder</p></td>
+    </tr>
+  </tbody>
+</table>
+<p>For an example, see <a href="#ex_regularexpression01">Example: HTML file extension, one role</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -817,12 +866,12 @@ no-catalog: true
 <a name="contentbased_whattags"></a><h3>What  tags are available for content-based doc tagging?</h3>
 <p>The following tags are supported for doc tagging within a specific file:</p>
 <ul>
-  <li><a href="#doctags_showforlicense">showforlicense</a></li>
-  <li><a href="#doctags_showforscope">showforscope</a></li>
-  <li><a href="#doctags_showforoperation">showforoperation</a></li>
+  <li><a href="#doctags_showforlicense">soa:showforlicense</a></li>
+  <li><a href="#doctags_showforscope">soa:showforscope</a></li>
+  <li><a href="#doctags_showforoperation">soa:showforoperation</a></li>
   <li><a href="#doctags_showforrole">showforrole</a></li>
-  <li><a href="#doctags_showforanonymoususer">showforanonymoususer</a></li>
-  <li><a href="#doctags_showforloggedinuser">showforloggedinuser</a></li>
+  <li><a href="#doctags_showforanonymoususer">soa:showforanonymoususer</a></li>
+  <li><a href="#doctags_showforloggedinuser">soa:showforloggedinuser</a></li>
 </ul>
 <p>In each scenario, you'll need to enclose the relevant content within specific code tags as outlined in <a href="#how_do_i_tag_a_section_of_content">How do I tag a section of content?</a> below.</p>
 <p class="apidoc_note"><strong>Note</strong>: In the tags, make sure that the scope, license, or operation name is exactly the same as it is in the user interface, including case. Case differences might not be an issue, but it's best to be exact.</p>
@@ -841,14 +890,15 @@ no-catalog: true
 
 <a name="how_do_i_set_up_the_head_tag"></a><h3>How do I set up the &lt;head&gt; tag in my file?</h3>
 <p>Within the &lt;head&gt; tag, after the &lt;title&gt; tag, add the following lines, replacing the {resource.version} variable with your own unique value:</p>
-    <pre>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/resources/style/base.css&quot;/&gt;
+    <pre>
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/resources/style/reset.css&quot;/&gt; 
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/resources/style/base.css&quot;/&gt;
 &lt;script language=&quot;javascript&quot; src=&quot;/ui/apps/atmosphere/{resource.version}/resources/uiframework/jquery/jquery.js&quot;
   type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
 &lt;script language=&quot;javascript&quot; src=&quot;/ui/apps/atmosphere/{resource.version}/resources/console/javascript/dynamic_docs.js&quot;
   type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</pre>
-  
-  
-  
+<p>For information about the {resource.version} variable and what value to use, see <a href="#what_is_the_resource_version_variable">What is the {resource.version} variable and why is it important?</a></p>
+
 <p>Below is an example of the opening &lt;html&gt; tag and entire &lt;head&gt; tag of a sample HTML file, showing where the additional entries are placed to implement the documentation tagging feature.</p>
 <pre>&lt;html <strong>lang="en" xmlns:soa="http://soa.com</strong>"&gt;
 &lt;head&gt;
@@ -860,20 +910,21 @@ no-catalog: true
 &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/resources/style/reset.css&quot;/&gt; 
 &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/resources/style/base.css&quot;/&gt;
 
-&lt;script language=&quot;javascript&quot; src=&quot;/ui/apps/atmosphere/{resource.version}/resources/uiframework/jquery/jquery.js&quot;
+&lt;script language=&quot;javascript&quot; src=&quot;/ui/apps/atmosphere/123456/resources/uiframework/jquery/jquery.js&quot;
   type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
-&lt;script language=&quot;javascript&quot; src=&quot;/ui/apps/atmosphere/{resource.version}/resources/console/javascript/dynamic_docs.js&quot;
+&lt;script language=&quot;javascript&quot; src=&quot;/ui/apps/atmosphere/123456/resources/console/javascript/dynamic_docs.js&quot;
   type=&quot;text/javascript&quot;&gt;&lt;/script&gt;<strong>
 </strong>
 &lt;/head&gt;</pre>
-<p>For information about the {resource.version} variable and what value to use, see below.</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
 <a name="what_is_the_resource_version_variable"></a><h3>What is the {resource.version} variable and why is it important?</h3> 
 <p>If you want to use content-based tagging in a documentation file, the doc file must reference these two JavaScript files:</p>
-<pre>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/resources/style/base.css&quot;/&gt;
+<pre>
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/resources/style/reset.css&quot;/&gt; 
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/resources/style/base.css&quot;/&gt;
 &lt;script language=&quot;javascript&quot; src=&quot;/ui/apps/atmosphere/{resource.version}/resources/uiframework/jquery/jquery.js&quot;
   type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
 &lt;script language=&quot;javascript&quot; src=&quot;/ui/apps/atmosphere/{resource.version}/resources/console/javascript/dynamic_docs.js&quot;
@@ -902,7 +953,7 @@ no-catalog: true
 
 
 <a name="doctags_showforlicense"></a><h3>How do I use content-based tagging to restrict visibility by license?</h3>
-<p>To restrict visibility of certain pieces of content within a documentation file, so that the content can only be seen by users with visibility of a specific license, specify the license names in the <strong>showforlicense</strong> tag.</p>
+<p>To restrict visibility of certain pieces of content within a documentation file, so that the content can only be seen by users with visibility of a specific license, specify the license names in the <strong>soa:showforlicense</strong> tag.</p>
 <p>To specify multiple licenses, separate them with commas.</p>
 <p>If the tagged content is a link to another file, remember to also specify in the <strong>metadata.xml</strong> file that the destination file is accessible to users with visibility of the same license. If you don't, users will see the link and be able to click the link but will not have permission to view the target file.</p>
 <p>In the documentation tag, use a &lt;div&gt; tag with the <strong>soa-ui-cm-dynamic-docs</strong> tag assigned to it. Refer to the examples below.</p>
@@ -1038,7 +1089,7 @@ no-catalog: true
 &lt;/soa:showforrole&gt;</pre>
 
 
-<h5>Example : Admin (user must be either API Admin or Business Admin)</h5>
+<h5>Example 5: Admin (user must be either API Admin or Business Admin)</h5>
 <p>In the example below, the specified file is visible only to users with the role of <strong>either</strong> API Admin <strong>or</strong> Business Admin.</p>
 <pre>&lt;soa:showforrole roleNames=&quot;Admin&quot;&gt;
   &lt;div class=&quot;soa-ui-cm-dynamic-docs&quot;&gt;
@@ -1047,7 +1098,7 @@ no-catalog: true
 &lt;/soa:showforrole&gt;</pre>
 
 
-<h5>Example 6: Multiple roles; user must have both roles</h5>
+<h5><a name="ex_06_showforrole"></a>Example 6: Multiple roles; user must have both roles</h5>
 <p>In the example below, the specified file is visible only to users with the role of <strong>both</strong> Site Admin <strong>and</strong> Business Admin. The <strong>and</strong> operator (case does not matter) causes both roles to be required.</p>
 <pre>&lt;soa:showforrole roleNames=&quot;SiteAdmin, BusinessAdmin&quot; condition=&quot;and&quot;&gt;
   &lt;div class=&quot;soa-ui-cm-dynamic-docs&quot;&gt;
@@ -1134,7 +1185,7 @@ no-catalog: true
 
 
 <a name="using_multiple_tags"></a><h3>When I'm using content-based tagging, can I use multiple tags?</h3>
-<p>When you're using content-based tagging, you can specify multiple entries of the same type (licenses, scopes, or operations) and separate them with a comma. </p>
+<p>When you're using content-based tagging, you can specify multiple entries of the same type (licenses, scopes, or operations) and separate them with a comma.</p>
 <p>This restricts  visibility of a specific piece of content so that it can only be seen by users with a specific combination of more than one license, more than one scope, or more than one operation.</p>
 <p>Multiple items must all be of the same type. For example, you cannot set up a single entry to combine one scope and one license. The entries would have to be separate.</p>
 <p>In the example below, only users who have visibility of <strong>both</strong> scopes will see the designated content.</p>
@@ -1144,6 +1195,258 @@ no-catalog: true
     &lt;p&gt;&lt;a href="<strong>twoscopes.html</strong>"&gt;<strong>twoscopes.html</strong>&lt;/a&gt;&lt;/p&gt;
   &lt;/div&gt;
 &lt;/soa:showforscope&gt;</pre>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="doctags_operators"></a>
+<h3>When I'm doing content-based tagging, what operators can I use in my tags?</h3>
+<p>In most cases, with content tags, if you provide multiple values (separated by commas) the default behavior is <strong>or</strong>. This means that if the viewing user has visibility of <strong>one</strong> of the specified resources, the user can see the content. The exception to this is the <strong>soa:showforscope</strong> tag. For specifics, refer to the table below.</p>
+<table cellspacing="0px" class="doctable" style="width: 98%;">
+  <thead>
+    <tr>
+      <th width="20%">Tag</th>
+      <th width="20%">Default operator</th>
+      <th width="60%">Supports the &quot;and&quot; operator?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="t2row">
+      <td>soa:showforlicense</td>
+      <td>Or</td>
+      <td>No</td>
+    </tr>
+    <tr class="t1row">
+      <td>soa:showforscope</td>
+      <td>And</td>
+      <td>Yes, plus it is the default.  The user must have visibility access to <strong>all</strong> the specified scopes in order to see the content. </td>
+    </tr>
+    <tr class="t2row">
+      <td>soa:showforoperation</td>
+      <td>Or</td>
+      <td>No</td>
+    </tr>
+    <tr class="t1row">
+      <td>soa:showforrole</td>
+      <td>Or</td>
+      <td>Yes. For this tag, the default value is <strong>or</strong>, but the <strong>and</strong> operator is also supported. If <strong>and</strong> is used, the viewing user must have <strong>all</strong> roles in order to have visibility of the content. for an example, see <a href="#ex_06_showforrole">Example 6: Multiple roles; user must have both roles</a>.</td>
+    </tr>
+    <tr class="t2row">
+      <td>showforanonymoususer</td>
+      <td>Or</td>
+      <td>No</td>
+    </tr>
+    <tr class="t1row">
+      <td>soa:showforloggedinuser</td>
+      <td>Or</td>
+      <td>No</td>
+    </tr>
+    <tr class="t2row">
+      <td>soa:showforoperation</td>
+      <td>Or</td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="h_streamlining"></a><h3>Streamlining Content-Based Doc Tagging:</h3>
+
+
+
+<a name="how_can_i_simplify_content_based_doc_tagging_updates_using_replacements_js"></a><h3>How can I simplify content-based doc tagging updates using the replacements.js file?</h3>
+<p>If you have a lot of tags on your documentation set, and something changes, you might have many updates to make. For example:</p>
+<ul>
+  <li>You might have a new license, or change a license name. Perhaps you have a new version of your Gold license, and you call it UltraGold, but you want users of the new license to see the new content.</li>
+</ul>
+<p>Alternatively, you might have some customization in place that might affect how you tag your documentation. For example:</p>
+<ul>
+  <li>You might have a custom role. Perhaps you set up a custom role, SeniorAdmin, that encompasses both Site Admin and Business Admin roles.</li>
+</ul>
+<p>The platform's documentation tagging feature includes a facility that you can use to help automate updates to your documentation. It's a JavaScript file, <strong>replacements.js</strong>, which you can customize to your implementation by performing the following steps:</p>
+<ul>
+  <li> In your doc tagging, instead of using the actual license, scope, operation, or role names, use placeholder variables.</li>
+  <li>In the <strong>replacements.js</strong> file, specify the values the platform will use for the placeholder variables.</li>
+  <li>In your documentation files, load <strong>replacements.js</strong> by means of a &lt;script&gt; tag in the &lt;head&gt; tag, before loading the <strong>dynamic_docs.js</strong> file.</li>
+</ul>
+<p><strong>Note</strong>: the processing of this file includes up to two levels of replacement. So, for example, you can map one variable to two or more variables. On the first pass, the single variable is replaced by the two variables; on the second pass, each of the two variables is replaced by the actual values. If two passes are not needed, the platform only does one (or none, if no variables are used).</p>
+<p>Below is an example of a <strong>replacements.js</strong> file, which you can use to build your own. It includes:</p>
+<ul>
+  <li>At the top, a namespace declaration,</li>
+  <li>On each line, name-value pairs:
+    <ul>
+  <li><strong>Name</strong>: a variable name which you can use in your doc tag, preceded by the namespace value. The replacements.js file looks for this value in your files, and replaces it with the second value.</li>
+  <li><strong>Value</strong>: the value that's substituted. It can be the actual name of a scope, license, operation, or role, or it can be another variable which the platform will replace with actual values on a second pass through the documentation.</li></ul></li>
+</ul>
+<pre>// only 2 levels for replacement processing like
+// siteAdminCommaBusinessAdmin: "{MYAPP.siteAdmin}, {MYAPP.businessAdmin}" are supported.
+// It is best to create a namespace such as MYAPP
+window.MYAPP = {
+  "mySampleAPIVersionId" : "changeMe(APIVersionID)",
+  "siteAdmin" : "SiteAdmin",
+  "businessAdmin" : "BusinessAdmin",
+  "siteAdminCommaBusinessAdmin" : "{MYAPP.siteAdmin}, {MYAPP.businessAdmin}",
+  "admin" : "Admin",
+  "publicScope1" : "public-scope-1",
+  "publicScope2" : "public-scope-1",
+  "publicScope1CommaPublicScope2" : "public-scope-1, public-scope-1",
+  "privateScope1" : "private-scope-1",
+  "privateScope2" : "private-scope-2",
+  "privateScope1CommaprivateScope2" : "private-scope-1, private-scope-2",
+  "publicLicense1" : "public-license-1",
+  "privateLicense1" : "private-license-1",
+  "operationTargeted" : "operation-targeted"
+}</pre>
+<p>In each line of the above, the first value is the name of a license, scope, operation, or role, that you might use in your doc tagging. The second value is a placeholder variable that you use in the documentation to designate that license, scope, operation, or role.</p>
+<p>For information on the APIVersionID variable in the above, see <a href="#how_do_i_implement_version_specific_documentation_in_simple_dev_theme">How do I implement version-specific API documentation in Simple Dev theme?</a></p>
+<p class="apidoc_note"><strong>Tip</strong>: It's best to create a namespace for the variables, as shown in the default example above, and then use it in all the names for your variables. For example, in the variable {ACMEPC.myscopename}, ACMEPC is the namespace, which would have to be defined at the top of the file as in the MYAPP example above (window.MYAPP = ). Using a namespace will ensure there's no naming collision between any variable names that might already be in use elsewhere in the platform.</p>
+<p>Below are some examples of how you can use this file to automate your doc tagging updates.</p>
+<h5>Example 1: One change instead of many</h5>
+<p>Let's say you have many instances in your documentation files where there is content tagged for the GoldLicense. By setting up the below entry in your replacements.js file, if the license name changes, all you need to do is change the entry on the left in the file. You don't need to update any of the tags in your documentation files.</p>
+<pre>
+window.ACMEPC = {
+  "goldLicense" : "Gold",
+  ...
+}</pre>
+<p>In this example, the tag in your documentation file would look like the below:</p>
+<pre>&lt;soa:showforlicense licenseNames="{ACMEPC.goldLicense}"&gt;
+  &lt;div class="soa-ui-cm-dynamic-docs"&gt;
+    &lt;p&gt;&lt;a href="goldlicense.html"&gt;About the Gold License&lt;/a&gt;&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/soa:showforlicense&gt;</pre>
+<p><strong>Note</strong>: You must also include a &lt;script&gt; tag in the head of the above HTML file; otherwise, the variables will not be replaced with the actual values. See <a href="#how_do_i_implement_the_replacements_js_file">How do I implement the replacements.js file?</a> below.</p>
+
+
+<h5>Example 2: One variable for multiple values: licenses</h5>
+<p>Let's say you want to create a single tag that will give visibility permission for two licenses, Gold and Silver.</p>
+<p>You can define variables for each license, and in addition a variable that encompasses both licenses, as follows: </p>
+<pre>
+window.ACMEPC = {
+  &quot;goldLicense&quot; : &quot;Gold&quot;,
+  &quot;silverLicense&quot; : &quot;Silver&quot;,
+  &quot;goldAndSilverLicenses&quot; : &quot;{ACMEPC.goldLicense}, {ACMEPC.silverLicense}&quot;,
+  ...
+}</pre>
+<p>Your documentation tag might look like this:</p>
+<pre>&lt;soa:showforlicense licenseNames=&quot;{ACMEPC.goldAndSilverLicenses}&quot;&gt;
+  &lt;div class=&quot;soa-ui-cm-dynamic-docs&quot;&gt;
+    &lt;p&gt;&lt;a href=&quot;license_goldsilver.html&quot;&gt;Information for holders of multiple licenses&lt;/a&gt;&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/soa:showforlicense&gt;</pre>
+<p>On the first pass, the script would replace the variable like this:</p>
+<pre>&lt;soa:showforlicense licenseNames=&quot;{ACMEPC.goldLicense}, {ACMEPC.silverLicense}&quot;&gt;
+  &lt;div class=&quot;soa-ui-cm-dynamic-docs&quot;&gt;
+    &lt;p&gt;&lt;a href=&quot;license_goldsilver.html&quot;&gt;Information for holders of multiple licenses&lt;/a&gt;&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/soa:showforlicense&gt;</pre>
+<p>On the second pass, the script would replace the variable like this:</p>
+<pre>&lt;soa:showforlicense licenseNames=&quot;Gold, Silver&quot;&gt;
+  &lt;div class=&quot;soa-ui-cm-dynamic-docs&quot;&gt;
+    &lt;p&gt;&lt;a href=&quot;license_goldsilver.html&quot;&gt;Information for holders of multiple licenses&lt;/a&gt;&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/soa:showforlicense&gt;</pre>
+<p>With this approach, if you want to add a third license to the definition, you can change one line in the <strong>replacements.js</strong> file and your change is effected throughout the documentation set. Otherwise, you'd have to find every instance where documentation is tagged for two licenses and add the third. It's more work, and more possibility for error.</p>
+
+
+<h5>Example 3: One variable for multiple values: roles</h5>
+<p>Let's say you want to create a role for internal users. Site Admin and Business Admins are internal users; but the definition of this term might change, either to add API Admins or to remove Site Admins.</p>
+<p>You can define a variable that encompasses these multiple roles, as follows: </p>
+<pre>
+window.ACMEPC = {
+  &quot;siteAdmin&quot; : &quot;SiteAdmin&quot;,
+  &quot;businessAdmin&quot; : &quot;BusinessAdmin&quot;,
+  &quot;InternalUsers&quot; : &quot;{ACMEPC.siteAdmin}, {ACMEPC.businessAdmin}&quot;,
+  ...
+}</pre>
+<p>Your documentation tag might look like this:</p>
+<pre>&lt;soa:showforrole roleNames=&quot;{ACMEPC.InternalUsers}&quot;&gt;
+  &lt;div class=&quot;soa-ui-cm-dynamic-docs&quot;&gt;
+    &lt;p&gt;&lt;a href=&quot;internal_users.html&quot;&gt;Information for internal users only&lt;/a&gt;&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/soa:showforrole&gt;</pre>
+<p>On the first pass, the script would replace the variable like this:</p>
+<pre>&lt;soa:showforrole roleNames=&quot;{ACMEPC.siteAdmin}, {ACMEPC.businessAdmin}&quot;&gt;
+  &lt;div class=&quot;soa-ui-cm-dynamic-docs&quot;&gt;
+    &lt;p&gt;&lt;a href=&quot;internal_users.html&quot;&gt;Information for internal users only&lt;/a&gt;&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/soa:showforrole&gt;</pre>
+<p>On the second pass, the script would replace the variable like this:</p>
+<pre>&lt;soa:showforrole roleNames=&quot;siteAdmin, businessAdmin&quot;&gt;
+  &lt;div class=&quot;soa-ui-cm-dynamic-docs&quot;&gt;
+    &lt;p&gt;&lt;a href=&quot;internal_users.html&quot;&gt;Information for internal users only&lt;/a&gt;&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/soa:showforrole&gt;</pre>
+<p>With this approach, if the definition of internal users changes, you can change one line in the <strong>replacements.js</strong> file and your change is effected throughout the documentation set.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_do_i_implement_the_replacements_js_file"></a>
+<h3>How do I implement the replacements.js file?</h3>
+<p>If you're using a <strong>replacements.js</strong> file to automate maintenance of your doc tags, you'll need to load it with a &lt;script&gt; tag in the &lt;head&gt; tag of your HTML files, making sure you load it before the <strong>dynamic_docs.js</strong> file.</p>
+<p>Below is an example of what the &lt;head&gt; tag of one of your documentation files might look like.</p>
+<pre>&lt;head&gt;
+  &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+  &lt;meta http-equiv="X-UA-Compatible" content="IE=edge" /&gt;
+
+  &lt;title&gt;About the addPayment Operation&lt;/title&gt;
+
+  &lt;link rel="stylesheet" type="text/css" href="/resources/style/reset.css"/&gt;
+  &lt;link rel="stylesheet" type="text/css" href="/resources/style/base.css"/&gt;
+
+  &lt;script language="javascript" src="/ui/apps/atmosphere/123/resources/uiframework/jquery/jquery.js"
+  type="text/javascript"&gt;&lt;/script&gt;
+
+  &lt;!-- load replacements.js before dynamic_docs.js --&gt;
+  &lt;script language="javascript" src="./replacements.js"
+  type="text/javascript"&gt;&lt;/script&gt;
+
+  &lt;script language="javascript" src="/ui/apps/atmosphere/123/resources/console/javascript/dynamic_docs.js"
+  type="text/javascript"&gt;&lt;/script&gt;
+&lt;/head&gt;</pre>
+<p><strong>Note</strong>: Make sure you have the correct path to the <strong>replacements.js</strong> file, whether it's in the same folder, a subfolder, or a parent folder.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="where_do_i_store_the_replacements_js_file"></a><h3>Where do I store the replacements.js file?</h3>
+<p>If you're using a <strong>replacements.js</strong> file to automate maintenance of your doc tags, upload the file to the main documents directory for your API doc.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_do_i_implement_version_specific_documentation_in_simple_dev_theme"></a>
+<h3>How do I implement version-specific API documentation in Simple Dev theme?</h3>
+<p>You can support version-specific API documentation in Simple Dev theme by using the <strong>apiVersionId</strong> attribute in your content-based doc tagging.</p>
+<p>The value of the attribute is defined in the <strong>replacements.js</strong> file, and your documentation HTML file must reference the <strong>replacements.js</strong> file in the &lt;head&gt; tag. For information and instructions, see <a href="#how_can_i_simplify_content_based_doc_tagging_updates_using_replacements_js">How can I simplify content-based doc tagging updates using the replacements.js file?</a></p>
+<p>By default, if an API has multiple versions, the latest version is the default version.</p>
+<p>In Default Theme, the user chooses the API, chooses the version, and then views the documentation. The platform applies the user's API version selection, filtering out the documentation by version. If the user doesn't choose a different version, the user sees the latest version, since it is the default.</p>
+<p>In Simple Dev theme, this is not the case. There is no way for the platform to determine which API version the user is interested in. Therefore, to implement version-specific documentation in Simple Dev theme, you can use the API Version attribute in your content-based doc tags.</p>
+<p>There are some content-based doc tags for which API version isn't relevant; for example, showforanonymoususer and showforloggedinuser. However, it is relevant for the following tags:</p>
+<ul>
+  <li>showforlicense</li>
+  <li>showforscope</li>
+  <li>showforoperation </li>
+  <li>showforrole </li>
+</ul>
+<p>By tagging sections of your content with the <strong>apiVersionId</strong> attribute, you identify which sections of text should be shown for which API version.</p>
+<p>The example below shows a tag that includes the <strong>apiVersionId</strong> attribute.</p>
+<pre>&lt;soa:showforscope scopeNames="{ACMEPC.publicScope1}" apiVersionId="{ACMEPC.mySampleAPIVersionId}"&gt;
+  &lt;div class="soa-ui-cm-dynamic-docs"&gt;
+    &lt;a href="public-scope-1.html"&gt;public-scope-1.html&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/soa:showforscope&gt;</pre>
+<p>If you are not sure what the API version ID is for your version, you can easily get it from viewing the documentation in Default Theme. See below.</p>
+<h5>To get the API version ID</h5>
+<ol>
+  <li>Log in to Default Theme and go to the API.</li>
+  <li>From the Versions drop-down, choose the version you want.</li>
+  <li>From the left menu, choose <strong>Documents</strong>, and view the documentation index page. If the page name is index.html, the path will be something like the below:
+    <p><strong>http://{hostname}/#/api/{APIID}/versions/{APIVersionID}/documents/index.htm</strong></p></li>
+  <li>Copy the URL, and extract the API version ID.</li>
+</ol>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -1235,158 +1538,5 @@ no-catalog: true
   <li><a href="api_admin_content_guidelines.htm#how_do_i_set_the_file_display_name_in_the_api_documentation_table_of_contents">How do I set the file display name in the API documentation table of contents?</a></li>
 </ul>
 <p><a href="#top">Back to top</a></p>
-
-
-
-<a name="h_maintenance"></a><h3>Maintenance:</h3>
-
-
-
-<a name="how_can_i_simplify_content_based_doc_tagging_updates_using_replacements_js"></a>
-<h3>How can I simplify content-based doc tagging updates using the replacements.js file?</h3>
-<p>If you have a lot of document tags, and something changes, you might have many updates to make. For example:</p>
-<ul>
-  <li>You might have a new license, or change a license name. Perhaps you have a new version of your Gold license, and you call it UltraGold, but you want users of the new license to see the new content.</li>
-</ul>
-<p>Alternatively, you might have some customization in place that might affect how you tag your documentation. For example:</p>
-<ul>
-  <li>You might have a custom role. Perhaps you set up a custom role, SeniorAdmin, that encompasses both Site Admin and Business Admin roles.</li>
-</ul>
-<p>The platform's documentation tagging feature includes a facility that you can use to help automate updates to your documentation. It's a JavaScript file, <strong>replacements.js</strong>, which you can customize to your implementation by performing the following steps:</p>
-<ul>
-  <li> In your doc tagging, instead of using the actual license, scope, operation, or role names, use placeholder variables.</li>
-  <li>In the <strong>replacements.js</strong> file, specify the values the platform will use for the placeholder variables.</li>
-  <li>In your documentation files, load <strong>replacements.js</strong> with a &lt;script&gt; tag in the &lt;head&gt; tag, before loading the <strong>dynamic_docs.js</strong> file.</li>
-</ul>
-<p><strong>Note</strong>: the processing of this file includes up to two levels of replacement. So, for example, you can map one variable to two or more variables. On the first pass, the single variable is replaced by the two variables; on the second pass, each of the two variables is replaced by the actual values. If two passes are not needed, the platform only does one (or none, if no variables are used).</p>
-<p>Below is an example of a <strong>replacements.js</strong> file, which you can use to build your own.</p>
-<pre>// only 2 levels for replacement processing like
-// siteAdminCommaBusinessAdmin: "{MYAPP.siteAdmin}, {MYAPP.businessAdmin}" are supported.
-// It is best to create a namespace such as MYAPP
-window.MYAPP = {
-  "mySampleAPIVersionId" : "changeMe(APIVersionID)",
-  "siteAdmin" : "SiteAdmin",
-  "businessAdmin" : "BusinessAdmin",
-  "siteAdminCommaBusinessAdmin" : "{MYAPP.siteAdmin}, {MYAPP.businessAdmin}",
-  "admin" : "Admin",
-  "publicScope1" : "public-scope-1",
-  "publicScope2" : "public-scope-1",
-  "publicScope1CommaPublicScope2" : "public-scope-1, public-scope-1",
-  "privateScope1" : "private-scope-1",
-  "privateScope2" : "private-scope-2",
-  "privateScope1CommaprivateScope2" : "private-scope-1, private-scope-2",
-  "publicLicense1" : "public-license-1",
-  "privateLicense1" : "private-license-1",
-  "operationTargeted" : "operation-targeted"
-}</pre>
-<p>In each line of the above, the first value is the name of a license, scope, operation, or role, that you might use in your doc tagging. The second value is a placeholder variable that you use in the documentation to designate that license, scope, operation, or role.</p>
-<p>For information on the APIVersionID variable in the above, see <a href="#how_do_i_implement_version_specific_documentation_in_simple_dev_theme">How do I implement version-specific API documentation in Simple Dev theme?</a></p>
-<p class="apidoc_note"><strong>Tip</strong>: It's best to create a namespace for the variables, as shown in the default example above, and then use it in all the names for your variables. For example, in the variable {AcmePaymentsCorp.myscopename}, AcmePaymentsCorp is the namespace, which would have to be defined at the top of the file as in the MYAPP example above (window.MYAPP = ). Using a namespace will ensure there's no naming collision between any variable names that might already be in use elsewhere in the platform.</p>
-<p>Below are some examples of how you can use this file to automate your doc tagging updates.</p>
-<h5>Example 1: One change instead of many</h5>
-<p>Let's say you have many instances in your documentation files where there is content tagged for the GoldLicense. By setting up the below entry in your replacements.js file, if the license name changes, all you need to do is change the entry on the left in the file. You don't need to update any of the tags in your documentation files.</p>
-<pre>"GoldLicense" : "{acmepaymentscorp.GoldLicense}",</pre>
-<p>In this example, the tag in your documentation file would look like the below:</p>
-<pre>&lt;soa:showforlicense licenseNames="{GoldLicense}"&gt;
-  &lt;div class="soa-ui-cm-dynamic-docs"&gt;
-    &lt;p&gt;&lt;a href="goldlicense.html"&gt;About the Gold License&lt;/a&gt;&lt;/p&gt;
-  &lt;/div&gt;
-&lt;/soa:showforlicense&gt;</pre>
-<p><strong>Note</strong>: You must also include a script tag in the head of the above HTML file; otherwise, the variables will not be replaced with the actual values. See <a href="#how_do_i_implement_the_replacements_js_file">How do I implement the replacements.js file?</a> below.</p>
-
-
-<h5>Example 2: One variable for multiple values</h5>
-<p>Let's say you want to create a role for internal users. Site Admin and Business Admins are internal users; but the definition of this term might change, either to add API Admins or to remove Site Admins.</p>
-<p>You can define a variable that encompasses these multiple roles, as follows: </p>
-<pre>&quot;InternalUsers&quot; : &quot;{acmepaymentscorp.siteAdmin}, {acmepaymentscorp.businessAdmin}&quot;,</pre>
-<p>Your documentation tag might look like this:</p>
-<pre>&lt;soa:showforrole roleNames=&quot;{InternalUsers}&quot;&gt;
-  &lt;div class=&quot;soa-ui-cm-dynamic-docs&quot;&gt;
-    &lt;p&gt;&lt;a href=&quot;internal_users.html&quot;&gt;Information for internal users only&lt;/a&gt;&lt;/p&gt;
-  &lt;/div&gt;
-&lt;/soa:showforrole&gt;</pre>
-<p>On the first pass, the script would replace the variable like this:</p>
-<pre>&lt;soa:showforrole roleNames=&quot;{acmepaymentscorp.siteAdmin}, {acmepaymentscorp.businessAdmin}&quot;&gt;
-  &lt;div class=&quot;soa-ui-cm-dynamic-docs&quot;&gt;
-    &lt;p&gt;&lt;a href=&quot;internal_users.html&quot;&gt;Information for internal users only&lt;/a&gt;&lt;/p&gt;
-  &lt;/div&gt;
-&lt;/soa:showforrole&gt;</pre>
-<p>On the second pass, the script would replace the variable like this:</p>
-<pre>&lt;soa:showforrole roleNames=&quot;siteAdmin, businessAdmin&quot;&gt;
-  &lt;div class=&quot;soa-ui-cm-dynamic-docs&quot;&gt;
-    &lt;p&gt;&lt;a href=&quot;internal_users.html&quot;&gt;Information for internal users only&lt;/a&gt;&lt;/p&gt;
-  &lt;/div&gt;
-&lt;/soa:showforrole&gt;</pre>
-<p>With this approach, if the definition of internal users changes, you can change one line in the <strong>replacements.js</strong> file and your change is effected throughout the documentation set.</p>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<a name="how_do_i_implement_the_replacements_js_file"></a>
-<h3>How do I implement the replacements.js file?</h3>
-<p>If you're using a <strong>replacements.js</strong> file to automate maintenance of your doc tags, you'll need to load it with a &lt;script&gt; tag in the &lt;head&gt; tag of your HTML files, making sure you load it before the <strong>dynamic_docs.js</strong> file.</p>
-<p>Below is an example of what the &lt;head&gt; tag of one of your documentation files might look like.</p>
-<pre>&lt;head&gt;
-  &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
-  &lt;meta http-equiv="X-UA-Compatible" content="IE=edge" /&gt;
-
-  &lt;title&gt;About the addPayment Operation&lt;/title&gt;
-
-  &lt;link rel="stylesheet" type="text/css" href="/resources/style/reset.css"/&gt;
-  &lt;link rel="stylesheet" type="text/css" href="/resources/style/base.css"/&gt;
-
-  &lt;script language="javascript" src="/ui/apps/atmosphere/123/resources/uiframework/jquery/jquery.js"
-  type="text/javascript"&gt;&lt;/script&gt;
-
-  &lt;!-- load replacement file before dynamic_docs.js --&gt;
-  &lt;script language="javascript" src="./replacements.js"
-  type="text/javascript"&gt;&lt;/script&gt;
-
-  &lt;script language="javascript" src="/ui/apps/atmosphere/123/resources/console/javascript/dynamic_docs.js"
-  type="text/javascript"&gt;&lt;/script&gt;
-&lt;/head&gt;</pre>
-<p>Make sure you have the correct path to the <strong>replacements.js</strong> file, whether it's in the same folder, a subfolder, or a parent folder.</p>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<a name="where_do_i_store_the_replacements_js_file"></a><h3>Where do I store the replacements.js file?</h3>
-<p>If you're using a <strong>replacements.js</strong> file to automate maintenance of your doc tags, upload the file to the main documents directory for your API doc.</p>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<a name="how_do_i_implement_version_specific_documentation_in_simple_dev_theme"></a>
-<h3>How do I implement version-specific API documentation in Simple Dev theme?</h3>
-<p>You can support version-specific API documentation in Simple Dev theme by using the <strong>apiVersionId</strong> attribute in your content-based doc tagging.</p>
-<p>The value of the attribute is defined in the <strong>replacements.js</strong> file, and your documentation HTML file must reference the <strong>replacements.js</strong> file in the &lt;head&gt; tag. For information and instructions, see <a href="#how_can_i_simplify_content_based_doc_tagging_updates_using_replacements_js">How can I simplify file-based doc tagging updates using the replacements.js file?</a></p>
-<p>By default, if an API has multiple versions, the latest version is the default version.</p>
-<p>In Default Theme, the user chooses the API, chooses the version, and then views the documentation. The platform applies the user's API version selection, filtering out the documentation by version. If the user doesn't choose a different version, the user sees the latest version, since it is the default.</p>
-<p>In Simple Dev theme, this is not the case. There is no way for the platform to determine which API version the user is interested in. Therefore, to implement version-specific documentation in Simple Dev theme, you can use the API Version attribute in your content-based doc tags.</p>
-<p>There are some content-based doc tags for which API version isn't relevant; for example, showforanonymoususer and showforloggedinuser. However, it is relevant for the following tags:</p>
-<ul>
-  <li>showforlicense</li>
-  <li>showforscope</li>
-  <li>showforoperation </li>
-  <li>showforrole </li>
-</ul>
-<p>By tagging sections of your content with the <strong>apiVersionId</strong> attribute, you identify which sections of text should be shown for which API version.</p>
-<p>The example below shows a tag that includes the <strong>apiVersionId</strong> attribute.</p>
-<pre>&lt;soa:showforscope scopeNames="{acmepaymentscorp.publicScope1}" apiVersionId="{acmepaymentscorp.mySampleAPIVersionId}"&gt;
-  &lt;div class="soa-ui-cm-dynamic-docs"&gt;
-    &lt;a href="public-scope-1.html"&gt;public-scope-1.html&lt;/a&gt;
-  &lt;/div&gt;
-&lt;/soa:showforscope&gt;</pre>
-<p>If you are not sure what the API version ID is for your version, you can easily get it from viewing the documentation in Default Theme. See below.</p>
-<h5>To get the API version ID</h5>
-<ol>
-  <li>Log in to Default Theme and go to the API.</li>
-  <li>From the Versions drop-down, choose the version you want.</li>
-  <li>From the left menu, choose <strong>Documents</strong>, and view the documentation index page. If the page name is index.html, the path will be something like the below:
-    <p><strong>http://{hostname}/#/api/{APIID}/versions/{APIVersionID}/documents/index.htm</strong></p></li>
-  <li>Copy the URL, and extract the API version ID.</li>
-</ol>
-<p><a href="#top">Back to top</a></p>
-
 
 
