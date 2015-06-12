@@ -72,7 +72,7 @@ nav-title: App Security
 <a name="token_structure"></a><h4>Token Structure</h4>
 <p>In order for the platform to recognize your app, you must construct a token and send it with the request message.</p>
 <p>The values that make up the token, and the way it's constructed, vary according to the security mechanism you're using. The table below lists all token values and indicates the security mechanisms for which each is valid. The specific values and their sequence depend on the specific security mechanism you choose; the procedures for setting up each security mechanism include exact instructions for constructing the token for that mechanism.</p>
-<p class="apidoc_note"><strong>Note</strong>: Each value includes a prefix, the value of which is determined by the Site Admin. In the table below, and everywhere in this document, we use a fictitious company name, <strong>acmecorp</strong>, for the prefix; for example, <strong>acmecorp_app_id</strong>. In your installation it will be some other value; for example, it might be the Tenant ID. If you're not sure what value to use, consult your site administrator.</p>
+<p class="apidoc_note"><strong>Note</strong>: Each value includes a prefix, the value of which is determined by the Site Admin. In the table below, and everywhere in this document, we use a fictitious company name, <strong>acmepaymentscorp</strong>, for the prefix; for example, <strong>acmepaymentscorp_app_id</strong>. In your installation it will be some other value; for example, it might be the Tenant ID. If you're not sure what value to use, consult your site administrator.</p>
 <table width="98%" cellpadding="2" cellspacing="0" class="tableparmsresponse" summary="table description">
 <thead>
   <tr>
@@ -83,44 +83,44 @@ nav-title: App Security
 </thead>
 <tbody>
   <tr>
-    <td><a name="acmecorp_app_id"></a>acmecorp_app_id</td>
+    <td><a name="acmecorp_app_id"></a>acmepaymentscorp_app_id</td>
     <td>All</td>
     <td>The AppID assigned to the app in the platform.</td>
   </tr>
   <tr>
-    <td><a name="acmecorp_nonce"></a>acmecorp_nonce</td>
+    <td><a name="acmecorp_nonce"></a>acmepaymentscorp_nonce</td>
     <td>All</td>
     <td><p>A random string, uniquely generated for each request. The nonce allows the API providers to verify that a request has never been made before and helps prevent replay attacks when requests are made over a non-secure channel.</p>
       <p>For more information, see <a href="#generatingnonce">Generating a Nonce Value</a>.</p></td>
   </tr>
   <tr>
-    <td><a name="acmecorp_secret_digest"></a>acmecorp_secret_digest</td>
+    <td><a name="acmecorp_secret_digest"></a>acmepaymentscorp_secret_digest</td>
     <td>Hash/Digest with Shared Secret</td>
     <td>A value produced by concatenating the nonce, the timestamp, and the Shared Secret, hashing the combined value using SHA-1, and then Base-64 encoding the result. You can also URL-encode the result, but this isn't required.</td>
   </tr>
   <tr>
-    <td><a name="acmecorp_signature_method"></a>acmecorp_signature_method</td>
+    <td><a name="acmecorp_signature_method"></a>acmepaymentscorp_signature_method</td>
     <td>All</td>
     <td><p>A value indicating the signature method. Valid values:</p>
       <ul class="apidoctable_ul">
         <li>For HMAC Signature with Shared Secret: <strong>HMAC-SHA1</strong> or <strong>HMAC-SHA256</strong>.</li>
         <li>For Hash/Digest with Shared Secret: <strong>Digest</strong>.</li>
-        <li>For RSA Signature with PKI: <strong>SHA1withRSA</strong>,<strong>SHA256withRSA</strong>, or <strong>NONE</strong>. The <strong>NONE</strong> signature method is used for APIs that don't require security. In this case, only the acmecorp_app_id is required in the HTTP Authorization headers.</li>
+        <li>For RSA Signature with PKI: <strong>SHA1withRSA</strong>,<strong>SHA256withRSA</strong>, or <strong>NONE</strong>. The <strong>NONE</strong> signature method is used for APIs that don't require security. In this case, only the acmepaymentscorp_app_id is required in the HTTP Authorization headers.</li>
       </ul></td>
   </tr>
   <tr>
-    <td><a name="acmecorp_signature"></a>acmecorp_signature</td>
-    <td> HMAC Signature with Shared Secret, RSA Signature with PKI</td>
+    <td><a name="acmecorp_signature"></a>acmepaymentscorp_signature</td>
+    <td>HMAC Signature with Shared Secret, RSA Signature with PKI</td>
     <td>The signature value. For information on how the signature value is calculated, see <a href="#composing_signature_hmac_ss">Composing the Signature: HMAC Signature with Shared Secret</a> or <a href="#composing_signature_rsa_pki">Composing the Signature: RSA Signature with PKI</a>.</td>
   </tr>
   <tr>
-    <td><a name="acmecorp_timestamp"></a>acmecorp_timestamp</td>
+    <td><a name="acmecorp_timestamp"></a>acmepaymentscorp_timestamp</td>
     <td>All</td>
     <td><p>The timestamp of the request, expressed as the number of milliseconds since January 1, 1970 00:00:00 GMT. The timestamp must be a positive integer and must be greater than or equal to the timestamp used in previous requests.</p>
       <p>For more information, see <a href="#generatingtimestamp">Generating the Timestamp</a>.</p></td>
   </tr>
   <tr>
-  <td><a name="acmecorp_version"></a>acmecorp_version</td>
+  <td><a name="acmecorp_version"></a>acmepaymentscorp_version</td>
     <td>All</td>
     <td>The platform version. Optional. If present, the value must be 1.0.</td>
   </tr>
@@ -135,7 +135,7 @@ nav-title: App Security
   <li>The platform automatically defaults to the first part of the incoming request hostname.</li>
   <li>You can change it, but the value you choose must be a valid part of the incoming request hostname.</li>
 </ul>
-<p>Let's say, for example, the hostname for your API requests is <strong>acmecorp.payments.com</strong>. The platform defaults to <strong>acmecorp</strong>. You can change it to payments, but you cannot choose <strong>acmecorporation</strong>. You must choose a valid part of the hostname.</p>
+<p>Let's say, for example, the hostname for your API requests is <strong>acmepaymentscorp.payments.com</strong>. The platform defaults to <strong>acmepaymentscorp</strong>. You can change it to payments, but you cannot choose <strong>acmepaymentscorporation</strong>. You must choose a valid part of the hostname.</p>
 <p>The value for the realm is configured for the platform in the <a href="basics_glossary.htm#gl_api_gateway">API Gateway</a> by the Administrator.</p>
 <p>When constructing the signature, do not include the realm in the signature base string (see later sections for specific instructions).</p>
 <p>For more information about use of the realm parameter in authentication, refer to the <a href="http://tools.ietf.org/html/rfc2617#section-1.2" target="_blank">Access Authentication Framework</a> section of the HTTP Authentication standard for Basic and Digest Access Authentication.</p>
@@ -162,7 +162,7 @@ nav-title: App Security
 
 
 <a name="processflow_hmac_ss"></a><h4>Authenticating with HMAC Signature with Shared Secret: Process Flow</h4>
-<p> The process flow diagram below shows an overview of API request authentication with HMAC Signature with Shared Secret.</p>
+<p>The process flow diagram below shows an overview of API request authentication with HMAC Signature with Shared Secret.</p>
 <p class="apidoc_image_p"><img src="images/processflow_apirequestauth_hmac_app.jpg" alt="Process flow: HMAC signature with shared secret security mechanism" width="590" height="565" /></p>
 
 
@@ -170,22 +170,22 @@ nav-title: App Security
 <a name="headerexample_hmac_ss"></a><h4>HMAC Signature with Shared Secret: Header Example</h4>
 <p>If you choose the HMAC Signature with Shared Secret authentication mechanism, your HTTP Authorization header must include the values shown below. For definitions of each value, refer to <a href="#token_structure">Token Structure</a>.</p>
 <ul>
-  <li><a href="#acmecorp_app_id">acmecorp_app_id</a></li>
-  <li><a href="#acmecorp_nonce">acmecorp_nonce</a></li>
-  <li><a href="#acmecorp_signature_method">acmecorp_signature_method</a></li>
-  <li><a href="#acmecorp_signature">acmecorp_signature</a></li>
-  <li><a href="#acmecorp_timestamp">acmecorp_timestamp</a></li>
-  <li><a href="#acmecorp_version">acmecorp_version</a></li>
+  <li><a href="#acmecorp_app_id">acmepaymentscorp_app_id</a></li>
+  <li><a href="#acmecorp_nonce">acmepaymentscorp_nonce</a></li>
+  <li><a href="#acmecorp_signature_method">acmepaymentscorp_signature_method</a></li>
+  <li><a href="#acmecorp_signature">acmepaymentscorp_signature</a></li>
+  <li><a href="#acmecorp_timestamp">acmepaymentscorp_timestamp</a></li>
+  <li><a href="#acmecorp_version">acmepaymentscorp_version</a></li>
 </ul>
 <p>Below is an example of an Authorization header with app authentication parameters, when you use the HMAC Signature with Shared Secret approach. <!--RS__ Query is sequence important with HMAC. The sequence of the parameters isn't significant, but all parameters must be present with valid values.--></p>
 <p class="apidoc_note"><strong>Note</strong>: The value for the realm is determined by the www-Authenticate header. Make sure the value you set in the Authorization header is correct for your installation. For more information about the <strong>realm</strong> value, see <a href="#authentication_realm">Authentication Realm</a>.</p>
-<pre>Authorization: acmecorp realm="http://acmecorp",
-  acmecorp_app_id="myplatform-AS0iTmhoGaE6Y9sWhUkvcL6T",
-  acmecorp_nonce="4572616e48616d6d65724c61686176",
-  acmecorp_signature_method="HMAC-SHA1",
-  acmecorp_signature="wOJIO9A2W5mFwDgiDvZbTSMK%2FPY%3D",
-  acmecorp_timestamp="137131200",
-  acmecorp_version="1.0"
+<pre>Authorization: acmepaymentscorp realm="http://acmepaymentscorp",
+  acmepaymentscorp_app_id="myplatform-AS0iTmhoGaE6Y9sWhUkvcL6T",
+  acmepaymentscorp_nonce="4572616e48616d6d65724c61686176",
+  acmepaymentscorp_signature_method="HMAC-SHA1",
+  acmepaymentscorp_signature="wOJIO9A2W5mFwDgiDvZbTSMK%2FPY%3D",
+  acmepaymentscorp_timestamp="137131200",
+  acmepaymentscorp_version="1.0"
 </pre>
 
 <a name="signing_hmac_ss"></a><h4>HMAC Signature with Shared Secret: Signing Requests with the Shared Secret</h4>
@@ -196,7 +196,7 @@ nav-title: App Security
   <li>Hash the result using the SHA-1 secure hashing algorithm.</li>
   <li>Encode the hashed value using the Base64 encoding scheme.</li>
   <li>Optional: You can also URL-encode the result, but this isn't required.</li>
-  <li>Assign the result as the value for the acmecorp_secret_digest parameter.</li>
+  <li>Assign the result as the value for the acmepaymentscorp_secret_digest parameter.</li>
   <li>Send it in the HTTP Authorization message header.</li>
 </ol>
 
@@ -215,7 +215,7 @@ nav-title: App Security
   
   <li>Apply the hash and signature algorithm against the Signature Based String. </li>
 </ol>
-<p class="apidoc_note"><strong>Note</strong>: The acmecorp_signature parameter <em>must</em> be excluded from the Signature Base String.</p>
+<p class="apidoc_note"><strong>Note</strong>: The acmepaymentscorp_signature parameter <em>must</em> be excluded from the Signature Base String.</p>
 
 
 <a name="constructingsbs_hmac_ss"></a>
@@ -235,12 +235,12 @@ nav-title: App Security
 <p>Below are two examples of the Signature Base String for HMAC/Shared Secret authentication.</p>
 <p>For a POST request:</p>
 <pre>
-POST&amp;https://api.com/Payments/Funds&amp;acmecorp_app_id=myplatform-AS0iTmhoGaE6Y9sWhUkvcL6T&amp;acmecorp_nonce=1326409129918&amp;
-acmecorp_signature_method=HMAC-SHA1&amp;acmecorp_timestamp=1326409129918&amp;acmecorp_version=1.0</pre>
+POST&amp;https://api.com/Payments/Funds&amp;acmepaymentscorp_app_id=myplatform-AS0iTmhoGaE6Y9sWhUkvcL6T&amp;acmepaymentscorp_nonce=1326409129918&amp;
+acmepaymentscorp_signature_method=HMAC-SHA1&amp;acmepaymentscorp_timestamp=1326409129918&amp;acmepaymentscorp_version=1.0</pre>
 <p>For a GET request:</p>
 <pre>
-GET&amp;https://api.com/Payments/FundDetails&amp;a=1&amp;acmecorp_app_id=myplatform-AS0iTmhoGaE6Y9sWhUkvcL6T&amp;acmecorp_nonce=1326409129918&amp;
-acmecorp_signature_method=HMAC-SHA1&amp;acmecorp_timestamp=1326409129918&amp;acmecorp_version=1.0&amp;id=123</pre>
+GET&amp;https://api.com/Payments/FundDetails&amp;a=1&amp;acmepaymentscorp_app_id=myplatform-AS0iTmhoGaE6Y9sWhUkvcL6T&amp;acmepaymentscorp_nonce=1326409129918&amp;
+acmepaymentscorp_signature_method=HMAC-SHA1&amp;acmepaymentscorp_timestamp=1326409129918&amp;acmepaymentscorp_version=1.0&amp;id=123</pre>
 
 
 <a name="computing_signature_hmac_ss"></a><h4>Computing the Signature Value (HMAC Signature with Shared Secret)</h4>
@@ -249,18 +249,18 @@ acmecorp_signature_method=HMAC-SHA1&amp;acmecorp_timestamp=1326409129918&amp;acm
 <ol>
   <li>Base64-encode the signature value.</li>
   <li>URL-encode the result into a string.</li>
-  <li>Set the string as the value for the acmecorp_signature parameter.</li>
+  <li>Set the string as the value for the acmepaymentscorp_signature parameter.</li>
 </ol>
 <p>For example, let's say the value of the signature is:</p>
 <pre>g682XYDko3%2BqIn0xmFfLTbtGgO%2Fa5vrOOgeJ4iOu0Myx99Pq84triSJLdxVq8KlMcKrJjbd96pEbU3tA2</pre>
 <p>In this example, the Authorization header would look something like this:</p>
-<pre>Authorization: acmecorp realm="http://acmecorp",
-acmecorp_app_id="myplatform-AS0iTmhoGaE6Y9sWhUkvcL6T",
-acmecorp_nonce="1326409129918",
-acmecorp_signature_method="HMAC-SHA1",
-acmecorp_signature="g682XYDko3%2BqIn0xmFfLTbtGgO%2Fa5vrOOgeJ4iOu0Myx99Pq84triSJLdxVq8KlMcKrJjbd96pEbU3tA2",
-acmecorp_timestamp="1326409129918",
-acmecorp_version="1.0"</pre>
+<pre>Authorization: acmepaymentscorp realm="http://acmepaymentscorp",
+acmepaymentscorp_app_id="myplatform-AS0iTmhoGaE6Y9sWhUkvcL6T",
+acmepaymentscorp_nonce="1326409129918",
+acmepaymentscorp_signature_method="HMAC-SHA1",
+acmepaymentscorp_signature="g682XYDko3%2BqIn0xmFfLTbtGgO%2Fa5vrOOgeJ4iOu0Myx99Pq84triSJLdxVq8KlMcKrJjbd96pEbU3tA2",
+acmepaymentscorp_timestamp="1326409129918",
+acmepaymentscorp_version="1.0"</pre>
 
 
 <a name="oauth10_hmac_ss"></a><h4>Compatibility with OAuth 1.0 (a deprecated standard)</h4>
@@ -296,7 +296,7 @@ String resultSignature = org.apache.commons.codec.binary.Base64.encodeBase64Stri
   <li>Hash the result using the SHA-1 secure hashing algorithm.</li>
   <li>Encode the hashed value using the Base64 encoding scheme.</li>
   <li>Optional: You can also URL-encode the result, but this isn't required.</li>
-  <li>Assign the result as the value for the acmecorp_secret_digest parameter.</li>
+  <li>Assign the result as the value for the acmepaymentscorp_secret_digest parameter.</li>
   <li>Include this parameter in the HTTP Authorization message header.</li>
 </ol>
 <p>The API verifies each incoming request using the Shared Secret.</p>
@@ -311,19 +311,19 @@ String resultSignature = org.apache.commons.codec.binary.Base64.encodeBase64Stri
 
 
 <h4><a name="processflow_ss"></a>Authenticating with the Hash/Digest with Shared Secret: Process Flow</h4>
-<p> The process flow diagram below shows an overview of API request authentication with the shared secret security mechanism.</p>
+<p>The process flow diagram below shows an overview of API request authentication with the shared secret security mechanism.</p>
 <p class="apidoc_image_p"><img src="images/processflow_apirequestauth_ss_app.jpg" alt="Process flow: shared secret security mechanism" width="592" height="535" /></p>
 
 
 <a name="sampleheader"></a><h4>Sample Header With Authorization Parameters (Hash/Digest with Shared Secret)</h4>
 <p>If you choose the Hash/Digest with Shared Secret authentication mechanism, your HTTP Authorization header must include the values shown below. For definitions of each value, refer to <a href="#token_structure">Token Structure</a>.</p>
 <ul>
-  <li><a href="#acmecorp_app_id">acmecorp_app_id</a></li>
-  <li><a href="#acmecorp_nonce">acmecorp_nonce</a></li>
-  <li><a href="#acmecorp_secret_digest">acmecorp_secret_digest</a></li>
-  <li><a href="#acmecorp_signature_method">acmecorp_signature_method</a></li>
-  <li><a href="#acmecorp_timestamp">acmecorp_timestamp</a></li>
-  <li><a href="#acmecorp_version">acmecorp_version</a></li>
+  <li><a href="#acmecorp_app_id">acmepaymentscorp_app_id</a></li>
+  <li><a href="#acmecorp_nonce">acmepaymentscorp_nonce</a></li>
+  <li><a href="#acmecorp_secret_digest">acmepaymentscorp_secret_digest</a></li>
+  <li><a href="#acmecorp_signature_method">acmepaymentscorp_signature_method</a></li>
+  <li><a href="#acmecorp_timestamp">acmepaymentscorp_timestamp</a></li>
+  <li><a href="#acmecorp_version">acmepaymentscorp_version</a></li>
 </ul>
 
 
@@ -332,22 +332,22 @@ String resultSignature = org.apache.commons.codec.binary.Base64.encodeBase64Stri
 
 <p>Below is an example of an Authorization header with app authentication parameters, when you use the Hash/Digest with Shared Secret approach. The sequence of the parameters isn't significant, but all parameters must be present with valid values.</p>
 <p class="apidoc_note"><strong>Note</strong>: The value for the realm is determined by the www-Authenticate header. Make sure the value you set in the Authorization header is correct for your installation. For more information about the <strong>realm</strong> value, see <a href="#authentication_realm">Authentication Realm</a>.</p>
-<pre>Authorization: acmecorp realm="http://acmecorp",
-  acmecorp_app_id="development-AS0iTmhoGaE6Y9sWhUkvcL6T",
-  acmecorp_nonce="1326409129918",
-  acmecorp_secret_digest="wOJIO9A2W5mFwDgiDvZbTSMK%2FPY%3D",
-  acmecorp_digest_method="SHA1",
-  acmecorp_timestamp="1326755565940",
-  acmecorp_version="1.0"
+<pre>Authorization: acmepaymentscorp realm="http://acmepaymentscorp",
+  acmepaymentscorp_app_id="development-AS0iTmhoGaE6Y9sWhUkvcL6T",
+  acmepaymentscorp_nonce="1326409129918",
+  acmepaymentscorp_secret_digest="wOJIO9A2W5mFwDgiDvZbTSMK%2FPY%3D",
+  acmepaymentscorp_digest_method="SHA1",
+  acmepaymentscorp_timestamp="1326755565940",
+  acmepaymentscorp_version="1.0"
 </pre>
 
 
 <a name="hashing_sha1"></a><h4>Hashing With the SHA-1 Secure Hash Algorithm</h4>
 <p>SHA-1 is a cryptographic hash function, broadly used and trusted.</p>
 <p>When you hash a value with SHA-1, the hash function returns a 160-bit string. This is the message digest. The value is hashed and sent with the message; at the receipt point, the value is hashed again, and the two hash values are compared. When the two hash values match, it is a secure, reliable indication that the message hasn't changed; the message at the receipt point is an accurate duplication of the message at the send point.</p>
-<p>If you're using the Shared Secret security mechanism, you concatenate the nonce, the timestamp, and the Shared Secret, and then you hash that combined value using SHA-1. You then encode the result, and send it in the message header as the value for the acmecorp_secret_digest parameter.</p>
+<p>If you're using the Shared Secret security mechanism, you concatenate the nonce, the timestamp, and the Shared Secret, and then you hash that combined value using SHA-1. You then encode the result, and send it in the message header as the value for the acmepaymentscorp_secret_digest parameter.</p>
 <p>The formula for computing the hash is:</p>
-<pre>acmecorp_secret_digest = Base64 ( SHA-1 ( nonce + created + AppSecret ) )</pre>
+<pre>acmepaymentscorp_secret_digest = Base64 ( SHA-1 ( nonce + created + AppSecret ) )</pre>
 <p>Below is an example of a hashed base string:</p>
 <pre>
 1326409129918+1326755565940+2d9d42b42a4e2abc1fa5489d5081e03b95818ffd</pre>
@@ -365,7 +365,7 @@ String digest = encodeAsBase64String(md.digest());</pre>
 
 
 <a name="example_java_sha1"></a><h4>Java Example: Creating a Shared Secret Hash</h4>
-<p>Below is an example of how to create the acmecorp_secret_digest value in Java.</p>
+<p>Below is an example of how to create the acmepaymentscorp_secret_digest value in Java.</p>
 <pre>  //Use the shared secret of app on file
 String sharedSecret = "1008877afabf32efb31f9c974dbeaa688bed0769";
 
@@ -407,7 +407,7 @@ String digest = encodeAsBase64String(md.digest());</pre>
 
 
 <a name="processflow_pki"></a><h4>Authenticating with PKI: Process Flow</h4>
-<p> The process flow diagram below shows an overview of API request authentication with PKI.</p>
+<p>The process flow diagram below shows an overview of API request authentication with PKI.</p>
 <p class="apidoc_image_p"><img src="images/processflow_apirequestauth_pki_app.jpg" alt="Process flow: PKI security mechanism" width="585" height="538" /></p>
 
 
@@ -427,44 +427,44 @@ String digest = encodeAsBase64String(md.digest());</pre>
 <a name="sample_pki_authparms"></a><h5>Sample header with authorization parameters</h5>
 <p>Below is an example of an Authorization header with app authentication parameters. Make sure you list the parameters in the sequence shown below.</p>
 <p class="apidoc_note"><strong>Note</strong>: The value for the realm is determined by the www-Authenticate header. Make sure the value you set in the Authorization header is correct for your installation. For more information about the <strong>realm</strong> value, see <a href="#authentication_realm">Authentication Realm</a>.</p>
-<pre>Authorization: realm="http://acmecorp",
-  acmecorp_app_id="acmecorp-7FSXeNRkVRJ8XtAurgaea65R",
-  acmecorp_nonce="1323732744354",
-  acmecorp_signature_method="SHA1withRSA",
-  acmecorp_signature="wOJIO9A2W5mFwDgiDvZbTSMK%2FPY%3D",
-  acmecorp_timestamp="1323732744354",
-  acmecorp_version="1.0"</pre>
+<pre>Authorization: realm="http://acmepaymentscorp",
+  acmepaymentscorp_app_id="acmepaymentscorp-7FSXeNRkVRJ8XtAurgaea65R",
+  acmepaymentscorp_nonce="1323732744354",
+  acmepaymentscorp_signature_method="SHA1withRSA",
+  acmepaymentscorp_signature="wOJIO9A2W5mFwDgiDvZbTSMK%2FPY%3D",
+  acmepaymentscorp_timestamp="1323732744354",
+  acmepaymentscorp_version="1.0"</pre>
 
 
 <a name="sample_pki_noauthparms"></a><h5>Sample header without authorization parameters</h5>
-<p> Below is an example of an Authorization header for an API that doesn't require authentication.</p>
+<p>Below is an example of an Authorization header for an API that doesn't require authentication.</p>
 <pre>
-Authorization: realm=&quot;http://acmecorp&quot;,
-acmecorp_app_id=&quot;http://www.acmecorp.com/app/101&quot;,
-acmecorp_signature_method=&quot;NONE&quot;</pre>
+Authorization: realm=&quot;http://acmepaymentscorp&quot;,
+acmepaymentscorp_app_id=&quot;http://www.acmepaymentscorp.com/app/101&quot;,
+acmepaymentscorp_signature_method=&quot;NONE&quot;</pre>
 <p class="apidoc_note"><strong>Note</strong>: In case the client, such as an Ajax client in the browser or an Android app, cannot set the HTTP Authorization header, you can set the required authorization header parameters in the HTTP query string.</p>
 
 
 <a name="signing_pki"></a><h4>Signing Requests with Private Key</h4>
-<p>The signature process for signing the request with private key follows a similar approach to the <a href="http://tools.ietf.org/html/rfc5849" target="_blank">OAuth 1.0 standard</a>. The platform uses an HTTP Extension header to support its app authentication scheme. The name of this extension header is configurable; the examples in this document use a fictitious value, acmecorp. The extension header uses the standard HTTP Authorization header and WWW-Authenticate response header to pass app-related authentication parameters. The HTTP query string can also be used to pass authentication data for cases where the app cannot directly manipulate HTTP headers.</p>
+<p>The signature process for signing the request with private key follows a similar approach to the <a href="http://tools.ietf.org/html/rfc5849" target="_blank">OAuth 1.0 standard</a>. The platform uses an HTTP Extension header to support its app authentication scheme. The name of this extension header is configurable; the examples in this document use a fictitious value, acmepaymentscorp. The extension header uses the standard HTTP Authorization header and WWW-Authenticate response header to pass app-related authentication parameters. The HTTP query string can also be used to pass authentication data for cases where the app cannot directly manipulate HTTP headers.</p>
 
 
 <h4>WWW-Authenticate header</h4>
-<p> API providers can indicate their support for the extension by returning the HTTP WWW-Authenticate header in response to app requests for protected resources. Below is an example:</p>
+<p>API providers can indicate their support for the extension by returning the HTTP WWW-Authenticate header in response to app requests for protected resources. Below is an example:</p>
 <pre>
-WWW-Authenticate: acmecorp realm=&quot;http://acmecorp&quot;</pre>
+WWW-Authenticate: acmepaymentscorp realm=&quot;http://acmepaymentscorp&quot;</pre>
 
 
 <h4>Authorization header</h4>
 <p>Apps should send their credentials in the HTTP Authorization header. If you choose the Public Key Integration approach for your app security, your HTTP Authorization header must include the values shown below.</p>
 <p class="apidoc_note"><strong>Important</strong>: The sequence of the header attributes is critical and must exactly match the order below.</p>
 <ul>
-  <li><a href="#acmecorp_app_id">acmecorp_app_id</a></li>
-  <li><a href="#acmecorp_nonce">acmecorp_nonce</a></li>
-  <li><a href="#acmecorp_signature_method">acmecorp_signature_method</a></li>
-  <li><a href="#acmecorp_signature">acmecorp_signature</a></li>
-  <li><a href="#acmecorp_timestamp">acmecorp_timestamp</a></li>
-  <li><a href="#acmecorp_version">acmecorp_version</a></li>
+  <li><a href="#acmecorp_app_id">acmepaymentscorp_app_id</a></li>
+  <li><a href="#acmecorp_nonce">acmepaymentscorp_nonce</a></li>
+  <li><a href="#acmecorp_signature_method">acmepaymentscorp_signature_method</a></li>
+  <li><a href="#acmecorp_signature">acmepaymentscorp_signature</a></li>
+  <li><a href="#acmecorp_timestamp">acmepaymentscorp_timestamp</a></li>
+  <li><a href="#acmecorp_version">acmepaymentscorp_version</a></li>
 </ul>
 
 
@@ -478,7 +478,7 @@ WWW-Authenticate: acmecorp realm=&quot;http://acmecorp&quot;</pre>
 
 <a name="constructingsbs_rsa_pki"></a><h4>Constructing the Signature Base String (PKI Approach)</h4>
 <p>The first step in composing the digital signature is to create the content. Once that's done, the data is signed using the signature algorithm.</p>
-<p class="apidoc_note"><strong>Note</strong>: The acmecorp_signature parameter <em>must</em> be excluded from the Signature Base String.</p>
+<p class="apidoc_note"><strong>Note</strong>: The acmepaymentscorp_signature parameter <em>must</em> be excluded from the Signature Base String.</p>
 <p>The process of constructing the Signature Base String consists of three steps:</p>
 <ol>
   <li>Normalize request parameters: see <a href="#normalize_hmac_ss">To normalize request parameters</a>.</li>
@@ -494,9 +494,9 @@ WWW-Authenticate: acmecorp realm=&quot;http://acmecorp&quot;</pre>
 <p>Below is an example of the Signature Base String when using the RSA with PKI approach.</p>
 <pre>
 POST&amp;https://api.sandbox.yoursandbox.com/APIName/Payment/v1/MethodName
-&amp;acmecorp_app_id=acmecorp-7FSXeNRkVRJ8XtAurgaea65R
-&amp;acmecorp_nonce=1323732744354&amp;acmecorp_signature_method=SHA1withRSA
-&amp;acmecorp_timestamp=1323732744354&amp;acmecorp_version=1.0</pre>
+&amp;acmepaymentscorp_app_id=acmepaymentscorp-7FSXeNRkVRJ8XtAurgaea65R
+&amp;acmepaymentscorp_nonce=1323732744354&amp;acmepaymentscorp_signature_method=SHA1withRSA
+&amp;acmepaymentscorp_timestamp=1323732744354&amp;acmepaymentscorp_version=1.0</pre>
 
 
 <a name="signingandencoding_rsa_pki"></a><h4>Signing the Signature Base String and Encoding the Signature (PKI Approach)</h4>
@@ -508,7 +508,7 @@ POST&amp;https://api.sandbox.yoursandbox.com/APIName/Payment/v1/MethodName
   <span class="apidoc_note"><strong>Note:</strong> Base64 encoding should <em>not</em> include the CRLF (carriage return/line feed) every 72 characters which is part of strict Base64 encoding. Instead, the whole Base64 encoded string should be without line breaks.</span>
 </li>
   <li>Optionally, URL-encode the result into a string.</li>
-  <li>Set the string as the value for the acmecorp_signature parameter.</li>
+  <li>Set the string as the value for the acmepaymentscorp_signature parameter.</li>
 </ol>
 <p><a href="#top">Back to top</a></p>
 <hr />
@@ -533,7 +533,7 @@ POST&amp;https://api.sandbox.yoursandbox.com/APIName/Payment/v1/MethodName
 
 <a name="generatingtimestamp"></a><h4>Generating the Timestamp</h4>
 <p>The timestamp of the request is sent in the message header, for both Shared Secret and PKI security mechanisms. In the Shared Secret mechanism it is also used in creating the Secret Digest.</p>
-<p> The timestamp must be in Unix epoch time, expressed as the number of milliseconds since January 1, 1970 00:00:00 GMT. The timestamp must be a positive integer and must be greater than or equal to the timestamp used in previous requests. In most implementations, the timestamp is taken from the host server. It's important that the timestamp in the message is accurate; if the timestamp is off, the message might be rejected.</p>
+<p>The timestamp must be in Unix epoch time, expressed as the number of milliseconds since January 1, 1970 00:00:00 GMT. The timestamp must be a positive integer and must be greater than or equal to the timestamp used in previous requests. In most implementations, the timestamp is taken from the host server. It's important that the timestamp in the message is accurate; if the timestamp is off, the message might be rejected.</p>
 <p>For more information on Unix epoch time, and examples of implementation of the timestamp in different programming languages, see <a href="http://www.epochconverter.com" target="_blank">http://www.epochconverter.com</a> (scroll down).</p>
 <p>A Java example of generating the timestamp is shown below.</p>
 <pre>  // Get the timestamp in milliseconds
@@ -569,11 +569,11 @@ long nonce = rand.nextLong();</pre>
 <p>Collect the request parameters, sort them, and concatenate them into a normalized string.</p>
 <p>Parameters to include:</p>
 <ul>
-  <li>All parameters in the acmecorp HTTP Authorization header <strong>except</strong> the realm parameter which must <strong>not</strong> be included.</li>
+  <li>All parameters in the acmepaymentscorp HTTP Authorization header <strong>except</strong> the realm parameter which must <strong>not</strong> be included.</li>
   <li> Parameters in the HTTP POST request body (with a content-type of application/x-www-form-urlencoded).</li>
   <li>HTTP GET parameters added to the URLs in the query part.</li>
 </ul>
-<p><span class="apidoc_note"><strong>Note</strong>: The acmecorp_signature parameter MUST be excluded.</span></p>
+<p><span class="apidoc_note"><strong>Note</strong>: The acmepaymentscorp_signature parameter MUST be excluded.</span></p>
 <p>Normalize the parameters into a single string following the steps below:</p>
 <ol>
   <li>Sort by parameter name, using lexicographical byte value ordering. If two or more parameters share the same name, sort by value. For example:
@@ -597,7 +597,7 @@ long nonce = rand.nextLong();</pre>
   <li>The HTTP Host header</li>
   <li>The relative HTTP request URL</li>
 </ul>
-<p> URL scheme and authority must be lowercase and must include the port number.</p>
+<p>URL scheme and authority must be lowercase and must include the port number.</p>
 <p><span class="apidoc_note"><strong>Note</strong>: HTTP default port 80 and HTTPS default port 443 must be excluded</span>.</p>
 <p>For example, this request:</p>
 <pre>http://example.com:80/resource?id=123</pre>
@@ -609,7 +609,7 @@ long nonce = rand.nextLong();</pre>
 <ul>
   <li>The HTTP request method used to send the request. Value must be uppercase, for example: POST, GET, PUT.</li>
   <li>The request URL.</li>
-  <li>The normalized request parameters string. Note that the acmecorp_signature parameter, scheme, and realm are excluded. </li>
+  <li>The normalized request parameters string. Note that the acmepaymentscorp_signature parameter, scheme, and realm are excluded. </li>
 </ul>
 <p>Once you've created the Signature Base String, the next step is to compute the signature. Depending on the approach you're using, refer to the applicable next step:</p>
 <ul>
@@ -736,15 +736,15 @@ long nonce = rand.nextLong();</pre>
 <tbody>
   <tr>
     <td>HMAC Signature with Shared Secret</td>
-    <td><p>acmecorp_signature</p></td>
+    <td><p>acmepaymentscorp_signature</p></td>
   </tr>
   <tr>
     <td>Hash/Digest with Shared Secret</td>
-    <td><p>acmecorp_secret_digest</p></td>
+    <td><p>acmepaymentscorp_secret_digest</p></td>
   </tr>
   <tr>
     <td>RSA Signature with PKI</td>
-    <td><p>acmecorp_signature</p></td>
+    <td><p>acmepaymentscorp_signature</p></td>
   </tr>
 </tbody>
 </table>
@@ -813,11 +813,11 @@ long nonce = rand.nextLong();</pre>
   </tr>
   <tr>
     <td>1010703</td>
-    <td>Invalid <u>Nonce</u>. The value of the acmecorp_nonce field has already been used.</td>
+    <td>Invalid <u>Nonce</u>. The value of the acmepaymentscorp_nonce field has already been used.</td>
   </tr>
   <tr>
     <td>1010704</td>
-    <td>Invalid timestamp. The value of the acmecorp_timestamp field is out of range.</td>
+    <td>Invalid timestamp. The value of the acmepaymentscorp_timestamp field is out of range.</td>
   </tr>
   <tr>
     <td>1010705</td>
@@ -829,7 +829,7 @@ long nonce = rand.nextLong();</pre>
   </tr>
   <tr>
     <td>1010707</td>
-    <td>Missing nonce. The acmecorp_nonce field value is required.</td>
+    <td>Missing nonce. The acmepaymentscorp_nonce field value is required.</td>
   </tr>
   <tr>
     <td>1010708</td>
@@ -841,7 +841,7 @@ long nonce = rand.nextLong();</pre>
   </tr>
   <tr>
     <td>1010710</td>
-    <td>Invalid AppID. The value [{0}] in the acmecorp_app_id field is invalid or missing.</td>
+    <td>Invalid AppID. The value [{0}] in the acmepaymentscorp_app_id field is invalid or missing.</td>
   </tr>
   <tr>
     <td>1010711</td>
@@ -858,4 +858,3 @@ long nonce = rand.nextLong();</pre>
 
 
 
-</div>

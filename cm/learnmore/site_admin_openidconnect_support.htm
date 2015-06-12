@@ -33,28 +33,32 @@ no-catalog: true
   <li><a href="#what_signature_algorithms_are_supported_by_openidconnect_oauthprovider">What signature algorithms are supported by the platform's OpenID Connect OAuth provider?</a></li>
   <li><a href="#how_often_are_json_web_keys_rolled_over">How often are JSON web keys rolled over?</a></li>
   <li><a href="#how_do_i_configure_an_openid_connect_relying_party_domain">How do I configure an OpenID Connect Relying Party domain?</a></li>
+  <li><a href="#how_do_i_choose_which_response_type_to_use">How do I choose which response type to use?</a></li>
 </ol>
 <div class = "divider1"></div>
 
 
 
 <a name="what_is_openid_connect"></a><h3>What is OpenID Connect?</h3>
-<p><a href="basics_glossary.htm#gl_openidconnect">OpenID Connect</a> is a popular protocol for user authentication; it is an identity layer on top of the OAuth 2.0 protocol that allows a client app to verify the identity of an end-user, and interoperates smoothly with OAuth to provide both authentication and authorization services. OpenID Connect was released in February 2014 and is gaining popularity. For example, Google has moved from OpenID to OpenID Connect for products such as the Google+ API, used by the platform's Google login domain, and no longer supports OpenID. For more information, see <a href="http://openid.net/connect/" target="_blank">Welcome to OpenID Connect</a> (external site).</p>
-<p>OpenID Connect is often used in combination with the OAuth 2.0 protocol; an OpenID Connect provider performs the authentication, verifying the user's identity, and the OAuth provider performs the authorization, managing the process of the authenticated end-user giving permission to an application to access the user's resources In this scenario, OpenID Connect allows the client application (relying party) to verify the identity the end-user based on authentication by an <a href="basics_glossary.htm#gl_oauth_authorizationserver">OAuth Authorization server</a>.</p>
+<p><a href="basics_glossary.htm#gl_openidconnect">OpenID Connect</a> is a popular protocol for user authentication; it is an identity layer on top of the OAuth 2.0 protocol that allows a client app to verify the identity of an end-user. It interoperates smoothly with OAuth to provide both authentication and authorization services. OpenID Connect was released in February 2014 and is gaining in popularity. For example, Google has moved from OpenID to OpenID Connect for products such as the Google+ API, used by the platform's Google login domain, and no longer supports OpenID. For more information, see <a href="http://openid.net/connect/" target="_blank">Welcome to OpenID Connect</a> (external site).</p>
+<p>Although it can be used on its own for authentication, OpenID Connect is often used in combination with the OAuth 2.0 protocol to provide both authentication and authorization. An OpenID Connect provider performs the authentication, verifying the user's identity, and the OAuth provider performs the authorization, managing the process of the authenticated end-user giving permission to an application to access the user's resources. In this scenario, OpenID Connect allows the client application (Relying Party) to verify the identity of the end-user based on authentication by an <a href="basics_glossary.htm#gl_identityprovider">OpenID Connect Identity Provider</a> (IdP).</p>
+<p>The IdP performs the authentication and sends back a token to the application; the application then sends the information, along with its own credentials, to the OAuth Authorization server.</p>
+<p>Finally, the Authorization Server issues an access token, which the application sends to the Resource Server with its request for resources. The Resource Server responds with the resource access, and the application provides the requested service to the consumer.</p>
 <p>OpenID Connect defines the following roles of users and applications:</p>
 <ul>
   <li><strong>End-user</strong>&#8212;The user to be authenticated in order to then consume a service; the consumer.</li>
   <li><strong><a href="basics_glossary.htm#gl_identityprovider">OpenID Connect Identity Provider</a></strong>&#8212;The entity responsible for verifying identity and issuing user identity information via the OpenID Connect protocol.</li>
-  <li><strong><a href="basics_glossary.htm#gl_relyingparty">Relying Party</a></strong>&#8212;The site that wants to verify the end-user identity. In the case of OpenID Connect used for login, the Relying Party is the developer portal. This role is also called Service Provider, because the site is providing a service to the consumer (end-user).</li>
+  <li><strong><a href="basics_glossary.htm#gl_relyingparty">Relying Party</a></strong>&#8212;The app or site that wants to verify the end-user identity. In the case of OpenID Connect used for login, the Relying Party is the developer portal. This role is also called Service Provider, because the app or site is providing a service to the consumer (end-user).</li>
   <li><strong>Server Agent</strong>&#8212;The server that verifies the end-user's OpenID Connect credentials. It is usually the same as the OpenID Connect Identity Provider.</li>
   <li><strong>User Agent</strong>&#8212;The program used by the end-user to access the relying party / service provider; usually a browser.</li>
+  <li><a href="basics_glossary.htm#gl_oauth_authorizationserver"><strong>OAuth Authorization server</strong></a>&#8212;The server that issues an access token to the application (Relying Party) after authentication and authorization are complete.</li>
 </ul>
 <p><a href="#top">Back to top</a></p>
 
 
 
 <a name="how_is_openid_connect_different_from_openid"></a><h3>How is OpenID Connect different from OpenID?</h3>
-<p>OpenID Connect has support for OAuth 2.0 built in, and is extensible. OpenID Connect is more API-friendly and is more flexible and extensible.</p>
+<p>OpenID Connect has support for OAuth 2.0 built in, and is extensible. OpenID Connect is more API-friendly and is more flexible.</p>
 <p>OpenID is now deprecated.</p>
 <p><a href="#top">Back to top</a></p>
 
@@ -186,11 +190,11 @@ no-catalog: true
 <tbody>
   <tr class="t2row">
     <td>Community Manager Login</td>
-    <td>&lt;CMConsoleAddress&gt;/api/login/ssoLogin</td>
+    <td>{CMConsoleAddress}/api/login/ssoLogin</td>
   </tr>
   <tr class="t1row">
     <td>OAuth Provider Resource Owner domain</td>
-    <td>&lt;OAuthProviderAuthorizationServer&gt;/oauth/auz/grants/provider/authcomplete</td>
+    <td>{OAuthProviderAuthorizationServer}/oauth/auz/grants/provider/authcomplete</td>
   </tr>
 </tbody>
 </table>
@@ -283,12 +287,12 @@ no-catalog: true
   <li>Follow the instructions for each tab. The information you'll provide depends on your OpenID Connect Provider and on how you are using the domain. For details on specific fields and options, if needed, refer to the additional information in <a href="#field_values_openid_connect_relying_party">OpenID Connect Relying Party Domain: Configuration Values</a> below. The wizard includes the following tabs:
     <ol>
       <li><strong>Details</strong>: the name and description you want to assign to the domain.</li>
-      <li><strong>Configuration Method</strong>: the approach you want to use for setting up your domain. You can dynamically reference the provider metadata, read in the provider metadata and then modify it as needed, or do a completely manual configuration.</li>
-      <li><strong>Provider</strong>: basic information about your OpenID Connect identity provider. The platform uses this to connect to the provider.</li>
-      <li><strong>Authentication</strong>: values associated with user authentication and how user information is returned to you.</li>
-      <li><strong>App</strong>: the two values, App ID and Shared Secret, that uniquely identify your app with your OpenID Connect identity provider.</li>
-      <li><strong>Token</strong>: If you want claims to be returned from the token endpoint, you must configure values relating to the token.</li>
-      <li><strong>User</strong>: If you want claims to be returned from the UserInfo endpoint, you must configure URI and HTTP method.</li>
+      <li><strong>Configuration Method</strong>: the approach you want to use for setting up your domain. You can dynamically reference the provider metadata, read in the provider metadata and then modify it as needed, or do a completely manual configuration. For more information on values, see <a href="#oidcrp_domain_tab2">Tab 2: Configuration Method</a> below.</li>
+      <li><strong>Provider</strong>: basic information about your OpenID Connect identity provider. The platform uses this to connect to the provider. For more information on values, see <a href="#oidcrp_domain_tab3">Tab 3: Provider</a> below.</li>
+      <li><strong>Authentication</strong>: values associated with user authentication and how user information is returned to you. For more information on values, see <a href="#oidcrp_domain_tab4">Tab 4: Authentication</a> below.</li>
+      <li><strong>App</strong>: the two values, App ID and Shared Secret, that uniquely identify your app with your OpenID Connect identity provider. For more information on values, see <a href="#oidcrp_domain_tab5">Tab 5: App</a> below.</li>
+      <li><strong>Token</strong>: If you want claims to be returned from the token endpoint, you must configure values relating to the token. For more information on values, see <a href="#oidcrp_domain_tab6">Tab 6: Token</a> below.</li>
+      <li><strong>User</strong>: If you want claims to be returned from the UserInfo endpoint, you must configure URI and HTTP method. For more information on values, see <a href="#oidcrp_domain_tab7">Tab 7: User</a> below.</li>
     </ol>
   </li>
   <li>Click <strong>Save</strong>.</li>
@@ -297,7 +301,7 @@ no-catalog: true
 
 <a name="field_values_openid_connect_relying_party"></a><h4>OpenID Connect Relying Party Domain: Configuration Values</h4>
 <p>This topic provides reference information to help you configure your OpenID Connect Relying Party domain.</p>
-<h4>Tab 2: Configuration Method</h4>
+<h4><a name="oidcrp_domain_tab2"></a>Tab 2: Configuration Method</h4>
 <p>On this tab, you specify how you want to provide the information that the platform needs for your OpenID Connect Relying Party domain. Use the information below to help determine your choices.</p>
 <p><strong>Select Configuration Method</strong></p>
 <table cellspacing="0px" class="doctable" style="width: 98%;">
@@ -328,8 +332,8 @@ no-catalog: true
 <dd><strong>Note</strong>: If the well-known configuration URL is https, the issuer certificate of the server must be trusted by the platform. Also, the issuer certificate of the server must be part of the <strong>cacerts</strong> file on the Community Manager container JRE. For instructions, see <a href="site_admin_domains.htm#p_https_cert_setup">To set up the PingFederate server certificate in Policy Manager</a>. The instructions are for PingFederate, but the steps are the same.</dd>
 </dl>
 
-<h4>Tab 3: Provider</h4>
-<p>On this tab, you specify basic information about your OpenID Connect identity provider. Use the information below to help determine your choices. </p>
+<h4><a name="oidcrp_domain_tab3"></a>Tab 3: Provider</h4>
+<p>On this tab, you specify basic information about your OpenID Connect identity provider. Use the information below to help determine your choices.</p>
 <p>If you chose to reference provider metadata, some of the information is read in from the metadata file.</p>
 <dl>
 <dt>Issuer</dt>
@@ -362,14 +366,14 @@ no-catalog: true
   </tr>
   <tr class="t2row">
     <td>UserInfo from UserInfo Endpoint</td>
-    <td><p>Choose this option if you want claims to be returned in the UserInfo response from the UserInfo endpoint, and/or for backwards compatibility with an earlier version of the developer portal. This option introduces a third step. An ID token is not involved; plain text JSON is used for claims. This option is the least efficient and least secure. It is the only option supported in earlier versions of the platform. </p>
+    <td><p>Choose this option if you want claims to be returned in the UserInfo response from the UserInfo endpoint, and/or for backwards compatibility with an earlier version of the developer portal. This option introduces a third step. An ID token is not involved; plain text JSON is used for claims. This option is the least efficient and least secure. It is the only option supported in earlier versions of the platform.</p>
       <p>If you choose this option, you must complete all seven tabs of the wizard.</p></td>
   </tr>
 </tbody>
 </table>
 
 
-<h4>Tab 4: Authentication</h4>
+<h4><a name="oidcrp_domain_tab4"></a>Tab 4: Authentication</h4>
 <p>On this tab, you specify values associated with user authentication and how user info is returned to you. Use the information below to help determine your choices.</p>
 
 <dl>
@@ -382,7 +386,7 @@ no-catalog: true
 <dd><strong>Note</strong>: In general, every server that relays the message will log query parameters, but not form parameters. For this reason, it is more secure to send information as form parameters in a POST request rather than as query parameters in a GET request.</dd>
 
 <dt>Response Type</dt>
-<dd>Indicates the type of response that the identity provider should send to the client. Choose from available values. Choices might be limited by what your provider supports. If you are doing a manual configuration, make sure you choose a response type that your provider supports.</dd>
+<dd>Indicates the type of response that the identity provider should send to the client. Choose from available values. Choices might be limited by what your provider supports. If you are doing a manual configuration, make sure you choose a response type that your provider supports. For more information, see <a href="#how_do_i_choose_which_response_type_to_use">How do I choose which response type to use?</a> below.</dd>
 
 <dt>Response Mode</dt>
 <dd>Indicates how the OpenID Connect Identity Provider should return/encode the response parameters in the Authorization response: as query parameters, as a fragment, or as HTML form parameters via HTTP POST.</dd>
@@ -434,12 +438,13 @@ no-catalog: true
 </table>
 
 
-<h4>Tab 5: App</h4>
+<h4><a name="oidcrp_domain_tab5"></a>Tab 5: App</h4>
 <p>On this tab, you specify the two values, App ID and Shared Secret, that uniquely identity your app with your OpenID Connect identity provider.</p>
+<p>You also have the option to check the <strong> Is Platform Identity</strong> box. If you set up the app that you created with the OpenID Connect identity provider, as an app in the developer portal, checking this box allows the domain to get the Shared Secret value directly from the app. This means that if the Shared Secret is updated in the future, you don't need to update the domain; the domain configuration dynamically references the latest value in the app setup.</p>
 <p>If you are configuring your domain by dynamically referencing the provider URL, this completes the domain setup, and you can save and close the wizard.</p>
 
 
-<h4>Tab 6: Token</h4>
+<h4><a name="oidcrp_domain_tab6"></a>Tab 6: Token</h4>
 <p>If in the Provider tab you chose <strong>ID Token from Token Endpoint</strong> as the way end-user claims would be returned to your app, you must provide values for receiving the token.</p>
 <p>You only need to provide information on this tab if you are manually configuring your information, either completely or by starting with the information at the well-known configuration URL. If your domain setup dynamically references the well-known configuration URL, Tab 5 completes the setup.</p>
 
@@ -449,12 +454,16 @@ no-catalog: true
 <dd>If you provided a well-known configuration URL, the value is read from the provider's configuration file and displayed.</dd>
 
 <dt>Client Authentication Method</dt>
-<dd>The method that the token endpoint uses to authenticate the relying party (app). Make sure the option you choose is supported by your OpenID Connect provider.</dd>
+<dd>The method that the token endpoint uses to authenticate the relying party (app). Make sure the option you choose is supported by your OpenID Connect provider. Values supported by the platform are:</dd>
+<dd>- client_secret_basic</dd>
+<dd>- client_secret_post</dd>
+<dd>- client_secret_jwt</dd>
 <dd>If you provided a well-known configuration URL, only choices supported by your provider are displayed.</dd>
 </dl>
 
-<h4>Tab 7: User</h4>
+<h4><a name="oidcrp_domain_tab7"></a>Tab 7: User</h4>
 <p>On this tab, you specify information relating to the UserInfo endpoint.</p>
+<p>In each of the Claim fields in this tab, the default value is the standard claim name. If you use custom claim names, you can use these fields to specify the names you're using. For more information on <a href="basics_glossary.htm#gl_claim">claims</a>, refer to the <a href="http://openid.net/specs/openid-connect-core-1_0.html#StandardClaims" target="_blank">OpenID Connect specification, Standard Claims list</a>. </p>
 
 <dl>
 <dt>UserInfo Endpoint URI</dt>
@@ -463,7 +472,60 @@ no-catalog: true
 
 <dt>HTTP method</dt>
 <dd>The HTTP method to be used for the message to the UserInfo endpoint. POST is more secure, and is recommended. Use POST if your provider supports it.</dd>
+<dt>Subject Claim</dt>
+<dd>Optionally, you can specify the <a href="basics_glossary.htm#gl_claim">claim</a> name that refers to the subject identifier in JWT/UserInfo claims. Default claim name: <strong>sub</strong>.</dd>
+<dt>First Name Claim</dt>
+<dd>Optionally, you can specify the claim name that refers to the first name of the user in JWT/UserInfo claims. Default claim name: <strong>given_name</strong>.</dd>
+<dt>Last Name Claim</dt>
+<dd>Optionally, you can specify the claim name that refers to the last name of the user in JWT/UserInfo claims. Default claim name: <strong>family_name</strong>.</dd>
+<dt>Email Claim</dt>
+<dd>Optionally, you can specify the claim name that refers to the user's email address in JWT/UserInfo claims. Default claim name: <strong>email</strong>.</dd>
 </dl>
+<p><a href="#top">Back to top</a></p>
+
+
+<a name="how_do_i_choose_which_response_type_to_use"></a><h3>How do I choose which response type to use?</h3>
+<p>When you're configuring your OpenID Connect Relying Party domain, you'll need to choose a <strong>Response Type</strong> in <strong>Tab 4, Authentication</strong>. See <a href="#how_do_i_configure_an_openid_connect_relying_party_domain">How do I configure an OpenID Connect Relying Party domain?</a> above.</p>
+<p>When you make choices earlier in the wizard, including manually providing values from your OpenID Connect Provider or reading in information from a Well-Known Configuration URL, the platform dynamically modifies the list so that you are only offered valid choices. However, there might be several options. The full set of possible options is shown below.</p>
+<ul>
+  <li>ID Token from Authorization Endpoint:
+    <ul>
+      <li>id_token</li>
+      <li>id_token token</li>
+      <li>code id_token</li>
+      <li>code id_token token</li>
+    </ul>
+  </li>
+  <li>ID Token from Token Endpoint:
+    <ul>
+      <li>code</li>
+      <li>code id_token</li>
+      <li>code token</li>
+      <li>code id_token token</li>
+    </ul>
+  </li>
+  <li>UserInfo from UserInfo Endpoint:
+    <ul>
+      <li>code</li>
+      <li>id_token token</li>
+      <li>code id_token</li>
+      <li>code token</li>
+      <li>code id_token token</li>
+    </ul>
+  </li>
+  </ul>
+<p>The response type determines what gets returned in the response. From the perspective of the platform as an OpenID Relying Party, any available option is valid. The platform&rsquo;s minimum requirements for each of the choices are as follows:</p>
+<ul>
+  <li><strong>ID Token from Authorization Endpoint</strong>: The ID token (JWK token) is all that the platform requires, so the minimum requirement is <strong>id_token</strong>. The platform doesn't require code or token in the response_type. However, you might choose to include either or both of these values if your Identity Provider uses them.</li>
+  <li><strong>ID Token from Token Endpoint</strong>: The platform gets the JWK token from the Token Endpoint. In order to send the response from the token endpoint, the OpenID Connect provider requires an authorization code as proof that the user has authorized the client to obtain the user profile. A response_type value of code returns the authorization code, which the app can then provide to the Token Endpoint to obtain the ID token. The Token Endpoint response also includes access_token; this can be ignored, since the id_token value includes the user profile information.
+  <p>In this case, the platform's  minimum requirement for the response_type parameter is <strong>code</strong>. The token and id_token are not required. However, you might choose to include either or both of these values if your Identity Provider uses them.</p></li>
+  <li><strong>UserInfo from UserInfo Endpoint</strong>: The platform gets the userinfo from the UserInfo Endpoint. To do that, the platform needs to get the access token, either from the Authorization Endpoint or from the Token Endpoint. To get the access token from the Authorization Endpoint, it must get the token. To get the access token from the token endpoint, it needs the code. So either <strong>code</strong> or <strong>token</strong> should be there in the response type.
+<p>If you select <strong>code</strong>, there are three steps to the process flow: go to the Authorization Endpoint, then the Token Endpoint, and then the UserInfo Endpoint.</p>
+<p>If you select <strong>token</strong>, there are two steps to the process flow: go to the Authorization Endpoint and then the UserInfo Endpoint. In this scenario, it&rsquo;s not necessary to go to the Token Endpoint, because the platform gets the access token directly from the Authorization Endpoint.</p>
+<p>However, there are also security implications to these choices. The token is delivered via the browser, which is not as secure because it could potentially be captured by another application. Anything exchanged directly between the client and the Token Endpoint is much more secure. So, <strong>code</strong> is more secure, but <strong>token</strong> gives better performance.</p>
+</li>
+</ul>
+<p>As well as the platform&rsquo;s minimum requirements, your OpenID Connect provider might have requirements, or might offer a different behavior based on your choice. If you&rsquo;re not sure which option to choose, consult with your OpenID Connect provider to determine what&rsquo;s best for your use case.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -473,4 +535,3 @@ no-catalog: true
 
 
 
-</div>
