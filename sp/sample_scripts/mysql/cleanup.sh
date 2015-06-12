@@ -55,3 +55,5 @@ mysql -u xxx -pxxx -D dbname -e "delete from BOARD_ITEM_ASSIGNMENTS where ITEMID
 date
 mysql -u xxx -pxxx -D dbname -e "delete from BOARD_ITEMS where ARCHIVABLE='Y' and CREATEDDTS < TIMESTAMPADD(YEAR, -1, now());"
 [ $? != 0 ] && exit 1
+
+date
