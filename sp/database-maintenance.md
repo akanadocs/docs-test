@@ -95,7 +95,7 @@ monitoring.delete.usage.enable=false
 
 ### <a name="using-cron"></a>Leveraging cron to delete data
 
-For higher throughput environments its better to offload the task to delete/archive data by simply executing scripts directly against the database using a cron job. The following script (cleanup.sh) will delete all:
+For higher throughput environments its better to offload the task to delete/archive data by simply executing scripts directly against the database using a cron job. The following scripts will delete all:
 
 * next-hop data in MO\_USAGE_NEXTHOP older than 1 month
 * usage messages in MO_USAGEMSGS older than 1 month
@@ -110,71 +110,41 @@ For higher throughput environments its better to offload the task to delete/arch
 * alerts in AM\_ALERTS and AM\_ALERTS_SLAS older than 1 month
 
 ```
-PATH=$PATH:/usr/bin
+delete from MO_USAGE_NEXTHOP where REQUESTDTS < TIMESTAMPADD(MONTH, -1, now());
 
-date
-mysql -u xxx -pxxx -D open -e "delete from MO_USAGE_NEXTHOP where REQUESTDTS < TIMESTAMPADD(MONTH, -1, now());"
-[ $? != 0 ] && exit 1
+delete from MO_USAGEMSGS where MSGCAPTUREDDTS < TIMESTAMPADD(MONTH, -1, now());
 
-date
-mysql -u xxx -pxxx -D open -e "delete from MO_USAGEMSGS where MSGCAPTUREDDTS < TIMESTAMPADD(MONTH, -1, now());"
-[ $? != 0 ] && exit 1
+delete from MO_USAGEDATA where REQUESTDTS < TIMESTAMPADD(MONTH, -1, now());
 
-date
-mysql -u xxx -pxxx -D open -e "delete from MO_USAGEDATA where REQUESTDTS < TIMESTAMPADD(MONTH, -1, now());"
-[ $? != 0 ] && exit 1
+delete from MO_ROLLUPDATA where ROLLUPDATAID < (select min(MAX_ID) from MO_STATUS) and INTVLSTARTDTS < TIMESTAMPADD(MONTH, -1, now());
 
-date
-mysql -u xxx -pxxx -D dbname -e "delete from MO_ROLLUPDATA where ROLLUPDATAID < (select min(MAX_ID) from MO_STATUS) and INTVLSTARTDTS < TIMESTAMPADD(MONTH, -1, now());"
-[ $? != 0 ] && exit 1
+delete from MO_ROLLUP15 where INTVLSTARTDTS < TIMESTAMPADD(MONTH, -1, now());
 
-date
-mysql -u xxx -pxxx -D dbname -e "delete from MO_ROLLUP15 where INTVLSTARTDTS < TIMESTAMPADD(MONTH, -1, now());"
-[ $? != 0 ] && exit 1
+delete from MO_ROLL_ORG15 where INTVLSTARTDTS < TIMESTAMPADD(MONTH, -1, now());
 
-date
-mysql -u xxx -pxxx -D dbname -e "delete from MO_ROLL_ORG15 where INTVLSTARTDTS < TIMESTAMPADD(MONTH, -1, now());"
-[ $? != 0 ] && exit 1
+delete from MO_ROLLUP_HOUR where INTVLSTARTDTS < TIMESTAMPADD(MONTH, -3, now());
 
-date
-mysql -u xxx -pxxx -D dbname -e "delete from MO_ROLLUP_HOUR where INTVLSTARTDTS < TIMESTAMPADD(MONTH, -3, now());"
-[ $? != 0 ] && exit 1
+delete from MO_ROLL_ORG_H where INTVLSTARTDTS < TIMESTAMPADD(MONTH, -3, now());
 
-date
-mysql -u xxx -pxxx -D dbname -e "delete from MO_ROLL_ORG_H where INTVLSTARTDTS < TIMESTAMPADD(MONTH, -3, now());"
-[ $? != 0 ] && exit 1
+delete from MO_ROLLUP_DAY where INTVLSTARTDTS < TIMESTAMPADD(YEAR, -1, now());
 
-date
-mysql -u xxx -pxxx -D dbname -e "delete from MO_ROLLUP_DAY where INTVLSTARTDTS < TIMESTAMPADD(YEAR, -1, now());"
-[ $? != 0 ] && exit 1
+delete from MO_ROLL_ORG_D where INTVLSTARTDTS < TIMESTAMPADD(YEAR, -1, now());
 
-date
-mysql -u xxx -pxxx -D dbname -e "delete from MO_ROLL_ORG_D where INTVLSTARTDTS < TIMESTAMPADD(YEAR, -1, now());"
-[ $? != 0 ] && exit 1
+delete s from AM_ALERTS a inner join AM_ALERTS_SLAS s on s.ALERTSID = a.ALERTSID where a.SOURCEDTS < TIMESTAMPADD(MONTH, -1, now());
 
-date
-mysql -u xxx -pxxx -D dbname -e "delete s from AM_ALERTS a inner join AM_ALERTS_SLAS s on s.ALERTSID = a.ALERTSID where a.SOURCEDTS < TIMESTAMPADD(MONTH, -1, now());"
-[ $? != 0 ] && exit 1
-
-date
-mysql -u xxx -pxxx -D dbname -e "delete from AM_ALERTS where SOURCEDTS < TIMESTAMPADD(MONTH, -1, now());"
-[ $? != 0 ] && exit 1
-
-date
+delete from AM_ALERTS where SOURCEDTS < TIMESTAMPADD(MONTH, -1, now());
 
 ```
 
 For Community Manager, there are additional tables such as the Boards (Forums) that you may want to clean up:
 
 ```
-date
-mysql -u xxx -pxxx -D dbname -e "delete from BOARD_ITEM_ASSIGNMENTS where ITEMID in (select ITEMID from BOARD_ITEMS where ARCHIVABLE='Y' and CREATEDDTS < TIMESTAMPADD(YEAR, -1, now());"
-[ $? != 0 ] && exit 1
+delete from BOARD_ITEM_ASSIGNMENTS where ITEMID in (select ITEMID from BOARD_ITEMS where ARCHIVABLE='Y' and CREATEDDTS < TIMESTAMPADD(YEAR, -1, now());
 
-date
-mysql -u xxx -pxxx -D dbname -e "delete from BOARD_ITEMS where ARCHIVABLE='Y' and CREATEDDTS < TIMESTAMPADD(YEAR, -1, now());"
-[ $? != 0 ] && exit 1
+delete from BOARD_ITEMS where ARCHIVABLE='Y' and CREATEDDTS < TIMESTAMPADD(YEAR, -1, now());
+
 ```
+For sample scripts on MySql and Oracle (other databases coming soon) download the following zip archive: [sample_scripts.zip](sample_scripts.zip)
 
 Once satisfied with the script, you can set up a cron job to execute it each night. For example, configuring cron to execute at 1am each morning as follows:
 
@@ -519,76 +489,17 @@ These scripts would be called several times with different, incremental values o
 
 ### <a name="cron-partitions"></a>Leveraging cron to drop and create partitions
 
-The benefit of partitioning your data is that you can delete old data by simply dropping a partition. The downside of the approach is that you have to continually create new partitions for future data. The following script (partition.sh) shows how to drop and create partitions on a weekly basis:
+The benefit of partitioning your data is that you can delete old data by simply dropping a partition. The downside of the approach is that you have to continually create new partitions for future data. 
 
-```
-#!/bin/bash
-# $id$
+You will need to create scripts to:
 
-DB_USER=""
-DB_PASS=""
-DB_NAME=""
-WEEKS_KEEP=10
+* Validate the existing partitions to make sure that they are correct for the current date
+* Drop the partition you want to delete based on the date
+* Drop the catch-all 'future' partition - optionally validating that it contains no data
+* Add the new partition
 
-mysqlcmd="mysql -NB -u $DB_USER -p${DB_PASS} -D $DB_NAME -e "
-NDAY=`$mysqlcmd "select TIMESTAMPADD(DAY, +8,DATE_FORMAT(now(), '%Y-%m-%d 00:00:00'))"`
-[ $? != 0 ] && { echo "cannot connect to database"; exit 1; }
+For sample scripts on MySql and Oracle (other databases coming soon) download the following zip archive: [sample_scripts.zip](sample_scripts.zip)
 
-MSGS_NUM=`$mysqlcmd "show create table MO_USAGEMSGS\G" | grep PARTITION | wc -l`
-MSGS_DEL=`$mysqlcmd "show create table MO_USAGEMSGS\G" | awk '/PARTITION/ { if (match($2,"p[0-9][1-9]")) { print $2; exit;} }'`
-[ $? != 0 ] && { echo "cannot connect to database"; exit 1; }
-
-DATA_NUM=`$mysqlcmd "show create table MO_USAGEDATA\G" | grep PARTITION | wc -l`
-DATA_DEL=`$mysqlcmd "show create table MO_USAGEDATA\G" | awk '/PARTITION/ { if (match($2,"p[0-9][1-9]")) { print $2; exit;} }'`
-[ $? != 0 ] && { echo "cannot connect to database"; exit 1; }
-
-HOP_NUM=`$mysqlcmd "show create table MO_USAGE_NEXTHOP\G" | grep PARTITION | wc -l`
-HOP_DEL=`$mysqlcmd "show create table MO_USAGE_NEXTHOP\G" | awk '/PARTITION/ { if (match($2,"p[0-9][1-9]")) { print $2; exit;} }'`
-[ $? != 0 ] && { echo "cannot connect to database"; exit 1; }
-
-[ -z "$NDAY" -o "$NDAY" = "NULL" ] && { echo "New partition date $NDAY is invalid"; exit 1; }
-[ -z "$MSGS_DEL" -o "$MSGS_DEL" = "NULL" ] && { echo "Old MO_USAGEMSGS partition name $MSGS_DEL is invalid"; exit 1; }
-[ -z "$DATA_DEL" -o "$DATA_DEL" = "NULL" ] && { echo "Old MO_USAGEDATA partition name $DATA_DEL is invalid"; exit 1; }
-[ -z "$HOP_DEL" -o "$HOP_DEL" = "NULL" ] && { echo "Old MO_USAGE_NEXTHOP partition name $HOP_DEL is invalid"; exit 1; }
-
-echo $NDAY | egrep -q '^20[1-9]' || { echo "New partition date $NDAY is invalid"; exit 1; }
-echo $MSGS_DEL | egrep -q '^p[0-9][1-9]' || { echo "Old MO_USAGEMSGS partition name $MSGS_DEL is invalid"; exit 1; }
-echo $DATA_DEL | egrep -q '^p[0-9][1-9]' || { echo "Old MO_USAGEDATA partition name $DATA_DEL is invalid"; exit 1; }
-echo $HOP_DEL | egrep -q '^p[0-9][1-9]' || { echo "Old MO_USAGE_NEXTHOP partition name $HOP_DEL is invalid"; exit 1; }
-
-PNAME=`echo $NDAY | awk '{ split($1,pname,"-"); print "p"pname[2]pname[3]; }'`
-echo $PNAME | egrep -q '^p[0-9][1-9]' || { echo "New partition name $PNAME is invalid"; exit 1; }
-
-[ $MSGS_NUM -le $((WEEKS_KEEP+3)) ] && MSGSCMD1="ALTER TABLE MO_USAGEMSGS DROP PARTITION future" || \
-MSGSCMD1="ALTER TABLE MO_USAGEMSGS DROP PARTITION $MSGS_DEL, future"
-MSGSCMD2="ALTER TABLE MO_USAGEMSGS ADD PARTITION (PARTITION $PNAME VALUES LESS THAN (TO_DAYS('$NDAY')), PARTITION future  VALUES LESS THAN MAXVALUE)"
-
-[ $DATA_NUM  -le $((WEEKS_KEEP+3)) ] && DATACMD1="ALTER TABLE MO_USAGEDATA DROP PARTITION future" || \
-DATACMD1="ALTER TABLE MO_USAGEDATA DROP PARTITION $DATA_DEL, future"
-DATACMD2="ALTER TABLE MO_USAGEDATA ADD PARTITION (PARTITION $PNAME VALUES LESS THAN (TO_DAYS('$NDAY')), PARTITION future  VALUES LESS THAN MAXVALUE)"
-
-[ $HOP_NUM  -le $((WEEKS_KEEP+3)) ] && HOPCMD1="ALTER TABLE MO_USAGE_NEXTHOP DROP PARTITION future" || \
-HOPCMD1="ALTER TABLE MO_USAGE_NEXTHOP DROP PARTITION $HOP_DEL, future"
-HOPCMD2="ALTER TABLE MO_USAGE_NEXTHOP ADD PARTITION (PARTITION $PNAME VALUES LESS THAN (TO_DAYS('$NDAY')), PARTITION future  VALUES LESS THAN MAXVALUE)"
-
-$mysqlcmd "$MSGSCMD1"
-[ $? != 0 ] && { echo "alter tabel failed; $MSGSCMD1"; exit 1; } || { echo "Successfully ran $MSGSCMD1"; }
-$mysqlcmd "$MSGSCMD2"
-[ $? != 0 ] && { echo "alter tabel failed; $MSGSCMD2"; exit 1; } || { echo "Successfully ran $MSGSCMD2"; }
-$mysqlcmd "$DATACMD1"
-[ $? != 0 ] && { echo "alter tabel failed; $DATACMD1"; exit 1; } || { echo "Successfully ran $DATACMD1"; }
-$mysqlcmd "$DATACMD2"
-[ $? != 0 ] && { echo "alter tabel failed; $DATACMD2"; exit 1; } || { echo "Successfully ran $DATACMD2"; }
-$mysqlcmd "$HOPCMD1"
-[ $? != 0 ] && { echo "alter tabel failed; $HOPCMD1"; exit 1; } || { echo "Successfully ran $HOPCMD1"; }
-$mysqlcmd "$HOPCMD2"
-[ $? != 0 ] && { echo "alter tabel failed; $HOPCMD2"; exit 1; } || { echo "Successfully ran $HOPCMD2"; }
-
-$mysqlcmd "show create table MO_USAGEMSGS\G" | grep PARTITION
-$mysqlcmd "show create table MO_USAGEDATA\G" | grep PARTITION
-$mysqlcmd "show create table MO_USAGE_NEXTHOP\G" | grep PARTITION
-exit 0
-```
 Once satisfied with the script, you can set up a cron job to execute it each night. For example, configuring cron to execute on Sunday morning at 1am as follows:
 
 ```
