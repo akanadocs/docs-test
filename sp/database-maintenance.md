@@ -165,7 +165,7 @@ Partitioning is fairly complex. As a result, we recommend that you test this tho
 
 ##### Drop existing foreign keys, modify, and add new indexes #####
 
-Partitioning in mySQL does not support foreign key relationships. In addition, the partition key must be added to the primary key index:
+Partitioning in MySQL does not support foreign key relationships. In addition, the partition key must be added to the primary key index:
  
 ```
 ALTER TABLE MO_USAGE_NEXTHOP
@@ -237,7 +237,7 @@ Oracle does not permit the ALTER-ing of tables to add partitions. This means tha
 
 ##### Step 1: Create new tables #####
 
-Partitioning in mySQL does not support foreign key relationships. In addition, the partition key must be added to the primary key index:
+Create new, paritioned tables with a _NEW suffix.
  
 ```
 -- Use below script to create MO_USAGE_NEXTHOP_NEW table with partitions. Below script has example partitions set up.
@@ -365,7 +365,7 @@ RENAME TABLE MO_USAGE_NEXTHOP TO MO_USAGE_NEXTHOP_BCK, MO_USAGE_NEXTHOP_NEW TO M
 
 ##### Step 3: Merge data #####
 
-Due to the fact that you created a set of new tables to temporarily store live data while the partitioning was done, you need to merge the data from those tables back into the live tables so that it is not lost.
+Due to the fact that you created a set of new tables, you need to merge the data from the old tables into the new partitioned tables so that it is not lost.
 
 ```
 INSERT INTO MO_USAGE_NEXTHOP 
