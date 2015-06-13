@@ -387,11 +387,11 @@ INSERT INTO MO_USAGEMSGS
 
 These scripts would be called several times with different, incremental values of X and Y where X and Y represents a small time interval like 6 hours. This keeps the merging of data discrete and less error-prone.
 
-### <a name="partitioning-verylarge"></a>Partitioning large data stores under load
+### <a name="partitioning-verylarge"></a>Partitioning large data stores under load (MySQL Only)
 
-If the usage tables contain a large amount of data you will need to rename, rotate and transfer data from the existing tables to a new set of partitioned tables. 
+If the usage tables contain a large amount of data you will need to rename, rotate and transfer data from the existing tables to a new set of partitioned tables. For Oracle, the steps are exactly the same as shown in the previous section. For MySQL, it is quicker to partition the tables with an ALTER statement and merge much smaller dataset. This is shown below.
 
-#### Step 1: Create new tables ####
+#### Step 1: Create new tables (MySQL only) ####
 
 Firstly create new tables that will temporarily support the live system:
 
@@ -469,7 +469,7 @@ CREATE TABLE MO_USAGE_NEXTHOP_NEW (
 
 **Note:** Table definitions might change based on product version. You should check to make sure that the definition above matches your table structure and alter it as necessary.
 
-#### Step 2: Switch the new tables with the old tables ####
+#### Step 2: Switch the new tables with the old tables (MySQL only) ####
 
 Rename the existing live tables to *\_BCK and replace them with the new, empty tables:
 
@@ -479,7 +479,7 @@ RENAME TABLE MO_USAGEDATA TO MO_USAGEDATA_BCK, MO_USAGEDATA_NEW TO MO_USAGEDATA;
 RENAME TABLE MO_USAGE_NEXTHOP TO MO_USAGE_NEXTHOP_BCK, MO_USAGE_NEXTHOP_NEW TO MO_USAGE_NEXTHOP;
 ```
 
-#### Step 3: Drop existing foreign keys and add new indexes ####
+#### Step 3: Drop existing foreign keys and add new indexes (MySQL only) ####
 
 Alter the tables as shown in the previous chapter, but this time against the *_BCK tables. 
 
@@ -504,7 +504,7 @@ ADD INDEX NUI_USG_EVENTID(EVENTID),
 ADD INDEX NUI_USG_USAGEDATAID(USAGEDATAID);
 ```
 
-#### Step 4: Create partitions ####
+#### Step 4: Create partitions (MySQL only) ####
 
 You then create partitions as shown in the previous chapter - this time against the *_BCK tables. The dates and intervals would be changed to suit your system.
 
@@ -551,7 +551,7 @@ PARTITION BY RANGE (TO_DAYS(REQUESTDTS)) (
 );
 ```
 
-#### Step 5: Switch the partitioned tables back ####
+#### Step 5: Switch the partitioned tables back (MySQL only) ####
 
 Now switch the partitioned tables (*_BCK) with the new tables you created in Step 1. This will return the original data tables to live.
 
@@ -561,17 +561,23 @@ RENAME TABLE MO_USAGEMSGS TO MO_USAGEMSGS2, MO_USAGEMSGS_BCK TO MO_USAGEMSGS;
 RENAME TABLE MO_USAGE_NEXTHOP TO MO_USAGE_NEXTHOP2, MO_USAGE_NEXTHOP_BCK TO MO_USAGE_NEXTHOP;
 ```
 
-#### Step 6: Merge data ####
+#### Step 6: Merge data (MySQL only) ####
 
 Due to the fact that you created a set of new tables to temporarily store live data while the partitioning was done, you need to merge the data from those tables back into the live tables so that it is not lost.
 
 ```
-INSERT INTO MO_USAGE_NEXTHOP (EVENTID, URL, REQUESTDTS, CREATEDTS, RESPTIME) SELECT EVENTID, URL, REQUESTDTS, CREATEDTS, RESPTIME FROM MO_USAGE_NEXTHOP2 where REQUESTDTS between X and Y;
+INSERT INTO MO_USAGE_NEXTHOP 
+	(EVENTID, URL, REQUESTDTS, CREATEDTS, RESPTIME) 
+SELECT EVENTID, URL, REQUESTDTS, CREATEDTS, RESPTIME 
+	FROM MO_USAGE_NEXTHOP_BCK where REQUESTDTS between X and Y;
 
-INSERT INTO MO_USAGEDATA (EVENTID PARENTEVENTID CLIENTHOST MPNAME OPERATIONID SERVICEID ORGID CONTRACTID BINDTEMPLATEID REQUSERNAME REQUESTDTS REQUESTMILLIS RESPONSETIME REQMSGSIZE NMREQMSGSIZE RESPMSGSIZE NMRESPMSGSIZE ERRCATEGORY ERRMESSAGE ERRDETAILS CREATEDTS CREATEDMILLIS NEXTHOPURL ISSOAPFLTBYMP ISSOAPFLTBYNEXTHOP LISTENERURL NEXTHOPRESPTIME APPUSERNAME OTHERUSERNAMES CUSTOMFIELD1 VERB STATUS_CODE) SELECT EVENTID PARENTEVENTID CLIENTHOST MPNAME OPERATIONID SERVICEID ORGID CONTRACTID BINDTEMPLATEID REQUSERNAME REQUESTDTS REQUESTMILLIS RESPONSETIME REQMSGSIZE NMREQMSGSIZE RESPMSGSIZE NMRESPMSGSIZE ERRCATEGORY ERRMESSAGE ERRDETAILS CREATEDTS CREATEDMILLIS NEXTHOPURL ISSOAPFLTBYMP ISSOAPFLTBYNEXTHOP LISTENERURL NEXTHOPRESPTIME APPUSERNAME OTHERUSERNAMES CUSTOMFIELD1 VERB STATUS_CODE FROM MO_USAGEDATA2 where REQUESTDTS between X and Y;
+INSERT INTO MO_USAGEDATA 
+	(EVENTID PARENTEVENTID CLIENTHOST MPNAME OPERATIONID SERVICEID ORGID CONTRACTID BINDTEMPLATEID REQUSERNAME REQUESTDTS REQUESTMILLIS RESPONSETIME REQMSGSIZE NMREQMSGSIZE RESPMSGSIZE NMRESPMSGSIZE ERRCATEGORY ERRMESSAGE ERRDETAILS CREATEDTS CREATEDMILLIS NEXTHOPURL ISSOAPFLTBYMP ISSOAPFLTBYNEXTHOP LISTENERURL NEXTHOPRESPTIME APPUSERNAME OTHERUSERNAMES CUSTOMFIELD1 VERB STATUS_CODE) 
+SELECT EVENTID PARENTEVENTID CLIENTHOST MPNAME OPERATIONID SERVICEID ORGID CONTRACTID BINDTEMPLATEID REQUSERNAME REQUESTDTS REQUESTMILLIS RESPONSETIME REQMSGSIZE NMREQMSGSIZE RESPMSGSIZE NMRESPMSGSIZE ERRCATEGORY ERRMESSAGE ERRDETAILS CREATEDTS CREATEDMILLIS NEXTHOPURL ISSOAPFLTBYMP ISSOAPFLTBYNEXTHOP LISTENERURL NEXTHOPRESPTIME APPUSERNAME OTHERUSERNAMES CUSTOMFIELD1 VERB STATUS_CODE 
+	FROM MO_USAGEDATA_BCK where REQUESTDTS between X and Y;
 
-INSERT INTO MO_USAGEMSGS SELECT * FROM MO_USAGEMSGS2 where MSGCAPTUREDDTS between X and Y;
-
+INSERT INTO MO_USAGEMSGS 
+	SELECT * FROM MO_USAGEMSGS_BCK where MSGCAPTUREDDTS between X and Y;
 ```
 
 **Note:** Table definitions might change based on product version. You should check to make sure that the definition above matches your table structure and alter it as necessary.
