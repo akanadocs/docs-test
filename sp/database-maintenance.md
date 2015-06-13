@@ -389,11 +389,11 @@ These scripts would be called several times with different, incremental values o
 
 ### <a name="partitioning-verylarge"></a>Partitioning large data stores under load (MySQL Only)
 
-If the usage tables contain a large amount of data you will need to rename, rotate and transfer data from the existing tables to a new set of partitioned tables. For Oracle, the steps are exactly the same as shown in the previous section. For MySQL, it is quicker to partition the tables with an ALTER statement and merge much smaller dataset. This is shown below.
+If the usage tables contain a large amount of data you will need to rename, rotate and transfer data from the existing tables to a new set of partitioned tables. For Oracle, the steps are exactly the same as shown in the previous section. For MySQL, it is quicker to partition the tables with an ALTER statement and merge a much smaller dataset. This is shown below.
 
 #### Step 1: Create new tables (MySQL only) ####
 
-Firstly create new tables that will temporarily support the live system:
+Firstly create new tables that will temporarily support the live system. These do not have to be partitioned as they will only support a small amount of data:
 
 ```
 CREATE TABLE MO_USAGEMSGS_NEW (
