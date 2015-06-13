@@ -100,7 +100,7 @@ For higher throughput environments its better to offload the task to delete/arch
 * next-hop data in MO\_USAGE_NEXTHOP older than 1 month
 * usage messages in MO_USAGEMSGS older than 1 month
 * usage data in MO_USAGEDATA older than 1 month
-* next-hop data in MO\_USAGE_NEXTHOP older than 1 month
+* 5-second rollup data in MO_ROLLUPDATA older than 1 month
 * 15-minute rollup data in MO_ROLLUP15 older than 1 month
 * 15-minute rollup data in MO\_ROLL_ORG15 older than 1 month
 * 1-hour rollup data in MO\_ROLLUP_HOUR older than 3 months
