@@ -233,68 +233,159 @@ PARTITION BY RANGE (TO_DAYS(REQUESTDTS)) (
 
 #### Oracle ####
 
+Oracle does not permit the ALTER-ing of tables to add partitions. This means that new tables need to be created and the data migrated over.
 
-##### Modify indexes #####
+##### Step 1: Create new tables #####
 
 Partitioning in mySQL does not support foreign key relationships. In addition, the partition key must be added to the primary key index:
  
 ```
-ALTER TABLE MO_USAGE_NEXTHOP
-ADD CONSTRAINT MO_USAGE_NEXTHOP_PK primary key (NEXTHOPID, REQUESTDTS);
+-- Use below script to create MO_USAGE_NEXTHOP_NEW table with partitions. Below script has example partitions set up.
+-- replace the partitions as needed. For each partition, update partition name and partition dates as needed
+-- It is highly recommended to partition this table when Record component is used frequently.
 
-ALTER TABLE MO_USAGEMSGS 
-ADD CONSTRAINT MO_USAGEMSGS_PK primary key (EVENTID,SEQ, MSGCAPTUREDDTS);
+CREATE TABLE MO_USAGE_NEXTHOP_NEW ( 
+	NEXTHOPID number(38,0) NOT NULL,
+	EVENTID varchar2(41) NOT NULL,
+	URL varchar2(512) NULL,
+	REQUESTDTS date NOT NULL,
+	CREATEDTS date NOT NULL,
+	RESPTIME number(38,0) NULL
+	,CONSTRAINT MO_USG_NEXTHOP_PK primary key (NEXTHOPID, REQUESTDTS))
+PARTITION BY RANGE ("REQUESTDTS") (
+	PARTITION p0000 VALUES LESS THAN (to_date('2015-01-04 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
+	PARTITION p0111 VALUES LESS THAN (to_date('2015-01-11 00:00:00', 'mm-dd-yyyy hh24:mi:ss'))
+	PARTITION p0118 VALUES LESS THAN (to_date('2015-01-18 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
+	PARTITION p0125 VALUES LESS THAN (to_date('2015-01-25 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
+	PARTITION p0201 VALUES LESS THAN (to_date('2015-02-01 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
+	PARTITION p0208 VALUES LESS THAN (to_date('2015-02-08 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
+	PARTITION p0215 VALUES LESS THAN (to_date('2015-02-15 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
+	PARTITION p0222 VALUES LESS THAN (to_date('2015-02-22 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
+	PARTITION future VALUES LESS THAN (maxvalue)
+);
 
-ALTER TABLE MO_USAGEDATA
-ADD CONSTRAINT MO_USAGEDATA_PK primary key (USAGEDATAID, REQUESTDTS),
-ADD INDEX NUI_USG_USAGEDATAID(USAGEDATAID);
+-- Use below script to create MO_USAGEMSGS_NEW table with partitions. Below script has example partitions set up.
+-- replace the partitions as needed. For each partition, update partition name and partition dates as needed
+-- It is highly recommended to partition this table when Record component is used frequently.
+
+CREATE TABLE MO_USAGEMSGS_NEW ( 
+	EVENTID varchar2(41) NOT NULL,
+	SEQ number(38,0) NOT NULL,
+	MSGNAME varchar2(64) NOT NULL,
+	MSGCAPTUREDDTS date NOT NULL,
+	MSGCAPTUREDMILLIS number(38,0) NOT NULL,
+	MESSAGE clob NOT NULL,
+	TYPE varchar2(10) NOT NULL,
+	ISCOMPLETEMESSAGE char(1) NOT NULL,
+	TRANSPORTHEADERS varchar2(2048) NULL 
+	,CONSTRAINT MO_USAGEMSGS_PK primary key (EVENTID,SEQ, MSGCAPTUREDDTS))
+PARTITION BY RANGE ("MSGCAPTUREDDTS") (
+	PARTITION p0000 VALUES LESS THAN (to_date('2015-01-04 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
+	PARTITION p0111 VALUES LESS THAN (to_date('2015-01-11 00:00:00', 'mm-dd-yyyy hh24:mi:ss'))
+	PARTITION p0118 VALUES LESS THAN (to_date('2015-01-18 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
+	PARTITION p0125 VALUES LESS THAN (to_date('2015-01-25 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
+	PARTITION p0201 VALUES LESS THAN (to_date('2015-02-01 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
+	PARTITION p0208 VALUES LESS THAN (to_date('2015-02-08 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
+	PARTITION p0215 VALUES LESS THAN (to_date('2015-02-15 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
+	PARTITION p0222 VALUES LESS THAN (to_date('2015-02-22 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
+	PARTITION future VALUES LESS THAN (maxvalue)
+);
+
+-- Use below script to create MO_USAGEDATA_NEW table with partitions. Below script has example partitions set up.
+-- replace the partitions as needed. For each partition, update partition name and partition dates as needed
+-- It is highly recommended to partition this table when using 100% usage logging enabled or incase of high traffic scenario
+
+CREATE TABLE MO_USAGEDATA_NEW ( 
+	USAGEDATAID number(38,0) NOT NULL,
+	EVENTID varchar2(41) NOT NULL,
+	PARENTEVENTID varchar2(41) NULL,
+	CLIENTHOST varchar2(255) NULL,
+	MPNAME varchar2(64) NOT NULL,
+	OPERATIONID number(38,0) NOT NULL,
+	SERVICEID number(38,0) NOT NULL,
+	ORGID number(38,0) DEFAULT 0 NULL,
+	CONTRACTID number(38,0) NOT NULL,
+	BINDTEMPLATEID number(38,0) NOT NULL,
+	REQUSERNAME varchar2(128) NULL,
+	REQUESTDTS date NOT NULL,
+	REQUESTMILLIS number(38,0) NOT NULL,
+	RESPONSETIME number(38,0) NOT NULL,
+	REQMSGSIZE number(38,0) NOT NULL,
+	NMREQMSGSIZE number(38,0) NULL,
+	RESPMSGSIZE number(38,0) NULL,
+	NMRESPMSGSIZE number(38,0) NULL,
+	ERRCATEGORY number(38,0) NULL,
+	ERRMESSAGE varchar2(512) NULL,
+	ERRDETAILS varchar2(1024) NULL,
+	CREATEDTS date NOT NULL,
+	CREATEDMILLIS number(38,0) NOT NULL,
+	NEXTHOPURL varchar2(512) NULL,
+	ISSOAPFLTBYMP number(38,0) NOT NULL,
+	ISSOAPFLTBYNEXTHOP number(38,0) NOT NULL,
+	LISTENERURL varchar2(512) NULL,
+	NEXTHOPRESPTIME number(38,0) NULL,
+	APPUSERNAME varchar2(128) NULL,
+	OTHERUSERNAMES varchar2(512) NULL,
+	CUSTOMFIELD1 varchar2(256) NULL,
+	VERB varchar2(8) NULL,
+	STATUS_CODE varchar2(8) NULL
+	,CONSTRAINT MO_USAGEDATA_PK primary key (USAGEDATAID, REQUESTDTS))
+	partition by range ("REQUESTDTS")
+PARTITION BY RANGE ("MSGCAPTUREDDTS") (
+	PARTITION p0000 VALUES LESS THAN (to_date('2015-01-04 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
+	PARTITION p0111 VALUES LESS THAN (to_date('2015-01-11 00:00:00', 'mm-dd-yyyy hh24:mi:ss'))
+	PARTITION p0118 VALUES LESS THAN (to_date('2015-01-18 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
+	PARTITION p0125 VALUES LESS THAN (to_date('2015-01-25 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
+	PARTITION p0201 VALUES LESS THAN (to_date('2015-02-01 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
+	PARTITION p0208 VALUES LESS THAN (to_date('2015-02-08 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
+	PARTITION p0215 VALUES LESS THAN (to_date('2015-02-15 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
+	PARTITION p0222 VALUES LESS THAN (to_date('2015-02-22 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
+	PARTITION future VALUES LESS THAN (maxvalue)
+);
+
+CREATE  INDEX MO_USAGEDATA_PK1 ON MO_USAGEDATA_NEW(REQUESTDTS DESC,REQUESTMILLIS DESC);
+CREATE  INDEX MO_USAGEDATA_PK2 ON MO_USAGEDATA_NEW(OPERATIONID);
+CREATE  INDEX MO_USAGEDATA_PK3 ON MO_USAGEDATA_NEW(CONTRACTID);
+
+     
+```
+
+**Note:** Table definitions might change based on product version. You should check to make sure that the definition above matches your table structure and alter it as necessary.
+
+
+##### Step 2: Switch the new tables with the old tables #####
+
+Rename the existing live tables to *\_BCK and replace them with the new, empty tables:
+
+```
+RENAME TABLE MO_USAGEMSGS TO MO_USAGEMSGS_BCK, MO_USAGEMSGS_NEW TO MO_USAGEMSGS;
+RENAME TABLE MO_USAGEDATA TO MO_USAGEDATA_BCK, MO_USAGEDATA_NEW TO MO_USAGEDATA;
+RENAME TABLE MO_USAGE_NEXTHOP TO MO_USAGE_NEXTHOP_BCK, MO_USAGE_NEXTHOP_NEW TO MO_USAGE_NEXTHOP;
+```
+
+##### Step 3: Merge data #####
+
+Due to the fact that you created a set of new tables to temporarily store live data while the partitioning was done, you need to merge the data from those tables back into the live tables so that it is not lost.
+
+```
+INSERT INTO MO_USAGE_NEXTHOP 
+	(EVENTID, URL, REQUESTDTS, CREATEDTS, RESPTIME) 
+SELECT EVENTID, URL, REQUESTDTS, CREATEDTS, RESPTIME 
+	FROM MO_USAGE_NEXTHOP_BCK where REQUESTDTS between X and Y;
+
+INSERT INTO MO_USAGEDATA 
+	(EVENTID PARENTEVENTID CLIENTHOST MPNAME OPERATIONID SERVICEID ORGID CONTRACTID BINDTEMPLATEID REQUSERNAME REQUESTDTS REQUESTMILLIS RESPONSETIME REQMSGSIZE NMREQMSGSIZE RESPMSGSIZE NMRESPMSGSIZE ERRCATEGORY ERRMESSAGE ERRDETAILS CREATEDTS CREATEDMILLIS NEXTHOPURL ISSOAPFLTBYMP ISSOAPFLTBYNEXTHOP LISTENERURL NEXTHOPRESPTIME APPUSERNAME OTHERUSERNAMES CUSTOMFIELD1 VERB STATUS_CODE) 
+SELECT EVENTID PARENTEVENTID CLIENTHOST MPNAME OPERATIONID SERVICEID ORGID CONTRACTID BINDTEMPLATEID REQUSERNAME REQUESTDTS REQUESTMILLIS RESPONSETIME REQMSGSIZE NMREQMSGSIZE RESPMSGSIZE NMRESPMSGSIZE ERRCATEGORY ERRMESSAGE ERRDETAILS CREATEDTS CREATEDMILLIS NEXTHOPURL ISSOAPFLTBYMP ISSOAPFLTBYNEXTHOP LISTENERURL NEXTHOPRESPTIME APPUSERNAME OTHERUSERNAMES CUSTOMFIELD1 VERB STATUS_CODE 
+	FROM MO_USAGEDATA_BCK where REQUESTDTS between X and Y;
+
+INSERT INTO MO_USAGEMSGS 
+	SELECT * FROM MO_USAGEMSGS_BCK where MSGCAPTUREDDTS between X and Y;
 
 ```
 
-##### Create partitions #####
+**Note:** Table definitions might change based on product version. You should check to make sure that the definition above matches your table structure and alter it as necessary.
 
-Similar to the tables in the previous section, these scripts demonstrate how to partition Oracle tables:
-
-```
-ALTER TABLE MO_USAGE_NEXTHOP
-PARTITION BY RANGE (REQUESTDTS) (
-     PARTITION p0000 VALUES LESS THAN (to_date('2015-01-04 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION p0111 VALUES LESS THAN (to_date('2015-01-11 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION p0118 VALUES LESS THAN (to_date('2015-01-18 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION p0125 VALUES LESS THAN (to_date('2015-01-25 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION p0201 VALUES LESS THAN (to_date('2015-02-01 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION p0208 VALUES LESS THAN (to_date('2015-02-08 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION p0215 VALUES LESS THAN (to_date('2015-02-15 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION p0222 VALUES LESS THAN (to_date('2015-02-22 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION future VALUES LESS THAN (maxvalue)
-);
-
-ALTER TABLE MO_USAGEMSGS
-PARTITION BY RANGE (MSGCAPTUREDDTS) (
-     PARTITION p0000 VALUES LESS THAN (to_date('2015-01-04 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION p0111 VALUES LESS THAN (to_date('2015-01-11 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION p0118 VALUES LESS THAN (to_date('2015-01-18 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION p0125 VALUES LESS THAN (to_date('2015-01-25 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION p0201 VALUES LESS THAN (to_date('2015-02-01 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION p0208 VALUES LESS THAN (to_date('2015-02-08 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION p0215 VALUES LESS THAN (to_date('2015-02-15 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION p0222 VALUES LESS THAN (to_date('2015-02-22 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION future VALUES LESS THAN (maxvalue)
-);
-
-ALTER TABLE MO_USAGEDATA
-PARTITION BY RANGE (REQUESTDTS) (
-     PARTITION p0000 VALUES LESS THAN (to_date('2015-01-04 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION p0111 VALUES LESS THAN (to_date('2015-01-11 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION p0118 VALUES LESS THAN (to_date('2015-01-18 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION p0125 VALUES LESS THAN (to_date('2015-01-25 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION p0201 VALUES LESS THAN (to_date('2015-02-01 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION p0208 VALUES LESS THAN (to_date('2015-02-08 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION p0215 VALUES LESS THAN (to_date('2015-02-15 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION p0222 VALUES LESS THAN (to_date('2015-02-22 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-     PARTITION future VALUES LESS THAN (maxvalue)
-);
-```
+These scripts would be called several times with different, incremental values of X and Y where X and Y represents a small time interval like 6 hours. This keeps the merging of data discrete and less error-prone.
 
 ### <a name="partitioning-verylarge"></a>Partitioning large data stores under load
 
