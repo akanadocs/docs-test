@@ -237,7 +237,7 @@ Oracle does not permit the ALTER-ing of tables to add partitions. This means tha
 
 ##### Step 1: Create new tables #####
 
-Create new, paritioned tables with a _NEW suffix.
+Create new, paritioned tables with a _NEW suffix. Note that the 'PARTITION BY RANGE (REQUESTDTS) INTERVAL' clause will result in new partitions being created automatically.
  
 ```
 CREATE TABLE MO_USAGE_NEXTHOP_NEW (
@@ -562,7 +562,7 @@ For sample procedures to drop the partitions, download the following zip archive
 
 #### MySQL ####
 
-For sample scripts on MySql download the following zip archive: [sample_scripts.zip](sample_scripts.zip)
+For MySQL, you will need to create new partitions and drop old partitions each week. For sample scripts on MySql download the following zip archive: [sample_scripts.zip](sample_scripts.zip)
 
 Once satisfied with the scripts, you can set up a cron job to execute it each night. For example, configuring cron to execute on Sunday morning at 1am as follows:
 
