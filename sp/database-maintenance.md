@@ -20,7 +20,7 @@ Akana Platform Database Maintenance
 	<li><a href="#built-in">Using the built-in jobs</a></li>
 	<li><a href="#using-cron">Leveraging cron to delete data</a></li>
 	<li><a href="#partitioning">Partitioning large data stores</a></li>
-	<li><a href="#partitioning-verylarge">Partitioning large data stores under load</a></li>
+	<li><a href="#partitioning-verylarge">Partitioning large data stores under load (MySQL Only)</a></li>
 	<li><a href="#drop-partitions">Dropping partitions</a></li>
 </ol>
 
