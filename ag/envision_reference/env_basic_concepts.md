@@ -4,7 +4,6 @@ title: Envision Basic Concepts
 description: Provides a technical overview of the Envision product.
 product: ag
 category: ref
-sub-nav-class: Envision
 weight: 4
 type: page
 nav-title: Envision Basic Concepts 
