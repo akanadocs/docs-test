@@ -4,6 +4,7 @@ title: Creating a Dashboard with Envision
 description: Learn how add and reposition charts on an Envision Dashboard and display in Live Mode. 
 product: ag
 category: ref
+sub-nav-class: Envision Reference
 weight: 4
 type: page
 nav-title: Creating a Dashboard with Envision
@@ -34,15 +35,12 @@ To present working Charts to Envision users those Charts need to be placed on a 
 * A Dashboard is simply a web page that will display 0 or more functional Charts. 
 
 * It is not for editing Charts but for displaying their results. 
-
 * If the Chart was designed to have interactive Filters then those would be functional on the Dashboard.
-
 From the Envision top level menu select the *DASHBOARDS* menu item.
 
 ![Envision](images/env_creating_dashboard1.jpg "DASHBOARDS MENU")
 
 * The default, or your most favorite, dashboard is displayed. It is a fully functional dashboard where you can view data. 
-
 * To switch to a configuration view of dashboards select **Configure** in the upper right.
 
 ![Envision](images/env_creating_dashboard2.jpg "DASHBOARD Configuration View")
@@ -66,13 +64,9 @@ Select **New Dashboard** to start the process of creating a new dashboard. A pop
 A dashboard can be shared by other users. 
 
 * When a dashboard is shared with a user that user can view the chart and place them on dashboards. They cannot change the dashboard. 
-
 * A dashboard can be shared with nobody, everybody, or individual users and/or groups. 
-
 * The dashboard will automatically be placed in the My dashboards list. 
-
 * If the *Marked as Favorite* checkbox is checked it will also be placed in the *Favorites* dashboards list.
-
 * Each dashboard card in a list has a pull-down menu of options that can be performed on the dashboard. 
 
 <a href="#top">back to top</a>
@@ -103,17 +97,11 @@ Initially the dashboard is empty. To add a chart to the dashboard select **Add C
 ![Envision](images/env_creating_dashboard6.jpg "Add Chart")
 
 * The **Add Chart** page looks very similar to the page you see when you click on the *CHARTS* link. 
-
 * There are three different sections for *My*, *Favorites*, and *Shared*. 
-
 * There are cards displayed for each chart. 
-
 * The difference here is that each chart card has an **Add** button and a **Preview** link. 
-
 * The **Add** button, when selected, will add the chart to the dashboard. 
-
 * You can continue to add charts to the dashboard without leaving this page. 
-
 * When you are finished click on the back arrow in front of the dashboard name.
 
 The **Preview** link will present a full page preview of the chart. 
