@@ -330,7 +330,7 @@ This table explains what each of these log phrases mean:
 
 <tr>
 		<td>com.mysql.jdbc.exceptions.jdbc4.<wbr>CommunicationsException </td>
-		<td>This is due to the DB going down or a network issue</td>
+		<td>This is due to the DB going down or a network issue. (MySQL specific)</td>
 		<td>Critical</td>
 		<td>Check DB availability 
 </tr>

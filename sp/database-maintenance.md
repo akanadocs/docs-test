@@ -383,9 +383,12 @@ INSERT INTO MO_USAGEMSGS
 
 ```
 
+These scripts would be called several times with different, incremental values of X and Y where X and Y represents a small time interval like 6 hours. This keeps the merging of data discrete and less error-prone. 
+
+You also might want to call this from a shell script to automate the process - see the sample script merge.sh in [sample_scripts.zip](sample_scripts.zip).
+
 **Note:** Table definitions might change based on product version. You should check to make sure that the definition above matches your table structure and alter it as necessary.
 
-These scripts would be called several times with different, incremental values of X and Y where X and Y represents a small time interval like 6 hours. This keeps the merging of data discrete and less error-prone.
 
 ### <a name="partitioning-verylarge"></a>Partitioning large data stores under load (MySQL Only)
 
@@ -583,6 +586,8 @@ INSERT INTO MO_USAGEMSGS
 **Note:** Table definitions might change based on product version. You should check to make sure that the definition above matches your table structure and alter it as necessary.
 
 These scripts would be called several times with different, incremental values of X and Y where X and Y represents a small time interval like 6 hours. This keeps the merging of data discrete and less error-prone.
+
+You also might want to call this from a shell script to automate the process - see the sample script merge.sh in [sample_scripts.zip](sample_scripts.zip).
 
 ### <a name="cron-partitions"></a>Leveraging cron to drop and create partitions
 
