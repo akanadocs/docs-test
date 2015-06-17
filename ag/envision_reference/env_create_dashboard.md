@@ -10,8 +10,13 @@ type: page
 nav-title: Creating a Dashboard with Envision
 ---
 
-Creating a Dashboard with Envision
-----------------------------------
+## Creating a Dashboard with Envision
+
+<a href="env_toc.htm" class="button secondary">Envision Reference (Main Topic)</a>
+
+<p></p>
+
+  <div class = "divider1"></div>
 
 <h3 name="top" style="color: grey;">Table of Contents</h3>
 

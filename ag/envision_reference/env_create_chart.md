@@ -10,8 +10,13 @@ type: page
 nav-title: Creating a Chart with Envision
 ---
 
-Creating a Chart with Envision
-----------------------------------
+## Creating a Chart with Envision
+
+<a href="env_toc.htm" class="button secondary">Envision Reference (Main Topic)</a>
+
+<p></p>
+
+  <div class = "divider1"></div>
 
 <h3 id="table-of-contents" name="top" style="color: grey;">Table of Contents</h3>
 
@@ -50,13 +55,10 @@ Once a data set has been created a Chart can be created that will display the me
 #### <a id="create-new-chart"></a>Create New Chart
 
 1. From the Envision top level menu select the *Charts* menu. You are presented three lists of charts:
-
-	![Envision](images/env_creating_charts1.jpg "Charts Menu")
-
 	* **My** - Charts that the logged in user has created. 
 	* **Shared** - Charts that others have created and made available to the user.
 	* **Favorites** - Those selected by the user to (either their own or someone else’s) to be in the list. This option provides a faster look-up of commonly used items by giving them their own list.<br><br>
-
+	![Envision](images/env_creating_charts1.jpg "Charts Menu")
 2. Select **New Chart**. On the *New Chart* pop-up enter a name and description for the chart.
 
 	![Envision](images/env_creating_charts2.jpg "New Chart Pop-up")
