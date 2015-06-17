@@ -11,12 +11,13 @@ nav-title: Envision Data Set Collection and Aggregation
 ---
 
 ## Data Set Collection and Aggregation
+Learn how Envision performs data collection and data aggregation.
 
-<a href="env_toc.htm" class="button secondary">Envision Reference (Main Topic)</a>
+<a href="env_toc.html" class="button secondary">Envision Reference (Main Topic)</a>
 
-<p></p>
+<h5 class="stamp">Supported Platforms: 8.0</h5><br>
 
-  <div class = "divider1"></div>
+<div class = "divider1"></div>
 
 <h3 name="top" style="color: grey;">Table of Contents</h3>
 
@@ -25,6 +26,7 @@ nav-title: Envision Data Set Collection and Aggregation
 3. [Data Collection Using Individual Transactions or Raw Data](#data-collection-using-individual-transations-or-raw-data)
 4. [Data Aggregation Using Time Intervals](#data-aggregation-using-time-intervals)
 
+<div class = "divider1"></div>
 ### <a id="introduction"></a>Introduction
 
 In the previous topic we introduced the concept of a data set, how metrics are defined, their aggregation, and collection intervals. In this topic we will describe how the data in a data set is actually collected and how the aggregation is performed.

@@ -13,9 +13,9 @@ nav-title: Envision Basic Concepts
 ## Envision Basic Concepts
 Provides a technical overview of the Envision product.
 
-<a href="env_toc.htm" class="button secondary">Envision Reference (Main Topic)</a>
+<a href="env_toc.html" class="button secondary">Envision Reference (Main Topic)</a>
 
-<h5 class="stamp">Supported Platforms: 8.0</h5>
+<h5 class="stamp">Supported Platforms: 8.0</h5><br>
 
 <div class = "divider1"></div>
 

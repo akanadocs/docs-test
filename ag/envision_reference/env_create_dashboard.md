@@ -11,12 +11,13 @@ nav-title: Creating a Dashboard with Envision
 ---
 
 ## Creating a Dashboard with Envision
+Learn how add and reposition charts on an Envision Dashboard and display in Live Mode.
 
-<a href="env_toc.htm" class="button secondary">Envision Reference (Main Topic)</a>
+<a href="env_toc.html" class="button secondary">Envision Reference (Main Topic)</a>
 
-<p></p>
+<h5 class="stamp">Supported Platforms: 8.0</h5><br>
 
-  <div class = "divider1"></div>
+<div class = "divider1"></div>
 
 <h3 name="top" style="color: grey;">Table of Contents</h3>
 
@@ -32,7 +33,7 @@ nav-title: Creating a Dashboard with Envision
 	* [Display Dashboard in Live Mode](#dashboard-live-mode)
 	* [View Chart Filters in Live Mode](#view-chart-filters)
 
-
+<div class = "divider1"></div>
 ### <a id="introduction"></a>Introduction
 
 To present working Charts to Envision users those Charts need to be placed on a *Dashboard*. 

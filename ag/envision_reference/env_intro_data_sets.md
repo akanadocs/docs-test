@@ -11,12 +11,13 @@ nav-title: Introduction to Envision Data Sets
 ---
 
 ## Introduction to Envision Data Sets
+Learn basic concepts about Envision Data Sets.
 
-<a href="env_toc.htm" class="button secondary">Envision Reference (Main Topic)</a>
+<a href="env_toc.html" class="button secondary">Envision Reference (Main Topic)</a>
 
-<p></p>
+<h5 class="stamp">Supported Platforms: 8.0</h5><br>
 
-  <div class = "divider1"></div>
+<div class = "divider1"></div>
 
 <h3 name="top" style="color: grey;">Table of Contents</h3>
 
@@ -24,6 +25,7 @@ nav-title: Introduction to Envision Data Sets
 2. [Metrics and Dimensions](#metrics-and-dimensions)
 3. [Data Set Examples](#data-set-examples)
 
+<div class = "divider1"></div>
 ### <a id="what-is-a-data-set"></a>What is a Data Set?
 
 A data set is a group of metrics that are collected so that they can be analyzed through queries based on different criteria, or dimensions. It is the foundation on top of which all analysis can be performed. Take a company named Acme that manufactures shoes, for example. Acme provides an API for merchants to order shoes that are sold to the public. Acme wishes to collect metrics on those sales such as: 

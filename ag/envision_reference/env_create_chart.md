@@ -11,12 +11,13 @@ nav-title: Creating a Chart with Envision
 ---
 
 ## Creating a Chart with Envision
+Learn how to create a chart with Envision and configure datasets, use chart options, and preview charts in Live Mode.
 
-<a href="env_toc.htm" class="button secondary">Envision Reference (Main Topic)</a>
+<a href="env_toc.html" class="button secondary">Envision Reference (Main Topic)</a>
 
-<p></p>
+<h5 class="stamp">Supported Platforms: 8.0</h5><br>
 
-  <div class = "divider1"></div>
+<div class = "divider1"></div>
 
 <h3 id="table-of-contents" name="top" style="color: grey;">Table of Contents</h3>
 
@@ -48,6 +49,7 @@ nav-title: Creating a Chart with Envision
 7. [Overlaying Charts](#id="overlaying-charts"></a>)
 	* [Create Combination Charts](#id="create-combination-charts"></a>)
 
+<div class = "divider1"></div>
 ### <a id="introduction"></a>Introduction
 
 Once a data set has been created a Chart can be created that will display the metrics collected for the data set. There are several kinds of Charts that are available in Envision. This topic will describe the common concepts of all charts. The options specific to each chart and examples of their use can be found in Envision Appendix.
