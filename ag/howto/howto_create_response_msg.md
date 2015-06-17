@@ -10,7 +10,7 @@ type: page
 nav-title: Create Response Msg
 ---
 
-# How to Create a Response Msg
+## How to Create a Response Msg
 
 This article describes how to create a virtual service process that creates a response message using input from the request message and returns this response to the consumer.  This is useful for creating sandbox services.  In this case I am adding a protocol header that is specific to SOAP, this header would only be returned via a SOAP binding, but the process generates a normalized XML message that can be returned via any of the bindings, including being mediated to JSON if that is required.
 

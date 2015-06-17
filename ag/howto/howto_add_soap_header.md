@@ -10,7 +10,7 @@ type: page
 nav-title: Add SOAP Header
 ---
 
-# How to Add a SOAP Header
+## How to Add a SOAP Header
 
 This article describes how to add a soap header to a downstream request using a script activity in an operation process.  It's a simple process with 4 steps:
 
