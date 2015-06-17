@@ -5,7 +5,7 @@ description: Learn how to create a chart with Envision and configure datasets, u
 product: ag
 category: ref
 sub-nav-class: Envision Reference
-weight: 4
+weight: 6
 type: page
 nav-title: Creating a Chart with Envision
 ---

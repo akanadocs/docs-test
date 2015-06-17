@@ -5,7 +5,7 @@ description: Learn how to create an Envision data set and configure dimensions a
 product: ag
 category: ref
 sub-nav-class: Envision Reference
-weight: 4
+weight: 5
 type: page
 nav-title: Creating a Data Set with Envision
 ---

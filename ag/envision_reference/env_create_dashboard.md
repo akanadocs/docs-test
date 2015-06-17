@@ -5,7 +5,7 @@ description: Learn how add and reposition charts on an Envision Dashboard and di
 product: ag
 category: ref
 sub-nav-class: Envision Reference
-weight: 4
+weight: 7
 type: page
 nav-title: Creating a Dashboard with Envision
 ---

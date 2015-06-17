@@ -5,7 +5,7 @@ description: Provides a list of chart properties used in the Envision Dashboard.
 product: ag
 category: ref
 sub-nav-class: Envision Reference
-weight: 4
+weight: 8
 type: page
 nav-title: Envision Appendix 
 ---
