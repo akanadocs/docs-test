@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Creating a Chart with Envision
+title: Chapter 5 - Creating a Chart with Envision
 description: Learn how to create a chart with Envision and configure datasets, use chart options, and preview charts in Live Mode. 
 product: ag
 category: ref

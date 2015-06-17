@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Envision Data Set Collection and Aggregation
+title: Chapter 3 - Envision Data Set Collection and Aggregation
 description: Learn how Envision performs data collection and data aggregation.
 product: ag
 category: ref
