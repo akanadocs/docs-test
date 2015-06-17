@@ -147,7 +147,7 @@ When the configuration is complete, you can then click **Close**. YOu will then 
 9. After installation, we recommend that you click the **Installed Features** tab, and check the "Pending Installation Tasks" to ensure all features were properly installed. You can use the **Configuration** tab to re-configure any features that were missed. 
 
 ## Step 4: Register Network Director in Policy Manager
-YOu'll need to tell the Policy Manager where to find the containers you created, so that the Network Director can successfully connect to POlicy Manager. 
+You'll need to tell the Policy Manager where to find the containers you created, so that the Network Director can successfully connect to POlicy Manager. 
 
 1. From the Policy Manager Organization tree, click **Containers**.
 2. Click **Add Container**. 
