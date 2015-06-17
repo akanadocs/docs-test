@@ -24,6 +24,7 @@ Edit the reply activity and pick your new message variable as the response messa
 
 ### Step 3 - Add a Script Activity between the receive and the reply
 Add a script activity between the receive and the reply, and use the script below.  This script performs a few operations:
+
 * creates a new normalized message
 * normalizes the input request and converts the resulting normalized message to a Javascript object
 * Sets the content of the new normalized message as a string built using an element taken from the Javascript object (in this case we know that the input request contains an element called 'cin')
