@@ -49,11 +49,9 @@ Once a data set has been created a Chart can be created that will display the me
 
 #### <a id="create-new-chart"></a>Create New Chart
 
-1. From the Envision top level menu select the *Charts* menu.
+1. From the Envision top level menu select the *Charts* menu. You are presented three lists of charts:
 
 	![Envision](images/env_creating_charts1.jpg "Charts Menu")
-
-	You are presented three lists of charts:
 
 	* **My** - Charts that the logged in user has created. 
 	* **Shared** - Charts that others have created and made available to the user.
