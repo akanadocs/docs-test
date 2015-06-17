@@ -11,12 +11,13 @@ nav-title: Envision Basic Concepts
 ---
 
 ## Envision Basic Concepts
+Provides a technical overview of the Envision product.
 
 <a href="env_toc.htm" class="button secondary">Envision Reference (Main Topic)</a>
 
-<p></p>
+<h5 class="stamp">Supported Platforms: 8.0</h5>
 
-  <div class = "divider1"></div>
+<div class = "divider1"></div>
 
 <h3 name="top" style="color: grey;">Table of Contents</h3>
 
@@ -27,6 +28,7 @@ nav-title: Envision Basic Concepts
 5. [Data Analysis](#data-analysis)
 6. [Data Aggregation](#data-aggregation)
 
+<div class = "divider1"></div>
 ### <a id="introduction"></a>Introduction
 
 Envision is an analytics platform that allows you to slice and dice your data to analyze every aspect of your business and digital strategy. It can help you collect data and identify patterns, trends, violations, baselines, or historical context. The domain of the data you wish to analyze is open ended. You may wish to analyze:
