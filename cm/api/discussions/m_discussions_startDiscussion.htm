@@ -17,6 +17,7 @@ no-catalog: true
 
 <!-- InstanceBeginEditable name="Intro_AuthRoles" -->
 <p><!-- #BeginLibraryItem "/Library/desc_startDiscussion.lbi" -->Starts a new discussion.<!-- #EndLibraryItem --></p>
+<p class="apidoc_note"><strong>Note</strong>: If you are using markdown, and will be incorporating one or more artifacts in your discussion, you must upload the artifacts first. Run the <span class="apidoc_code"><a href="../boards/m_boards_addFirstArtifact.htm">POST&nbsp;/api/boards/items/artifacts</a></span> operation to upload the first artifact and the <span class="apidoc_code"><a href="../boards/m_boards_addArtifact.htm">POST&nbsp;/api/boards/items/{BoardItemID}/artifacts</a></span> operation to upload any subsequent artifacts. Use the values from the responses, such as the BoardItemID and the image paths, to construct the payload for adding the discussion.</p>
 <p id="id_roles"><strong>Authorization Roles/Permissions: </strong><a href="../Ref_AuthorizationRolesOnThePlatform.htm#authroles_user">Registered site user</a>; authorized user for the resource.</p>
 <!-- InstanceEndEditable --><!-- #BeginLibraryItem "/Library/_whatdoyouwanttoreadabout.lbi" -->
 <p>This topic includes the following sections:</p>
@@ -63,18 +64,49 @@ Host: {hostname}
 Accept: text/plain
 Content-Type: application/json
 <!-- #BeginLibraryItem "/Library/hdr_xcsrf.lbi" -->X-Csrf-Token_{tenant}: {TokenID}<!-- #EndLibraryItem --></pre>
-<p><strong>Sample request body</strong></p>
-<pre>
-{
+<p><strong>Sample request body: no artifacts</strong></p>
+<p><!-- #BeginLibraryItem "/Library/_linebreakincode_plain.lbi" --> Line breaks have been added for display reasons. Indentation in subsequent lines indicates a line break; it does not represent spaces in the content.<!-- #EndLibraryItem --></p>
+<pre>{ 
   "Content":"We are planning for our next release. Feature requests welcome!",
-  "DiscussionSubjectID":"4096a6ca-b535-40f9-acba-97796cf852d1.acmepaymentscorp",
+  "DiscussionSubjectID":"0157f427-0b07-4ae6-9ade-26f4ef3bcc71.acmepaymentscorp",
   "DiscussionType":"com.soa.discussion.type.comment",
-  "Tag":[
-    "payments",
-    "features"
+  "Tag":[ 
+    "features",
+    "announcement"
   ],
   "Topic":"Call for feature requests",
-  "UserID":"ed9073d2-ef38-4793-815f-728efa46ba5e.acmepaymentscorp"
+  "UserID":"aadb625a-6a2a-41b6-9801-f40f81db7a16.acmepaymentscorp",
+  "DescriptionMediaType":"text/markdown",
+  "BoardItemArtifacts":{ 
+    "BoardItemArtifact":[ 
+
+    ]
+  }
+}</pre>
+<p><strong>Sample request body: with artifacts</strong></p>
+<p><!-- #BeginLibraryItem "/Library/_linebreakincode_plain.lbi" --> Line breaks have been added for display reasons. Indentation in subsequent lines indicates a line break; it does not represent spaces in the content.<!-- #EndLibraryItem --></p>
+<pre>{
+  "Content":"We are planning for our next release. Feature requests welcome! \n\n![image](http://{hostname}/
+api/boards/items/063fe661-a74f-40d2-a242-9d49ec426e81.acmepaymentscorp/img_dollars.jpg \"img_dollars.jpg\")
+\n\nCash prizes for the first five suggestions that we use!",
+  "DiscussionSubjectID":"ecbf7010-abcf-41f8-9f52-1c02b3a51984.acmepaymentscorp",
+  "DiscussionType":"com.soa.discussion.type.comment",
+  "Tag":[
+
+  ],
+  "Topic":"Call for feature requests",
+  "UserID":"8dba2d85-1108-417f-ad81-7a369e9e5d79.acmepaymentscorp",
+  "DescriptionMediaType":"text/markdown",
+  "BoardItemArtifacts":{
+    "BoardItemArtifact":[
+      {
+        "ContextID":"063fe661-a74f-40d2-a242-9d49ec426e81.acmepaymentscorp",
+        "FileName":"img_dollars.jpg",
+        "BaseUri":"http://{hostname}",
+        "UriPath":"/api/boards/items/063fe661-a74f-40d2-a242-9d49ec426e81.acmepaymentscorp/img_dollars.jpg"
+      }
+    ]
+  }
 }</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 <!-- InstanceEndEditable -->
@@ -148,9 +180,9 @@ Content-Type: application/json
 <p><strong>Sample response headers</strong></p>
 <pre>HTTP/1.1 200 OK
 Content-Type: text/plain
-Date: Thu, 29 Jan 2015 12:32:11 GMT</pre>
+Date: Mon, 11 May 2015 15:29:53 GMT</pre>
 <p><strong>Sample response body</strong></p>
-<pre>discussion11727.acmepaymentscorp</pre>
+<pre>063fe661-a74f-40d2-a242-9d49ec426e81.acmepaymentscorp</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 
 <!-- InstanceEndEditable -->
@@ -211,8 +243,7 @@ The unique ID for a specific <a href="../Ref_Glossary_CommunityPlatform.htm#gl_d
     </tr>
     <tr>
       <td><a href="../Ref_HTTPStatusCodes.htm#http401">401</a></td>
-      <td><p><!-- #BeginLibraryItem "/Library/401_CSRF.lbi" -->
-Unauthorized. For example, you would get this response if you didn't include the custom <a href="../Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_{fedmemberID}</a> header in the request, when it was required by the platform settings; or you included an invalid or expired value for this header.<!-- #EndLibraryItem --></p>
+      <td><p><!-- #BeginLibraryItem "/Library/401_CSRF.lbi" -->Unauthorized. For example, you would get this response if you didn't include the custom <a href="../Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_{fedmemberID}</a> header in the request, when it was required by the platform settings; or if you included an invalid or expired value for this header.<!-- #EndLibraryItem --></p>
         <p>You would also get this response if you hadn't logged in before running the operation, or if the resource was private and you were not an authorized user.</p></td>
     </tr>
   </thead>
