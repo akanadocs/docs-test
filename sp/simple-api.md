@@ -16,12 +16,15 @@ Getting started: Managing a Simple API
 
 <h3 style="color: grey;">Table of Contents</h3>
 <ol class="table_of_contents">
-	<li><a href="#Overview">Overview</a></li>
-	<li><a href="#Prerequisites">Prerequisites</a></li>
 	<li><a href="#Installing">Installing the Policy Manager and Network Director containers, and configuring them</a></li>
 	<li><a href="#register-nd">Register Network Director in Policy Manager</a></li>
 	<li><a href="#register-api">Register the API in Policy Manager</a></li>
+	<li><a href="#Configure Policies">Configure Policies</a></li>
+	<li><a href="#Create Contracts">Create Contracts</a></li>
+	<li><a href="#Send a test request">Send a test request</a></li>
+	
 </ol>
+
 
 ### <a name="Overview"></a>Overview
 
@@ -210,7 +213,7 @@ When you've finished, you'll have two services: a physical and a virtual service
 5. Under the "HTTP Details" Section, enter the API web address For our example: [http://demo.akana-dev.net:3005/posts](http://demo.akana-dev.net:3005/posts) in the **Location** field. Click **Finish**.
 
 
-##Step 6 Configure Policies
+##<a name="Configure Policies"></a>Step 6 Configure Policies
 
 ![Step 6](images/simple-api-scenario-6.png "Step 6")
 
@@ -226,7 +229,7 @@ Now you'll configure your API’s with the policies you want Akana to enforce.
 
 You can find all descriptions of the policies in the Organization Tree. 
 
-##Step 7 Create Contracts
+##<a name="Create Contracts"></a>Step 7 Create Contracts
 
 ![Step 7](images/simple-api-scenario-7.png "Step 7")
 
@@ -245,7 +248,7 @@ Your contract is now in draft mode. It needs to be activated by:
 3. Click on the Contract - in this example it shows as "Anonymous."
 4. Review the contract, then on the right side click **Activate Contract**. Then click **OK**
 
-##Step 8: Send a test request
+##<a name="Send a test request"></a>Step 8: Send a test request
 
 ![Step 8](images/simple-api-scenario-8.png "Step 8")
 
