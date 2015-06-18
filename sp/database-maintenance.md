@@ -20,8 +20,8 @@ Akana Platform Database Maintenance
 	<li><a href="#built-in">Using the built-in jobs</a></li>
 	<li><a href="#using-cron">Leveraging cron to delete data</a></li>
 	<li><a href="#partitioning">Partitioning large data stores</a></li>
-	<li><a href="#partitioning-verylarge">Partitioning large data stores under load</a></li>
-	<li><a href="#cron-partitions">Leveraging cron to drop and create partitions</a></li>
+	<li><a href="#partitioning-verylarge">Partitioning large data stores under load (MySQL Only)</a></li>
+	<li><a href="#drop-partitions">Dropping partitions</a></li>
 </ol>
 
 ### <a name="introduction"></a>Introduction
@@ -237,121 +237,82 @@ Oracle does not permit the ALTER-ing of tables to add partitions. This means tha
 
 ##### Step 1: Create new tables #####
 
-Create new, paritioned tables with a _NEW suffix.
+Create new, paritioned tables with a _NEW suffix. Note that the 'PARTITION BY RANGE (REQUESTDTS) INTERVAL' clause will result in new partitions being created automatically.
  
 ```
--- Use below script to create MO_USAGE_NEXTHOP_NEW table with partitions. Below script has example partitions set up.
--- replace the partitions as needed. For each partition, update partition name and partition dates as needed
--- It is highly recommended to partition this table when Record component is used frequently.
-
-CREATE TABLE MO_USAGE_NEXTHOP_NEW ( 
-	NEXTHOPID number(38,0) NOT NULL,
-	EVENTID varchar2(41) NOT NULL,
-	URL varchar2(512) NULL,
-	REQUESTDTS date NOT NULL,
-	CREATEDTS date NOT NULL,
-	RESPTIME number(38,0) NULL
-	,CONSTRAINT MO_USG_NEXTHOP_PK primary key (NEXTHOPID, REQUESTDTS))
-PARTITION BY RANGE ("REQUESTDTS") (
-	PARTITION p0000 VALUES LESS THAN (to_date('2015-01-04 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-	PARTITION p0111 VALUES LESS THAN (to_date('2015-01-11 00:00:00', 'mm-dd-yyyy hh24:mi:ss'))
-	PARTITION p0118 VALUES LESS THAN (to_date('2015-01-18 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-	PARTITION p0125 VALUES LESS THAN (to_date('2015-01-25 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-	PARTITION p0201 VALUES LESS THAN (to_date('2015-02-01 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-	PARTITION p0208 VALUES LESS THAN (to_date('2015-02-08 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-	PARTITION p0215 VALUES LESS THAN (to_date('2015-02-15 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-	PARTITION p0222 VALUES LESS THAN (to_date('2015-02-22 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-	PARTITION future VALUES LESS THAN (maxvalue)
+CREATE TABLE MO_USAGE_NEXTHOP_NEW (
+        NEXTHOPID number(38,0) NOT NULL,
+        EVENTID varchar2(41) NOT NULL,
+        URL varchar2(512) NULL,
+        REQUESTDTS date NOT NULL,
+        CREATEDTS date NOT NULL,
+        RESPTIME number(38,0) NULL
+        ,CONSTRAINT MO_USG_NEXTHOP_BAK_PK primary key (NEXTHOPID,REQUESTDTS))
+        PARTITION BY RANGE (REQUESTDTS) INTERVAL (NUMTODSINTERVAL(7,'day'))
+( PARTITION p0 VALUES LESS THAN (to_date('01-JUN-2015','DD-MON-YYYY'))
 );
 
--- Use below script to create MO_USAGEMSGS_NEW table with partitions. Below script has example partitions set up.
--- replace the partitions as needed. For each partition, update partition name and partition dates as needed
--- It is highly recommended to partition this table when Record component is used frequently.
-
-CREATE TABLE MO_USAGEMSGS_NEW ( 
-	EVENTID varchar2(41) NOT NULL,
-	SEQ number(38,0) NOT NULL,
-	MSGNAME varchar2(64) NOT NULL,
-	MSGCAPTUREDDTS date NOT NULL,
-	MSGCAPTUREDMILLIS number(38,0) NOT NULL,
-	MESSAGE clob NOT NULL,
-	TYPE varchar2(10) NOT NULL,
-	ISCOMPLETEMESSAGE char(1) NOT NULL,
-	TRANSPORTHEADERS varchar2(2048) NULL 
-	,CONSTRAINT MO_USAGEMSGS_PK primary key (EVENTID,SEQ, MSGCAPTUREDDTS))
-PARTITION BY RANGE ("MSGCAPTUREDDTS") (
-	PARTITION p0000 VALUES LESS THAN (to_date('2015-01-04 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-	PARTITION p0111 VALUES LESS THAN (to_date('2015-01-11 00:00:00', 'mm-dd-yyyy hh24:mi:ss'))
-	PARTITION p0118 VALUES LESS THAN (to_date('2015-01-18 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-	PARTITION p0125 VALUES LESS THAN (to_date('2015-01-25 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-	PARTITION p0201 VALUES LESS THAN (to_date('2015-02-01 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-	PARTITION p0208 VALUES LESS THAN (to_date('2015-02-08 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-	PARTITION p0215 VALUES LESS THAN (to_date('2015-02-15 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-	PARTITION p0222 VALUES LESS THAN (to_date('2015-02-22 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-	PARTITION future VALUES LESS THAN (maxvalue)
+CREATE TABLE MO_USAGEMSGS_NEW (
+        EVENTID varchar2(41) NOT NULL,
+        SEQ number(38,0) NOT NULL,
+        MSGNAME varchar2(64) NOT NULL,
+        MSGCAPTUREDDTS date NOT NULL,
+        MSGCAPTUREDMILLIS number(38,0) NOT NULL,
+        MESSAGE clob NOT NULL,
+        TYPE varchar2(10) NOT NULL,
+        ISCOMPLETEMESSAGE char(1) NOT NULL,
+        TRANSPORTHEADERS varchar2(2048) NULL,
+        CONSTRAINT MO_USAGEMSGS_BAK_PK primary key (EVENTID,SEQ, MSGCAPTUREDDTS))
+        PARTITION BY RANGE (MSGCAPTUREDDTS) INTERVAL (NUMTODSINTERVAL(7,'day'))
+( PARTITION p0 VALUES LESS THAN (to_date('01-JUN-2015','DD-MON-YYYY'))
 );
 
--- Use below script to create MO_USAGEDATA_NEW table with partitions. Below script has example partitions set up.
--- replace the partitions as needed. For each partition, update partition name and partition dates as needed
--- It is highly recommended to partition this table when using 100% usage logging enabled or incase of high traffic scenario
-
-CREATE TABLE MO_USAGEDATA_NEW ( 
-	USAGEDATAID number(38,0) NOT NULL,
-	EVENTID varchar2(41) NOT NULL,
-	PARENTEVENTID varchar2(41) NULL,
-	CLIENTHOST varchar2(255) NULL,
-	MPNAME varchar2(64) NOT NULL,
-	OPERATIONID number(38,0) NOT NULL,
-	SERVICEID number(38,0) NOT NULL,
-	ORGID number(38,0) DEFAULT 0 NULL,
-	CONTRACTID number(38,0) NOT NULL,
-	BINDTEMPLATEID number(38,0) NOT NULL,
-	REQUSERNAME varchar2(128) NULL,
-	REQUESTDTS date NOT NULL,
-	REQUESTMILLIS number(38,0) NOT NULL,
-	RESPONSETIME number(38,0) NOT NULL,
-	REQMSGSIZE number(38,0) NOT NULL,
-	NMREQMSGSIZE number(38,0) NULL,
-	RESPMSGSIZE number(38,0) NULL,
-	NMRESPMSGSIZE number(38,0) NULL,
-	ERRCATEGORY number(38,0) NULL,
-	ERRMESSAGE varchar2(512) NULL,
-	ERRDETAILS varchar2(1024) NULL,
-	CREATEDTS date NOT NULL,
-	CREATEDMILLIS number(38,0) NOT NULL,
-	NEXTHOPURL varchar2(512) NULL,
-	ISSOAPFLTBYMP number(38,0) NOT NULL,
-	ISSOAPFLTBYNEXTHOP number(38,0) NOT NULL,
-	LISTENERURL varchar2(512) NULL,
-	NEXTHOPRESPTIME number(38,0) NULL,
-	APPUSERNAME varchar2(128) NULL,
-	OTHERUSERNAMES varchar2(512) NULL,
-	CUSTOMFIELD1 varchar2(256) NULL,
-	VERB varchar2(8) NULL,
-	STATUS_CODE varchar2(8) NULL
-	,CONSTRAINT MO_USAGEDATA_PK primary key (USAGEDATAID, REQUESTDTS))
-	partition by range ("REQUESTDTS")
-PARTITION BY RANGE ("MSGCAPTUREDDTS") (
-	PARTITION p0000 VALUES LESS THAN (to_date('2015-01-04 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-	PARTITION p0111 VALUES LESS THAN (to_date('2015-01-11 00:00:00', 'mm-dd-yyyy hh24:mi:ss'))
-	PARTITION p0118 VALUES LESS THAN (to_date('2015-01-18 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-	PARTITION p0125 VALUES LESS THAN (to_date('2015-01-25 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-	PARTITION p0201 VALUES LESS THAN (to_date('2015-02-01 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-	PARTITION p0208 VALUES LESS THAN (to_date('2015-02-08 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-	PARTITION p0215 VALUES LESS THAN (to_date('2015-02-15 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-	PARTITION p0222 VALUES LESS THAN (to_date('2015-02-22 00:00:00', 'mm-dd-yyyy hh24:mi:ss')),
-	PARTITION future VALUES LESS THAN (maxvalue)
+CREATE TABLE MO_USAGEDATA_NEW (
+        USAGEDATAID number(38,0) NOT NULL,
+        EVENTID varchar2(41) NOT NULL,
+        PARENTEVENTID varchar2(41) NULL,
+        CLIENTHOST varchar2(255) NULL,
+        MPNAME varchar2(64) NOT NULL,
+        OPERATIONID number(38,0) NOT NULL,
+        SERVICEID number(38,0) NOT NULL,
+        ORGID number(38,0) DEFAULT 0 NULL,
+        CONTRACTID number(38,0) NOT NULL,
+        BINDTEMPLATEID number(38,0) NOT NULL,
+        REQUSERNAME varchar2(128) NULL,
+        REQUESTDTS date NOT NULL,
+        REQUESTMILLIS number(38,0) NOT NULL,
+        RESPONSETIME number(38,0) NOT NULL,
+        REQMSGSIZE number(38,0) NOT NULL,
+        NMREQMSGSIZE number(38,0) NULL,
+        RESPMSGSIZE number(38,0) NULL,
+        NMRESPMSGSIZE number(38,0) NULL,
+        ERRCATEGORY number(38,0) NULL,
+        ERRMESSAGE varchar2(512) NULL,
+        ERRDETAILS varchar2(1024) NULL,
+        CREATEDTS date NOT NULL,
+        CREATEDMILLIS number(38,0) NOT NULL,
+        NEXTHOPURL varchar2(512) NULL,
+        ISSOAPFLTBYMP number(38,0) NOT NULL,
+        ISSOAPFLTBYNEXTHOP number(38,0) NOT NULL,
+        LISTENERURL varchar2(512) NULL,
+        NEXTHOPRESPTIME number(38,0) NULL,
+        APPUSERNAME varchar2(128) NULL,
+        OTHERUSERNAMES varchar2(512) NULL,
+        CUSTOMFIELD1 varchar2(256) NULL,
+        VERB varchar2(8) NULL,
+        STATUS_CODE varchar2(8) NULL
+        ,CONSTRAINT MO_USAGEDATA_PK primary key (USAGEDATAID,REQUESTDTS))
+        PARTITION BY RANGE (REQUESTDTS) INTERVAL (NUMTODSINTERVAL(7,'day'))
+( PARTITION p0 VALUES LESS THAN (to_date('01-JUN-2015','DD-MON-YYYY'))
 );
 
 CREATE  INDEX MO_USAGEDATA_PK1 ON MO_USAGEDATA_NEW(REQUESTDTS DESC,REQUESTMILLIS DESC);
 CREATE  INDEX MO_USAGEDATA_PK2 ON MO_USAGEDATA_NEW(OPERATIONID);
 CREATE  INDEX MO_USAGEDATA_PK3 ON MO_USAGEDATA_NEW(CONTRACTID);
 
-     
 ```
 
 **Note:** Table definitions might change based on product version. You should check to make sure that the definition above matches your table structure and alter it as necessary.
-
 
 ##### Step 2: Switch the new tables with the old tables #####
 
@@ -383,9 +344,12 @@ INSERT INTO MO_USAGEMSGS
 
 ```
 
+These scripts would be called several times with different, incremental values of X and Y where X and Y represents a small time interval like 6 hours. This keeps the merging of data discrete and less error-prone. 
+
+You also might want to call this from a shell script to automate the process - see the sample script merge.sh in [sample_scripts.zip](sample_scripts.zip).
+
 **Note:** Table definitions might change based on product version. You should check to make sure that the definition above matches your table structure and alter it as necessary.
 
-These scripts would be called several times with different, incremental values of X and Y where X and Y represents a small time interval like 6 hours. This keeps the merging of data discrete and less error-prone.
 
 ### <a name="partitioning-verylarge"></a>Partitioning large data stores under load (MySQL Only)
 
@@ -584,20 +548,23 @@ INSERT INTO MO_USAGEMSGS
 
 These scripts would be called several times with different, incremental values of X and Y where X and Y represents a small time interval like 6 hours. This keeps the merging of data discrete and less error-prone.
 
-### <a name="cron-partitions"></a>Leveraging cron to drop and create partitions
+You also might want to call this from a shell script to automate the process - see the sample script merge.sh in [sample_scripts.zip](sample_scripts.zip).
 
-The benefit of partitioning your data is that you can delete old data by simply dropping a partition. The downside of the approach is that you have to continually create new partitions for future data. 
+### <a name="drop-partitions"></a>Dropping partitions
 
-You will need to create scripts to:
+The benefit of partitioning your data is that you can delete old data by simply dropping a partition. The next sections will describe how to drop partitions for different databases
 
-* Validate the existing partitions to make sure that they are correct for the current date
-* Drop the partition you want to delete based on the date
-* Drop the catch-all 'future' partition - optionally validating that it contains no data
-* Add the new partition
+#### Oracle ####
 
-For sample scripts on MySql and Oracle (other databases coming soon) download the following zip archive: [sample_scripts.zip](sample_scripts.zip)
+For Oracle, the tables will automatically create new partitions each week. 
 
-Once satisfied with the script, you can set up a cron job to execute it each night. For example, configuring cron to execute on Sunday morning at 1am as follows:
+For sample procedures to drop the partitions, download the following zip archive: [sample_scripts.zip](sample_scripts.zip)
+
+#### MySQL ####
+
+For MySQL, you will need to create new partitions and drop old partitions each week. For sample scripts on MySql download the following zip archive: [sample_scripts.zip](sample_scripts.zip)
+
+Once satisfied with the scripts, you can set up a cron job to execute it each night. For example, configuring cron to execute on Sunday morning at 1am as follows:
 
 ```
 0 1 * * 0 /xxx/bin/partition.sh
