@@ -51,7 +51,7 @@ Learn how to create a chart with Envision and configure datasets, use chart opti
 <div class = "divider1"></div>
 ### <a id="introduction"></a>Introduction
 
-Once a data set has been created a Chart can be created that will display the metrics collected for the data set. There are several kinds of Charts that are available in Envision. This topic will describe the common concepts of all charts. The options specific to each chart and examples of their use can be found in Envision Appendix.
+Once a data set has been created a Chart can be created that will display the metrics collected for the data set. There are several kinds of Charts that are available in Envision. This topic will describe the common concepts of all charts. The options specific to each chart and examples of their use can be found in <a href="env_appendix.html">Envision Appendix</a>. [Envision Appendix](../envision_reference/env_appendix.html)
 
 #### <a id="create-new-chart"></a>Create New Chart
 
@@ -186,7 +186,7 @@ The following illustrates the *DATASETS* section using our Shoe Sales data set.
 
 #### <a id="chart-types"></a>Chart Types
 
-The *CHARTS* section identifies the type of chart to visually display the data with. There are several choices of charts, such as line chart, bar chart, or pie chart. Each of those charts may have a set of variations, or sub-types, such as standard, or stacked. The types of charts and their variations are listed in Envision Appendix.
+The *CHARTS* section identifies the type of chart to visually display the data with. There are several choices of charts, such as line chart, bar chart, or pie chart. Each of those charts may have a set of variations, or sub-types, such as standard, or stacked. The types of charts and their variations are listed in <a href="env_appendix.html">Envision Appendix</a>.
 
 The following illustrates the selection of a Standard Column Chart.
 
@@ -196,7 +196,7 @@ The following illustrates the selection of a Standard Column Chart.
 
 #### <a id="chart-options"></a>Chart Options
 
-Each chart type and variation may have specific options. These options are also listed in Envision Appendix and can be accessed in the user interface by selecting the Customize More link. 
+Each chart type and variation may have specific options. These options are also listed in <a href="env_appendix.html">Envision Appendix</a> and can be accessed in the user interface by selecting the **Customize More** link. 
 
 The following illustrates these options for the Standard Column Chart.  
 
@@ -275,7 +275,7 @@ The *FILTERS* section works the same as the *FILTERS* section in the *DATASET* s
 
 #### <a id="series-examples"></a>Series Examples
 
-Each chart type and variation may have specific SERIES options. These options are also listed in Appendix A and can be accessed in the user interface by selecting the **Customize More** link. 
+Each chart type and variation may have specific SERIES options. These options are also listed in <a href="env_appendix.html">Envision Appendix</a> and can be accessed in the user interface by selecting the **Customize More** link. 
 
 The following illustrates these options for the Standard Column Chart.  
 
