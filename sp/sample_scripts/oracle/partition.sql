@@ -9,24 +9,26 @@ RETURN v_date;
 END;
 /
 
-CREATE OR REPLACE procedure drop_mo_partition
+CREATE OR REPLACE procedure drop_mo_partition (weeks_to_keep in number := 10)
 authid current_user
 is
    v_date DATE;
    v_date_cut DATE;
    d DATE;
+   n number;
 BEGIN
-   v_date_cut :=  add_days (SYSDATE, -70);
+   n := weeks_to_keep * -7;
+   v_date_cut :=  add_days (SYSDATE, n);
    FOR cc IN (SELECT partition_name, high_value
                 FROM user_tab_partitions
                WHERE table_name = 'MO_USAGEMSGS') 
    LOOP
       EXECUTE IMMEDIATE 'SELECT ' || cc.high_value || ' from dual'
          INTO v_date;
-     IF v_date < v_date_cut
-     THEN
-       EXECUTE IMMEDIATE 'alter table MO_USAGEMSGS drop partition ' || cc.partition_name;
-     END IF;
+   IF v_date < v_date_cut
+   THEN
+     EXECUTE IMMEDIATE 'alter table MO_USAGEMSGS drop partition ' || cc.partition_name;
+   END IF;
    END LOOP;
 
    FOR cc IN (SELECT partition_name, high_value
@@ -35,22 +37,10 @@ BEGIN
    LOOP
       EXECUTE IMMEDIATE 'SELECT ' || cc.high_value || ' from dual'
          INTO v_date;
-     IF v_date < v_date_cut
-     THEN
-       EXECUTE IMMEDIATE 'alter table MO_USAGEDATA drop partition ' || cc.partition_name;
-     END IF;
-   END LOOP;
-
-   FOR cc IN (SELECT partition_name, high_value
-                FROM user_tab_partitions
-               WHERE table_name = 'MO_USAGE_NEXTHOP') 
-   LOOP
-      EXECUTE IMMEDIATE 'SELECT ' || cc.high_value || ' from dual'
-         INTO v_date;
-     IF v_date < v_date_cut
-     THEN
-       EXECUTE IMMEDIATE 'alter table MO_USAGE_NEXTHOP drop partition ' || cc.partition_name;
-     END IF;
+   IF v_date < v_date_cut
+   THEN
+     EXECUTE IMMEDIATE 'alter table MO_USAGEDATA drop partition ' || cc.partition_name;
+   END IF;
    END LOOP;
 END;
 /
