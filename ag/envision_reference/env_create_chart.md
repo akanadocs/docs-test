@@ -13,9 +13,8 @@ nav-title: Creating a Chart with Envision
 ## Creating a Chart with Envision
 Learn how to create a chart with Envision and configure datasets, use chart options, and preview charts in Live Mode.
 
-<a href="env_toc.html" class="button secondary">Envision Reference (Main Topic)</a>
-
-<h5 class="stamp">Supported Platforms: 8.0</h5><br>
+<a href="env_toc.html" class="button secondary">Envision Reference (Main Topic)</a>  <a href="../envision_install/installing_envision.htm" class="button secondary">Installing Envision 1.0</a>
+<h5 class="stamp">Supported Platforms: 8.0</h5><h5 class="stamp">Supported Envision Version: 1.0</h5><br>
 
 <div class = "divider1"></div>
 

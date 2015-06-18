@@ -10,9 +10,8 @@ type: page
 nav-title: Envision Reference
 ---
 
-Envision Reference
--------------------
-
+## Envision Reference
+<h5 class="stamp">Supported Platforms: 8.0</h5><h5 class="stamp">Supported Envision Version: 1.0</h5>
 ### [Chapter 1: Envision Basic Concepts](../envision_reference/env_basic_concepts.html)
 Provides a technical overview of the Envision product. 
 <div class = "divider1"></div>
