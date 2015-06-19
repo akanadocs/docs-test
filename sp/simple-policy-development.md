@@ -1,17 +1,16 @@
 ---
 layout: page
-title: Developing in Eclipse
+title: Policy Handler Development
 description: A guide to developing and compiling simple policy in Eclipse
 product: sp
 category: gs
 sub-nav-class: Custom Development
 weight: 10
 type: page
-nav-title: Developing in Eclipse
+nav-title: Policy Handler Development
 ---
 
-Developing in Eclipse
--------------------------------------
+## Policy Handler Development
 
 <h3 style="color: grey;">Table of Contents</h3>
 <ol class="table_of_contents">
