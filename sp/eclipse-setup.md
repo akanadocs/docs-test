@@ -1,13 +1,13 @@
 ---
 layout: page
-title: Eclipse workspace setup
+title: Eclipse Workspace Setup
 description: A guide on how to set up an Eclipse workspace for platform development
 product: gs
 category: ref
 sub-nav-class: 
 weight: 4
 type: page
-nav-title: Eclipse workspace setup
+nav-title: Eclipse Workspace Setup
 ---
 
 Eclipse Workspace Setup
@@ -27,7 +27,6 @@ This document describes how to set up an Eclipse workspace for platform developm
 #### <a name="data"></a>Prerequisites
 
 * This configuration guide assumes that you’ve already installed the platform. If you need help installing the platform, please see the [install guide](http://docs.akana.com/sp/assets/SOA_Software_Platform_Install_Guide_v70.pdf). 
-* If writing policy components for the API Gateway, you will have to create and configure a Policy Manager (PM) and Network Directory (ND) container. This is described in the document [Managing a Simple API](simple_api.html#Installing)
 * Install the **Eclipse IDE for Java EE Developers**. At the time of writing, Luna is the latest version, available at [http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/lunasr2](http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/lunasr2)
 
 ### <a name="java"></a>Configure the default JRE
