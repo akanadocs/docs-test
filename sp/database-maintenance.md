@@ -10,8 +10,7 @@ type: page
 nav-title: Database Maintenance
 ---
 
-Akana Platform Database Maintenance
--------------------------------------
+##Akana Platform Database Maintenance
 
 <h3 style="color: grey;">Table of Contents</h3>
 <ol class="table_of_contents">

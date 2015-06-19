@@ -10,8 +10,7 @@ type: page
 nav-title: Performance Tuning
 ---
 
-Akana Performance Tuning Guide
--------------------------------------
+##Akana Performance Tuning Guide
 
 <h3 style="color: grey;">Table of Contents</h3>
 <ol class="table_of_contents">
