@@ -28,7 +28,10 @@ Provides a list of chart properties used in the Envision Dashboard.
 ### <a id="xxx"></a>xxx
 
 
-xxx
-
+| Column1            | Column2            | Column3 | 
+| -------            | :----- ---------:  | ------: |
+| col 3 is           | right-aligned      | $1600   |
+| col 2 is           | centered           |   $12   |
+| zebra stripes      | are neat           |    $1   |
 
 <a href="#top">back to top</a>

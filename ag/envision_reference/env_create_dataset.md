@@ -67,7 +67,7 @@ Each data set card in a list has a pull-down menu of options that can be perform
 * **Favorite /Unfavorite** - Can be used to toggle whether the data set should be placed in the Favorites list. 
 * **Delete** - Removes the data set from the system. If any charts exist that use the data set an error will be displayed to avoid breaking any dependent charts.
 
-To define the details of a data set such as metrics and dimensions, select the name of the data set on the data set card. The data set details page will be displayed. The page is divided into three sections, *Dimensions*, *Metrics*, and *Settings*. 
+To define the details of a data set such as metrics and dimensions, select the name of the data set on the data set card. The data set details page displays. The page is divided into three sections, *Dimensions*, *Metrics*, and *Settings*. 
 
 <a href="#top">back to top</a>
 
@@ -79,7 +79,9 @@ The *Dimensions* section lists all the dimensions for the data set. Dimensions a
 
 #### <a id="add-new-dimension"></a>Add New Dimension
 
-Each data set is created initially with a single default dimension, *timestamp*. The timestamp dimension will group all metrics collected with a timestamp within the same collection time interval. The dimension can be deleted if you are not interested in time based aggregations but there must be at least one Date dimension for aggregation over time to function properly. 
+* Each data set is created initially with a single default dimension, *timestamp*. 
+* The timestamp dimension will group all metrics collected with a timestamp within the same collection time interval. 
+* The dimension can be deleted if you are not interested in time based aggregations but there must be at least one Date dimension for aggregation over time to function properly. 
 
 To add another dimension select **New Dimension**. A pop-up displays where you can enter a name, a description, a type, a default value (if any), and if the dimension is required or not. 
 
@@ -94,7 +96,7 @@ Dimensions can be one of the following types: Date, String, ID-Name, IP-Address,
 * The ID-Name type is a dual valued property with both an ID and a name. For example, if integrating with Policy Manager a dimension may be an organization. 
 * An organization in Policy Manager has an ID and a descriptive name. 
 * The engine will group metrics using the organization’s ID. But when displaying choices of organizations in the Envision UI the organization names will be displayed to the user since they won’t likely know the IDs. 
-* * The Location type is a property that can reference a city, state, zip code, country, or geolocation (latitude/longitude).
+* The Location type is a property that can reference a city, state, zip code, country, or geolocation (latitude/longitude).
 
 If a Default is specified, any data set row that does not have the dimension will have the dimension added with the default value. The default value must be of the same type as the dimension. If the dimension is classified as required any collector of data MUST include the dimension or the data will not aggregate correctly and charts will likely not work well.
 
@@ -102,7 +104,7 @@ Each dimension in the list has a pull-down menu of options that can be performed
 
 ![Envision](images/env_creating_dataset6.jpg "Dimension Options")
 
-* **Edit** – Displays the pop-up used to create the dimension initiallyso that changes can be made (excluding the name which cannot be changed). 
+* **Edit** – Displays the pop-up used to create the dimension initially so that changes can be made (excluding the name which cannot be changed). 
 * **Delete** - Removes the dimension from the data set. 
 
 <a href="#top">back to top</a>
