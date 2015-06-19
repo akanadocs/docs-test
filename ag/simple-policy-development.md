@@ -3,7 +3,7 @@ layout: page
 title: OSGi Plug-in Projects
 description: A guide to creating and compiling an OSGi plug-in project for a custom policy
 product: ag
-category: ref
+category: learn
 sub-nav-class: Custom Development
 weight: 10
 type: page
