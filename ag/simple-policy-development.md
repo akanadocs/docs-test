@@ -2,16 +2,15 @@
 layout: page
 title: Developing in Eclipse
 description: A guide to developing and compiling simple policy in Eclipse
-product: sp
-category: gs
+product: ag
+category: ref
 sub-nav-class: Custom Development
 weight: 10
 type: page
 nav-title: Developing in Eclipse
 ---
 
-Developing in Eclipse
--------------------------------------
+##Developing in Eclipse
 
 <h3 style="color: grey;">Table of Contents</h3>
 <ol class="table_of_contents">
