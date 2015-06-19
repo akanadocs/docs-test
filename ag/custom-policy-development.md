@@ -42,7 +42,7 @@ All Policy Handlers utilize the Policy Handler Framework provided by Akana. The 
 Given that the Policy Handler Framework is a specialization of the Message Handler Framework, there are many classes reused between the two:
 
 ![Handler UML](images/handler_uml.png "Handler UML")
-How a Handler determines which Policy it will act on, is determined by the associated Policy classes as shown below:
+How a Handler determines which Policy it will act on is determined by the associated Policy classes as shown below:
 
 ![Policy UML](images/policy_uml.png "Policy UML")
 The assertion Marshaller retrieves the policies from Policy Manager then calls the Policy Handler Factory to determine if it should create a Policy handler.
@@ -52,11 +52,11 @@ All Policy Handlers utilize the Policy Handler Framework provided by Akana. The 
 The Policy Handler framework works on the notion of Handler chains. These chains are associated with two criteria:
 1.	The direction of the message2.	The Actor that the Network Director is playing
 
-The following diagram shows how handler chains on processed for the IN message (such as an HTTP request):
+The following diagram shows how handler chains are processed for the IN message (such as an HTTP request):
 
 ![IN Message Processing](images/in_processing.png "IN Message Processing")
 
-The following diagram shows how handler chains on processed for the OUT message (such as an HTTP response):
+The following diagram shows how handler chains are processed for the OUT message (such as an HTTP response):
 
 ![OUT Message Processing](images/out_processing.png "OUT Message Processing")
 Keep this design and chain sequence in mind when creating the design for a Policy Handler.

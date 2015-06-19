@@ -28,7 +28,7 @@ Add a script activity between the receive and the reply, and use the script belo
 * creates a new normalized message
 * normalizes the input request and converts the resulting normalized message to a Javascript object
 * Sets the content of the new normalized message as a string built using an element taken from the Javascript object (in this case we know that the input request contains an element called 'cin')
-* adds a new protocol (binding) header to the new message - this is Optional, and is here simply to show how this works between SOAP and REST binding (it's ignored by the REST binding)
+* adds a new protocol (binding) header to the new message - this is Optional, and is here simply to show how this works between SOAP and REST bindings (it's ignored by the REST binding)
 
 NOTE: there is a known issue in releases prior to 7.2.10 that means that setProtocolHeader() only works on newly created messages.  After 7.2.10 you will be able to use setProtocolHeader() to add new headers to the input message (after normalization).
 
