@@ -5,7 +5,7 @@ description: A guide to developing and compiling simple policy in Eclipse
 product: sp
 category: gs
 sub-nav-class: Custom Development
-weight: 4
+weight: 10
 type: page
 nav-title: Developing in Eclipse
 ---
