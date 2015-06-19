@@ -2,8 +2,8 @@
 layout: page
 title: Developing in Eclipse
 description: A guide to developing and compiling simple policy in Eclipse
-product: gs
-category: ref
+product: sp
+category: gs
 sub-nav-class: 
 weight: 4
 type: page
