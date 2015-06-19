@@ -41,4 +41,7 @@ This document describes how to build a simple policy handler using the Eclipse I
 
 The platform ships with a number of samples that can be found in the '/samples' subdirectory. Included in these is a simple policy handler, which we will import into the plug-in project, compile and build.
 
-1. 
+1. Drag and drop the contents of the '/samples/com.soa.examples.policy.handler.simple' directory into the root of the 'com.soa.examples.policy.handler.simple' plug-in project created in the previous section.
+2. Build the project from top **Project ** menu and verify that there are no compilation errors.
+3. Open the Ant view and drag the build/build.xml file into it. Double-click on the 'simple-policy-handler-example' project to run the build script.
+4. If the build is successful, the resulting JAR file can be found in a '/build/bin/' sub-directory in your Eclipse workspace root directory.
