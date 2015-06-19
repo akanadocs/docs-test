@@ -27,7 +27,7 @@ This document describes how to build a simple policy handler using the Eclipse I
 #### <a name="data"></a>Prerequisites
 
 * This configuration guide assumes that you’ve already installed the platform. If you need help installing the platform, please see the [install guide](http://docs.akana.com/sp/assets/SOA_Software_Platform_Install_Guide_v70.pdf). 
-* If writing policy components for the API Gateway, you will have to create and configure a Policy Manager (PM) and Network Directory (ND) container. This is described in the document [Managing a Simple API](simple_api.html#Installing)
+* If writing policy components for the API Gateway, you will have to create and configure a Policy Manager (PM) and Network Directory (ND) container. This is described in the document [Managing a Simple API](simple-api.html#Installing)
 * Install and configure the Eclipse IDE as described in the document [Eclipse Workspace Setup](eclipse-setup.html)
 
 ### <a name="project"></a>Create your plug-in project
