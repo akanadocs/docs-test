@@ -4,7 +4,7 @@ title: Eclipse Workspace Setup
 description: A guide on how to set up an Eclipse workspace for platform development
 product: sp
 category: gs
-sub-nav-class: 
+sub-nav-class: Custom Development
 weight: 4
 type: page
 nav-title: Eclipse Workspace Setup
