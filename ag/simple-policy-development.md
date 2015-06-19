@@ -1,16 +1,16 @@
 ---
 layout: page
-title: Policy Handler Development
-description: A guide to developing and compiling simple policy in Eclipse
+title: OSGi Plug-in Projects
+description: A guide to creating and compiling an OSGi plug-in project for a custom policy
 product: ag
 category: ref
 sub-nav-class: Custom Development
 weight: 10
 type: page
-nav-title: Policy Handler Development
+nav-title: OSGi Plug-in Projects
 ---
 
-## Policy Handler Development
+## Creating and Compiling an OSGi plug-in project
 
 <h3 style="color: grey;">Table of Contents</h3>
 <ol class="table_of_contents">
@@ -21,7 +21,7 @@ nav-title: Policy Handler Development
 
 ### <a name="introduction"></a>Overview
 
-This document describes how to build a simple policy handler using the Eclipse IDE.
+This document describes how to create and compile an OSGi Plug-in project (such as a custom policy component) using the Eclipse IDE.
 
 #### <a name="data"></a>Prerequisites
 
