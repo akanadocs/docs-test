@@ -15,7 +15,8 @@ Provides a technical overview the Envision 1.0 product and how to create Data Se
 
 <h5 class="stamp">Supported Platforms: 8.0</h5><h5 class="stamp">Supported Envision Version: 1.0</h5>
 
-<div class = "divider1"></div><br>
+<div class = "divider1"></div>
+
 ### [Chapter 1: Envision Basic Concepts](../envision_reference/env_basic_concepts.html)
 Provides a technical overview of the Envision product. 
 <div class = "divider1"></div>
