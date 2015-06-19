@@ -69,7 +69,7 @@ The Policy Handler is developed as an OSGi Plug-in. Please refer to the [OSGi Pl
 
 A typical policy handler plug-in will also have these additional folders:
 
-* build: will contain build.xml Ant script and related file* META-INF/spring: will contain all Spring XML files for the bundle* META-INF/resources: will contain any bundle resource files for the bundle such as:	 * XSD files	 * I18N message bundle
+* build: contains the build.xml Ant script and related files* META-INF/spring: contains all Spring XML files for the bundle* META-INF/resources: contains any resource files for the bundle such as:	 * XSD files	 * I18N message bundle
 
 ####Create the Assertion Model
 
@@ -184,15 +184,114 @@ Policies are configured in the Policy Manager console via one of two different m
 
 The Policy Handler Console Plug-in is developed as an OSGi Plug-in. Please refer to the [OSGi Plug-in Development](osgi-plugin-development.html) document which describes how to set up an Eclipse workspace and create plug-in projects. Ensure that you have followed the directions for 'Compiling the complex policy handler example'.
 
+A typical policy handler console plug-in will also have these additional folders:
+
+* build: contains the build.xml Ant script and related files* META-INF/spring: contains all Spring XML files for the bundle* META-INF/resources/faces: contains default Faces config that seldom needs altering
+* META-INF/images: contains the images required by the plug-in
+* OSGI-INF/l10n: Localization message bundle
+* WebContent/xxxpolicy; contains the JSP files
+* WebContent/WEB-INF: contains the tag libraries and web.xml file
+	 ####Spring Wiring
+
+Two Spring beans need to be published by the policy handler by editing the /META-INF/sping/*.xml files:
+
+* Policy Renderer
+* Faces Config
+1.	Define the Spring bean for the Policy Renderer and publish the OSGi service:
+	```	<bean id="complex.policy.renderer" class="com.soa.examples.console.policy.complex.ComplexPolicyRenderer" />   
+	    	         
+	<osgi:service ref="complex.policy.renderer" interface="com.soa.console.policy.renderer.OperationalPolicyRenderer"/>
+	    	```
+2. Define the Spring bean for the Faces configuration and publish the OSGi service. This rarely needs any customization but is required for the policy to work correctly:
+
+	```
+	<osgi:service interface="com.soa.console.faces.config.FacesConfig">
+		<osgi:service-properties>
+			<entry key="name" value="com.soa.examples.complex.policy.faces.config"/>
+		</osgi:service-properties>	
+		<bean class="com.soa.console.faces.myfaces.MyFacesConfigFactory">
+			<property name="location" value="classpath:faces/faces-config.xml"/>
+		</bean>
+	</osgi:service>
+	```
+		
+####Package Descriptions
+There are several packages that typically make up the solution for the Policy Handler:
+1. xxx.xxx.akana.console.policy.xxxx
+2. xxx.xxx.akana.console.policy.xxxx.bean
+#####xxx.xxx.akana.console.policy.xxxxThis package contains the renderer for the Policy Handler.* **xxxxPolicyRenderer** - Extends the `com.soa.console.policy.renderer.impl.OperationalPolicyRendererBase` abstract class.
+
+#####xxx.xxx.akana.console.policy.xxxx.beanThis package contains the form bean for Policy which include the getters and setters for the form fields and the logic for converting between the form and the policy assertion.
+
+* **xxxxPolicyBean** - Extends the `com.digev.ms.console.struts.forms.MSActionForm` abstract class.
+
+####Localization####All localization is supported by message bundles in the OSGI-INF/l10n directory.  Al labels in the entire product need to be specified with a unique name so its wise to prefix all labels with the java package name. 
+
+The policy.xxxx.name is a special property and should always match the id from the PolicyRenderer - with a '.name' suffix:
+
+```
+policy.complexexample.name=Complex Example Policy
+com.soa.examples.console.policy.complex.options.label=Options
+com.soa.examples.console.policy.complex.headername.label=Header Name
+com.soa.examples.console.policy.complex.optional.label=Optional
+
+```
+
+To localize text in the JSP pages, simply use the <workbench:message> tag:
+
+```
+<workbench:message key="com.soa.examples.console.policy.complex.headername.label"/>
+```
+####Web Content####
+
+The WebContent/xxxpolicy directory contains the files required to render the user interface. The entry point is defined in the `PolicyRender.getContentLocation(String policyKey)` method. e.g:
+
+```
+public class ComplexPolicyRenderer extends OperationalPolicyRendererBase {
+
+	public String getId() {
+		return "policy.complexexample";
+	}
+
+	public String getContentLocation(String policyKey) throws GException{
+		return "/complexpolicy/complex_policy_details.jsp?policyKey="+policyKey;
+	}
+
+	public String getContentLocation(HttpServletRequest request)
+			throws GException {
+		return getContentLocation(getPolicyKey(request));
+	}
+}
+```
+
+In this case, the complex\_policy\_details.jsp JSP page is passed the PolicyBean and renders the policy details. It also contains a link to the page used to modify the policy. In this example:
+
+```
+
+	<td><b><workbench:message key="com.soa.examples.console.policy.complex.options.label"/></b>
+	  			&nbsp;&nbsp;|&nbsp;&nbsp;<a  href="javascript:(new createWindow('<%=request.getContextPath()%>/complexpolicy/modify_complex_policy_details.faces?policyKey=<%=policyKey%>', 'ActionWizardWindow', 10, 10, 550, 200, 'no', 'yes', 'no', 'no', 'no').openWindow());"><workbench:message key="com.soa.examples.console.policy.complex.modify.label"/></a>
+	</td>
+	  	
+``` 
+
+When the 'Save' button is clicked, the PolicyBean is called to process the form and save the assertion:
+
+```
+	<h:commandButton  id="finish" style="display:none;" action="#{ComplexPolicyBean.modifyAction}"/>
+	<f:verbatim><feat:Button label="save" onclick="submitFinish()"/></f:verbatim>
+```
+
 ###<a href="#deploy"></a>Building and Deploying the Policy Handler Plug-ins
 
 ####Build the Policy Handler
-1.	Ensure the Java packages containing the HandlerFactory implementation (and any other classes referenced in the Spring wiring) are included in the Export-Package list in MANIFEST.MF2.	Ensure all Java packages imported from outside the new Handler bundle are included in the Import-Package list in MANIFEST.MF	*	Imported com.akana and com.digev packages should specify version="x.0.0" where x is the major version number of the API Gateway you have installed.3.	Build the bundle JAR from the project	*	Run build.xml Ant script in /build folder	*	Be sure project’s MANIFEST.MF is included in the JAR####Set up Felix console
+1.	Ensure the Java packages containing the HandlerFactory implementation (and any other classes referenced in the Spring wiring) are included in the Export-Package list in MANIFEST.MF2.	Ensure all Java packages imported from outside the new Handler bundle are included in the Import-Package list in MANIFEST.MF	*	Imported com.akana and com.digev packages should specify version="x.0.0" where x is the major version number of the API Gateway you have installed.3.	Build the plug-ins as described in the [OSGi Plug-in Development](osgi-plugin-development.html) document.####Set up Felix console
 This is not necessary for anytime but the first time you deploy the Policy Handler. Its function is to simply to make sure that you know what is happening. Once you are comfortable with loading the Policy Handler you can disable this console.
 To start the TUI (Textual User Interface) console simply copy the lib/ext/org.apache.felix.shell.tui-x.x.x.jar file into the instances/[container name]/deploy directory. Immediately the “->” prompt should appear in your SSH session. 
 ####Deploy the Policy Handler Bundles
 The simplest way to deploy the policy handler is to copy the jar files into the  'instances/[CONTAINER NAME]/deploy' directory.
- To check that the new bundle is active, simply type “ps” (without the quotes) into the TUI (see previous section) and look for the new bundle at the end of the list. You can also see the installed bundles from the **Installed Features** tab in the Admin console. Select 'Bundle' from the **Filter** drop-down list.  
+
+The Policy Manager requires both the 'policy handler' and 'policy handler console' bundles, whereas the Network Director only requires the 'policy handler' bundle.
+ To check that the new bundles are active, simply type “ps” (without the quotes) into the TUI (see previous section) and look for the new bundles at the end of the list. You can also see the installed bundles from the **Installed Features** tab in the Admin console. Select 'Bundle' from the **Filter** drop-down list.  
 ###<a href="#testing"></a>Testing the Policy Handler
 The best way to test the Policy Handler is to use the remote debug features of Eclipse and the Felix Container.
 1.	Restart the container specifying the –debug option: (from  [SOA_HOME]/sm60/bin):
@@ -201,5 +300,5 @@ The Policy Handler Console Plug-in is developed as an OSGi Plug-in. Please refer
 	./startup.sh <ND name> –debug 7777
 	```
 		* note: 7777 does not have to be used. It can be any port value not already used.2.	Set up a remote debug session in Eclipse and connect to the process.####Define and attach the Policy in Policy Manager
-Once deployment complete the policy handler will be loaded and invoked once a service with the correct policy attached is detected by the Network Director.For this to happen, you must attach the policy to a service in Policy Manager. However, before this can happen, you must define the Policy in Policy Manager and attach it to a Service.
-1.	Log on to the Policy Manager console with administrator account2.	In the Organization Tree, click on <your organization>->Policies->Operational Policies3.	Click the “Add Policy” button on the bottom right of the screen.4.	The add policy dialog will be displayed. Click the “import Policy” radio button, then the “Browse” Button and browse to where the xxxx-policy.xml file is located on your file system. This is in the XML body of you WS-Policy and should be placed in the the META-INF/resources/policy directory of the project. This file is the WS-Policy definition of the Policy, and includes the directives for your policy. Click next.5.	Add the name in the “Policy Name” field and click the finished button.6.	The policy will now appear in the list of Operational Policies and is ready to be attached to a service when needed. 
+Once deployment is completed the policy handler will be loaded and invoked once a service with the correct policy attached is detected by the Network Director.For this to happen, you must attach the policy to a service in Policy Manager. However, before this can happen, you must define the Policy in Policy Manager and attach it to a Service.
+1.	Log on to the Policy Manager console with administrator account2.	In the Organization Tree, click on <your organization>->Policies->Operational Policies3.	Click the “Add Policy” button on the bottom right of the screen.4.	The add policy dialog will be displayed. Select your policy from the list. Click next.5.	Add the name in the “Policy Name” field and click the finished button.6.	The policy will now appear in the list of Operational Policies and is ready to be attached to a service when needed. 
