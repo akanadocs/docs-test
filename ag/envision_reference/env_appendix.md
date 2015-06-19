@@ -21,14 +21,24 @@ Provides a list of chart properties used in the Envision Dashboard.
 
 <h3 name="top" style="color: grey;">Table of Contents</h3>
 
-1. [xxx](#xxx)
+1. [Line Chart](#line-chart)
+2. [Pie Chart](#pie-chart)
+3. [Column Chart](#column-chart)
+4. [Bar Chart](#bar-chart)
+5. [Area Chart](#area-chart)
+6. [Indicator Chart](#indicator-chart)
 
 
 <div class = "divider1"></div>
-### <a id="xxx"></a>xxx
+### <a id="xxx"></a>
 
 
-xxx
+
+| One | Two | Three |
+|:--------------------|:--------------------:|---------:|
+| col 3 is           | right-aligned      | $1600   |
+| col 2 is           | centered           |   $12   |
+| zebra stripes      | are neat           |    $1   |
 
 
 <a href="#top">back to top</a>
