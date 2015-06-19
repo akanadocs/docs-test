@@ -177,6 +177,13 @@ Several Spring beans need to be published by the policy handler by editing the /
 In the com.soa.examples.policy.handler.complex policy plug-in, the build/build.xml file contains an 'assertions' target that is responsible for the generation of the model objects.
 ###<a href="#console"></a>Developing the Policy Handler Console Plug-in
 
+Policies are configured in the Policy Manager console via one of two different mechanisms:
+
+1. **XML Policy** - the XML Policy is used when no Console Plug-in can be found for a policy. Users can simply type the XML assertion into a dialog box with the appropriate XML structure (namespace, localname, etc) and it will be passed into the Policy Handler as an assertion. This is the approached leveraged by the 'com.soa.examples.policy.handler.simple' example.
+2. **Custom Console Plugin** - a nicer way to interface with users is via a specific UI designed to render the policy. This is the approach used by the 'com.soa.examples.policy.handler.complex' example.
+
+The Policy Handler Console Plug-in is developed as an OSGi Plug-in. Please refer to the [OSGi Plug-in Development](osgi-plugin-development.html) document which describes how to set up an Eclipse workspace and create plug-in projects. Ensure that you have followed the directions for 'Compiling the complex policy handler example'.
+
 ###<a href="#deploy"></a>Building and Deploying the Policy Handler Plug-ins
 
 ####Build the Policy Handler
