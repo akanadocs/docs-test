@@ -18,10 +18,6 @@ Eclipse Workspace Setup
 	<li><a href="#introduction">Overview</a></li>
 	<li><a href="#java">Configure the default JRE</a></li>
 	<li><a href="#osgi">Configure the OSGi Target Platform</a></li>
-	<li><a href="#using-cron">Leveraging cron to delete data</a></li>
-	<li><a href="#partitioning">Partitioning large data stores</a></li>
-	<li><a href="#partitioning-verylarge">Partitioning large data stores under load (MySQL Only)</a></li>
-	<li><a href="#drop-partitions">Dropping partitions</a></li>
 </ol>
 
 ### <a name="introduction"></a>Overview
