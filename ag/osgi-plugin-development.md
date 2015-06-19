@@ -5,7 +5,7 @@ description: A guide to creating and compiling an OSGi plug-in project for a cus
 product: ag
 category: learn
 sub-nav-class: Custom Development
-weight: 10
+weight: 5
 type: page
 nav-title: OSGi Plug-in Projects
 ---
