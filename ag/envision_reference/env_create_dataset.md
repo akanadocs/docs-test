@@ -6,7 +6,7 @@ product: ag
 category: ref
 sub-nav-class: Envision Reference
 weight: 5
-type: page
+type: pagedura
 nav-title: Creating a Data Set with Envision
 ---
 
