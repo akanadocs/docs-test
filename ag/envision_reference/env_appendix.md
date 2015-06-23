@@ -35,20 +35,49 @@ Provides a list of chart properties used in the Envision Dashboard.
 <div class = "divider1"></div>
 ### <a id="main-chart-category"></a>Main Chart Category
 The properties of an Envision chart are divided into three broad categories:
+
 * **Visualization** - Gather information on the visual aspect of the chart.
 * **Basic Info** - Specify name and description (required), sharing, favorite information. 
-* **Data Series** - 
+* **Data Series**  
 	* *Datasets* - Select Dataset and configure data grouping, filters, and aggregation (X-AXIS)
 	* *Chart Type* - Select a chart type, filters and data mapping (X-AXIS) to configure how and where the data will be displayed on the chart. Options in this category will vary based on the requirements of the selected chart type.
 
 #### <a id="common-characteristics"></a>Common Characteristics
 When you create a chart using the **New Chart** function, each chart includes the following common information. 
 
-| Chart Option | Description | Chart Type |
-|:---------------- ----|:--------------------:|---------:|
-| text           | text     | text    |
-| text            | text            |   text    |
-| text       | text            |    text   |
+
+##### New Chart
+
+
+| Chart Option    | Description | 
+|:--------------------|:-------------------------------------------------|
+| Name           | Enter a chart name. This field is required.      |
+| Description           | Enter a chart description. This field is required.           |
+| Sharing      | Select whether chart visibility will be public or private.           |
+| Marked as Favorite       | Select if you want your chart added to the *Favorites* menu.           |
+
+
+
+##### Dataset Details
+
+###### Datasets
+
+| Chart Option     | Description | 
+|:----------------   ----|:-------------------------------------------------|
+| Select Dataset           | Select a dataset the application will use to collect data.      |
+| Duration           | Select the data rollup interval.           |
+| Data Grouping      | Select one more categories of data to collect.           |
+
+
+###### Filters
+
+| Chart Option     | Description          | 
+|:----------------------------|:------------------------------------------|
+| Select Filter           | Select one or more objects that data will be collected for.   |
+| Operator             | Select a boolean operator to filter data with and specify a value in the text box. <br> <br> Options include (CONTAINS, ENDSWITH, EQUALS, NOT EQUALS, IN, NOT_IN, and STARTSWITH). |
+| Alias      | Specify an alias name to assign to the dataset filter.  |
+| +      | Add an additional filter.   |
+
 
 ### <a id="chart-types"></a>Chart Types
 
