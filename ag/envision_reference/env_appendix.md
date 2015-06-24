@@ -52,27 +52,23 @@ When you create a chart using the **New Chart** function, each chart includes th
 
 ##### <a id="new-chart"></a>New Chart
 
-
 | Chart Option    | Description | 
 |:--------------------|:-------------------------------------------------|
 | Name           | Enter a chart name. This field is required.      |
 | Description           | Enter a chart description. This field is required.           |
 | Sharing      | Select whether chart visibility will be public or private.           |
 | Marked as Favorite       | Select if you want your chart added to the *Favorites* menu.           |
-
-
-
+<br>
 ##### <a id="dataset-details"></a>Dataset Details
 
 ###### Datasets
 
-| Chart Option     | Description | 
-|:----------------   ----|:-------------------------------------------------|
+| Chart Option    | Description | 
+|:--------------------|:-------------------------------------------------|
 | Select Dataset           | Select a dataset the application will use to collect data.      |
 | Duration           | Select the data rollup interval.           |
 | Data Grouping      | Select one or more categories of data to collect.           |
-
-
+<br>
 ###### Filters
 
 | Chart Option     | Description          | 
@@ -81,7 +77,7 @@ When you create a chart using the **New Chart** function, each chart includes th
 | Operator             | Select a boolean operator to filter data with and specify a value in the text box. <br> <br> Options include (CONTAINS, ENDSWITH, EQUALS, NOT EQUALS, IN, NOT_IN, and STARTSWITH). |
 | Alias      | Specify an alias name to assign to the dataset filter.  |
 | +      | Add an additional filter.   |
-
+<br>
 ###### Charts
 
 The Charts section includes the same set of options for each Chart Type selected. 
@@ -97,18 +93,18 @@ The Charts section includes the same set of options for each Chart Type selected
 | Size      | Specify the height and width of the chart.    |
 | Show Legend      | Enable / Disable legend data for chart (True/False).   |
 | Threshold      | Specify and color for chart threshold line.   |
-
+<br>
 
 #### <a id="XAXIS"></a>X-AXIS
 
-The X-AXIS section section defines the X-AXIS of the chart, what data will be used for tick marks, the title of the axis and the format of the tick mark labels.
+The X-AXIS section defines the X-AXIS of the chart, what data will be used for tick marks, the title of the axis and the format of the tick mark labels.
 
 | Chart Option     | Description          | 
 |:----------------------------|:------------------------------------------|
 | Value           | This option is used to select the data to use for the X-AXIS tick marks. These values represent dimensions and metrics of the selected dataset.     |
 | Title             | This option is used to specify an X-AXIS title. The format of the tick marks is handled differently depending on the type of the dimension used.  |
 | Format      | Select a date format. If you are not a date dimension an optional prefix and suffix can be added to each tick mark label. 
-
+<br>
 #### <a id="series"></a>Series
 
 The SERIES section defines data series of the chart.
@@ -120,14 +116,16 @@ The SERIES section defines data series of the chart.
 | Operator             | Select a boolean operator to filter data with and specify a value in the text box. <br> <br> Options include (CONTAINS, ENDSWITH, EQUALS, NOT EQUALS, IN, NOT_IN, and STARTSWITH). |
 | Alias      | Specify an alias name to assign to the series filter.  |
 | +      | Add an additional filter.   |
-
+<br>
 ###### Y-AXIS
 | Chart Option     | Description          | 
 |:----------------------------|:------------------------------------------|
 | Value           | Select the metric you want plotted along the y axis. The Value pulldown lists all metrics from the data set.    |
-| Aggregation           | Select the aggregration method (sum, average, etc.). |
+| Aggregation           | Select the aggregation method (sum, average, etc.). |
 | Label             | Select option for how each series will be labeled. In a line chart this would be the label for each line. For a bar chart it would be the label for each bar. Since there may be multiple series the label will be derived from the dimensions used in the Group By field of the DATASET section which identifies how the data points are organized. 
 | Title      | Enter the y axis title in the Title text box. This field is optional.  |
+
+<a href="#top">back to top</a>
 
 ### <a id="chart-types"></a>Chart Types
 
@@ -139,6 +137,16 @@ Line charts are used to illustrate trends over time. This is done most often to 
 * Stacked
 * Percentage Stacked
 
+##### Example: Line Chart - Monthly Response Time
+
+Demonstrate simple line chart configuration with global filter and grouping 
+
+![Envision](images/env_appendix_linechart1.jpg "Line Chart - Monthly Response Time")
+<br>
+###### Configuration
+
+<a href="#top">back to top</a>
+
 #### <a id="area-chart"></a>Area Chart
 
 Area charts are useful for emphasizing the magnitude of change over time. Stacked area charts are also used to show the relationship of parts to a whole.
@@ -146,6 +154,24 @@ Area charts are useful for emphasizing the magnitude of change over time. Stacke
 * Standard 
 * Stacked
 * Percentage Stacked
+
+##### Example: Area Chart - Data Exchange per Container
+
+Demonstrate simple area chart configuration with global filter, grouping and context filter. 
+
+![Envision](images/env_appendix_areachart1.jpg "Area Chart - Data Exchange per Container")
+<br>
+###### Configuration
+
+##### Example: Area Chart - Reginal Throughput Since Start
+
+Demonstrate stacked area chart configuration with no filter, custom dimension grouping. 
+
+![Envision](images/env_appendix_areachart3.jpg "Area Chart - Reginal Throughput Since Start")
+<br>
+###### Configuration
+
+<a href="#top">back to top</a>
 
 #### <a id="pie-chart"></a>Pie Chart
 
@@ -157,12 +183,48 @@ Pie charts are best used to illustrate a sample break down in a single dimension
 * Donut
 * Semi Donut
 
+##### Example
+
+Measures how much traffic is coming from a specific application, like Chrome, Safari, Firefox, IE, and other platform. 
+
+![Envision](images/env_appendix_piechart1.jpg "Pie Chart - Traffic by Browser Agent")
+<br>
+###### Configuration
+
+##### Example: Pie Chart - Error Summary - Semi Donut
+
+The sum of errors generated by each developer app consuming the selected API. 
+
+![Envision](images/env_appendix_piechart2.jpg "Pie Chart - Error Summary - Semi Donut")
+<br>
+###### Configuration
+
+##### Example: Pie Chart - Sales Process (Funnel/Pyramid
+
+Demonstrate simple funnel chart configuration. With some visual customization.  
+
+![Envision](images/env_appendix_piechart3.jpg "Pie Chart - Sales Process (Funnel/Pyramid")
+<br>
+###### Configuration
+
+<a href="#top">back to top</a>
+
 #### <a id="column-bar-chart"></a>Column Chart
 Column charts are useful for comparing discrete data or showing trends over time. Column charts use vertical data markers to compare individual values. Can be plotted as standard, stacked and percentage stacked.
 #####Sub Type
 * Standard 
 * Stacked 
 * Stacked Percentage
+
+
+##### Example: Column Chart - Monthly Throughput per Service
+
+
+![Envision](images/env_appendix_columnchart1.jpg "Column Chart - Monthly Throughput per Service")
+
+###### Configuration 
+
+<a href="#top">back to top</a>
 
 #### <a id="bar-chart"></a>Bar Chart
 Bar charts are useful for showing trends over time and plotting many data series. Bar charts use horizontal data markers to compare individual values. Can be plotted as standard, stacked and percentage stacked.
@@ -171,6 +233,18 @@ Bar charts are useful for showing trends over time and plotting many data series
 * Stacked 
 * Stacked Percentage
 
+##### Example: Bar Chart - API Traffic by App
+
+The sum of errors generated by each developer app consuming the selected API. 
+
+![Envision](images/env_appendix_barchart1.jpg "Bar Chart - API Traffic by App")
+
+###### Configuration 
+
+
+<br>
+
+<a href="#top">back to top</a>
 
 #### <a id="indicator-chart"></a>Indicator Chart
 The range is a Cartesian series type with higher and lower Y values along an X axis. These charts are useful for showing a target range and a tolerance range.
@@ -179,5 +253,13 @@ The range is a Cartesian series type with higher and lower Y values along an X a
 * Candle Stick
 * Bar Range
 * Column Range
+
+##### Example: Bar Chart - API Traffic by App
+
+The sum of errors generated by each developer app consuming the selected API. 
+
+![Envision](images/env_appendix_rangechart1.jpg "Indicator Chart - Response Time Range")
+
+###### Configuration 
 
 <a href="#top">back to top</a>
