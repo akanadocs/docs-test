@@ -23,6 +23,10 @@ Provides a list of chart properties used in the Envision Dashboard.
 
 1. [Main Chart Category](#main-chart-category)
 2. [Common Characteristics](#common-characteristics)
+	- [New Chart](#new-chart)
+	- [Dataset Details](#dataset-details)
+	- [X-AXIS](#xaxis)
+	- [Series Chart](#series-chart)
 3. [Chart Types](#chart-types)
 	- [Line Chart](#line-chart)
 	- [Area Chart](#area-chart)
@@ -46,7 +50,7 @@ The properties of an Envision chart are divided into three broad categories:
 When you create a chart using the **New Chart** function, each chart includes the following common information. 
 
 
-##### New Chart
+##### <a id="new-chart"></a>New Chart
 
 
 | Chart Option    | Description | 
@@ -58,7 +62,7 @@ When you create a chart using the **New Chart** function, each chart includes th
 
 
 
-##### Dataset Details
+##### <a id="dataset-details"></a>Dataset Details
 
 ###### Datasets
 
@@ -66,7 +70,7 @@ When you create a chart using the **New Chart** function, each chart includes th
 |:----------------   ----|:-------------------------------------------------|
 | Select Dataset           | Select a dataset the application will use to collect data.      |
 | Duration           | Select the data rollup interval.           |
-| Data Grouping      | Select one more categories of data to collect.           |
+| Data Grouping      | Select one or more categories of data to collect.           |
 
 
 ###### Filters
@@ -78,6 +82,52 @@ When you create a chart using the **New Chart** function, each chart includes th
 | Alias      | Specify an alias name to assign to the dataset filter.  |
 | +      | Add an additional filter.   |
 
+###### Charts
+
+The Charts section includes the same set of options for each Chart Type selected. 
+
+*Refer to Chart Types section for additional detail and examples.*
+
+| Chart Option     | Description          | 
+|:----------------------------|:------------------------------------------|
+| Select Chart Type           | Select the chart type you would like to render.    |
+| Select Chart Layout             | Select a chart layout. Options will vary based on the selected chart type. |
+| X Position      | Specify the x-coordinate of the upper left-corner of the Chart.  |
+| Y Position      | Specify the y-coordinate of the upper left-corner of the Chart.   |
+| Size      | Specify the height and width of the chart.    |
+| Show Legend      | Enable / Disable legend data for chart (True/False).   |
+| Threshold      | Specify and color for chart threshold line.   |
+
+
+#### <a id="XAXIS"></a>X-AXIS
+
+The X-AXIS section section defines the X-AXIS of the chart, what data will be used for tick marks, the title of the axis and the format of the tick mark labels.
+
+| Chart Option     | Description          | 
+|:----------------------------|:------------------------------------------|
+| Value           | This option is used to select the data to use for the X-AXIS tick marks. These values represent dimensions and metrics of the selected dataset.     |
+| Title             | This option is used to specify an X-AXIS title. The format of the tick marks is handled differently depending on the type of the dimension used.  |
+| Format      | Select a date format. If you are not a date dimension an optional prefix and suffix can be added to each tick mark label. 
+
+#### <a id="series"></a>Series
+
+The SERIES section defines data series of the chart.
+
+###### Filter
+| Chart Option     | Description          | 
+|:----------------------------|:------------------------------------------|
+| Select Filter           | Select a filter for the current data series.   |
+| Operator             | Select a boolean operator to filter data with and specify a value in the text box. <br> <br> Options include (CONTAINS, ENDSWITH, EQUALS, NOT EQUALS, IN, NOT_IN, and STARTSWITH). |
+| Alias      | Specify an alias name to assign to the series filter.  |
+| +      | Add an additional filter.   |
+
+###### Y-AXIS
+| Chart Option     | Description          | 
+|:----------------------------|:------------------------------------------|
+| Value           | Select the metric you want plotted along the y axis. The Value pulldown lists all metrics from the data set.    |
+| Aggregation           | Select the aggregration method (sum, average, etc.). |
+| Label             | Select option for how each series will be labeled. In a line chart this would be the label for each line. For a bar chart it would be the label for each bar. Since there may be multiple series the label will be derived from the dimensions used in the Group By field of the DATASET section which identifies how the data points are organized. 
+| Title      | Enter the y axis title in the Title text box. This field is optional.  |
 
 ### <a id="chart-types"></a>Chart Types
 
