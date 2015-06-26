@@ -12,9 +12,9 @@ no-catalog: true
 ---
 
 ## How to Manage API Visibility with Licenses
-This article describes how to create a really simple environment that uses licenses to control visibility and access to the operations of an API.  This is typically used in conjunction with [content visibility controls](/cm/howto/howto_control_content_visibility.html) and [documentation file visibility controls](/cm/howto/howto_control_doc_file_visibility.html) to provide a comprehensive solution.  
+This article describes how to create a really simple environment that uses licenses to control visibility and access to the operations of an API.  This is typically used in conjunction with [content visibility controls](howto_control_content_visibility.html) and [documentation file visibility controls](howto_control_doc_file_visibility.html) to provide a comprehensive solution.  
 
-This article provides a simple set of instructions to get you started, for a comprehensive guide to the documentation visibility controls [click here](/cm/learnmore/api_admin_documentation_tagging.htm).
+This article provides a simple set of instructions to get you started, for a comprehensive guide to the documentation visibility controls [click here](../learnmore/api_admin_documentation_tagging.htm).
 
 The licenses feature is extremely powerful, and as suck can be a little hard to understand at time.  In this example we are going to create a "public" API, and then use license restrictions to make some operations within the API "private", granting access to these operations to members of an admin group.  
 
@@ -65,7 +65,7 @@ To expose these operations to selected users you will define a group, assign the
 Now you can click on the group name and invite users to be members of your admin group.  Remember that the invited users will need to accept their invitations before they will be group members.  As soon as they are members they will be able to see the full list of operations in the Test Client and Swagger documentation.
 
 ### Next Steps - documentation visibility
-Now you have set up the basic license features for API visibility you can move on to controlling [content visibility](/cm/howto/howto_control_content_visibility.html) and [documentation file visibility](/cm/howto/howto_control_doc_file_visibility.html).
+Now you have set up the basic license features for API visibility you can move on to controlling [content visibility](howto_control_content_visibility.html) and [documentation file visibility](howto_control_doc_file_visibility.html).
 
 
 
