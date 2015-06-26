@@ -29,20 +29,20 @@ Provides a list of chart properties used in the Envision Dashboard.
 	- [Series Chart](#series-chart)
 4. [Data Mapping for Charts](#data-mapping-for-charts)
 5. [Line Chart](#line-chart)
-	- [Example: Line Chart - Monthly Response Time](#line-chart-monthly-response-time)
+	- [Example - Monthly Response Time](#line-chart-monthly-response-time)
 6. [Area Chart](#area-chart)
-	- [Example: Area Chart - Data Exchange per Container](#area-chart-data-exchange-per-container)
-	- [Example: Area Chart - Regional Throughput since Start](#area-chart-regional-throughput-since-start)
+	- [Example - Data Exchange per Container](#area-chart-data-exchange-per-container)
+	- [Example - Regional Throughput since Start](#area-chart-regional-throughput-since-start)
 7. [Pie Chart](#pie-chart)
-	- [Example: Pie Chart - Traffic by Browser Agent](#pie-chart-traffic-by-browser-agent)
-	- [Example: Pie Chart - Error Summary - Semi Donut](#pie-chart-error-summary-semi-donut)
-	- [Example: Pie Chart - Sales Process (Funnnel/Pyramid)](#pie-chart-sales-process-funnel-pyramid)
+	- [Example - Traffic by Browser Agent](#pie-chart-traffic-by-browser-agent)
+	- [Example - Error Summary - Semi Donut](#pie-chart-error-summary-semi-donut)
+	- [Example - Sales Process (Funnnel/Pyramid)](#pie-chart-sales-process-funnel-pyramid)
 8. [Column Chart](#column-chart)
-	- [Example: Column Chart - Monthly Throughput per Service](#pie-chart-monthly-throughput-per-service)
+	- [Example - Monthly Throughput per Service](#pie-chart-monthly-throughput-per-service)
 9. [Bar Chart](#bar-chart)
-	- [Example: Bar Chart - API Traffic by App](#bar-chart-api-traffic-by-app)
+	- [Example - API Traffic by App](#bar-chart-api-traffic-by-app)
 10. [Indicator Chart](#indicator-chart)
-	- [Example: Indicator Chart - Response Time Range](#indicator-chart-response-time-range)
+	- [Example - Response Time Range](#indicator-chart-response-time-range)
 
 <div class = "divider1"></div>
 ### <a id="main-chart-category"></a>Main Chart Category
@@ -103,7 +103,7 @@ The Charts section includes the same set of options for each Chart Type selected
 | Threshold      | Specify and color for chart threshold line.   |
 <br>
 
-#### <a id="XAXIS"></a>X-AXIS
+#### <a id="xaxis"></a>X-AXIS
 
 The X-AXIS section defines the X-AXIS of the chart, what data will be used for tick marks, the title of the axis and the format of the tick mark labels.
 
@@ -113,7 +113,7 @@ The X-AXIS section defines the X-AXIS of the chart, what data will be used for t
 | Title             | This option is used to specify an X-AXIS title. The format of the tick marks is handled differently depending on the type of the dimension used.  |
 | Format      | Select a date format. If you are not a date dimension an optional prefix and suffix can be added to each tick mark label. 
 <br>
-#### <a id="series"></a>Series
+#### <a id="series-chart"></a>Series Chart
 
 The SERIES section defines data series of the chart.
 
@@ -135,11 +135,9 @@ The SERIES section defines data series of the chart.
 
 <a href="#top">back to top</a>
 
-### <a id="chart-types-examples"></a>Chart Types and Examples
-
 #### <a id="data-mapping-for-charts"></a>Data Mapping for Charts
 
-#####Mapping for Line / Area / Bar / Column / Scatter Charts
+##### Mapping for Line / Area / Bar / Column / Scatter Charts
 
 ![Envision](images/datamap_line_area_bar_column_scatter.jpg "Data mapping for Line, Area, Bar, Column, and Scatter Charts")
 
@@ -160,7 +158,7 @@ Line charts are used to illustrate trends over time. This is done most often to 
 * Stacked
 * Percentage Stacked
 
-##### <a id="line-chart-monthly-response-time">Example - Monthly Response Time
+##### <a id="line-chart-monthly-response-time"></a>Example - Monthly Response Time
 
 Demonstrate simple line chart configuration with global filter and grouping 
 
@@ -182,17 +180,17 @@ Area charts are useful for emphasizing the magnitude of change over time. Stacke
 * Stacked
 * Percentage Stacked
 
-##### <a id="area-chart-data-exchange-per-container>Example - Data Exchange per Container
+##### <a id="area-chart-data-exchange-per-container></a>Example - Data Exchange per Container
 
 Demonstrate simple area chart configuration with global filter, grouping and context filter. 
 
 ![Envision](images/env_appendix_areachart1.jpg "Area Chart - Data Exchange per Container")
-<br>
+
 ###### Configuration
 
 ![Envision](images/env_appendix_areachart1_config.jpg "Area Chart - Data Exchange per Container")
-<br>
-##### <a id="area-chart-regional-throughput-since-start>Example - Regional Throughput Since Start
+
+##### <a id="area-chart-regional-throughput-since-start></a>Example - Regional Throughput Since Start
 
 Demonstrate stacked area chart configuration with no filter, custom dimension grouping. 
 
@@ -205,7 +203,6 @@ Demonstrate stacked area chart configuration with no filter, custom dimension gr
 <a href="#top">back to top</a>
 
 #### <a id="pie-chart"></a>Pie Chart
-
 Pie charts are best used to illustrate a sample break down in a single dimension. In other words, it is best to use pie charts when you want to show differences within groups based on one variable.  
 #####Sub Type
 * Pie
@@ -214,17 +211,16 @@ Pie charts are best used to illustrate a sample break down in a single dimension
 * Donut
 * Semi Donut
 
-##### <a id="pie-chart-traffic-by-browser-agent">Example - Traffic By Browser Agent
+##### <a id="pie-chart-traffic-by-browser-agent"></a>Example - Traffic By Browser Agent
 
 Measures how much traffic is coming from a specific application, like Chrome, Safari, Firefox, IE, and other platform. 
 
-![Envision](images/env_appendix_piechart1.jpg "Pie Chart - Traffic by Browser Agent")
 <br>
 ###### Configuration
 
 ![Envision](images/env_appendix_piechart1_config.jpg "Pie Chart - Traffic by Browser Agent")
 <br>
-##### <a id="pie-chart-error-summary-semi-donut">Example - Error Summary - Semi Donut
+##### <a id="pie-chart-error-summary-semi-donut"></a>Example - Error Summary - Semi Donut
 
 The sum of errors generated by each developer app consuming the selected API. 
 
@@ -234,7 +230,7 @@ The sum of errors generated by each developer app consuming the selected API.
 
 ![Envision](images/env_appendix_piechart2_config.jpg "Pie Chart - Error Summary - Semi Donut")
 <br>
-##### <a id="pie-chart-sales-process-funnel-pyramid">Example - Sales Process (Funnel/Pyramid)
+##### <a id="pie-chart-sales-process-funnel-pyramid"></a>Example - Sales Process (Funnel/Pyramid)
 
 Demonstrate simple funnel chart configuration. With some visual customization.  
 
@@ -254,7 +250,7 @@ Column charts are useful for comparing discrete data or showing trends over time
 * Stacked Percentage
 
 
-##### <a id="pie-chart-monthly-throughput-per-service">Example - Monthly Throughput per Service
+##### <a id="pie-chart-monthly-throughput-per-service"></a>Example - Monthly Throughput per Service
 
 
 ![Envision](images/env_appendix_columnchart1.jpg "Column Chart - Monthly Throughput per Service")
@@ -272,7 +268,7 @@ Bar charts are useful for showing trends over time and plotting many data series
 * Stacked 
 * Stacked Percentage
 
-##### <a id="bar-chart-api-traffic-by-app">Example - API Traffic by App
+##### <a id="bar-chart-api-traffic-by-app"></a>Example - API Traffic by App
 
 The sum of errors generated by each developer app consuming the selected API. 
 
@@ -293,7 +289,7 @@ The range is a Cartesian series type with higher and lower Y values along an X a
 * Bar Range
 * Column Range
 
-##### <a id="indicator-chart-response-time-range">Example - Indicator Chart - Response Time Range
+##### <a id="indicator-chart-response-time-range"></a>Example - Indicator Chart - Response Time Range
 
 The response time range per month. 
 
