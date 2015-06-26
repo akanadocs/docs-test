@@ -4,10 +4,11 @@ title: How to Manage API Visibility with Licenses
 description: A how to guide for creating a simple setup to use licenses to control the visibility of APIs
 product: cm
 category: learn
-sub-nav-class: API Documentation
+subcategory: API Documentation
 weight: 4
 type: page
 nav-title: API Licenses
+no-catalog: true
 ---
 
 ## How to Manage API Visibility with Licenses

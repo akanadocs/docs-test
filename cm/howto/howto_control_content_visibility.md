@@ -4,10 +4,11 @@ title: How to Control Document Content Visibility
 description: A how to guide for using licenses to control the visibility of content elements in documentation files
 product: cm
 category: learn
-sub-nav-class: API Documentation
-weight: 4
+subcategory: API Documentation
+weight: 10
 type: page
 nav-title: Content Visibility
+no-catalog: true
 ---
 
 ## How to Control Document Content Visibility

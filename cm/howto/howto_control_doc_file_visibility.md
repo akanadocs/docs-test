@@ -4,10 +4,11 @@ title: How to Control Document File Visibility
 description: A how to guide for using licenses to control the visibility of documentation files
 product: cm
 category: learn
-sub-nav-class: API Documentation
-weight: 4
+subcategory: API Documentation
+weight: 5
 type: page
 nav-title: File Visibility
+no-catalog: true
 ---
 
 ## How to Control Document File Visibility in the Default Theme
