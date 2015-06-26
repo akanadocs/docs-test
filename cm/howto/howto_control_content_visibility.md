@@ -22,6 +22,10 @@ This article assumes that you have completed the steps in the [simple license se
 The document tagging relies on an Akana provided Javascript library.  Ensure that you include:
 
 ```html
+<link rel="stylesheet" type="text/css" href="/resources/style/reset.css"/>
+<link rel="stylesheet" type="text/css" href="/resources/style/base.css"/>
+<script language="javascript" src="/ui/apps/atmosphere/123/resources/uiframework/jquery/jquery.js"
+            type="text/javascript"></script>
 <script language="javascript" src="/ui/apps/atmosphere/123/resources/console/javascript/dynamic_docs.js"
         type="text/javascript"></script>
 ```
