@@ -28,6 +28,9 @@ Provides a list of chart properties used in the Envision Dashboard.
 	- [X-AXIS](#xaxis)
 	- [Series Chart](#series-chart)
 4. [Data Mapping for Charts](#data-mapping-for-charts)
+	- [Mapping for Line / Area / Bar / Column / Scatter Charts](#mapping-line-area-bar-column-scatter)
+	- [Mapping for Indicator Chart](#mapping-indicator)
+	- [Mapping for Indicator Chart](#mapping-pie)
 5. [Line Chart](#line-chart)
 	- [Example - Monthly Response Time](#line-chart-monthly-response-time)
 6. [Area Chart](#area-chart)
@@ -88,9 +91,9 @@ When you create a chart using the **New Chart** function, each chart includes th
 <br>
 ###### Charts
 
-The Charts section includes the same set of options for each Chart Type selected. 
+The *Charts* section includes the same set of options for each Chart Type selected. 
 
-*Refer to Chart Types section for additional detail and examples.*
+*Refer to each specific chart type section for additional detail and examples.*
 
 | Chart Option     | Description          | 
 |:----------------------------|:------------------------------------------|
@@ -113,6 +116,7 @@ The X-AXIS section defines the X-AXIS of the chart, what data will be used for t
 | Title             | This option is used to specify an X-AXIS title. The format of the tick marks is handled differently depending on the type of the dimension used.  |
 | Format      | Select a date format. If you are not a date dimension an optional prefix and suffix can be added to each tick mark label. 
 <br>
+
 #### <a id="series-chart"></a>Series Chart
 
 The SERIES section defines data series of the chart.
@@ -125,6 +129,7 @@ The SERIES section defines data series of the chart.
 | Alias      | Specify an alias name to assign to the series filter.  |
 | +      | Add an additional filter.   |
 <br>
+
 ###### Y-AXIS
 | Chart Option     | Description          | 
 |:----------------------------|:------------------------------------------|
@@ -137,22 +142,22 @@ The SERIES section defines data series of the chart.
 
 #### <a id="data-mapping-for-charts"></a>Data Mapping for Charts
 
-##### Mapping for Line / Area / Bar / Column / Scatter Charts
+##### <a id="mapping-line-area-bar-column-scatter"></a>Mapping for Line / Area / Bar / Column / Scatter Charts
 
 ![Envision](images/datamap_line_area_bar_column_scatter.jpg "Data mapping for Line, Area, Bar, Column, and Scatter Charts")
 
-#####Mapping for Indicator Chart
+##### <a id="mapping-indicator"></a>Mapping for Indicator Chart
 
 ![Envision](images/datamap_indicator.jpg "Data mapping for Indicator Chart")
 
-#####Mapping for Pie Chart
+##### <a id="mapping-pie">Mapping for Pie Chart
 
 ![Envision](images/datamap_pie.jpg "Data mapping for Pie Chart")
-
 
 #### <a id="line-chart"></a>Line Chart
 
 Line charts are used to illustrate trends over time. This is done most often to measure the long term progression of any other empirical statistic important to businesses or organizations. It can also be used to compare two different variables over time.
+
 #####Sub Type
 * Standard 
 * Stacked
@@ -175,12 +180,13 @@ Demonstrate simple line chart configuration with global filter and grouping
 #### <a id="area-chart"></a>Area Chart
 
 Area charts are useful for emphasizing the magnitude of change over time. Stacked area charts are also used to show the relationship of parts to a whole.
+
 #####Sub Type
 * Standard 
 * Stacked
 * Percentage Stacked
 
-##### <a id="area-chart-data-exchange-per-container></a>Example - Data Exchange per Container
+##### <a id="area-chart-data-exchange-per-container"></a>Example - Data Exchange per Container
 
 Demonstrate simple area chart configuration with global filter, grouping and context filter. 
 
@@ -190,12 +196,13 @@ Demonstrate simple area chart configuration with global filter, grouping and con
 
 ![Envision](images/env_appendix_areachart1_config.jpg "Area Chart - Data Exchange per Container")
 
-##### <a id="area-chart-regional-throughput-since-start></a>Example - Regional Throughput Since Start
+##### <a id="area-chart-regional-throughput-since-start"></a>Example - Regional Throughput Since Start
 
 Demonstrate stacked area chart configuration with no filter, custom dimension grouping. 
 
 ![Envision](images/env_appendix_areachart3.jpg "Area Chart - Regional Throughput Since Start")
 <br>
+
 ###### Configuration
 
 ![Envision](images/env_appendix_areachart3_config.jpg "Area Chart - Reginal Throughput Since Start")
@@ -203,7 +210,9 @@ Demonstrate stacked area chart configuration with no filter, custom dimension gr
 <a href="#top">back to top</a>
 
 #### <a id="pie-chart"></a>Pie Chart
+
 Pie charts are best used to illustrate a sample break down in a single dimension. In other words, it is best to use pie charts when you want to show differences within groups based on one variable.  
+
 #####Sub Type
 * Pie
 * Pyramid
@@ -215,11 +224,12 @@ Pie charts are best used to illustrate a sample break down in a single dimension
 
 Measures how much traffic is coming from a specific application, like Chrome, Safari, Firefox, IE, and other platform. 
 
-<br>
+
 ###### Configuration
 
 ![Envision](images/env_appendix_piechart1_config.jpg "Pie Chart - Traffic by Browser Agent")
 <br>
+
 ##### <a id="pie-chart-error-summary-semi-donut"></a>Example - Error Summary - Semi Donut
 
 The sum of errors generated by each developer app consuming the selected API. 
@@ -236,6 +246,7 @@ Demonstrate simple funnel chart configuration. With some visual customization.
 
 ![Envision](images/env_appendix_piechart3.jpg "Pie Chart - Sales Process (Funnel/Pyramid")
 <br>
+
 ###### Configuration
 
 ![Envision](images/env_appendix_piechart3_config.jpg "Pie Chart - Sales Process (Funnel/Pyramid")
@@ -244,14 +255,13 @@ Demonstrate simple funnel chart configuration. With some visual customization.
 
 #### <a id="column-bar-chart"></a>Column Chart
 Column charts are useful for comparing discrete data or showing trends over time. Column charts use vertical data markers to compare individual values. Can be plotted as standard, stacked and percentage stacked.
+
 #####Sub Type
 * Standard 
 * Stacked 
 * Stacked Percentage
 
-
 ##### <a id="pie-chart-monthly-throughput-per-service"></a>Example - Monthly Throughput per Service
-
 
 ![Envision](images/env_appendix_columnchart1.jpg "Column Chart - Monthly Throughput per Service")
 
@@ -262,7 +272,9 @@ Column charts are useful for comparing discrete data or showing trends over time
 <a href="#top">back to top</a>
 
 #### <a id="bar-chart"></a>Bar Chart
+
 Bar charts are useful for showing trends over time and plotting many data series. Bar charts use horizontal data markers to compare individual values. Can be plotted as standard, stacked and percentage stacked.
+
 #####Sub Type
 * Standard 
 * Stacked 
@@ -283,6 +295,7 @@ The sum of errors generated by each developer app consuming the selected API.
 
 #### <a id="indicator-chart"></a>Indicator Chart
 The range is a Cartesian series type with higher and lower Y values along an X axis. These charts are useful for showing a target range and a tolerance range.
+
 #####Sub Type 
 * Area
 * Candle Stick
