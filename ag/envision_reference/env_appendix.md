@@ -26,7 +26,7 @@ Provides a list of chart properties used in the Envision Dashboard.
 	- [New Chart](#new-chart)
 	- [Dataset Details](#dataset-details)
 	- [X-AXIS](#xaxis)
-	- [Series Chart](#series-chart)
+	- [Series](#series)
 4. [Data Mapping for Charts](#data-mapping-for-charts)
 	- [Mapping for Line / Area / Bar / Column / Scatter Charts](#mapping-line-area-bar-column-scatter)
 	- [Mapping for Indicator Chart](#mapping-indicator)
@@ -49,6 +49,7 @@ Provides a list of chart properties used in the Envision Dashboard.
 
 <div class = "divider1"></div>
 ### <a id="main-chart-category"></a>Main Chart Category
+
 The properties of an Envision chart are divided into three broad categories:
 
 * **Visualization** - Gather information on the visual aspect of the chart.
@@ -56,6 +57,8 @@ The properties of an Envision chart are divided into three broad categories:
 * **Data Series**  
 	* *Datasets* - Select Dataset and configure data grouping, filters, and aggregation (X-AXIS)
 	* *Chart Type* - Select a chart type, filters and data mapping (X-AXIS) to configure how and where the data will be displayed on the chart. Options in this category will vary based on the requirements of the selected chart type.
+
+<a href="#top">back to top</a>
 
 #### <a id="common-characteristics"></a>Common Characteristics
 When you create a chart using the **New Chart** function, each chart includes the following common information. 
@@ -108,7 +111,7 @@ The *Charts* section includes the same set of options for each Chart Type select
 
 #### <a id="xaxis"></a>X-AXIS
 
-The X-AXIS section defines the X-AXIS of the chart, what data will be used for tick marks, the title of the axis and the format of the tick mark labels.
+The *X-AXIS* section defines the X-AXIS of the chart, what data will be used for tick marks, the title of the axis and the format of the tick mark labels.
 
 | Chart Option     | Description          | 
 |:----------------------------|:------------------------------------------|
@@ -117,9 +120,9 @@ The X-AXIS section defines the X-AXIS of the chart, what data will be used for t
 | Format      | Select a date format. If you are not a date dimension an optional prefix and suffix can be added to each tick mark label. 
 <br>
 
-#### <a id="series-chart"></a>Series Chart
+#### <a id="series"></a>Series
 
-The SERIES section defines data series of the chart.
+The *SERIES* section defines data series of the chart.
 
 ###### Filter
 | Chart Option     | Description          | 
