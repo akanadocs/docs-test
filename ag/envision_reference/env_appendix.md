@@ -49,7 +49,6 @@ Provides a list of chart properties used in the Envision Dashboard.
 	- [Example - Success vs. Error (Stacked Bar Chart)](#bar-chart-success-vs-error)
 10. [Indicator Chart](#indicator-chart)
 	- [Example - Response Time Range](#indicator-chart-response-time-range)
-	- [Example - Response Time Variation by Day](#indicator-chart-response-time-variation-by-day)
 
 <div class = "divider1"></div>
 ### <a id="main-chart-category"></a>Main Chart Category
@@ -182,7 +181,7 @@ Simple line chart with global filter and grouping.
 <br>
 ###### Configuration
 
-![Envision](images/env_appendix_linechart1_config.jpg "Line Chart - Configuration")
+![Envision](images/env_appendix_linechart1_config.jpg "Line Chart - Monthly Response Time Configuration")
 
 
 <a href="#top">back to top</a>
@@ -215,7 +214,7 @@ Stacked area chart with no filter and custom dimension grouping.
 
 ###### Configuration
 
-![Envision](images/env_appendix_areachart3_config.jpg "Area Chart - Reginal Throughput Since Start")
+![Envision](images/env_appendix_areachart3_config.jpg "Area Chart - Regional Throughput Since Start")
 
 <a href="#top">back to top</a>
 
@@ -335,15 +334,4 @@ The response time range per month.
 
 <a href="#top">back to top</a>
 
-##### <a id="indicator-chart-response-time-variation-by-day"></a>Example - Indicator Chart - Response Time Variation By Day
 
-The response time variation by day. 
-
-![Envision](images/env_appendix_rangechart2.jpg "Indicator Chart - Response Time Variation By Day")
-
-
-###### Configuration 
-
-![Envision](images/env_appendix_rangechart2_config.jpg "Indicator Chart - Response Time Variation By Day")
-
-<a href="#top">back to top</a>
