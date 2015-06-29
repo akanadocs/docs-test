@@ -38,7 +38,7 @@ In the previous topics we described the concept of a data set. In this chapter w
 
 ### <a id="data-sets"></a>Data Sets
 
-When a user logs into Envision they are presented with a top level menu consisting of DASHBOARDS, CHARTS, and DATASETS. Select the DATASETS menu item.
+When you log into Envision you are presented with a top level menu consisting of *DASHBOARDS*, *CHARTS*, and *DATASETS*. Select the *DATASETS* menu item.
 
 ![Envision](images/env_creating_dataset1.jpg "DATASETS menu on Envision Console")
 
@@ -56,7 +56,7 @@ Select **New Dataset** to start the process of creating a new data set. A pop-up
 
 #### <a id="dataset-options"></a>Dataset Options
 
-A data set can be shared other users. When a data set is shared with a user that user can view the data set and build charts against it. They cannot change the data set. A data set can be shared with nobody, everybody, or individual users and/or groups. The data set will automatically be placed in the My data sets list. If the **Marked as Favorite** checkbox is checked it will also be placed in the Favorites data sets list.
+A data set can be shared other users. When a data set is shared users who are not the author can view the data set and build charts against it. They cannot change the data set. The data set will automatically be placed in the My data sets list. If the **Marked as Favorite** checkbox is checked it will also be placed in the Favorites data sets list.
 
 Each data set card in a list has a pull-down menu of options that can be performed on the data set. 
 
@@ -83,7 +83,7 @@ The *Dimensions* section lists all the dimensions for the data set. Dimensions a
 * The timestamp dimension will group all metrics collected with a timestamp within the same collection time interval. 
 * The dimension can be deleted if you are not interested in time based aggregations but there must be at least one Date dimension for aggregation over time to function properly. 
 
-To add another dimension select **New Dimension**. A pop-up displays where you can enter a name, a description, a type, a default value (if any), and if the dimension is required or not. 
+To add another dimension, select **New Dimension**. A pop-up displays where you can enter a name, a description, a type, a default value (if any), and if the dimension is required or not. 
 
 ![Envision](images/env_creating_dataset5.jpg "Add New Dimension")
 
@@ -115,7 +115,7 @@ The *Metrics* section lists all the metrics for the data set. Metrics are the pr
 
 ![Envision](images/env_creating_dataset7.jpg "Metrics")
 
-Each data set is created initially with a single default metric, RequestCount. The RequestCount metric is the measure for the number of transactions, or orders in this example. The metric can be deleted if you do not wish to collect it. 
+Each data set is created initially with a single default metric, **RequestCount**. The RequestCount metric is the measure for the number of transactions, or orders in this example. The metric can be deleted if you do not wish to collect it. 
 
 To add another metric select **New Metric**. A pop-up displays where you can enter a name, a description, a type, and a set of aggregation calculations to perform.
 

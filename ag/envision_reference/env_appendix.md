@@ -27,27 +27,23 @@ Provides a list of chart properties used in the Envision Dashboard.
 	- [Dataset Details](#dataset-details)
 	- [X-AXIS](#xaxis)
 	- [Series](#series)
-4. [Data Mapping for Charts](#data-mapping-for-charts)
-	- [Mapping for Line / Area / Bar / Column / Scatter Charts](#mapping-line-area-bar-column-scatter)
-	- [Mapping for Indicator Chart](#mapping-indicator)
-	- [Mapping for Pie Chart](#mapping-pie)
-5. [Charts and Examples](#charts-and-examples)
-6. [Line Chart](#line-chart)
+3. [Charts and Examples](#charts-and-examples)
+4. [Line Chart](#line-chart)
 	- [Example - Monthly Response Time](#line-chart-monthly-response-time)
 	- [Example - Response Time Against Target](#line-chart-response-time-against-target)
-6. [Area Chart](#area-chart)
+5. [Area Chart](#area-chart)
 	- [Example - Data Exchange per Container](#area-chart-data-exchange-per-container)
 	- [Example - Regional Throughput since Start](#area-chart-regional-throughput-since-start)
-7. [Pie Chart](#pie-chart)
+6. [Pie Chart](#pie-chart)
 	- [Example - Traffic by Browser Agent](#pie-chart-traffic-by-browser-agent)
 	- [Example - Error Summary - Semi Donut](#pie-chart-error-summary-semi-donut)
 	- [Example - Sales Process (Funnnel/Pyramid)](#pie-chart-sales-process-funnel-pyramid)
-8. [Column Chart](#column-chart)
+7. [Column Chart](#column-chart)
 	- [Example - Monthly Throughput per Service](#pie-chart-monthly-throughput-per-service)
-9. [Bar Chart](#bar-chart)
+8. [Bar Chart](#bar-chart)
 	- [Example - API Traffic by App](#bar-chart-api-traffic-by-app)
 	- [Example - Success vs. Error (Stacked Bar Chart)](#bar-chart-success-vs-error)
-10. [Indicator Chart](#indicator-chart)
+9. [Indicator Chart](#indicator-chart)
 	- [Example - Response Time Range](#indicator-chart-response-time-range)
 
 <div class = "divider1"></div>
@@ -145,20 +141,6 @@ The *SERIES* section defines data series of the chart.
 | Title      | Enter the y axis title in the Title text box. This field is optional.  |
 
 <a href="#top">back to top</a>
-
-#### <a id="data-mapping-for-charts"></a>Data Mapping for Charts
-
-##### <a id="mapping-line-area-bar-column-scatter"></a>Mapping for Line / Area / Bar / Column / Scatter Charts
-
-![Envision](images/datamap_line_area_bar_column_scatter.jpg "Data mapping for Line, Area, Bar, Column, and Scatter Charts")
-
-##### <a id="mapping-indicator"></a>Mapping for Indicator Chart
-
-![Envision](images/datamap_indicator.jpg "Data mapping for Indicator Chart")
-
-##### <a id="mapping-pie">Mapping for Pie Chart
-
-![Envision](images/datamap_pie.jpg "Data mapping for Pie Chart")
 
 ### <a id="charts-and-examples"></a>Charts and Examples
 
