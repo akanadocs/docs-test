@@ -16,7 +16,7 @@ Getting started: Managing a Simple API
 
 <h3 style="color: grey;">Table of Contents</h3>
 <ol class="table_of_contents">
-	<li><a href="#Installing">Install and configure the Policy Manager  Network Director containers</a></li>
+	<li><a href="#Installing">Install and configure the Policy Manager and Network Director containers</a></li>
 	<li><a href="#register-nd">Register Network Director in Policy Manager</a></li>
 	<li><a href="#register-api">Register the API in Policy Manager</a></li>
 	<li><a href="#Configure Policies">Configure Policies</a></li>
