@@ -28,6 +28,7 @@ Learn how add and reposition charts on an Envision Dashboard and display in Live
 	* [Add Chart To Dashboard](#add-chart-to-dashboard)
 	* [Resize Charts on Dashboard](#resize-charts-on-dashboard)
 	* [Position Charts on Dashboard](#position-charts-on-dashboard)
+	* [Multiple Charts with Different Filters](#multiple-charts-with-different-filters)
 	* [Save Charts on Dashboard](#save-charts-on-dashboard)
 	* [Display Dashboard in Live Mode](#dashboard-live-mode)
 	* [View Chart Filters in Live Mode](#view-chart-filters)
@@ -68,8 +69,7 @@ Select **New Dashboard** to start the process of creating a new dashboard. A pop
 
 A dashboard can be shared by other users. 
 
-* When a dashboard is shared with a user that user can view the chart and place them on dashboards. They cannot change the dashboard. 
-* A dashboard can be shared with nobody, everybody, or individual users and/or groups. 
+* When a dashboard is shared users who are not the author can view the chart and place them on dashboards. They cannot change the dashboard. 
 * The dashboard will automatically be placed in the My dashboards list. 
 * If the *Marked as Favorite* checkbox is checked it will also be placed in the *Favorites* dashboards list.
 * Each dashboard card in a list has a pull-down menu of options that can be performed on the dashboard. 
@@ -137,9 +137,29 @@ Charts can also be moved to different positions. To move a chart grab the title 
 
 <a href="#top">back to top</a>
 
+#### <a id="multiple-charts-with-different-filters"></a>Multiple Charts with Different Filters
+
+In some situations you may want multiple charts of the same kind but with different filters on the data being displayed on the same dashboard. 
+
+For example, you can create a chart that displays a single merchant’s number of orders over time but you want to show this for your two top merchants on a single dashboard. 
+
+To save effort, instead of having to create two different charts the same chart can be reused for both merchants on the same dashboard. 
+
+This is done by configuring default filters for charts relative to a dashboard they are displayed on. Once a chart with a filter is displayed on a dashboard you can select the *Filter* option from the options pulldown in the upper right hand corner of the chart.
+
+![Envision](images/env_creating_dashboard13.jpg "Multiple Charts with Different Filters on Same Dashboard")
+
+This option will display the filters for the chart as they would on a completed functioning dashboard. You can change the value of the filters and the chart contents will be changed. In this example we’ll change the Merchant name to Target in the second chart.
+
+![Envision](images/env_creating_dashboard14.jpg "Multiple Charts with Different Filters ")
+
+To see the changed filter take effect on the chart select the Update button. To save the new filter value for the next time the dashboard is displayed select the **Save** button.
+
 #### <a id="save-charts-on-dashboard"></a>Save Charts on Dashboard
 
-Finally when the charts have been positioned and sized properly you can save the dashboard by selecting **Save**. If the dashboard is saved as a favorite it will be listed in the *Dashboards* pulldown. 
+Finally when the charts have been positioned and sized properly and the filter changes are made you can save the dashboard by selecting **Save**. 
+
+If the dashboard is saved as a favorite it will be listed in the *Dashboards* pulldown. 
 
 <a href="#top">back to top</a>
 
