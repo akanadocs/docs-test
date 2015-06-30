@@ -1,16 +1,15 @@
 ---
 layout: page
-title: Chapter 1 - Envision Basic Concepts
+title: Chapter 1 - Basic Concepts
 description: Provides a technical overview of the Envision product.
 product: ev
 category: learn
-sub-nav-class: Envision Reference
 weight: 2
 type: page
-nav-title: Envision Basic Concepts 
+nav-title: Basic Concepts 
 ---
 
-## Envision Basic Concepts
+## Basic Concepts
 Provides a technical overview of the Envision product.
 
 <a href="env_toc.html" class="button secondary">Envision Reference (Main Topic)</a>  <a href="../envision_install/installing_envision.htm" class="button secondary">Installing Envision 1.0</a>
