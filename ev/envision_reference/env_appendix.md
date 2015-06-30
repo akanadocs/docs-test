@@ -1,16 +1,15 @@
 ---
 layout: page
-title: Envision Appendix
+title: Appendix
 description: Provides a list of chart properties used in the Envision Dashboard.
 product: ev
 category: learn
-sub-nav-class: Envision Reference
 weight: 8
 type: page
-nav-title: Envision Appendix 
+nav-title: Appendix 
 ---
 
-## Envision Appendix
+## Appendix
 Provides a list of chart properties used in the Envision Dashboard.
 
 <a href="env_toc.html" class="button secondary">Envision Reference (Main Topic)</a>  <a href="../envision_install/installing_envision.htm" class="button secondary">Installing Envision 1.0</a>
@@ -30,7 +29,6 @@ Provides a list of chart properties used in the Envision Dashboard.
 3. [Charts and Examples](#charts-and-examples)
 4. [Line Chart](#line-chart)
 	- [Example - Monthly Response Time](#line-chart-monthly-response-time)
-	- [Example - Response Time Against Target](#line-chart-response-time-against-target)
 5. [Area Chart](#area-chart)
 	- [Example - Data Exchange per Container](#area-chart-data-exchange-per-container)
 	- [Example - Regional Throughput since Start](#area-chart-regional-throughput-since-start)

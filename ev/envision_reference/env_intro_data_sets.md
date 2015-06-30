@@ -1,16 +1,15 @@
 ---
 layout: page
-title: Chapter 2 - Introduction to Envision Data Sets
+title: Chapter 2 - Introduction to Data Sets
 description: Learn about Envision data sets, metrics, and dimensions. 
 product: ev
 category: learn
-sub-nav-class: Envision Reference
 weight: 3
 type: page
-nav-title: Introduction to Envision Data Sets 
+nav-title: Introduction to Data Sets 
 ---
 
-## Introduction to Envision Data Sets
+## Introduction to Data Sets
 Learn about Envision data sets, metrics, and dimensions.
 
 <a href="env_toc.html" class="button secondary">Envision Reference (Main Topic)</a>  <a href="../envision_install/installing_envision.htm" class="button secondary">Installing Envision 1.0</a>

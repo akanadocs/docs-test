@@ -1,16 +1,16 @@
 ---
 layout: page
-title: Chapter 5 - Creating a Chart with Envision
+title: Chapter 5 - Creating a Chart
 description: Learn how to create a chart with Envision and configure datasets, use chart options, and preview charts in Live Mode. 
 product: ev
 category: learn
 sub-nav-class: Envision Reference
 weight: 6
 type: page
-nav-title: Creating a Chart with Envision
+nav-title: Creating a Chart
 ---
 
-## Creating a Chart with Envision
+## Creating a Chart
 Learn how to create a chart with Envision and configure datasets, use chart options, and preview charts in Live Mode.
 
 <a href="env_toc.html" class="button secondary">Envision Reference (Main Topic)</a>  <a href="../envision_install/installing_envision.htm" class="button secondary">Installing Envision 1.0</a>
@@ -38,7 +38,7 @@ Learn how to create a chart with Envision and configure datasets, use chart opti
 	* [Chart X-AXIS](#chart-xaxis)
 	* [Chart X-AXIS Example](#chart-xaxis-example)
 4. [Series](#series)
-	* [Series](#series")
+	* [Series](#series)
 	* [Series Options](#series-options)
 	* [Filter Series](#filter-series)
 	* [Series Examples](#series-examples)
@@ -46,7 +46,7 @@ Learn how to create a chart with Envision and configure datasets, use chart opti
 	* [Preview Examples](#preview-examples)
 6. [Rename Chart](#rename-chart)
 7. [Overlaying Charts](#overlaying-charts)
-	* [Create Combination Charts](#create-combination-charts")
+	* [Create Combination Charts](#create-combination-charts)
 
 <div class = "divider1"></div>
 ### <a id="introduction"></a>Introduction
