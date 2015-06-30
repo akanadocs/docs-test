@@ -205,11 +205,21 @@ The rectangular area then becomes the complete view of the chart as seen below.
 
 #### <a id="chart-options"></a>Chart Options
 
-Each chart type and variation may have specific options. These options are also listed in [Envision Appendix](../envision_reference/env_appendix.html) and can be accessed in the user interface by selecting the **Customize More** link. 
+##### <a id="customize-more"></a>Customize More Link
+
+The *Customize More* link expands the section to show more advanced options for the chart and options that may be specific to the type and subtype of the chart selected. These options are also listed in the [Envision Appendix](../envision_reference/env_appendix.html). The following illustrates these options for the Standard Column Chart.  
 
 The following illustrates these options for the Standard Column Chart.  
 
 ![Envision](images/env_creating_charts12.jpg "Standard Column Chart Options")
+
+##### <a id="color-theme"></a>Color Theme
+
+The *Color Theme* is available for all chart types. A color theme is a group of colors that will be used to draw the data series on the chart. The themes can be experimented with using the *Preview* function.
+
+The *Show In Legend* option is also available for all chart types. When selected each data series will be listed in a legend for the chart.
+
+![Envision](images/env_creating_charts35.jpg "Color Theme")
 
 <a href="#top">back to top</a>
 
@@ -363,7 +373,7 @@ Then by selecting any of the Low Top bars the Merchant Sales chart replaces the 
 
 ![Envision](images/env_creating_charts32.jpg "xxx")
 
-The Merchant Sales chart is passed the Order Date filter from the Style Sales chart so the time frame remains the same. The selected style, Low Top in this example, is passed to the Merchant Sales chart filtering the data series to just the selected style. This results in data series for each of the merchants but limited to the Low Top style.
+The Merchant Sales chart is passed the Order Date filter from the Style Sales chart so the time frame remains the same. The selected style, Low Top in this example, is passed to the Merchant Sales chart filtering the data series to just the selected style. This results in data series for each of the merchants but limited to the Low Top style. Note however that drilling down on a data series is only available when a single dimension is selected in the data series section of the chart.
 
 In addition to the ability to drill down from one chart to another, there is a drill down option that allows you to easily build a chart that will drill down based on time. This can be done from the Merchant Sales chart. Open the CHARTS section and select the X-AXIS drill down option.
 
