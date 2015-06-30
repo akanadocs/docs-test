@@ -185,7 +185,7 @@ Simple area chart with global filter, grouping and context filter.
 
 ###### Configuration
 
-![Envision](images/env_appendix_areachart1_config.jpg "Area Chart - Data Exchange per Container")
+![Envision](images/env_appendix_areachart1_config.jpg "Area Chart - Data Exchange per Container")  
 
 ##### <a id="area-chart-regional-throughput-since-start"></a>Example - Regional Throughput Since Start
 
