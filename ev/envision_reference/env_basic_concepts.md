@@ -2,8 +2,8 @@
 layout: page
 title: Chapter 1 - Envision Basic Concepts
 description: Provides a technical overview of the Envision product.
-product: ag
-category: ref
+product: ev
+category: learn
 sub-nav-class: Envision Reference
 weight: 2
 type: page

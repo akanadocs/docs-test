@@ -2,8 +2,8 @@
 layout: page
 title: Chapter 2 - Introduction to Envision Data Sets
 description: Learn about Envision data sets, metrics, and dimensions. 
-product: ag
-category: ref
+product: ev
+category: learn
 sub-nav-class: Envision Reference
 weight: 3
 type: page

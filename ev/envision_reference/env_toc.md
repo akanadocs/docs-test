@@ -2,8 +2,8 @@
 layout: page
 title: Envision Reference
 description: Reference guide for the Envison analytics platform.
-product: ag
-category: ref
+product: ev
+category: learn
 sub-nav-class: Envision Reference
 weight: 1
 type: page
