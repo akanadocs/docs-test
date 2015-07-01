@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Chapter 4 - Creating a Data Set
+title: Creating a Data Set
 description: Learn how to create an Envision data set and configure dimensions and metrics.
 product: ev
 category: learn

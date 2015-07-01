@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Chapter 3 - Data Set Collection and Aggregation
+title: Data Set Collection and Aggregation
 description: Learn how Envision performs data collection and data aggregation.
 product: ev
 category: learn

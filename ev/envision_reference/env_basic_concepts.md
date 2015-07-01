@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Chapter 1 - Basic Concepts
+title: Basic Concepts
 description: Provides a technical overview of the Envision product.
 product: ev
 category: learn

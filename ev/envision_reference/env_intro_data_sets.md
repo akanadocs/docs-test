@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Chapter 2 - Introduction to Data Sets
+title: Introduction to Data Sets
 description: Learn about Envision data sets, metrics, and dimensions. 
 product: ev
 category: learn
