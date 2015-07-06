@@ -35,7 +35,7 @@ This document will walk you through the steps to configure containers and then c
 ![Simple API](images/simple-api-scenario.png "Simple API")
 
 ## <a name="Installing"></a>Step: 1: Install the Platform
-"Installation" is a very simple process, before version 8 you download and run an operating system specific platform installer (entering you license key), after version 8 you download zip files for both the platfrom and the product you are installing (Policy Manager in this case), and unzip them both into a local folder.
+Platform Installation is a very simple process, before version 8 you download and run an operating system specific platform installer (entering your license key), after version 8 you download zip files for both the platform and the product you are installing (Policy Manager in this case), and unzip them both into a local folder.
 
 NOTE: with version 8 and after you may need to define some environment variables including the location of your JRE.
 
