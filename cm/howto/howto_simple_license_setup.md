@@ -8,6 +8,7 @@ subcategory: API Documentation
 weight: 4
 type: page
 nav-title: API Licenses
+no-nav: true
 no-catalog: true
 ---
 
