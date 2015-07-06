@@ -16,9 +16,11 @@ Getting started: Managing a Simple API
 
 <h3 style="color: grey;">Table of Contents</h3>
 <ol class="table_of_contents">
-	<li><a href="#Installing">Install and configure the Policy Manager and Network Director containers</a></li>
+	<li><a href="#Installing">Install the Platform</a></li>
+	<li><a href="#Containers">Create and start the Policy Manager and Network Director containers</a></li>
+	<li><a href="#Config">Configure the Policy Manager and Network Director containers</a></li>
 	<li><a href="#register-nd">Register Network Director in Policy Manager</a></li>
-	<li><a href="#register-api">Register the API in Policy Manager</a></li>
+	<li><a href="#register-api">Add the API to Policy Manager</a></li>
 	<li><a href="#Configure Policies">Configure Policies</a></li>
 	<li><a href="#Create Contracts">Create Contracts</a></li>
 	<li><a href="#Send a test request">Send a test request</a></li>
@@ -32,21 +34,24 @@ This document will walk you through the steps to configure containers and then c
 
 ![Simple API](images/simple-api-scenario.png "Simple API")
 
-#### <a name="Prerequisites"></a>Prerequisites
+## <a name="Installing"></a>Step: 1: Install the Platform
+"Installation" is a very simple process, before version 8 you download and run an operating system specific platform installer (entering you license key), after version 8 you download zip files for both the platfrom and the product you are installing (Policy Manager in this case), and unzip them both into a local folder.
 
-This configuration guide assumes that you’ve already installed the platform. If you need help installing the platform, please see the detailed steps in Chapter 1 of our [install guide](http://docs.akana.com/sp/assets/SOA_Software_Platform_Install_Guide_v70.pdf).
+NOTE: with version 8 and after you may need to define some environment variables including the location of your JRE.
 
-## <a name="Installing"></a>Step: 1: Installing the Policy Manager and Network Director containers, and configuring them
+If you need help installing the platform, please see the detailed steps in Chapter 1 of our [install guide](http://docs.akana.com/sp/assets/SOA_Software_Platform_Install_Guide_v70.pdf).
+
+## <a name="Containers"></a>Step: 2: Create and Start the Policy Manager and Network Director containers
 
 
 You will create and configure a Policy Manager (PM) and Network Directory (ND) container. For detailed steps on how to create the containers, [see pages 34 & 35 of the Platform install guide v70.](http://docs.akana.com/sp/assets/SOA_Software_Platform_Install_Guide_v70.pdf) 
 
-#### <a name="Policy Manager Container"></a>Policy Manager Container
+### <a name="Policy Manager Container"></a>Policy Manager Container
 
 1. Name your container something that makes sense for your environment. Enter the structure for PM properties. It is:
 
 	```
-	container.instance.name=pm	credential.username=administrator	credential.password=password	default.host=127.0.0.1	default.port=9900
+	container.instance.name=pm	credential.username=administrator	credential.password=password	default.host=0.0.0.0	default.port=9900
 	```
 
 2. Run the following command: 
@@ -54,14 +59,10 @@ You will create and configure a Policy Manager (PM) and Network Directory (ND) c
 	```
 	./startup.sh configurator -Dsilent=true -Dproperties=/[property file directory location]/pm.properties
 	```
- 
-3.	Edit the sm70/instances/pm/system.properties file by adding the following line:
-
-	```
-	com.soa.http.bind.all=true
-	```
 	
-##### Copying database driver (optional)
+	NOTE: the property file location must be an absolute path, not relative.
+	
+#### Copying database driver (optional)
 
 This step is only necessary if using Oracle or MySQL.
 
@@ -72,12 +73,12 @@ This step is only necessary if using Oracle or MySQL.
 
 You may also want to dedicate containers for the "SOA Software Policy Manager Services" feature. This feature provides the backend APIs to support the Network Directors and is often installed in the same containers as the "SOA Software Policy Manager Console" and/or "SOA Software Community Manager" features. The decision to install it on its own container can be driven by security requirements (e.g. network topology) or the minimization of load on the Web traffic containers. 
 
-#### <a name="Network Director Container"></a>Network Director Container
+### <a name="Network Director Container"></a>Network Director Container
 
 1. Enter the structure for the ND properties. It is:
 
 	```
-	container.instance.name=nd	credential.username=administrator	credential.password=password	default.host=127.0.0.1	default.port=9901
+	container.instance.name=nd	credential.username=administrator	credential.password=password	default.host=0.0.0.0	default.port=9901
 	```
 	
 2. Run the following command: 
@@ -85,11 +86,7 @@ You may also want to dedicate containers for the "SOA Software Policy Manager Se
 	```
 	./startup.sh configurator -Dsilent=true -Dproperties=/[property file directory location]/nd.properties
 	```
-3.	Edit the sm70/instances/nd/system.properties file by adding the following line:
-
-	```	com.soa.http.bind.all=true
-	```
-	##### Copying database driver (optional)
+	#### Copying database driver (optional)
 
 This step is only necessary if using Oracle or MySQL.
 
@@ -100,59 +97,69 @@ This step is only necessary if using Oracle or MySQL.
 
 ### Starting the containers
 
-For each of the containers go to **SM70/bin/startup.sh*[container instance name]* -bg**
+For each of the containers go to **SM70/bin/** and use the startup command; ```startup.sh [container instance name]  -bg```, e.g. ```startup.sh pm -bg```.
 
-To ensure that the containers have started, open a browser, and enter:
-**http://[hostname]:[default port/admin**
+To ensure that the containers have started, open a browser, and access the container admin console;
+```http://[hostname]:[port]/admin```, e.g. ```http://localhost:9900/admin```, make sure you see the admin console login.
 
-###<a name="config-pm"></a>Configuring the Policy Manager
+## <a name="Config"></a>Configure the Policy Manager and Network Director containers
+
+###<a name="config-pm"></a>Configuring Policy Manager
 Once you've created the Policy Manager container, it needs to be configured. Configuration consists of installing features, configuring database options, managing schemas, and setting administrator credentials. 
 ####Installing Policy Manager Features
-1. Log into the SOA Administration Console.
+1. Log into the Container Administration Console (http://[hostname]:[port]/admin) using the credentials you provided in your container properties file (administrator/password in our sample file).
 2. From the "Available Features" tab, check the boxes for the:
 	* SOA Software Policy Manager Console
 	* SOA Software Policy Manager Services
 3. In the bottom-right corner, click **Install Features**. The Install Wizard will run through the installation steps.
-4. When the installation is complete, you will see a pop-up window. Click **Configure** to complete the deployment.
-5. On the "Manage PKI Keys Wizard" window, keep the defaulted options and click **Next**, then click **Finish**. Click **Go to Next Task**. 
+4. When the installation is complete, you will see a pop-up window. Click **Configure** to complete the deployment using the following wizards steps - note: these may not appear in this order:
 
-####Configuring Database options
+#### Manage PKI Keys
+In the "Manage PKI Keys Wizard" window, keep the defaulted options and click **Next**, then click **Finish**. Click **Go to Next Task**. 
+
+#### Configuring Database options
 1. In the "Database Options," choose **Create New Database**. Click **Next**.
 2. Enter your database parameters. Click **Finish**, then **Go To Next Task**.
 
-####Managing Schemas
-On the "Manage Schemas Wizard," you'll see a list of schemas that are available to install, as well as schemas that you've already installed. 
+#### Managing Schemas
+In the "Manage Schemas Wizard," you'll see a list of schemas that are available to install, as well as schemas that you've already installed. Select the schemas you want to add - typically selecting all of the "available schemas".
 
-####<span style="color: red">Note: Do not check the box for installed schemas unless you want to uninstall it. Checking an installed schema and clicking Finish can cause the schema to uninstall, and could cause data loss.  </span>
+#### <span style="color: red">Note: Do not check the box for installed schemas unless you want to uninstall it. Checking an installed schema and clicking Finish can cause the schema to uninstall, and could cause data loss.  </span>
 
 After installing the schemas, click **Go to Next Task**.
 
-####Set Administrator Credentials
+#### Set Administrator Credentials
 After setting the Administrator credentials, click **Finish**.
 You'll get a pop-up advising you that the container must be restarted in order for the changes to be applied. Click **OK**.
 
-When the configuration is complete, you can then click **Close**. You will be logged out of the Administration Console. 
+When the configuration is complete, you can click **Close**. You will be prompted to restart the container and logged out of the Administration Console.
 
-###<a name="config-nd"></a>Configuring the Network Director
-1. Log into the SOA Software Administration Console.
+### <a name="config-nd"></a>Configuring the Network Director
+1. Log into the Container Administration Console (http://[hostname]:[port]/admin) using the credentials you provided in your container properties file (administrator/password in our sample file).
 2. From the "Available Features" tab, check the **SOA Software Network Director**. In the bottom right corner, click **Install Feature**.
 3. You'll see the Installation Wizard screen. Click **Install Feature**. 
-4. Click **Configure** to complete the deployment. 
-5. **Connecting the Network Director and the Policy Manager**. The connection between the ND and the PM is an important step of the Network Director configuration. In the "WS-MetaDataExhange Options" window, you need to supply the URL for the Policy Manager's Metadata Exchange service. To find the URL:
+4. Click **Configure** to complete the deployment using the following wizards steps - note: these may not appear in this order:
+
+#### Configure Policy Manager location
+The connection between the ND and the PM is an important step of the Network Director configuration. In the "WS-MetaDataExhange Options" window, you need to supply the URL for the Policy Manager's Metadata Exchange service. This will normally be ```http://[policy manager host]:[policy manager port]/wsmex``` e.g. ```http://localhost:9900/wsmex```.
+
+To find the URL:
 	1. Log into the Policy Manager.
 	2. Click the **Workbench** tab.
 	3. On the Left Pane (Called the "Organization Tree") click **SOA Software Policy Manager - Services - Metedata Exchange Service - Access Points.** 
 	4. The URL will appear in the windows in the middle of the screen. 
 
-	Back in the "Network Director Install Wizard," enter the URL you found in the Policy Manager. Then click **Finish**.
-6. Click **Go to next Task**.
-7. On the "Manage PKI Keys Wizard" window, leave the defaults and click **Finish**.
+Back in the "Network Director Install Wizard," enter the URL you found in the Policy Manager. Then click **Finish**.
+
+#### Manage PKI Keys
+On the "Manage PKI Keys Wizard" window, leave the defaults and click **Finish**.
+
 8. You may be prompted to restart the Console. Do so for your changes to take effect. 
 9. After installation, we recommend that you click the **Installed Features** tab, and check the "Pending Installation Tasks" to ensure all features were properly installed. You can use the **Configuration** tab to re-configure any features that were missed. 
 
-## <a name="register-nd"></a>Step 2: Register Network Director in Policy Manager
+When the configuration is complete, you can click **Close**. You will be prompted to restart the container and logged out of the Administration Console.
 
-
+## <a name="register-nd"></a>Step 3: Register Network Director with Policy Manager
 
 You'll need to tell the Policy Manager where to find the containers you created, so that the Network Director can successfully connect to Policy Manager. 
 
@@ -164,8 +171,7 @@ You'll need to tell the Policy Manager where to find the containers you created,
 6. Enter the **Instance Name** and name the **Network Director**. Then click **Finish, Close**.
 7. Check that the Container started. You can do this from the Organization Tree - click **Containers**- ***Container Name.*** In the "Container Overview," the State should say: "Started." ***Note: you may need to refresh or wait a few seconds before checking the State.***
 
-##<a name="register-api"></a>Step 3: Register the API in Policy Manager
-
+##<a name="register-api"></a>Step 4: Add the API to Policy Manager
 
 In this step we will use the Akana Demo REST API, available at [http://demo.akana-dev.net:3005](http://demo.akana-dev.net:3005). To keep it simple, we will just register the GET operation at [http://demo.akana-dev.net:3005/posts.](http://demo.akana-dev.net:3005/posts)
 
@@ -211,8 +217,7 @@ When you've finished, you'll have two services: a physical and a virtual service
 5. Under the "HTTP Details" Section, enter the API web address For our example: [http://demo.akana-dev.net:3005/posts](http://demo.akana-dev.net:3005/posts) in the **Location** field. Click **Finish**.
 
 
-##<a name="Configure Policies"></a>Step 4: Configure Policies
-
+##<a name="Configure Policies"></a>Step 5: Configure Policies
 
 Now you'll configure your API’s with the policies you want Akana to enforce. 
 
@@ -226,8 +231,7 @@ Now you'll configure your API’s with the policies you want Akana to enforce.
 
 You can find all descriptions of the policies in the Organization Tree. 
 
-##<a name="Create Contracts"></a>Step 5: Create Contracts
-
+##<a name="Create Contracts"></a>Step 6: Create Contracts
 
 A contract gives someone (typcially another application,) authorization to access an API. 
 
@@ -244,8 +248,7 @@ Your contract is now in draft mode. It needs to be activated by:
 3. Click on the Contract - in this example it shows as "Anonymous."
 4. Review the contract, then on the right side click **Activate Contract**. Then click **OK**.
 
-##<a name="Send a test request"></a>Step 6: Send a test request
-
+##<a name="Send a test request"></a>Step 7: Send a test request
 
 To send a test request you will need the end point. You can find this in the Policy Manager Organization Tree, under your organization's name - Services - API. Click on the **Access Points** tab. 
 
