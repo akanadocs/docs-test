@@ -16,6 +16,7 @@ no-catalog: true
 This article describes how to use licenses to control the visibility of documentation files in both the default and developer themes.  This is typically used in conjunction with [document file visibility controls](howto_control_doc_file_visibility.html) to provide a comprehensive solution.  This article provides a simple set of instructions to get you started, for a comprehensive guide to the documentation visibility controls [click here](../learnmore/api_admin_documentation_tagging.htm).
 
 ### Table of Contents
+<div id="toc-marker"></div>
 * [Setup the document](#step-1---setup-the-document-file)
 * [Step 2 - Wrap Restricted Elements](#step-2---wrap-restricted-elements)
 
