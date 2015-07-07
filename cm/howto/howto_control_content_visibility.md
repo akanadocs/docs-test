@@ -16,10 +16,8 @@ no-catalog: true
 This article describes how to use licenses to control the visibility of documentation files in both the default and developer themes.  This is typically used in conjunction with [document file visibility controls](howto_control_doc_file_visibility.html) to provide a comprehensive solution.  This article provides a simple set of instructions to get you started, for a comprehensive guide to the documentation visibility controls [click here](../learnmore/api_admin_documentation_tagging.htm).
 
 ### Table of Contents
-<ul id="markdown-toc">
 * [Setup the document](#step-1---setup-the-document-file)
 * [Step 2 - Wrap Restricted Elements](#step-2---wrap-restricted-elements)
-</ul>
 
 A common scenario is where you have a set of documents for an API with an overview doc, and one document for each API operation.  The documentation for some of the API operations should only be visible to users with an admin license, while the rest should be visible to all users.  All of the docs also contain a content element (e.g. a footer) with links to each of the other docs.  This article describes how you can use the ```metadata.xml``` file to control which files a user will be allowed to see (which also controls what will show up in the default theme API documentation table of contents).  You will need to use these instructions along with [content visibility controls](howto_control_content_visibility.html) to hide links to these protected files and other sensitive content from within the documents.
 
