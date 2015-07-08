@@ -17,12 +17,12 @@ Learn how Envision performs data collection and data aggregation.
 
 <div class = "divider1"></div>
 
-<h3 name="top" style="color: grey;">Table of Contents</h3>
-
-1. [Introduction](#introduction)
-2. [Data Collection Using a Broker](#data-collection-using-a-broker)
-3. [Data Collection Using Individual Transactions or Raw Data](#data-collection-using-individual-transations-or-raw-data)
-4. [Data Aggregation Using Time Intervals](#data-aggregation-using-time-intervals)
+### Table of Contents
+<div id="toc-marker"></div>
+* [Introduction](#introduction)
+* [Data Collection Using a Broker](#data-collection-using-a-broker)
+* [Data Collection Using Individual Transactions or Raw Data](#data-collection-using-individual-transations-or-raw-data)
+* [Data Aggregation Using Time Intervals](#data-aggregation-using-time-intervals)
 
 <div class = "divider1"></div>
 ### <a id="introduction"></a>Introduction

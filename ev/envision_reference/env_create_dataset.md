@@ -17,16 +17,16 @@ Learn how to create an Envision data set and configure dimensions and metrics.
 
 <div class = "divider1"></div>
 
-<h3 name="top" style="color: grey;">Table of Contents</h3>
-
-1. [Introduction](#introduction)
-2. [Data Sets](#data-sets)
+### Table of Contents
+<div id="toc-marker"></div>
+* [Introduction](#introduction)
+* [Data Sets](#data-sets)
 	* [Create New Dataset](#create-new-data-set)
 	* [Dataset Options](#dataset-options)
-3. [Dimensions](#dimensions)
+* [Dimensions](#dimensions)
 	* [Add New Dimension](#add-new-dimension)
 	* [Dimension Options](#dimension-options)
-4. [Metrics](#metrics)
+* [Metrics](#metrics)
 	* [Add New Metric](#add-new-metric)
 	* [Metrics Options](#metrics-options)
 

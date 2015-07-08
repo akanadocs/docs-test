@@ -17,8 +17,8 @@ Learn how add and reposition charts on an Envision Dashboard and display in Live
 
 <div class = "divider1"></div>
 
-<h3 name="top" style="color: grey;">Table of Contents</h3>
-
+### Table of Contents
+<div id="toc-marker"></div>
 1. [Introduction](#introduction)
 2. [Dashboards](#Dashboard)
 	* [Create New Dashboard](#create-new-dashboard)

@@ -17,11 +17,11 @@ Learn about Envision data sets, metrics, and dimensions.
 
 <div class = "divider1"></div>
 
-<h3 name="top" style="color: grey;">Table of Contents</h3>
-
-1. [What is a Data Set?](#what-is-a-data-set)
-2. [Metrics and Dimensions](#metrics-and-dimensions)
-3. [Data Set Examples](#data-set-examples)
+### Table of Contents
+<div id="toc-marker"></div>
+* [What is a Data Set?](#what-is-a-data-set)
+* [Metrics and Dimensions](#metrics-and-dimensions)
+* [Data Set Examples](#data-set-examples)
 
 <div class = "divider1"></div>
 ### <a id="what-is-a-data-set"></a>What is a Data Set?

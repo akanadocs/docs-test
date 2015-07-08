@@ -17,14 +17,14 @@ Provides a technical overview of the Envision product.
 
 <div class = "divider1"></div>
 
-<h3 name="top" style="color: grey;">Table of Contents</h3>
-
-1. [Introduction](#introduction)
-2. [Capabilities](#capabilities)
-3. [Data Definition](#data-definition)
-4. [Data Storage](#data-storage)
-5. [Data Analysis](#data-analysis)
-6. [Data Aggregation](#data-aggregation)
+### Table of Contents
+<div id="toc-marker"></div>
+* [Introduction](#introduction)
+* [Capabilities](#capabilities)
+* [Data Definition](#data-definition)
+* [Data Storage](#data-storage)
+* [Data Analysis](#data-analysis)
+* [Data Aggregation](#data-aggregation)
 
 <div class = "divider1"></div>
 ### <a id="introduction"></a>Introduction
