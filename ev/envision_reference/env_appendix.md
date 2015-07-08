@@ -18,8 +18,8 @@ Provides a list of chart properties used in the Envision Dashboard.
 <div class = "divider1"></div>
 
 
-<h3 name="top" style="color: grey;">Table of Contents</h3>
-
+### Table of Contents
+<div id="toc-marker"></div>
 1. [Main Chart Category](#main-chart-category)
 2. [Common Characteristics](#common-characteristics)
 	- [New Chart](#new-chart)
