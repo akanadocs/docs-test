@@ -8,6 +8,7 @@ subcategory: API Documentation
 weight: 18
 type: page
 nav-title: API Documentation
+no-nav: true
 ---
 
 ## Howto Setup Documentation Visibility
