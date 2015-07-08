@@ -19,8 +19,8 @@ Learn how add and reposition charts on an Envision Dashboard and display in Live
 
 ### Table of Contents
 <div id="toc-marker"></div>
-1. [Introduction](#introduction)
-2. [Dashboards](#Dashboard)
+* [Introduction](#introduction)
+* [Dashboards](#Dashboard)
 	* [Create New Dashboard](#create-new-dashboard)
 	* [Dashboard Options](#dashboard-options)
 	* [Configure Dashboard](#configure-dashboard)

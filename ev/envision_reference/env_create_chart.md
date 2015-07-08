@@ -17,18 +17,18 @@ Learn how to create a chart with Envision and configure datasets, use chart opti
 
 <div class = "divider1"></div>
 
-<h3 id="table-of-contents" name="top" style="color: grey;">Table of Contents</h3>
-
-1. [Introduction](#introduction)
+### Table of Contents
+<div id="toc-marker"></div>
+* [Introduction](#introduction)
 	* [Create New Chart](#create-new-chart)
 	* [Chart Card](#chart-card)
 	* [Configure Chart](#configure-chart)
-2.  [Datasets](#datasets)
+*  [Datasets](#datasets)
 	* [Select Dataset](#select-dataset)
 	* [Select Dataset Options](#select-dataset-options)
 	* [Set Dataset Aggregation Level](#set-aggregation-level)
 	* [Group Dataset by Dimension](#group-dataset-by-dimension)
-3. [Charts](#charts)
+* [Charts](#charts)
 	* [Filter Chart Data](#filter-chart-data)
 	* [Chart Filter Options](#chart-filter-options)
 	* [Chart Filter Example](#chart-filter-example)
@@ -36,15 +36,15 @@ Learn how to create a chart with Envision and configure datasets, use chart opti
 	* [Chart Options](#chart-options)
 	* [Chart X-AXIS](#chart-xaxis)
 	* [Chart X-AXIS Example](#chart-xaxis-example)
-4. [Series](#series)
+* [Series](#series)
 	* [Series](#series)
 	* [Series Options](#series-options)
 	* [Filter Series](#filter-series)
 	* [Series Examples](#series-examples)
-5. [Preview Chart](#preview-chart)
+* [Preview Chart](#preview-chart)
 	* [Preview Examples](#preview-examples)
-6. [Rename Chart](#rename-chart)
-7. [Overlaying Charts](#overlaying-charts)
+* [Rename Chart](#rename-chart)
+* [Overlaying Charts](#overlaying-charts)
 	* [Create Combination Charts](#create-combination-charts)
 
 <div class = "divider1"></div>
