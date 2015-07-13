@@ -1,7 +1,7 @@
 ---
 layout: page
 title: About Auditing
-description: Learn how to monitor system activity using alert notifications.
+description: Learn how to monitor system activity using alert notifications or security policy-related actions, users, and date and time range. notifications.
 product: ag
 category: learn
 sub-nav-class: Auditing
