@@ -20,8 +20,8 @@ Includes search criteria, field descriptions, and audit trail job usage options 
 * [Introduction](#introduction)
 * [Audit Trail Search Criteria](#audit-trail-search-criteria)
 * [Audit Trail Field Descriptions](#audit-trail-field-descriptions)
-* [Schedule Alert Audit Trail Job (Usage Options(](#schedule-alert-audit-trail-job)
-* [Schedule Security Audit Trail Job (Usage Options)](#schedule-security-audit-trail-job)
+* [Schedule Alert Audit Trail Job Usage Options](#schedule-alert-audit-trail-job-usage-options)
+* [Schedule Security Audit Trail Job (Usage Options)](#schedule-security-audit-trail-job-usage-options)
 
 ## Introduction
 This topic includes search criteria, field descriptions, and audit trail job usage options for configuring Alert and Security Audit Trails.

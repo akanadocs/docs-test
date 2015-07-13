@@ -46,7 +46,7 @@ This is accomplished by enabling **Log Alert** in an Alert Code (for Alert Audit
 1. Go to **Auditing > Security Audit Trails**  
 ***Note***: *The initial search results display presents a listing of all audit trail data associated with the currently logged on user.*
   
-2. Enter the following Search Criteria and then click **Filter**. (see [Audit Trail Search Criteria](../auditing/auditing_reference.html#audit_trail_search_criteria) for details).
+2. Enter the following Search Criteria and then click **Filter**. (see [Audit Trail Search Criteria](../auditing/auditing_reference.html#audit-trail-search-criteria) for details).
   * **Enter Date Range** - Click **Start Date** or **End Date** to invoke a Calendar pop-up.
   * **Enter Time Range** - Manually enter times into the **Start** and **End** time fields using the 24-hour clock format, e.g. 20\:00\:01.
   * **Enter Action** - Refers to Add, Modify and Delete actions.
@@ -72,7 +72,7 @@ Configure a system object to observe system activity and create a log (i.e., aud
 
 1. Go to **Auditing > Security Audit Trails**.
 2. Perform a [Security Audit Trail Search](#perform-security-audit-trail-search) to obtain a list of search results.
-3. Select a desired system object line item, and click **View Audit Trail**. The *View Audit Trail* pop-up displays. Refer to [Audit Trail Field Descriptions](../auditing/auditing_reference.html#audit-trail-field-descriptions) for more information. 
+3. Select a desired system object line item, and click **View Audit Trail**. The *View Audit Trail* pop-up displays. Refer to [Audit Trail Field Descriptions](../auditing/auditingreference.html#audit-trail-field-descriptions) for more information. 
 4. Click **Close**.
 
 <a href="#top">back to top</a>
@@ -107,4 +107,4 @@ Filtering is optional. If any of the filtering criteria is not specified, the fo
 
 ***Note***: *In case of error during export, a partially exported file does* ***not*** *get deleted.*
 
-See the [Schedule Security Audit Trail Job Usage Options](#../auditing/auditing_reference.html#schedule_security_audit_trail_job_usage_options) for more information.
+See the [Schedule Security Audit Trail Job Usage Options](#../auditing/auditing_reference.html#schedule-a-security-audit-trail-job-usage-options) for more information.
