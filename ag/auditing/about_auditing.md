@@ -1,7 +1,7 @@
 ---
 layout: page
 title: About Auditing
-description: Learn how to monitor system activity using alert notifications or security policy-related actions, users, and date and time range. notifications.
+description: Provides a summary of Policy Manager auditing functionality.
 product: ag
 category: learn
 sub-nav-class: Auditing
@@ -11,7 +11,7 @@ nav-title: About Auditing
 ---
 
 ## About Auditing
-Learn how to monitor system activity using alert notifications or security policy-related actions, users, and date and time range.
+Provides a summary of Policy Manager auditing functionality.
 
 <a href="auditing_toc.html" class="button secondary">Auditing (Home)</a> <a href="../auditing/using_alert_auditing.html" class="button secondary">Using Alert Auditing</a>  <a href="../auditing/using_security_auditing.html" class="button secondary">Using Security Auditing</a>  <a href="../auditing/auditing_reference.html" class="button secondary">Auditing Reference</a>  
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
@@ -22,7 +22,7 @@ Learn how to monitor system activity using alert notifications or security polic
 * [Security Audit Trails](#security-audit-trails)
 
 ## Introduction
-The *Audit Trails* section of Policy Manager's *Auditing* tab allows you to:
+The *Auditing* section of the *Policy Manager Management Console* provides support for Alerts and Security auditing and allows you to:
 
 * Monitor system activity based on alert notifications or security policy-related actions, users, and date and time range. 
 * This system activity is saved in an "Audit Trail" which is a log of add, modify, and delete operations performed on all objects in the system. 
