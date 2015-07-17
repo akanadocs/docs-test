@@ -40,7 +40,7 @@ This topic describes how to perform the following tasks in Akana Policy Manager.
 * Create a virtual service that provides a messaging (AMQP or JMS) interface to one or more existing services of any type (REST, Messaging, SOAP). 
 * Create a virtual service that provides a RESTful interface for placing messages onto, and pulling messages from a JMS or AMQP queue.
 
-### Step 1: Add Messaging Binding (AMQP or JMS)
+### Step 1 - Add Messaging Binding (AMQP or JMS)
 
 1. Launch the Policy Manager Management Console. 
 2. Select **Create Physical Service**, create a physical service with http://www.ebi.ac.uk/ebisearch/ws/rest?_wadl
@@ -62,21 +62,21 @@ This topic describes how to perform the following tasks in Akana Policy Manager.
 10. After adding the required fields, finish the process. 
 11. Similarly, select JMS in Transport field, if it is desired to have a Messaging Binding over JMS protocol.
 
-### Step 2: Add AMQP Listener
+### Step 2 - Add AMQP Listener
 
 1. Select the *Containers* folder where you will be adding the AMQP listener, and select **Add Listener**. 
 2. Select the **AMQP** Listener type.
 3. Add an AMQP listener with details as shown below.
 	![Messaging Binding](images/message_binding_usecase4.jpg "Add Messaging Binding")
 
-### Step 3: Add JMS Listener
+### Step 3 - Add JMS Listener
 
 1. Select the *Containers* folder and Network Director (**ND1**) container where you will be adding the JMS listener, and select **Add Listener**.
 2. Select the JMS listener type.
 3. Add the JMS listener with details as shown below.
 	![Messaging Binding](images/message_binding_usecase5.jpg "Add Messaging Binding")
 
-### Step 4: Assign Messaging Binding to Service
+### Step 4 - Assign Messaging Binding to Service
 
 1. Select the Services folder for the Physical Service. In the *Service Overview* section select **Manage** in the *Interfaces and Bindings* section. 
 
@@ -95,11 +95,12 @@ This topic describes how to perform the following tasks in Akana Policy Manager.
 
 	![Messaging Binding](images/message_binding_usecase10.jpg "Add Messaging Binding")
 
-### Step 5: Send Requests to API Using ActiveMQ
+### Step 5 - Send Requests to API Using ActiveMQ
 
 1. Network Directory (**ND1**) must be connected to an AMQP broker such as apache-activemq-5.10.0.
 
 2. Run ActiveMQ.
+
 	![Messaging Binding](images/message_binding_usecase11.jpg "Add Messaging Binding")
 
 3. Access activeMQ client at 'http://agubba-e6420:8161/admin/'.
@@ -114,7 +115,7 @@ This topic describes how to perform the following tasks in Akana Policy Manager.
 
 	![Messaging Binding](images/message_binding_usecase13.jpg "Add Messaging Binding")
 
-### Step 6: Create Virtual Service to Provide RESTful Interface for Placing Messages
+### Step 6 - Create Virtual Service to Provide RESTful Interface for Placing Messages
 
 1. Virtualize the above service on Network Director (**ND2**) with HTTP binding, and assign a name (e.g., **VS2**).
 2. Send requests to **VS2**.
@@ -124,7 +125,7 @@ This topic describes how to perform the following tasks in Akana Policy Manager.
 
    And the response is seen.
 
-### Step 7: Logging
+### Step 7 - Logging
 
 1. If the Detailed Auditing policy is attached to **VS1** and **VS2**, usage logs will be generated.
 2. **VS2** logs:
