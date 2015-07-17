@@ -40,9 +40,11 @@ This topic describes how to perform the following tasks in Akana Policy Manager.
 * Create a virtual service that provides a messaging (AMQP or JMS) interface to one or more existing services of any type (REST, Messaging, SOAP). 
 * Create a virtual service that provides a RESTful interface for placing messages onto, and pulling messages from a JMS or AMQP queue.
 
+<a href="#top">Back to top</a>
+
 ### Step 1 - Add Messaging Binding (AMQP or JMS)
 
-1. Launch the Policy Manager Management Console. 
+1. Launch the *Policy Manager Management Console*. 
 2. Select **Create Physical Service**, create a physical service with http://www.ebi.ac.uk/ebisearch/ws/rest?_wadl
 3. Navigate to **Configure > Registry > Bindings** and select **Add Binding**.
 4. Select the service added in Step 2.
@@ -57,10 +59,11 @@ This topic describes how to perform the following tasks in Akana Policy Manager.
 	![Messaging Binding](images/message_binding_usecase3.jpg "Add Messaging Binding")
 
    So that the request will hit, http://agubba-e6420:9901/VS/uniprot/entry/WAP_RAT,WAP_MOUSE?fields=descAltName,organism_scientific_name&fieldurl=true&viewurl=true&format=json
-
 9. Provide an XPath or SQL query for Use selector option (e.g., Operation='get').
 10. After adding the required fields, finish the process. 
 11. Similarly, select JMS in Transport field, if it is desired to have a Messaging Binding over JMS protocol.
+
+<a href="#top">Back to top</a>
 
 ### Step 2 - Add AMQP Listener
 
@@ -69,6 +72,8 @@ This topic describes how to perform the following tasks in Akana Policy Manager.
 3. Add an AMQP listener with details as shown below.
 	![Messaging Binding](images/message_binding_usecase4.jpg "Add Messaging Binding")
 
+<a href="#top">Back to top</a>
+
 ### Step 3 - Add JMS Listener
 
 1. Select the *Containers* folder and Network Director (**ND1**) container where you will be adding the JMS listener, and select **Add Listener**.
@@ -76,13 +81,15 @@ This topic describes how to perform the following tasks in Akana Policy Manager.
 3. Add the JMS listener with details as shown below.
 	![Messaging Binding](images/message_binding_usecase5.jpg "Add Messaging Binding")
 
+<a href="#top">Back to top</a>
+
 ### Step 4 - Assign Messaging Binding to Service
 
-1. Select the Services folder for the Physical Service. In the *Service Overview* section select **Manage** in the *Interfaces and Bindings* section. 
+1. Select the *Services* folder for the Physical Service. In the *Service Overview* section select **Manage** in the *Interfaces and Bindings* section. 
 
 	![Messaging Binding](images/message_binding_usecase6.jpg "Add Messaging Binding")
 
-2. On the Select Interfaces screen, select the Messaging Binding and assign it to the service (i.e., copy to the Interfaces Assigned panel), and complete the wizard.
+2. On the *Select Interfaces* screen, select the **Messaging Binding** and assign it to the service (i.e., copy to the *Interfaces Assigned* panel), and complete the wizard.
 
 	![Messaging Binding](images/message_binding_usecase7.jpg "Add Messaging Binding")
 	![Messaging Binding](images/message_binding_usecase8.jpg "Add Messaging Binding")
@@ -94,6 +101,8 @@ This topic describes how to perform the following tasks in Akana Policy Manager.
 4. The virtual service should be hosted on the **ND1** where we have previously added the AMQP/JMS listeners.
 
 	![Messaging Binding](images/message_binding_usecase10.jpg "Add Messaging Binding")
+
+<a href="#top">Back to top</a>
 
 ### Step 5 - Send Requests to API Using ActiveMQ
 
@@ -115,6 +124,8 @@ This topic describes how to perform the following tasks in Akana Policy Manager.
 
 	![Messaging Binding](images/message_binding_usecase13.jpg "Add Messaging Binding")
 
+<a href="#top">Back to top</a>
+
 ### Step 6 - Create Virtual Service to Provide RESTful Interface for Placing Messages
 
 1. Virtualize the above service on Network Director (**ND2**) with HTTP binding, and assign a name (e.g., **VS2**).
@@ -124,6 +135,8 @@ This topic describes how to perform the following tasks in Akana Policy Manager.
 	![Messaging Binding](images/message_binding_usecase14.jpg "Add Messaging Binding")
 
    And the response is seen.
+
+<a href="#top">Back to top</a>
 
 ### Step 7 - Logging
 
