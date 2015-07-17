@@ -4,7 +4,7 @@ title: Messaging Binding Usage Scenarios for Policy Manager
 description: Learn how to create an AMQP binding for REST, Messaging, and SOAP services and use with a virtual service.  
 product: ag
 category: learn
-weight: 2
+weight: 3
 sub-nav-class: Bindings
 type: page
 nav-title: Messaging Binding Usage Scenarios for Policy Manager
