@@ -14,7 +14,7 @@ nav-title: Messaging Binding Usage Scenarios for Policy Manager
 
 Learn how to create an AMQP binding for REST, Messaging, and SOAP services and use with a virtual service.
 
-<a href="../assets/bindings/using_messaging_binding.html" target="_blank" class="button secondary">Using the Messaging Binding</a>
+<a href="../bindings/using_messaging_binding.html" target="_blank" class="button secondary">Using the Messaging Binding</a>
 
 <h5 class="stamp">Supported Platforms: 7.2</h5>
 

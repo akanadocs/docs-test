@@ -14,7 +14,7 @@ nav-title: Using the Messaging Binding
 
 Learn about messaging binding configuration options and how to configure a virtual service with AMQP or JMS messaging.
 
-<a href="../assets/bindings/messaging_binding_use_cases.html" target="_blank" class="button secondary">Use Cases (Messaging Binding)</a>
+<a href="../bindings/messaging_binding_use_cases.html" target="_blank" class="button secondary">Use Cases (Messaging Binding)</a>
 
 <h5 class="stamp">Supported Platforms: 7.2</h5>
 
@@ -175,7 +175,7 @@ If the AMQPS binding will be used to authenticate an AMQP registry where AMQP de
 
 ### Use Cases
 
-The [Messaging Binding Usage Scenarios for Policy Manager](../assets/bindings/messaging_binding_use_cases.html) topic provides instructions for configuring the following scenarios:
+The [Messaging Binding Usage Scenarios for Policy Manager](../bindings/messaging_binding_use_cases.html) topic provides instructions for configuring the following scenarios:
 
 * Create AMQP binding for services of any type (REST, Messaging, SOAP).
 * Create a virtual service that provides a messaging (AMQP or JMS) interface to one or more existing services of any type (REST, Messaging, SOAP). 
