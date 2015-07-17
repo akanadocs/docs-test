@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Using the  Messaging Binding
+title: Using the Messaging Binding
 description: Learn about messaging binding configuration options and how to configure a virtual service with AMQP or JMS messaging. 
 product: ag
 category: learn
@@ -43,7 +43,7 @@ Support for this binding is available in the following sections of the *Policy M
 * *Add / Modify Access Point > Specify AMQPS Details* - (Workbench &gt; Services &gt; Access Points)
 * *Add Container Listener (AMQP)* -  (Workbench > Containers > Details)
 * *Add Container Listener (AMQPS)* -  (Workbench > Containers > Details)
-* *Host Virtual Service / Modify Virtual Service > Specify AMQP Details* – (Workbench > Containers > Hosted Services)
+* *Host Virtual Service / Modify Virtual Service > Specify AMQP Details* - (Workbench > Containers > Hosted Services)
 
 
 <p><a href="#top">Back to top</a></p>
@@ -149,7 +149,7 @@ The *Specify AMQPS Details* screen for a physical and virtual service allows you
 
 ##### Connection
 
-Connection properties are user-defined additional properties that allow you to specify    the messaging engine that an application will connect to. Only &quot;String&quot; type message    properties are supported. Connection Properties are configured by entering a &quot;Property    Name&quot; and &quot;Property Value. You can enter unlimited connection properties. Entering  a Connection Property is optional.
+Connection properties are user-defined additional properties that allow you to specify the messaging engine that an application will connect to. Only "String" type message    properties are supported. Connection Properties are configured by entering a "Property Name" and "Property Value." You can enter unlimited connection properties. Entering a Connection Property is optional.
 
 ##### *Add Container Listener (AMQPS) > Configure AMQPS Listener Details - (Workbench > Containers >Details)*
 
