@@ -22,7 +22,7 @@ Learn about messaging binding configuration options and how to configure a virtu
 <div id="toc-marker"></div>
 
 * [Introduction](#introduction)
-* [Configuration Options](#config-options)
+* [Configuration Options](#configuration-options)
 * [Use Cases](#use-cases)
 
 <div class = "divider1"></div>

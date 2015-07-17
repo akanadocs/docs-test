@@ -22,12 +22,12 @@ Learn how to create an AMQP binding for REST, Messaging, and SOAP services and u
 <div id="toc-marker"></div>
 
 * [Introduction](#introduction)
-* [Step 1 - Add Messaging Binding (AMQP or JMS)](#add-messaging-binding)
-* [Step 2 - Add AMQP Listener](#add-amqp-listener)
-* [Step 3 - Add JMS Listener](#add-jms-listener)
-* [Step 4 - Assign Messaging Binding to Service](#assign-messaging-binding-to-service)
-* [Step 5 - Send Requests to API Using ActiveMQ](#send-requests-to-api-using-activemq)
-* [Step 6 - Create Virtual Service to Provide RESTful Interface for Placing Messages](#create-virtual-service-to-provide-restful-interface-for-placing-messages)
+* [Step 1 - Add Messaging Binding (AMQP or JMS)](#step-1-add-messaging-binding-amqp-or-jms)
+* [Step 2 - Add AMQP Listener](#step-2-add-amqp-listener)
+* [Step 3 - Add JMS Listener](#step-3-add-jms-listener)
+* [Step 4 - Assign Messaging Binding to Service](#step-4-assign-messaging-binding-to-service)
+* [Step 5 - Send Requests to API Using ActiveMQ](#step-5-send-requests-to-api-using-activemq)
+* [Step 6 - Create Virtual Service to Provide RESTful Interface for Placing Messages](#step-6-create-virtual-service-to-provide-restful-interface-for-placing-messages)
 * [Step 7 - Logging](#logging)
 
 <div class = "divider1"></div>
