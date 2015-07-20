@@ -30,6 +30,8 @@ Getting started: Managing a Simple API
 
 ### <a name="Overview"></a>Overview
 
+
+
 This document will walk you through the steps to configure containers and then configure the Policy Manager to the Network Director. You will then register the API(s), create a contract, and then send a test request to check that the set up is complete and correct. 
 
 ![Simple API](images/simple-api-scenario.png "Simple API")
