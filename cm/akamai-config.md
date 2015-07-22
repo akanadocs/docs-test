@@ -40,7 +40,7 @@ True Client Header Name | True-Client-IP
 Origin SSL Certificate Verification Field | Input
 ------------- | -------------
 Verification Settings | **Choose Your Own (Recommended)**
-Match CN/SAN To | {{Forward Host Header}}; ***eap.soa.com;** {{Origin Hostname}} 
+Match CN/SAN To | \{\{Forward Host Header\}\}; **\*.eap.soa.com;** \{\{Origin Hostname\}\} 
 Trust | Akamai-managed Certificate Authorities Sets
 Akamai-managed Certifcate Authority Sets | Akamai Certificate Store
 
@@ -87,7 +87,7 @@ Click the **Add Behavior** to add the following behaviors:
 * Allow PUT
 
 ### Content Compression Settings
-On the left side click on **COntent Compression** and input the following:
+On the left side click on **Content Compression** and input the following:
 
 Content Compression Field | Input
 ------------- | -------------
@@ -104,7 +104,7 @@ Static Content Field | Input
 Criteria | **Match Any**
 IF | File Extension 
 Is one of | **aif; aiff; au; avi; bin; bmp; cab; carb; cct; cdf; class; css; doc; dcr; dtd; exe; flv; gcf; gff; gif; grv; hdml; hqx; ico; ini; jpeg; jpg; js; mov; mp3; nc; pct; pdf; png; ppc; pws; swa; swf; txt; vbs; w32; wav; wbmp; wml; wmlc; wmls; wmlsc; xsd; zip; properties; html; htm; json**
-OR Path is one of | **"/*/avatar"; /*/metadata**
+OR Path matches one of | **/\*/avatar; /\*/metadata**
 
 Caching Fields | Input
 ------------- | -------------
