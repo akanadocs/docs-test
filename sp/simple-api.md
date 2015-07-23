@@ -188,7 +188,6 @@ In this step we will use the Akana Demo REST API, available at [http://demo.akan
 2. Under the "Service Summary", click **Create Physical Service**.
 3. Click the radio button for **Create Without Using Service Descriptor Document**. Click **Next**.
 4. In the "Service Details," enter the:
-	
 	* Name: Enter the name of the API
 	* QName: Give a unique Namespace and Localpart. This is used by the system internally to uniquely route to a service or API. 
 	
@@ -197,7 +196,6 @@ In this step we will use the Akana Demo REST API, available at [http://demo.akan
 6. Click **Add Operation**. Give it a name and a description if you'd like. Click **Next**.
 7. The "Operation Details" screen  gives you the opportunity to specify Schema elements/types for your operation. For simplicity's sake, under "Schemas," assign the **anyType** to the "input"and the "Output" by clicking the >>. You can leave "Fault" blank. Click **Next**.
 8. In the "Binding Properties" screen, choose your:
-
 	* Method (in our example, we used the GET operation.)
 	* URI Syntax: This is the path for your operation. Regular expressions can be used. Use the left-side panel to get more information. 
 
