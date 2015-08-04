@@ -31,12 +31,14 @@ nav-title: Performance Tuning
 	<li><a href="#other-settings">Other Settings</a></li>
 	<ol>
 		<li><a href="#gif-metrics">Calculating GIF metrics</a></li>
-		<li><a href="#auto-search">Disabling auto-search</a></li>
-		<li><a href="#require-metrics-policy">Internal service metrics calculations</a></li>
+		<li><a href="#auto-search">Disabling Auto-search</a></li>
+		<li><a href="#require-metrics-policy">Internal Service Metrics Calculations</a></li>
 		<li><a href="#usage-writer">Configuring the Usage Writer</a></li>
-		<li><a href="#preloading">Preloading invoked services</a></li>
-		<li><a href="#contract-policy-cache">Contract policy cache</a></li>
-		<li><a href="#endpoint-cache">Endpoint cache</a></li>
+		<li><a href="#preloading">Preloading Invoked Services</a></li>
+		<li><a href="#contract-policy-cache">Contract Policy Cache</a></li>
+		<li><a href="#cert-cache">Policy Manager Client (Certificate) Cache</a></li>
+		<li><a href="#az-cache">Contract Authorization Cache</a></li>
+		<li><a href="#cm-settings">Community Manager settings</a></li>
 	</ol>
 </ol>
 
@@ -195,7 +197,7 @@ com.soa.service.category ->
 service.category.manager.transactional.loadGifMetrics = false
 ```
 
-#### <a name="auto-search"></a>Disabling auto-search
+#### <a name="auto-search"></a>Disabling Auto-search
 
 This property controls the behavior of the Policy Manager Console (Workbench Tab) when its loaded. By default this value is set to true and a search is executed to display all the APIs/Services in the system. If there are a large number of services this default search can take a while and should be disabled.
 
@@ -208,7 +210,7 @@ com.soa.console ->
 workbench.search.PerformAutoSearch=true
 ```
 
-#### <a name="require-metrics-policy"></a>Internal service metrics calculations
+#### <a name="require-metrics-policy"></a>Internal Service Metrics Calculations
 
 By default, the Policy Manager records performance metrics for its own internal services. This will add volumes of data to the database if not cleaned out regularly. If these metrics are not important, you can disable the default metrics collection (thereby requiring the explicit assignment of the metric policy) by setting the config parameter to 'true'. This setting is slightly counter-intuitive.
 
@@ -250,7 +252,7 @@ The 'com.soa.monitor.usage' property is the one that in most cases causes issues
 2. Increasing the usageBatchSize by small increments 
 3. Decreasing the writeInterval by small decrements
 
-#### <a name="preloading"></a>Preloading invoked services
+#### <a name="preloading"></a>Preloading Invoked Services
 
 During normal Network Director operation, the downstream API/service endpoints are loaded only upon first invocation. This is done to save memory and lower startup time, but incurs an overhead in the first invocation of an API. If the number of APIs/Services is less than 100, you can preload all the downstream endpoint on startup.
 
@@ -263,7 +265,7 @@ com.soa.vs.engine ->
 vs.capability.metadata.preloadInvokedServices=true
 ```
 
-#### <a name="contract-policy-cache"></a>Contract policy cache
+#### <a name="contract-policy-cache"></a>Contract Policy Cache
 
 The Network Director caches the policies associated with the contract. This cache expires to save memory, but incurs an overhead in the first invocation of an API when the cache is reloaded.
 
@@ -284,7 +286,7 @@ contract.handler.framework.maxRefreshInterval=900
 
 Amount of seconds a contract should remain in the cache before requiring a refesh. The default value is 120, but can be extended to something like 900 (15 minutes) as long as the time taken to propagate contract policies is not a security or operational concern.
 
-#### <a name="endpoint-cache"></a>Endpoint cache
+#### <a name="endpoint-cache"></a>Endpoint Cache
 
 The Network Director caches the endpoints associated with downstream APIs/Service. This cache expires to save memory, but incurs an overhead in the first invocation of an API when the cache is reloaded.
 
@@ -303,12 +305,66 @@ If true, removes endpoints from the ache when inactive. The default value is tru
 com.soa.jbi -> 
 lbha.endpoint.refresh.task.expirationInterval=3600000
 ```
-The time in milliseconds and endpoint can be inactive (not called) before it is removed from the router cache. The default value is 300000, but can be set to 3600000 (one hour). 
+The time in milliseconds an endpoint can be inactive (not called) before it is removed from the router cache. The default value is 300000, but can be set to 3600000 (one hour). 
 
 ```
 com.soa.jbi -> 
 lbha.endpoint.refresh.task.maxrefreshInterval=900000
 ```
 The maximum amount of time in milliseconds before the refresh of endpoints. The default value is 60000, but can be extended to 900000 (15 minutes) as long as the time to propagate downstream endpoint changes is not a security or operational concern.
+
+#### <a name="cert-cache"></a>Policy Manager Client (Certificate) Cache
+
+The Network Director caches the certificates and keys used for the crytographic functions. The cache can be increased or decreased depending on availability and security requriements.
+
+**Scope**: Network Director Containers
+
+In the admin console, configure the following:
+
+```
+com.soa.client.subsystems -> 
+pm.client.cache.refresh.trigger.repeatInterval=60000
+```
+The time in milliseconds before the Policy Manager Client (Certificate) cache attempts a refresh. This can be shortened if faster certificate revocation is essential to system security.
+
+```
+com.soa.client.subsystems -> 
+pm.client.cache.cacheExpirationSecs=300
+```
+The time is seconds before a certificate is expired from the cache. This time can be lengthened to ensure that the Network Directors can continue to function without the Policy Manager. This may cause a security vulnerability if a certificate is revoked but the Policy Manager is unreachable.
+
+
+#### <a name="az-cache"></a>Contract Authorization Cache
+
+The Network Director caches the contract authorization descisions to improve performance. This cache improves the performance of the authorization activities and will also allow the Network Director to continue functioning for a while without connectivity to Policy Manager.
+
+**Scope**: Network Director Containers
+
+In the admin console, configure the following:
+
+```
+com.soa.auz.operation -> 
+cached.auz.engine.operation.cacheTimeout=60
+```
+The time is seconds before the authorization descision is marked as expired from the cache. This time can be lengthened to improve performance of the Network Director.
+
+
+```
+com.soa.auz.operation -> 
+cached.auz.engine.operation.expirationTimeInSeconds=1800
+```
+The time in seconds before the authorization descision will be removed from the cache. This time can be lengthened to ensure that the Network Directors can continue to function without the Policy Manager. This may cause a security vulnerability if a contract is revoked but the Policy Manager is unreachable.
+
+#### <a name="cm-settings"></a>Community Manager Settings
+
+Community Manager also incorporates a number of cache settings. These include:
+
+* [com.soa.api.security](../../cm/learnmore/site_admin_admin_console_settings.htm#com_soa_api_security)
+* [com.soa.oauth.agent.client.cache](../../cm/learnmore/site_admin_admin_console_settings.htm#com_soa_oauth_agent_client_cache)
+* [com.soa.oauth.client.cache](../../cm/learnmore/site_admin_admin_console_settings.htm#com_soa_oauth_client_cache)
+
+For more information, please refer to the [Admin Console Settings](../../cm/learnmore/site_admin_admin_console_settings.htm) document for Community Manager.
+
+
 
 
