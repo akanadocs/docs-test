@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Configure JMS Connection over HTTP
+title: JMS Additional Connection Properties
 description: Learn how to configure additional JMS connection properties.   
 product: ag
 category: learn

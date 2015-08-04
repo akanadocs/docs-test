@@ -115,7 +115,8 @@ This use case is based on the assumption that a WSDL for the underlying service 
 
 #### Manage Bindings
 
-1. ![JMS/HTTP](images/jms_http_9.jpg "Manage Bindings")
+1. 
+2. ![JMS/HTTP](images/jms_http_9.jpg "Manage Bindings")
 
 2. Change the binding from the original SOAP/HTTP to the newly created SOAP/JMS.
 
