@@ -4,7 +4,7 @@ title: Configure JMS Connection over HTTP
 description: Learn how to configure JMS or AMQP to initiate an HTTP/SOAP call that is then sent to JMS in a queue.   
 product: ag
 category: learn
-weight: 3
+weight: 4
 sub-nav-class: Bindings
 type: page
 nav-title: Configure JMS Connection over HTTP
@@ -58,7 +58,6 @@ For the different JMS vendors you need to deploy client libraries of the target 
 #### Configuring Network Director
 
 1. Choose **Add Container Listener** and select **JMS** as Listener Type. In the following window provide the connection details of the JMS server:
-
 	* **JNDI URL** - Address of the server, for example `tibjmsnaming://tibco.emeademo.de:7222` (Tibco) or `tcp://activemq.emeademo.de:61616` (ActiveMQ)
 	* **JNDI Initial Context** - `com.tibco.tibjms.naming.TibjmsInitialContextFactory` (Tibco) `org.apache.activemq.jndi.ActiveMQInitialContextFactory` (ActiveMQ)
 	* **JMS Destination Factory Name** - Depending on the JMS server configuration, for example `ConnectionFactory`
@@ -199,27 +198,28 @@ This use case is about having a WSDL with JMS binding included. This means we wi
 
 #### Checking WSDL
 
-1. Important note: Some JMS servers do provide vendor specific JMS binding properties in the WSDL. Those entries might be in a format which cannot be imported directly in the Policy Manager and therefor will be configured manually (see below). In this case *remove the wsdl:port from the WSDL before importing*.
+1. **Important note:** Some JMS servers do provide vendor specific JMS binding properties in the WSDL. Those entries might be in a format which cannot be imported directly in the Policy Manager and therefor will be configured manually (see below). In this case *remove the wsdl:port from the WSDL before importing*.
 
-```
-<wsdl:service name="serviceESB">
-        <wsdl:port name="serviceJMS" binding="tns:serviceJMS">
-            <soap:address location=""/>
-            <jndi:context>
-                <jndi:property name="java.naming.factory.initial" type="java.lang.String">com.tibco.tibjms.naming.TibjmsInitialContextFactory</jndi:property>
-                <jndi:property name="java.naming.provider.url" type="java.lang.String">tcp://tibco.emeademo.de:7221</jndi:property>
-            </jndi:context>
-            <jms:connectionFactory>QueueConnectionFactory</jms:connectionFactory>
-            <!--The element targetAddress value (targetQueue) is the jndi name of the destination. Please replace this with physical destination name at the service consumption point.-->
-            <jms:targetAddress destination="queue"> targetQueue</jms:targetAddress>
-        </wsdl:port>
-    </wsdl:service>
-
-```             
+	```
+	<wsdl:service name="serviceESB">
+	        <wsdl:port name="serviceJMS" binding="tns:serviceJMS">
+	            <soap:address location=""/>
+	            <jndi:context>
+	                <jndi:property name="java.naming.factory.initial" type="java.lang.String">com.tibco.tibjms.naming.TibjmsInitialContextFactory</jndi:property>
+	                <jndi:property name="java.naming.provider.url" type="java.lang.String">tcp://tibco.emeademo.de:7221</jndi:property>
+	            </jndi:context>
+	            <jms:connectionFactory>QueueConnectionFactory</jms:connectionFactory>
+	            <!--The element targetAddress value (targetQueue) is the jndi name of the destination. Please replace this with physical destination name at the service consumption point.-->
+	            <jms:targetAddress destination="queue"> targetQueue</jms:targetAddress>
+	        </wsdl:port>
+	    </wsdl:service>
+	
+	```             
 
 #### Import WSDL
 
-1. ![JMS/HTTP](images/jms_http_24.jpg "Import WSDL")
+1. Select **Create Physical Service** and import the WSDL.
+	![JMS/HTTP](images/jms_http_24.jpg "Import WSDL")
 
 2. Choose to virtualize the service later.
 
@@ -266,9 +266,7 @@ This use case is about having a WSDL with JMS binding included. This means we wi
 3. Set the parameters according to the JMS server.
 
 	![JMS/HTTP](images/jms_http_33.jpg "Set Parameters According to JMS Server")
-
 	* **JNDI URL** - Address of the server, for example `tibjmsnaming://tibco.emeademo.de:7222` (Tibco) or `tcp://activemq.emeademo.de:61616` (ActiveMQ)
-
 	* **JNDI Initial Context** -  `com.tibco.tibjms.naming.TibjmsInitialContextFactory` (Tibco) `org.apache.activemq.jndi.ActiveMQInitialContextFactory` (ActiveMQ)
  * **JMS Destination Factory Name** - Depending on the JMS server configuration, for example `ConnectionFactory`
 
