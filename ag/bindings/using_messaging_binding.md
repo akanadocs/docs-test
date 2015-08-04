@@ -98,7 +98,7 @@ The *Specify AMQP Details* screen for a physical and virtual service allows you 
 * **Binding Details** - Displays the "Binding Type" and "Binding" associated    with the service access point definition. The "Binding Type" is a Policy Manager-specific  field. The "Binding" represents the wsdl:binding element in the WSDL.
 * **Access Point Details** - Displays the "WSDL Port Name" and "Description." The "WSDL Port Name" represents the wsdl:port element in the WSDL. The "Description" represents the wsdl:documentation element in the WSDL. The "Description" field is  optional.
 * **Virtual Host Name** - Allows you to specify the virtual host name of the  AMQP broker.
-* **Authentication Required** - Used if the AMQPS binding will be used to authenticate an AMQP registry where AMQP destinations or targets are located, or to authenticate the AMQP system itself, authentication may be required. To enable authentication, select the checkbox and specify the username and password credentials.
+* **Authentication Required** - Used if the AMQPS binding will be used to authenticate an AMQP registry where AMQP destinations or targets are located, or to authenticate the AMQP system itself, authentication may be required. To enable authentication, select the check-box and specify the username and password credentials.
 
 ##### Virtual Service
 
@@ -106,7 +106,7 @@ The *Specify AMQP Details* screen for a physical and virtual service allows you 
 * **Binding Details** - Displays the "Binding Type" and "Binding" associated with the service access point definition. The "Binding Type" is a Policy Manager-specific  field. The "Binding" represents the wsdl:binding element in the WSDL.
 * **Access Point Details** - Displays the "WSDL Port Name" and "Description." The "WSDL Port Name" represents the wsdl:port element in the WSDL. The "Description" represents the wsdl:documentation element in the WSDL. The "Description" field is  optional.
 * Virtual Host Name - Allows you to specify the virtual host name of the  AMQP broker.
-* **AMQP Details** - Displays the virtual host name assigned to the AMQP broker, authentication details (true/false), and Username. If true, the AMQP binding will be used to authenticate an AMQP registry where AMQP destinations or targets are located,  or will authenticate the AMQP system itself.
+* **AMQP Details** - Displays the virtual host name assigned to the AMQP broker, authentication details (true/false), and username. If true, the AMQP binding will be used to authenticate an AMQP registry where AMQP destinations or targets are located, or will authenticate the AMQP system itself.
 
 ##### *Add / Modify Access Point > Specify AMQPS Details* - (Workbench &gt; Services > Access Points)
 
@@ -118,10 +118,10 @@ The *Specify AMQPS Details* screen for a physical and virtual service allows you
 
 * **Binding Details** - Displays the "Binding Type" and "Binding" associated with the service access point definition. The "Binding Type" is a Policy Manager-specific  field. The "Binding" represents the wsdl:binding element in the WSDL.
 
-* **Access Point Details** - Displays the "WSDL Port Name" and "Description." The "WSDL Port Name" represents the wsdl:port element in the WSDL. The "Description"    represents the wsdl:documentation element in the WSDL. The "Description" field is  optional.
+* **Access Point Details** - Displays the "WSDL Port Name" and "Description." The "WSDL Port Name" represents the wsdl:port element in the WSDL. The "Description" represents the wsdl:documentation element in the WSDL. The "Description" field is  optional.
 
-* **Virtual Host Name** - Allows you to specify the virtual host name of the  AMQP broker.
-* **Authentication Required** - Used if the AMQPS binding will be used to authenticate an AMQPS registry where AMQP destinations or targets are located, or to authenticate the AMQP system itself, authentication may be required. To enable  authentication, select the checkbox and specify the username and password credentials.
+* **Virtual Host Name** - Allows you to specify the virtual host name of the AMQP broker.
+* **Authentication Required** - Used if the AMQPS binding will be used to authenticate an AMQPS registry where AMQP destinations or targets are located, or to authenticate the AMQP system itself, authentication may be required. To enable  authentication, select the check-box and specify the username and password credentials.
 
 ##### Virtual Service
 
@@ -129,7 +129,7 @@ The *Specify AMQPS Details* screen for a physical and virtual service allows you
 * **Binding Details** - Displays the "Binding Type" and "Binding" associated with the service access point definition. The "Binding Type" is a Policy Manager-specific field. The "Binding" represents the wsdl:binding element in the WSDL.
 * **Access Point Details** - Displays the "WSDL Port Name" and "Description." The "WSDL Port Name" represents the wsdl:port element in the WSDL. The "Description" represents the wsdl:documentation element in the WSDL. The "Description" field is  optional.
 * Virtual Host Name - Allows you to specify the virtual host name of the  AMQP broker.
-* **AMQPS Details** - Displays the virtual host name assigned to the AMQP broker, authentication details (true/false), and Username. If true, the AMQPS binding will be used to authenticate an AMQP registry where AMQP destinations or targets are located, or will authenticate the AMQP system itself. To enable authentication, select the checkbox and specify the username and password credentials.
+* **AMQPS Details** - Displays the virtual host name assigned to the AMQP broker, authentication details (true/false), and username. If true, the AMQPS binding will be used to authenticate an AMQP registry where AMQP destinations or targets are located, or will authenticate the AMQP system itself. To enable authentication, select the check-box and specify the username and password credentials.
 
 *Add Container Listener (AMQP) > Configure AMQP Listener Details* -  (Workbench > Containers > Details)
 
@@ -145,7 +145,7 @@ The *Specify AMQPS Details* screen for a physical and virtual service allows you
 
 ##### Authentication Required
 
-* If the AMQP binding will be used to authenticate an AMQP registry where AMQP destinations or targets are located, or to authenticate the AMQP system itself, authentication may be required. To enable authentication, select the checkbox and specify the username  and password credentials.
+* If the AMQP binding will be used to authenticate an AMQP registry where AMQP destinations or targets are located, or to authenticate the AMQP system itself, authentication may be required. To enable authentication, select the check-box and specify the username  and password credentials.
 
 ##### Connection
 
@@ -165,7 +165,7 @@ Connection properties are user-defined additional properties that allow you to s
 
 ##### Authentication Required
 
-If the AMQPS binding will be used to authenticate an AMQP registry where AMQP destinations    or targets are located, or to authenticate the AMQP system itself, authentication    may be required. To enable authentication, select the checkbox and specify the username  and password credentials. 
+If the AMQPS binding will be used to authenticate an AMQP registry where AMQP destinations or targets are located, or to authenticate the AMQP system itself, authentication may be required. To enable authentication, select the check-box and specify the username  and password credentials. 
 
 ##### Connection
 

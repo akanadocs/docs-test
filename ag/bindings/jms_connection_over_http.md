@@ -31,17 +31,17 @@ Learn how to configure JMS or AMQP to initiate an HTTP/SOAP call that is then se
 
 This topic provides documentation about two typical use cases when working with a JMS (AMQP setup is similar).
 
-The result will be being able to initiate a HTTP/SOAP call (e.g. SOAPUI) which is then send to the JMS in a queue. The result will be pulled from a result queue and being send back over HTTP to the client.
+The result will allow you to initiate a HTTP/SOAP call (e.g. SOAPUI) that is then sent to the JMS in a queue. The result will be pulled from a result queue and sent back over HTTP to the client.
 
 ### General: Create JMS Listener
 
-For both use cases a JMS Listener needs to be configured first.
+For both use cases a JMS Listener must be configured first.
 
 #### Client libraries
 
-For the different JMS vendors you need to deploy client libraries of the target system into the Network Director you are planning to use for the connections. Those are typically version dependent and should be taken from the actual JMS server you are binding to.
+For the different JMS vendors you need to deploy client libraries of the target system into the Network Director instance you are planning to use for the connections. Those are typically version dependent and should be taken from the actual JMS server you are binding to.
 
-1. Copy them to your Network Director deploy directory and restart the instance afterwards:
+1. Copy them to your Network Director deploy directory, then restart the instance:
 
 	`cp clientLibs.jar /opt/soa/sm70/instance/NetworkDirectorForJMS/deploy/`
 
@@ -59,11 +59,11 @@ For the different JMS vendors you need to deploy client libraries of the target 
 
 1. Choose **Add Container Listener** and select **JMS** as Listener Type. In the following window provide the connection details of the JMS server:
 
- * **JNDI URL** - Address of the server, for example `tibjmsnaming://tibco.emeademo.de:7222` (Tibco) or `tcp://activemq.emeademo.de:61616` (ActiveMQ)
- * **JNDI Initial Context** - `com.tibco.tibjms.naming.TibjmsInitialContextFactory` (Tibco) `org.apache.activemq.jndi.ActiveMQInitialContextFactory` (ActiveMQ)
- * J**MS Destination Factory Name** - Depending on the JMS server configuration, for example `ConnectionFactory`
+	* **JNDI URL** - Address of the server, for example `tibjmsnaming://tibco.emeademo.de:7222` (Tibco) or `tcp://activemq.emeademo.de:61616` (ActiveMQ)
+	* **JNDI Initial Context** - `com.tibco.tibjms.naming.TibjmsInitialContextFactory` (Tibco) `org.apache.activemq.jndi.ActiveMQInitialContextFactory` (ActiveMQ)
+	* **JMS Destination Factory Name** - Depending on the JMS server configuration, for example `ConnectionFactory`
 
-2. If you need to enter credentials or other specific parameters for the connection to the server use the **Add Property** link and add the parameters. Refer to “JMS Additional Properties” for the available options.
+2. If you need to enter credentials or other specific parameters for the connection to the server use the **Add Property** link and add the parameters. Refer to [JMS Additional Properties](../bindings/jms_additional_connection_properties.html) for the available options.
 
 	![Messaging Binding](images/jms_http_1.jpg "Configure JMS Connection Listener")
 
@@ -79,7 +79,7 @@ This use case is based on the assumption that a WSDL for the underlying service 
 
 	![JMS/HTTP](images/jms_http_2.jpg "Create Physical Service")
 
-2. Choose **Do not manage this time** when being asked for creating a virtual service.
+2. Choose **Do not manage this time** when being asked to create virtual service.
 
 	![JMS/HTTP](../bindings/images/jms_http_3.jpg "Select Service Management Option")
 
@@ -99,7 +99,7 @@ This use case is based on the assumption that a WSDL for the underlying service 
 
 	![JMS/HTTP](images/jms_http_6.jpg "Configure SOAP 1.1 Binding Properties")
 
-5. For the SOAP action, check with the WSDL and JMS server setup for which option to choose.
+5. For the SOAP action, check with the WSDL and JMS server setup for what option to choose.
 
 #### Create Virtual Service for JMS
 
@@ -115,8 +115,7 @@ This use case is based on the assumption that a WSDL for the underlying service 
 
 #### Manage Bindings
 
-1. 
-2. ![JMS/HTTP](images/jms_http_9.jpg "Manage Bindings")
+1. ![JMS/HTTP](images/jms_http_9.jpg "Manage Bindings")
 
 2. Change the binding from the original SOAP/HTTP to the newly created SOAP/JMS.
 
@@ -124,11 +123,11 @@ This use case is based on the assumption that a WSDL for the underlying service 
 
 #### Add Access Point
 
-1. Add a new Access Point for your virtual Service:
+1. Add a new Access Point for your virtual service:
 
 	![JMS/HTTP](images/jms_http_11.jpg "Add Access Point")
 
-2. Choose the Network Director which has been configured for JMS (see above).
+2. Choose the Network Director instance which has been configured for JMS (see above).
 
 	![JMS/HTTP](images/jms_http_12.jpg "Select Container")
 
@@ -148,7 +147,7 @@ This use case is based on the assumption that a WSDL for the underlying service 
 
 	![JMS/HTTP](images/jms_http_15.jpg "Add Parameter for Reply Queue")
 
-8. See also the “JMS Connection Additional Properties” document for more parameters.
+8. See also the [JMS Additional Properties](../bindings/jms_additional_connection_properties.html) for more parameters.
 
 #### Create Virtual Service for HTTP
 
@@ -186,7 +185,7 @@ This use case is based on the assumption that a WSDL for the underlying service 
 
 	![JMS/HTTP](images/jms_http_23.jpg "Chose Virtual Host and Context Path")
 
-9. Done. Grab the WSDL of this virtual service and start sending messages to the service. Be sure to have authentication policy or contract applied.
+9. The configuration is complete. Grab the WSDL of this virtual service and start sending messages to the service. Be sure to have authentication policy or contract applied.
 
 <a href="#top">back to top</a>
 
@@ -258,7 +257,7 @@ This use case is about having a WSDL with JMS binding included. This means we wi
 
 	![JMS/HTTP](images/jms_http_30.jpg "Add Access Point to Physical Service")
 
-2. Choose the Network Director with JMS Listener configured.
+2. Choose the Network Director instance with JMS Listener configured.
 
 	![JMS/HTTP](images/jms_http_31.jpg "Choose Network Director with JMS Listener Configured")
 
@@ -268,18 +267,18 @@ This use case is about having a WSDL with JMS binding included. This means we wi
 
 	![JMS/HTTP](images/jms_http_33.jpg "Set Parameters According to JMS Server")
 
- * **JNDI URL** - Address of the server, for example `tibjmsnaming://tibco.emeademo.de:7222` (Tibco) or `tcp://activemq.emeademo.de:61616` (ActiveMQ)
+	* **JNDI URL** - Address of the server, for example `tibjmsnaming://tibco.emeademo.de:7222` (Tibco) or `tcp://activemq.emeademo.de:61616` (ActiveMQ)
 
- * **JNDI Initial Context** -  `com.tibco.tibjms.naming.TibjmsInitialContextFactory` (Tibco) `org.apache.activemq.jndi.ActiveMQInitialContextFactory` (ActiveMQ)
+	* **JNDI Initial Context** -  `com.tibco.tibjms.naming.TibjmsInitialContextFactory` (Tibco) `org.apache.activemq.jndi.ActiveMQInitialContextFactory` (ActiveMQ)
  * **JMS Destination Factory Name** - Depending on the JMS server configuration, for example `ConnectionFactory`
 
-	Those parameters are inherited from Network Director.
+	Those parameters are inherited from the Network Director instance.
 
-4. If you need to enter credentials or other specific parameters for the connection to the server use the **Add Property** link and add the parameters. See *JMS Additional Properties* for the available options.
+4. If you need to enter credentials or other specific parameters for the connection to the server use the **Add Property** link and add the parameters. See [JMS Additional Properties](../bindings/jms_additional_connection_properties.html) for the available options.
 
 #### Virtualize Service as HTTP
 
-1. Choose “Virtualize Service” on your physical service.
+1. Choose **Virtualize Service** on your physical service.
 
 2. Select the container later.
 
@@ -327,7 +326,7 @@ This use case is about having a WSDL with JMS binding included. This means we wi
 
 	![JMS/HTTP](images/jms_http_43.jpg "Specify Virtual Host and Context Path")
 
-5. Done. Grab the WSDL of this virtual service and start sending messages to the service. Be sure to have authentication policy or contract applied.
+5. The configuration is complete. Grab the WSDL of this virtual service and start sending messages to the service. Be sure to have authentication policy or contract applied.
 
 <a href="#top">back to top</a>
 
