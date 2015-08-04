@@ -10,7 +10,7 @@ type: page
 nav-title: Configure JMS Connection over HTTP
 ---
 
-## JMS Connection Over HTTP
+## Configure JMS Connection Over HTTP
 
 Learn how to configure JMS or AMQP to initiate an HTTP/SOAP call that is then sent to JMS in a queue. 
 
@@ -94,7 +94,7 @@ This use case is based on the assumption that a WSDL for the underlying service 
 
 	![JMS/HTTP](images/jms_http_5.jpg "Specify Binding Details")
 
-4. On the next screen choose `JMS` for **Transport** and the **Transport URI** depending on the JMS server you are using:
+4. On the next screen choose `JMS` for **Transport** and the **Transport URI** depending on the JMS server you are using.
 
 	![JMS/HTTP](images/jms_http_6.jpg "Configure SOAP 1.1 Binding Properties")
 
@@ -114,7 +114,8 @@ This use case is based on the assumption that a WSDL for the underlying service 
 
 #### Manage Bindings
 
-1. ![JMS/HTTP](images/jms_http_9.jpg "Manage Bindings")
+1. In *Service Overview > Interfaces and Bindings*, select **Manage Bindings**.
+	![JMS/HTTP](images/jms_http_9.jpg "Manage Bindings")
 
 2. Change the binding from the original SOAP/HTTP to the newly created SOAP/JMS.
 
@@ -122,7 +123,7 @@ This use case is based on the assumption that a WSDL for the underlying service 
 
 #### Add Access Point
 
-1. Add a new Access Point for your virtual service:
+1. Add a new Access Point for your virtual service.
 
 	![JMS/HTTP](images/jms_http_11.jpg "Add Access Point")
 
@@ -142,7 +143,7 @@ This use case is based on the assumption that a WSDL for the underlying service 
 
 	![JMS/HTTP](images/jms_http_14.jpg "Add Parameter for Destination Queue")
 
-7. For a fixed reply queue: Set the `jms.replyto.name` to the name of the reply queue.
+7. For a fixed reply queue, set the `jms.replyto.name` to the name of the reply queue.
 
 	![JMS/HTTP](images/jms_http_15.jpg "Add Parameter for Reply Queue")
 
@@ -151,8 +152,7 @@ This use case is based on the assumption that a WSDL for the underlying service 
 #### Create Virtual Service for HTTP
 
 1. Virtualize your just created JMS virtual service. 
-
-	***Hint:** Name it `YourServiceName_JMS_HTTP` so it can be easily identified.* 
+	* *Hint: Name it `YourServiceName_JMS_HTTP` so it can be easily identified.* 
 
 	![JMS/HTTP](images/jms_http_16.jpg "Virtualize JMS Virtual Service")
 
@@ -160,7 +160,7 @@ This use case is based on the assumption that a WSDL for the underlying service 
 
 	![JMS/HTTP](images/jms_http_17.jpg "Select Container Later")
 
-3. Manage the binding of the just created virtual service:
+3. Manage the binding of the just created virtual service.
 
 	![JMS/HTTP](images/jms_http_18.jpg "Manage Binding of Virtual Service")
 
@@ -168,7 +168,7 @@ This use case is based on the assumption that a WSDL for the underlying service 
 
 	![JMS/HTTP](images/jms_http_19.jpg "Choose non-JMS Binding")
 
-5. Create an access point for the new virtual service:
+5. Create an access point for the new virtual service.
 
 	![JMS/HTTP](images/jms_http_20.jpg "Create Access Point for Virtual Service")
 
@@ -180,7 +180,7 @@ This use case is based on the assumption that a WSDL for the underlying service 
 
 	![JMS/HTTP](images/jms_http_22.jpg "Select HTTP Listener")
 
-8. Choose virtual host and context path:
+8. Choose virtual host and context path.
 
 	![JMS/HTTP](images/jms_http_23.jpg "Chose Virtual Host and Context Path")
 
@@ -243,7 +243,7 @@ This use case is about having a WSDL with JMS binding included. This means we wi
 
 	![JMS/HTTP](images/jms_http_27.jpg "Choose Binding Type, Transport, and Transport URI")
 
-8. Add the binding to the service by choosing the **Manage** link on Interfaces and bindings:
+8. Add the binding to the service by choosing the **Manage** link on Interfaces and bindings.
 
 	![JMS/HTTP](images/jms_http_28.jpg "Add Binding to Service")
 

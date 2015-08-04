@@ -14,7 +14,7 @@ nav-title: Using the Messaging Binding
 
 Learn about messaging binding configuration options and how to configure a virtual service with AMQP or JMS messaging.
 
-<a href="../bindings/messaging_binding_use_cases.html" target="_blank" class="button secondary">Use Cases (Messaging Binding)</a>
+<a href="../bindings/message_bindings_use_case_toc.html" target="_blank" class="button secondary">Use Cases (Messaging Binding)</a>
 
 <h5 class="stamp">Supported Platforms: 7.2</h5>
 
@@ -46,7 +46,7 @@ Support for this binding is available in the following sections of the *Policy M
 * *Host Virtual Service / Modify Virtual Service > Specify AMQP Details* - (Workbench > Containers > Hosted Services)
 
 
-<p><a href="#top">Back to top</a></p>
+<p><a href="#top">back to top</a></p>
 
 ### Configuration Options
 
@@ -171,7 +171,7 @@ If the AMQPS binding will be used to authenticate an AMQP registry where AMQP de
 
 * Connection properties are user-defined additional properties that allow you to specify the messaging engine that an application will connect to. Only "String" type message properties are supported. Connection Properties are configured by entering a "Property Name" and "Property Value." You can enter unlimited connection properties. Entering  a Connection Property is optional.
 
-<a href="#top">Back to top</a>
+<a href="#top">back to top</a>
 
 ### Use Cases
 
@@ -181,6 +181,6 @@ The [Messaging Binding Usage Scenarios for Policy Manager](../bindings/messaging
 * Create a virtual service that provides a messaging (AMQP or JMS) interface to one or more existing services of any type (REST, Messaging, SOAP). 
 * Create a virtual service that provides a RESTful interface for placing messages onto, and pulling messages from a JMS or AMQP queue.
 
-<a href="#top">Back to top</a>
+<a href="#top">back to top</a>
 
 <div class = "divider1"></div>
