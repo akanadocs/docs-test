@@ -254,7 +254,7 @@ The 'com.soa.monitor.usage' property is the one that in most cases causes issues
 
 #### <a name="preloading"></a>Preloading Invoked Services
 
-During normal Network Director operation, the downstream API/service endpoints are loaded only upon first invocation. This is done to save memory and lower startup time, but incurs an overhead in the first invocation of an API. If the number of APIs/Services is less than 100, you can preload all the downstream endpoint on startup.
+During normal Network Director operation, the downstream API/service endpoints are loaded only upon first invocation. This is done to save memory and lower startup time, but incurs an overhead in the first invocation of an API. 
 
 **Scope**: Network Director Containers
 
@@ -262,8 +262,9 @@ In the admin console, configure the following:
 
 ```
 com.soa.vs.engine -> 
-vs.capability.metadata.preloadInvokedServices=true
+vs.capability.metadata.preloadInvokedServices=false
 ```
+If the number of APIs/Services is less than 100, you can preload all the downstream endpoint on startup by setting this value to 'true'.
 
 #### <a name="contract-policy-cache"></a>Contract Policy Cache
 
@@ -275,13 +276,13 @@ In the admin console, configure the following:
 
 ```
 com.soa.contract.enforcement -> 
-contract.handler.framework.idleExpiration=259200
+contract.handler.framework.idleExpiration=300
 ```
 Amount of seconds a contract that has not been authorized against will remain cached. The default value is 300, but it can be extended to something like 259200 (3 days)
 
 ```
 com.soa.contract.enforcement -> 
-contract.handler.framework.maxRefreshInterval=900
+contract.handler.framework.maxRefreshInterval=120
 ```
 
 Amount of seconds a contract should remain in the cache before requiring a refesh. The default value is 120, but can be extended to something like 900 (15 minutes) as long as the time taken to propagate contract policies is not a security or operational concern.
@@ -296,20 +297,20 @@ In the admin console, configure the following:
 
 ```
 com.soa.jbi -> 
-lbha.endpoint.refresh.task.allowRemoval=false
+lbha.endpoint.refresh.task.allowRemoval=true
 ```
-If true, removes endpoints from the ache when inactive. The default value is true, but if there are not large numbers of inactive APIs/Services being managed, this value can be set to false.
+If true, the system removes endpoints from the ache when inactive. The default value is true, but if there are not large numbers of inactive APIs/Services being managed, this value can be set to false.
 
 
 ```
 com.soa.jbi -> 
-lbha.endpoint.refresh.task.expirationInterval=3600000
+lbha.endpoint.refresh.task.expirationInterval=300000
 ```
 The time in milliseconds an endpoint can be inactive (not called) before it is removed from the router cache. The default value is 300000, but can be set to 3600000 (one hour). 
 
 ```
 com.soa.jbi -> 
-lbha.endpoint.refresh.task.maxrefreshInterval=900000
+lbha.endpoint.refresh.task.maxrefreshInterval=60000
 ```
 The maximum amount of time in milliseconds before the refresh of endpoints. The default value is 60000, but can be extended to 900000 (15 minutes) as long as the time to propagate downstream endpoint changes is not a security or operational concern.
 
