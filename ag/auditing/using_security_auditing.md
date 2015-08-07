@@ -50,7 +50,7 @@ This is accomplished by enabling **Log Alert** in an Alert Code (for Alert Audit
   * **Enter Date Range** - Click **Start Date** or **End Date** to invoke a Calendar pop-up.
   * **Enter Time Range** - Manually enter times into the **Start** and **End** time fields using the 24-hour clock format, e.g. 20\:00\:01.
   * **Enter Action** - Refers to Add, Modify and Delete actions.
-  * **Enter User** - The Username you want to audit.
+  * **Enter User** - The username you want to audit.
   * **Audit Status** - Filter your search by Audit Trails that have been Observed, Unobserved or Both.
 
 <a href="#top">back to top</a>
@@ -108,3 +108,5 @@ Filtering is optional. If any of the filtering criteria is not specified, the fo
 ***Note***: *In case of error during export, a partially exported file does* ***not*** *get deleted.*
 
 See the [Schedule Security Audit Trail Job Usage Options](#../auditing/auditing_reference.html#schedule-a-security-audit-trail-job-usage-options) for more information.
+
+<a href="#top">back to top</a>

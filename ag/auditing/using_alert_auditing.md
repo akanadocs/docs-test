@@ -46,11 +46,11 @@ To capture alert data, the alert auditing feature must be activated for each ale
 ### Perform Alert Audit Trail Search
 
 1. Go to **Auditing > Alert Audit Trails**. Note that the initial search results display presents a listing of all audit trail data associated with the currently logged on user.
-2. Enter the following search sriteria and click **Filter**. See [Audit Trail Search Criteria](../auditing/auditing_reference.html#audit-trail-search-criteria) for a description of each option.
+2. Enter the following search criteria and click **Filter**. See [Audit Trail Search Criteria](../auditing/auditing_reference.html#audit-trail-search-criteria) for a description of each option.
   * **Enter Date Range** - Click **Start Date** or **End Date** to invoke a Calendar pop-up.
   * **Enter Time Range** - Manually enter times into the **Start** and **End** time fields using the 24-hour clock format (e.g., 20\:00\:01).
   * **Enter Action** - Refers to Add, Modify and Delete actions.
-  * **Enter User** - The Username you want to audit.
+  * **Enter User** - The username you want to audit.
   * **Audit Status** - Filter your search by Audit Trails that have been Observed, Unobserved or Both.
 
 <a href="#top">back to top</a>
