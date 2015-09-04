@@ -19,15 +19,13 @@ Learn about default and custom Envision Console login options.
 
 ### Table of Contents
 <div id="toc-marker"></div>
-* [Introduction](#introduction)
 * [Envision Default Login](#envision-default-login)
 * [LDAP Authentication Domain](#ldap-authentication-domain)
 
 
 <div class = "divider1"></div>
-### Introduction
 
-By default, the Envision Console uses the Username/Password credential assigned to the Envision container during the initial configuration using the Configure Container Instance Wizard.
+Envision supports logging into the Envision Console using the following options:  
 
 ### Envision Default Login
 
@@ -76,6 +74,6 @@ If you would like to log into the *Envision Console* using a custom login, you c
 
   **LDAP JNDI Provider Class** - The LDAP Service Provider Name.
 
-4. After completing the configuration click **Finish** and restart the container. After the container has successfully restarted, re-login into the *Envision Console* using the new custom login. 
+4. After completing the configuration click **Finish** and restart the Envision container. After the container has successfully restarted, re-login into the *Envision Console* using the new custom login. 
 
 <a href="#top">back to top</a>
