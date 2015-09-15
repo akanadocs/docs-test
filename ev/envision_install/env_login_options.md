@@ -15,7 +15,7 @@ Learn about default and custom Envision Console login options.
 <a href="../envision_install/installing_envision_features.html" class="button secondary">Installing Envision Features (Main Topic)</a> 
 <a href="../envision_install/installing_envision_v11.html" class="button secondary">Installing Envision 1.1</a> <a href="env_toc.html" class="button secondary">Envision Reference (Main Topic)</a>  
 
-<h5 class="stamp">Supported Platforms: 8.1</h5>  <h5 class="stamp">Supported Envision Versions: 1.1</h5><br>
+<h5 class="stamp">Supported Platforms: 8.1</h5> <h5 class="stamp">Supported Envision Versions: 1.1</h5>
 
 <div class = "divider1"></div>
 
@@ -26,7 +26,7 @@ Learn about default and custom Envision Console login options.
 
 
 <div class = "divider1"></div>
-
+<p></p>
 Envision supports logging into the Envision Console using the following options:  
 
 ### Envision Default Login
