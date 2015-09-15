@@ -16,9 +16,8 @@ Learn how to install the Envision 1.1 analytics and monitoring solution.
 <a href="../envision_install/installing_envision_features.html" class="button secondary">Installing Envision Features (Main Topic)</a>  
 <a href="../envision_reference/env_toc.html" class="button secondary">Envision Reference</a>    
 
-<h5 class="stamp">Supported Platforms: 8.0, 8.1</h5>
-<h5 class="stamp">Supported Envision Versions: 1.1</h5><br>
-<p></p>
+<h5 class="stamp">Supported Platforms: 8.0, 8.1</h5> <h5 class="stamp">Supported Envision Versions: 1.1</h5>
+
 
 <div class = "divider1"></div>
 
