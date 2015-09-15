@@ -23,7 +23,8 @@ Learn how to install the Envision Standalone Analytics Manager UI and associated
 
 <a href="../container_management/container_management.htm" class="button secondary">Managing Containers</a><p></p>
 
-<h5 class="stamp">Supported Platforms: 8.x</h5>
+<h5 class="stamp">Supported Platforms: 8.0, 8.1</h5>
+<h5 class="stamp">Supported Envision Versions: 1.0, 1.1</h5><br>
 <p></p>
 
   <div class = "divider1"></div>
