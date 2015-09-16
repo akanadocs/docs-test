@@ -14,12 +14,11 @@ nav-title: Using the Envision Policy Manager Console Extension Feature
 Learn how to install Envision Business Metrics Policy Extensions to the Policy Manager Management Console.
 
 <a href="../envision_install/installing_envision_features.html" class="button secondary">Installing Envision Features (Main Topic)</a> 
-<a href="../envision_install/installing_envision_v11.html" class="button secondary">Installing Envision 1.1</a> <a href="using_admin_console.htm" class="button secondary">Using Admin Console</a> <br><br>
-<a href="../container_management/container_management.htm" class="button secondary">Managing Containers</a><p></p>
+<a href="../envision_install/installing_envision_v11.html" class="button secondary">Installing Envision 1.1</a> <a href="using_admin_console.htm" class="button secondary">Using Admin Console</a> <p></p>
+<a href="../container_management/container_management.htm" class="button secondary">Managing Containers</a>
 
 <h5 class="stamp">Supported Platforms: 8.1</h5>
-<h5 class="stamp">Supported Envision Versions: 1.1</h5><br>
-<p></p>
+<h5 class="stamp">Supported Envision Versions: 1.1</h5>
 
 
   <div class = "divider1"></div>

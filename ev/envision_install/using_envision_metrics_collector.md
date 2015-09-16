@@ -11,7 +11,7 @@ nav-title: Using the Envision Metrics Collector Feature
 ---
 
 ## Using the Envision Metrics Collector Feature
-Learn how to 
+Learn how to install extensions to the Network Director cotnainer that will collect metrics for the Envision product.
 
 <a href="../envision_install/installing_envision_features.html" class="button secondary">Installing Envision Features (Main Topic)</a> 
 <a href="../envision_install/installing_envision_v11.html" class="button secondary">Installing Envision 1.1</a> <a href="../envision_reference/env_toc.html" class="button secondary">Envision Reference</a> <a href="using_admin_console.htm" class="button secondary">Using Admin Console</a> <p></p><a href="../container_management/container_management.htm" class="button secondary">Managing Containers</a><p></p>

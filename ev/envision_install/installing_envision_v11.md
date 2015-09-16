@@ -13,11 +13,9 @@ nav-title: Installing Envision 1.1
 
 Learn how to install the Envision 1.1 analytics and monitoring solution.
 
-<a href="../envision_install/installing_envision_features.html" class="button secondary">Installing Envision Features (Main Topic)</a>  
-<a href="../envision_reference/env_toc.html" class="button secondary">Envision Reference</a>    
+<a href="../envision_install/installing_envision_features.html" class="button secondary">Installing Envision Features (Main Topic)</a>  <a href="../envision_reference/env_toc.html" class="button secondary">Envision Reference</a>    
 
-<h5 class="stamp">Supported Platforms: 8.0, 8.1</h5> <h5 class="stamp">Supported Envision Versions: 1.1</h5>
-
+<h5 class="stamp">Supported Platforms: 8.0, 8.1</h5> <h5 class="stamp">Supported Envision Versions: 1.1</h5><br><br>
 
 <div class = "divider1"></div>
 
@@ -31,11 +29,11 @@ Learn how to install the Envision 1.1 analytics and monitoring solution.
 [Step 5: Download Envision Zip File](#step-5-download-envision-zip-file)
 [Step 6: Install Envision Zip File](#step-6-install-envision-zip-file)
 [Step 7: Configure Envision Container](#step-7-configure-envision-container)
-[Step 8: Install and Configure Envision Feature](#step-8-install-and-configure-envision-feature)   
-[Step 9: Install and Configure Sample Data Sets](#step-9-install-and-configure-sample-data-sets)   
-[Step 10: Launch Envision Console](#step-10-launch-envision)   
-[Step 11: Review Reference Guide](#step-11-review-reference-guide)     
-[Step 12: Container and Database Shutdown Procedure](#step-12-container-and-database-shutdown)   
+[Step 8: Install and Configure Envision Feature](#step-8-install-and-configure-envision-feature)
+[Step 9: Install and Configure Sample Data Sets](#step-9-install-and-configure-sample-data-sets)
+[Step 10: Launch Envision Console](#step-10-launch-envision)
+[Step 11: Review Reference Guide](#step-11-review-reference-guide) 
+[Step 12: Container and Database Shutdown Procedure](#step-12-container-and-database-shutdown)
 
 <div class = "divider1"></div>
 
@@ -45,9 +43,9 @@ Installation of the Envision 1.1 analytics and monitoring solution requires inst
 ### Step 1: Download and Install MongoDB
 1. Go to http://www.mongodb.org/downloads and download the MongoDB Version 3.0.0 file for your platform. Windows 64-bit (MSI), Linux 64-bit (TGZ), and Solaris 64-bit (TGZ) are supported. If you are on a Mac you can install Mongo with homebrew using "brew install mongo."
 2. Install MongoDB on your platform.**
-3. Note that these instructions provide a basic MongoDB installation approach. Refer to the MongoDB documentation for information on installation instructions and shutdown procedures for your specific deployment. The site link is listed below:* 
+3. Note that these instructions provide a basic MongoDB installation approach. Refer to the MongoDB documentation for information on installation instructions and shutdown procedures for your specific deployment. The site link is listed below:*
 
- https://docs.mongodb.org/v3.0/tutorial/manage-mongodb-processes/">https://docs.mongodb.org/v3.0/tutorial/manage-mongodb-processes/ 
+   https://docs.mongodb.org/v3.0/tutorial/manage-mongodb-processes/">https://docs.mongodb.org/v3.0/tutorial/manage-mongodb-processes/ 
 
 <a href="#top">back to top</a>
 
@@ -61,7 +59,6 @@ Installation of the Envision 1.1 analytics and monitoring solution requires inst
 
     **/MongoDB/Server/3.0/bin**
 2. Enter **mongod**. 
-
 3. If MongoDB  successfully starts, your command window will say "waiting for connections" followed by the port number. 
 
 <a href="#top">back to top</a>
@@ -102,8 +99,7 @@ The Envision feature is typically installed into a Standalone container.
 ### Step 8: Install and Configure Envision Feature
 1. Launch the *Administration Console* (http://hostname:port/admin/).
 2. Select the *Repository* tab and click the **Refresh** icon. The *Akana Envision Repository* will display. 
-3. On the *Available Features* screen, select **Feature** from the *Filter* menu. 
-4. Select the *Akana Envision* feature and click **Install Feature**.
+3. On the *Available Features* screen, select **Feature** from the *Filter* menu. 4. Select the *Akana Envision* feature and click **Install Feature**.
 5. After the installation is complete, click **Configure** and continue.
 6. On the *Configure MongoDB Database* screen, specify the host name and port where the MongoDB database is installed in the MongoClientURI field. The default MongoDB port is 27017. Click **Finish**. The URI is assigned and the system automatically configures seed data and adds schemas. 
 
@@ -129,7 +125,7 @@ The Envision feature is typically installed into a Standalone container.
 <p><a href="#top">back to top</a></p>
 
 ### Step 11: Review Reference Guide</h3></a>
-To learn about Envision functionality and how to configure various monitoring scenarios, refer to  [Envision Reference 1.0](../envision_reference/env_toc.html). 
+To learn about Envision functionality and how to configure various monitoring scenarios, refer to  [Envision Reference](../envision_reference/env_toc.html). 
 
 <a href="#top">back to top</a>
 
@@ -139,7 +135,7 @@ When shutting down your Envision system, its important to shutdown the Envision 
 1. Shutdown the container first. Refer to [Starting and Stopping a Container Instance](../../../sp/container_management/start_stop_container_instance.htm) for shutdown options. 
 2. Shutdown the MongoDB container second. Refer to the MongoDB documentation for information on shutdown procedures for your specific deployment. The site link is listed below: 
 
-  https://docs.mongodb.org/v3.0/tutorial/manage-mongodb-processes/
+     https://docs.mongodb.org/v3.0/tutorial/manage-mongodb-processes/
 
 <a href="#top">back to top</a>
 
