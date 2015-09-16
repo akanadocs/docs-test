@@ -14,7 +14,7 @@ nav-title: Using the MongoDB Support Feature
 Learn how to redirect the collection of metrics and audit data from the designated Policy Manager Database to the MongoDB Database.
 
 <a href="../envision_install/installing_envision_features.html" class="button secondary">Installing Envision Features (Main Topic)</a> 
-<a href="../envision_install/installing_envision_v11.html" class="button secondary">Installing Envision 1.1</a> <a href="../envision_reference/env_toc.html" class="button secondary">Envision Reference</a> <a href="using_admin_console.htm" class="button secondary">Using Admin Console</a> <br></br><a href="../../../sp/container_management/container_management.htm" class="button secondary">Managing Containers</a><br>
+<a href="../envision_install/installing_envision_v11.html" class="button secondary">Installing Envision 1.1</a> <a href="../envision_reference/env_toc.html" class="button secondary">Envision Reference</a> <a href="../../../sp/admin_console/using_admin_console.htm" class="button secondary">Using Admin Console</a> <br></br><a href="../../../sp/container_management/container_management.htm" class="button secondary">Managing Containers</a><br>
 
 <h5 class="stamp">Supported Platforms: 8.0, 8.1</h5> <h5 class="stamp">Supported Envision Versions: 1.0, 1.1</h5><br>
 
