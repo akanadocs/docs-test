@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Envision Reference
-description: Reference guide for the Envison analytics platform.
+description: Reference guide for the Envision analytics platform.
 product: ev
 category: ref
 no-nav: true

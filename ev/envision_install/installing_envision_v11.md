@@ -117,9 +117,9 @@ The Envision feature is typically installed into a Standalone container.
 ### Step 10: Launch Envision Console
 1. Enter the following URL to launch the *Envision Console*. 
 2. http://hostname:port/analytics/login
-3. Log into the *Envision Console* using the Username/Password you defined for your Envision container, then click the *Dashboards* tab.
+3. Log into the *Envision Console* using the Username/Password you defined for your Envision container, then click the *Dashboards* tab.<br>
    ![Envision](images/envision_dashboard.jpg "Envision Dashboard")
-4. If you do not see the DataSets and/or have problems logging into the *Envision Console*, restart the Envision container (See [Starting and Stopping a Container Instance](../../../sp/container_management/start_stop_container_instance.htm) and refer to [Step 3: Start MongoDB](xxx) for instructions on how to start MongoDB.
+4. If you do not see the DataSets and/or have problems logging into the *Envision Console*, restart the Envision container (See [Starting and Stopping a Container Instance](../../../sp/container_management/start_stop_container_instance.htm) and refer to [Step 3: Start MongoDB](#step-3-start-mongodb) for instructions on how to start MongoDB.
 
 <p><a href="#top">back to top</a></p>
 

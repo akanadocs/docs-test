@@ -4,7 +4,7 @@ title: Installing Envision Features
 description: Learn how to install Envision features. 
 product: ev
 category: learn
-weight:	6
+weight:	1
 sub-nav-class: Installation
 type: page
 nav-title: Installing Envision Features
@@ -27,12 +27,12 @@ This plug-in provides connectivity to a MongoDB instance for features that have 
 
 <div class = "divider1"></div>
 
-### [Akana Sample Data Sets for Demo Charts](using_sample_data_for_demo_charts.html)
+### [Akana Sample Data Sets for Demo Charts](using_sample_data_sets_for_demo_charts.html)
 This plug-in provides a series of sample data sets for demo charts that can be installed to the Envision Console. When you install a sample data set the associated Widget and Dashboard are added to the Envision Console. Requires installation of Akana Envision.
 
 <div class = "divider1"></div>
 
-### [Akana Envision Policy Manager Console Extensions](using_pm_console_extensions.html)
+### [Akana Envision Policy Manager Console Extensions] (using_envision_console_extensions.html)
 This plug-in installs extensions to the Policy Manager Management Console to direct the collection of business metrics that are then fed into the Envision product. The extensions include configuration screens for the business metrics related policies. This feature must be installed into the Policy Manager container instance. Requires that the Policy Manager Console feature be installed to the Policy Manager container instance. This feature works in conjunction with the Akana Envision product.
 
 <div class = "divider1"></div>

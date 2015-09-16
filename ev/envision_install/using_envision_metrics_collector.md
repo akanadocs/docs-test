@@ -4,7 +4,7 @@ title: Using the Envision Metrics Collector Feature
 description: Learn how to install extensions to the Network Director cotnainer that will collect metrics for the Envision product.
 product: ev
 category: learn
-weight:	6
+weight:	7
 sub-nav-class: Installation
 type: page
 nav-title: Using the Envision Metrics Collector Feature
@@ -14,7 +14,7 @@ nav-title: Using the Envision Metrics Collector Feature
 Learn how to install extensions to the Network Director cotnainer that will collect metrics for the Envision product.
 
 <a href="../envision_install/installing_envision_features.html" class="button secondary">Installing Envision Features (Main Topic)</a> 
-<a href="../envision_install/installing_envision_v11.html" class="button secondary">Installing Envision 1.1</a> <a href="../envision_reference/env_toc.html" class="button secondary">Envision Reference</a> <a href="using_admin_console.htm" class="button secondary">Using Admin Console</a> <br></br><a href="../container_management/container_management.htm" class="button secondary">Managing Containers</a><br>
+<a href="../envision_install/installing_envision_v11.html" class="button secondary">Installing Envision 1.1</a> <a href="../envision_reference/env_toc.html" class="button secondary">Envision Reference</a> <a href="using_admin_console.htm" class="button secondary">Using Admin Console</a> <br></br><a href="../../../sp/container_management/container_management.htm" class="button secondary">Managing Containers</a><br>
 
 <h5 class="stamp">Supported Platforms: 8.1</h5> <h5 class="stamp">Supported Envision Versions: 1.1</h5><br>
 
