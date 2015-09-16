@@ -45,6 +45,6 @@ See [Installing the Akana Envision 1.1](../../sp/platform_install/installing_env
 5. On the *Configure MongoDB Database* screen, specify the host name and port where the MongoDB database is installed in the MongoClientURI field. The default MongoDB port is 27017. 
 6. Click **Finish**. The URI is assigned and the system automatically configures seed data and installs schemas and tables.  
 
-<p><a href="#top">back to top</a></p>
+<a href="#top">back to top</a>
 
 
