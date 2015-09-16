@@ -47,8 +47,7 @@ Installation of the *Akana Envision* feature is required to view and use the sam
 4. After the installation is complete, click **Configure** and continue.
 5. If the *Akana Envision* or *Akana Envision MongoDB Support* features have *not* yet been installed, the *Configure MongoDB Database* screen will display. Here you will specify the **MongoClientURI** to connect to the database. If these features have been previously installed, this means you are already connected to the database, this screen will not display, and you can skip to the next step. 
 5. On the *Configure Sample Data Sets* screen, select the checkbox for each data set you wold like to install. 
-
-*Note that the Operational Metrics and Shoe Sales Data Sets and Charts are installed by default as part of the Akana Envision feature installation (i.e., data set options will be checked)*
+  *Note that the Operational Metrics and Shoe Sales Data Sets and Charts are installed by default as part of the Akana Envision feature installation (i.e., data set options will be checked)*
 6. Click **Finish**, then **OK** to restart the container. Click **Close** after the container is restart is completed. 
 7. After the installation is complete, you can manage (i.e., install / uninstall) data sets via the *Configuration* tab by selecting *Configure Sample Data Sets*.
 
