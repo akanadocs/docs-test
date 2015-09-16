@@ -3,7 +3,7 @@ layout: page
 title: Basic Concepts
 description: Provides a technical overview of the Envision product.
 product: ev
-category: learn
+category: ref
 weight: 2
 type: page
 nav-title: Basic Concepts 

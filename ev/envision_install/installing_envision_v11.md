@@ -24,16 +24,16 @@ Learn how to install the Envision 1.1 analytics and monitoring solution.
 * [Introduction](#introduction)
 * [Step 1: Download and Install MongoDB](#step-1-download-and-install-mongodb)
 * [Step 2: Create MongoDB Data Folder](#step-2-create-mongodb-data-folder)
-* [Step 3: Start MongoDB](#start-mongodb)
+* [Step 3: Start MongoDB](#step-3-start-mongodb)
 * [Step 4: Install Akana Platform](#step-4-install-akana-platform)
 * [Step 5: Download Envision Zip File](#step-5-download-envision-zip-file)
 * [Step 6: Install Envision Zip File](#step-6-install-envision-zip-file)
 * [Step 7: Configure Envision Container](#step-7-configure-envision-container)
 * [Step 8: Install and Configure Envision Feature](#step-8-install-and-configure-envision-feature)
 * [Step 9: Install and Configure Sample Data Sets](#step-9-install-and-configure-sample-data-sets)
-* [Step 10: Launch Envision Console](#step-10-launch-envision)
+* [Step 10: Launch Envision Console](#step-10-launch-envision-console)
 * [Step 11: Review Reference Guide](#step-11-review-reference-guide) 
-* [Step 12: Container and Database Shutdown Procedure](#step-12-container-and-database-shutdown)
+* [Step 12: Container and Database Shutdown Procedure](#step-12-container-and-database-shutdown-procedure)
 
 <div class = "divider1"></div>
 
@@ -43,9 +43,9 @@ Installation of the Envision 1.1 analytics and monitoring solution requires inst
 ### Step 1: Download and Install MongoDB
 1. Go to http://www.mongodb.org/downloads and download the MongoDB Version 3.0.0 file for your platform. Windows 64-bit (MSI), Linux 64-bit (TGZ), and Solaris 64-bit (TGZ) are supported. If you are on a Mac you can install Mongo with homebrew using "brew install mongo."
 2. Install MongoDB on your platform.**
-3. Note that these instructions provide a basic MongoDB installation approach. Refer to the MongoDB documentation for information on installation instructions and shutdown procedures for your specific deployment. The site link is listed below:*
+3. Note that these instructions provide a basic MongoDB installation approach. Refer to the MongoDB documentation for information on installation instructions and shutdown procedures for your specific deployment. The site link is listed below:
 
-   https://docs.mongodb.org/v3.0/tutorial/manage-mongodb-processes/">https://docs.mongodb.org/v3.0/tutorial/manage-mongodb-processes/ 
+	https://docs.mongodb.org/v3.0/tutorial/manage-mongodb-processes/
 
 <a href="#top">back to top</a>
 
@@ -56,7 +56,6 @@ Installation of the Envision 1.1 analytics and monitoring solution requires inst
 
 ### Step 3: Start MongoDB
 1. Navigate to the MongoDB installation directory:
-
     **/MongoDB/Server/3.0/bin**
 2. Enter **mongod**. 
 3. If MongoDB  successfully starts, your command window will say "waiting for connections" followed by the port number. 

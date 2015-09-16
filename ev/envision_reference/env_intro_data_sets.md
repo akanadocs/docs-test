@@ -3,7 +3,7 @@ layout: page
 title: Introduction to Data Sets
 description: Learn about Envision data sets, metrics, and dimensions. 
 product: ev
-category: learn
+category: ref
 weight: 3
 type: page
 nav-title: Introduction to Data Sets 
