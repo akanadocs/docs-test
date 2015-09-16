@@ -1,21 +1,21 @@
 ---
 layout: page
-title: Using the Akana Sample Data Sets for Demo Charts Feature
+title: Using the Sample Data Sets for Demo Charts Feature
 description: Learn how to install sample data sets that can be used in the Envision Console.
 product: ev
 category: learn
 weight:	6
 sub-nav-class: Installation
 type: page
-nav-title: Using the Akana Sample Data Sets for Demo Charts Feature
+nav-title: Using the Sample Data Sets for Demo Charts Feature
 ---
 
-## Using Akana Envision 
+## Using Sample Data Sets for Demo Charts Feature
 Learn how to install sample data sets that can be used in the Envision Console.
 
-<a href="../envision_install/installing_envision_features.html" class="button secondary">Installing Envision Features (Main Topic)</a> <a href="../envision_install/installing_envision_v11.html" class="button secondary">Installing Envision 1.1</a> <a href="../envision_reference/env_toc.html" class="button secondary">Envision Reference</a> <a href="using_admin_console.htm" class="button secondary">Using Admin Console</a> <br></br> <a href="../container_management/container_management.htm" class="button secondary">Managing Containers</a>
+<a href="../envision_install/installing_envision_features.html" class="button secondary">Installing Envision Features (Main Topic)</a> <a href="../envision_install/installing_envision_v11.html" class="button secondary">Installing Envision 1.1</a> <a href="../envision_reference/env_toc.html" class="button secondary">Envision Reference</a> <a href="using_admin_console.htm" class="button secondary">Using Admin Console</a> <br></br> <a href="../container_management/container_management.htm" class="button secondary">Managing Containers</a><br>
 
-<h5 class="stamp">Supported Platforms: 8.0, 8.1</h5> <h5 class="stamp">Supported Envision Versions: 1.0, 1.1</h5>
+<h5 class="stamp">Supported Platforms: 8.0, 8.1</h5> <h5 class="stamp">Supported Envision Versions: 1.0, 1.1</h5><br>
 
 <div class = "divider1"></div>
 
@@ -37,7 +37,7 @@ This plug-in provides a series of sample data sets for demo charts that can be i
 
 Installation of the *Akana Envision* feature is required to view and use the sample data sets in the *Envision Console* and in the *Business Metrics Policy*, but you can install the *Sample Data Sets for Demo Charts* feature and connect to the MongoDB database without pre-installing the *Akana Envision* feature.
 
-<a href="#top">back to top</a>**
+<a href="#top">back to top</a>
 
 ### Configuration
 

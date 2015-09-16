@@ -24,7 +24,6 @@ Learn about default and custom Envision Console login options.
 * [Envision Default Login](#envision-default-login)
 * [LDAP Authentication Domain](#ldap-authentication-domain)
 
-
 <div class = "divider1"></div>
 <p></p>
 Envision supports logging into the Envision Console using the following options:  

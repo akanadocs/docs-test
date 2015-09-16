@@ -13,27 +13,27 @@ nav-title: Installing Envision 1.1
 
 Learn how to install the Envision 1.1 analytics and monitoring solution.
 
-<a href="../envision_install/installing_envision_features.html" class="button secondary">Installing Envision Features (Main Topic)</a>  <a href="../envision_reference/env_toc.html" class="button secondary">Envision Reference</a>    
+<a href="../envision_install/installing_envision_features.html" class="button secondary">Installing Envision Features (Main Topic)</a>  <a href="../envision_reference/env_toc.html" class="button secondary">Envision Reference</a>
 
-<h5 class="stamp">Supported Platforms: 8.0, 8.1</h5> <h5 class="stamp">Supported Envision Versions: 1.1</h5><br><br>
+<h5 class="stamp">Supported Platforms: 8.0, 8.1</h5> <h5 class="stamp">Supported Envision Versions: 1.1</h5><br>
 
 <div class = "divider1"></div>
 
 ### Table of Contents
 <div id="toc-marker"></div>
-[Introduction](#introduction)
-[Step 1: Download and Install MongoDB](#step-1-download-and-install-mongodb)
-[Step 2: Create MongoDB Data Folder](#step-2-create-mongodb-data-folder)
-[Step 3: Start MongoDB](#start-mongodb)
-[Step 4: Install Akana Platform](#step-4-install-akana-platform)
-[Step 5: Download Envision Zip File](#step-5-download-envision-zip-file)
-[Step 6: Install Envision Zip File](#step-6-install-envision-zip-file)
-[Step 7: Configure Envision Container](#step-7-configure-envision-container)
-[Step 8: Install and Configure Envision Feature](#step-8-install-and-configure-envision-feature)
-[Step 9: Install and Configure Sample Data Sets](#step-9-install-and-configure-sample-data-sets)
-[Step 10: Launch Envision Console](#step-10-launch-envision)
-[Step 11: Review Reference Guide](#step-11-review-reference-guide) 
-[Step 12: Container and Database Shutdown Procedure](#step-12-container-and-database-shutdown)
+* [Introduction](#introduction)
+* [Step 1: Download and Install MongoDB](#step-1-download-and-install-mongodb)
+* [Step 2: Create MongoDB Data Folder](#step-2-create-mongodb-data-folder)
+* [Step 3: Start MongoDB](#start-mongodb)
+* [Step 4: Install Akana Platform](#step-4-install-akana-platform)
+* [Step 5: Download Envision Zip File](#step-5-download-envision-zip-file)
+* [Step 6: Install Envision Zip File](#step-6-install-envision-zip-file)
+* [Step 7: Configure Envision Container](#step-7-configure-envision-container)
+* [Step 8: Install and Configure Envision Feature](#step-8-install-and-configure-envision-feature)
+* [Step 9: Install and Configure Sample Data Sets](#step-9-install-and-configure-sample-data-sets)
+* [Step 10: Launch Envision Console](#step-10-launch-envision)
+* [Step 11: Review Reference Guide](#step-11-review-reference-guide) 
+* [Step 12: Container and Database Shutdown Procedure](#step-12-container-and-database-shutdown)
 
 <div class = "divider1"></div>
 
