@@ -32,8 +32,8 @@ Learn how to install the Envision 1.1 analytics and monitoring solution.
 * [Step 8: Install and Configure Envision Feature](#step-8-install-and-configure-envision-feature)
 * [Step 9: Install and Configure Sample Data Sets](#step-9-install-and-configure-sample-data-sets)
 * [Step 10: Launch Envision Console](#step-10-launch-envision-console)
-* [Step 11: Review Reference Guide](#step-11-review-reference-guide) 
-* [Step 12: Container and Database Shutdown Procedure](#step-12-container-and-database-shutdown-procedure)
+* [Step 11: Review Reference Guide](#step-11-review-reference-guide)
+* [Step 12: Database and Container Shutdown Procedure](#step-12-database-and-container-shutdown-procedure)
 
 <div class = "divider1"></div>
 
