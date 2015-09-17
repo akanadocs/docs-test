@@ -39,11 +39,6 @@
 											<p class='propertydefault'>Default: false</p>
 									</div>
 							<div class="property">
-					<strong class='propertyname'> ()</strong>
-											<p class='propertydesc'>org.owasp.csrfguard.action.RequestAttribute=org.owasp.csrfguard.action.RequestAttribute org.owasp.csrfguard.action.RequestAttribute.AttributeName=Owasp_CsrfGuard_Exception_Key org.owasp.csrfguard.action.Rotate=org.owasp.csrfguard.action.Rotate org.owasp.csrfguard.action.SessionAttribute=org.owasp.csrfguard.action.SessionAttribute org.owasp.csrfguard.action.SessionAttribute.AttributeName=Owasp_CsrfGuard_Exception_Key org.owasp.csrfguard.action.Error=org.owasp.csrfguard.action.Error org.owasp.csrfguard.action.Error.Code=403 org.owasp.csrfguard.action.Error.Message=Security violation.</p>
-										
-									</div>
-							<div class="property">
 					<strong class='propertyname'>Unique Per-Page Tokens (org.owasp.csrfguard.TokenPerPage)</strong>
 											<p class='propertydesc'>The unique token per-page property (org.owasp.csrfguard.TokenPerPage) is a boolean value that determines if CSRFGuard should make use of unique per-page (i.e. URI) prevention tokens as opposed to unique per-session prevention tokens. When a user requests a protected resource, CSRFGuard will determine if a page specific token has been previously generated. If a page specific token has not yet been previously generated, CSRFGuard will verify the request was submitted with the per-session token intact. After verifying the presence of the per-session token, CSRFGuard will create a page specific token that is required for all subsequent requests to the associated resource. The per-session CSRF token can only be used when requesting a resource for the first time. All subsequent requests must have the per-page token intact or the request will be treated as a CSRF attack. This behavior can be changed with the org.owasp.csrfguard.TokenPerPagePrecreate property. Enabling this property will make CSRFGuard calculate the per page token prior to a first visit. This option only works with JSTL token injection and is useful for preserving the validity of links if the user pushes the back button. There may be a performance impact when enabling this option if the .jsp has a large number of proctected links that need tokens to be calculated. Use of the unique token per page property is currently experimental but provides a significant amount of improved security. Consider the exposure of a CSRF token using the legacy unique per-session model. Exposure of this token facilitates the attacker's ability to carry out a CSRF attack against the victim's active session for any resource exposed by the web application. Now consider the exposure of a CSRF token using the experimental unique token per-page model. Exposure of this token would only allow the attacker to carry out a CSRF attack against the victim's active session for a small subset of resources exposed by the web application. Use of the unique token per-page property is a strong defense in depth strategy significantly reducing the impact of exposed CSRF prevention tokens. The following configuration snippet instructs OWASP CSRFGuard to utilize the unique token per-page model: org.owasp.csrfguard.TokenPerPage=true org.owasp.csrfguard.TokenPerPagePrecreate=false</p>
 										
@@ -65,7 +60,7 @@
 					<strong class='propertyname'>org.owasp.csrfguard.unprotected.1 (org.owasp.csrfguard.unprotected.1)</strong>
 											<p class='propertydesc'>Unprotected Pages: The unprotected pages property (org.owasp.csrfguard.unprotected.) defines a series of pages that should not be protected by CSRFGuard. Such configurations are useful when the CsrfGuardFilter is aggressively mapped (ex: /). The syntax of the property name is org.owasp.csrfguard.unprotected.PageName, where PageName is some arbitrary identifier that can be used to reference a resource. The syntax of defining the uri of unprotected pages is the same as the syntax used by the JavaEE container for uri mapping. Specifically, CSRFGuard will identify the first match (if any) between the requested uri and an unprotected page in order of declaration. Match criteria is as follows: Case 1: exact match between request uri and unprotected page Case 2: longest path prefix match, beginning / and ending / Case 3: extension match, beginning . Case 4: if the value starts with ^ and ends with $, it will be evaulated as a regex.  Note that before the regex is compiled, any common variables will be substituted (e.g. %servletContext%) Default: requested resource must be validated by CSRFGuard The following code snippet illustrates the four use cases over four examples. The first two examples (Tag and JavaScriptServlet) look for direct URI matches. The third example (Html) looks for all resources ending in a .html extension. The next example (Public) looks for all resources prefixed with the URI path /MySite/Public/. The last example looks for resources that end in Public.do org.owasp.csrfguard.unprotected.Tag=%servletContext%/tag.jsp org.owasp.csrfguard.unprotected.JavaScriptServlet=%servletContext%/JavaScriptServlet org.owasp.csrfguard.unprotected.Html=.html org.owasp.csrfguard.unprotected.Public=%servletContext%/Public/ regex example starts with ^ and ends with $, and the %servletContext% is evaluated before the regex org.owasp.csrfguard.unprotected.PublicServlet=^%servletContext%/.Public.do$</p>
 										
-											<p class='propertydefault'>Default: %servletContext%/common/sessionexpired.jsp</p>
+											<p class='propertydefault'>Default: ^/common/sessionexpired.jsp.$</p>
 									</div>
 							<div class="property">
 					<strong class='propertyname'>org.owasp.csrfguard.action.Log (org.owasp.csrfguard.action.Log)</strong>
@@ -126,6 +121,17 @@
 											<p class='propertydesc'>Boolean value that determines whether or not the dynamic JavaScript code should be strict  with regards to what links it should inject the CSRF prevention token. With a value of true,  the JavaScript code will only place the token in links that point to the same exact domain  from which the HTML originated. With a value of false, the JavaScript code will place the  token in links that not only point to the same exact domain from which the HTML originated,  but sub-domains as well.</p>
 										
 											<p class='propertydefault'>Default: true</p>
+									</div>
+							<div class="property">
+					<strong class='propertyname'>Domain Skip (org.owasp.csrfguard.JavascriptServlet.domainSkip)</strong>
+											<p class='propertydesc'>Value of true will inject CSRF prevention tokens into all links regardless of domain from which HTML originated.</p>
+										
+											<p class='propertydefault'>Default: false</p>
+									</div>
+							<div class="property">
+					<strong class='propertyname'>Authorized domains (org.owasp.csrfguard.JavascriptServlet.authorizedDomains)</strong>
+											<p class='propertydesc'>Comma separated list of domain names which will be considered valid regardless of domain of origin useful when dealing with proxy servers.</p>
+										
 									</div>
 							<div class="property">
 					<strong class='propertyname'>cache (org.owasp.csrfguard.JavascriptServlet.cacheControl)</strong>
