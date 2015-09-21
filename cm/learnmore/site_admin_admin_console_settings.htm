@@ -57,6 +57,7 @@ nav-title: Admin Console Settings
   <li><a href="#com_soa_atmosphere_console">com.soa.atmosphere.console</a></li>
   <li><a href="#com_soa_atmosphere_forwardproxy">com.soa.atmosphere.forwardproxy</a></li>
   <li><a href="#com_soa_oauth">com.soa.oauth</a></li>
+  <li><a href="#com_soa_oauth_provider">com.soa.oauth.provider</a></li>
   <li><a href="#com_soa_oauth_agent_client_cache">com.soa.oauth.agent.client.cache</a></li>
   <li><a href="#com_soa_oauth_client_cache">com.soa.oauth.client.cache</a></li>
   <li><a href="#com_soa_oauth_provider">com.soa.oauth.provider</a></li>
@@ -109,6 +110,19 @@ nav-title: Admin Console Settings
   <dd>This helps ensure that if the same user has an account on two different tenants there is no conflict and each account is treated separately.</dd>
 
 
+
+<!--<dt>atmosphere.config.loadContentFromWorkspace</dt>
+<dd>(debug option used internally)</dd>-->
+
+
+<!--<dt>atmosphere.config.loadResourcesFromWorkspace</dt>
+<dd>(debug option used internally)</dd>-->
+
+
+<!--<dt>atmosphere.config.resourcePath</dt>
+<dd>(Doc not needed)</dd>-->
+
+
   <dt>atmosphere.config.userRolesDenied</dt>
   <dd>Allows you to set up one or more roles that cannot use this implementation. For example, you might want to dedicate a special container for administrator use only.</dd>
   <dd>Use comma separators as needed. For example:
@@ -156,6 +170,38 @@ nav-title: Admin Console Settings
 <dt>com.soa.oauth.resourceserver.grant.refreshTime</dt>
 <dd>Refresh time for OAuth Resource Server grants: the length of time for which a refresh token is valid.</dd>
 </dl>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h4><a name="com_soa_oauth_provider"></a>com.soa.oauth.provider</h4>
+<p>Indicates settings are applicable when the platform is used as an OAuth Provider. Tuning the settings to your installation can help you achieve better performance and make the OAuth Provider more scalable. To access the settings, log in to the Policy Manager console and go to <strong>Configuration</strong> > <strong>com.soa.oauth.provider</strong>.</p>
+<p>The following settings are available:</p>
+<dl>
+<dt>com.soa.oauth.provider.config.grantAttributesCacheExpirationTime</dt>
+<dd>The expiration time for grant attributes stored in the cache, in milliseconds. A scheduler takes care of refreshing the cache entries depending upon their expiration, as follows:</dd>
+</dl>
+<ul>
+  <li>Value = 0: the cache is not cleared. Cache entries are retained.</li>
+  <li>Value &lt; 0 (negative number): the cache is deleted.</li>
+  <li>Value &gt; 0 (positive number): the scheduler checks the last access time of the entry. If the last access time is greater than the expiration time, the cache entry is expired since this indicates that probably the grant attributes are no longer required. If they are required, they are retrieved from the database.</li>
+</ul>
+<dl>
+  <dt>com.soa.oauth.provider.config.grantAttributesCacheMaxSize</dt>
+  <dd>Maximum cache size for OAuth Provider grants. The cache cannot exceed the max size. The scheduler uses the cache max size and cache expiration time to refresh and update the cache data.</dd>
+  <dt>com.soa.oauth.provider.config.grantSequenceIDCacheExpirationTime</dt>
+  <dd>The cache expiration time for the Grant sequence ID (seqID) in the cache, in milliseconds. This property works in the same way as grantAttributesCacheExpirationTime above, for the grant seqID. The scheduler takes care of refreshing the cache entries depending upon their expiration, as follows:</dd>
+  </dl>
+<ul>
+  <li>Value = 0: the cache is not cleared. Cache entries are retained.</li>
+  <li>Value &lt; 0 (negative number): the cache is deleted.</li>
+  <li>Value > 0 (positive number): the scheduler checks the last access time of the entry . If the last access time is greater than the expiration time, the cache entry is expired since this indicates that probably the grant sequence ID is no longer required. If it is required, it is retrieved from the database.</li>
+</ul>
+<dl>
+  <dt>com.soa.oauth.provider.config.grantSequenceIDCacheCacheMaxSize</dt>
+  <dd>Maximum cache size for OAuth grantSeqID values. The grantSeqID represents a unique OAuth grant or token, and is the primary key of the OAUTH_GRANTS table as well as the OAUTH_TOKENS table. When doing a lookup for a grant or grant-related properties, instead of querying on huge grants or the tokens table it is faster to fetch it from cache.</dd>
+</dl>
+
 <p><a href="#top">Back to top</a></p>
 
 
