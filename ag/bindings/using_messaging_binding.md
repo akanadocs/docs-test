@@ -175,11 +175,11 @@ If the AMQPS binding will be used to authenticate an AMQP registry where AMQP de
 
 ### Use Cases
 
-The [Messaging Binding Usage Scenarios for Policy Manager](../bindings/messaging_binding_use_cases.html) topic provides instructions for configuring the following scenarios:
+The [Messaging Binding Usage Scenarios for Policy Manager](../bindings/message_bindings_use_case_toc.html) topic provides instructions for configuring the following scenarios:
 
-* Create AMQP binding for services of any type (REST, Messaging, SOAP).
-* Create a virtual service that provides a messaging (AMQP or JMS) interface to one or more existing services of any type (REST, Messaging, SOAP). 
-* Create a virtual service that provides a RESTful interface for placing messages onto, and pulling messages from a JMS or AMQP queue.
+* Configure an AMQP binding for REST, Messaging, and SOAP services
+* Configure JMS Connection over HTTP
+* JMS Additional Connection Properties
 
 <a href="#top">back to top</a>
 
