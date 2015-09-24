@@ -96,10 +96,10 @@ The purpose of the authentication policy is to ensure that the correct certifica
 4. On the *Modify Authentication Policy* pop-up, select the **End User** radio button.  
 5. In the *Domains* section, select any domains you wish to have access to, use **>>** to move them to the right panel, and click **Apply**.
    ![](images/imp_2way_ssl_2.jpg)
-6. In the *Policy Workflow" actions portlet, click **Activate Policy**.
+6. In the *Policy Workflow* actions portlet, click **Activate Policy**.
 7. Attach this policy to the service you want to implement mutual authentication on.
 8. Navigate to [*Your Virtual Service*].
-9. In the *Policy Attachments" portlet, click **Manage** in the *Operational* section.
+9. In the *Policy Attachments* portlet, click **Manage** in the *Operational* section.
 10. Navigate the Policy Hierarchy, select the newly created *Authentication Policy*, and click **Apply**
 
 <a href="#top">back to top</a>
@@ -114,7 +114,7 @@ If you would like to use different outbound certificates for different services,
 
 ![](images/imp_2way_ssl_3.jpg)
 
-1. In *Policy Manager* Workbench, select the virtual service you would like to attach an Outbound Certificate to.
+1. In *Policy Manager Workbench*, select the virtual service you would like to attach an Outbound Certificate to.
 2. On the *Service Details* screen, click **Manage PKI Keys** from the *Actions* portlet. 
 3. On the *Select Key Management Option* screen. Two options can be used.
 4. **Option 1: Generate Your Own PKI keys and an X.509 certificate.** Use this option if you do not have your own certificate and PKI keys. Policy Manager will create them for you and display the information after. *Note that Policy Manager must be configured as a Certificate Authority in order to complete the following steps.*
@@ -163,7 +163,7 @@ There are two things to do in order to enable client certification:
 
 ### Create an HTTPS Inbound Listener
 
-*Note: If you have an existing HTTPS listener you want to use, you can just modify it under **Actions > Modify Container Listener** and change its client certificate requirements.*
+*Note: If you have an existing HTTPS listener you want to use, you can just modify it under Actions > Modify Container Listener and change its client certificate requirements.*
 
 1. In the *Inbound Listeners* portlet, select the *Network Director* container instance you plan to host the service on.
 2. Click **Add Container Listener**.
