@@ -115,20 +115,21 @@ If you would like to use different outbound certificates for different services,
 
 1. In *Policy Manager* Workbench, select the virtual service you would like to attach an Outbound Certificate to.
 2. On the *Service Details* screen, click **Manage PKI Keys** from the *Actions* portlet. 
-3. On the *Select Key Management Option* screen, select from two options:   **Generate Your Own PKI keys and an X.509 certificate**
+3. On the *Select Key Management Option* screen, select from two options:
+  * **Generate Your Own PKI keys and an X.509 certificate**
   Use this option if you do not have your own certificate and PKI keys. Policy Manager will create them for you and display the information after.
   ***Note***: *Policy Manager must be configured as a Certificate Authority in order to complete the following steps*.
-  a. Select **Generate PKI Keys and X.509 Certificate**, and click **Next**.
-  b. Select the key length value (2048 is recommended).
-  c. Fill out *Certificate Details* and click **Finish**.
+	a. Select **Generate PKI Keys and X.509 Certificate**, and click **Next**.
+	b. Select the key length value (2048 is recommended).
+	c. Fill out *Certificate Details* and click **Finish**.
   * **Import your already existing certificate and keys**
   Use this option if you have purchased a certificate from a CA and would like to use it.
-  a. Select **Import PKI Keys and X.509 Certificate** and click **Next**.
-  b. Specify the *Keystore Type*.
-  c. Specify the *Keystore Path*.
-  d. Enter the password for the selected keystore.
-  e. Click **Load Aliases**.
-  f. Select the *Key Alias* you would like to import and click **Finish**.
+	a. Select **Import PKI Keys and X.509 Certificate** and click **Next**.
+	b. Specify the *Keystore Type*.
+	c. Specify the *Keystore Path*.
+	d. Enter the password for the selected keystore.
+	e. Click **Load Aliases**.
+	f. Select the *Key Alias* you would like to import and click **Finish**.
   ![](images/imp_2way_ssl_4.jpg)
 
 ### Outbound HTTPS Certificate Configured on the Network Director Container
@@ -140,7 +141,6 @@ This optional method can be thought of as a “default” certificate that is se
 1. In *Policy Manager* Workbench, go to *Organization Tree > Containers* and select the Network Director container instance the service is hosted on.
 2. In the *Outbound Configurations* portlet, click **Manage PKI Keys**.
 ![](images/imp_2way_ssl_6.jpg)
-
   On the *Select Key Management Option* screen, select from two options:
   * **Generate Your Own PKI keys and an X.509 certificate** 
   Use this option if you do not have your own certificate and PKI keys. Policy Manager will create them for you and display the information after.
@@ -162,14 +162,12 @@ This optional method can be thought of as a “default” certificate that is se
 ## Configure Inbound HTTPS Support
 
 There are two things to do in order to enable client certification:
-
 * Set your HTTPS inbound listener to accept client certificates.
 * Use Policy Manager to create a client certificate and add it to your store of Trusted CA Certificates.
 
 ### Create an HTTPS Inbound Listener
 
 *Note: If you have an existing HTTPS listener you want to use, you can just modify it under **Actions > Modify Container Listener** and change its client certificate requirements.*
-
 1. In the *Inbound Listeners* portlet, select the *Network Director* container instance you plan to host the service on.
 2. Click **Add Container Listener**.
 ![](images/imp_2way_ssl_7.jpg)
@@ -180,7 +178,6 @@ There are two things to do in order to enable client certification:
 6. Go to **Actions > Manage PKI Keys**.
 7. Create or import PKI Keys and certificate for HTTPS Inbound Listener.
 ![](images/imp_2way_ssl_9.jpg)
-
 On the *Select Key Management Option* screen, select from two options:
   * **Generate Your Own PKI keys and an X.509 certificate**
   Use this option if you do not have your own certificate and PKI keys. Policy Manager will create them for you and display the information after.
@@ -202,7 +199,6 @@ On the *Select Key Management Option* screen, select from two options:
 ## Add Trusted Client Certificates to Policy Manager
 
 Add any additional trusted client certificates to the Trust CA Store in Policy Manager.
-
 1. Go to *Configure > Security > Certificates > Trusted CA Certificates*.
 2. To import the certificate for the client, click **Add Trusted CA Certificate** and click **Apply**.
 3. Go to **Security > Users**.
