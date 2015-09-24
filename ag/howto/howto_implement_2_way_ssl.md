@@ -62,30 +62,32 @@ In order for Policy Manager to properly implement mutual authentication, the fol
 ## Assumptions
 This topic implements mutual authentication with an anonymous contract. It allows any user in your Workbench with the correct certificate attached to access the service. 
 
-<a href="#top">back to top</a> 
+<a href="#top">back to top</a>
 
 ## Create HTTP Security Policy
 
 The purpose of the HTTP Security Policy is to require a certain credential from the client. In this case we want to require the client to send a certificate as their credentials, which will be validated by the authentication policy in the next step. The HTTP Security Policy must be attached to the virtual service of any service you would like to implement mutual authentication on. 
 
 1. Go to *[Organization Containing Service] > Polices > Operational Policies*.
-2. On the *Policies Summary*, click **Add Policy** and create an *HTTP Security Policy*. 
+2. On the *Policies Summary*, click **Add Policy** and create an *HTTP Security Policy*.
 3. On the *HTTP Security Policy Details* portlet, click **Modify**. 
 4. Click **Next** on the *Specify HTTP Authentication Options* screen.
 5. On the *Specify Client Certificate Authentication* screen, click the **Require Client Certification Authentication** checkbox and select the **Use clients X.509 certificate from the SSL context** radio button.
-6. Under *Subject Category*, select **End-User** and click **Finish**.
-   ![](images/imp_2way_ssl_1.jpg)   
+6. Under *Subject Category*, select **End-User** and click **Finish**
+   ![](images/imp_2way_ssl_1.jpg)
 7. In the *Policy Workflow* actions portlet, click **Activate Policy**.
-8. Attach this policy to the service you want to implement mutual authentication on.  
+8. Attach this policy to the service you want to implement mutual authentication on.
    a. Navigate to [*your virtual service*].
-   b. In the *Policy Attachments* portlet, click **Manage** in the *Operational* section. 
-   c. Navigate the Policy Hierarchy, select the newly created HTTP Security Policy and click **Apply**. 
+   b. In the *Policy Attachments* portlet, click **Manage** in the *Operational* section.
+   c. Navigate the Policy Hierarchy, select the newly created HTTP Security Policy and click **Apply**.
 
 <a href="#top">back to top</a> 
 
 ## Create Authentication Policy
 
-The purpose of the authentication policy is to ensure that the correct certificate is received. The *HTTP Security Policy* only requires that a certificate be sent by the client, but that could be any certificate. This policy must also be attached to the service you want to implement mutual authentication on. 
+The purpose of the authentication policy is to ensure that the correct certificate is received. The *HTTP Security Policy* only requires that a certificate be sent by the client, but that could be any certificate. This policy must also be attached to the service you want to implement mutual authentication on.
+
+The purpose of the authentication policy is to ensure that the correct certificate is received. The *HTTP Security Policy* only requires that a certificate be sent by the client, but that could be any certificate. This policy must also be attached to the service you want to implement mutual authentication on.
 
 1. Go to *[Organization Containing Service] > Polices > Operational Policies*.
 2. On the *Policies Summary*, click **Add Policy** and create an *Authentication Policy*.
@@ -94,131 +96,139 @@ The purpose of the authentication policy is to ensure that the correct certifica
 5. In the *Domains* section, select any domains you wish to have access to, use **>>** to move them to the right panel, and click **Apply**.
    ![](images/imp_2way_ssl_2.jpg)
 6. In the *Policy Workflow" actions portlet, click **Activate Policy**.
-7. Attach this policy to the service you want to implement mutual authentication on.  
+7. Attach this policy to the service you want to implement mutual authentication on.
    a. Navigate to [*your virtual service*].
-   b. In the *Policy Attachments" portlet, click **Manage** in the *Operational* section. 
+   b. In the *Policy Attachments" portlet, click **Manage** in the *Operational* section.
    c. Navigate the Policy Hierarchy, select the newly created *Authentication Policy*, and click **Apply**
 
-<a href="#top">back to top</a> 
+<a href="#top">back to top</a>
 
 ## Configure Outbound HTTPS Support
 
-The Network Director supports Outbound HTTPS to the physical service/endpoint using the following two methods: 
+The Network Director supports Outbound HTTPS to the physical service/endpoint using the following two methods:
 
 ### Outbound HTTP Certificate Configured on the Virtual Service (Suggested Method)
 
-If you would like to use different outbound certificates for different services, you can accomplish this by attaching them to a particular virtual service.  
+If you would like to use different outbound certificates for different services, you can accomplish this by attaching them to a particular virtual service.
 
-![](images/imp_2way_ssl_3.jpg)   
+![](images/imp_2way_ssl_3.jpg)
+
 1. In *Policy Manager* Workbench, select the virtual service you would like to attach an Outbound Certificate to.
 2. On the *Service Details* screen, click **Manage PKI Keys** from the *Actions* portlet. 
-3. On the *Select Key Management Option* screen, select from two options:   **Generate Your Own PKI keys and an X.509 certificate**  
-  Use this option if you do not have your own certificate and PKI keys. Policy Manager will create them for you and display the information after.  
-  ***Note***: *Policy Manager must be configured as a Certificate Authority in order to complete the following steps*.  
+3. On the *Select Key Management Option* screen, select from two options:   **Generate Your Own PKI keys and an X.509 certificate**
+  Use this option if you do not have your own certificate and PKI keys. Policy Manager will create them for you and display the information after.
+  ***Note***: *Policy Manager must be configured as a Certificate Authority in order to complete the following steps*.
   a. Select **Generate PKI Keys and X.509 Certificate**, and click **Next**.
-  b. Select the key length value (2048 is recommended).   
+  b. Select the key length value (2048 is recommended).
   c. Fill out *Certificate Details* and click **Finish**.
-  * **Import your already existing certificate and keys**  
-  Use this option if you have purchased a certificate from a CA and would like to use it.  
+  * **Import your already existing certificate and keys**
+  Use this option if you have purchased a certificate from a CA and would like to use it.
   a. Select **Import PKI Keys and X.509 Certificate** and click **Next**.
-  b. Specify the *Keystore Type*.  
-  c. Specify the *Keystore Path*.  
-  d. Enter the password for the selected keystore. 
-  e. Click **Load Aliases**.  
+  b. Specify the *Keystore Type*.
+  c. Specify the *Keystore Path*.
+  d. Enter the password for the selected keystore.
+  e. Click **Load Aliases**.
   f. Select the *Key Alias* you would like to import and click **Finish**.
   ![](images/imp_2way_ssl_4.jpg)
 
-
 ### Outbound HTTPS Certificate Configured on the Network Director Container
-This optional method can be thought of as a “default” certificate that is sent with every request made by services hosted on the Network Director. It is configured in the *Details* tab in the *Outbound Configuration* portlet.    
+
+This optional method can be thought of as a “default” certificate that is sent with every request made by services hosted on the Network Director. It is configured in the *Details* tab in the *Outbound Configuration* portlet.
+
 ![](images/imp_2way_ssl_5.jpg)
 
 1. In *Policy Manager* Workbench, go to *Organization Tree > Containers* and select the Network Director container instance the service is hosted on.
-2. In the *Outbound Configurations* portlet, click **Manage PKI Keys**.  
-![](images/imp_2way_ssl_6.jpg)  
-On the *Select Key Management Option* screen, select from two options:  
-  * **Generate Your Own PKI keys and an X.509 certificate**  
-  Use this option if you do not have your own certificate and PKI keys. Policy Manager will create them for you and display the information after.  
-  ***Note***: *Policy Manager must be configured as a Certificate Authority in order to complete the following steps*  
+2. In the *Outbound Configurations* portlet, click **Manage PKI Keys**.
+![](images/imp_2way_ssl_6.jpg)
+
+  On the *Select Key Management Option* screen, select from two options:
+  * **Generate Your Own PKI keys and an X.509 certificate** 
+  Use this option if you do not have your own certificate and PKI keys. Policy Manager will create them for you and display the information after.
+  ***Note***: *Policy Manager must be configured as a Certificate Authority in order to complete the following steps*
   a. Select **Generate PKI Keys and X.509 Certificate** and click **Next**.
-  b. Select the key length value (2048 is recommended).  
-  c. Fill out the *Certificate Details* and click **Finish**. 
-  * **Import your already existing certificate and keys**  
-  Use this option if you have purchased a certificate from a CA and would like to use it.  
+  b. Select the key length value (2048 is recommended).
+  c. Fill out the *Certificate Details* and click **Finish**.
+   * **Import your already existing certificate and keys**
+   Use this option if you have purchased a certificate from a CA and would like to use it.
   a. Select **Import PKI Keys and X.509 Certificate** and click **Next**.
-  b. Specify the *Keystore Type*.  
-  c. Specify the *Keystore Path*.  
+  b. Specify the *Keystore Type*.
+  c. Specify the *Keystore Path*.
   d. Enter the password for selected keystore.
-  e. Click **Load Aliases**.  
+  e. Click **Load Aliases**.
   f. Select the *Key Alias* you would like to import and click **Finish**.
 
 <a href="#top">back to top</a> 
 
 ## Configure Inbound HTTPS Support
-There are two things to do in order to enable client certification:  
+
+There are two things to do in order to enable client certification:
 
 * Set your HTTPS inbound listener to accept client certificates.
-* Use Policy Manager to create a client certificate and add it to your store of Trusted CA Certificates. 
+* Use Policy Manager to create a client certificate and add it to your store of Trusted CA Certificates.
 
-### Create an HTTPS Inbound Listener 
+### Create an HTTPS Inbound Listener
 
 *Note: If you have an existing HTTPS listener you want to use, you can just modify it under **Actions > Modify Container Listener** and change its client certificate requirements.*
 
 1. In the *Inbound Listeners* portlet, select the *Network Director* container instance you plan to host the service on.
-2. Click **Add Container Listener**.  
+2. Click **Add Container Listener**.
 ![](images/imp_2way_ssl_7.jpg)
 3. From the drop-down, select **HTTPS** and click **Next**.
 4. From the *Client Certificates* drop-down, select **Accept Client Certificates**.
-5. Fill out the rest of the fields to your preference and click **Finish**. 
+5. Fill out the rest of the fields to your preference and click **Finish**.
 ![](images/imp_2way_ssl_8.jpg)
 6. Go to **Actions > Manage PKI Keys**.
-7. Create or import PKI Keys and certificate for HTTPS Inbound Listener.  
-![](images/imp_2way_ssl_9.jpg)  
-On the *Select Key Management Option* screen, select from two options:  
-  * **Generate Your Own PKI keys and an X.509 certificate**  
-  Use this option if you do not have your own certificate and PKI keys. Policy Manager will create them for you and display the information after.  
-  ***Note***: *Policy Manager must be configured as a Certificate Authority in order to complete the following steps*  
-	a. Select **Generate PKI Keys and X.509 Certificate** and click **Next**.  
-	b. Select the key length value (2048 is recommended). 
-	c. Fill out the *Certificate Details* and click **Finish**.  
-  * **Import your already existing certificate and keys**  
-  Use this option if you have purchased a certificate from a CA and would like to use it.  
-	a. Select **Import PKI Keys and X.509 Certificate** and click **Next**.  
-	b. Specify the *Keystore Type*.   
-	c. Specify the *Keystore Path*.
-	d. Enter the password for the selected keystore. 
-	e. Click **Load Aliases**. 
-	f. Select the *Key Alias* you would like to import and click **Finish**.
- 
-<a href="#top">back to top</a> 
+7. Create or import PKI Keys and certificate for HTTPS Inbound Listener.
+![](images/imp_2way_ssl_9.jpg)
+
+On the *Select Key Management Option* screen, select from two options:
+  * **Generate Your Own PKI keys and an X.509 certificate**
+  Use this option if you do not have your own certificate and PKI keys. Policy Manager will create them for you and display the information after.
+  ***Note***: *Policy Manager must be configured as a Certificate Authority in order to complete the following steps*
+  a. Select **Generate PKI Keys and X.509 Certificate** and click **Next**.
+  b. Select the key length value (2048 is recommended).
+  c. Fill out the *Certificate Details* and click **Finish**.
+  * **Import your already existing certificate and keys**
+  Use this option if you have purchased a certificate from a CA and would like to use it.
+  a. Select **Import PKI Keys and X.509 Certificate** and click **Next**.
+  b. Specify the *Keystore Type*.
+  c. Specify the *Keystore Path*.
+  d. Enter the password for the selected keystore.
+  e. Click **Load Aliases**.
+  f. Select the *Key Alias* you would like to import and click **Finish**.
+
+<a href="#top">back to top</a>
 
 ## Add Trusted Client Certificates to Policy Manager
+
 Add any additional trusted client certificates to the Trust CA Store in Policy Manager.
 
 1. Go to *Configure > Security > Certificates > Trusted CA Certificates*.
 2. To import the certificate for the client, click **Add Trusted CA Certificate** and click **Apply**.
 3. Go to **Security > Users**.
 4. Assign PKI Keys and X.509 certificate to desired user(s):
-	a. Select user(s).  
-	b. Click **Manage PKI Keys**.  
-	c. Select **Import PKI Keys and X.509 Certificate** and click **Next**.
-	d. Select a **valid .jks file** and click **Finish**.  
+  a. Select user(s).
+  b. Click **Manage PKI Keys**.
+  c. Select **Import PKI Keys and X.509 Certificate** and click **Next**.
+  d. Select a **valid .jks file** and click **Finish**.
 
-<a href="#top">back to top</a> 
+<a href="#top">back to top</a>
 
 ## Test 
-You can test to be sure that mutual authentication is working properly by testing it with SOAPUI. You just need to export the Private Key and X.509 Certificate from the HTTPS Inbound Listener and add them to your SOAPUI. 
 
-1. Navigate to [*your Network Director*]. 
+You can test to be sure that mutual authentication is working properly by testing it with SOAPUI. You just need to export the Private Key and X.509 Certificate from the HTTPS Inbound Listener and add them to your SOAPUI.
+1. Navigate to [*your Network Director*].
 2. Locate your [HTTPS Listener created earlier in this guide](#configure-inbound-https-support) under *Inbound Listeners* portlet.
 3. From the *Actions* drop-down, select **Manage PKI Keys**.
-4. Under *Key Management Options*, select **Export Private Key and X.509 Certificate** and click **Next**. 
+4. Under *Key Management Options*, select **Export Private Key and X.509 Certificate** and click **Next**.
 5. Confirm that *Keystore* Type is set to **Java**.
 6. Fill out the **Keystore Details** fields and click **Finish**.
 ![](images/imp_2way_ssl_10.jpg)
 7. Inside SOAPUI, go to **File > Preferences > SSL Settings**.
 8. Inside the *Keystore* field, **browse** to where you saved the exported file.
-9. Under **KeyStore Password**, enter the same password you made when you exported the keys and click **OK**. 
+9. Under **KeyStore Password**, enter the same password you made when you exported the keys and click **OK**.
 10. SOAPUI should now be able to successfully test services with mutual authentication.
 
-<a href="#top">back to top</a> 
+<a href="#top">back to top</a>
+
+ 
