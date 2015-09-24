@@ -25,49 +25,50 @@ Learn how to use Policy Manager to implement mutual authentication using an SSL 
 * [Add Trusted Client Certificates to Policy Manager](#add-trusted-client-certificates-to-policy-manager)
 * [Test](#test)
 
+
 <h5 class="stamp">Supported Platforms: 7.x</h5>
 
 ## SSL Overview
 
 ### Identity Certificates
+
 When a user visits your secure site, your web server will send a copy of your SSL (Secure Socket Layer) certificate to the user's web browser. The information in the certificate will always include your web site's domain name, such as *www.yourdomain.com* and the name of the **certificate authority (CA)** that issued the certificate; *sometimes* it will also include your company's information. This lets the browser know that the web site it's connecting to is the correct web site, and not an impostor or phishing site. This is **authentication.**
-There are two types of SSL Authentication: **full-authentication** and **domain-authentication**. 
+
+There are two types of SSL Authentication: **full-authentication** and **domain-authentication**.
 
 #### Fully-Authenticated SSL Certificates
 
-A **fully-authenticated** SSL certificate will contain information about your domain name and the legal name of your business organization. It will also contain the geographical location information for the city, state, and country where your business is registered to do business. Before a Certificate Authority issues this certificate, the applying business has to fax in supporting proof-of-organization documents to prove its identity. Fully-authenticated websites will typically have a green bar before their domain name.  
+A **fully-authenticated** SSL certificate will contain information about your domain name and the legal name of your business organization. It will also contain the geographical location information for the city, state, and country where your business is registered to do business. Before a Certificate Authority issues this certificate, the applying business has to fax in supporting proof-of-organization documents to prove its identity. Fully-authenticated websites will typically have a green bar before their domain name.
 
 ![](images/imp_2way_ssl_11.png)
 
-
-**Domain-Authenticated SSL Certificates**  
+**Domain-Authenticated SSL Certificates**
 
 A **domain-authenticated** certificate will vouch for your domain only. It will not include any information about your company nor its location in the certificate (except for the two-letter country code).  Domain-authenticated websites will have a lock icon before their name. 
- 
+
 ![](images/imp_2way_ssl_12.png)
 
-<a href="#top">back to top</a> 
+<a href="#top">back to top</a>
 
 ## 2-Way SSL Prerequisites
 
 In order for Policy Manager to properly implement mutual authentication, the following requirements must be met inside Policy Manager:
 
 1. You must have an *HTTP Security Policy* with the *Require Client Certificate Authentication* option enabled and attached to the service you want.
-2. You must have an *Authentication Policy* that will check that the correct certificate is presented.
+2. You must have an *Authentication Policy* that will check that the correct certificate is presented
 3. You must set your *HTTPS Inbound Listener* on your Network Director to *Accept Client Certificates*.
 4. Your *HTTPS Inbound Listener* must have a set of PKI Keys and an X.509 Certificate.
 
-<a href="#top">back to top</a> 
+<a href="#top">back to top</a>
 
 ## Assumptions
-This topic implements mutual authentication with an anonymous contract. It allows any user in your Workbench with the correct certificate attached to access the service. 
+
+This topic implements mutual authentication with an anonymous contract. It allows any user in your Workbench with the correct certificate attached to access the service.
 
 <a href="#top">back to top</a>
 
 ## Create HTTP Security Policy
-
 The purpose of the HTTP Security Policy is to require a certain credential from the client. In this case we want to require the client to send a certificate as their credentials, which will be validated by the authentication policy in the next step. The HTTP Security Policy must be attached to the virtual service of any service you would like to implement mutual authentication on. 
-
 1. Go to *[Organization Containing Service] > Polices > Operational Policies*.
 2. On the *Policies Summary*, click **Add Policy** and create an *HTTP Security Policy*.
 3. On the *HTTP Security Policy Details* portlet, click **Modify**. 
@@ -84,11 +85,9 @@ The purpose of the HTTP Security Policy is to require a certain credential from 
 <a href="#top">back to top</a> 
 
 ## Create Authentication Policy
-
 The purpose of the authentication policy is to ensure that the correct certificate is received. The *HTTP Security Policy* only requires that a certificate be sent by the client, but that could be any certificate. This policy must also be attached to the service you want to implement mutual authentication on.
 
 The purpose of the authentication policy is to ensure that the correct certificate is received. The *HTTP Security Policy* only requires that a certificate be sent by the client, but that could be any certificate. This policy must also be attached to the service you want to implement mutual authentication on.
-
 1. Go to *[Organization Containing Service] > Polices > Operational Policies*.
 2. On the *Policies Summary*, click **Add Policy** and create an *Authentication Policy*.
 3. On the *Authentication Policy* portlet, click **Modify**. 
@@ -108,7 +107,6 @@ The purpose of the authentication policy is to ensure that the correct certifica
 The Network Director supports Outbound HTTPS to the physical service/endpoint using the following two methods:
 
 ### Outbound HTTP Certificate Configured on the Virtual Service (Suggested Method)
-
 If you would like to use different outbound certificates for different services, you can accomplish this by attaching them to a particular virtual service.
 ![](images/imp_2way_ssl_3.jpg)
 1. In *Policy Manager* Workbench, select the virtual service you would like to attach an Outbound Certificate to.
@@ -128,11 +126,8 @@ If you would like to use different outbound certificates for different services,
    ![](images/imp_2way_ssl_4.jpg)
 
 ### Outbound HTTPS Certificate Configured on the Network Director Container
-
 This optional method can be thought of as a “default” certificate that is sent with every request made by services hosted on the Network Director. It is configured in the *Details* tab in the *Outbound Configuration* portlet.
-
 ![](images/imp_2way_ssl_5.jpg)
-
 1. In *Policy Manager* Workbench, go to *Organization Tree > Containers* and select the Network Director container instance the service is hosted on.
 2. In the *Outbound Configurations* portlet, click **Manage PKI Keys**.
 ![](images/imp_2way_ssl_6.jpg)
@@ -158,7 +153,6 @@ There are two things to do in order to enable client certification:
 * Use Policy Manager to create a client certificate and add it to your store of Trusted CA Certificates.
 
 ### Create an HTTPS Inbound Listener
-
 *Note: If you have an existing HTTPS listener you want to use, you can just modify it under **Actions > Modify Container Listener** and change its client certificate requirements.*
 1. In the *Inbound Listeners* portlet, select the *Network Director* container instance you plan to host the service on.
 2. Click **Add Container Listener**.
@@ -186,7 +180,6 @@ There are two things to do in order to enable client certification:
 <a href="#top">back to top</a>
 
 ## Add Trusted Client Certificates to Policy Manager
-
 Add any additional trusted client certificates to the Trust CA Store in Policy Manager.
 1. Go to *Configure > Security > Certificates > Trusted CA Certificates*.
 2. To import the certificate for the client, click **Add Trusted CA Certificate** and click **Apply**.
@@ -200,7 +193,6 @@ Add any additional trusted client certificates to the Trust CA Store in Policy M
 <a href="#top">back to top</a>
 
 ## Test 
-
 You can test to be sure that mutual authentication is working properly by testing it with SOAPUI. You just need to export the Private Key and X.509 Certificate from the HTTPS Inbound Listener and add them to your SOAPUI.
 1. Navigate to [*your Network Director*].
 2. Locate your [HTTPS Listener created earlier in this guide](#configure-inbound-https-support) under *Inbound Listeners* portlet.
