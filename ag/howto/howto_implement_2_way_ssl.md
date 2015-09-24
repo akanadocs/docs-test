@@ -112,10 +112,12 @@ If you would like to use different outbound certificates for different services,
 1. In *Policy Manager* Workbench, select the virtual service you would like to attach an Outbound Certificate to.
 2. On the *Service Details* screen, click **Manage PKI Keys** from the *Actions* portlet. 
 3. On the *Select Key Management Option* screen, select from two options:
-4. **Generate Your Own PKI keys and an X.509 certificate**. Use this option if you do not have your own certificate and PKI keys. Policy Manager will create them for you and display the information after. *Policy Manager must be configured as a Certificate Authority in order to complete the following steps.*
-6. Select **Generate PKI Keys and X.509 Certificate**, and click **Next**.
-7. Select the key length value (2048 is recommended).
-8. Fill out *Certificate Details* and click **Finish**.
+	* **Generate Your Own PKI keys and an X.509 certificate**. 
+	  Use this option if you do not have your own certificate and PKI keys. Policy Manager will create them for you and display the information after. 	
+	  *Policy Manager must be configured as a Certificate Authority in order to complete the following steps.*
+		a. Select **Generate PKI Keys and X.509 Certificate**, and click **Next**.
+		b. Select the key length value (2048 is recommended).
+		c. Fill out *Certificate Details* and click **Finish**.
 9. **Import your already existing certificate and keys**. Use this option if you have purchased a certificate from a CA and would like to use it.
 10. Select **Import PKI Keys and X.509 Certificate** and click **Next**.
 11. Specify the *Keystore Type*.
