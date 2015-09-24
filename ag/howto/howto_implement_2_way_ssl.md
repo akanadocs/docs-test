@@ -13,7 +13,6 @@ nav-title: Implementing 2-Way SSL using Policy Manager 7.x
 ## Implementing 2-Way SSL
 Learn how to use Policy Manager to implement mutual authentication using an SSL (Secure Socket Layer) Certificate to authenticate either your business' legal name and location or, alternatively, just your domain.
 
-<h5 class="stamp">Supported Platforms: 7.x</h5>
 ### Table of Contents
 <div id="toc-marker"></div>
 * [SSL Overview](#ssl-overview)  
@@ -25,6 +24,8 @@ Learn how to use Policy Manager to implement mutual authentication using an SSL 
 * [Configure Inbound HTTPS Support](#configure-inbound-https-support)
 * [Add Trusted Client Certificates to Policy Manager](#add-trusted-client-certificates-to-policy-manager)
 * [Test](#test)
+
+<h5 class="stamp">Supported Platforms: 7.x</h5>
 
 ## SSL Overview
 
@@ -111,8 +112,7 @@ If you would like to use different outbound certificates for different services,
 ![](images/imp_2way_ssl_3.jpg)   
 1. In *Policy Manager* Workbench, select the virtual service you would like to attach an Outbound Certificate to.
 2. On the *Service Details* screen, click **Manage PKI Keys** from the *Actions* portlet. 
-3. On the *Select Key Management Option* screen, select from two options:  
-  * **Generate Your Own PKI keys and an X.509 certificate**  
+3. On the *Select Key Management Option* screen, select from two options:   **Generate Your Own PKI keys and an X.509 certificate**  
   Use this option if you do not have your own certificate and PKI keys. Policy Manager will create them for you and display the information after.  
   ***Note***: *Policy Manager must be configured as a Certificate Authority in order to complete the following steps*.  
   a. Select **Generate PKI Keys and X.509 Certificate**, and click **Next**.
@@ -178,16 +178,17 @@ On the *Select Key Management Option* screen, select from two options:
   * **Generate Your Own PKI keys and an X.509 certificate**  
   Use this option if you do not have your own certificate and PKI keys. Policy Manager will create them for you and display the information after.  
   ***Note***: *Policy Manager must be configured as a Certificate Authority in order to complete the following steps*  
-  a. Select **Generate PKI Keys and X.509 Certificate** and click **Next**.  
-  b. Select the key length value (2048 is recommended).   
-  c. Fill out the *Certificate Details* and click **Finish**.  
+	a. Select **Generate PKI Keys and X.509 Certificate** and click **Next**.  
+	b. Select the key length value (2048 is recommended). 
+	c. Fill out the *Certificate Details* and click **Finish**.  
   * **Import your already existing certificate and keys**  
   Use this option if you have purchased a certificate from a CA and would like to use it.  
-  a. Select **Import PKI Keys and X.509 Certificate** and click **Next**.  b. Specify the *Keystore Type*.   
-  c. Specify the *Keystore Path*.  
-  d. Enter the password for the selected keystore.  
-  e. Click **Load Aliases**.  
-  f. Select the *Key Alias* you would like to import and click **Finish**.
+	a. Select **Import PKI Keys and X.509 Certificate** and click **Next**.  
+	b. Specify the *Keystore Type*.   
+	c. Specify the *Keystore Path*.
+	d. Enter the password for the selected keystore. 
+	e. Click **Load Aliases**. 
+	f. Select the *Key Alias* you would like to import and click **Finish**.
  
 <a href="#top">back to top</a> 
 
@@ -197,11 +198,11 @@ Add any additional trusted client certificates to the Trust CA Store in Policy M
 1. Go to *Configure > Security > Certificates > Trusted CA Certificates*.
 2. To import the certificate for the client, click **Add Trusted CA Certificate** and click **Apply**.
 3. Go to **Security > Users**.
-4. Assign PKI Keys and X.509 certificate to desired user(s):  
-  a. Select user(s).  
-  b. Click **Manage PKI Keys**.  
-  c. Select **Import PKI Keys and X.509 Certificate** and click **Next**.
-  d. Select a **valid .jks file** and click **Finish**.  
+4. Assign PKI Keys and X.509 certificate to desired user(s):
+	a. Select user(s).  
+	b. Click **Manage PKI Keys**.  
+	c. Select **Import PKI Keys and X.509 Certificate** and click **Next**.
+	d. Select a **valid .jks file** and click **Finish**.  
 
 <a href="#top">back to top</a> 
 
