@@ -110,27 +110,25 @@ The Network Director supports Outbound HTTPS to the physical service/endpoint us
 ### Outbound HTTP Certificate Configured on the Virtual Service (Suggested Method)
 
 If you would like to use different outbound certificates for different services, you can accomplish this by attaching them to a particular virtual service.
-
 ![](images/imp_2way_ssl_3.jpg)
-
 1. In *Policy Manager* Workbench, select the virtual service you would like to attach an Outbound Certificate to.
 2. On the *Service Details* screen, click **Manage PKI Keys** from the *Actions* portlet. 
 3. On the *Select Key Management Option* screen, select from two options:
-  * **Generate Your Own PKI keys and an X.509 certificate**
-  Use this option if you do not have your own certificate and PKI keys. Policy Manager will create them for you and display the information after.
-  ***Note***: *Policy Manager must be configured as a Certificate Authority in order to complete the following steps*.
+	* **Generate Your Own PKI keys and an X.509 certificate**
+	Use this option if you do not have your own certificate and PKI keys. Policy Manager will create them for you and display the information after.
+	***Note***: *Policy Manager must be configured as a Certificate Authority in order to complete the following steps*.
 	a. Select **Generate PKI Keys and X.509 Certificate**, and click **Next**.
 	b. Select the key length value (2048 is recommended).
 	c. Fill out *Certificate Details* and click **Finish**.
-  * **Import your already existing certificate and keys**
-  Use this option if you have purchased a certificate from a CA and would like to use it.
+	* **Import your already existing certificate and keys**
+	Use this option if you have purchased a certificate from a CA and would like to use it.
 	a. Select **Import PKI Keys and X.509 Certificate** and click **Next**.
 	b. Specify the *Keystore Type*.
 	c. Specify the *Keystore Path*.
 	d. Enter the password for the selected keystore.
 	e. Click **Load Aliases**.
 	f. Select the *Key Alias* you would like to import and click **Finish**.
-  ![](images/imp_2way_ssl_4.jpg)
+	![](images/imp_2way_ssl_4.jpg)
 
 ### Outbound HTTPS Certificate Configured on the Network Director Container
 
