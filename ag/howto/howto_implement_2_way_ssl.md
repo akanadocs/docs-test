@@ -7,7 +7,7 @@ category: learn
 sub-nav-class: Mediation
 weight:	4
 type: page
-nav-title: How to Implement 2-Way SSL using Policy Manager 7.x
+nav-title: Implement 2-Way SSL using Policy Manager 7.x
 ---
 
 ## Implementing 2-Way SSL
