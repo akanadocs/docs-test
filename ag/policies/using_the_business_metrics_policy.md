@@ -32,7 +32,7 @@ Learn how to specify what business metrics should be gathered from the contents 
 
 ### Introduction
 
-The Business Metrics Policy specifies what business  specific metrics should be gathered from the contents of the messages being exchanged. It differs from an Operational Metrics Policy in that the  information collected is not general to all messages but very specific using  data from message payloads, headers, or URLs. 
+The Business Metrics Policy specifies what business specific metrics should be gathered from the contents of the messages being exchanged. It differs from an Operational Metrics Policy in that the information collected is not general to all messages but very specific using data from message payloads, headers, or URLs. 
 
 The *Business Metrics Policy Details* displays a summary of the policy configuration including:
 
@@ -42,7 +42,8 @@ The *Business Metrics Policy Details* displays a summary of the policy configura
 
 ### Prerequisites
 
-  * MongoDB must be started to log into the *Policy Manager Management Console* and modify a Business Metrics Policy . 
+  * MongoDB must be started to log into the *Policy Manager Management Console* and modify a Business Metrics Policy. 
+  * A data set must be previously defined so it can be selected as part of the policy configuration. Datasets can be defined using the Envision Console, or can be imported into MongoDB. 
 
 ### Configuration Options
 
