@@ -37,6 +37,7 @@ This feature must be installed into the Policy Manager container instance. Requi
 **Note:** MongoDB must be started before proceeding with this installation to both connect to the MongoClientURI and to Modify the associated policies after logging into the Policy Manager Management Console.  
 
 This plug-in installs the following policies:
+
 * Business Metrics Policy
 * Operational Metrics Policy
 * Business Metrics SLA QoS Policy

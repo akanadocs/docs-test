@@ -34,7 +34,7 @@ Learn how to install the Envision Standalone Analytics Manager UI and associated
 
 This feature installs the Envision Standalone Analytics Manager UI and associated services.
 
-See [Installing the Akana Envision 1.1](../../sp/platform_install/installing_envision_v11.html) for complete end-to-end installation instructions including installing MongoDB, configuring a container, configuring sample data sets, launching the Envision Console.
+See [Installing the Akana Envision 1.1](../../ev/envision_install/installing_envision_v11.html) for complete end-to-end installation instructions including installing MongoDB, configuring a container, configuring sample data sets, launching the Envision Console.
 
 ### Configuration
 
