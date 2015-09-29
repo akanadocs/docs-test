@@ -42,7 +42,7 @@ Learn how to perform the Policy Manager / Envision integration installation.
 	* [Step 2: Install Policy Manager Zip file](#step-2-install-policy-manager-zip-file)
 	* [Step 3: Configure Policy Manager Container](#step-3-configure-policy-manager-container)
 	* [Step 4: Install and Configure Policy Manager Services and Console Features](#step-4-install-and-configure-policy-manager-services-and-console-features)
-	* [Step 5: Install Envision Policy Manager Console Extensions Plug-in](#step-5-install-envision-policy-manager-console-extensions-plug-in)
+	* [Step 5: Install Envision Metrics Console Extensions Plug-in](#step-5-install-envision-metrics-console-extensions-plug-in)
 * [Configure Network Director](#configure-network-director)
 	* [Step 1: Create Network Director Container](#step-1-create-network-director-container)
 	* [Step 2: Install Network Director Feature](#step-2-install-network-director-feature)
@@ -210,12 +210,16 @@ The Policy Manager zip file must be installed to the Akana Platform. Download th
 1. On the *Available Features* screen, select the *Policy Manager Services* and *Policy Manager Console* features, click **Install Feature**. 
 2. Complete the installation and configuration. 
 3. For detailed instructions on installing these features see [Reference Documentation](#reference-documentation).
+4. Click **Cancel** on the container restart message, then **Close** on the summary screen and continue to the next step.
 
-### Step 5: Install Envision Policy Manager Console Extensions Plug-in
+### Step 5: Install Envision Metrics Console Extensions Plug-in
 
 1. On the *Available Features* screen, select **Plug-ins** from the *Filter* menu. 
-2. Select the *Envision Policy Manager Console Extensions* plug-in and click **Install Feature**.
-3. After the installation is complete, click **Finish**, then **OK** to restart the container. Click **Close** after the container restart is completed. 
+2. Select the *Envision Metrics Console Extensions* plug-in and click **Install Feature**.
+3. After the installation is complete, click **Configure** and continue.
+6. On the *Configure MongoDB Database* screen, specify the host name and port where the MongoDB database is installed in the MongoClientURI field. The default MongoDB port is 27017. Click **Finish**. The URI is assigned and the system automatically configures seed data and adds schemas. 
+7. Click **OK** to restart the container, then Close on the summary screen. 
+
 
 <a href="#top">back to top</a>
 
