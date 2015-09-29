@@ -280,8 +280,8 @@ Because this is a custom configuration, not that you must add Step 4: Install En
 
 1. Enter the following URL to launch the *Envision Console*. 
 2. http://hostname:port/analytics/login
-3. Log into the *Envision Console* using the Username/Password you defined for your Envision container, then click the *Dashboards* tab.<br>
-   ![Envision](images/envision_dashboard.jpg "Envision Dashboard")
+3. Log into the *Envision Console* using the Username/Password you defined for your Envision container, then click the *Dashboards* tab, and select a dashboard from the drop-down menu.<br>
+   ![Envision](images/sample_dataset_dashboard.jpg "Envision Dashboard")
 4. If you do not see the DataSets and/or have problems logging into the *Envision Console*, restart the Envision container and refer to [Step 3: Start MongoDB](#step-3-start-mongodb) for instructions on how to start MongoDB.
 
 <a href="#top">back to top</a>
