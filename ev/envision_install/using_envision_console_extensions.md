@@ -10,7 +10,7 @@ type: page
 nav-title: Using the Envision Metrics Console Extension Feature 
 ---
 
-## Using the Envision Policy Manager Console Extension Feature  
+## Using the Envision Metrics Console Extension Feature  
 Learn how to install Envision business metrics and service level agreement (SLA) extensions to the the *Policy Manager Management Console*.
 
 <a href="../envision_install/installing_envision_features.html" class="button secondary">Installing Envision Features (Main Topic)</a> 
@@ -38,10 +38,10 @@ This feature must be installed into the Policy Manager container instance. Requi
 
 This plug-in installs the following features:
 
-* **Akana Envision Metric Service Extensions** - This plug-in installs connectors Policy Manager uses for collection of business metrics that are then fed into the Envision product. This feature must be installed into the Policy Manager container instance and works in conjunction with the Akana Envision. 
+* **Akana Envision Metrics Service Extensions** - This plug-in installs connectors Policy Manager uses for collection of business metrics that are then fed into the Envision product. This feature must be installed into the Policy Manager container instance and works in conjunction with the Akana Envision. 
 
 	Installs the Business Metrics and Operational Metrics Policies to the *Policies > Operational* section. 
-* **Akana Envision Metric Console Extensions** - This plug-in installs extensions to the Policy Manager Management Console to direct the collection of business metrics and SLA collection that are then fed into the Envision product. The extensions include configuration screens for the business metrics related policies and configuring SLA for Business Metrics. 
+* **Akana Envision Metrics Console Extensions** - This plug-in installs extensions to the Policy Manager Management Console to direct the collection of business metrics and SLA collection that are then fed into the Envision product. The extensions include configuration screens for the business metrics related policies and configuring SLA for Business Metrics. 
 
 	This feature requires Policy Manager Console feature. Installs the Business Service Level Agreement Policy to the *Policies > QoS* section.
 
