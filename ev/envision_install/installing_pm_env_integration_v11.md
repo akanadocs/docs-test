@@ -78,12 +78,12 @@ Detailed instructions of common tasks are available in expanded reference docume
 
 ##### Envision:
 
-* [Installing Envison Features](http://docs.akana.com/ev/envision_install/using_pmconsole_feature.htm)
+* [Installing Envison Features](http://docs.akana.com/ev/envision_install/installing_envision_features.html)
 
 ##### Policy Manager:
 
 * [Policy Manager Services Feature](http://docs.akana.com/sp/admin_console/using_pmservices_feature.htm)
-* [Policy Manager Console Feature](http://docs.akana.com/sp/admin_console/installing_envision_features.htm)
+* [Policy Manager Console Feature](http://docs.akana.com/sp/admin_console/using_pmconsole_feature.htm)
 
 ##### Network Director:
 
@@ -225,7 +225,7 @@ For detailed instructions on the complete Network Director configuration see [Re
 
 ### Step 2: Install Network Director Feature
 
-1. Launch the Administration Console (http://<hostname:<port>/admin/).
+1. Launch the Administration Console (http://hostname:port/admin/).
 2. On the **Installed Features** screen, select the *Network Director* feature and click **Install Feature**.
 3. After the installation is complete, click **Configure** and continue to the next step. 
 
@@ -246,7 +246,7 @@ This step in not included in the general [Using Network Director Feature](http:/
 
 ### Step 5: Modify Usage Writer Properties
 
-1. Log into the *Administration Console* (http://<hostname:<port>/admin/).
+1. Log into the *Administration Console* (http://hostname:port/admin/).
 2. Click the *Configuration* tab.
 3. In the *Configuration Categories* section, navigate to the com.soa.monitor.usage configuration category.
 4. Set **usage.local.writer.enabled** to **false**.
@@ -255,7 +255,7 @@ This step in not included in the general [Using Network Director Feature](http:/
 
 ### Step 6: Register Network Director Container
 
-1. Log into the *Policy Manager Management Console* (http://<hostname:<port>/ms/index.do/), and navigate to *Organization > Containers*. 
+1. Log into the *Policy Manager Management Console* (http://hostname:port/ms/index.do/), and navigate to *Organization > Containers*. 
 2. On the *Containers Summary* screen click **Add Container**. 
 3. Specify the container type, container metadata, add metadata certificate to trusted CA (if applicable), and container details.
 4. Complete your entries and click **Finish**, then **Close**. The *Container Details* page for the Network Director displays. 
