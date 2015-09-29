@@ -47,7 +47,7 @@ Learn how to perform the Policy Manager / Envision integration installation.
 	* [Step 1: Create Network Director Container](#step-1-create-network-director-container)
 	* [Step 2: Install Network Director Feature](#step-2-install-network-director-feature)
 	* [Step 3: Configure Network Director](#step-3-configure-network-director)
-	* [Step 4: Install Envision Metrics Collector Feature](#step-4-install-envision-metrics-collector-feature)
+	* [Step 4: Install Envision Metrics Collector Plug-in](#step-4-install-envision-metrics-collector-plug-in)
 	* [Step 5: Modify Usage Writer Properties](#step-5-modify-usage-writer-properties)
 	* [Step 6: Register Network Director Container](#step-6-register-network-director-container)
 	* [Step 7: Host Virtual Services in Network Director Container](#step-7-host-virtual-services-in-network-director-container)
@@ -216,16 +216,15 @@ The Policy Manager zip file must be installed to the Akana Platform. Download th
 
 1. On the *Available Features* screen, select **Plug-ins** from the *Filter* menu. 
 2. Select the *Envision Metrics Console Extensions* plug-in and click **Install Feature**.
-3. After the installation is complete, click **Configure** and continue.
-6. On the *Configure MongoDB Database* screen, specify the host name and port where the MongoDB database is installed in the MongoClientURI field. The default MongoDB port is 27017. Click **Finish**. The URI is assigned and the system automatically configures seed data and adds schemas. 
-7. Click **OK** to restart the container, then Close on the summary screen. 
-
+3. After the installation is complete, Click **Finish**, then **OK** to restart the container. Click **Close** on the summary screen after the container restart is completed. 
 
 <a href="#top">back to top</a>
 
 ## Configure Network Director
 
-For detailed instructions on the complete Network Director configuration see [Reference Documentation](#reference-documentation).
+You have the option of using the Network Director detailed instructions to complete Network Director configuration see [Reference Documentation](#reference-documentation). 
+
+Because this is a custom configuration, not that you must add Step 4: Install Envision Metrics Collector Feature, and  and Step 5: Modify Usage Writer Properties to your configuration sequence. 
 
 ### Step 1: Create Network Director Container
 
@@ -243,26 +242,23 @@ For detailed instructions on the complete Network Director configuration see [Re
 ### Step 3: Configure Network Director
 
 1. Specify WS-MetadataExchange URL, configure keys. The Generate PKI Keys & X.509 Certificate option is the most commonly used default option.
-2. Click **Finish**, and **OK** to restart the container. After the container restarts, click **Close**. 
+2. Click **Finish**, then **Cancel** on the container restart message, then **Close** on the summary screen and continue to the next step.
 
-### Step 4: Install Akana Envision Metrics Collector Feature
-
-This step in not included in the general [Using Network Director Feature](http://docs.akana.com/sp/admin_console/using_network_director_feature.htm) documentation.
+### Step 4: Install Envision Metrics Collector Plug-in
 
 **Note:** If the *Network Director* feature is installed directly to the Policy Manager container, skip this step. The *Envision Metrics Collector* feature is installed as part of the *Envision Policy Manager Console Extensions* features that is installed as part of the Policy Manager container configuration. 
 
 1. On the *Available Features* screen, select **Plug-ins** from the *Filter* menu. 
-3. Select the *Envision Metrics Collector Feature* plug-in and click **Install Feature**.
-4. After the installation is complete, click **OK** to restart the container.  
+2. Select the *Envision Metrics Collector Feature* plug-in and click **Install Feature**.
+3. After the installation is complete, click **Cancel** on the container restart message, then **Close** on the summary screen and continue to the next step.
 
 ### Step 5: Modify Usage Writer Properties
 
-1. Log into the *Administration Console* (http://hostname:port/admin/).
-2. Click the *Configuration* tab.
-3. In the *Configuration Categories* section, navigate to the com.soa.monitor.usage configuration category.
-4. Set **usage.local.writer.enabled** to **false**.
-5. Set **usage.rest.writer.enabled** to **true**.
-6. Click **Apply Changes**, then restart the container.
+1. Click the *Configuration* tab.
+2. In the *Configuration Categories* section, navigate to the **com.soa.monitor.usage** configuration category.
+3. Set **usage.local.writer.enabled** to **false**.
+4. Set **usage.remote.writer.enabled** to **true**.
+5. Click **Apply Changes**, then restart the container.
 
 ### Step 6: Register Network Director Container
 
