@@ -32,8 +32,8 @@ This plug-in provides a series of sample data sets for demo charts that can be i
 
 <div class = "divider1"></div>
 
-### [Akana Envision Policy Manager Console Extensions] (using_envision_console_extensions.html)
-This plug-in installs extensions to the Policy Manager Management Console to direct the collection of business metrics that are then fed into the Envision product. The extensions include configuration screens for the business metrics related policies. This feature must be installed into the Policy Manager container instance. Requires that the Policy Manager Console feature be installed to the Policy Manager container instance. This feature works in conjunction with the Akana Envision product.
+### [Akana Envision Metrics Console Extensions] (using_envision_console_extensions.html)
+This plug-in installs extensions to the Policy Manager Management Console to direct the collection of business metrics and SLA collection that are then fed into the Envision product. The extensions include configuration screens for the business metrics related policies and configuring SLA for Business Metrics. This feature requires Policy Manager Console feature.
 
 <div class = "divider1"></div>
 

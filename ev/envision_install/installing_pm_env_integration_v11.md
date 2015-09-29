@@ -42,7 +42,7 @@ Learn how to perform the Policy Manager / Envision integration installation.
 	* [Step 2: Install Policy Manager Zip file](#step-2-install-policy-manager-zip-file)
 	* [Step 3: Configure Policy Manager Container](#step-3-configure-policy-manager-container)
 	* [Step 4: Install and Configure Policy Manager Services and Console Features](#step-4-install-and-configure-policy-manager-services-and-console-features)
-	* [Step 5: Install Envision Metrics Console Extensions Plug-in](#step-5-install-envision-metrics-console-extensions-plug-in)
+	* [Step 5: Install Envision Metric Console Extensions Plug-in](#step-5-install-envision-metrics-console-extensions-plug-in)
 * [Configure Network Director](#configure-network-director)
 	* [Step 1: Create Network Director Container](#step-1-create-network-director-container)
 	* [Step 2: Install Network Director Feature](#step-2-install-network-director-feature)
@@ -278,8 +278,8 @@ Because this is a custom configuration, not that you must add Step 4: Install En
 
 ### Step 1: Launch Envision Console
 
-1. Enter the following URL to launch the *Envision Console*. 
-2. http://hostname:port/analytics/login
+1. Enter the following URL to launch the *Envision Console*.
+	http://hostname:port/analytics/login
 3. Log into the *Envision Console* using the Username/Password you defined for your Envision container, then click the *Dashboards* tab, and select a dashboard from the drop-down menu.<br>
    ![Envision](images/sample_dataset_dashboard.jpg "Envision Dashboard")
 4. If you do not see the DataSets and/or have problems logging into the *Envision Console*, restart the Envision container and refer to [Step 3: Start MongoDB](#step-3-start-mongodb) for instructions on how to start MongoDB.
