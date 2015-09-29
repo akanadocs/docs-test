@@ -94,6 +94,7 @@ Detailed instructions of common tasks are available in expanded reference docume
 ## Setup MongoDB
 
 ### Step 1: Download and Install MongoDB
+
 1. Go to http://www.mongodb.org/downloads and download the MongoDB Version 3.0.0 file for your platform. Windows 64-bit (MSI), Linux 64-bit (TGZ), and Solaris 64-bit (TGZ) are supported. If you are on a Mac you can install Mongo with homebrew using "brew install mongo."
 2. Install MongoDB on your platform.
 3. Note that these instructions provide a basic MongoDB installation approach. Refer to the MongoDB documentation for information on installation instructions and shutdown procedures for your specific deployment. The site link is listed below:
@@ -101,15 +102,18 @@ Detailed instructions of common tasks are available in expanded reference docume
 	https://docs.mongodb.org/v3.0/tutorial/manage-mongodb-processes/
 
 ### Step 2: Create MongoDB Data Folder
+
 1. Create a MongoDB data folder. The default is **/data/db**. If you prefer to use a different location use --dbpath.    
 
 ### Step 3: Start MongoDB
+
 1. Navigate to the MongoDB installation directory:
     **/MongoDB/Server/3.0/bin**
 2. Enter **mongod**. 
 3. If MongoDB  successfully starts, your command window will say "waiting for connections" followed by the port number. 
 
 ### Step 4: Database and Container Shutdown Procedure
+
 When shutting down your Envision system, its important to shutdown the Envision container, and MongoDB database in the following sequence to  avoid data loss and/or the requirement of performing data repair.
 
 1. Shutdown the container first. Refer to [Starting and Stopping a Container Instance](../../../sp/container_management/start_stop_container_instance.htm) for shutdown options. 
@@ -136,6 +140,7 @@ See [Installing the Akana Platform](../../sp/platform_install/installing_akana_p
 ### Step 1: Download Envision Zip File
 
 The Envision zip file must be installed to the Akana Platform. Download the Envision self-extracting zip file from the Akana Customer Support site. 
+
 1. Launch www.support.akana.com.
 2. Go to *Downloads > Envision > 1.1*.
 3. Download the Envision zip file:
@@ -193,6 +198,7 @@ The Policy Manager zip file must be installed to the Akana Platform. Download th
 ### Step 3: Configure Policy Manager Container
 
 The Envision feature is typically installed into a Standalone container.
+
 1. Launch the *Configure Container Instance Wizard*. Navigate to the  Platform release directory \release_directory\bin  and enter:
  - startup.bat configurator (Windows)
  - startup.sh configurator (UNIX)
