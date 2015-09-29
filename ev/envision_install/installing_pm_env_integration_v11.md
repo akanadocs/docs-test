@@ -148,6 +148,7 @@ The Envision zip file must be installed to the Akana Platform. Download the Envi
 ### Step 3: Configure Envision Container
 
 The Envision feature is typically installed into a Standalone container.
+
 1. Launch the *Configure Container Instance Wizard*. Navigate to the  Platform release directory \release_directory\bin  and enter:
  - startup.bat configurator (Windows)
  - startup.sh configurator (UNIX)
@@ -261,6 +262,7 @@ This step in not included in the general [Using Network Director Feature](http:/
 4. Complete your entries and click **Finish**, then **Close**. The *Container Details* page for the Network Director displays. 
 
 ### Step 7: Host Virtual Services in Network Director Container 
+
 1. Navigate to *Containers > Hosted Services* and click **Host Virtual Service**. 
 2. On the *Select Virtual Service* screen, select a virtual service from the Organization tree, and map one or more bindings from the selected virtual service to the access points of the current container. 
 
@@ -269,15 +271,17 @@ This step in not included in the general [Using Network Director Feature](http:/
 ## Launch Envision Console
 
 ### Step 1: Launch Envision Console
+
 1. Enter the following URL to launch the *Envision Console*. 
 2. http://hostname:port/analytics/login
 3. Log into the *Envision Console* using the Username/Password you defined for your Envision container, then click the *Dashboards* tab.<br>
    ![Envision](images/envision_dashboard.jpg "Envision Dashboard")
 4. If you do not see the DataSets and/or have problems logging into the *Envision Console*, restart the Envision container and refer to [Step 3: Start MongoDB](#step-3-start-mongodb) for instructions on how to start MongoDB.
 
-<p><a href="#top">back to top</a></p>
+<a href="#top">back to top</a>
 
-### Step 2: Review Envision Reference Guide</h3></a>
+### Step 2: Review Envision Reference Guide
+
 To learn about Envision functionality and how to configure various monitoring scenarios, refer to  [Envision Reference](../envision_reference/env_toc.html). 
 
 <a href="#top">back to top</a>
