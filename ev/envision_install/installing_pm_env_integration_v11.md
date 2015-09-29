@@ -61,7 +61,8 @@ Learn how to perform the Policy Manager / Envision integration installation.
 Integrating Policy Manager with the Envision 1.1 analytics and monitoring solution allows you to take advantage of the Policy Manager business metrics related policies. These policies are plug-in extensions to the *Policy Manager Management Console* and provide support for capturing business metrics data (i.e., usage data and logs for a selected dataset). This data is then fed into the Envision product and can be used to generate statistical reports about API/service usage. 
 
 * The integration requires the installation of MongoDB, the Akana Platform, and Policy Manager and Envision Products. 
-* The presented installation uses three containers (Envision, Policy Manager, and Network Director). 
+* The presented installation requires you to configure three container instances (Envision, Policy Manager, and Network Director). 
+* Each container instance requires a unique port number.
 * You have the option to use a different container configuration scenario based on your requirements. 
 
 <a href="#top">back to top</a>
@@ -168,15 +169,16 @@ The Envision feature is typically installed into a Standalone container.
 4. Select the *Akana Envision* feature and click **Install Feature**.
 5. After the installation is complete, click **Configure** and continue.
 6. On the *Configure MongoDB Database* screen, specify the host name and port where the MongoDB database is installed in the MongoClientURI field. The default MongoDB port is 27017. Click **Finish**. The URI is assigned and the system automatically configures seed data and adds schemas. 
+7. Click **Cancel** on the container restart message, then **Close** on the summary screen and continue to the next step.
 
 ### Step 5: Install and Configure Sample Data Sets
 
 1. On the *Available Features* screen, select **Plug-ins** from the *Filter* menu. 
 2. Select the *Akana Sample Data Sets for Demo Charts* plug-in and click **Install Feature**.
 3. After the installation is complete, click **Configure** and continue.
-4. On the *Configure Sample Data Sets* screen, select the check-box for each data set you wold like to install. Click **Finish**, then **OK** to restart the container. Click **Close** after the container is restart is completed. 
+4. On the *Configure Sample Data Sets* screen, select the check-box for each data set you wold like to install. Click **Finish**, then **OK** to restart the container. Click **Close** after the container restart is completed. 
 
-**Note:** After the installation is compete, you can manage (i.e., install / uninstall) data sets a the *Configuration* tab by selecting *Configure Sample Data Sets*. 
+**Note:** After the installation is complete, you can manage (i.e., install / uninstall) data sets a the *Configuration* tab by selecting *Configure Sample Data Sets*. 
 
 <a href="#top">back to top</a>
 
@@ -197,8 +199,6 @@ The Policy Manager zip file must be installed to the Akana Platform. Download th
 
 ### Step 3: Configure Policy Manager Container
 
-The Envision feature is typically installed into a Standalone container.
-
 1. Launch the *Configure Container Instance Wizard*. Navigate to the  Platform release directory \release_directory\bin  and enter:
  - startup.bat configurator (Windows)
  - startup.sh configurator (UNIX)
@@ -215,7 +215,7 @@ The Envision feature is typically installed into a Standalone container.
 
 1. On the *Available Features* screen, select **Plug-ins** from the *Filter* menu. 
 2. Select the *Envision Policy Manager Console Extensions* plug-in and click **Install Feature**.
-3. After the installation is complete, click **Finish**, then **OK** to restart the container. Click **Close** after the container is restart is completed. 
+3. After the installation is complete, click **Finish**, then **OK** to restart the container. Click **Close** after the container restart is completed. 
 
 <a href="#top">back to top</a>
 
