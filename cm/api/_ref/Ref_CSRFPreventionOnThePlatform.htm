@@ -1,0 +1,147 @@
+---
+layout: apipage
+title: CSRF Prevention on the Platform | Reference Material | Enterprise API Platform API
+description: The platform offers a CSRF prevention feature that adds a layer of protection against malicious <a href="../Ref_Glossary_CommunityPlatform.htm#gl_csrf_attack">CSRF</a> attacks.
+product: cm
+category: ref
+nav-title: CSRF Prevention on the Platform 
+no-nav: api
+sub-nav: true
+sub-nav-class: _ref
+no-catalog: true
+---
+
+<h2><a name="top"></a>CSRF Prevention on the Platform</h2>
+<p>The platform offers a CSRF prevention feature that adds a layer of protection against malicious <a href="../Ref_Glossary_CommunityPlatform.htm#gl_csrf_attack">CSRF</a> attacks.</p>
+<p>A CSRF attack leverages the fact that the authorized user has already authenticated, and that the cookie is stored in the user's browser. The CSRF prevention feature requires an additional value, a CSRF token, to be sent in the request. If the CSRF token is not present, the request is rejected as unauthorized.</p>
+<p>This topic includes:</p>
+<ul>
+  <li><a href="#checking_if_csrf_is_required">Checking if CSRF Is Required: Platform Settings</a></li>
+  <li><a href="#operations_exempt_from_csrf">Operations Exempt from CSRF</a></li>
+  <li><a href="#getting_the_csrf_cookie_value">Getting the CSRF Cookie Value</a></li>
+  <li><a href="#sending_the_csrf_token">Sending the CSRF Token</a></li>
+  <li><a href="#csrf_in_a_federation_setting">CSRF in a federation setting</a></li>
+</ul>
+
+
+
+<h3><a name="checking_if_csrf_is_required"></a>Checking if CSRF Is Required: Platform Settings</h3>
+<p>If the platform security settings relating to CSRF are turned off, the CSRF token is not returned at login. If either of the two settings is turned on, the CSRF token is returned. It is always returned as a cookie.</p>
+<p>In case you are not sure whether the CSRF header is required in your implementation, here are two ways you can check:</p>
+<ul>
+  <li>Run a POST, PUT, or DELETE operation in a web client such as RESTClient. If you get an HTTP <a href="Ref_HTTPStatusCodes.htm#http401">401</a> status code in response, you know the CSRF header is needed. If you do get a 401, check a GET operation also.</li>
+  <li>Check the platform's security settings by running the <span class="apidoc_code"><a href="../businesses/m_businesses_getBusinessSettings.htm">GET&nbsp;/api/businesses/{BusinessID}/settings</a></span> operation. Include the optional parameter for business security settings: <span class="apidoc_code">?IncludeSecuritySettings=true</span>. Check whether either or both of these two settings are enabled:
+    <ul>
+      <li>ReadRequestCSRFSupport</li>
+      <li>WriteRequestCSRFSupport</li>
+    </ul>
+  </li>
+  </ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3><a name="operations_exempt_from_csrf"></a>Operations Exempt from CSRF</h3>
+<p>Certain operations are exempt from CSRF, regardless of the platform settings. These are GET operations which, if disabled, could interfere with the core user experience on the platform. When the platform CSRF settings are both turned on, CSRF is required for most GET operations, but not for these specific operations that are exempt.</p>
+<p>An example is the <span class="apidoc_code"><a href="../content/m_content_get.htm">GET&nbsp;/{contentpath}</a></span> operation which allows users to view API documentation which is not marked as private.</p>
+<p>For any such operations, you'll see the below note in the documentation, below the <strong>Authorization Roles/Permissions</strong> section.</p>
+<p class="apidoc_note"><strong>Note</strong>: The <a href="../Ref_Glossary_CommunityPlatform.htm#gl_csrf_header">CSRF header</a> is never required for this operation, regardless of platform settings.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3><a name="getting_the_csrf_cookie_value"></a>Getting the CSRF Cookie Value</h3>
+<p>If the developer portal is configured to require a CSRF token, the CSRF value is generated as a result of successful login, and is sent to the browser as a cookie, along with the standard <a href="Ref_CookiesOnThePlatform.htm#cookie_atmoauthtoken">AtmoAuthToken</a> cookie. If the AtmoAuthToken cookie is renewed, the CSRF token is renewed at the same time, using the <span class="apidoc_code"><a href="../login/m_login_renewToken.htm">POST&nbsp;/api/login/renewToken</a></span> operation.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3><a name="sending_the_csrf_token"></a>Sending the CSRF Token</h3>
+<p>The CSRF token can be sent in any of several ways. Different ways are better in different scenarios, as shown in the table below.</p>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="32%">This way of sending the CSRF token...</th>
+      <th width="64%">Is used in this scenario...</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Custom Header</td>
+      <td>Ajax-friendly scenarios</td>
+    </tr>
+    <tr>
+      <td>Part name (implemented using a hidden field in the form that contains the file upload control)</td>
+      <td>Multipart/form-data messages</td>
+    </tr>
+    <tr>
+      <td>POST parameter</td>
+      <td>Non-Ajax client</td>
+    </tr>
+    <tr>
+      <td>Query parameter</td>
+      <td><p>Either of these:</p>
+        <ul class="apidoctable_ul">
+          <li>FORM with GET action and non-Ajax client</li>
+          <li>Image URLs and URLs used for iframes.</li>
+        </ul>        </td>
+    </tr>
+  </tbody>
+</table>
+<p>An authorized app developer can get the CSRF value from the cookie, after authenticating, and can then compose and send the custom header, parameter, or part name with the request message.</p>
+<p>The header is the <a href="../Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_{fedmemberID}</a> header. If this is required, based on platform settings, the app must take the value in the <a href="../Ref_Glossary_CommunityPlatform.htm#gl_csrf_tokencookie">Csrf-Token cookie</a> and send it as the value for the X-Csrf-Token_{fedmemberID} header in the following scenarios (depending on which settings are enabled):</p>
+<ul>
+  <li>All POST operations</li>
+  <li>All PUT operations</li>
+  <li>All DELETE operations  </li>
+  <li>All GET operations <strong>except</strong> those in the following services/activities:
+<ul>
+      <li>Content retrieval</li>
+      <li>Resource retrieval (such as avatars)</li>
+      <li>Login (renewing the user's token requires the CSRF header)</li>
+      <li>Any operations that are available to anonymous users (no login required)</li>
+    </ul>
+  </li>
+  </ul>
+<p>The <strong>Csrf-Token cookie</strong> has the same timeout value as the <strong>AtmoAuthToken</strong> authorization cookie (as specified by the Site Admin, or 25 minutes by default).</p>
+<p>For general information about cookies used by the platform, see <a href="Ref_CookiesOnThePlatform.htm">Cookies in the Enterprise API Platform</a>.</p>
+<p>For information about the FedmemberID that's used in the header, see <a href="Ref_IDsOnThePlatform.htm#id_fedmemberid">IDs on the Platform</a>.</p>
+<h5>To use the Community Manager API, using the custom header, when the CSRF prevention feature is in effect:</h5>
+<ol>
+  <li>Get the value from the Csrf-Token cookie for the authenticated Community Manager user.</li>
+  <li>Send the exact same value in the <a href="../Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_{fedmemberID}</a> header for the request message.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3><a name="csrf_in_a_federation_setting"></a>CSRF in a federation setting</h3>
+<p>In a federation setting, CSRF should be either disabled in both/all federation members or enabled in both/all federation members. If CSRF is enabled in one federation member and disabled in other, there will be issues with conflicting permission requirements.</p>
+<p>When changing the CSRF permission setting in two or more federation members, allow five minutes after changing the setting for the cache to be refreshed on the server side.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+
+
+
+
+
+
+<h3 id="relatedtopics">Related Topics</h3><!-- #BeginLibraryItem "/library/_RelatedTopics.lbi" -->
+<table width="700" border="0" cellspacing="0" cellpadding="2">
+  <tr>
+    <td width="300"><ul>
+  <li><a href="../index.htm">Enterprise API Platform API: Overview</a></li>
+  <li><a href="../Ref_Glossary_CommunityPlatform.htm">Glossary of Terms</a></li>
+  <li><a href="../Ref_DocConventions.htm">Documentation Conventions</a></li>
+</ul>
+</td>
+    <td width="400"><ul>
+  <li><a href="../Ref_AuthenticationAndSecurity.htm">Authentication and Security</a></li>
+  <li><a href="../Ref_TroubleshootingAndSupport.htm">Troubleshooting and Support</a></li>
+  <li><a href="../Ref_API_Reference.htm">Enterprise API Platform API: Reference Material</a></li>
+</ul>
+</td>
+  </tr>
+</table><!-- #EndLibraryItem --><hr />

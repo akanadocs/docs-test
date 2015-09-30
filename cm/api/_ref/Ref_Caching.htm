@@ -1,0 +1,101 @@
+---
+layout: apipage
+title: How the Platform API Uses Caching | Reference Material | Enterprise API Platform API
+description: Most&nbsp;Enterprise API Platform&nbsp;operations don't use caching at all. Generally, the <strong>Cache-Control</strong> header is set to <strong>no-cache</strong>, for both request and response messages, since the platform APIs generally pass database information that might change and should therefore not be cached.
+product: cm
+category: ref
+nav-title: How the Platform API Uses Caching 
+no-nav: api
+sub-nav: true
+sub-nav-class: _ref
+no-catalog: true
+---
+
+<h2><a name="top"></a>How the Platform API Uses Caching</h2>
+<p>Most&nbsp;<!-- #BeginLibraryItem "/library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;operations don't use caching at all. Generally, the <strong>Cache-Control</strong> header is set to <strong>no-cache</strong>, for both request and response messages, since the platform APIs generally pass database information that might change and should therefore not be cached.</p>
+<p>However, there are a few operations that do use caching. In general, the types of information that might be cached are:</p>
+<ul>
+  <li>UI resource files: code-related components such as JavaScript files, templates, and stylesheets. Caching: 1 month.</li>
+  <li>Avatar images (such as a user's profile picture). Caching: until updated.</li>
+  <li>Data resources such as API documentation and online help. Caching: 1 hour.</li>
+</ul>
+<p>The sections below provide additional information about how operations managing these types of information use caching:</p>
+<ul>
+  <li><a href="#caching_ui_resources">Caching of UI Resource Files</a></li>
+  <li><a href="#caching_avatars">Caching of Avatars</a></li>
+  <li><a href="#caching_content">Caching of Content Files</a></li>
+</ul>
+
+
+
+<h3><a name="caching_ui_resources"></a>Caching of UI Resource Files</h3>
+<p>UI resource files include all code-related components such as JavaScript files, templates, and stylesheets.</p>
+<p>These types of files are cached for a long time, to improve performance, since generally the files do not change. The cache setting is one month.</p>
+<p>For all resource files, the URL includes a dynamically-constructed unique ID, called a Resource Version Key.</p>
+<p> If a new version of the platform resource files is uploaded, there is a new Resource Version Key. Because the URL is different, the next time the file is retrieved, the latest version replaces the older version. Therefore, a <a href="../Ref_Glossary_CommunityPlatform.htm#gl_cdn">CDN</a>, browser cache, forward proxy, etc. will need to make a new call to get the latest version. The change in the URL triggers the new call, and the updated resource is served.</p>
+<p>The key is dynamically constructed every 10 minutes. This means that if you update a file, you won't see the change immediately. To see the update you'll need to do two things:</p>
+<ol>
+  <li>Wait for 10 minutes to be sure the content is updated.</li>
+  <li>Refresh the page so you'll see the change.</li>
+</ol>
+<p>If you need to set up your platform version so that file updates are immediate, you'll need to:</p>
+<ul>
+  <li>Make sure you are not using any other components between the browser and the server, that might cache the file, such as a CDN, forward proxy, or reverse proxy.</li>
+  <li>Clear the browser cache and refresh the page.</li>
+</ul>
+<p>The resource version key is used to construct the URL, but is not used when the request comes in. The server will always serve the latest file, independent of the version key specified in the URL. A request referencing an old version key will still get the new version in response.</p>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
+<h3><a name="caching_avatars"></a>Caching of Avatars</h3>
+<p>Avatar files are cached using a similar approach to that used for UI resource files; the URL to each version of the file includes a unique key. However, this is not the Resource Version Key, which is unique to a specific version of the platform resource files. Instead, each avatar has its own unique ID, randomly generated when the avatar is uploaded, and used in the avatar URL. If a new avatar is uploaded for the same resource, the new avatar will have a different ID, and therefore, a unique URL.</p>
+<p>Unlike the Resource Version Key, which is refreshed every 10 minutes, the unique ID for the avatar remains the same for the life of the avatar.</p>
+<p>With avatars, there are two approaches you can take to make sure you always get the latest version of the file:</p>
+<ul>
+  <li>As explained above in <a href="#caching_ui_resources">Caching of UI Resource Files</a>: disabling caching completely at all points between the browser and the server, or waiting 10 minutes and then clearing cache and refreshing the page.</li>
+  <li>Run a GET operation to retrieve the details of the resource, which will include the avatar URL. Since there is no caching on the operations that retrieve the resource details, you will always get the latest avatar URL by running the GET operation for the applicable resource.</li>
+</ul>
+<p>For example:</p>
+<ul>
+  <li>For an application, run <span class="apidoc_code"><a href="../apps/m_apps_getApp.htm">GET&nbsp;/api/apps/{AppID}</a></span></li>
+  <li>For an API, run <span class="apidoc_code"><a href="../apis/m_apis_getAPI.htm">GET&nbsp;/api/apis/{APIID}</a></span></li>
+  <li>For a user, run <span class="apidoc_code"><a href="../users/m_users_getUser.htm">GET&nbsp;/api/users/{UserID}</a></span></li>
+</ul>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
+<h3><a name="caching_content"></a>Caching of Content Files</h3>
+<p>Content files include API documentation, platform online help, and customizable content pages such as the platform home page.</p>
+<p>Content files do not have a unique ID. Page URLs are constructed as follows:</p>
+<ul>
+  <li>For platform content, the URL is determined by the platform page location. For example, for Default Theme, the URL of the Support page is: <strong>http://{hostname}/{TenantID}/#/home/support</strong>.</li>
+  <li>For API documentation, the URL is constructed using the API ID/API Version ID in this pattern: <strong>{protocol}://{hostname}/{TenantID}/#/{APIID}/versions/{APIVersionID}/documents</strong>.<br />
+    Example:
+      <ul>
+      <li>API ID: <strong>f0809f3f-6d04-42a9-8bc8-653f16ebd6a8.acmepaymentscorp</strong></li>
+      <li>API Version ID: <strong>1756b78e-8ed5-4e14-9eff-a4b045e32044.acmepaymentscorp</strong></li>
+      <li>API documentation main page: <strong>http://www.acmepaymentscorp.com/acmepaymentscorp/#/api/f0809f3f-6d04-42a9-8bc8-653f16ebd6a8.acmepaymentscorp/versions/1756b78e-8ed5-4e14-9eff-a4b045e32044.acmepaymentscorp/documents</strong></li>
+    </ul>
+  </li>
+  </ul>
+<p>Content files are cached for 1 hour. When you update any of these files and want to see the update, you'll need to do either of the following:</p>
+<ul>
+  <li>Make sure caching is disabled completely at all points between the browser and the server, and refresh the page.</li>
+  <li>Wait for 1 hour and then clear the browser cache and refresh the page.</li>
+</ul>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.htm"><!-- #BeginLibraryItem "/library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;API: Overview</a></li>
+  <li><a href="../Ref_AuthenticationAndSecurity.htm">Authentication and Security</a></li>
+  <li><a href="../Ref_TroubleshootingAndSupport.htm">Troubleshooting and Support</a></li>
+  <li><a href="../Ref_Glossary_CommunityPlatform.htm">Glossary of Terms</a></li>
+  <li><a href="../Ref_DocConventions.htm">Documentation Conventions</a></li>
+</ul>
+
+<hr />

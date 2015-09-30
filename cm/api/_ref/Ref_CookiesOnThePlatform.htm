@@ -1,0 +1,117 @@
+---
+layout: apipage
+title: Cookies in the Platform | Reference Material | Enterprise API Platform API
+description: This topic provides information about the use of cookies in the platform, including-
+product: cm
+category: ref
+nav-title: Cookies in the Platform 
+no-nav: api
+sub-nav: true
+sub-nav-class: _ref
+no-catalog: true
+---
+
+<h2><a name="top"></a>Cookies in the&nbsp;<!-- #BeginLibraryItem "/library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;</h2>
+<p>This topic provides information about the use of cookies in the platform, including:</p>
+<ul>
+  <li><a href="#cookies_custom">Session cookies</a></li>
+  <li><a href="#cookies_oauth">OAuth cookie</a></li>
+  <li><a href="#cookies_short_term">Short-term cookies</a></li>
+  <li><a href="#cookies_google_analytics">Optional Google Analytics cookies</a></li>
+</ul>
+<h4><a name="cookies_custom"></a>Session Cookies</h4>
+<p>API calls from the&nbsp;<!-- #BeginLibraryItem "/library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;use the custom cookies shown below. The AtmoAuthToken cookie is quite long&#8212;over 400 characters.</p>
+<p class="apidoc_note"><strong>Note</strong>: The only requirement from the developer using the&nbsp;<!-- #BeginLibraryItem "/library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;API is that the app supports cookies. The&nbsp;<!-- #BeginLibraryItem "/library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;takes care of the rest. If your development environment supports automatically capturing and sending the&nbsp;<!-- #BeginLibraryItem "/library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;cookie you don't need to do anything. If it doesn't, you'll have to make sure the cookie that the&nbsp;<!-- #BeginLibraryItem "/library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;returns upon login is sent with every request and that the token is renewed when information stored in the token changes, such as when a user adds an app.</p>
+<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+<thead>
+    <tr>
+    <th width="20%">Cookie Name</th>
+    <th width="80%">Description/Values</th>
+    </tr>
+</thead>
+<tbody>
+    <tr>
+      <td><a name="cookie_atmoauthtoken"></a>AtmoAuthToken_{fedmemberid}</td>
+      <td><p>A tenant-specific cookie. <!--In a federation scenario, one cookie is set for each federation member, so there would generally be at least two.-->This is the&nbsp;<!-- #BeginLibraryItem "/library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;authorization token. This cookie indicates the level of access allowed. It is valid only for 30 minutes and must be renewed at that time. It also includes other information, such as the APIs, apps, and groups the user is a member of. When any of this information changes, the token must be renewed.</p>
+        <p><strong>Note</strong>: When your app invokes the <span class="apidoc_code"><a href="../login/m_login_login.htm">POST&nbsp;/api/login</a></span> method, the&nbsp;<!-- #BeginLibraryItem "/library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;sets the cookie; you don't need to do anything. Your app must support cookies, so that the cookies that are set by the API responses can be sent back as part of the subsequent requests.</p></td>
+    </tr>
+    <tr>
+      <td><a name="cookie_csrftoken"></a>Csrf-Token_{fedmemberid}</td>
+      <td>An additional cookie used when the CSRF prevention feature is in effect. The value is then used in the <a href="../Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_{fedmemberID}</a> custom header in request messages. For more information, see <a href="Ref_CSRFPreventionOnThePlatform.htm">CSRF Prevention on the Platform</a>.</td>
+    </tr>
+</tbody>
+</table>
+<p>Below is an example of an AtmoAuthToken cookie sent by the <span class="apidoc_code"><a href="../legals/m_legals_getAgreementDocument.htm">GET&nbsp;/api/legals/{LegalDocumentID}</a></span> operation. Line breaks have been added for display reasons.</p>
+<pre>Cookie:  AtmoAuthToken_acmepaymentscorp=TokenID%3D94299147-d006-11e3-a97a-e4f95250745e%2Cclaimed_id%3Durn%3A
+acmepaymentscorp%3Auser%3Ademo%3Auser29005%2CissueTime%3D1398821242584%2CexpirationTime%3D1398823042538%2C
+AttributesIncluded%3Dfalse%2CUserFDN%3Duser29005%252Edemo%2CUserName%3Ddemo-MaryMead%2Csig%3DHXlox2IqdCf1b
+I060ZoGQESQjhQJz5x_uilEZGifnL4gUr_cFaepQoebfmJJCmrUVqoF0yFkHnuhAMxnVzHUnnbIbfvwqOyZ2gClm4n8IyHza2m_PxfMA
+OpM8UWQ0jfwReP7mbU1E2OyH69uRCgg5SsLw9RQLzyxojBGslxXDvo</pre>
+<p>Below is an example of a CSRF token cookie returned by the <span class="apidoc_code"><a href="../login/m_login_login.htm">POST&nbsp;/api/login</a></span> operation. Line breaks have been added for display reasons.</p>
+<pre>Csrf-Token_acmepaymentscorp=TokenID%3Deaa11ad3-0884-11e5-902f-82920a2a00d8%2CexpirationTime%3D1433182067000
+%2CUserFDN%3D8431248b-4863-45c2-b7b4-09148a92a50d%252Eacmepaymentscorp%2Csig%3DDeCpOJ1SNKV6wbqmG_ErBd8ojdA
+7PxuqYbf09qDGrt0bO_81perAAde56fTagQqfOK54ZuxUVfOQtiAPq9h8KOseU87tyfhlmkYPDEqwlwvsWMV6ylXofH-bo5RHPorW-B-lppEz
+AVkr8n9CapHdlQ9f-E1k44Pqlg8t7iAgk2M</pre>
+
+
+<h4><a name="cookies_oauth"></a>OAuth cookie</h4>
+<p>If OAuth is being used, when the user (resource owner) authenticates with the authentication server, the platform generates an <strong>OAuthToken_{OAuthProviderName}</strong> cookie. This cookie identifies the logged-in user and the specific roles associated with the user. The app then uses this cookie in subsequent requests to the platform's OAuth Provider, for session management and grant administration, until grant authorization is complete. For non-browser scenarios, the app <strong>must</strong> save this cookie and include it in every request.</p>
+<p>For more information about OAuth operations, refer to the OAuth API documentation.</p>
+<p>Below is an example of an <strong>OAuthToken_{OAuthProviderName}</strong> cookie returned by the <span class="apidoc_code">POST&nbsp;/oauth/login/renewToken</span> operation in the Set-Cookie header. Line breaks have been added for display reasons.</p>
+<pre>Set-Cookie: OAuthToken_acmepaymentscorp: TokenID%3D57d30fc7-240e-11e5-a1b9-8945fbb2b0eb%2Cclaimed_id%3DLDAP_acmepaymentscorp%5Ceng100
+%2CissueTime%3D1436207972636%2CexpirationTime%3D1436208572626%2Csig%3DlOsIenU6JM-dYquJKhKMdKarQRtef4ALY5Abuls7KV5jaPgWapM1w0Y
+thq0I1hJvMJ7xlWj8haU3OvM4b6I3LgGWGvw5_Uws935JKLW57xiti_UC2IvxFDrAIg4xx2k-x-icqUDsWfVGNfjWlun43_uRM667RjGOkh_ZmU2xq0Q</pre>
+<p>The example below is returned by the GET&nbsp;/oauth/auz/grants/{GrantID}/authcomplete operation.</p>
+<pre>Set-Cookie: AtmoAuthToken_acmepaymentscorp: TokenID%3D480a3a7c-240e-11e5-a1b9-8945fbb2b0eb%2Cclaimed_id%3Durn%3Aacmepaymentscorp%3Auser
+%3Aacmepaymentscorp%3A8fb17266-354a-4032-96fb-2208ae7b4da4%2CissueTime%3D1436207946162%2CexpirationTime%3D1436209746144%2CAttributes
+Included%3Dfalse%2CUserFDN%3D8fb17266-354a-4032-96fb-2208ae7b4da4%252Eacmepaymentscorp%2CUserName%3Dadminacmepaymentscorp%2Csig
+%3Dd5YEgxmZQaCgfp64gs0EL1ttryepO3kWTwu4gO12OxLF6sjpcrojVKUf0X8heu9eoi8WlEd9ZIN7vPNgi6pu-XZ883L-OkD9fYnN4ktbRPwHQ2Phaa1H1bXaCpfgpeI8q6u
+DjeqX_awH70N6-QQKrhF5n9Lm5PYCKciKNWTSWVooauthRedirectInfoCookie: %7B%22accessTokenUrl%22%3A%22%2Fapi%2Fdevconsole%2Foauth%2Faccesstoken%22
+%2C%22providerEndpoint%22%3A%22%2Fapi%2Fdevconsole%2Foauth%2Faccesstoken%22%2C%22queryString%22%3A%22session_key%3Dapiv%253D090888
+a5-27f8-454e-8319-c7900d1da4bc.acmepaymentscorp%2526scope%253DScope1%2526appRuntimeId%253D5tRKCWjfz599pLJ8Te4tvn1D.acmepaymentscorp
+%2526granttype%253Dauthorization_code%2526policy_type%253DOAuth%2525202.0%2526appsecret%253De4d5949f72473acc151b34065f69169099ebe732
+%2526appid%253Dacmepaymentscorp-5tRKCWjfz599pLJ8Te4tvn1D%2526token_url%253Dhttp%253A%252F%252F{hostname}%252Foauth%252Foauth20%252Ftoken%
+2526opname%253DGetDiscussions%2526policy_key%253Doauth%2526guid%253Daf880c48-1389-4da4-98e5-2fb29dcca155%2526auz_url%253Dhttp%253A
+%252F%252F{hostname}%252Foauth%252Fauz%252Fauthorize%2526callback%253Dhttp%253A%252F%252F{hostname}%252Fui%252Fapps%252Facmepaymentscorp
+%252F_VcuNfhlXb0PE8hHDxAx9OhA%252Fresources%252Fconsole%252Fglobal%252Foauthclientredirect.html%253Fdynamic%25253Dtrue
+%2526signature_method%253DSharedSecret%2526apienv%253DProduction%2526token_verb%253DPOST%22%7D
+OAuthToken_acmepaymentscorp: TokenID%3D57d30fc7-240e-11e5-a1b9-8945fbb2b0eb%2Cclaimed_id%3DLDAP_acmepaymentscorp%5Ceng100
+%2CissueTime%3D1436207972636%2CexpirationTime%3D1436208572626%2Csig%3DlOsIenU6JM-dYquJKhKMdKarQRtef4ALY5Abuls7KV5jaPgWapM1w0Y
+thq0I1hJvMJ7xlWj8haU3OvM4b6I3LgGWGvw5_Uws935JKLW57xiti_UC2IvxFDrAIg4xx2k-x-icqUDsWfVGNfjWlun43_uRM667RjGOkh_ZmU2xq0Q</pre>
+
+
+
+<h4><a name="cookies_short_term"></a>Short-term cookies</h4>
+<p>As well as the session cookies, the developer portal also uses cookies very briefly with certain features, in the following scenarios:</p>
+<ol>
+  <li><strong>Dev Console with OAuth Policy</strong>
+    <p>If you are using <a href="../Ref_Glossary_CommunityPlatform.htm#gl_devconsole">Dev Console</a> with OAuth policy, there is a cookie used in the Dev Console feature that is set in the main page of the user interface so that it can be read in a popup window. It is deleted as soon as it has been read in the popup window. The platform does this to work around browser-enforced security, since the OAuth provider is usually from a different URL than the developer portal URL. This cookie is live in Dev Console only for a very short time, probably a few milliseconds.</p>
+  </li>
+  <li><strong>Third-Party Login with Google and Facebook (not LDAP)</strong>
+    <p>If you are using a third party such as Google or Facebook for login (not LDAP login), when the  user logs into the portal for the first time, the portal uses a transient cookie to exchange information between the SSO login page and the signup page, in order to complete the signup page. This cookie stays live only for a very short time, probably a few milliseconds.</p>
+  </li>
+</ol>
+
+
+<h4><a name="cookies_google_analytics"></a>Optional Google Analytics cookies</h4>
+<p>The platform supports the option to enable Google Analytics for platform pages. This is controlled by a database setting; in the <strong>TENANTS</strong> table, it's the <strong>ANALYTICSACCOUNTID</strong> column. By default, Google Analytics cookies are not enabled (value set to <strong>null</strong>).</p>
+<p>Google Analytics cookies are prefixed with __utm. For example:</p>
+<ul>
+  <li>__utma=120274954.1033981115.1360618092.1367978778.1368109070.82;</li>
+  <li>__utmz=120274954.1360695664.4.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); </li>
+  <li>__utmc=120274954;</li>
+  <li>__utmb=120274954.9.10.1368109070;</li>
+</ul>
+
+
+
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.htm"><!-- #BeginLibraryItem "/library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;API: Overview</a></li>
+  <li><a href="../Ref_AuthenticationAndSecurity.htm">Authentication and Security</a></li>
+  <li><a href="../Ref_TroubleshootingAndSupport.htm">Troubleshooting and Support</a></li>
+  <li><a href="../Ref_Glossary_CommunityPlatform.htm">Glossary of Terms</a></li>
+  <li><a href="../Ref_DocConventions.htm">Documentation Conventions</a></li>
+</ul>
+
+<hr />

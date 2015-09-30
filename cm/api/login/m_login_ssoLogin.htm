@@ -1,0 +1,287 @@
+---
+layout: apipage
+title: SSO Login (GET) | Login Service | Enterprise API Platform API
+description: Allows a user to log in by authenticating with an external identity provider that has its own login screen, providing SSO is enabled between the platform and the identity provider. Examples- Facebook, Google.
+product: cm
+category: ref
+nav-title: SSO Login (GET) 
+no-nav: api
+sub-nav: true
+sub-nav-class: login
+no-catalog: true
+---
+
+<!-- InstanceBeginEditable name="Heading" -->
+<h2><a name="top" id="top"></a>GET&nbsp;/api/login/ssoLogin</h2>
+<!-- InstanceEndEditable -->
+
+<!-- InstanceBeginEditable name="Intro_AuthRoles" -->
+<p><!-- #BeginLibraryItem "/library/desc_ssoLogin.lbi" -->Allows a user to log in by authenticating with an external identity provider that has its own login screen, providing SSO is enabled between the platform and the identity provider. Examples: Facebook, Google.<!-- #EndLibraryItem --></p>
+<p>For example, this operation is generally used when SSO login uses a redirect URL to accomplish the login. In this case, the Domain ID is sent as a query or path parameter rather than POST data.</p>
+<p class="apidoc_note"><strong>Note</strong>: Login domains might support SSO login via POST or GET. For example, an OpenID Connect Relying Party domain might support a response mode of query, fragment, or form_post. If the domain supports form_post, <span class="apidoc_code">POST&nbsp;/api/login/ssoLogin</span> is used. If the domain supports query or fragment, <span class="apidoc_code">GET&nbsp;/api/login/ssoLogin</span> is used.</p>
+<p>This operation initiates the login process. Other operations might be needed to move the user through the login process including completing any login tasks. </p>
+<p>The <span class="apidoc_code"><a href="m_login_endSession.htm">GET&nbsp;/api/login/endsession</a></span> operation is used to terminate the login session.</p>
+<p>This operation redirects the user to the identity provider selected so that the identity provider can authenticate the user. The identity provider:</p>
+<ol>
+  <li>Checks if the user is already logged in. If the user isn't logged in, presents a login screen for the user to log in.</li>
+  <li>Once the user is logged in, returns confirmation that the user has been authenticated, and returns specific information about the user; for example, first name, last name, and email address. The specific data returned depends on the specific provider and configuration scenario.</li>
+</ol>
+<p>If the optional finalURL parameter is included, the identity provider also redirects the user to the specified URL once authentication is complete.</p>
+<p id="id_roles"><strong>Authorization Roles/Permissions: </strong>To complete this operation successfully, a user must have valid credentials for the login connector specified in the domain parameter. Note that support of specific login connectors is configurable and is therefore not the same on all platform instances.</p>
+<!-- InstanceEndEditable --><!-- #BeginLibraryItem "/library/_whatdoyouwanttoreadabout.lbi" -->
+<p>This topic includes the following sections:</p>
+<table width="600" border="0" cellspacing="0" cellpadding="2">
+  <tr>
+    <td width="200"><ul>
+  <li><a href="#httpmethod">HTTP Method</a></li>
+  <li><a href="#endpoint">URL</a></li>
+  <li><a href="#samplerequest">Sample Request</a></li>
+  <li><a href="#requestheaders">Request Headers</a></li>
+  <li><a href="#requestparameters">Request Parameters</a></li>
+</ul>
+</td>
+    <td width="400"><ul>
+  <li><a href="#response">Response</a></li>
+  <li><a href="#sampleresponse">Sample Response</a></li>
+  <li><a href="#responseheaders">Response Headers</a></li>
+  <li><a href="#responsebody">Response Body</a></li>
+  <li><a href="#errorcodes">Error Codes/Messages</a></li>
+</ul>
+</td>
+  </tr>
+</table><!-- #EndLibraryItem --><h3 id="httpmethod">HTTP Method</h3>
+<!-- InstanceBeginEditable name="HTTP Method" -->
+<p class="httpverb">GET</p>
+<!-- InstanceEndEditable -->
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+<h3 id="endpoint">URL</h3>
+<!-- InstanceBeginEditable name="URL" -->
+<pre class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->login/ssologin</pre>
+<!-- InstanceEndEditable -->
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+<!-- InstanceBeginEditable name="Sample Request" -->
+<h3 id="samplerequest">Sample Request</h3>
+<p id="id_samplerequest">The example below shows a request for SSO login when the user has chosen to log in with Google.</p>
+<p><strong>Request URL#1</strong></p>
+<p>In the example below, the domain name is in a query parameter. The response will include the LoginData objec, login cookie, and CSRF cookie if applicable.</p>
+<pre>http://www.acmepaymentscorp.com/api/login/ssoLogin?domain=GoogleAutomation</pre>
+
+<p><strong>Request URL#2</strong></p>
+<p>In the example below, the domain name is in a path parameter. The response will include the LoginData objec, login cookie, and CSRF cookie if applicable.</p>
+<pre>http://www.acmepaymentscorp.com/api/login/ssoLogin/GoogleAutomation</pre>
+
+<p><strong>Request URL#3:</strong></p>
+<p>This example includes the finalURL parameter. The domain name is in a query parameter. The URL is accessed in a  new tab.</p>
+<pre>http://www.acmepaymentscorp.com/api/login/ssoLogin?ssoRetryCount=0&domain=siochain-prod-siteminder&finalUrl=https%3A//developer.siochain.com/xyz</pre>
+<p>In the above example, the API redirects the browser to the following URL:</p>
+<pre>https://acmecorp.com/newpage?status=success&amp;userID=c28217f4-879a-4045-9abb-b018b4f59700.acmepaymentscorp&amp;userState=registered</pre>
+<p>In the above example, the status, userID, and userState parameters are added. The platform cookie, and CSRF cookie if applicable, will be in the response.</p>
+
+<p><strong>Sample request headers</strong></p>
+<pre>
+Accept: application/json</pre>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Request Headers" -->
+<h3 id="requestheaders">Request Headers</h3>
+<p>For general information on request header values, refer to <a href="../_ref/Ref_HTTPHeaders.htm#ref_httprequestheaders">HTTP Request Headers</a>.</p>
+<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="../_ref/Ref_HTTPHeaders.htm#acceptheader">Accept</a></td>
+      <td><!-- #BeginLibraryItem "/library/hdrval_appjson.lbi" --><strong>application/json</strong><!-- #EndLibraryItem --></td>
+    </tr>
+  </tbody>
+</table>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Request Parameters" -->
+<h3 id="requestparameters">Request Parameters</h3>
+<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+  <thead>
+    <tr>
+      <th width="11%">Parameter</th>
+      <th width="9%">Parm Type</th>
+      <th width="11%">Data Type</th>
+      <th width="11%">Required</th>
+      <th width="58%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Domain</td>
+      <td>Query</td>
+      <td>string</td>
+      <td>Required</td>
+      <td>The login domain the user has selected for logging in.</td>
+    </tr>
+    <tr>
+      <td>finalURL</td>
+      <td>Query</td>
+      <td>string</td>
+      <td>Optional</td>
+      <td><p>The URL to which the login provider should return the user once the login provider has completed the authentication process. If this parameter is provided, this operation redirects the user to the specified URL, along with userID, status, and userState query parameters. If it isn't provided, the operation returns information in a JSON object.</p>
+        <p>Instead of returning a LoginData response it redirects the browser to the finalURL value.</p></td>
+    </tr>
+  </tbody>
+</table>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Response Description" -->
+<h3 id="response">Response</h3>
+<p id="id_successstatement">If successful, this operation returns one of these:</p>
+<ul>
+  <li>If finalURL parameter was provided: HTTP status code 307, with the temporary redirect location.</li>
+  <li>If finalURL prameter was not provided: HTTP status code 200, with the user authentication information in JSON format.</li>
+</ul>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Sample Response" -->
+<h3 id="sampleresponse">Sample Response</h3>
+<p id="id_sampleresponse">The sample response below shows the authentication information returned from Google.</p>
+<p><strong>Sample response header (Request #1: finalURL parameter provided in request)</strong></p>
+<p>Line breaks have been added for display purposes (to the redirect location).</p>
+<pre>HTTP/1.1 307 Temporary Redirect
+Location: https://www.google.com/accounts/o8/ud?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0
+&amp;openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&amp;openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select
+&amp;openid.return_to=http%3A%2F%2F{hostname}%3A9900%2Fapi%2Flogin%2FssoLogin%3Fdomain%3DGoogleAutomation%26finalUrl%3Dhttp%253A%252F%252F{hostname}%253A9900%252Fui%252F
+apps%252Facmepaymentscorp%252F_VzIIxu3KZVLI9OE54nLgNnQ%252Fresources%252Fconsole%252Fglobal%252Frelyingpartypostlogin.html%253Fdynamic%253Dtrue%2526baseUrl%253Dhttp%253A%252F%252F
+{hostname}l%253A9900%252Facmepaymentscorp%26ssoRetryCount%3D0
+&amp;openid.realm=http%3A%2F%2F{hostname}%3A9900&amp;openid.assoc_handle=1.AMlYA9VUmHqfKXB6FDt6oPqbXQltnJwUq-cp3pCesTn_Z8HnsXu4nxfL5848Bp25qpzq_DsrHRX2Zg
+&amp;openid.mode=checkid_setup&amp;openid.ns.ext1=http%3A%2F%2Fopenid.net%2Fsrv%2Fax%2F1.0&amp;openid.ext1.type.email=http%3A%2F%2Faxschema.org%2Fcontact%2Femail
+&amp;openid.ext1.type.lastname=http%3A%2F%2Faxschema.org%2FnamePerson%2Flast&amp;openid.ext1.type.firstname=http%3A%2F%2Faxschema.org%2FnamePerson%2Ffirst
+&amp;openid.ext1.type.fullname=http%3A%2F%2Faxschema.org%2FnamePerson&amp;openid.ext1.required=firstname%2Clastname%2Cemail%2Cfullname&amp;amp;openid.ext1.mode=fetch_request</pre>
+<p><strong>Sample response header (Request #2: no finalURL parameter)</strong></p>
+<p>Line breaks have been added for display purposes (to the cookie).</p>
+<pre>Status Code: 200 OK
+Content-Type: application/json
+Set-Cookie: AtmoAuthToken_acmepaymentscorp=TokenID%3D09e80883-fcad-11e3-9389-f3b8a6785a3a%2Cclaimed_id%3Durn%3Aacmepaymentscorp%3Auser%3Aacmepaymentscorp
+%3Aa06082f9-a139-485b-aecd-3cce36334188%2CissueTime%3D1403730587730%2CexpirationTime%3D1403732387699%2CAttributesIncl
+uded%3Dfalse%2CUserFDN%3Da06082f9-a139-485b-aecd-3cce36334188%252Eacmepaymentscorp%2CUserName%3Dhttps%3A%2F%2Fwww%252Egoogle%2
+52Ecom%2Faccounts%2Fo8%2Fid%3Fid%253DAItOawnegtajeS9fo4Wg1k_lERFhXQajXDR8JCM%2Csig%3DGvMp8xTb3XT6XsVnlrQae0Etn2_6LOMyFRr
+0G-Y2tLLV3BJ9caahwAPEik_cX8Cc_Ar2rCJwoBNvfpIYAMg-S16mqtQ_qLGQUoefu0UM7IhGE3LaWdh41y-Gwcir_pOoD1-zRleY9oSdH-dWHm2rfWHWmXKlu
+VljKGd2q6kXBzU;path=/;expires=Wed, 25-Jun-2014 21:34:47 GMT;HttpOnly;Version=1</pre>
+
+<p><strong>Sample response body (Request #2: no finalURL parameter)</strong></p>
+<p>Line breaks added for display purposes (in authTokenString)</p>
+<pre>{
+  "state" : "registered",
+  "status" : "Active",
+  "authTokenString" : "TokenID%3D09e80883-fcad-11e3-9389-f3b8a6785a3a%2Cclaimed_id%3Durn%3Aacmepaymentscorp%3Auser%3Aacmepaymentscorp%3Aa06082f9-a139-485b-aecd-3cce36334188
+%2CissueTime%3D1403730587730%2CexpirationTime%3D1403732387699%2CAttributesIncluded%3Dfalse%2CUserFDN%3Da06082f9-a139-485b-aecd-3cce36334188%252Eacmepaymentscorp%2C
+UserName%3Dhttps%3A%2F%2Fwww%252Egoogle%252Ecom%2Faccounts%2Fo8%2Fid%3Fid%253DAItOawnegtajeS9fo4Wg1k_lERFhXQajXDR8JCM%2Csig%3DGvMp8xTb3XT6XsVnlrQae0Etn2_
+6LOMyFRr0G-Y2tLLV3BJ9caahwAPEik_cX8Cc_Ar2rCJwoBNvfpIYAMg-S16mqtQ_qLGQUoefu0UM7IhGE3LaWdh41y-Gwcir_pOoD1-zRleY9oSdH-dWHm2rfWHWmXKluVljKGd2q6kXBzU",
+  "response" : {
+    "pendingNotifications" : 0,
+    "loginDomainID" : "56bd0bfa-b3d9-406e-8d11-5bccf300efb8.acmepaymentscorp",
+    "userFDN" : "a06082f9-a139-485b-aecd-3cce36334188.acmepaymentscorp",
+    "userName" : "JaneSaoirse"
+  }
+}</pre>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Response Headers" -->
+<h3 id="responseheaders">Response Headers</h3>
+<p>For general information on response header values, refer to <a href="../_ref/Ref_HTTPHeaders.htm#ref_httpresponseheaders">HTTP Response Headers</a>.</p>
+<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+  <thead>
+    <tr bgcolor="#DDDDDD">
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="../_ref/Ref_HTTPHeaders.htm#contenttype_response">Content-Type</a></td>
+      <td><!-- #BeginLibraryItem "/library/hdrval_appjson.lbi" --><strong>application/json</strong><!-- #EndLibraryItem --></td>
+    </tr>
+    <tr>
+      <td><a href="../_ref/Ref_HTTPHeaders.htm#location_response">Location</a></td>
+      <td>The URL the user is redirected to, for authentication by the identity provider (only if finalURL parameter was included in the request).</td>
+    </tr>
+  </tbody>
+</table>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Response Body" -->
+<h3 id="responsebody">Response Body</h3>
+<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+  <thead>
+    <tr bgcolor="#DDDDDD">
+      <th width="20%">Name</th>
+      <th width="15%">Type</th>
+      <th width="65%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LoginData</td>
+      <td><a href="../obj/o_login_LoginData.htm">LoginData</a></td>
+      <td><!-- #BeginLibraryItem "/library/o_login_LoginData.lbi" -->Contains data associated with a user's login.<!-- #EndLibraryItem --></td>
+    </tr>
+  </tbody>
+</table>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<h3 id="errorcodes">Error Codes/Messages</h3>
+<p>If the call is unsuccessful an error code/message is returned. One or more examples of possible errors for this operation are shown below.</p>
+<!-- InstanceBeginEditable name="Error Messages" -->
+<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+  <thead>
+    <tr bgcolor="#DDDDDD">
+      <th width="20%">Item</th>
+      <th width="80%">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="../_ref/Ref_HTTPStatusCodes.htm#http500">500</a></td>
+      <td>An error occurred processing the call. </td>
+    </tr>
+  </tbody>
+</table>
+<!-- InstanceEndEditable -->
+<p><a href="../_ref/Ref_ErrorMessages.htm">More information about&nbsp;<!-- #BeginLibraryItem "/library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;API error messages.</a></p>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+<h3 id="relatedtopics">Related Topics</h3><!-- #BeginLibraryItem "/library/_RelatedTopics.lbi" -->
+<table width="700" border="0" cellspacing="0" cellpadding="2">
+  <tr>
+    <td width="300"><ul>
+  <li><a href="../index.htm">Enterprise API Platform API: Overview</a></li>
+  <li><a href="../Ref_Glossary_CommunityPlatform.htm">Glossary of Terms</a></li>
+  <li><a href="../Ref_DocConventions.htm">Documentation Conventions</a></li>
+</ul>
+</td>
+    <td width="400"><ul>
+  <li><a href="../Ref_AuthenticationAndSecurity.htm">Authentication and Security</a></li>
+  <li><a href="../Ref_TroubleshootingAndSupport.htm">Troubleshooting and Support</a></li>
+  <li><a href="../Ref_API_Reference.htm">Enterprise API Platform API: Reference Material</a></li>
+</ul>
+</td>
+  </tr>
+</table><!-- #EndLibraryItem --><hr />
