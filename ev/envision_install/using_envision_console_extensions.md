@@ -38,7 +38,7 @@ This feature must be installed into the Policy Manager container instance. Requi
 
 This plug-in installs the following features:
 
-* **Akana Envision Metrics Service Extensions** - This plug-in installs connectors Policy Manager uses for collection of business metrics that are then fed into the Envision product. This feature must be installed into the Policy Manager container instance and works in conjunction with the Akana Envision. 
+* **Akana Envision Metrics Service Extensions** - This plug-in installs connectors Policy Manager uses for collection of business metrics that are then fed into the Envision product. This feature must be installed into the Policy Manager container instance and works in conjunction with the Akana Envision. This plug-in also automatically installs the Envision Metrics Collector plug-in.  
 
 	Installs the Business Metrics and Operational Metrics Policies to the *Policies > Operational* section. 
 * **Akana Envision Metrics Console Extensions** - This plug-in installs extensions to the Policy Manager Management Console to direct the collection of business metrics and SLA collection that are then fed into the Envision product. The extensions include configuration screens for the business metrics related policies and configuring SLA for Business Metrics. 
