@@ -32,7 +32,7 @@ This plug-in provides a series of sample data sets for demo charts that can be i
 
 <div class = "divider1"></div>
 
-### [Akana Envision Metrics Console Extensions] (using_envision_console_extensions.html)
+### [Akana Envision Console Extensions] (using_envision_console_extensions.html)
 This plug-in installs extensions to the Policy Manager Management Console to direct the collection of business metrics and SLA collection that are then fed into the Envision product. The extensions include configuration screens for the business metrics related policies and configuring SLA for Business Metrics. This feature requires Policy Manager Console feature.
 
 <div class = "divider1"></div>
