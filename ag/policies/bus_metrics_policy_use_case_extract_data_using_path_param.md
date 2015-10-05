@@ -10,15 +10,11 @@ type: page
 nav-title: Business Metrics Policy Use Case - How Do I Extract Business Information from Service Usage Data Using Path Parameters?
 ---
 
-## Business Metrics Policy Extracting Business Information from Service Usage Data from Path Parameters
-
-Learn how to Extract Business information from service usage data from path parameters.
-
-## Introduction
-
-Operational Metrics Policy collects any data relating to service request/response time and by any dimension as per customer’s requirement that can be visualized in charts.
-
 ## How Do I Extract Business Information from Service Usage Data Using Path Parameters?
+
+The following use case illustrates how to use the Business Metrics Policy to extract business information from service usage data from path parameters.
+
+## Configuration
 
 1. Launch the *Envision Console*, select **New Dataset** and define a dataset with sharing as **Public**.   
 ![](images/bus_metrics_pol_usecase2a.jpg)
