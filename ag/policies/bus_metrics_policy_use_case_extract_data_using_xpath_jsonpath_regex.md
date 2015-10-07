@@ -35,7 +35,7 @@ The following use case illustrates how to use the Business Metrics Policy to Ext
 7. Launch the *Policy Manager Management Console* and create a service with [http://www.restfulwebservices.net/wcf/CurrencyService.svc?wsdl7](http://www.restfulwebservices.net/wcf/CurrencyService.svc?wsdl7).
 8. Virtualize the service on Network Director.  
 ![](images/bus_metrics_pol_usecase1k.jpg)
-9.Navigate to *Policies > Operational* and create a *Business Metrics Policy* using **Add Policy**.10.	Configure the policy and select the dataset defined above.  
+9. Navigate to *Policies > Operational* and create a *Business Metrics Policy* using **Add Policy**.10. Configure the policy and select the dataset defined above.  
 ![](images/bus_metrics_pol_usecase1l.jpg)
 11. Provide Extract/Derive Configuration for each of the dimensions and metrics using the example illustrated below:  
   * a.	Dimension using Extract – To obtain a value in request payload using XPath/JsonPath/RegEx.
@@ -43,7 +43,7 @@ The following use case illustrates how to use the Business Metrics Policy to Ext
 ![](images/bus_metrics_pol_usecase1m.jpg)
 ![](images/bus_metrics_pol_usecase1n.jpg)
 ![](images/bus_metrics_pol_usecase1o.jpg)
-12.  Attach the policy to the service.  
+12. Attach the policy to the service.
 ![](images/bus_metrics_pol_usecase1p.jpg)
 ![](images/bus_metrics_pol_usecase1q.jpg)
 13. Send multiple requests to generate data for various usage scenarios.  
