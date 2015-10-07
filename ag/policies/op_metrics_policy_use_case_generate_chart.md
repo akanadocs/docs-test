@@ -16,9 +16,10 @@ The following use case illustrates how to generate a chart from Operational Metr
 
 ## Configuration
 
-1. Perform the [Policy Manager / Envision Integration Installation](http://docs.akana.com/docs-test/ev/envision_install/installing_pm_env_integration_v11.html). At the end of this process you will have configured Envision, Policy Manager, and Network Director container instances. This process also includes using **Add Container** in the *Policy Manager Management Console* to register the Network Director container.2. Launch the *Akana Administration Console* for the Network Director container instance and change the following configuration properties via the *Configuration* tab:
-![](images/oper_metrics_usecase1a.jpg)  
-![](images/oper_metrics_usecase1b.jpg) 
+1. Perform the [Policy Manager / Envision Integration Installation](http://docs.akana.com/docs-test/ev/envision_install/installing_pm_env_integration_v11.html). At the end of this process you will have configured Envision, Policy Manager, and Network Director container instances. This process also includes using **Add Container** in the *Policy Manager Management Console* to register the Network Director container.
+2. Launch the *Akana Administration Console* for the Network Director container instance and change the following configuration properties via the *Configuration* tab  
+![](images/oper_metrics_usecase1a.jpg)
+![](images/oper_metrics_usecase1b.jpg)
 3. Restart the Network Director container instance.4. Launch the Policy Manager Management Console and create a physical service with [http://www.ebi.ac.uk/Tools/services/rest/censor?wadl](http://www.ebi.ac.uk/Tools/services/rest/censor?wadl)5. Select **Virtualize Service** and virtualize the physical service in the Network Director container. 6. Go to *Policies > Operational* and use **Add Policy** to create an Operational Metrics Policy and configure it based on the illustration below.  
 ![](images/oper_metrics_usecase1c.jpg) 
 7. Attach a Detailed Auditing Policy (found in the root Policies folder) and an Operational Metrics Policy to the virtual service.8. Send requests to virtual service.
