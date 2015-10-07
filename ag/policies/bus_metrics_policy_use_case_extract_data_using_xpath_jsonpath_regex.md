@@ -23,13 +23,13 @@ The following use case illustrates how to use the Business Metrics Policy to Ext
 3. Select **New Metric** in the same dataset and define a metric with the the **COUNT** type and all aggregations. 
 ![](images/bus_metrics_pol_usecase1c.jpg)
 4. Save aggregation settings for the selected dataset.  
-![](images/bus_metrics_pol_usecase1d.png)
+![](images/bus_metrics_pol_usecase1d.jpg)
 5. Select **New Chart**, and create a chart using this dataset with the follwing configuration:  
 ![](images/bus_metrics_pol_usecase1e.jpg)
 ![](images/bus_metrics_pol_usecase1f.jpg)
 ![](images/bus_metrics_pol_usecase1g.jpg)
 6. Select **New Dashboard** and create a dashboard with the newly defined chart:  
-![](images/bus_metrics_pol_usecase1h.png)
+![](images/bus_metrics_pol_usecase1h.jpg)
 ![](images/bus_metrics_pol_usecase1i.jpg)
 ![](images/bus_metrics_pol_usecase1j.jpg)
 7. Launch the *Policy Manager Management Console* and create a service with [http://www.restfulwebservices.net/wcf/CurrencyService.svc?wsdl7](http://www.restfulwebservices.net/wcf/CurrencyService.svc?wsdl7).
@@ -45,10 +45,10 @@ The following use case illustrates how to use the Business Metrics Policy to Ext
 ![](images/bus_metrics_pol_usecase1o.jpg)
 12.  Attach the policy to the service.  
 ![](images/bus_metrics_pol_usecase1p.jpg)
-![](images/bus_metrics_pol_usecase1q.png)
+![](images/bus_metrics_pol_usecase1q.jpg)
 13. Send multiple requests to generate data for various usage scenarios.  
 ![](images/bus_metrics_pol_usecase1r.jpg)
 ![](images/bus_metrics_pol_usecase1s.jpg)
-![](images/bus_metrics_pol_usecase1t.png)
+![](images/bus_metrics_pol_usecase1t.jpg)
 ![](images/bus_metrics_pol_usecase1u.jpg)
 14. Check the data to be recorded in MongoDB and Dataset. The data should be appropriate per the requests sent.15. The chart should record information based on the data generated in the datasets from above requests. <a href="#top">back to top</a>

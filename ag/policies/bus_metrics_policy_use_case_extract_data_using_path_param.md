@@ -26,7 +26,7 @@ The following use case illustrates how to use the Business Metrics Policy to ext
 ![](images/bus_metrics_pol_usecase2d.jpg)
 5. Select **New Chart**, and create a chart using this dataset with the following configuration:  
 ![](images/bus_metrics_pol_usecase2e.jpg)
-![](images/bus_metrics_pol_usecase2f.png)
+![](images/bus_metrics_pol_usecase2f.jpg)
 ![](images/bus_metrics_pol_usecase2g.jpg)
 6. Select **New Dashboard** and create a dashboard with the newly defined chart:   
 ![](images/bus_metrics_pol_usecase2h.jpg)
