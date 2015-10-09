@@ -13,6 +13,7 @@ nav-title: Using the Business Metrics Policy
 ## Using the Business Metrics Policy
 Learn how to specify what business metrics should be gathered from the contents of messages being exchanged.
 
+<a href="policy_management.htm" class="button secondary">Managing Policies</a>  <a href="policies_use_case_toc.html" class="button secondary">Use Cases</a>
 
 <h5 class="stamp">Supported Platforms: 8.0 and greater.</h5>
 ### Table of Contents
@@ -34,6 +35,8 @@ Learn how to specify what business metrics should be gathered from the contents 
 
 The Business Metrics Policy specifies what business specific metrics should be gathered from the contents of the messages being exchanged. It differs from an Operational Metrics Policy in that the information collected is not general to all messages but very specific using data from message payloads, headers, or URLs. 
 
+***Note:** This policy is used with the Envision product and is installed as part of the *Envision Console Extensions Feature*. *
+
 The *Business Metrics Policy Details* displays a summary of the policy configuration including:
 
 * **Data Set** - Name of the data set the policy collects metrics for.
@@ -42,6 +45,7 @@ The *Business Metrics Policy Details* displays a summary of the policy configura
 
 ### Prerequisites
 
+  * This policy is used with the Envision product and is installed as part of the Envision Console Extension Feature. 
   * MongoDB must be started to log into the *Policy Manager Management Console* and modify a Business Metrics Policy. 
   * A data set must be previously defined so it can be selected as part of the policy configuration. Datasets can be defined using the Envision Console, or can be imported into MongoDB. 
 
@@ -51,6 +55,8 @@ The *Business Metrics Policy Details* displays a summary of the policy configura
 This screen allows you to select the data set the policy will define the collection of metrics for. Data displayed for data sets is read only. 
 
 * **Data Set Pull Down** - Displays the data sets that can be viewed by the user. The list of available data sets represents those you created using the Envision Console or imported into MongoDB. The data set selected determines what dimensions and metrics will be collected. Data from the selected data set displays in the following tables:
+
+#### Payload
 
 #### Dimensions
 Displays the following read-only dimensions of the selected data set: 

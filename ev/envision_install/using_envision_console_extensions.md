@@ -36,7 +36,7 @@ This feature must be installed into the Policy Manager container instance. Requi
 
 **Note:** MongoDB must be started before proceeding with this installation to both connect to the MongoClientURI and to Modify the associated policies after logging into the Policy Manager Management Console.  
 
-This plug-in installs the following features:
+This plug-in also installs the following features:
 
 * **Akana Envision Service Extensions** - This plug-in installs connectors Policy Manager uses for collection of business metrics that are then fed into the Envision product. This feature must be installed into the Policy Manager container instance and works in conjunction with the Akana Envision. This plug-in also automatically installs the Envision Metrics Collector plug-in.  
 

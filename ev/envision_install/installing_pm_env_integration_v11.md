@@ -215,8 +215,10 @@ The Policy Manager zip file must be installed to the Akana Platform. Download th
 ### Step 5: Install Envision Console Extensions Plug-in
 
 1. On the *Available Features* screen, select **Plug-ins** from the *Filter* menu. 
-2. Select the *Envision Console Extensions* plug-in and click **Install Feature**.
-3. After the installation is complete, Click **Finish**, then **OK** to restart the container. Click **Close** on the summary screen after the container restart is completed. 
+2. Select the *Envision Console Extensions* plug-in and click **Install Feature**. Note that this feature also installs the Envision Service Extensions Feature. 
+3. After the installation is complete, click **Configure** and continue.
+4. On the *Configure MongoDB Database* screen, specify the host name and port where the MongoDB database is installed in the MongoClientURI field. The default MongoDB port is 27017. Click **Finish**. The URI is assigned and the system automatically configures seed data and adds schemas. 
+5. After the installation is complete, Click **Finish**, then **OK** to restart the container. Click **Close** on the summary screen after the container restart is completed. 
 
 <a href="#top">back to top</a>
 
