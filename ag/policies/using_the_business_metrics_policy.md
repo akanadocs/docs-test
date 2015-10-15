@@ -203,7 +203,7 @@ After you select the Derive radio button, the following expression types can be 
 
 	![Spring Expression Example](images/bus_metrics_spring_expression_example.jpg "Spring Expression Example")
 
-* **Operational Dimension** – Allows you to select a Dimension from the selected dataset from a drop-down menu.  
+* **Operational Dimension** – Allows you to select a Dimension from the selected data set from a drop-down menu.  
 
 <a href="#top">back to top</a>
 
@@ -219,7 +219,7 @@ After you select the Derive radio button, the following expression types can be 
 Refer to the following Business Metrics Policy use cases for walk-through tutorials on adding and configuring a Business Metrics Policy. 
 
 * [Extracting Data Using Path Param](bus_metrics_policy_use_case_extract_data_using_path_param.html) 
-* [Extracting Datat Using XPath, JsonPath, or Regex](bus_metrics_policy_use_case_extract_data_using_xpath_jsonpath_regex.html)
+* [Extracting Data Using XPath, JsonPath, or Regex](bus_metrics_policy_use_case_extract_data_using_xpath_jsonpath_regex.html)
 
 <p></p>
 <a href="#top">back to top</a>
