@@ -1,213 +1,531 @@
 ---
 layout: page
-title: Using the Business Metrics Policy
-description: Learn how to specify what business metrics should be gathered from the contents of messages being exchanged.
-product: ag
+title: Envision Use Case - How Do I Import Data Into An Envision Data Set Using A REST API?
+description: Learn how to import data into an existing Envision data set using a REST API.
 product: ev
 category: learn
-sub-nav-class: Operational Policies
-weight:	7
+sub-nav-class: Technical Notes
+weight:	5
 type: page
-nav-title: Using the Business Metrics Policy
+nav-title: Envision Use Case - How Do I Import Data Into An Envision Data Set Using A REST API? 
 ---
 
-## Using the Business Metrics Policy
-Learn how to specify what business metrics should be gathered from the contents of messages being exchanged.
+## How Do I Import Data Into An Envision Data Set Using A REST API?
+Learn how to import data into an existing Envision data set using a REST API. 
 
-<a href="policy_management.htm" class="button secondary">Managing Policies</a>  <a href="policies_use_case_toc.html" class="button secondary">Use Cases</a>
+<a href="policy_management.htm" class="button secondary">Managing Policies</a>  <a href="policies_use_case_toc.html" class="button secondary">Use Cases</a> <a href="../envision_reference/env_toc.html" class="button secondary">Envision Reference</a>
 
 <h5 class="stamp">Supported Platforms: 8.0 and greater.</h5>
+
+<div class = "divider1"></div>
 
 ### Table of Contents
 <div id="toc-marker"></div>
 * [Introduction](#introduction)
-* [Prerequisites](#prerequisites)
-* [Configuration Options](#configuration-options)
-	* [Select Data Set](#select-data-set)
-	* [Define Payload Structures](#define-payload-structures)	
-	* [Define Variables](#define-variables)
-	* [Define Dimensions](#define-dimensions)
-	* [Define Metrics](#define-metrics)
-	* [Extraction Instructions](#extraction-instructions)
-	* [Derivation Instructions](#derivation-instructions)
-	* [Test Message](#test-message)
+* [Create Data Set in Envision Console](#create-data-set-in-envision-console)
+* [Data Set Configuration](#data-set-configuration)
+* [Request Payload](#request-payload)
+* [Sample Request Using SOAPUI](#sample-request-using-soapui)
+* [Import Data Sets](#import-data-sets)
+
+<div class = "divider1"></div>
 
 ### Introduction
 
-The Business Metrics Policy specifies what business specific metrics should be gathered from the contents of the messages being exchanged. It differs from an Operational Metrics Policy in that the information collected is not general to all messages but very specific using data from message payloads, headers, or URLs. 
+The following use case illustrates how import data into an existing Envision data set using a REST API. 
 
-The *Business Metrics Policy Details* displays a summary of the policy configuration including:
+<a href="#top">back to top</a> 
 
-* **Data Set** - Name of the data set the policy collects metrics for.
-* **Dimensions** - List of dimensions the policy is collecting.
-* **Metrics** - List of metrics the policy is collecting. 
-* **Payload Structures** - List of payload structures that will be extracted from the request or response.
+### Create Data Set in Envision Console
 
-### Prerequisites
+1. Log into the *Envision Console* and create a data set. In this use case following data set example is used: 
 
-  * Completion of the [Policy Manager / Envision Integration Installation](http://docs.akana.com/docs-test/ev/envision_install/installing_pm_env_integration_v11.html). Note that this policy is used with the Envision product and is installed as part of the *Envision Console Extension Feature* which is included in this installation. . 
-  * MongoDB must be started to log into the *Policy Manager Management Console* and modify a Business Metrics Policy. 
-  * A data set must be previously defined so it can be selected as part of the policy configuration. Data sets can be defined using the Envision Console, or can be imported into MongoDB. 
+![](images/import_dataset_usecase_1.jpg)
 
-### Configuration Options
+![](images/import_dataset_usecase_2.jpg)
 
-#### Select Data Set
+![](images/import_dataset_usecase_3.jpg)
 
-This screen allows you to select the data set the policy will define the collection of metrics for and then define data you want to *extract* or *derive* from them. Data displayed for data sets is read only.
+<a href="#top">back to top</a> 
 
-##### **Data Set Drop-Down** 
+### Data Set Configuration
 
-* Allows you to select a data set. Available data sets are those created using the *Envision Console* or imported into MongoDB. 
-* The data set selected determines what Dimensions and Metrics will be collected. 
-* You can view the Dimensions and Metrics of the selected data set in the read-only tables.
+```
+{
+  "id" : "561df462931e252ca4457da2",
+  "metrics" : [ {
+    "type" : "COUNT",
+    "aggregations" : [ "Total", "Average", "Minimum", "Maximum" ],
+    "name" : "Request Count",
+    "description" : "Captures count of Request happened on a Aggregation time unit",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "RequestCount",
+    "favorites" : [ ]
+  }, {
+    "type" : "TIME",
+    "aggregations" : [ "Average", "Minimum", "Maximum", "Total" ],
+    "name" : "Metric_@~!$%^*()_+{}_October14_2015_101511",
+    "description" : "edit to have special characters @!$^%",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "Metric_@~!$%^*()_+{}_October14_2015_101511",
+    "favorites" : [ ]
+  }, {
+    "type" : "COUNT",
+    "aggregations" : [ "Average", "Minimum", "Maximum", "Total" ],
+    "name" : "Metric_COUNT_October14_2015_101511",
+    "description" : "Edit Count Metric",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "Metric_COUNT_October14_2015_101511",
+    "favorites" : [ ]
+  }, {
+    "type" : "TIME",
+    "aggregations" : [ "Average", "Minimum", "Maximum", "Total" ],
+    "name" : "Metric_TIME_October14_2015_101511",
+    "description" : "Edit Time metric",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "Metric_TIME_October14_2015_101511",
+    "favorites" : [ ]
+  }, {
+    "type" : "SIZE",
+    "aggregations" : [ "Average", "Minimum", "Maximum", "Total" ],
+    "name" : "Metric_SIZE_October14_2015_101511",
+    "description" : "Edit size metric",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "Metric_SIZE_October14_2015_101511",
+    "favorites" : [ ]
+  }, {
+    "type" : "NUMBER",
+    "aggregations" : [ "Average", "Minimum", "Maximum", "Total" ],
+    "name" : "Metric_NUM_October14_2015_101511",
+    "description" : "Edit number metric",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "Metric_NUM_October14_2015_101511",
+    "favorites" : [ ]
+  }, {
+    "type" : "SIZE",
+    "aggregations" : [ "Average", "Minimum", "Maximum", "Total" ],
+    "name" : "Metric_CURRENCY_October14_2015_101511",
+    "description" : "Change Metric type from Currency to size",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "Metric_CURRENCY_October14_2015_101511",
+    "favorites" : [ ]
+  }, {
+    "type" : "CURRENCY",
+    "aggregations" : [ "Maximum", "Total" ],
+    "name" : "Metric_AGG_October14_2015_101511",
+    "description" : "Edit currency metric aggregations",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "Metric_AGG_October14_2015_101511",
+    "favorites" : [ ]
+  } ],
+  "dimensions" : [ {
+    "required" : false,
+    "type" : "DATE",
+    "aggregatorOperator" : true,
+    "isLocationType" : false,
+    "name" : "Create Time",
+    "description" : "Captures Time Stamp when metric data is created",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "timestamp",
+    "favorites" : [ ]
+  }, {
+    "required" : true,
+    "type" : "TEXT",
+    "defaultValue" : "sfd",
+    "aggregatorOperator" : false,
+    "isLocationType" : false,
+    "name" : "Dimension_~!@$%^*()_October14_2015_101511",
+    "description" : "Add spl char ~!@$%",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "Dimension_~!@$%^*()_October14_2015_101511",
+    "favorites" : [ ]
+  }, {
+    "required" : true,
+    "type" : "KEY-NAME",
+    "defaultValue" : "sfd",
+    "aggregatorOperator" : false,
+    "isLocationType" : false,
+    "name" : "Dimension_KEYNAME_September9_2015_035148",
+    "description" : "Description_key name_September9_2015_035148",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "Dimension_KEYNAME_September9_2015_035148",
+    "favorites" : [ ]
+  }, {
+    "required" : true,
+    "type" : "IP-ADDRESS",
+    "defaultValue" : "sfd",
+    "aggregatorOperator" : false,
+    "isLocationType" : false,
+    "name" : "Dimension_IP_September9_2015_035148",
+    "description" : "Description_ip address_September9_2015_035148",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "Dimension_IP_September9_2015_035148",
+    "favorites" : [ ]
+  }, {
+    "required" : false,
+    "type" : "iso-a2",
+    "group" : "",
+    "defaultValue" : "",
+    "aggregatorOperator" : false,
+    "isLocationType" : true,
+    "name" : "2 letter country code",
+    "description" : "2 letter country code",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "2_letter_country_code",
+    "favorites" : [ ]
+  }, {
+    "required" : false,
+    "type" : "iso-a3",
+    "group" : "",
+    "defaultValue" : "",
+    "aggregatorOperator" : false,
+    "isLocationType" : true,
+    "name" : "3 letter country code",
+    "description" : "3 letter country code",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "3_letter_country_code",
+    "favorites" : [ ]
+  }, {
+    "required" : false,
+    "type" : "name",
+    "group" : "",
+    "defaultValue" : "",
+    "aggregatorOperator" : false,
+    "isLocationType" : true,
+    "name" : "area name",
+    "description" : "area name",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "area_name",
+    "favorites" : [ ]
+  }, {
+    "required" : false,
+    "type" : "postal-code",
+    "group" : "",
+    "defaultValue" : "",
+    "aggregatorOperator" : false,
+    "isLocationType" : true,
+    "name" : "area postal code",
+    "description" : "area postal code",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "area_postal_code",
+    "favorites" : [ ]
+  }, {
+    "required" : false,
+    "type" : "CITY",
+    "group" : "",
+    "defaultValue" : "",
+    "aggregatorOperator" : false,
+    "isLocationType" : true,
+    "name" : "city",
+    "description" : "city",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "city",
+    "favorites" : [ ]
+  }, {
+    "required" : false,
+    "type" : "continent",
+    "group" : "",
+    "defaultValue" : "",
+    "aggregatorOperator" : false,
+    "isLocationType" : true,
+    "name" : "continent",
+    "description" : "continent",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "continent",
+    "favorites" : [ ]
+  }, {
+    "required" : false,
+    "type" : "country-abbrev",
+    "group" : "",
+    "defaultValue" : "",
+    "aggregatorOperator" : false,
+    "isLocationType" : true,
+    "name" : "country abbrevation name",
+    "description" : "country abbrevation name",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "country_abbrevation_name",
+    "favorites" : [ ]
+  }, {
+    "required" : false,
+    "type" : "COUNTY",
+    "group" : "",
+    "defaultValue" : "",
+    "aggregatorOperator" : false,
+    "isLocationType" : true,
+    "name" : "country",
+    "description" : "country",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "country",
+    "favorites" : [ ]
+  }, {
+    "required" : false,
+    "type" : "LAT-LONG",
+    "group" : "",
+    "defaultValue" : "",
+    "aggregatorOperator" : false,
+    "isLocationType" : true,
+    "name" : "latlong",
+    "description" : "lat-long",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "latlong",
+    "favorites" : [ ]
+  }, {
+    "required" : false,
+    "type" : "postal-code",
+    "group" : "",
+    "defaultValue" : "",
+    "aggregatorOperator" : false,
+    "isLocationType" : true,
+    "name" : "state",
+    "description" : "satte",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "state",
+    "favorites" : [ ]
+  }, {
+    "required" : false,
+    "type" : "LOCATION",
+    "group" : "",
+    "defaultValue" : "",
+    "aggregatorOperator" : false,
+    "isLocationType" : true,
+    "name" : "venue",
+    "description" : "venue",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "venue",
+    "favorites" : [ ]
+  }, {
+    "required" : false,
+    "type" : "ZIPCODE",
+    "group" : "",
+    "defaultValue" : "",
+    "aggregatorOperator" : false,
+    "isLocationType" : true,
+    "name" : "zipcode",
+    "description" : "zipcode",
+    "isActive" : true,
+    "isFavorite" : false,
+    "alias" : "zipcode",
+    "favorites" : [ ]
+  } ],
+  "aggregations" : [ {
+    "name" : "METRIC_DATA_MINUTES",
+    "isActive" : true,
+    "isFavorite" : false,
+    "favorites" : [ ],
+    "source" : "METRICDATASEC",
+    "purgeTimeUnit" : {
+      "type" : "DAYS",
+      "interval" : 2
+    }
+  }, {
+    "name" : "METRIC_DATA_HOURS",
+    "isActive" : true,
+    "isFavorite" : false,
+    "favorites" : [ ],
+    "source" : "METRICDATAMIN",
+    "purgeTimeUnit" : {
+      "type" : "WEEK",
+      "interval" : 1
+    }
+  }, {
+    "name" : "METRIC_DATA_DAYS",
+    "isActive" : true,
+    "isFavorite" : false,
+    "favorites" : [ ],
+    "source" : "METRICDATAHOUR",
+    "purgeTimeUnit" : {
+      "type" : "MONTH",
+      "interval" : 1
+    }
+  }, {
+    "name" : "METRIC_DATA_WEEKS",
+    "isActive" : true,
+    "isFavorite" : false,
+    "favorites" : [ ],
+    "source" : "METRICDATADAY",
+    "purgeTimeUnit" : {
+      "type" : "MONTH",
+      "interval" : 6
+    }
+  }, {
+    "name" : "METRIC_DATA_MONTHS",
+    "isActive" : true,
+    "isFavorite" : false,
+    "favorites" : [ ],
+    "source" : "METRICDATAWEEK",
+    "purgeTimeUnit" : {
+      "type" : "YEAR",
+      "interval" : 2
+    }
+  }, {
+    "name" : "METRIC_DATA_YEARS",
+    "isActive" : true,
+    "isFavorite" : false,
+    "favorites" : [ ],
+    "source" : "METRICDATAMONTH",
+    "purgeTimeUnit" : {
+      "type" : "YEAR",
+      "interval" : 10
+    }
+  } ],
+  "order" : 0,
+  "name" : "A",
+  "description" : "A",
+  "createdDate" : 1444803682166,
+  "createdBy" : "Admin Console\\administrator",
+  "lastModifiedDate" : 1444803682166,
+  "isActive" : true,
+  "isFavorite" : true,
+  "sharingType" : "Public"
+}
 
-#### Define Payload Structures
+```
 
-This screen allows you to configure payload structures. By default, the entire request and response body content (payloads) can be used as the context from which to extract information. However in some cases the payloads may be complex with 0 to many nested structures.
+1. To insert data into this dataset, send a request to the operation listed below with cookie for authentication. The cookie can be obtained from the Login API.  
 
-* When extracting multiple items from nested structures it may be important to preserve the relationships between those items. 
-* For example, a purchase transaction may have multiple nested item structures with both a name and a price. 
-* You could collect two separate arrays of names and prices easily, but if you want to match the prices collected with their names you will need to identify the item as a payload structure on the page.
+	POST /collector/save/{name}
 
-You define a Payload structure using the **Add** function, and identify what portion of the message will be extracted (i.e., Source) using a path language. 
+	URL: http://localhost:9800/api/analytics/metrics/collector/save/{name}
 
-##### Configuration Options
+	name = A (dataset name)
 
-* **Add** - Define a payload structure by specifying Name and optional Description. 
-* **Delete** - Delete a payload structure by highlighting row.
-* **Source** - Identify if the structure will be extracted from the Request, Response, or Fault portion of a message. 
-* **Path** - Specify the method used to identify the location of the structure using XPath, JsonPath, or RegEx path languages. 
-* **Test Message** - Specify the test message to be used for testing expressions in the text box. Test messages are optional.
-* **Apply** – Button that applies the values in the Extraction instructions or Derivation Instructions to the selected row in the Variables Table. 
+<a href="#top">back to top</a> 
 
-#### Define Variables
+### Request Payload
 
-You can optionally define variables to identify what to extract from the payload. Variables can be used later in an expression for deriving dimension or metric values.
+```
+{
+    "area_name" : "vbit",
+    "continent" : "north america",
+    "country" : "america",
+    "venue" :{
+	"City":”ADF",
+	"State":"AXDS"
+	"Country":"skjdvn"
+	"Zip":"83727"
+	},
+    "area_postal_code" : "32451",
+    "city" : "",
+    "Metric_AGG_October14_2015_101511" : {
+        "min" : 0.0000000000000000,
+        "avg" : 0.0000000000000000,
+        "max" : 0.0000000000000000,
+        "sum" : 0.0000000000000000
+    },
+    "2_letter_country_code" : "AZ",
+    "Dimension_KEYNAME_September9_2015_035148" : {
+        "name" : "sfd",
+        "key" : "sfd"
+    },
+    "RequestCount" : {
+        "min" : 1228434.0000000000000000,
+        "avg" : 1228434.0000000000000000,
+        "max" : 1228434.0000000000000000,
+        "sum" : 1228434.0000000000000000
+    },
+    "Dimension_IP_September9_2015_035148" : "sfd",
+    "Dimension_~!@$%^*()_October14_2015_101511" : “Anusha”,
+    "country_abbrevation_name" : "AZ",
+    "Metric_NUM_October14_2015_101511" : {
+        "min" : 0.0000000000000000,
+        "avg" : 0.0000000000000000,
+        "max" : 0.0000000000000000,
+        "sum" : 0.0000000000000000
+    },
+    "state" : "Arizona",
+    "Metric_TIME_October14_2015_101511" : {
+        "min" : 0.0000000000000000,
+        "avg" : 0.0000000000000000,
+        "max" : 0.0000000000000000,
+        "sum" : 0.0000000000000000
+    },
+    "Metric_CURRENCY_October14_2015_101511" : {
+        "min" : 0.0000000000000000,
+        "avg" : 0.0000000000000000,
+        "max" : 0.0000000000000000,
+        "sum" : 0.0000000000000000
+    },
+    "timestamp" : 1444806623989,
+    "3_letter_country_code" : "IND",
+    "contract" : {
+        "name" : "AM",
+        "id" : 1012,
+        "key" : "064586e7-722e-11e5-830b-bd015f78ece6:1012"
+    },
+    "latlong" : {
+	"lat":"17.123",
+	"long":"15.324"
+	},
+    "Metric_COUNT_October14_2015_101511" : {
+        "min" : 0.0000000000000000,
+        "avg" : 0.0000000000000000,
+        "max" : 0.0000000000000000,
+        "sum" : 0.0000000000000000
+    },
+    "Metric_SIZE_October14_2015_101511" : {
+        "min" : 0.0000000000000000,
+        "avg" : 0.0000000000000000,
+        "max" : 0.0000000000000000,
+        "sum" : 0.0000000000000000
+    },
+    "zipcode" : "12312",
+    "Metric_@~!$%^*()_+{}_October14_2015_101511" : {
+        "min" : 0.0000000000000000,
+        "avg" : 0.0000000000000000,
+        "max" : 0.0000000000000000,
+        "sum" : 0.0000000000000000
+    }
+}
 
-* You begin by adding a variable and assigning a particular type (Currency, Number, or Text). 
-* You can “extract” data from a selected “source” (e.g., Payload, Header, or Param), or “derive” data by selecting an expression type and defining an expression of how you want to extract data. 
-* Payload source types provide an option for testing the response message. XPath examples are provided for Payload source options, and expression examples are provided for simple and spring expression types. 
+<a href="#top">back to top</a> 
 
-##### Configuration Options
+```
 
-* **Variables Table** – Holds the variables used by other variables, dimensions, or metrics. The table cells are editable.
-	* **Name** – Variable name. 
-	* **Description** – Variable description. This field is optional.
-	* **Type** – Drop down menu of available types of variables including Currency, Number, Location, Text, Date, and Multi-Valued.
-* **Add** – Adds a new row in the Variables table. 
-* **Delete** – Deletes the selected row. Any variable, dimension, or metric definitions that reference the deleted variable will be deleted.
-* **Extract** – Radio button displays the Extraction Instructions for the highlighted row in the Variables table. 
-	* **Source** – Drop down for selecting the Request Header, Response Payload, Response Header, Fault Payload, Fault Header, Form Param, Path Param, and Query Param.
-	* **Multi-Valued** – Check-box enables the Multi-Valued Aggregation Pull. Options include Number of Records, Get First, and Get Last.
-	* **Path** - Specify the method used to identify the location of the structure using XPath, JsonPath, or RegEx path languages. 
-* **Derive** – Radio button that displays the Derivation Instructions for the highlighted row in the Variables table. Options include Constant, Simple Expression, Spring Expression, and Operational Dimension. 
-* **Test Message** -  Specify the test message to be used for testing expressions in the text box. Test messages are optional.
-* **Apply** – Button that applies the values in the Extraction or Derivation Instructions to the selected row in the Variables table. 
+### Sample Request Using SOAPUI
 
+![](images/import_dataset_usecase_4.jpg)
 
-#### Dimensions
+1. Verify the data in MongoDB by connecting to any DB viewer ( e.g., RoboMongo).
 
-A dimension is an organization property of a transaction. Merchant or style is an example of a dimension. Metrics are partitioned or grouped into dimensions. This section allows you to define the constructions of dimensions in the data set by selecting one or more dimensions that you would like to map, and defining how to collect the data into the data set. 
+![](images/import_dataset_usecase_5.jpg)
 
-* You can “extract” data from a selected “source” (e.g., Payload, Header, or Param), or “derive” data by selecting an expression type and defining an expression of how you want to extract data. 
-* Payload source types provide an option for testing the response message. XPath examples are provided for Payload source options, and expression examples are provided for simple and spring expression types.
-* You can also use Variables you defined in the previous section in your expressions. 
+### Import Data Sets
 
-##### Configuration Options
+1.  Log into the *Envision Console* and create a data set. 
+2.  Send a request to the API.
 
-* **Dimensions Table** – Table that holds the dimensions collected. The cells of the table are not editable. They are filled when the page is displayed based on the data set selected on the Select Data Set page. 
-	* **Name** – Dimension name.
-	* **Description** – Dimension description. This field is optional. 
-	* **Type** – Dimension type. Possible types include Currency, Number, Location, Text, Date, and Multi-Valued.
-* **Path** - Specify the method used to identify the location of the structure using XPath, JsonPath, or RegEx path languages. 
-* **Extract** – Radio button displays the Extraction Instructions for the highlighted row in the Dimensions table. 
-	* **Source** – Drop down for selecting the Request Header, Response Payload, Response Header, Fault Payload, Fault Header, Form Param, Path Param, and Query Param.
-	* **Multi-Valued** – Check-box enables the Multi-Valued Aggregation Pull. Options include Number of Records, Get First, and Get Last.
-	* **Path** - Specify the method used to identify the location of the structure using XPath, JsonPath, or RegEx path languages. 
-* **Derive** – Radio button that displays the Derivation Instructions for the highlighted row in the Dimensions table. Options include Constant, Simple Expression, Spring Expression, and Operational Dimension. 
-* **Test Message** -  Specify the test message to be used for testing expressions in the text box. Test messages are optional.
-* **Apply** – Button that applies the values in the Extraction or Derivation Instructions to the selected row in the Dimensions table. 
+	URL: http://localhost:9800/api/analytics/metrics/collector/saveall
 
-#### Metrics
+	Request payload looks like: 
 
-Metrics represent numeric values such as a price or quantity. The Metrics section allows you to select one or more Metrics that you would like to map, and define how to collect the data into the data set. 
+	```
+	{“DataSetName”:[{payload},{payload}],“DataSetName”:[{payload},{payload}],“DataSetName”:[{payload},{payload}]}… 
+	```
 
-* You can “extract” data from a selected “source” (e.g., Payload, Header, or Param), or “derive” data by selecting an expression type and defining an expression of how you want to extract data. 
-* Payload source types provide an option for testing the response message. XPath examples are provided for Payload source options, and expression examples are provided for simple and spring expression types. 
-* You can also use Variables you defined in the previous section in your expressions. 
-
-The Metrics section displays the following read-only metrics information of the selected data set:
-
-* **Name** - Metric name. 
-* **Description** - Metric description. 
-* **Type** - Metric type. Possible types include Currency, Number, Location, Text, Date, and Multi-Valued.
-* **Source** - Drop-down for identifying if the metric will be extracted from the Request Header, Response Payload, Response Header, Fault Payload, Fault Header, Form Param, Path Param, or Query Param portion of the message. 
-* **Extract** – Radio button displays the Extraction Instructions for the highlighted row in the Metrics table. 
-	* **Source** – Drop down for selecting the Request Header, Response Payload, Response Header, Fault Payload, Fault Header, Form Param, Path Param, and Query Param.
-	* **Multi-Valued** – Check-box enables the Multi-Valued Aggregation Pull. Options include Number of Records, Get First, Get Last, Get Maximum, Get Minimum, Add All
-	* **Path** - Specify the method used to identify the location of the structure using XPath, JsonPath, or RegEx path languages. 
-* **Derive** – Radio button that displays the Derivation Instructions for the highlighted row in the Metrics table. Options include Constant, Simple Expression, Spring Expression, and Operational Metric. 
-* **Test Message** - Specify the test message to be used for testing expressions in the text box. Test messages are optional.
-* **Apply** – Button that applies the values in the Extraction or Derivation Instructions to the selected row in the Dimensions table. 
-### Extraction Instructions
-
-![Business Metrics Policy](images/business_metrics_policy_extraction1.jpg "Extraction Instructions")
-
-* **Multi-Valued** – Check-box enables the Multi-Valued Aggregation Pull Down.
-* **Multi-Valued Aggregation** – Pull down of aggregation functions for multi-valued extraction results. The options that are always available Count, First, Last, Contains, Exclude and Include. The additional options that are available for items of type Number are Sum, Avg, Count, Max, Min, Equal To, Greater Than, and Less Than. The additional options that are available for items of type Text are Begins With and Ends With. The additional options that are available for items of type Date are Max, Min, Greater Than, and Less Than. Only enabled when the Multi-Valued check-box is selected.
-* **Aggregation Comparator** – Pull down of variables to use if the Multi-Valued Aggregation pull down value is either Equal To, Begins With, Ends With, Contains, Exclude, Include, Greater Than, or Less Than. See image below. The pull down is not displayed if one of these values is not selected.
-
-![Business Metrics Policy](images/business_metrics_policy_extraction2.jpg "Extraction Instructions")
-
-* **Path Expression Language** – Pull down for selecting the language for specifying the path in the message to extract. The possible options are XPath, JsonPath, and Regex. Only displayed when Source is Request, Response, or Fault.
-* **Path Expression** – Text box for entering the path expression for extraction. Only displayed when Source is Request, Response, or Fault.
-* **Path Test** – Button that when pressed will attempt to perform the expression in the Path Expression Text Box against the sample message identified by the Source Pull Down and perform any aggregation functions if multi-valued.
-* **Path Result** – Text box that will display the results of the test attempted by selecting the **Path Test** Button. The text box is not editable.
-
-![Business Metrics Policy](images/business_metrics_policy_extraction3.jpg "Extraction Instructions")
-
-* **Header/Param Name** – Text box for entering the header, query parameter, or path parameter name to extract from. Only visible if the Source is Header, Query Param, or Path Param.
-* **Param Test** – Button that attempts to extract the query parameter from the sample URI text box and perform any aggregation functions if multi-valued. Only displayed when the Source is Query Param.
-* **Param Result** – Text box displays the results of the test attempted by selecting the **Param Test** Button. The text box is not editable.
-
-![Business Metrics Policy](images/business_metrics_policy_extraction4.jpg "Extraction Instructions")
-
-* **Format** – Text box for entering the format of data values that will be extracted. The format is constructed using Y for year, M for month, D for day, h for hour, m for minute, s for second, S for millisecond, and Z for timezone. Only displayed if data item is of type Date.
-
-### Derivation Instructions
-
-![Business Metrics Policy](images/business_metrics_policy_derivation1.jpg "Extraction Instructions")
-
-After you select the Derive radio button, the following expression types can be selected.
-
-* **Constant** – Indicates the content of the Derivation Text Box is a constant value. A constant value can be:
-	* A number
-	* A string
-	* An array of numbers/strings in the form of: 1, 2, 3 or “ a”, “b”, “c”
-	* A map of numbers/strings to numbers/strings in the form of: “a”=1, 2=”b”, “c”=”d”
-* **Simple Expression** – Indicates the content of the Derivation Text Box is a mathematical expression. The functions available are addition, subtraction, multiplication, division, and modulus.
-	*Simple Expression Example*  
-	```${Variable Name} = Reference Variable
-add(Variable Name1,Variable Name2) = Type Safe Addition + can also be used but it will fail if result is an Array```
-* **Spring Expression** – Indicates the content of the Derivation Text Box is a valid expression string. 
-	*Spring Expression Example*  
-	```${Variable Name} = Reference Variable```
-* **Operational Dimension** – Allows you to select a Dimension from the selected dataset from a drop-down menu.  
-* **Derivation** – Text box for entering a constant’s definition or an expression depending on the radio button selected.
-* **Derivation Test** – Button that when pressed will attempt to perform the expression in the Derivation Text Box against the sample message identified by the Source Pull Down. Only visible if the Expression Radio Button is selected.
-* **Derivation Result** – Text box that will display the results of the test attempted by selecting the Derivation Test Button. The text box is not editable. Only visible if the Expression Radio button is selected.
-
-##### Test Messages
-
-* **Test Message** – Specify the test message to be used for testing expressions in the text box. Changes made on the current page are available on subsequent pages. Test messages are optional. *Option available for Request Payload, Response Payload, and Fault Payload.*  
-* **URL** – Specify a sample URL including query parameters. *Option available for Path Param.* 
-
-### Configuration
-
-Refer to the following Business Metrics Policy use cases for walk-through tutorials on adding and configuring a Business Metrics Policy. 
-
-* [Extracting Data Using Path Param](bus_metrics_policy_use_case_extract_data_using_path_param.html) 
-* [Extracting Datat Using XPath, JsonPath, or Regex](bus_metrics_policy_use_case_extract_data_using_xpath_jsonpath_regex.html)
+	You can import multiple data sets and multiple payloads into the same data set. 
 
 
-<a href="#top">back to top</a>
+<a href="#top">back to top</a> 
