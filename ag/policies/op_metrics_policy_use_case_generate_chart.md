@@ -14,7 +14,7 @@ nav-title: Operational Metrics Policy Use Case - Generate a Chart from Operation
 
 The following use case illustrates how to generate a chart from Operational Metrics obtained from Service Operational Data.
 
-## Configuration
+### Configuration
 
 1. Perform the [Policy Manager / Envision Integration Installation](http://docs.akana.com/docs-test/ev/envision_install/installing_pm_env_integration_v11.html). At the end of this process you will have configured Envision, Policy Manager, and Network Director container instances. This process also includes using **Add Container** in the *Policy Manager Management Console* to register the Network Director container.
 2. Launch the *Akana Administration Console* for the Network Director container instance and change the following configuration properties via the *Configuration* tab  

@@ -14,7 +14,13 @@ nav-title: Business Metrics Policy Use Case - How Do I Extract Business Informat
 
 The following use case illustrates how to use the Business Metrics Policy to Extract Business information from service usage data using XPath/JsonPath/RegEx from Request payload and derive operational metrics.
 
-## Configuration
+<a href="policy_management.htm" class="button secondary">Managing Policies</a>  <a href="policies_use_case_toc.html" class="button secondary">Business Metrics Policy Use Cases</a>
+
+<h5 class="stamp">Supported Platforms: 8.0 and greater.</h5>
+
+<div id="toc-marker"></div>
+
+### Configuration
 
 1. Launch the *Envision Console*, select **New Dataset** and define a dataset with sharing as **Public**.
 ![](images/bus_metrics_pol_usecase1a.jpg)
