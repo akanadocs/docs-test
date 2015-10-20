@@ -34,7 +34,8 @@ Learn how to view elements of a Binding definition including Key, QName, Type, D
 
 ## Launch Add Binding Wizard
 
-1. Go to **Configure > Registry > Bindings**.  
+1. Log into the Policy Manager *Management Console*.
+2. Go to **Configure > Registry > Bindings**.  
 2. On the *Bindings Summary* screen, click **Add Binding**. The *Add Binding Wizard* launches and displays the *Select Interface* screen.
 
 <a href="#top">back to top</a> 

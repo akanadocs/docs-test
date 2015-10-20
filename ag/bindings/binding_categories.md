@@ -59,7 +59,8 @@ Remove a category association from the current binding definition. Necessary if:
 * The established association with a selected category scheme is no longer valid.
 * A binding definition has changed, requiring a new category association, etc.
 
-1. Go to **Configure > Registry > Bindings**.  
+1. Log into the Policy Manager *Management Console*.
+2. Go to **Configure > Registry > Bindings**.  
 2. On the *Bindings Summary* screen, click on the binding you want to assign a binding category to.
 3. From the **Actions** drop-down, select **View Binding Details**.  
 4. On the *Binding Details* screen, click the **Categories** tab. The *Binding Categories Summary* screen displays, showing all the Categories that are defined for the current Binding.
@@ -83,7 +84,8 @@ Examples of Category Groups are:
 
 **Note**: *Each Organization, Service, tModel, Schema, Interface, or Binding can be assigned to one or more Category Groups.*
 
-1. Go to **Configure > Registry > Bindings**.  
+1. Log into the Policy Manager *Management Console*.
+2. Go to **Configure > Registry > Bindings**.  
 2. On the *Bindings Summary* screen, click on the binding you want to assign a binding category to.
 3. From the **Actions** drop-down list box, select **View Binding Details**.  
 4. On the *Binding Details* screen, click the **Categories** tab. The *Binding Categories Summary* screen displays showing all the Categories that are defined for the current Binding.
@@ -103,7 +105,8 @@ Remove a category group association from the current Binding. This is necessary 
 * The established association with a selected category group is no longer valid.
 * A binding definition has changed, requiring a new category association, etc.
 
-1. Go to **Configure > Registry > Bindings**.  
+1. Log into the Policy Manager *Management Console*.
+2. Go to **Configure > Registry > Bindings**.  
 2. On the *Bindings Summary* screen, click on the binding you want to assign a binding category to.
 3. From the **Actions** drop-down, select **View Binding Details**.  
 4. On the *Binding Details* screen, click the **Categories** tab. The *Binding Categories Summary* screen displays showing all the Categories that are defined for the current binding.

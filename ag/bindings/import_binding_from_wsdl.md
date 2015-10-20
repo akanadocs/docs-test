@@ -26,7 +26,8 @@ Learn how to import bindings and interfaces from a WSDL file into the Policy Man
 
 ## Launch the Import Bindings and Interfaces Wizard
 
-1. Go to **Configure > Registry > Bindings**.  
+1. Log into the Policy Manager *Management Console*.
+2. Go to **Configure > Registry > Bindings**.  
 2. On the *Bindings Summary* screen, click **View Binding Details**.  
 3. Click **Import Binding from WSDL**.
 

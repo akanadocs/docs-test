@@ -27,7 +27,8 @@ Learn how to review and assign or unassign identifiers that are defined for the 
 
 View a listing of Identifiers that are defined for the current binding.
 
-1. Go to **Configure > Registry > Bindings**.  
+1. Log into the Policy Manager *Management Console*.
+2. Go to **Configure > Registry > Bindings**.  
 2. On the *Bindings Summary* screen, select **View Binding Details** from the *Actions* drop-down.  
 3. Click the **Identifiers** tab. The *Binding Identifiers Summary* screen displays.  
 
@@ -37,7 +38,8 @@ View a listing of Identifiers that are defined for the current binding.
 
 Assign an Identifier Scheme, Key Name, and Key Value that represent look-up elements that will be invoked during a search.
 
-1. Go to **Configure > Registry > Bindings**.  
+1. Log into the Policy Manager *Management Console*.
+2. Go to **Configure > Registry > Bindings**.  
 2. On the *Bindings Summary* screen, select the line item of the binding you want to assign an identifier to and select **View Binding Details** from the *Actions* drop-down. 
 3. On the *Binding Details* screen, click the **Identifiers** tab.  
 4. On the *Binding Identifiers Summary* screen, click **Assign Identifier**.  
@@ -51,7 +53,8 @@ Assign an Identifier Scheme, Key Name, and Key Value that represent look-up elem
 
 Removing an identifier from the current binding definition could become necessary if, for example, the established association with the selected identifier scheme is no longer valid or the Interface Definition changed, requiring a new identifier association.
 
-1. Go to **Configure > Registry > Bindings**.  
+1. Log into the Policy Manager *Management Console*.
+2. Go to **Configure > Registry > Bindings**.  
 2. On the *Bindings Summary* screen, select the binding you want to assign an identifier to and select **View Binding Details** from the *Actions* drop-down.  
 3. On the *Binding Details* screen, click the **Identifiers** tab. The *Binding Identifiers Summary* screen displays showing all the Identifiers that are defined for the current binding.
 4. Select the identifier scheme to be unassigned, and click **Unassign Identifier**.  

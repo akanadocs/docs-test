@@ -49,7 +49,7 @@ Learn how to import bindings and interfaces from a WSDL file into the Policy Man
 <div class = "divider1"></div>
 
 ### [View WSDL \(Binding\)](../bindings/view_wsdl_binding.html)
-Learn how to display  WSDL metadata associated with the current binding.
+Learn how to display WSDL metadata associated with the current binding.
 
 <div class = "divider1"></div>
 

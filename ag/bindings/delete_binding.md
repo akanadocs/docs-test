@@ -17,7 +17,8 @@ Learn how to delete a binding.
 
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
 
-1. Go to **Configure > Registry > Bindings**.  
+1. Log into the Policy Manager *Management Console*.
+2. Go to **Configure > Registry > Bindings**.  
 2. On the *Bindings Summary* screen, click **View Binding Details**.  
 3. Select the binding you want to delete.
 4. From the **Actions** drop-down, select **Delete Binding**.  
