@@ -22,7 +22,6 @@ Learn how to review and assign or unassign identifiers that are defined for the 
 * [Assign Binding Identifiers](#assign-binding-identifiers)
 * [Unassign Binding Identifiers](#unassign-binding-identifiers)
 
-
 ## View Binding Identifiers Summary
 
 View a listing of Identifiers that are defined for the current binding.
