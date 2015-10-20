@@ -54,7 +54,7 @@ Learn how to display  WSDL metadata associated with the current binding.
 <div class = "divider1"></div>
 
 ### [View Service References \(Binding\)](../bindings/view_service_references_binding.html)
-How how to review the number of services that are currently implementing a specific binding.
+Learn how to review the number of services that are currently implementing a specific binding.
 
 <div class = "divider1"></div>
 

@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Binding Identifiers
-description: Review and assign or unassign Identifiers that are defined for the current Binding.
+description: Learn how to review and assign or unassign identifiers that are defined for the current binding.
 product: ag
 category: learn
 sub-nav-class: Bindings
@@ -11,7 +11,7 @@ nav-title: Binding Identifiers
 ---
 
 ## Binding Identifiers
-Review and assign or unassign Identifiers that are defined for the current Binding.
+Learn how to review and assign or unassign identifiers that are defined for the current binding.
 
 <a href="bindings_toc.html" class="button secondary">Bindings (Home)</a> <a href="../bindings/about_bindings.html" class="button secondary">About Bindings</a> <a href="../bindings/view_binding_details.html" class="button secondary">View Binding Details</a>    <a href="../bindings/add_binding.html" class="button secondary">Add Binding</a>  <a href="../bindings/binding_categories.html" class="button secondary">Binding Categories</a> <br><br><a href="../bindings/import_binding_from_wsdl.html" class="button secondary">Import Binding from WSDL</a> <a href="../bindings/view_wsdl_binding.html" class="button secondary">View WSDL (Binding)</a> <a href="../bindings/view_service_references_binding.html" class="button secondary">View Service References (Binding)</a> <a href="../bindings/delete_binding.html" class="button secondary">Delete Binding</a>
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
@@ -52,8 +52,7 @@ Assign an Identifier Scheme, Key Name, and Key Value that represent look-up elem
 Removing an identifier from the current binding definition could become necessary if, for example, the established association with the selected identifier scheme is no longer valid or the Interface Definition changed, requiring a new identifier association.
 
 1. Go to **Configure > Registry > Bindings**.  
-The *Bindings Summary* Screen is displayed.
-2. On the Bindings Summary screen, select the binding you want to assign an identifier to and select **View Binding Details** from the *Actions* drop-down.  
+2. On the *Bindings Summary* screen, select the binding you want to assign an identifier to and select **View Binding Details** from the *Actions* drop-down.  
 3. On the *Binding Details* screen, click the **Identifiers** tab. The *Binding Identifiers Summary* screen displays showing all the Identifiers that are defined for the current binding.
 4. Select the identifier scheme to be unassigned, and click **Unassign Identifier**.  
 5. Click **OK** to confirm the action or **Cancel** to exit the operation.
