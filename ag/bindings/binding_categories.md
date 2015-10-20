@@ -60,7 +60,6 @@ Remove a category association from the current binding definition. Necessary if:
 * A binding definition has changed, requiring a new category association, etc.
 
 1. Go to **Configure > Registry > Bindings**.  
-
 2. On the *Bindings Summary* screen, click on the binding you want to assign a binding category to.
 3. From the **Actions** drop-down, select **View Binding Details**.  
 4. On the *Binding Details* screen, click the **Categories** tab. The *Binding Categories Summary* screen displays, showing all the Categories that are defined for the current Binding.
@@ -110,5 +109,5 @@ Remove a category group association from the current Binding. This is necessary 
 4. On the *Binding Details* screen, click the **Categories** tab. The *Binding Categories Summary* screen displays showing all the Categories that are defined for the current binding.
 5. From the line item display, select the category group to be unassigned.
 6. Click **Unassign Category Group**.
-7. Click **OK** to confirm the action or **Cancel** to exit the operation.  
+7. Click **OK** to confirm the action or **Cancel** to exit the operation. 
 <a href="#top">back to top</a> 
