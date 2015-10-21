@@ -38,7 +38,7 @@ Learn about custom "Reminder" and "Expiration" email notifications that can be i
 
 <div class = "divider1"></div>
 
-### [Identity Systems](../security/identity_systems.html)
+### [Managing Identity Systems](../security/managing_identity_systems.html)
 Learn about Identity Management Applications, which provide a method of storing data and making this data available to network users and administrators, and Authentication Protocols, which provide authentication for client/server applications and validate the identity of a communicating entity.
 
 <div class = "divider1"></div>

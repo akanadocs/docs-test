@@ -1,16 +1,16 @@
 ---
 layout: page
-title: Identity Systems
+title: Managing Identity Systems
 description: Learn about Identity Management Applications, which provide a method of storing data and making this data available to network users and administrators, and Authentication Protocols, which provide authentication for client/server applications and validate the identity of a communicating entity.
 product: ag
 category: learn
 sub-nav-class: Security Configuration
 weight:	6
 type: page
-nav-title: Identity Systems
+nav-title: Managing Identity Systems
 ---
 
-## Identity Systems
+## Managing Identity Systems
 Learn about Identity Management Applications, which provide a method of storing data and making this data available to network users and administrators, and Authentication Protocols, which provide authentication for client/server applications and validate the identity of a communicating entity.
 
 <a href="../security/security_configuration_toc.html" class="button secondary">Security Configuration (Home)</a> <a href="../security/view_and_modify_policy_manager_domain_name_and_description.html" class="button secondary">View and Modify Policy Manager Domain Name and Description</a> <a href="../security/certificate_authority.html" class="button secondary">Certificate Authority (CA)</a> <br><br> <a href="../security/trusted_ca_certificates.html" class="button secondary">Trusted CA Certificates</a> <a href="../security/user_certificate_renewal.html" class="button secondary">User Certificate Renewal</a> <a href="../security/identity_profiles.html" class="button secondary">Identity Profiles</a> <a href="../security/privacy.html" class="button secondary">Privacy</a>
@@ -158,90 +158,18 @@ At runtime, during the authentication phase, the digital signature inside a clai
 
 ## Add Identity System
 
-1. Go to **Configure > Security > Identity Systems**.  
-The *Identity Systems Summary* Screen is displayed.
-2. Click **Add Identity System**.  
-The *Add Identity System Wizard* is launched, displaying the *Identity System Domain Details* Screen.
-3. Under "Select Identity System," use the "Identity System Type" **drop-down list box** to select the identity system that will be integrated with Policy Manager.  
+The "Add Identity System Wizard" provides a series of options that are used to configure and maintain Identity Systems that you would like to integrate with Policy Manager.
+
 **Notes**:   
-*The number of identity systems available to select is based on how many "Identity System Option Packs" you have installed using the "SOA Software Administration Console" or have come pre-installed in your Policy Manager release.*  
-*If only one identity system displays, skip to the next step and configure the "Domain Details."*
-  * **Select from:**  
-  **Claim-based** (see #6 below for configuration details)  
-  **Cookie Authentication Module** (see #7 below for configuration details)  
-  **Directory Server (i.e. Active Directory)** (see #8 below for configuration details)  
-  **Kerberos** (see #9 below for configuration details)  
-  **SAML** (see #10 below for configuration details)    
-4. Enter the Domain Details (Name & Description) associated with the Claims-based Identity System Type selected in step 3.  
-5. Click **Next**.  
-6. If you selected "Claim-based" as the Identity System Type in step 3, then you are taken through the following *Claim Configuration* Screens.  You can define multiple claims in a single configuration.  
-**Note**: *After a Claim-based Identity System instance is created and configured, it can be used for authentication and authorization of web service requests.* 
-  * **Claim Configuration**  
-  **Issuer Name** - A URI that uniquely represents a claim issuer. If the claim token is SAML, the issuer identifier must match the issuer URL in the SAML token.  
-    **Issuer Certificate** - an X509 Certificate of the issuer. It is used by Policy Manager to verify the signature of the claim token at runtime.  Click **Choose File** to upload your certificate.  
-  **Identity XPath** -  An XPath string function that will be evaluated against the claim token during runtime. The result of the evaluation will be used as the identifier of the requester and saved as part of the usage data.  
-**Namespace Prefixes** - User-configured and used to both simplify the specification of XPath expressions ad as the context to evaluate all XPath expressions in the claim configuration. Click **Add Namespace** to add multiple Namespace entries.  
-**Claim Configuration Details** - Specify the configuration of multiple claims issued by the same authority. A requestor may satisfy multiple claims in the same token.  
-**Claim Name** - A string that identifies the claim. Click **Add Claim** to add multiple claim entries.  
-  * **Assertion XPaths** - Specify one or more XPath Assertions and Claim Descriptions for each claim.  
-**Note**: *An "Assertion XPaths" Screen will be displayed for each claim name you define.*   
-  **Claim Description** - Optional.  
-  **Assertion Xpaths** - An XPath string representing an assertion in a claim token.  
-  The XPath expression will be evaluated against a claim token at runtime. In order for the claim token to be valid, the result of the XPath evaluation must be true. You can specify multiple XPath assertions for a single claim. In this case, each assertion must be evaluated to true in order for the token to be accepted. If the evaluation of one or more specified XPath assertions is false at runtime, the claim will be considered invalid and will result in authorization failure.  
-7. If you selected "Cookie Authentication Module" as the Identity System Type in step 3,then you are taken to the *Cookie Authentication Module* Screen where you can specify SOA Secure Session Cookie Configuration Details.  
-**Notes**:  
-*SOA Secure Session Cookie is an HTTP cookie generated by Network Director or Policy Manager as part of HTTP Basic Authentication.*  
-*The SOA Session Cookie can be used as an alternative authentication token that is more secure than password-based authentication.*  
-  * **Cookie Name** - Specify the name of the cookie (soasession is the default value).
-  * **Cookie Max Age in Seconds** - Specify how many seconds after the browser receives the cookie that the cookie will expire.
-  * **Cookie Domain and Cookie Path** - Specify domain and path of the server where cookies should be sent.  
-  **Note**: *If no domain and path are specified, they default to the domain and path of the object that was requested.*
-  * **Cookie Only For Secure Channel** - Enter "True" or "False" to indicate whether the browser will send the cookie only over an encrypted channel (e.g., Transport Layer Security (HTTPS protocol)).  False is the default value.      
-8. If you selected "Directory Server" as the Identity System Type in step 3,then you are taken through the following *Active Directory Configuration* Screens:  
-  * **Directory Type** - Your selection represents the Directory Server that will be integrated with Policy Manager.  
-  * **Connection Properties**  
-  **Main URL** (Required) - Host Name of the selected Directory Type, and the Port Number used to connect to it.  
-  **Failover URLs** - Where identity system connection requests will be directed if the Main URL fails. You can specify up to five Failover URLs
-  * **Attribute Details**  
-  **Search Scope** - Used to define the search base in the identity system to begin a search and the search scope to be applied to the specified base.  
-  **Attribute Mapping** - Used to configure the identity system query attributes. Service Manager maps to these query attributes to enable the viewing of identity system data in the "Security" section of the Policy Manager "Management Console."  Includes "Users" and "Groups." 
-  * **Username DN Mapping** - Accurate Username and DN mapping must be configured to ensure that login data is properly authenticated, thus ensuring the identity system can effectively coexist with Policy Manager.  
-  **Map with Search** - Authenticates the User ID and Password.  
-  **Map with Prefix/Suffix** - Strings that will be prepended and appended (respectively) to the User Name when logging into Active Directory for the purpose of authentication.
-  * **Custom Queries** - Includes a default set of custom (but update-able) "LDAP Search Filter" queries that are used to interact with the identity system.  
-  **Note**: *$USERNAME, $FULLNAME, and $GROUPNAME are macro variables that are replaced with the actual Username, Full Name, or Group Name entered when a search is performed. They must be used when developing custom queries. The User and Group attributes used in custom queries must match the User and Group attribute names configured on the "Attribute Details" Screen.*
-  * **Proxy User Configuration** - Select from:  
-  **Anonymous** - An anonymous user can search users and groups for read-only operations without providing credentials.  
-  **Proxy** - Enter a Username and Password for the proxy user, who must have the permission to search users and groups in the identity system.
-  * **Advanced Properties** - Configure advanced properties for page control, caching, timeout, and connection pool settings (Configure to conform to your system requirements or accept the defaults).
-  * **Verify Connection** - Click **Verify Connection** to test your connection properties.  
-  Click **Finish** if your connection is successfully verified or **Back** if not.  
-  If the identity system you are integrating is LDAPS (LDAP over SSL), you will receive the following reminder message after the connection is verified: 
-   "After completing the configuration, you must upload a Trusted CA Certificate that can verify the SSL certificate of the LDAP server."
-  * **Summary** - Displays a summary of configuration parameters for each identity system.
-9. If you selected "Kerberos" as the Identity System Type in step 3, then you are taken through the following configuration screens:   
-**Notes**:  
-*Kerberos is an authentication service that uses symmetric cryptography (one "shared secret" key used to both encrypt and then decrypt a message) that frees services from having to maintain their own user account records.*  
-*For large systems with a high volume of requests, "realms" (unique login spaces that are artificial boundries) are used to ensure optimum performance of the Kerberos Authentication Server and KDC.* 
-  * **KDC Configuration Screen** - Specify per-realm configuration data to be used by the Kerberos Authentication Server and Key Distribution Center:  
-  **Upload KDC Configuration File** - Store the configuration file in the Policy Manager data repository and provide Containers interacting with Policy Manager centralized access to the configuration file.  
-  **Locate the KDC Configuration File on the Local File System** - Used for manual configurations.  
-  **Locate the KDC Configuration Using Default File System Path** - Locate the KDC Configuration file using the Kerberos default directory. 
-  * **Configure Realm Name - Domain Name Mapping** - Map the Identity System to a Kerberos realm login space.   
-  **User Realm Name as Domain Name** - A Kerberos Realm Name is currently mapped to an Identity System that is integrated with Policy Manager.  
-**Map Realm Name to Domain Name** - specify a Realm Name and select an Identity System Domain Name. Note that you can map all Realm Names to a single Identity System Domain Name by entering an asterisk (*) in the "Realm Name" field.
-10. If you selected "SAML Authority" as the Identity System Type in step 3,then you are taken to the *Issuer Details and Account Linking* Screen.   
-**Notes**:  
-*A SAML Authority is a system entity that issues assertions.*  
-*Configure a SAML Authority Identity System by defining a domain and then configuring the detail information of the Issuer and the approach to resolve the SAML Assertion into an identity in Policy Manager.  This information will be used to perform web service authentication based on SAML Assertion.*  
-  * **Issuer Details**  
-  **Issuer Name** - Specify the URI that identifies SAML Assertion issuer. Must exactly match the "Issuer" element in the SAML Assertion.  Verify the correct certificate has been assigned to the user or has expired with the "View Certificate" hyperlink.  
-  **Issuer Certificate** - Specify the certificate of the SAML issuer. It will be used to verify the signature of the SAML Assertion. The "Browse" button can be used to navigate the directory structure to target the desired certificate.  
-  * **Account Linking** (Optional) - Resolve the Subject in a SAML Assertion to a user in Service Manager.  If left unchecked, Service Manager will directly use the NameIdentifier element in the SAML as the Username.  
-**Map Domain** - Select the domain name you would like to map the SAML Assertion to.  
-**Map NameIdentifier** - Select a "Fixed Identity" or "Search-based Identity" to map the NameIdentifier in the SAML Assertion into a user name in LDAP to map the Subject element. The SAML Assertion has an Subject element, which has a NameIdentifier element to specify the identity that the token represents.
-11. Click **Finish**.  
-The system configures your identity system based on your provided configuration parameters and returns you to the *Identity System Summary* Screen.
+*The number of identity systems available to select is based on how many "Identity System Option Packs" you have installed using the "SOA Software Administration Console" or have come pre-installed in your Policy Manager release.* 
+
+Select the instruction set for the Identity System type you wish to add:
+
+* [Claims-based](../security/AddIdentitySystem/claims_based.html)
+* [Cookie Authentication Module](../security/AddIdentitySystem/cookie_authentication_module.html)
+* [Directory Server (i.e. Active Directory)](../security/AddIdentitySystem/directory_server.html)
+* [Kerberos](../security/AddIdentitySystem/kerberos.html)
+* [SAML](../security/AddIdentitySystem/saml.html)
 
 ###Authentication and Authorization
 * **For Authentication** - You must create an Authentication Policy, and select the Claim-Based Identity System as the authentication realm.
@@ -256,7 +184,7 @@ At runtime, during the authentication phase, the digital signature inside a clai
 
 ## Modify Identity System
 
-Follow all steps outlined in [Add Identity System](#add-identity-system) except substitute the following for step 2:
+Follow all steps outlined in the various [Add Identity System](#add-identity-system) instruction sets, except, in each case, substitute the following for step 2:
 
 Click **Modify Identity System**.  
 The *Modify Identity System Wizard* is launched, displaying *Identity System Domain Details* Screen.
