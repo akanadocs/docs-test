@@ -81,7 +81,7 @@ You define a Payload structure using the **Add** function, and identify what por
 * **Source** - Identify if the structure will be extracted from the Request, Response, or Fault portion of a message. 
 * **Path** - Specify the method used to identify the location of the structure using XPath, JsonPath, or RegEx path languages. 
 * **Test Message** - Specify the test message to be used for testing expressions in the text box. Test messages are optional.
-* **Apply** – Button that applies the values in the Extraction instructions or Derivation Instructions to the selected row in the Variables Table. 
+* **Apply** – Button that applies the values in the Extraction instructions or Derivation Instructions to the selected row in the Payload Structures Table. 
 
 <a href="#top">back to top</a>
 
@@ -91,26 +91,29 @@ You can optionally define variables to identify what to extract from the payload
 
 * You begin by adding a variable and assigning a particular type (Currency, Number, or Text). 
 * You can “extract” data from a selected “source” (e.g., Payload, Header, or Param), or “derive” data by selecting an expression type and defining an expression of how you want to extract data. 
-* Payload source types provide an option for testing the response message. XPath examples are provided for Payload source options, and expression examples are provided for simple and spring expression types. 
+* Payload source types provide an option for testing the response message. XPath, JsonPath, and RegEX examples are provided for Payload source options, and expression examples are provided for simple and spring expression types. 
 
 ##### Configuration Options
 
 * **Variables Table** – Holds the variables used by other variables, dimensions, or metrics. The table cells are editable.
 	* **Name** – Variable name. 
 	* **Description** – Variable description. This field is optional.
-	* **Type** – Drop down menu of available types of variables including Currency, Number, Location, Text, Date, and Multi-Valued.
+	* **Type** – Drop down menu of available types of variables including 3 LETTER COUNTRY CODE, AREA NAME, AREA POSTAL CODE, CITY, CONTINENT, COUNT, COUNTRY ABBREVIATION NAME, COUNTY, CURRENCY, DATE, IP-ADDRESS, KEY-NAME, LAT-LONG, NUMBER, SIZE, STATE, TEXT, TIME.
 * **Add** – Adds a new row in the Variables table. 
 * **Delete** – Deletes the selected row. Any variable, dimension, or metric definitions that reference the deleted variable will be deleted.
 * **Extract** – Radio button displays the Extraction Instructions for the highlighted row in the Variables table. 
 	* **Source** – Drop down for selecting the Request Header, Response Payload, Response Header, Fault Payload, Fault Header, Form Param, Path Param, and Query Param.
 	* **Multi-Valued** – Check-box enables the Multi-Valued Aggregation Pull. Options include Number of Records, Get First, and Get Last.
 	* **Path** - Specify the method used to identify the location of the structure using XPath, JsonPath, or RegEx path languages. 
+	* **Name (text box)** - Enter query or path parameter name to extract from. Only visible if the Source is Query Param, Form Param, or Path Param.
+	*  **Name (drop-down)** - Select area of header to extract from. Only visible if the Source is Header.
+	* **Test Message** -  Specify the test message to be used for testing expressions in the text box. Test messages are optional.
 * **Derive** – Radio button that displays the Derivation Instructions for the highlighted row in the Variables table. Options include Constant, Simple Expression, Spring Expression, and Operational Dimension. 
-	* **Derivation** – Text box for entering a constant’s definition or an expression depending on the radio button selected. 
+	* **Derivation** – For Constant, Simple Expression, or Spring Expression options, enter a definition in the text fox. For Operational Metric or Operational Dimension select a metric or dimension from the drop-down.
 	* Use the **Test** button to perform the expression in the Derivation Text Box against the sample message identified by the Source Pull Down. 
 	* The results will display in the text box. 
-* **Test Message** -  Specify the test message to be used for testing expressions in the text box. Test messages are optional.
 * **Apply** – Button that applies the values in the Extraction or Derivation Instructions to the selected row in the Variables table. 
+* **Clear** - 
 
 <a href="#top">back to top</a>
 
@@ -177,7 +180,7 @@ The Metrics section displays the following read-only metrics information of the 
 
 	![Request Payload XPath Example](images/bus_metrics_req_payload_xpath_example.jpg "Request Payload XPath Example")
 
-*  JSON Example
+*  JsonPath Example
 
 	![Request Payload JSON Example](images/bus_metrics_req_payload_json_example.jpg "Request Payload JSON Example")
 
