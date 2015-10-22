@@ -4,7 +4,7 @@ title: Security Reference
 description: Includes security basic concepts and model core elements such as Authentication, Authorization, Message Integrity and Auditing. 
 product: ag
 category: learn
-sub-nav-class: Security
+sub-nav-class: Security Administration
 weight:	9
 type: page
 nav-title: Security Reference
@@ -15,6 +15,7 @@ Includes Security basic concepts along with model core elements such as Authenti
 
 <a href="security_toc.html" class="button secondary">Security (Home)</a> <a href="../security/user_administration.html" class="button secondary">User Administration</a>  <a href="../security/user_group_administration.html" class="button secondary">User Group Administration</a>
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5> 
+
 ### Table of Contents
 <div id="toc-marker"></div>
 * [Introduction](#introduction)
@@ -32,8 +33,8 @@ Includes Security basic concepts along with model core elements such as Authenti
 
 ## Introduction
 Security is applied at the web service operation level via the *Security* tab at the Root and Sub-Organization levels and via policy attachments at each object level. Applying security at the operation level supports role-based access as access control and filtering can be applied at a more granular level.
-Applying security to a web service requires that it be registered and brought under management. The web service then assumes all the characteristics of a Container. The "Managed" web service can then be configured in the *Security* section of the Policy Manager using a variety of different security policies (i.e., policy components).
-The Policy Manager is implemented as a separate web service. During the system configuration process, the "Create Physical Service Wizard" creates a Policy Manager Subsystem web service that contains a domain, subsystem seed, and subsystem instance. This information is stored in the form of a Container and is reserved for system use.
+Applying security to a web service requires that it be registered and brought under management. The web service then assumes all the characteristics of a Container. The *Managed* web service can then be configured in the *Security* section of the Policy Manager using a variety of different security policies (i.e., policy components).
+The Policy Manager is implemented as a separate web service. During the system configuration process, the **Create Physical Service Wizard** creates a Policy Manager Subsystem web service that contains a domain, subsystem seed, and subsystem instance. This information is stored in the form of a Container and is reserved for system use.
 
 <a href="#top">back to top</a>
 
@@ -67,7 +68,7 @@ The Policy Manager security model supports multiple authentication types, includ
 
 ## Authorization
 
-Authorization is a security service that is used to determine whether the authenticated identity has permission to perform a particular action or function. Authorization is granted to a user or role based on established policies defined within the Policy Manager Subsystem. A user or role must have privileges from the Policy Manager (i.e., authorization authority) to gain access to these resources or services. The Policy Manager then evaluates the authorization data (i.e., privileges) to determine whether access is permitted. The authorization decision is formatted into a SAML authorization assertion. Authorization is granted when the Status Flag in the SAML assertion document equals "Yes." If the Status Flag equals "No," a message indicating the reason authorization failed is issued.
+Authorization is a security service that is used to determine whether the authenticated identity has permission to perform a particular action or function. Authorization is granted to a user or role based on established policies defined within the Policy Manager Subsystem. A user or role must have privileges from the Policy Manager (i.e., authorization authority) to gain access to these resources or services. The Policy Manager then evaluates the authorization data (i.e., privileges) to determine whether access is permitted. The authorization decision is formatted into a SAML authorization assertion. Authorization is granted when the Status Flag in the SAML assertion document equals **Yes**. If the Status Flag equals **No**, a message indicating the reason authorization failed is issued.
 
 Authorization Privilege and Credentials are configured using a Security Policy (i.e., Security Policy Component) that is added to the policy of the web service operation being managed.
 
@@ -76,7 +77,7 @@ Authorization Privilege and Credentials are configured using a Security Policy (
 There are several options you can configure for Authorization Privilege:
 
 * You can specify a unique privilege name or use the system default.
-* If your web service operation is configured with security contracts, you can waive the enforcement of these contracts by clicking the checkbox for **Do not Enforce Security Contracts**.
+* If your web service operation is configured with security contracts, you can waive the enforcement of these contracts by clicking the check-box for **Do not Enforce Security Contracts**.
 * You can utilize Policy Manager Authorization Enhancements to perform authorization.
 * You can generate audit data.
 
@@ -141,9 +142,11 @@ Audit Data is enabled through the Security "Pipeline" component (i.e., authentic
 
 For details about Key Management, see:
 
-* [Managing Keys](../../sp/key_management.htm)
-* [Identity Categories](../../sp/identity_categories.htm)
-* [Using the External Keystore Feature](../../sp/using_external_keystore.htm) to enable your own hardware security module (HSM) as an external keystore for storing and managing Policy Manager PKI keys and certificates
+* [Managing Keys](../../sp/key_management.html)
+* [Identity Categories](../../sp/identity_categories.html)
+* [Using the External Keystore Feature](../../sp/using_external_keystore.html) 
+
+to enable your own hardware security module (HSM) as an external keystore for storing and managing Policy Manager PKI keys and certificates.
 
 <a href="#top">back to top</a>
 

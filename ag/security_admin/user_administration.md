@@ -1,10 +1,10 @@
 ---
 layout: page
 title: User Administration
-description: View Users Summary, Perform User Serach, Add user accounts, modify user account information, including delete user account.
+description: View users summary, perform user search, add user accounts, modify user account information, including delete user account.
 product: ag
 category: learn
-sub-nav-class: Security
+sub-nav-class: Security Administration
 weight:	7
 type: page
 nav-title: User Administration

@@ -4,7 +4,7 @@ title: User Group Administration
 description: Add user groups, modify user groups, manage users, and manage roles & privileges for user groups.
 product: ag
 category: learn
-sub-nav-class: Security
+sub-nav-class: Security Administration
 weight:	6
 type: page
 nav-title: User Group Administration
