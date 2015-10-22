@@ -10,19 +10,18 @@ type: page
 nav-title: User Administration
 ---
 
-
 ## User Administration
+
 Learn how to administer Policy Manager user accounts including performing a user search, adding and modifying a new user account, and deleting a user account.   
 
 Location: *Security > Users* section of the *Policy Manager Management Console*.
 
-<a href="security_toc.html" class="button secondary">Security (Home)</a>  <a href="../security/user_group_administration.html" class="button secondary">User Group Administration</a>  
+<a href="security_toc.html" class="button secondary">Security (Home)</a>  <a href="user_group_administration.html" class="button secondary">User Group Administration</a>  
 
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>  
 
 ### Table of Contents
 <div id="toc-marker"></div>
-
 * [Perform User Search](#perform-user-search)
 * [Add User Account](#add-user-account)
 * [Modify User Account](#modify-user-account)

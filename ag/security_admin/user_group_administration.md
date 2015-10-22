@@ -11,13 +11,12 @@ type: page
 nav-title: User Group Administration
 ---
 
-
 ## User Group Administration
 Learn how to administer Policy Manager group accounts including adding and modifying a new user group, managing groups, and managing roles and privileges for user groups. 
 
 Location: *Security > User Groups* section of the *Policy Manger Management Console*.
 
-<a href="security_toc.html" class="button secondary">Security (Home)</a>  <a href="../security/user_administration.html" class="button secondary">User Administration</a>  
+<a href="security_toc.html" class="button secondary">Security (Home)</a>  <a href="user_administration.html" class="button secondary">User Administration</a>  
 
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5> 
  
@@ -100,7 +99,7 @@ The *User Groups Summary* screen is displayed.
 ## Manage Users 
 
 1. Go to **Security > User Groups**.
-2. Peform a [User Group Search](#perform-user-group-search).
+2. Perform a [User Group Search](#perform-user-group-search).
 3. Select results of the search by clicking on them.
 4. Click **Manage Users**.  
 The *Manage Users* screen displays, where you can search for Policy Manager user accounts and then assign them to the selected user group(s).  5. Apply **filters** in the *Users Options* section to search for users to to add to the current user group.
@@ -108,7 +107,7 @@ The *Manage Users* screen displays, where you can search for Policy Manager user
   * **Search for Users** — Search for Users or User Groups by Attribute (Name or Full Name), Match Type (Exact or Contains), Value (Free form text), and Within (Select a Domain). 
 6. Click the check-box(es) next to any users you wish to add to the group.
 7. Use the **double arrow** buttons to add or remove users (pointing right and left respectively) from the *Users Assigned* [to the group] section.  
-**Note**: *In both the* Results *and* Assigned Users *screen areas, all options can be selected by clicking the* ***Full Name*** *checkbox.*
+**Note**: *In both the* Results *and* Assigned Users *screen areas, all options can be selected by clicking the* ***Full Name*** *check-box.*
 8. Click **Next** and **Finish** to confirm.
 9. Click **Apply**.  
 The *Manage users* screen closes.  

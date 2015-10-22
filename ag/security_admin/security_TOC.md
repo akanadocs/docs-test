@@ -17,21 +17,21 @@ Configure and maintain Policy Manager user accounts, user groups, and key assign
 
 <div class = "divider1"></div>
 
-### [About Security](../security/about_security.html)
+### [About Security](about_security.html)
 
 Provides an overview of security concepts.
 
 <div class = "divider1"></div>
 
-### [Policy Setup and Administration - Users](../security/user_administration.html)
+### [Policy Setup and Administration - Users](user_administration.html)
 
-View Users Summary, Perform User Serach, Add user accounts, modify user account information, including delete user account.
+Learn how to administer Policy Manager user accounts including performing a user search, adding and modifying a new user account, and deleting a user account.
 
 <div class = "divider1"></div>
 
-### [Policy Setup and Administration - User Groups](../security/user_group_administration.html)
+### [Policy Setup and Administration - User Groups](user_group_administration.html)
 
-Add user groups, modify user groups, manage users, and manage roles & privileges for user groups.
+Learn how to administer Policy Manager group accounts including adding and modifying a new user group, managing groups, and managing roles and privileges for user groups.
 
 <div class = "divider1"></div>
 
