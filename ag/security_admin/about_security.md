@@ -13,7 +13,8 @@ nav-title: About Security
 ## About Security
 Provides a description of Security concepts.
 
-<a href="security_toc.html" class="button secondary">Security (Home)</a> <a href="../security/user_administration.html" class="button secondary">User Administration</a>  <a href="../security/user_group_administration.html" class="button secondary">User Group Administration</a>  <a href="../security/security_reference.html" class="button secondary">Security Reference</a>
+<a href="security_toc.html" class="button secondary">Security (Home)</a> <a href="../security/user_administration.html" class="button secondary">User Administration</a>  <a href="../security/user_group_administration.html" class="button secondary">User Group Administration</a>  
+
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>  
 
 ### Table of Contents
@@ -23,13 +24,7 @@ Provides a description of Security concepts.
 * [User Group Administration](../security/user_group_administration.html)
 
 ## Introduction
-The Policy Manager security model provides identity management functionality to manage secure access to web services. Core functional elements include:
-
-* Authentication  
-* Authorization  
-* Message Integrity  
-* Message Confidentiality
-Policy Manager performs security administration including:
+Policy Manager performs security administration including:
 
 * User, role and privilege administration
 * Mapping authentication credentials for message processing
@@ -38,7 +33,6 @@ The Policy Manager security model provides identity management functionality to 
 ## [User Administration](../security/user_administration.html)
 
 View Users Summary, Perform User Search, Add User accounts, Modify User Account information, including Delete User Account.
-
 
 ## [User Group Administration](../security/user_group_administration.html)
 

@@ -7,7 +7,7 @@ category: learn
 no-nav: true
 no-catalog: true
 weight: 5
-sub-nav-class: Security
+sub-nav-class: Security Administration
 type: page
 nav-title: Policy Manager Security
 ---
@@ -35,12 +35,3 @@ Add user groups, modify user groups, manage users, and manage roles & privileges
 
 <div class = "divider1"></div>
 
-
-### [Security Reference](../security/security_reference.html)
-
-Incldes overviews of:
-
-* **Security Basic Concepts** such as Authentication, Authorization, Message Integrity & Confidentiality, and Auditing
-* **Keys and Certificates** including Certificate of Authority (CA), Trusted CA Certificates, Select Keys, and Policy Manager Key Generation
-* **Policy Setup and Administration**
-* **User Groups**
