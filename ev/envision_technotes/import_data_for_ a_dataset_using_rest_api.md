@@ -506,7 +506,7 @@ The following use case illustrates how import data into an existing Envision dat
 
 ![](images/import_dataset_usecase_5.jpg)
 
-### Use Case 2: Importing Data to Multiple Data Sets
+### Use Case 2: Import Data Into Multiple Data Sets
 
 This use case illustrates how you can import multiple data sets and multiple payloads into the same data set.
 
