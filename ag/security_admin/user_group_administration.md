@@ -27,19 +27,16 @@ Location: *Security > User Groups* section of the *Policy Manger Management Cons
 * [Delete User Group](#delete-user-group)
 * [Manage Users](#manage-users)
 
-
 ## Perform User Group Search
 
 Query Policy Manager to target user groups that require administration.
 
-1. Go to **Security > User Groups**  
+1. Go to **Security > User Groups**.  
 All user groups that are currently defined for the selected domain are displayed.   
-
 2. Apply filters:
   * **Filter by Group Name** — Filter search results based on the "Group Name."
   *  **Filter by Domain** — Use the drop-down list to filter search results by domain.
   *  **Match Type** — Use the drop-down list to apply a match type to search criteria entered in the "Name" field. Choose either "Contains" or "Exact Match."
-   
 3. Click **Filter**.
 
 <a href="#top">back to top</a>
@@ -63,8 +60,7 @@ The *Users Information* screen displays where you can apply **filters** in the *
   * **Add all users from Domain [x]** — Select a local or external domain from the drop-down list. All its users will be added to the User Group.
   * **Search for Users** — Search for Users or User Groups by Attribute (Name or Full Name), Match Type (Exact or Contains), Value (Free form text), and Within (Select a Domain).  
 3. Click the check-box(es) next to any users you wish to add to the group.
-4. Use the **double arrow** buttons to add or remove users (pointing right and left respectively) from the *Users Assigned* [to the group] section.  
-**Note**: *In both the* Results *and* Assigned Users *screen areas, all options can be selected by clicking the ***Full Name*** *check-box.*
+4. Use the **double arrow** buttons to add or remove users (pointing right and left respectively) from the *Users Assigned* [to the group] section.  **Note**: *In both the* Results *and* Assigned Users *screen areas, all options can be selected by clicking the ***Full Name*** *check-box.*
 5. Click **Next**.  
 The *Confirmation* screen is displayed, providing a summary of the user group configuration.
 6. Review all information to ensure that your user group definition includes the desired configuration elements.
@@ -74,9 +70,9 @@ The *Confirmation* screen is displayed, providing a summary of the user group co
 
 ## Modify User Group
 
-1. Go to **Security > User Groups**  
+1. Go to **Security > User Groups**.  
 The *User Groups Summary* screen displays. 
-2. Click **Modify User Group**  
+2. Click **Modify User Group**.  
 The *Modify User* screen displays.
 3. (Optional) Enter a new name for the Group.
 4. (Optional) Enter a new description for the Group.
@@ -90,7 +86,7 @@ You are returned to the *User Group Summary* screen.
 1. Go to **Security > User Groups**.  
 The *User Groups Summary* screen is displayed.
 2. Select a User Group by clicking on its row in the displayed list.
-3. Click **Delete User**    
+3. Click **Delete User**.    
 4. Click **OK** to confirm or Cancel to exit the operation. 
 
 <a href="#top">back to top</a>
@@ -105,8 +101,9 @@ The *Manage Users* screen displays, where you can search for Policy Manager user
   * **Add all users from Domain [x]** — Select a local or external domain from the drop-down list. All its users will be added to the User Group.  Users matching your selections are displayed in the *Results* section of the screen.
   * **Search for Users** — Search for Users or User Groups by Attribute (Name or Full Name), Match Type (Exact or Contains), Value (Free form text), and Within (Select a Domain). 
 6. Click the check-box(es) next to any users you wish to add to the group.
-7. Use the **double arrow** buttons to add or remove users (pointing right and left respectively) from the *Users Assigned* [to the group] section.  
-**Note**: *In both the* Results *and* Assigned Users *screen areas, all options can be selected by clicking the* ***Full Name*** *check-box.*
+7. Use the **double arrow** buttons to add or remove users (pointing right and left respectively) from the *Users Assigned* [to the group] section.  **Note**: *In both the* Results *and* Assigned Users *screen areas, all options can be selected by clicking the* ***Full Name*** *check-box.*
 8. Click **Next** and **Finish** to confirm.
 9. Click **Apply**.  
 The *Manage users* screen closes.  
+
+<a href="#top">back to top</a>

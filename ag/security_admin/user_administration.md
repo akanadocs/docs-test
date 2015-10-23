@@ -126,7 +126,7 @@ The *Modify User* screen displays.
 The generated password (i.e., key) will display in a *Modify User* window after you complete the user account update process and click **Apply**.
 3. Check **Force password change on next login** - Optional. 
 
-###Expire User
+### Expire User
 
 Specify an expiration date for the user account.
 

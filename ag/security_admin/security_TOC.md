@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Policy Manager User and User Group Administration
+title: Policy Manager User and User Group Account Administration
 description: Learn how to configure and maintain Policy Manager user accounts, user groups, and key assignments.
 product: ag
 category: learn
@@ -14,9 +14,7 @@ nav-title: Policy Manager User and User Group Account Administration
 
 ## Policy Manager User and User Group Account Administration
 
-Policy Manager provides a SAML-compliant security store for defining and maintaining security policy definitions. A central security policy engine and ACL repository is used by all Policy Manager subsystems for storing and maintaining account definitions. The policy administration process includes management of Policy Manager users and service operations.
-
-The following topics describe the first phase of the policy management process—policy setup and administration. This process includes defining user profile information, user groups, and keys. The following key activities can be performed:
+Policy Manager provides a SAML-compliant security store for defining and maintaining security policy definitions. A central security policy engine and ACL repository is used by all Policy Manager subsystems for storing and maintaining account definitions. The following topics describe the user and user group account administration process. 
 
 ### [User Administration](user_administration.html)
 
