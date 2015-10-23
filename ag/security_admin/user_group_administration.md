@@ -16,7 +16,7 @@ Learn how to administer Policy Manager group accounts including adding and modif
 
 Location: *Security > User Groups* section of the *Policy Manger Management Console*.
 
-<a href="../security_admin/security_toc.html" class="button secondary">Security (Home)</a> <a href="user_administration.html" class="button secondary">User Administration</a>  
+<a href="security_toc.html" class="button secondary">Security (Home)</a> <a href="user_administration.html" class="button secondary">User Administration</a>  
 
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5> 
  
