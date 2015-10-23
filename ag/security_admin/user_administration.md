@@ -34,9 +34,9 @@ Query Policy Manager to target user accounts that require administration.
 1. Go to **Security > Users**  
 All users that are currently defined for the selected domain are displayed.  
 2. Apply filters:
-  * **Filter by Name** — Filter search results by "Username" or "Full Name."
-  * **Filter by Domain** — Use the drop-down list to filter search results by domain.
-  * **Match Type** — Use the drop-down list to apply a match type to search criteria entered in the "Name" field. Choose either "Contains" or "Exact Match."
+  * **Filter by Name** - Filter search results by "Username" or "Full Name."
+  * **Filter by Domain** - Use the drop-down list to filter search results by domain.
+  * **Match Type** - Use the drop-down list to apply a match type to search criteria entered in the "Name" field. Choose either "Contains" or "Exact Match."
 3. Click **Filter**.
 
 <a href="#top">back to top</a>
@@ -52,12 +52,12 @@ The *Define User Information* screen displays.
 ### Define User Information
 
 1. Enter account information into the *Details* section:
-  * **Username** — Required.  Up to 64 characters in length. Can be an abbreviation, nickname, etc.  * **Full Name** — Required.
-  * **Time Zone** — Use the drop-down list to select the "Time Zone" for the current user. Defaults to the system time zone unless modified.
-  * **First Name** — Optional.
-  * **Last** -  Optional.
-  * **Email** — Enter the user's email address. Required if you are using Policy Manager email notification features.   
-  * **Disabled** — Check to disable a user account. The default state of a new user account is "active." 
+  * **Username** - Required.  Up to 64 characters in length. Can be an abbreviation, nickname, etc.  * **Full Name** - Required.
+  * **Time Zone** - Use the drop-down list to select the "Time Zone" for the current user. Defaults to the system time zone unless modified.
+  * **First Name** - Optional.
+  * **Last** - Optional.
+  * **Email** - Enter the user's email address. Required if you are using Policy Manager email notification features.   
+  * **Disabled** - Check to disable a user account. The default state of a new user account is "active." 
 2. Generate a password (manually enter or auto-generate a random password):
   * Use Cases for "Manual Entry" Password Generation:  
       * **Administrator creating a user account for an end user** - The end user can be a user accessing web services managed by Policy Manager or a user who needs to access the Policy Manager user interface.
@@ -77,16 +77,15 @@ A Calendar pop-up displays.
 
 ### View Completion Summary
 
-1. Click **Next**  
+1. Click **Next**.  
 The **Completing the Add User Wizard** screen displays, providing a summary of the user account configuration.
 2. Review your user account definition.
-3. (Optional) You can update user account settings by selecting a maintenance option on the *Users Summary* screen that pertains to the account update activity you would like to perform.
 
 <a href="#top">back to top</a>
 
 ## Modify User Account
 
-The "Modify User" screen presents all of the user account information in a consolidated view. You can change all of the user account configuration settings with the exception of the username. You can update:  
+The "Modify User" screen presents user account information in a consolidated view. You can change all of the user account configuration settings with the exception of username. You can update:  
 
 * Account details
 * Password
@@ -96,9 +95,9 @@ The "Modify User" screen presents all of the user account information in a conso
 
 **Note**: *The values for Password, Password Confirm, Pin Number, and Pin Number Confirm are truncated to four characters for security purposes.* 
 
-After you have completed configuring the User Information, click **Apply** to be returned to the *Users Summary* screen.
+After you have completed configuring the *User Information*, click **Apply**. 
 
-If you do not edit these fields, the initial values are maintained.If you change the password generation method to "Auto Generated" and click the **View the generated password** check-box. After you apply your changes the *Modify User* screen displays with the new password.
+If you do not edit these fields, the initial values are maintained.If you change the password generation method to "Auto Generated" and click the **View the generated password** check-box, the auto-generated password displays on the *Modify User* screen after you apply your changes.
 
 1. Go to **Security > Users**.
 2. Click **Modify User**. 
@@ -106,12 +105,12 @@ The *Modify User* screen displays.
 
 ### Details
 
-* **Username** — Non-editable.  Shows the username defined in the initial "Add User" process.
+* **Username** - Non-editable.  Shows the username defined in the initial "Add User" process.
 * **Full Name** - Required.
-* **First Name** — Optional.
-* **Last Name** — Optional.
+* **First Name** - Optional.
+* **Last Name** - Optional.
 * **Email** —  **Note**: *Required if you are using Policy Manager email notification features.*
-* **Disable** — Update the default state. 
+* **Disable** - Update the default state. 
     * Uncheck **Disabled** to activate the account. 
     * Check **Disabled** to deactivate the account.
 
@@ -162,9 +161,6 @@ A Calendar pop-up displays.
 2. Select a custom user account.  
 **Note**: a custom user account does not display a check-box in the Read-Only column.
 3. Click **Delete User**.
-The following message displays "Are you sure you want to delete "user account name." 
-4. Click **OK**.
-The system permanently removes the user account definition from the system.
-5. (Optional) To cancel the delete operation, click **Cancel**.
+4. Click **OK** to confirm or **Cancel** to exit the operation.
 
 <a href="#top">back to top</a>

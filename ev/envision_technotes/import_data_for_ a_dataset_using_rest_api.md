@@ -1,13 +1,13 @@
 ---
 layout: page
-title: Envision Use Case - How Do I Import Data Into An Envision Data Set Using A REST API?
-description: Learn how to import data into an existing Envision data set using a REST API.
+title: How Do I Import Data Into An Envision Data Set Using A REST API?
+description: Learn how to import data into an existing or multiple Envision data sets using a REST API.
 product: ev
 category: learn
 sub-nav-class: Technical Notes
 weight:	5
 type: page
-nav-title: Envision Use Case - How Do I Import Data Into An Envision Data Set Using A REST API? 
+nav-title: How Do I Import Data Into An Envision Data Set Using A REST API?
 ---
 
 ## How Do I Import Data Into An Envision Data Set Using A REST API?
@@ -43,7 +43,7 @@ The following use case illustrates how import data into an existing Envision dat
 
 	![](images/import_dataset_usecase_3.jpg)
 
-2. Data set configuration.
+2. The Data Set configuration looks like: 
 
 	```
 	{
@@ -401,13 +401,14 @@ The following use case illustrates how import data into an existing Envision dat
 #### Hit the REST API
 
 1. To insert data into this data set, send a request to the operation listed below with cookie for authentication. The cookie can be obtained from the Login API.  
+
 	```
 	    POST /collector/save/{name}
 	    URL: http://localhost:9800/api/analytics/metrics/collector/save/{name}
 	    name = A (dataset name)
 ```
 
-2. Request Payload
+2. The Request Payload looks like:
 
 	```
 	    {
@@ -514,10 +515,11 @@ This use case illustrates how you can import multiple data sets and multiple pay
 
 	URL: http://localhost:9800/api/analytics/metrics/collector/saveall
 	
-	Request payload looks like: 
+	The Request Payload looks like: 
 	
 	```
-	{“DataSetName”:[{payload},{payload}],“DataSetName”:[{payload},{payload}],“DataSetName”:[{payload},{payload}]}… 
+	{“DataSetName”:[{payload},{payload}],“DataSetName”:[{payload},
+	{payload}],“DataSetName”:[{payload},{payload}]}… 
 	```
 
 <a href="#top">back to top</a> 
