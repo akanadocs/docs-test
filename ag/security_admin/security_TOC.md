@@ -6,7 +6,7 @@ product: ag
 category: learn
 no-nav: true
 no-catalog: true
-weight: 5
+weight: 4
 sub-nav-class: Security Administration
 type: page
 nav-title: Policy Manager User and User Group Account Administration

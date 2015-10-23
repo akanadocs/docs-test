@@ -2,11 +2,10 @@
 layout: page
 title: User Group Administration
 description: Learn how to administer Policy Manager group accounts including adding and modifying a new user group, managing groups, and managing roles and privileges for user groups. 
-
 product: ag
 category: learn
 sub-nav-class: Security Administration
-weight:	6
+weight:	7
 type: page
 nav-title: User Group Administration
 ---
