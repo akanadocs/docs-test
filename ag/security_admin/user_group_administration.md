@@ -32,6 +32,8 @@ Location: *Security > User Groups* section of the *Policy Manger Management Cons
 
 Query Policy Manager to target user groups that require administration.
 
+*Note: The security administration search options are case sensitive. When performing security administration and initiating a search using any of the security search options, search criteria must match the casing conventions used for each security option (e.g., users, user groups etc.).*
+
 1. Go to **Security > User Groups**.  
 All user groups that are currently defined for the selected domain are displayed.   
 2. Apply filters:
