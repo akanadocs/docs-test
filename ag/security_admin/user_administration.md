@@ -16,7 +16,7 @@ Learn how to administer Policy Manager user accounts including performing a user
 
 Location: *Security > Users* section of the *Policy Manager Management Console*.
 
-<a href="security_toc.html" class="button secondary">Security (Home)</a>  <a href="user_group_administration.html" class="button secondary">User Group Administration</a>  
+<a href="security_admin_toc.html" class="button secondary">Security (Home)</a>  <a href="user_group_administration.html" class="button secondary">User Group Administration</a>  
 
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>  
 
