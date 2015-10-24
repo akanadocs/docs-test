@@ -14,7 +14,11 @@ nav-title: Policy Manager User and User Group Account Administration
 
 ## Policy Manager User and User Group Account Administration
 
-Policy Manager provides a SAML-compliant security store for defining and maintaining security policy definitions. A central security policy engine and ACL repository is used by all Policy Manager subsystems for storing and maintaining account definitions. The following topics describe the user and user group account administration process. 
+The *Security* section on the *Policy Manager Management Console* provides administrators and key personnel responsible for web service management with tools for configuring and maintaining Policy Manager user accounts, user groups, and key assignments. A central security policy engine and ACL repository is used by all Policy Manager subsystems for storing and maintaining account definitions. 
+
+The *Security* tab on the main navigation is the starting point for beginning security administration activities. 
+
+The following topics describe the user and user group account administration process. 
 
 ### [User Administration](user_administration.html)
 
