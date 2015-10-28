@@ -109,11 +109,11 @@ You can optionally define variables to identify what to extract from the payload
 	*  **Name (drop-down)** - Select area of header to extract from. Only visible if the Source is Header.
 	* **Test Message** -  Specify the test message to be used for testing expressions in the text box. Test messages are optional.
 * **Derive** – Radio button that displays the Derivation Instructions for the highlighted row in the Variables table. Options include Constant, Simple Expression, Spring Expression, and Operational Dimension. 
-	* **Derivation** – For Constant, Simple Expression, or Spring Expression options, enter a definition in the text fox. For Operational Metric or Operational Dimension select a metric or dimension from the drop-down.
+	* **Derivation** – For Constant, Simple Expression, or Spring Expression options, enter a definition in the text box. For Operational Metric or Operational Dimension select a metric or dimension from the drop-down.
 	* Use the **Test** button to perform the expression in the Derivation Text Box against the sample message identified by the Source Pull Down. 
 	* The results will display in the text box. 
 * **Apply** – Button that applies the values in the Extraction or Derivation Instructions to the selected row in the Variables table. 
-* **Clear** - 
+* **Clear** - Clears the contents of the selected table row. 
 
 <a href="#top">back to top</a>
 
@@ -133,15 +133,17 @@ A dimension is an organization property of a transaction. Merchant or style is a
 	* **Type** – Dimension type. Possible types include Currency, Number, Location, Text, Date, and Multi-Valued.
 * **Path** - Specify the method used to identify the location of the structure using XPath, JsonPath, or RegEx path languages. 
 * **Extract** – Radio button displays the Extraction Instructions for the highlighted row in the Dimensions table. 
-	* **Source** – Drop down for selecting the Request Header, Response Payload, Response Header, Fault Payload, Fault Header, Form Param, Path Param, and Query Param.
+	* **Source** – Drop-down for identifying if the dimension will be extracted from the Request Header, Response Payload, Response Header, Fault Payload, Fault Header, Form Param, Path Param, or Query Param portion of the message. 
+	* **Name (text box)** - Enter query or path parameter name to extract from. Only visible if the Source is Query Param, Form Param, or Path Param.
+	*  **Name (drop-down)** - Select area of header to extract from. Only visible if the Source is Header.
 	* **Multi-Valued** – Check-box enables the Multi-Valued Aggregation Pull. Options include Number of Records, Get First, and Get Last.
-	* **Path** - Specify the method used to identify the location of the structure using XPath, JsonPath, or RegEx path languages. 
+	* **Test Message** -  Specify the test message to be used for testing expressions in the text box. Test messages are optional.
 * **Derive** – Radio button that displays the Derivation Instructions for the highlighted row in the Dimensions table. Options include Constant, Simple Expression, Spring Expression, and Operational Dimension. 
-	* **Derivation** – Text box for entering a constant’s definition or an expression depending on the radio button selected. 
+	* **Derivation** – For Constant, Simple Expression, or Spring Expression options, enter a definition in the text box. For Operational Metric or Operational Dimension select a metric or dimension from the drop-down. 
 	* Use the **Test** button to perform the expression in the Derivation Text Box against the sample message identified by the Source Pull Down. 
 	* The results will display in the text box. 
-* **Test Message** -  Specify the test message to be used for testing expressions in the text box. Test messages are optional.
 * **Apply** – Button that applies the values in the Extraction or Derivation Instructions to the selected row in the Dimensions table. 
+* **Clear** - Clears the contents of the selected table row. 
 
 <a href="#top">back to top</a>
 
@@ -155,20 +157,23 @@ Metrics represent numeric values such as a price or quantity. The Metrics sectio
 
 The Metrics section displays the following read-only metrics information of the selected data set:
 
-* **Name** - Metric name. 
-* **Description** - Metric description. 
-* **Type** - Metric type. Possible types include Currency, Number, Location, Text, Date, and Multi-Valued.
-* **Source** - Drop-down for identifying if the metric will be extracted from the Request Header, Response Payload, Response Header, Fault Payload, Fault Header, Form Param, Path Param, or Query Param portion of the message. 
-* **Extract** – Radio button displays the Extraction Instructions for the highlighted row in the Metrics table. 
-	* **Source** – Drop down for selecting the Request Header, Response Payload, Response Header, Fault Payload, Fault Header, Form Param, Path Param, and Query Param.
+* **Metrics Table** – Table that holds the metrics collected. The cells of the table are not editable. They are filled when the page is displayed based on the data set selected on the Select Data Set page. 
+	* **Name** - Metric name. 
+	* **Description** - Metric description. 
+	* **Type** - Metric type. Possible types include Currency, Number, Location, Text, Date, and Multi-Valued.
+***Extract** – Radio button displays the Extraction Instructions for the highlighted row in the Metrics table. 
+	* **Source** – Drop-down for identifying if the metric will be extracted from the Request Header, Response Payload, Response Header, Fault Payload, Fault Header, Form Param, Path Param, or Query Param portion of the message.
+	* **Name (text box)** - Enter query or path parameter name to extract from. Only visible if the Source is Query Param, Form Param, or Path Param.
+	*  **Name (drop-down)** - Select area of header to extract from. Only visible if the Source is Header.
 	* **Multi-Valued** – Check-box enables the Multi-Valued Aggregation Pull. Options include Number of Records, Get First, Get Last, Get Maximum, Get Minimum, Add All
 	* **Path** - Specify the method used to identify the location of the structure using XPath, JsonPath, or RegEx path languages. 
+	* **Test Message** -  Specify the test message to be used for testing expressions in the text box. Test messages are optional.
 * **Derive** – Radio button that displays the Derivation Instructions for the highlighted row in the Metrics table. Options include Constant, Simple Expression, Spring Expression, and Operational Metric. 
-	* **Derivation** – Text box for entering a constant’s definition or an expression depending on the radio button selected. 
+	* **Derivation** – For Constant, Simple Expression, or Spring Expression options, enter a definition in the text box. For Operational Metric or Operational Dimension select a metric or dimension from the drop-down. 
 	* Use the **Test** button to perform the expression in the Derivation Text Box against the sample message identified by the Source Pull Down. 
 	* The results will display in the text box. 
-* **Test Message** - Specify the test message to be used for testing expressions in the text box. Test messages are optional.
 * **Apply** – Button that applies the values in the Extraction or Derivation Instructions to the selected row in the Dimensions table. 
+* **Clear** - Clears the contents of the selected table row. 
 
 <a href="#top">back to top</a>
 
