@@ -103,8 +103,8 @@ You can optionally define variables to identify what to extract from the payload
 * **Delete** – Deletes the selected row. Any variable, dimension, or metric definitions that reference the deleted variable will be deleted.
 * **Extract** – Radio button displays the Extraction Instructions for the highlighted row in the Variables table. 
 	* **Source** – Drop down for selecting the Request Header, Response Payload, Response Header, Fault Payload, Fault Header, Form Param, Path Param, and Query Param.
-	* **Multi-Valued** – Check-box enables the Multi-Valued Aggregation Pull. Options include Number of Records, Get First, and Get Last.
 	* **Path** - Specify the method used to identify the location of the structure using XPath, JsonPath, or RegEx path languages. 
+	* **Multi-Valued** – Check-box enables the Multi-Valued Aggregation Pull. Options include Number of Records, Get First, and Get Last.
 	* **Name (text box)** - Enter query or path parameter name to extract from. Only visible if the Source is Query Param, Form Param, or Path Param.
 	*  **Name (drop-down)** - Select area of header to extract from. Only visible if the Source is Header.
 	* **Test Message** -  Specify the test message to be used for testing expressions in the text box. Test messages are optional.
@@ -131,11 +131,11 @@ A dimension is an organization property of a transaction. Merchant or style is a
 	* **Name** – Dimension name.
 	* **Description** – Dimension description. This field is optional. 
 	* **Type** – Dimension type. Possible types include Currency, Number, Location, Text, Date, and Multi-Valued.
-* **Path** - Specify the method used to identify the location of the structure using XPath, JsonPath, or RegEx path languages. 
 * **Extract** – Radio button displays the Extraction Instructions for the highlighted row in the Dimensions table. 
 	* **Source** – Drop-down for identifying if the dimension will be extracted from the Request Header, Response Payload, Response Header, Fault Payload, Fault Header, Form Param, Path Param, or Query Param portion of the message. 
 	* **Name (text box)** - Enter query or path parameter name to extract from. Only visible if the Source is Query Param, Form Param, or Path Param.
-	*  **Name (drop-down)** - Select area of header to extract from. Only visible if the Source is Header.
+	* **Name (drop-down)** - Select area of header to extract from. Only visible if the Source is Header.
+	* **Path** - Specify the method used to identify the location of the structure using XPath, JsonPath, or RegEx path languages. 
 	* **Multi-Valued** – Check-box enables the Multi-Valued Aggregation Pull. Options include Number of Records, Get First, and Get Last.
 	* **Test Message** -  Specify the test message to be used for testing expressions in the text box. Test messages are optional.
 * **Derive** – Radio button that displays the Derivation Instructions for the highlighted row in the Dimensions table. Options include Constant, Simple Expression, Spring Expression, and Operational Dimension. 
@@ -212,7 +212,10 @@ After you select the Derive radio button, the following expression types can be 
 
 	![Spring Expression Example](images/bus_metrics_spring_expression_example.jpg "Spring Expression Example")
 
-* **Operational Dimension** – Allows you to select a Dimension from the selected data set from a drop-down menu.  
+* **Operational Dimension** – Allows you to define the derive instructions for the selected Dimension by selecting a property of the data set from a drop-down menu.  
+
+	![Operational Dimension Example](images/bus_metrics_bus_metrics_pol_op_dimension.jpg "Operational Dimension Example")
+
 
 <a href="#top">back to top</a>
 
