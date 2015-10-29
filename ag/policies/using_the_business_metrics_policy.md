@@ -214,7 +214,7 @@ After you select the Derive radio button, the following expression types can be 
 
 * **Operational Dimension** – Allows you to define the derive instructions for the selected Dimension by selecting a property of the data set from a drop-down menu.  
 
-	![Operational Dimension Example](images/bus_metrics_bus_metrics_pol_op_dimension.jpg "Operational Dimension Example")
+	![Operational Dimension Example](images/bus_metrics_pol_op_dimension.jpg "Operational Dimension Example")
 
 
 <a href="#top">back to top</a>
