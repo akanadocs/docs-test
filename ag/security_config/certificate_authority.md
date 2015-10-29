@@ -43,11 +43,11 @@ Only one Certificate Authority can be configured. A Certificate Authority can be
 ## View Certificate Authority Summary
 
 1. Go to **Configure > Security > Certificates > Certificate Authority**.  
-The *Certificate Authority Summary* Screen is displayed showing details of the Certificate Authority configuration and presents a list of certificate management options.  
-**Note**: *If a Certificate Authority has not yet been defined, the "Certificate authority is not configured" message is displayed.  Begin the configuration process by clicking [Configure Certificate Authority](#configure-certificate-authority) button.*   <br><br>
+The *Certificate Authority Summary* screen displays and shows details of the Certificate Authority configuration and a list of certificate management options.  
+**Note**: *If a Certificate Authority has not yet been defined, the "Certificate authority is not configured" message is displays. Click **Configure Certificate Authority** to begin the configuration process.*   <br><br>
 2. Review CA details:  
   * **Public Key** - The name of the public key associated with the CA Certificate.
-  * **Subject DN** - The Subject Distinguished Name (DN) assigned to the CA Certificate. Included here is key identifier information including, but not limited to certificate name, organization & organization unit, and geographical identifiers (e.g., country, state, province), etc.
+  * **Subject DN** - The Subject Distinguished Name (DN) assigned to the CA Certificate including but not limited to certificate name, organization, organization unit, and geographical identifiers (e.g., country, state, province), etc.
   * **Issuer DN** - An Issuer Distinguished Name (DN) assigned to the CA Certificate. Includes key identifier information including geographical identifiers (e.g., country, state, province), organization and organizational unit, etc.
   * **Serial Number** - Serial number assigned to the CA Certificate.
   * **Effective Date** - The date the CA Certificate was issued.
