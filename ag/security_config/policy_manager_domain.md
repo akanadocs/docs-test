@@ -7,13 +7,13 @@ category: learn
 sub-nav-class: Security Configuration
 weight:	6
 type: page
-nav-title: View and Modify Policy Manager Domain Name and Description
+nav-title: Policy Manager Domain
 ---
 
-## View and Modify Policy Manager Domain Name and Description
+## Policy Manager Domain
 Learn how the Policy Manager Domain Name and Description are generated during the initial Policy Manager configuration process and how to modify these details.
 
-<a href="../security_config/security_configuration_toc.html" class="button secondary">Security Configuration (Home)</a> <a href="../security_config/certificate_authority.html" class="button secondary">Certificate Authority (CA)</a> <a href="../security_config/trusted_ca_certificates.html" class="button secondary">Trusted CA Certificates</a> <a href="../security_config/user_certificate_renewal.html" class="button secondary">User Certificate Renewal</a> <br> <br> <a href="../security_config/managing_identity_systems.html" class="button secondary">Managing Identity Systems</a> <a href="../security_config/identity_profiles.html" class="button secondary">Identity Profiles</a> <a href="../security_config/privacy.html" class="button secondary">Privacy</a>
+<a href="../security_config/security_configuration_toc.html" class="button secondary">Security Configuration (Home)</a> <a href="../security_config/certificate_authority.html" class="button secondary">Certificate Authority (CA)</a> <a href="../security_config/trusted_ca_certificates.html" class="button secondary">Trusted CA Certificates</a> <a href="../security_config/user_certificate_renewal.html" class="button secondary">User Certificate Renewal</a> <br> <br> <a href="../security_config/identity_systems.html" class="button secondary">Identity Systems</a> <a href="../security_config/identity_profiles.html" class="button secondary">Identity Profiles</a> <a href="../security_config/privacy.html" class="button secondary">Privacy</a>
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
 ### Table of Contents
 <div id="toc-marker"></div>
