@@ -15,6 +15,7 @@ Learn how to view, configure and manage the Certificate Authority (CA).
 
 <a href="../security_config/security_configuration_toc.html" class="button secondary">Security Configuration (Home)</a> <a href="../security_config/policy_manager_domain.html" class="button secondary">Policy Manager Domain </a> <a href="../security_config/trusted_ca_certificates.html" class="button secondary">Trusted CA Certificates</a> <br><br> <a href="../security_config/user_certificate_renewal.html" class="button secondary">User Certificate Renewal</a> <a href="../security_config/identity_systems.html" class="button secondary">Identity Systems</a> <a href="../security_config/identity_profiles.html" class="button secondary">Identity Profiles</a> <a href="../security_config/privacy.html" class="button secondary">Privacy</a>
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
+
 ### Table of Contents
 <div id="toc-marker"></div>
 * [About Certificate Authority](#about-certificate-authority)
@@ -31,6 +32,7 @@ Learn how to view, configure and manage the Certificate Authority (CA).
 
 
 ## About Certificate Authority
+
 A Certificate Authority (CA) is the Policy Manager CA Provider. The CA issues certificates and guarantees the validity of the binding between the certificate owner and its public key. The CA is a trusted authority, and any certificate issued by the CA identifies the owner of the certificate. Therefore the private key that corresponds to the public key in the certificate is deemed to be known only by the specific owner.
 
 Only one Certificate Authority can be configured. A Certificate Authority can be regenerated, renewed, deleted, or exported. When the Certificate Authority is generated, a serial number and Issuer DN is assigned. The Issuer DN will be the same as the Subject DN.
@@ -57,7 +59,8 @@ The *Certificate Authority Summary* screen displays and shows details of the Cer
 <a href="#top">back to top</a> 
 
 ## Configure Certificate Authority
-**Note**: *After the Certificate Authority is defined, you can generate PKI Keys and Certificates using the* Manage PKI Keys Wizard *for Users, Containers, Service Identities, and Users.  
+
+**Note**: *After the Certificate Authority is defined, you can generate PKI Keys and Certificates using the *Manage PKI Keys Wizard* for Users, Containers, Service Identities, and Users.  
 The following "Generate" options will be available after configuring the Certificate Authority:*
 
 Manage PKI Keys Generate Options| Available In
@@ -69,10 +72,10 @@ Generate Certificate Signing Request (CSR)  | User, Services
 
 ### Generate X.509 CA Certificate and PKI Keys
 
-The *Generate CA Certificate and X.509 Certificate* Screen allows you to generate PKI Keys and an X.509 certificate. PKI Keys guarantee message integrity by signing the message with a private key and verifying the message with a public key. An X.509 certificate is an authentication mechanism that provides visibility to public information and verifies private information while keeping it secure. Credential Information is embedded in the body of a SOAP Message, or can be obtained from the HTTPS Context.
+The *Generate CA Certificate and X.509 Certificate* screen allows you to generate PKI Keys and an X.509 certificate. PKI Keys guarantee message integrity by signing the message with a private key and verifying the message with a public key. An X.509 certificate is an authentication mechanism that provides visibility to public information and verifies private information while keeping it secure. Credential Information is embedded in the body of a SOAP Message, or can be obtained from the HTTPS Context.
 
 1. Go to **Configure > Security > Certificates > Certificate Authority**.  
-The *Certificate Authority Summary* screen displays. If a Certificate Authority has not yet been defined, the "Certificate authority is not configured" message is displayed.
+The *Certificate Authority Summary* screen displays. If a Certificate Authority has not yet been defined, the "Certificate authority is not configured" message displays.
 2. Click **Configure Certificate Authority**.  
 The *Configure Certificate Authority Wizard* launches and displays the *Select Certificate Configuration Option* screen. 
 3. Click the **Generate X.509 CA Certificate and PKI Keys** radio button, and **Next** to continue.  
@@ -97,6 +100,7 @@ The *Generate CA Certificate and PKI Keys* screen displays.
 The *Certificate Authority Summary* screen displays showing configuration details.
 
 ### Import X.509 CA Certificate and Private Key
+
 Import keys and a certificate that have been issued by a third party Certificate Authority. The import function supports .CER and .DER file formats.
 
 1. Go to **Configure > Security > Certificates > Certificate Authority**.  
@@ -118,7 +122,9 @@ The *Certificate Authority Summary* screen displays showing details of the Certi
 <a href="#top">back to top</a> 
 
 ## Manage CDP Options
+
 ###About Managing CDP Options
+
 The **Manage CDP Options** function allows you to modify the Policy Manager Certificate Authority (CA) configuration to include the CRL Distribution Point (CDP), and specify a CRL Distribution Point URL.
  
 Here's how it works:
@@ -135,13 +141,14 @@ Here's how it works:
 * *If the Policy Manager Certificate Authority (CA) is deleted using the [Delete CA Certificate](#delete-ca-certificate) function, the CDP Options are also deleted. If you use the [Renew CA Certificate](#renew-ca-certificate) function, CDP Options that are configured will be retained.*
 
 ### Scenarios
+
 ***Policy Manager and certificates in same subnet:***  
 
 When the Policy Manager installation and certificates generated by Policy Manager are in the same subnet, use the **Modify CDP Options** function with no additional steps. 
 
 ***Policy Manager and certificates in different subnet:***  
 
-Access to a Policy Manager installation is restricted for a specific subnet.  However, certificates generated by Policy Manager may be distributed to customers outside of that subnet.  In this case: 
+Access to a Policy Manager installation is restricted for a specific subnet.  However, certificates generated by Policy Manager may be distributed to customers outside of that subnet. In this case: 
 
 * The certificates may include a URL to the Certificate Revocation List. This URL is called a CDP. 
 * The Policy Manager "CRL Distribution Point Service" must point to this URL. However, because you are trying to access a "CRL Distribution Point Service" that may be in a different subnet, you cannot use it directly.
@@ -149,6 +156,7 @@ Access to a Policy Manager installation is restricted for a specific subnet.  Ho
 To resolve this access problem, you can set up a proxy server that publishes a URL that users can reach. This URL is then routed to the Policy Manager "CRL Distribution Point Service" URL by specifying the URL on the *Manage CDP Options* page.
 
 ### To Manage CDP Options
+
 Enable the Policy Manager Certificate Authority with Certification Revocation List functionality.
 
 1. Go to **Configure > Security > Certificates > Certificate Authority**.  
@@ -163,11 +171,13 @@ Your configuration changes appear in the "Certificate Distribution Point Options
 <a href="#top">back to top</a> 
 
 ## Regenerate CA Certificate
+
 This function regenerates a "Policy Manager CA Provider" which is a simplified version of Certificate Authority that can issue and renew X.509 certificates.  
+
 Two regeneration options are available:
 
 * Delete the CA Certificate from the Policy Manager data repository
-* Move the CA Certificate to the Trusted CA Certificates section
+* Move the CA Certificate to the *Trusted CA Certificates* section
 
 1. Go to **Configure > Security > Certificates > Certificate Authority**.  
 The *Certificate Authority Summary* screen displays.
@@ -205,6 +215,7 @@ All new certificates will be issued with the newly created Certificate Authority
 <a href="#top">back to top</a> 
 
 ## Renew CA Certificate
+
 Change the expiration date and time for both generated and imported certificates.   
 **Note**: *When a CA Certificate is renewed, the private key is retained and the existing certificate is replaced with a new self-generated one.*
 
@@ -217,15 +228,16 @@ The *Renew CA Certificate* screen displays, including the currently defined expi
  * **Expiration Date** - Click on this blank field to launch a calendar pop-up that allows you select the expiration date for the Certificate Authority.
   * **Expiration Time** - Using 24-hour clock time (e.g. 13:00), specify the Hour and Minute the Certificate Authority will expire on the date selected in the step above.
 8. Click **Apply**.  
-The *Certificate Authority Summary* Screen is displayed showing your newly entered expiration date and time.
+The *Certificate Authority Summary* screen displays showing your newly entered expiration date and time.
 
 <a href="#top">back to top</a> 
 
 ## Import CA Certificate
+
 Replace the existing CA Certificate with an externally imported one, while retaining the current private keys.
 
 1. Go to **Configure > Security > Certificates > Certificate Authority**.  
-The *Certificate Authority Summary* Screen is displayed.  
+The *Certificate Authority Summary* screen displays.  
 **Note**: *To renew a CA Certificate, an existing CA Certificate must already be defined.*
 2. Click **Import CA Certificate**.  
 The *Import CA Certificate* screen displays.
@@ -237,9 +249,11 @@ The CA Certificate will be imported and the certificate details will be displaye
 <a href="#top">back to top</a> 
 
 ## Generate CA CSR
+
 Generate a "Certificate Signing Request" (CSR) for the Policy Manager CA. 
 
 ###About Certificate Signing Requests
+
 A "Certificate Signing Request" (CSR) is a file that includes encoded information generated by a web server identifying the applicant and the public key chosen by the applicant. Before creating a CSR, the applicant first generates a key pair, keeping the private key secret. The corresponding private key is not included in the CSR, but is used to digitally sign the entire request.
 
 A CSR file typically has a .CSR extension but can have other extensions based on the source application that generated the file. Policy Manager supports the PEM (which is a BASE64 encoded PKCS10) for Certificate Signing Requests.
@@ -265,26 +279,18 @@ The Certificate Signing Request is generated and you are returned to the *Certif
 <a href="#top">back to top</a> 
 
 ## Export CA Certificate
+
 Save the CA Certificate to a file to be used by other software applications.
 
 1. Go to **Configure > Security > Certificates > Certificate Authority**.  
 The *Certificate Authority Summary* screen displays.  
 2. Click **Export CA Certificate**.  
-A *File Download* pop-up displays.
-3. (Optional) To view the contents of the Certificate you are exporting, click **Open**.  
-  * A *Certificate review* pop-up window displays the contents of the Certificate.
-  * Navigate through the three tabs (General, Details, and Certification Path) to determine if you would like to make any adjustments to the prior to performing the export.
-  * Click **OK** to close the *Certificate review* pop-up window and be returned to the *File Download* pop-up window.
-4. Click **Save**.  
-A *Save As* pop-up window is displayed.
-5. Navigate to the directory location where you would like to save the CA Certificate.
-6. Specify a filename for the .cer CA Certificate file.
-7. Click **OK**.  
-The CA Certificate is exported and saved to the filename and directory location specified in steps 5 & 6 above.
+3. Save the certificate file based on your browser requirements.  
 
 <a href="#top">back to top</a> 
 
 ## Delete CA Certificate
+
 Delete a CA Certificate.
 
 **Note**: *Deleting a CA Certificate will invalidate all certificates issued with it.*
@@ -294,13 +300,12 @@ The *Certificate Authority Summary* screen displays.
 2. Click **Delete CA Certificate**.  
 The following message displays:  
 "Deleting this CA Certificate will invalidate all certificates issued with it. To issue new certificates, you must configure a new CA Certificate which will be used as the trusted authority. Are you sure you want to delete this CA Certificate?"
-3. Click **OK**.  
-The CA Certificate is permanently removed from the system
-4. (Optional) To cancel the delete operation, click **Cancel**.
+3. Click **OK** to confirm or **Cancel** to exit the operation
 
 <a href="#top">back to top</a> 
 
 ## Issue Certificate
+
 The "Certificate Authority" is an entity that issues digital certificates for use by other parties. The "Issue Certificate Wizard" provides an interface that allows you to generate and download a certificate from a "Certificate Signing Request (CSR)."  
 
 1. Go to **Configure > Security > Certificates > Certificate Authority**.  
@@ -313,15 +318,8 @@ The field display populates with the selected path.
 5. Click **Next**.  
 The *Export Certificate* screen displays, showing the Public Key and Subject DN information of the certificate to be issued. The function of this screen is to:  
   * Generate and then download a certificate using the contents of the Certificate Signing Request (CSR) file specified in steps 3 & 4 above.
-  * Set a "Validity Period" (i.e. expiration date) for said certificate by clicking on the "Expiration Date" field to launch a calendar pop-up you can use to designate the expiration *date*, and then manually entering into the "Expiration Time" fields the Hour and Minute (in 24-hour clock time) that the Certificate Authority will expire on that date.
+  * Set a "Validity Period" (i.e., expiration date) for said certificate by clicking on the "Expiration Date" field to launch a calendar pop-up you can use to designate the expiration *date*, and then manually entering into the "Expiration Time" fields the Hour and Minute (in 24-hour clock time) that the Certificate Authority will expire on that date.
 6. Click **Finish**.
-The *File Download* pop-up window displays. 
-7. Save the file based on your browser requirements.  
-The CA Certificate is issued and saved.  Additionally, the *Summary* screen displays, showing the following message:  
-"You have successfully completed the "Issue Certificate Wizard."  
-The details of your exported certificate are displayed in the "Certificate Details" section.  
-The certificate is now issued and saved at the specified location. It can be distributed based on your requirements.  
-To exit this wizard, click **Close**.  
-If you exited the *File Download* dialog without saving your certificate, click the **Download Certificate** link to perform the download process again.
+7. Save the certificate file based on your browser requirements.
  
 <a href="#top">back to top</a> 

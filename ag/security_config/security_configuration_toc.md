@@ -18,8 +18,8 @@ Use the *Configuration > Security* section of the Policy Manager Management Cons
 
 <div class = "divider1"></div>
 
-## [Policy Manager Domain](../security_config/view_and_modify_policy_manager_domain_name_and_description.html)
-Learn how the Policy Manager Domain Name and Description are generated during the initial Policy Manager configuration process and how to modify these details..
+## [Policy Manager Domain](../security_config/policy_manager_domain.html)
+Learn how the Policy Manager Domain Name and Description are generated during the initial Policy Manager configuration process and how to modify these details.
 
 <div class = "divider1"></div>
 
@@ -40,7 +40,7 @@ Learn about custom "Reminder" and "Expiration" email notifications that can be i
 
 <div class = "divider1"></div>
 
-## [Identity Systems](../security_config/managing_identity_systems.html)
+## [Identity Systems](../security_config/identity_systems.html)
 Learn about Identity Management Applications, which provide a method of storing data and making this data available to network users and administrators, and Authentication Protocols, which provide authentication for client/server applications and validate the identity of a communicating entity.
 
 <div class = "divider1"></div>

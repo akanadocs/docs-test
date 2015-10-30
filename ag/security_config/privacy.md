@@ -21,23 +21,23 @@ Learn about applying additional encryption security to User Name, Full Name and 
 * [Manage Privacy](#manage-privacy)
 
 ## About Privacy
+
 In Policy Manager, the *User Name*, *Full Name*, and *Email* personal information fields are searchable / visible (by default) in various areas of the *Policy Manager Management Console*. If you would like to apply additional security to these fields and make them "private" (i.e., not searchable in the Policy Manager Management Console), you can configure them to be encrypted using the *Manage Privacy* function. 
 
-Access the *Privacy Summary* Screen, where you will see a list of personal information fields that are encrypted by going to **Configure > Security > Privacy**.
+To view a list of personal information fields that are encrypted, go to **Configure > Security > Privacy** to access the *Privacy Summary* screen.
 
 <a href="#top">back to top</a> 
 
-
 ## Manage Privacy
+
 Encrypt the *User Name*, *Full Name*, and *Email* fields so they are private and not searchable in the *Policy Manager Management Console*.
 
 1. Go to **Configure > Security > Privacy**.    
-The *Privacy Summary* Screen is displayed showing a list user information fields that can be selected for encryption. 
-2. Click the **checkbox** next to each information field you would like to encrypt in the Policy Manager Management Console.
+The *Privacy Summary* screen presents a list user information fields that can be selected for encryption. 
+2. Click the check-box next to each information field you would like to encrypt in the *Policy Manager Management Console*.
 3. Click **Apply**.  
 A confirmation message appears.
-4. Click **OK** to accept the confirmation.  
-The summary screen will update with your selections.
+4. Click **OK** to confirm or **Cancel** to exit the operation.
 
 For the information fields you designated as private in steps 1 - 4 above, when you try to search for them in the various areas of the *Policy Manager Management Console*, you will receive zero search results as the data will not be recognized because the fields are now encrypted. 
 
