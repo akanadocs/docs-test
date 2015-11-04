@@ -1,16 +1,16 @@
 ---
 layout: page
-title: Using the Business Metrics Policy SLA Policy
+title: Using the Business Service Level Policy
 description: Learn how to .
 product: ag
 category: learn
 sub-nav-class: QoS Policies
 weight:	7
 type: page
-nav-title: Using the Business Metrics Policy SLA Policy
+nav-title: Using the Business Service Level Policy
 ---
 
-## Using the Business Metrics SLA Policy
+## Using the Business Service Level Policy
 Learn how to .
 
 
@@ -24,7 +24,8 @@ Learn how to .
 
 ### Introduction
 
-The Business Metrics Policy SLA policy 
+The Business Service Level Policy 
+ 
 
 
 
