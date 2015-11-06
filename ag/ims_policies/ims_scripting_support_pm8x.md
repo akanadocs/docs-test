@@ -4,7 +4,7 @@ title: Intermediary for Microsoft Scripting Support
 description: Learn about Intermediary for Microsoft scripting support in Policy Manager 8.x.
 product: ag
 category: learn
-sub-nav-class: Auditing
+sub-nav-class: Intermediary for Microsoft
 weight:	7
 type: page
 nav-title: Learn about Intermediary for Microsoft scripting support in Policy Manager 8.x
