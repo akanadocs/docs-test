@@ -36,6 +36,7 @@ The policies support the majority of the same APIs that Network Director support
 * com.soa.security.script.saml2 package
 * com.soa.security.script.BST class
 * com.soa.security.script.SubjectMap.get(category) is ***renamed as*** getSubject(category)
+* com.soa.message.script.Headers.get(name) is ***renamed as*** getHeader
 
 ## Changes from Policy Manager 7.2 Scripting API 
 
@@ -44,6 +45,8 @@ The following list represents IMS supported elements of the Policy Manager 7.2 S
 * com.soa.message.script.Headers.get(name) ***renamed to*** com.soa.message.script.Headers.getHeader
 
 ##### Method Return Type Changes:
+
+The following Return Type changes were made to accomodate the the difference between the .NET and JAVA languages.
 
 * java.util.Set<string> ***changed to*** System.Collections.Generic.List<string>
 * java.security.cert.X509Certificate[] ***changed to*** System.Security.Cryptography.X509Certificates.X509Certificate2[]
