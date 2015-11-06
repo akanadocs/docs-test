@@ -10,8 +10,6 @@ type: page
 nav-title: Learn about Intermediary for Microsoft scripting support in Policy Manager 8.x
 ---
 
-<h5 class="stamp">Supported Platforms: 8.0 and greater.</h5>
-
 ## Intermediary for Microsoft Scripting Support
 Learn about Intermediary for Microsoft scripting support in Policy Manager 8.x.
 
