@@ -13,7 +13,7 @@ nav-title: Learn about Intermediary for Microsoft (Version 7.2) scripting suppor
 ## Intermediary for Microsoft (Version 7.2) Scripting Support
 Learn about Intermediary for Microsoft (Version 7.2) scripting support in Policy Manager 7.2.
 
-<a href="http://docs.akana.com/docs-test/ag/policies/using_op_script_policy.htm">Using the Operational Script Policy 7.x</a> 
+<a href="http://docs.akana.com/ag/policies/using_op_script_policy.htm">Using the Operational Script Policy 7.x</a> 
 
 <h5 class="stamp">Supported Platforms: 7.2.</h5>
 
@@ -26,9 +26,9 @@ Learn about Intermediary for Microsoft (Version 7.2) scripting support in Policy
 ## Introduction
 Intermediary for Microsoft (IMS) (Version 7.2) supports the Policy Manager 7.2 Operational Script Policy. 
 
-This policy works in the same manner as it does with the Network Director (see <a href="http://docs.akana.com/docs-test/ag/policies/using_op_script_policy.htm">Using the Operational Script Policy 7.x</a>). 
+This policy works in the same manner as it does with the Network Director (see <a href="http://docs.akana.com/ag/policies/using_op_script_policy.htm">Using the Operational Script Policy 7.x</a>). 
 
-The policy supports the majority of the same APIs that Network Director supports (see <a href="http://docs.akana.com/docs-test/ag/assets/scriptDocs_pm72/index.html">Policy Manager 7.2 Scripting API</a>) with the exception of the following:
+The policy supports the majority of the same APIs that Network Director supports (see <a href="http://docs.akana.com/ag/assets/scriptDocs_pm72/index.html">Policy Manager 7.2 Scripting API</a>) with the exception of the following:
 
 * com.soa.message.script.Message.normalize()
 * com.soa.process.bpel.runtime.script package
