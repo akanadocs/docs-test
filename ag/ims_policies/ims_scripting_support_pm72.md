@@ -13,9 +13,7 @@ nav-title: Learn about Intermediary for Microsoft (Version 7.2) scripting suppor
 ## Intermediary for Microsoft (Version 7.2) Scripting Support
 Learn about Intermediary for Microsoft (Version 7.2) scripting support in Policy Manager 7.2.
 
-<a href="http://docs.akana.com/ag/policies/using_op_script_policy.htm" class="button secondary">Using the Operational Script Policy 7.x</a> 
-
-<a href="http://docs.akana.com/ag/assets/scriptDocs_pm72/index.html" class="button secondary">Policy Manager 7.2 Scripting API</a>
+<a href="http://docs.akana.com/ag/policies/using_op_script_policy.htm" class="button secondary">Using the Operational Script Policy 7.x</a> <a href="http://docs.akana.com/ag/assets/scriptDocs_pm72/index.html" class="button secondary">Policy Manager 7.2 Scripting API</a>
 
 <h5 class="stamp">Supported Platforms: 7.2.</h5>
 
