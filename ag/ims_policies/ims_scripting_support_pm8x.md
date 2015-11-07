@@ -15,7 +15,7 @@ Learn about Intermediary for Microsoft (Version 7.2) scripting support in Policy
 
 <a href="http://docs.akana.com/ag/policies/using_op_script_policy.htm" class="button secondary">Using the Operational Script Policy 7.x</a> 
 
-<h5 class="stamp">Supported Platforms: 7.2.</h5>
+<h5 class="stamp">Supported Platforms: 7.2.</h5><p></p>
 
 <div class = "divider1"></div>
 
