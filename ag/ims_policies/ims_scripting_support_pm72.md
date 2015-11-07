@@ -17,7 +17,7 @@ Learn about Intermediary for Microsoft (Version 7.2) scripting support in Policy
 
 <a href="http://docs.akana.com/ag/assets/scriptDocs_pm72/index.html" class="button secondary">Policy Manager 7.2 Scripting API</a>
 
-<h5 class="stamp">Supported Platforms: 7.2.</h5><p></p>
+<h5 class="stamp">Supported Platforms: 7.2.</h5>
 
 <div class = "divider1"></div>
 
