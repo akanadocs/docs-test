@@ -46,7 +46,7 @@ The following list represents IMS supported elements of the Policy Manager 7.2 S
 
 ##### Method Return Type Changes:
 
-The following Return Type changes were made to accomodate the the difference between the .NET and JAVA languages.
+The following Return Type changes were made to accomodate the difference between .NET and JAVA languages.
 
 * java.util.Set<string> ***changed to*** System.Collections.Generic.List<string>
 * java.security.cert.X509Certificate[] ***changed to*** System.Security.Cryptography.X509Certificates.X509Certificate2[]
