@@ -17,6 +17,8 @@ Learn how to specify what business metrics should be gathered from the contents 
 
 <h5 class="stamp">Supported Platforms: 8.0 and greater.</h5>
 
+<div class = "divider1"></div>
+
 ### Table of Contents
 <div id="toc-marker"></div>
 * [Introduction](#introduction)
@@ -30,6 +32,8 @@ Learn how to specify what business metrics should be gathered from the contents 
 	* [Extraction Examples](#extraction-examples)
 	* [Derivation Expression Types](#derivation-expression-types)
 	* [Test Message](#test-message)
+
+<div class = "divider1"></div>
 
 ### Introduction
 
