@@ -44,7 +44,7 @@ The Operational Script Policy supports the majority of the same APIs that Networ
 * com.soa.security.script.SubjectMap.get(category) is ***renamed as*** getSubject(category)
 * com.soa.message.script.Headers.get(name) is ***renamed as*** getHeader
 
-## Method Return Type Changes:
+## Method Return Type Changes
 
 The following Return Type changes were made to accommodate the difference between .NET and JAVA languages.
 

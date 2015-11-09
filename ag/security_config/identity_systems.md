@@ -28,19 +28,18 @@ Learn about Identity Management Applications, which provide a method of storing 
 * [Delete Identity System](#delete-identity-system)
 * [Change Domain Sequence](#change-domain-sequence)
 
-
-
 ## About Identity Systems
+
 Identity management technologies provide tools for simplifying the management of data for users of an organization's information technology systems. An identity management application is referred to as an "Identity System." Each Identity System provides a method for storing data and making this data available to network users and administrators. Data is typically stored in what is called a "Directory."
 Data for a single user is stored in a user account. A user account includes Name, Password, Phone Numbers, etc. This information can be accessed by authorized users on the same network. User accounts can also be assigned to a group. This is referred to as a "User Group" or "Group Account." Rights and permissions are assigned to the user group and members of the group assume these rights and permissions.
 
-###Identity Management Functions  
+### Identity Management Functions  
 
-* **Identity administration** (provided through the identity management application)
+* **Identity administration** (provided through the identity management application).
 * **Community Management** (provided through the identity management application) - Addresses the connection and security of relationships between identities.
 * **Identity Integration** (provided through Policy Manager's "Identity Integration" functionality) - Focuses on the connection and cooperation of multiple identity repositories based on business rules.
 
-###Identity Management Components
+### Identity Management Components
 
 * **Directory Service** - Provides a central identity repository and reconciliation of identity details between application-specific directories.
 * **Identity Management Service** - Provides tools to manage identity details stored in the directory.
@@ -51,13 +50,12 @@ View the *Identity Systems Summary* Screen by going to **Configure > Security > 
 
 <a href="#top">back to top</a> 
 
-
 ## About Identity Integration
 The process of identity integration enables Policy Manager's Policy Manager Subsystem to authenticate with a third party identity system. The ability to connect to an enterprise organization's identity system significantly reduces the Policy Manager deployment time and increases the manageability of the security administration process.
 Identity integration is established between Policy Manager, the client application, and a third-party identity system using a set of business rules. These business rules are called "connector properties." Connector properties generally include configuration details for connecting to the host machine where the identity system resides, configuring the authentication method, and specifying user identity information (e.g., user/user group name, description, attributes, etc.). These connector properties are packaged in an "Identity System Option Pack."
-When an identity system is successfully integrated with Policy Manager, a trust is established between the client application user and the Policy Manager Subsystem and a domain name is added to the drop-down list box on the Policy Manager *Login* Screen and on the *User Groups Summary* Screen in **Security > User Groups**. When a user who is present in the identity system directory logs into the Policy Manager "Management Console," the Management Console authenticates with the identity system, then sends a request for a token to the Policy Manager Subsystem. Once this trust is established, access is granted to all Policy Manager functions based on assigned privileges.
+When an identity system is successfully integrated with Policy Manager, a trust is established between the client application user and the Policy Manager Subsystem and a domain name is added to the drop-down list box on the Policy Manager *Login* Screen and on the *User Groups Summary* screen in **Security > User Groups**. When a user who is present in the identity system directory logs into the Policy Manager "Management Console," the Management Console authenticates with the identity system, then sends a request for a token to the Policy Manager Subsystem. Once this trust is established, access is granted to all Policy Manager functions based on assigned privileges.
 Authentication credentials for identity system users that will be accessing Policy Manager are stored in the identity system. Policy Manager application users must be stored in the Policy Manager.
-Policy Manager provides an "Add Identity System Wizard" that is used to add an Identity System to Policy Manager (i.e., integrate) and maintain the associated connection properties (i.e, modify and delete). This wizard is accessible via the **Configure > Security > Identity Systems** section of the Management Console. Five types of identity systems are supported:
+Policy Manager provides an *Add Identity System Wizard* that is used to add an Identity System to Policy Manager (i.e., integrate) and maintain the associated connection properties (i.e, modify and delete). This wizard is accessible via the *Configure > Security > Identity Systems* section of the Management Console. Five types of identity systems are supported:
 
 * Claim-based
 * Cookie Authentication Module
@@ -69,24 +67,28 @@ The process of identity integration enables Policy Manager's Policy Manager Subs
 
 
 ## About Identity System Configuration
+
 The *Add Identity System Wizard* provides a method of integrating your Identity Management Application or Authentication Protocol with Policy Manager through the use of "Identity System Option Packs." Each Identity System Option Pack includes a set of connector properties and settings that must be configured to successfully integrate with Policy Manager.
 **Notes**:  
 *Two approaches are used for distributing option packs:*
   
-* *They can be distributed separately as a Feature and installed using the "SOA Software Administration Console."*
+* *They can be distributed separately as a Feature and installed using the "Akana Administration Console."*
 * *They can come pre-installed in a Policy Manager release. The distribution approach varies based on the Policy Manager release cycle. Installed option packs are accessible via a drop-down list box in the* Add Identity System Wizard.
-*After Policy Manager is updated with a new Option Pack, the feature set for the associated identity system is integrated with the* Add Identity System Wizard. *This wizard is used to configure and maintain identity system domains to be integrated with Policy Manager.*
+*After Policy Manager is updated with a new Option Pack, the feature set for the associated identity system is integrated with the *Add Identity System Wizard.* This wizard is used to configure and maintain identity system domains to be integrated with Policy Manager.*
 *When you add a new identity system to Policy Manager, the identity system domain is displayed in the* ***Configure > Security > Identity Systems*** *section of the Policy Manager* Management Console. 
 
 <a href="#top">back to top</a> 
 
 
 ## About Claim-Based Authentication and Authorization
+
 ###Introduction
+
 A "Claim" is a statement that one subject makes about itself or another subject. The subject making the claim(s) is the provider. Claims are packaged into one or more tokens that are then issued by an issuer.
 The claim-based identity system models a claim as an XML token that is signed by an authority, and the token contains assertions about the attributes of a user subject. In the case of Active Directory Federation Services (ADFS), a claim will be a SAML token. 
 
-###Authentication and Authorization
+### Authentication and Authorization
+
 After a claim-based Identity System instance is created and configured, it can be used for authentication and authorization of web service requests.
 
 * **For Authentication** - You must create an Authentication Policy, and select the Claim-Based Identity System as the authentication realm.
@@ -94,16 +96,18 @@ After a claim-based Identity System instance is created and configured, it can b
 
 **Note**: *Created Authentication and Authorization policies can be assigned to the web services that require Claim-based security.*
 
-###Runtime
+### Runtime
+
 At runtime, during the authentication phase, the digital signature inside a claim token will be validated based on the issuer certificate configured in the identity system. If the token is detected to be a SAML token, the issuer URL and the expiration date will also be verified automatically. During the authorization phase, all the configured XPath assertions associated with a claim configuration will be verified. If the verification succeeds, the configured XPath User Identifier will be evaluated and the result will be saved into usage data.
 
-###Policy Manager Claim-Based Authentication/Authorization Support
+### Policy Manager Claim-Based Authentication/Authorization Support
 
 * A user interface is available in the **Configure > Security > Identity Systems** Section that allows you to configure claims that will be validated by Policy Manager. You can configure a wide range of claims that can be issued by Active Directory Federation Services (ADFS). 
 * Associate claim-based authentication/authorization requests to web services by configuring an Authentication or Authorization Policy and selecting the Claim-Based Identity System.
 * The system supports retrieving claim tokens from web service requests and validating the tokens based on the claim configuration.
 
-###Design
+### Design
+
 Policy Manager has provided an extensible framework to plug in third-party identity systems (e.g., LDAP) for authentication/authorization purposes.  To support claims, a new claim-based Identity System will be provided. Here a claim will be modeled as an XML token that is signed by an authority, and the token will contain assertions about the attributes of a user or identity. In the case of ADFS, a claim will be a SAML token. The configuration of this new Claim-based identity system includes:
 
 * **Issuer Name** - A URI that uniquely represents a claim issuer. If the claim token is SAML, the issuer identifier must match the issuer URL in the SAML token.
@@ -118,10 +122,10 @@ Each claim configuration will have the following entries:
   * **Claim Description** - A description of the claim.
   * **Assertion XPaths** - An XPath string representing an assertion in a claim token. The XPath expression will be evaluated against a claim token at runtime. In order for the claim token to be valid, the result of the XPath evaluation must be true. A user can specify multiple XPath assertions for a single claim. In this case, each of the assertions must be evaluated to true in order for the token to be accepted. If the evaluation of one or more specified XPath assertions is false at runtime, the claim will be considered invalid and will result in authorization failure.
 
-###Example Configuration of a Claim-based Identity System
+### Example Configuration of a Claim-based Identity System
 The following claim-based Identity System example configuration specifies claims asserting groups a user belongs to and uses the email address in the token as the user identifier:  
 
-* **Claim Issuer Identifier**: http://www\.acme.com
+* **Claim Issuer Identifier**: http://www/.acme.com
 * **Claim Certificate**: [acme.com's certificate]
 * **Identity XPath**: /saml:Assertion/saml:AttributeStatement/saml:Attribute[@name="Email"]/saml:AttributeValue 
 
@@ -189,7 +193,7 @@ At runtime, during the authentication phase, the digital signature inside a clai
 Follow all steps outlined in the various [Add Identity System](#add-identity-system) instruction sets, except, in each case, substitute the following for step 2:
 
 Click **Modify Identity System**.  
-The *Modify Identity System Wizard* is launched, displaying *Identity System Domain Details* screen.
+The *Modify Identity System Wizard* launches and displays the *Identity System Domain Details* screen.
 
 <a href="#top">back to top</a> 
 
@@ -199,8 +203,7 @@ The *Modify Identity System Wizard* is launched, displaying *Identity System Dom
 2. On the *Identity Systems Summary* screen, select the identity system you would like to delete. 
 3. Click **Delete Identity System**.  
 A confirmation message displays.
-4. Click **OK**.  
-5. Click **OK** to confirm or **Cancel** to exit the operation.
+4. Click **OK** to confirm or **Cancel** to exit the operation.
 
 <a href="#top">back to top</a> 
 
@@ -212,9 +215,7 @@ The *Identity Systems Summary* screen displays.
 2. Click **Change Domain Sequence**.  
 The *Change Domain Sequence* screen displays and presents the list of identity system domains in the current display sequence.
 3. Select the line item you would like to re-position and the use the **Move Up** and/or **Move Down** buttons to move its position in the list.
-4. Click **Apply**.  
-The system saves the configuration and you are returned to the *Identity Systems Summary* screen.
-5. (Optional) To exit the *Change Domain Sequence* screen without saving, click **Cancel**.
+4. Click **Apply** to commit changes or **Cancel** to exit the operation.
 
 <a href="#top">back to top</a> 
 
