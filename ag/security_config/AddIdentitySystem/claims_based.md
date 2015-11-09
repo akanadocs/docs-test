@@ -41,7 +41,7 @@ The *Add Identity System Wizard* launches and displays the *Identity System Doma
 You are taken to the *Claim Configuration* screen.
 6. Enter *Issuer Details*:  
   * **Issuer Name** - A URI that uniquely represents a claim issuer. If the claim token is SAML, the issuer identifier must match the issuer URL in the SAML token.
-  * **Issuer Certificate** - an X509 Certificate of the issuer. It is used by Policy Manager to verify the signature of the claim token at runtime.
+  * **Issuer Certificate** - An X509 Certificate of the issuer. It is used by Policy Manager to verify the signature of the claim token at runtime.
   * Click **Choose File** to upload your certificate.
 7. Enter *XPath and Namespace Configuration Details*.  
   *  **Identity XPath** - An XPath string function that will be evaluated against the claim token during runtime. The result of the evaluation will be used as the identifier of the requester and saved as part of the usage data.
@@ -52,7 +52,7 @@ You are taken to the *Claim Configuration* screen.
   * **Claim Name** - A string that identifies the claim.
   * Click **Add Claim** to add multiple claim entries.
 9. Click **Next**.  
-The *Assertion XPaths* Screen is displayed where you specify one or more XPath Assertions and Claim Descriptions for each claim.  
+The *Assertion XPaths* screen is displayed where you specify one or more XPath Assertions and Claim Descriptions for each claim.  
 **Note**: *An "Assertion XPaths" Screen will be displayed for each claim name you define.*
 10. (Optional) Enter a **Claim Description**.
 11. Add an **Assertion XPath** which is an XPath string representing an assertion in a claim token.  
@@ -62,6 +62,5 @@ The *Assertion XPaths* Screen is displayed where you specify one or more XPath A
   * If the evaluation of one or more specified XPath assertions is false at runtime, the claim will be considered invalid and will result in authorization failure.
 12. Click **Finish**.  
 The system configures your identity system based on your provided configuration parameters and returns to the *Identity System Summary* screen.
-
 
 <a href="#top">back to top</a> 
