@@ -1,18 +1,18 @@
 ---
 layout: page
-title: Add Directory Server (i.e. Active Directory) Identity System
-description: Learn how to add a Directory Server (i.e. Active Directory) Identity System.
+title: Configure Directory Server (i.e. Active Directory) Identity System
+description: Learn how to configure a Directory Server (i.e. Active Directory) Identity System.
 product: ag
 category: learn
 sub-nav-class: Security Configuration
 weight:	6
 type: page
-nav-title: Add Directory Server (i.e. Active Directory) Identity System
+nav-title: Configure Directory Server (i.e. Active Directory) Identity System
 ---
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
 
 <a href="../managing_identity_systems.html" class="button secondary">Managing Identity Systems</a>
-## Add Directory Server (i.e. Active Directory) Identity System
+## Configure Directory Server (i.e. Active Directory) Identity System
 For the Active Directory Identity System, configuration tasks include specifying and/or configuring:
 
 * Domain Details
@@ -24,9 +24,9 @@ For the Active Directory Identity System, configuration tasks include specifying
 * Advanced Properties.
 
 1. Go to **Configure > Security > Identity Systems**.  
-The *Identity Systems Summary* Screen is displayed.
+The *Identity Systems Summary* screen displays.
 2. Click **Add Identity System**.  
-The *Add Identity System Wizard* is launched, displaying the *Identity System Domain Details* Screen.
+The *Add Identity System Wizard* launches and displays the *Identity System Domain Details* screen.
 3. Under *Select Identity System*, use the *Identity System Type* **drop-down list box** to select **Directory Server**. 
 4. Enter the Domain Details (Name & Description) associated with the Directory Server (i.e. Active Directory) Identity System Type selected in step 3.  
 5. Click **Next**.  
