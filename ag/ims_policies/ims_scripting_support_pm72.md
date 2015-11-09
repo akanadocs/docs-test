@@ -41,12 +41,13 @@ The Operational Script Policy supports the majority of the same APIs that Networ
 * com.soa.security.script.saml1 package
 * com.soa.security.script.saml2 package
 * com.soa.security.script.BST class
+* com.soa.message.handler.script.MessageContext.setMessage(Message msg) 
 * com.soa.security.script.SubjectMap.get(category) is ***renamed as*** getSubject(category)
-* com.soa.message.script.Headers.get(name) is ***renamed as*** getHeader
+* com.soa.message.script.Headers.get(name) is ***renamed as*** getHeader(name)
 
 ## Method Return Type Changes
 
-The following Return Type changes were made to accommodate the difference between .NET and JAVA languages.
+The following Return Type changes were made to the Policy Manager 7.2 Scripting API to accommodate the difference between .NET and JAVA languages.
 
 * java.util.Set<string> ***changed to*** System.Collections.Generic.List<string>
 * java.security.cert.X509Certificate[] ***changed to*** System.Security.Cryptography.X509Certificates.X509Certificate2[]
