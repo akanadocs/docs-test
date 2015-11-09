@@ -46,7 +46,7 @@ Learn about Identity Management Applications, which provide a method of storing 
 <div class = "divider1"></div>
 
 ## [Identity Profiles](../security_config/identity_profiles.html)
-Learn about Identity Profiles, which are defined for "Authentication Protocol" Identity System types and are mapped to the identity configuration in a third party system like a user account.
+Learn how to configure Identity Profiles for "Authentication Protocol" Identity System types and map them to identity configuration in a third-party system (e.g., user account).
 
 <div class = "divider1"></div>
 

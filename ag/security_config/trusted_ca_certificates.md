@@ -105,8 +105,7 @@ The *View Trusted CA Certificate* screen displays, including the following attri
 The *View Trusted CA Certificate* screen displays.
 2. Click on the line item for the Trusted Certificate you want to delete.
 3. Click **Delete**.  
-The following message is displayed:  
-"Are you sure you want to delete this Trusted CA Certificate?"
+A confirmation message displays.  
 4. Click **OK** to confirm or **Cancel** to exit the operation.
 
 <a href="#top">back to top</a> 

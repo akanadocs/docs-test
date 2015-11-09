@@ -36,7 +36,7 @@ Encrypt the *User Name*, *Full Name*, and *Email* fields so they are private and
 The *Privacy Summary* screen presents a list user information fields that can be selected for encryption. 
 2. Click the check-box next to each information field you would like to encrypt in the *Policy Manager Management Console*.
 3. Click **Apply**.  
-A confirmation message appears.
+A confirmation message displays.
 4. Click **OK** to confirm or **Cancel** to exit the operation.
 
 For the information fields you designated as private in steps 1 - 4 above, when you try to search for them in the various areas of the *Policy Manager Management Console*, you will receive zero search results as the data will not be recognized because the fields are now encrypted. 

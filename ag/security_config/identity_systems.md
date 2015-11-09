@@ -1,7 +1,9 @@
 ---
 layout: page
 title: Identity Systems
-description: Learn about Identity Management Applications, which provide a method of storing data and making this data available to network users and administrators, and Authentication Protocols, which provide authentication for client/server applications and validate the identity of a communicating entity.
+description: Learn about supported Identity Systems (e.g., claims-based, cookie authentication module, directory server, kerberos, saml, CA-SiteMinder) and how to configure them in a variety of use cases. 
+
+
 product: ag
 category: learn
 sub-nav-class: Security Configuration
@@ -158,10 +160,10 @@ At runtime, during the authentication phase, the digital signature inside a clai
 
 ## Add Identity System
 
-The "Add Identity System Wizard" provides a series of options that are used to configure and maintain Identity Systems that you would like to integrate with Policy Manager.
+The *Add Identity System Wizard* provides a series of options that are used to configure and maintain Identity Systems that you would like to integrate with Policy Manager.
 
 **Notes**:   
-*The number of identity systems available to select is based on how many "Identity System Option Packs" you have installed using the "SOA Software Administration Console" or have come pre-installed in your Policy Manager release.* 
+*The number of identity systems available to select is based on how many "Identity System Option Packs" you have installed using the "Akana Administration Console" or have come pre-installed in your Policy Manager release.* 
 
 Select the instruction set for the Identity System type you wish to add:
 
@@ -187,36 +189,31 @@ At runtime, during the authentication phase, the digital signature inside a clai
 Follow all steps outlined in the various [Add Identity System](#add-identity-system) instruction sets, except, in each case, substitute the following for step 2:
 
 Click **Modify Identity System**.  
-The *Modify Identity System Wizard* is launched, displaying *Identity System Domain Details* Screen.
-
+The *Modify Identity System Wizard* is launched, displaying *Identity System Domain Details* screen.
 
 <a href="#top">back to top</a> 
-
-
 
 ## Delete Identity System
 
 1. Go to **Configure > Security > Identity Systems**.  
-The *Identity Systems Summary* Screen is displayed.
-2. From the displayed list, select the identity system you would like to delete. 
+2. On the *Identity Systems Summary* screen, select the identity system you would like to delete. 
 3. Click **Delete Identity System**.  
-The following message is displayed: "Are you sure you want to delete this identity system?"
+A confirmation message displays.
 4. Click **OK**.  
-The system permanently removes the identity system from the database
-5. (Optional) To cancel the delete operation, click **Cancel**. 
+5. Click **OK** to confirm or **Cancel** to exit the operation.
 
 <a href="#top">back to top</a> 
 
 ## Change Domain Sequence
-Update the display sequence of Identity System domains that are selectable from drop-down menus throughout Policy Manager.  Used if your organization has integrated two or more identity system domains and you would like to configure the default menu selection for a specific Policy Manager deployment.
+Update the display sequence of Identity System domains that are selectable from drop-down menus throughout Policy Manager. Used if your organization has integrated two or more identity system domains and you would like to configure the default menu selection for a specific Policy Manager deployment.
 
 1. Go to **Configure > Security > Identity Systems**.  
-The *Identity Systems Summary* Screen is displayed.
+The *Identity Systems Summary* screen displays. 
 2. Click **Change Domain Sequence**.  
 The *Change Domain Sequence* Screen is displayed, presenting the list of identity system domains in the current display sequence.
-3. Select the line item you would like to reposition and the use the **Move Up** and/or **Move Down** buttons to move its position in the list.
+3. Select the line item you would like to re-position and the use the **Move Up** and/or **Move Down** buttons to move its position in the list.
 4. Click **Apply**.  
-The system saves the configuration and you are returned to the *Identity Systems Summary* Screen.
+The system saves the configuration and you are returned to the *Identity Systems Summary* screen.
 5. (Optional) To exit the *Change Domain Sequence* Screen without saving, click **Cancel**.
 
 <a href="#top">back to top</a> 
