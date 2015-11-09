@@ -22,7 +22,8 @@ Learn about Intermediary for Microsoft (Version 7.2) scripting support in Policy
 ### Table of Contents
 <div id="toc-marker"></div>
 * [Introduction](#introduction)
-* [Changes from Policy Manager 7.0 Scripting API ](#changes-from-policy-manager-7-0-scripting-api)
+* [Policy Support](#policy-support)
+* [Method Return Type Changes](#method-return-type-changes)
 
 <div class = "divider1"></div>
 
@@ -31,7 +32,9 @@ Intermediary for Microsoft (IMS) (Version 7.2) supports the Policy Manager 7.2 O
 
 This policy works in the same manner as it does with the Network Director (see <a href="http://docs.akana.com/ag/policies/using_op_script_policy.htm">Using the Operational Script Policy 7.x</a>). 
 
-The policy supports the majority of the same APIs that Network Director supports (see <a href="http://docs.akana.com/ag/assets/scriptDocs_pm72/index.html">Policy Manager 7.2 Scripting API</a>) with the exception of the following:
+## Policy Support
+
+The Operational Script Policy supports the majority of the same APIs that Network Director supports (see <a href="http://docs.akana.com/ag/assets/scriptDocs_pm72/index.html">Policy Manager 7.2 Scripting API</a>) with the following exceptions: 
 
 * com.soa.message.script.Message.normalize()
 * com.soa.process.bpel.runtime.script package
@@ -41,15 +44,9 @@ The policy supports the majority of the same APIs that Network Director supports
 * com.soa.security.script.SubjectMap.get(category) is ***renamed as*** getSubject(category)
 * com.soa.message.script.Headers.get(name) is ***renamed as*** getHeader
 
-## Changes from Policy Manager 7.0 Scripting API 
+## Method Return Type Changes:
 
-The following list represents IMS supported elements of the Policy Manager 7.0 Scripting API that have changed in the Policy Manager 7.2 Scripting API.
-
-* com.soa.message.script.Headers.get(name) ***renamed to*** com.soa.message.script.Headers.getHeader
-
-##### Method Return Type Changes:
-
-The following Return Type changes were made to accomodate the difference between .NET and JAVA languages.
+The following Return Type changes were made to accommodate the difference between .NET and JAVA languages.
 
 * java.util.Set<string> ***changed to*** System.Collections.Generic.List<string>
 * java.security.cert.X509Certificate[] ***changed to*** System.Security.Cryptography.X509Certificates.X509Certificate2[]

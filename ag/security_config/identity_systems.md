@@ -210,11 +210,11 @@ Update the display sequence of Identity System domains that are selectable from 
 1. Go to **Configure > Security > Identity Systems**.  
 The *Identity Systems Summary* screen displays. 
 2. Click **Change Domain Sequence**.  
-The *Change Domain Sequence* Screen is displayed, presenting the list of identity system domains in the current display sequence.
+The *Change Domain Sequence* screen displays and presents the list of identity system domains in the current display sequence.
 3. Select the line item you would like to re-position and the use the **Move Up** and/or **Move Down** buttons to move its position in the list.
 4. Click **Apply**.  
 The system saves the configuration and you are returned to the *Identity Systems Summary* screen.
-5. (Optional) To exit the *Change Domain Sequence* Screen without saving, click **Cancel**.
+5. (Optional) To exit the *Change Domain Sequence* screen without saving, click **Cancel**.
 
 <a href="#top">back to top</a> 
 
