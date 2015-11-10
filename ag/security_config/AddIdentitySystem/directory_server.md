@@ -34,7 +34,7 @@ You are taken to the *Directory Type* Screen.
 6. From the **drop-down list box**, select the *Directory Type* that is configured with default values for a particular Directory Server.  
 Your selection represents the Directory Server that will be integrated with Policy Manager.
 7. Click **Next**.  
-You are taken to the *Connection Properties* Screen.
+You are taken to the *Connection Properties* screen.
 8. Under **Main URL**, enter the Host Name of the selected Directory Type, and the Port Number used to connect to it.
 9. Under **Failover URLs**, enter the host name and port number where identity system connection requests will be directed if the Main URL fails.  
 **Note**: *You can specify up to five Failover URLs.*
@@ -59,13 +59,13 @@ You are taken to the *Attribute Details* Screen, used to configure the search sc
   * **Description Attribute** - The attribute of the group entry in the identity system that will be mapped to "Description" in Policy Manager. The default is "description."
   * **Member Attribute** - The attribute of the group entry in the identity system that will be mapped to the user relationship in Policy Manager. The default is "memberOf."  
 13. Click **Next**.  
-The *Username - DN Mapping* Screen is displayed.  
+The *Username - DN Mapping* screen displays.  
 14. Use the **radio buttons** to select and/or configure the **Username - DN Mapping** for the Active Directory Identity System.  
 **Note**:  *To ensure that the identity system can effectively coexist with Policy Manager, accurate Username and DN mapping must be configured. This ensures that login data is properly authenticated.*  
   * **Map with Search** - Authenticates the User ID and Password. 
   * **Map with Prefix/Suffix** - (optional) Strings that will be prepended and appended (respectively) to the User Name when logging into Active Directory for the purpose of authentication.
 15. Click **Next**.  
-The *Custom Queries* Screen is displayed.
+The *Custom Queries* screen displays. 
 16. Update the custom queries as needed to optimize your environment.  
 **Notes**:  
   * *This screen includes a default set of custom queries that are used to interact with the identity system.  The following custom queries are supported:*  
@@ -73,15 +73,15 @@ The *Custom Queries* Screen is displayed.
   * *A "Reset to default" button is included with each query type to reset a changed query back to the default setting.*
   * *Search filters can be customized to conform with the search performance requirements for a specific identity system. Note that the $USERNAME, $FULLNAME, and $GROUPNAME are macro variables that are replaced with the actual Username, Full Name, or Group Name entered when a search is performed. These macro variables must be used when developing custom queries. The User and Group attributes used in custom queries must match the User and Group attribute names configured on the "Attribute Details" screen.* 
 17. Click **Next**.  
-The *Proxy User Configuration* Screen is displayed.
+The *Proxy User Configuration* screen displays.
 18. Configure the *Proxy User Configuration* for the Identity System by using the **radio buttons** to select from:  
   * **Anonymous** - An anonymous user can search users and groups for read-only operations without providing credentials.
   * **Proxy** - When selected, it is required that you enter a Username and Password for the proxy user, who must have the permission to search users and groups in the identity system.
 19. Click **Next**.  
-The *Advanced Properties* Screen is displayed.
+The *Advanced Properties* screen displays.
 20. Configure advanced properties for page control, caching, timeout, and connection pool settings (Configure to conform to your system requirements or accept the defaults).
 21. Click **Next**.  
-The *Verify Connection* Screen is displayed.
+The *Verify Connection* screen displays.
 22. Click **Verify Connection** to test your connection properties.  
   * If your connection is successfully verified, click **Finish** to complete the identity system integration.
   * If your connection failed, use click **Back** to navigate to the appropriate screen and make the necessary adjustments.
@@ -89,7 +89,7 @@ The *Verify Connection* Screen is displayed.
 "After completing the configuration, you must upload a Trusted CA Certificate that can verify the SSL certificate of the LDAP server."  
 You must complete this step before deploying your Policy Manager production site.
 23. Click **Finish**.    
-The system configures your identity system based on your provided configuration parameters and returns to the *Identity System Summary* Screen.
+The system configures your identity system based on your provided configuration parameters and returns to the *Identity System Summary* screen.
 
 
 <a href="#top">back to top</a> 
