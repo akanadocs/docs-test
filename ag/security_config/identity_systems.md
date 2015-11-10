@@ -14,7 +14,11 @@ nav-title: Identity Systems
 Learn about Identity Management Applications, which provide a method of storing data and making this data available to network users and administrators, and Authentication Protocols, which provide authentication for client/server applications and validate the identity of a communicating entity.
 
 <a href="../security_config/security_configuration_toc.html" class="button secondary">Security Configuration (Home)</a> <a href="../security_config/policy_manager_domain.html" class="button secondary">Policy Manager Domain </a> <a href="../security_config/certificate_authority.html" class="button secondary">Certificate Authority (CA)</a> <br><br> <a href="../security_config/trusted_ca_certificates.html" class="button secondary">Trusted CA Certificates</a> <a href="../security_config/user_certificate_renewal.html" class="button secondary">User Certificate Renewal</a> <a href="../security_config/identity_profiles.html" class="button secondary">Identity Profiles</a> <a href="../security_config/privacy.html" class="button secondary">Privacy</a>
-<h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
+
+<h5 class="stamp">Supported Platforms: 7.0 and greater.</h5><br><br>
+
+<div class = "divider1"></div>
+
 ### Table of Contents
 <div id="toc-marker"></div>
 * [About Identity Systems](#about-identity-systems)
@@ -25,6 +29,8 @@ Learn about Identity Management Applications, which provide a method of storing 
 * [Modify Identity System](#modify-identity-system)
 * [Delete Identity System](#delete-identity-system)
 * [Change Domain Sequence](#change-domain-sequence)
+
+<div class = "divider1"></div>
 
 ## About Identity Systems
 
