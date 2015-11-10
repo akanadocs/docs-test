@@ -16,7 +16,7 @@ Learn how to view, configure and manage Trusted CA Certificates.
 
 <a href="../security_config/security_configuration_toc.html" class="button secondary">Security Configuration (Home)</a> <a href="../security_config/policy_manager_domain.html" class="button secondary">Policy Manager Domain</a> <a href="../security_config/certificate_authority.html" class="button secondary">Certificate Authority (CA)</a> <br><br> <a href="../security_config/user_certificate_renewal.html" class="button secondary">User Certificate Renewal</a>  <a href="../security_config/identity_systems.html" class="button secondary">Identity Systems</a> <a href="../security_config/identity_profiles.html" class="button secondary">Identity Profiles</a> <a href="../security_config/privacy.html" class="button secondary">Privacy</a>
 
-<h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
+<h5 class="stamp">Supported Platforms: 7.0 and greater.</h5><br><br>
 
 <div class = "divider1"></div>
 
