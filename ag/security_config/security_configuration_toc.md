@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Security Configuration
-description: Use the *Configuration > Security* section of the Policy Manager Management Console to determine how your deployment applies security, covering such topics as Domains, Certificates, Identity Profiles & Systems and Privacy.
+description: Use the *Configuration > Security* section of the Policy Manager Management Console to determine how your deployment applies security, covering such topics as Domains, Certificates, Identity Profiles, Identity Systems, and Privacy.
 product: ag
 category: learn
 no-nav: true
@@ -51,6 +51,6 @@ Learn how to configure Identity Profiles for "Authentication Protocol" Identity 
 <div class = "divider1"></div>
 
 ## [Privacy](../security_config/privacy.html)
-Learn about applying additional encryption security to User Name, Full Name and Email fields to make them private (i.e. not searchable in the Policy Manager Management Console).
+Learn about applying additional encryption security to User Name, Full Name and Email fields to make them private (i.e., not searchable in the *Policy Manager Management Console*).
 
 <div class = "divider1"></div>

@@ -17,10 +17,14 @@ Learn about custom "Reminder" and "Expiration" email notifications that can be i
 <a href="../security_config/security_configuration_toc.html" class="button secondary">Security Configuration (Home)</a> <a href="../security_config/policy_manager_domain.html" class="button secondary">Policy Manager Domain </a> <a href="../security_config/certificate_authority.html" class="button secondary">Certificate Authority (CA)</a> <br><br> <a href="../security_config/trusted_ca_certificates.html" class="button secondary">Trusted CA Certificates</a> <a href="../security_config/identity_systems.html" class="button secondary">Identity Systems</a> <a href="../security_config/identity_profiles.html" class="button secondary">Identity Profiles</a> <a href="../security_config/privacy.html" class="button secondary">Privacy</a>
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
 
+<div class = "divider1"></div>
+
 ### Table of Contents
 <div id="toc-marker"></div>
 * [View User Certificate Renewal Summary](#view-user-certificate-renewal-summary)
 * [Modify Renewal Notification](#modify-renewal-notification)
+
+<div class = "divider1"></div>
 
 ## View User Certificate Renewal Summary
 
@@ -41,7 +45,8 @@ The *User Certificate Renewal Summary* screen displays.
 2. Click **Modify Renewal Notification**.  
 The *Modify Renewal Notification* screen displays, showing the current renewal notification configuration.
 3. (Optional) Modify **Renewal Details**.  
-**Note**: *Substitutable variables are supported in the "Subject" and "Body" for both "Reminder" and "Expiration" email types. The variable names are enclosed in* ${}*s. Supported variables include:*   
+**Note**: *Substitutable variables are supported in the "Subject" and "Body" for both "Reminder" and "Expiration" email types. The variable names are enclosed in* ${}*s. 
+Supported variables include:*   
 *${expiration.date}—Expiration date of the certificate*  
 *${user.fullname}—Fullname attribute of the user*  
 *${user.username}—Username attribute of the user*  

@@ -18,6 +18,8 @@ Learn how to view, configure and manage Trusted CA Certificates.
 
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
 
+<div class = "divider1"></div>
+
 ### Table of Contents
 <div id="toc-marker"></div>
 * [About Trusted CA Certificates](#about-trusted-ca-certificates)
@@ -26,6 +28,8 @@ Learn how to view, configure and manage Trusted CA Certificates.
 * [View Trusted CA Certificates](#view-trusted-ca-certificates)
 * [Delete Trusted CA Certificates](#delete-trusted-ca-certificates)
 * [Export Trusted CA Certificates](#export-trusted-ca-certificates)
+
+<div class = "divider1"></div>
 
 ## About Trusted CA Certificates
 
@@ -36,7 +40,7 @@ Trusted CA Certificates imported will display on the *Trusted CA Certificates Su
 * Trusted CA certificates are used when an identity is being validated as the entity it claims to be. 
 * Certificates imported into Policy Manager must be issued by a Trusted CA Authority. 
 * Trusted CA Certificates must be configured prior to importing X.509 certificates for Service, User, Container, or Management Console operations.
-* Trusted CA Certificates can be imported (as .CER and .DER files only) using the **Add Trusted CA Certificate** option found under the *Configure > Security > Trusted CA Certificates* section of the Management Console and will be displayed on the *Trusted Certificates Summary* screen.
+* Trusted CA Certificates can be imported (as .CER and .DER files only) using the **Add Trusted CA Certificate** option.
 **Notes**:  * When importing a Trusted CA Certificate, all the Trusted CA Certificates in the Policy Manager’s vault will be overwritten by the certificates that are in the Java keystore file being used. Based on this, if you want to delete a certificate from the set of Trusted CA Certificates that are in the Policy Manager vault, you must have a Java keystore file that has all the Trusted CA Certificates except the one that you want to delete from the Policy Manager vault and use that Java keystore file during the update process.  
 * For example, if the Policy Manager vault has Trusted CA Certificates A, B and C, and you want to delete certificate B, then the Java keystore file used during the update process must have certificates A and C.* If you want to add a new Trusted CA Certificate to the set that is already in the Policy Manager vault, you must create a Java keystore file that has all the Trusted CA Certificates plus the new one that you want to add to the Policy Manager vault.  For example, if the Policy Manager vault has trusted certificates A, B and C, and you want to add certificate D, then the Java keystore file used during the update process must have certificates A, B, C and D.
 <a href="#top">back to top</a> 
@@ -63,9 +67,9 @@ The certificate is added to the Policy Manager keystore and the certificate is a
 Import Trusted CA Certificates into Policy Manager.  
 **Notes**:
   
-* *Certificates imported into Policy Manager must be issued by a Trusted CA Authority.*
-* *Trusted CA Certificates must be configured prior to importing X.509 certificates for Service, User, Container, or Management Console operations.*
-* *Imported Trusted CA Certificates will be displayed on the *Trusted Certificates Summary* screen.*
+* Certificates imported into Policy Manager must be issued by a Trusted CA Authority.
+* Trusted CA Certificates must be configured prior to importing X.509 certificates for Service, User, Container, or Management Console operations.
+* Imported Trusted CA Certificates will be displayed on the *Trusted Certificates Summary* screen.
 
 1. Go to **Configure > Security > Trusted CA Certificates**.  
 The *View Trusted CA Certificate* screen displays.
