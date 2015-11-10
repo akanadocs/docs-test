@@ -2,8 +2,6 @@
 layout: page
 title: Identity Systems
 description: Learn about supported Identity Systems (e.g., claims-based, cookie authentication module, directory server, kerberos, saml, CA-SiteMinder) and how to configure them in a variety of use cases. 
-
-
 product: ag
 category: learn
 sub-nav-class: Security Configuration
