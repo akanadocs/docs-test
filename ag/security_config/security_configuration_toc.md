@@ -43,6 +43,24 @@ Learn about custom "Reminder" and "Expiration" email notifications that can be i
 ## [Identity Systems](../security_config/identity_systems.html)
 Learn about Identity Management Applications, which provide a method of storing data and making this data available to network users and administrators, and Authentication Protocols, which provide authentication for client/server applications and validate the identity of a communicating entity.
 
+### [Claim-based](../security_config/configure_identity_system/claims_based.html)
+Learn how to configure a Claims-based Identity System.
+
+### [Cookie Authentication Module](../security_config/configure_identity_system/cookie_authentication_module.html)
+Learn how to configure a Cookie Authentication Module Identity System.
+
+### [Active Directory](../security_config/configure_identity_system/directory_server.html)
+Learn how to configure a Directory Server (i.e. Active Directory) Identity System.
+
+### [Kerberos](../security_config/configure_identity_system/Kerberos.html)
+Learn how to configure a Kerberos Identity System.
+
+### [SAML Authority](../security_config/configure_identity_system/SAML Authority.html)
+Learn how to configure a SAML Identity System.
+
+### [CA SiteMinder](http://docs.akana.com/ag/ca_siteminder/ca_siteminder_integrate_with_pm.htm)
+Learn how to integrate CA SiteMinder with Policy Manager and implement a configuration use case. 
+
 <div class = "divider1"></div>
 
 ## [Identity Profiles](../security_config/identity_profiles.html)
