@@ -8,6 +8,7 @@ sub-nav-class: Security Configuration
 weight:	6
 type: page
 nav-title: Configure SAML Identity System
+---
 
 ## Configure SAML Identity System
 

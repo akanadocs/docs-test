@@ -26,7 +26,7 @@ Learn how to define conditions for measuring and reporting performance of a spec
 
 ### Introduction
 
-The "Service Level Policy" defines conditions for measuring and reporting performance of a specific Contract. Each policy is composed of a "Rule" and "Access Interval." 
+The "Business Service Level Policy" defines conditions for measuring and reporting performance of a specific Contract. Each policy is composed of a "Rule" and "Access Interval." 
 
 * **Rules** represent the conditions you define to measure and report performance of a service contract. When a defined system condition matches a defined rule, an alert is raised. A **Rule** is composed of "Rule Elements" (i.e., Alert Code, Metric, Operator, Value, Units, and Interval) that are configured to meet your service monitoring requirements.
 
