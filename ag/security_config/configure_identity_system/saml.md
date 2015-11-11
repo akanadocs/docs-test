@@ -8,16 +8,29 @@ sub-nav-class: Security Configuration
 weight:	6
 type: page
 nav-title: Configure SAML Identity System
----
-<h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
+
+## Configure SAML Identity System
+
+Learn how to configure a SAML Identity System.
 
 <a href="../managing_identity_systems.html" class="button secondary">Managing Identity Systems</a>
-## Configure Saml Identity System
+
+<h5 class="stamp">Supported Platforms: 8.0 and greater.</h5>
+
+### Table of Contents
+<div id="toc-marker"></div>
+* [Introduction](#introduction)
+* [Configure SAML Identity System](#configure-saml-identity-system)
+
+## Introduction
+
 A SAML Authority is a system entity that issues assertions. You configure a SAML Authority Identity System by defining a domain and then configuring the detail information of the Issuer and the approach to resolve the SAML Assertion into an identity in Policy Manager. This information will be used to perform web service authentication based on SAML Assertion.  
 
 * Domain Details
 * KDC Configuration File
 * Realm Name - DN Mapping
+
+## Configure SAML Identity System
 
 1. Go to **Configure > Security > Identity Systems**.  
 The *Identity Systems Summary* screen displays. 

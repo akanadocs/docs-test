@@ -22,17 +22,21 @@ Learn about Identity Management Applications, which provide a method of storing 
 ### Table of Contents
 <div id="toc-marker"></div>
 * [About Identity Systems](#about-identity-systems)
+	* [Introduction](#introduction)
+	* [Identity Management Functions](#identity-management-functions)
+	* [Identity Management Components](#identity-management-components)
 * [About Identity Integration](#about-identity-integration)
 * [About Identity System Configuration](#about-identity-system-configuration)
-* [About Claim-Based Authentication and Authorization](#about-claim-based-authentication-and-authorization)
-* [Add Identity System](#add-identity-system)
-* [Modify Identity System](#modify-identity-system)
-* [Delete Identity System](#delete-identity-system)
-* [Change Domain Sequence](#change-domain-sequence)
+* [Configuration Options](#configuration-options)
+	* [Add Identity System](#add-identity-system)
+		* [Identity System Types](#identity-system-types)
+	* [Modify Identity System](#modify-identity-system)
+	* [Delete Identity System](#delete-identity-system)
+	* [Change Domain Sequence](#change-domain-sequence)
 
 <div class = "divider1"></div>
 
-## About Identity Systems
+## Introduction
 
 Identity management technologies provide tools for simplifying the management of data for users of an organization's information technology systems. An identity management application is referred to as an "Identity System." Each Identity System provides a method for storing data and making this data available to network users and administrators. Data is typically stored in what is called a "Directory."
 Data for a single user is stored in a user account. A user account includes Name, Password, Phone Numbers, etc. This information can be accessed by authorized users on the same network. User accounts can also be assigned to a group. This is referred to as a "User Group" or "Group Account." Rights and permissions are assigned to the user group and members of the group assume these rights and permissions.
@@ -69,7 +73,6 @@ The process of identity integration enables Policy Manager's Policy Manager Subs
 
 <a href="#top">back to top</a> 
 
-
 ## About Identity System Configuration
 
 The *Add Identity System Wizard* provides a method of integrating your Identity Management Application or Authentication Protocol with Policy Manager through the use of "Identity System Option Packs." Each Identity System Option Pack includes a set of connector properties and settings that must be configured to successfully integrate with Policy Manager.
@@ -83,95 +86,16 @@ The *Add Identity System Wizard* provides a method of integrating your Identity 
 
 <a href="#top">back to top</a> 
 
+## Configuration Options
 
-## About Claim-Based Authentication and Authorization
-
-###Introduction
-
-A "Claim" is a statement that one subject makes about itself or another subject. The subject making the claim(s) is the provider. Claims are packaged into one or more tokens that are then issued by an issuer.
-The claim-based identity system models a claim as an XML token that is signed by an authority, and the token contains assertions about the attributes of a user subject. In the case of Active Directory Federation Services (ADFS), a claim will be a SAML token. 
-
-### Authentication and Authorization
-
-After a claim-based Identity System instance is created and configured, it can be used for authentication and authorization of web service requests.
-
-* **For Authentication** - You must create an Authentication Policy, and select the Claim-Based Identity System as the authentication realm.
-* **For Authorization** - You must create an Authorization Policy.  First, select the Claim-Based Identity System as the authorization realm. Then, in the Resource field of the policy, specify the name of the claim (the Action field can be left as empty). 
-
-**Note**: *Created Authentication and Authorization policies can be assigned to the web services that require Claim-based security.*
-
-### Runtime
-
-At runtime, during the authentication phase, the digital signature inside a claim token will be validated based on the issuer certificate configured in the identity system. If the token is detected to be a SAML token, the issuer URL and the expiration date will also be verified automatically. During the authorization phase, all the configured XPath assertions associated with a claim configuration will be verified. If the verification succeeds, the configured XPath User Identifier will be evaluated and the result will be saved into usage data.
-
-### Policy Manager Claim-Based Authentication/Authorization Support
-
-* A user interface is available in the **Configure > Security > Identity Systems** Section that allows you to configure claims that will be validated by Policy Manager. You can configure a wide range of claims that can be issued by Active Directory Federation Services (ADFS). 
-* Associate claim-based authentication/authorization requests to web services by configuring an Authentication or Authorization Policy and selecting the Claim-Based Identity System.
-* The system supports retrieving claim tokens from web service requests and validating the tokens based on the claim configuration.
-
-### Design
-
-Policy Manager has provided an extensible framework to plug in third-party identity systems (e.g., LDAP) for authentication/authorization purposes.  To support claims, a new claim-based Identity System will be provided. Here a claim will be modeled as an XML token that is signed by an authority, and the token will contain assertions about the attributes of a user or identity. In the case of ADFS, a claim will be a SAML token. The configuration of this new Claim-based identity system includes:
-
-* **Issuer Name** - A URI that uniquely represents a claim issuer. If the claim token is SAML, the issuer identifier must match the issuer URL in the SAML token.
-* **Issuer Certificate** - An X509 Certificate of the issuer.  This certificate will be used by Policy Manager to verify the signature of the claim token at runtime.
-* **Identity XPath** - An XPath string function that will be evaluated against the claim token during runtime. The result of the evaluation will be used as the identifier of the requester and saved as part of the usage data. 
-* **Namespace Prefixes** - User-configured and used to both simplify the specification of XPath expressions ad as the context to evaluate all XPath expressions in the claim configuration.
-* **Claim Configuration** -  
-A user can specify the configuration of multiple claims issued by the same authority.  
-A requestor may satisfy multiple claims in the same token.  
-Each claim configuration will have the following entries:  
-  * **Claim Name** - A string that identifies the claim.
-  * **Claim Description** - A description of the claim.
-  * **Assertion XPaths** - An XPath string representing an assertion in a claim token. The XPath expression will be evaluated against a claim token at runtime. In order for the claim token to be valid, the result of the XPath evaluation must be true. A user can specify multiple XPath assertions for a single claim. In this case, each of the assertions must be evaluated to true in order for the token to be accepted. If the evaluation of one or more specified XPath assertions is false at runtime, the claim will be considered invalid and will result in authorization failure.
-
-### Example Configuration of a Claim-based Identity System
-The following claim-based Identity System example configuration specifies claims asserting groups a user belongs to and uses the email address in the token as the user identifier:  
-
-* **Claim Issuer Identifier**: http://www/.acme.com
-* **Claim Certificate**: [acme.com's certificate]
-* **Identity XPath**: /saml:Assertion/saml:AttributeStatement/saml:Attribute[@name="Email"]/saml:AttributeValue 
-
-**Claim Configuration #1**
-
-* Claim Detail:  
-  * Claim Name: AdminUser Claim
-  * Namespace Prefixes: Specify one or more Namespace prefixes that will evaluate all XPath expressions.
-* Assertion XPaths:  
-  * Claim Description: This claim asserts that a user belongs to the Admin group.
-  * Assertion XPath: /saml:Assertion/saml:AttributeStatement/saml:Attribute[@name="Group"]/saml:AttributeValue[text() = "admin"]
-
-**Claim Configuration #2**
-
-* Claim Detail:  
-  * Claim Name: ManagerClaim
-  * Namespace Prefixes: Specify one or more Namespace prefixes that will evaluate all XPath expressions.
-* Assertion XPaths:  
-  * Claim Description: This claim asserts that a user belongs to the Management group.
-  * Assertion XPath: /saml:Assertion/saml:AttributeStatement/saml:Attribute[@name="Group"]/saml:AttributeValue[text() = "management"] 
-
-After a claim-based Identity System instance is created and configured, it can be used for authentication and authorization of web service requests.
-
-* **For Authentication** - You must create an Authentication Policy, and select the Claim-Based Identity System as the authentication realm.
-* **For Authorization** - You must create an Authorization Policy. You first must select the Claim-Based Identity System as the authorization realm. Then in the Resource field of the policy, specify the name of the claim (the action field can be left empty).
-
-At runtime, during the authentication phase, the digital signature inside a claim token will be validated based on the issuer certificate configured in the identity system. If the token is detected to be a SAML token, the issuer URL and the expiration date will also be verified automatically. If the verification succeeds, the configured XPath User Identifier will be evaluated and the result will be saved into usage data. During the authorization phase, the XPath of the claim specified in the Authorization Policy will be verified.  
-
-**Notes**:
-
-* *The Authentication and Authorization policies created above can be assigned to the web services that require Claim-based security.*
-* *In this example, to authorize access to a web service for administrators, AdminUserClaim must be specified as the Resource field of the Authorization Policy.*
-
-<a href="#top">back to top</a> 
-
-
-## Add Identity System
+### Add Identity System
 
 The *Add Identity System Wizard* provides a series of options that are used to configure and maintain Identity Systems that you would like to integrate with Policy Manager.
 
 **Notes**:   
 *The number of identity systems available to select is based on how many "Identity System Option Packs" you have installed using the "Akana Administration Console" or have come pre-installed in your Policy Manager release.* 
+
+#### Identity System Types
 
 Select the instruction set for the Identity System type you wish to add:
 
@@ -180,19 +104,11 @@ Select the instruction set for the Identity System type you wish to add:
 * [Directory Server (i.e. Active Directory)](../security/AddIdentitySystem/directory_server.html)
 * [Kerberos](../security/AddIdentitySystem/kerberos.html)
 * [SAML](../security/AddIdentitySystem/saml.html)
+* [CA-SiteMinder](http://docs.akana.com/ag/ca_siteminder/ca_siteminder_integrate_with_pm.htm)
 
-###Authentication and Authorization
-* **For Authentication** - You must create an Authentication Policy, and select the Claim-Based Identity System as the authentication realm.
-* **For Authorization** - You must create an Authorization Policy. You first must select the Claim-Based Identity System as the authorization realm. Then in the Resource field of the policy, specify the name of the claim (the action field can be left empty).
-
-**Note**: *Created Authentication and Authorization policies can be assigned to the web services that require Claim-based security.*  
-
-###Runtime
-At runtime, during the authentication phase, the digital signature inside a claim token will be validated based on the issuer certificate configured in the identity system. If the token is detected to be a SAML token, the issuer URL and the expiration date will also be verified automatically. During the authorization phase, all the configured XPath assertions associated with a claim configuration will be verified. If the verification succeeds, the configured XPath User Identifier will be evaluated and the result will be saved into usage data.
-  
 <a href="#top">back to top</a>
 
-## Modify Identity System
+### Modify Identity System
 
 Follow all steps outlined in the various [Add Identity System](#add-identity-system) instruction sets, except, in each case, substitute the following for step 2:
 
@@ -201,7 +117,7 @@ The *Modify Identity System Wizard* launches and displays the *Identity System D
 
 <a href="#top">back to top</a> 
 
-## Delete Identity System
+### Delete Identity System
 
 1. Go to **Configure > Security > Identity Systems**.  
 2. On the *Identity Systems Summary* screen, select the identity system you would like to delete. 
@@ -211,7 +127,7 @@ A confirmation message displays.
 
 <a href="#top">back to top</a> 
 
-## Change Domain Sequence
+### Change Domain Sequence
 Update the display sequence of Identity System domains that are selectable from drop-down menus throughout Policy Manager. Used if your organization has integrated two or more identity system domains and you would like to configure the default menu selection for a specific Policy Manager deployment.
 
 1. Go to **Configure > Security > Identity Systems**.  

@@ -9,10 +9,21 @@ weight:	6
 type: page
 nav-title: Configure Directory Server (i.e. Active Directory) Identity System
 ---
-<h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
+
+## Configure Directory Server (i.e. Active Directory) Identity System
+
+Learn how to configure a Directory Server (i.e. Active Directory) Identity System.
 
 <a href="../managing_identity_systems.html" class="button secondary">Managing Identity Systems</a>
-## Configure Directory Server (i.e. Active Directory) Identity System
+
+<h5 class="stamp">Supported Platforms: 8.0 and greater.</h5>
+
+### Table of Contents
+<div id="toc-marker"></div>
+* [Introduction](#introduction)
+* [Configure Directory Server Identity System](#configure-directory-server-identity-system)
+
+## Introduction
 For the Active Directory Identity System, configuration tasks include specifying and/or configuring:
 
 * Domain Details
@@ -22,6 +33,8 @@ For the Active Directory Identity System, configuration tasks include specifying
 * Custom Queries
 * Proxy User DN
 * Advanced Properties.
+
+## Configure Directory Server Identity System
 
 1. Go to **Configure > Security > Identity Systems**.  
 The *Identity Systems Summary* screen displays.

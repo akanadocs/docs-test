@@ -9,13 +9,21 @@ weight:	6
 type: page
 nav-title: Configure Kerberos Identity System
 ---
-<h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
+
+
+## Configure Kerberos Identity System
+
+Learn how to configure a Kerberos Identity System.
 
 <a href="../managing_identity_systems.html" class="button secondary">Managing Identity Systems</a>
+
+<h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
+
 ### Table of Contents
 <div id="toc-marker"></div>
 * [About Kerberos](#about-kerberos)
 * [Configure Kerberos Identity System](#configure-kerberos-identity-system)
+
 
 ## About Kerberos
 Policy Manager includes an "Identity System Option Pack" that is pre-installed into the product that implements the OASIS Web Services Security, Kerberos Token Profile 1.1 (wss-v1.1-spec-os-KerberosToken Profile).  The "KerberosToken" is initially added to Policy Manager via the *Add Identity System* function in the *Configure > Identity Systems* section of the Policy Manager *Management Console*.  Then an Identity Profile is configured which utilizes the "KerberosToken" Identity System. Kerberos is an authentication service developed at MIT that allows users and services to demonstrate their identity to each other using a "shared secret" which is known by the user and service, and is used as an encryption key.
