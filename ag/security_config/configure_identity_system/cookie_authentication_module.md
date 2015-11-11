@@ -8,6 +8,7 @@ sub-nav-class: Security Configuration
 weight:	6
 type: page
 nav-title: Configure Cookie Authentication Module Identity System
+---
 
 ## Configure Directory Server (i.e. Active Directory) Identity System
 

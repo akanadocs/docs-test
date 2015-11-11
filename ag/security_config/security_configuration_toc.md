@@ -52,10 +52,10 @@ Learn how to configure a Cookie Authentication Module Identity System.
 ### [Active Directory](../security_config/configure_identity_system/directory_server.html)
 Learn how to configure a Directory Server (i.e. Active Directory) Identity System.
 
-### [Kerberos](../security_config/configure_identity_system/Kerberos.html)
+### [Kerberos](../security_config/configure_identity_system/kerberos.html)
 Learn how to configure a Kerberos Identity System.
 
-### [SAML Authority](../security_config/configure_identity_system/SAML Authority.html)
+### [SAML Authority](../security_config/configure_identity_system/saml.html)
 Learn how to configure a SAML Identity System.
 
 ### [CA SiteMinder](http://docs.akana.com/ag/ca_siteminder/ca_siteminder_integrate_with_pm.htm)
