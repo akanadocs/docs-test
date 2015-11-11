@@ -99,11 +99,11 @@ The *Add Identity System Wizard* provides a series of options that are used to c
 
 Select the instruction set for the Identity System type you wish to add:
 
-* [Claims-based](../security/AddIdentitySystem/claims_based.html)
-* [Cookie Authentication Module](../security/AddIdentitySystem/cookie_authentication_module.html)
-* [Directory Server (i.e. Active Directory)](../security/AddIdentitySystem/directory_server.html)
-* [Kerberos](../security/AddIdentitySystem/kerberos.html)
-* [SAML](../security/AddIdentitySystem/saml.html)
+* [Claims-based](../security_config/configure_identity_system/claims_based.html)
+* [Cookie Authentication Module](../security_config/configure_identity_system/cookie_authentication_module.html)
+* [Directory Server (i.e. Active Directory)](../security_config/configure_identity_system/directory_server.html)
+* [Kerberos](../security_config/configure_identity_system/kerberos.html)
+* [SAML](../security_config/configure_identity_system/saml.html)
 * [CA-SiteMinder](http://docs.akana.com/ag/ca_siteminder/ca_siteminder_integrate_with_pm.htm)
 
 <a href="#top">back to top</a>
