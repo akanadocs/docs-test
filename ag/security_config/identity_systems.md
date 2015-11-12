@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Identity Systems
-description: Learn about supported Identity Systems (e.g., Claims-based, cookie authentication module, Directory Server, Kerberos, SAML, CA-SiteMinder) and how to configure them in a variety of use cases. 
+description: Learn about supported Identity Systems (Claims-based, Cookie Authentication Module, Directory Server, Kerberos, SAML, and CA SiteMinder) and how to configure them in a variety of use cases. 
 product: ag
 category: learn
 sub-nav-class: Security Configuration
@@ -11,7 +11,7 @@ nav-title: Identity Systems
 ---
 
 ## Identity Systems
-Learn about supported Identity Systems (e.g., Claims-based, cookie authentication module, Directory Server, Kerberos, SAML, CA-SiteMinder) and how to configure them in a variety of use cases.
+Learn about supported Identity Systems (Claims-based, Cookie Authentication Module, Directory Server, Kerberos, SAML, and CA SiteMinder) and how to configure them in a variety of use cases.
 
 <a href="../security_config/security_configuration_toc.html" class="button secondary">Security Configuration (Home)</a> <a href="../security_config/policy_manager_domain.html" class="button secondary">Policy Manager Domain </a> <a href="../security_config/certificate_authority.html" class="button secondary">Certificate Authority (CA)</a> <br><br> <a href="../security_config/trusted_ca_certificates.html" class="button secondary">Trusted CA Certificates</a> <a href="../security_config/user_certificate_renewal.html" class="button secondary">User Certificate Renewal</a> <a href="../security_config/identity_profiles.html" class="button secondary">Identity Profiles</a> <a href="../security_config/privacy.html" class="button secondary">Privacy</a>
 
