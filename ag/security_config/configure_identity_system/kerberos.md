@@ -10,7 +10,6 @@ type: page
 nav-title: Configure Kerberos Identity System
 ---
 
-
 ## Configure Kerberos Identity System
 
 Learn how to configure a Kerberos Identity System.

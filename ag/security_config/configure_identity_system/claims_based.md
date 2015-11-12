@@ -10,9 +10,9 @@ type: page
 nav-title: Configure Claims-based Identity System
 ---
 
-## Configure SAML Identity System
+## Configure Claims-based Identity System
 
-Learn how to configure a SAML Identity System.
+Learn how to configure a Claims-based Identity System.
 
 <a href="../identity_systems.html" class="button secondary">Identity Systems (Home)</a>
 

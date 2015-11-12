@@ -10,9 +10,9 @@ type: page
 nav-title: Configure Cookie Authentication Module Identity System
 ---
 
-## Configure Directory Server (i.e. Active Directory) Identity System
+## Configure Cookie Authentication Module Identity System
 
-Learn how to configure a Directory Server (i.e. Active Directory) Identity System.
+Learn how to configure a Cookie Authentication Module Identity System.
 
 <a href="../identity_systems.html" class="button secondary">Identity Systems (Home)</a>
 
