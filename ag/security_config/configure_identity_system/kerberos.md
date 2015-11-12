@@ -15,7 +15,7 @@ nav-title: Configure Kerberos Identity System
 
 Learn how to configure a Kerberos Identity System.
 
-<a href="../managing_identity_systems.html" class="button secondary">Managing Identity Systems</a> <a href="http://docs.akana.com/ag/assets/kerberos_support_pm80.pdf" class="button secondary">Kerberos Support in Policy Manager 8.0</a>
+<a href="../security_config/identity_systems.html" class="button secondary">Identity Systems (Home)</a> <a href="http://docs.akana.com/ag/assets/kerberos_support_pm80.pdf" class="button secondary">Kerberos Support in Policy Manager 8.0</a>
 
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
 

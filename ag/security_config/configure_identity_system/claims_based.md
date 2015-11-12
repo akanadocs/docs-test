@@ -14,14 +14,13 @@ nav-title: Configure Claims-based Identity System
 
 Learn how to configure a SAML Identity System.
 
-<a href="../managing_identity_systems.html" class="button secondary">Managing Identity Systems</a>
+<a href="../security_config/identity_systems.html" class="button secondary">Identity Systems (Home)</a>
 
 <h5 class="stamp">Supported Platforms: 8.0 and greater.</h5>
 
 ### Table of Contents
 <div id="toc-marker"></div>
 * [Introduction](#introduction)
-	* [Introduction](#introduction)
 	* [Authentication and Authorization](#authentication-and-authorization)
 	* [Runtime](#runtime)
 	* [Policy Manager Claim-Based Authentication/Authorization Support](#policy-manager-claim-based-authentication-authorization-support)
