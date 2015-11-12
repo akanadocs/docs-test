@@ -5,7 +5,7 @@ description: Learn about applying additional encryption security to User Name, F
 product: ag
 category: learn
 sub-nav-class: Security Configuration
-weight:	6
+weight:	7
 type: page
 nav-title: Privacy
 ---

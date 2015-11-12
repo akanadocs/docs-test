@@ -1,11 +1,11 @@
 ---
 layout: page
-title: View and Modify Policy Manager Domain Name and Description
+title: Policy Manager Domain 
 description: Learn how the Policy Manager Domain Name and Description are generated during the initial Policy Manager configuration process and how to modify these details.
 product: ag
 category: learn
 sub-nav-class: Security Configuration
-weight:	6
+weight:	1
 type: page
 nav-title: Policy Manager Domain
 ---

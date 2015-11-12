@@ -5,7 +5,7 @@ description: Learn how to view, configure and manage the Certificate Authority (
 product: ag
 category: learn
 sub-nav-class: Security Configuration
-weight:	6
+weight:	2
 type: page
 nav-title: Certificate Authority
 ---

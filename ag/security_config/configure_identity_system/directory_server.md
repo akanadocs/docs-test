@@ -5,7 +5,7 @@ description: Learn how to configure a Directory Server (i.e. Active Directory) I
 product: ag
 category: learn
 sub-nav-class: Security Configuration
-weight:	6
+weight:	10
 type: page
 nav-title: Configure Directory Server (i.e. Active Directory) Identity System
 ---

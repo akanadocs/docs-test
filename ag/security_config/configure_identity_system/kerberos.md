@@ -5,7 +5,7 @@ description: Learn how to configure a Kerberos Identity System.
 product: ag
 category: learn
 sub-nav-class: Security Configuration
-weight:	6
+weight:	11
 type: page
 nav-title: Configure Kerberos Identity System
 ---

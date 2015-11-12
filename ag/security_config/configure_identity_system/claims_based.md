@@ -5,7 +5,7 @@ description: Learn how to configure a Claims-based Identity System.
 product: ag
 category: learn
 sub-nav-class: Security Configuration
-weight:	6
+weight:	8
 type: page
 nav-title: Configure Claims-based Identity System
 ---
