@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Identity Profiles
-description: Learn how to configure Identity Profiles for "Authentication Protocol" Identity System types and map them to identity configurations in a third-party system (e.g., user account). 
+description: Learn how to configure Identity Profiles for "Authentication Protocol" Identity System types and map them to identity configuration in a third-party system (e.g., user account). 
 product: ag
 category: learn
 sub-nav-class: Security Configuration
