@@ -16,7 +16,7 @@ Learn how to configure a Directory Server (i.e. Active Directory) Identity Syste
 
 <a href="../identity_systems.html" class="button secondary">Identity Systems (Home)</a>
 
-<h5 class="stamp">Supported Platforms: 8.0 and greater.</h5>
+<h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
 
 ### Table of Contents
 <div id="toc-marker"></div>

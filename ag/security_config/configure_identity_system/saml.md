@@ -16,7 +16,7 @@ Learn how to configure a SAML Identity System.
 
 <a href="../identity_systems.html" class="button secondary">Identity Systems (Home)</a> <a href="http://docs.akana.com/cm/assets/CM_WP_SAML.pdf" class="button secondary">SAML Single Sign On Use Cases</a> 
 
-<h5 class="stamp">Supported Platforms: 8.0 and greater.</h5>
+<h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
 
 ### Table of Contents
 <div id="toc-marker"></div>
@@ -59,7 +59,7 @@ The system configures your identity system based on your provided configuration 
 
 The following document provides information on the platform’s support of the SAML Web Browser SSO Profile, Service Provider role, used to provide single sign -on services for user login in various applications in the platform.
 
-<a href="http://docs.akana.com/cm/assets/CM_WP_SAML.pdf" class="button secondary">SAML Single Sign On Use Cases</a> 
+<a href="http://docs.akana.com/cm/assets/CM_WP_SAML.pdf">SAML Single Sign On Use Cases</a> 
 <br>
 
 <a href="#top">back to top</a> 
