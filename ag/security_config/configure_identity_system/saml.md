@@ -14,7 +14,7 @@ nav-title: Configure SAML Identity System
 
 Learn how to configure a SAML Identity System.
 
-<a href="../security_config/identity_systems.html" class="button secondary">Identity Systems (Home)</a> <a href="http://docs.akana.com/cm/assets/CM_WP_SAML.pdf" class="button secondary">SAML Single Sign On Use Cases</a> 
+<a href="../identity_systems.html" class="button secondary">Identity Systems (Home)</a> <a href="http://docs.akana.com/cm/assets/CM_WP_SAML.pdf" class="button secondary">SAML Single Sign On Use Cases</a> 
 
 <h5 class="stamp">Supported Platforms: 8.0 and greater.</h5>
 
