@@ -21,6 +21,12 @@ Learn how to configure a SAML Identity System.
 ### Table of Contents
 <div id="toc-marker"></div>
 * [Introduction](#introduction)
+	* [Introduction](#introduction)
+	* [Authentication and Authorization](#authentication-and-authorization)
+	* [Runtime](#runtime)
+	* [Policy Manager Claim-Based Authentication/Authorization Support](#policy-manager-claim-based-authentication-authorization-support)
+	* [Design](#design)
+	* [Example Configuration of a Claim-based Identity System](#example-configuration-of-a-claim-based-identity-system)
 * [Configure Claims-based Identity System](#configure-claims-based-identity-system)
 
 ## Introduction

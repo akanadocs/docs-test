@@ -14,7 +14,7 @@ nav-title: Configure SAML Identity System
 
 Learn how to configure a SAML Identity System.
 
-<a href="../managing_identity_systems.html" class="button secondary">Managing Identity Systems</a>
+<a href="../managing_identity_systems.html" class="button secondary">Managing Identity Systems</a> 
 
 <h5 class="stamp">Supported Platforms: 8.0 and greater.</h5>
 
@@ -22,6 +22,7 @@ Learn how to configure a SAML Identity System.
 <div id="toc-marker"></div>
 * [Introduction](#introduction)
 * [Configure SAML Identity System](#configure-saml-identity-system)
+* [SAML Single Sign On Use Cases](#saml-single-sign-on-use-cases)
 
 ## Introduction
 
@@ -54,5 +55,11 @@ You are taken to the *Realm Name - Domain Name Mapping* screen.
 9. Click **Finish**.    
 The system configures your identity system based on your provided configuration parameters and returns to the *Identity System Summary* screen.
 
+## SAML Single Sign On Use Cases
+
+The following document provides information on the platform’s support of the SAML Web Browser SSO Profile, Service Provider role, used to provide single sign -on services for user login in various applications in the platform.
+
+<a href="http://docs.akana.com/cm/assets/CM_WP_SAML.pdf" class="button secondary">SAML Single Sign On Use Cases</a> 
+<br>
 
 <a href="#top">back to top</a> 
