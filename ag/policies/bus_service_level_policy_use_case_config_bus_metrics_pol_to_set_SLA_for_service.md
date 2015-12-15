@@ -5,7 +5,7 @@ description: Learn how to configure a Business Metrics policy to set SLA for a s
 product: ag
 category: learn
 weight:	9
-sub-nav-class: Operational Policies
+sub-nav-class: Integration Policies
 type: page
 nav-title: Business Service Level Policy Use Case - How Do I Configure a Business Metrics policy to set SLA for a service?
 ---

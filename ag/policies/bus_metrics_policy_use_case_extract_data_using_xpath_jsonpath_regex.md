@@ -5,7 +5,7 @@ description: Learn how to use the Business Metrics Policy to Extract Business in
 product: ag
 category: learn
 weight:	9
-sub-nav-class: Operational Policies
+sub-nav-class: Integration Policies
 type: page
 nav-title: Business Metrics Policy Use Case - How Do I Extract Business Information from Service Usage Data Using XPath/JsonPath/RegEx?
 ---

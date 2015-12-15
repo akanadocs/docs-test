@@ -5,7 +5,7 @@ description: Learn how to generate a chart from Operational Metrics obtained fro
 product: ag
 category: learn
 weight:	9
-sub-nav-class: Operational Policies
+sub-nav-class: Integration Policies
 type: page
 nav-title: Operational Metrics Policy Use Case - Generate a Chart from Operational Metrics Obtained from Service Operational Data
 ---

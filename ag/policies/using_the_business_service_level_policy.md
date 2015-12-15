@@ -4,7 +4,7 @@ title: Using the Business Service Level Policy
 description: Learn how to .
 product: ag
 category: learn
-sub-nav-class: QoS Policies
+sub-nav-class: Integration Policies
 weight:	7
 type: page
 nav-title: Using the Business Service Level Policy
