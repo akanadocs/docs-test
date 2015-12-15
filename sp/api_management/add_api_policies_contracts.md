@@ -4,7 +4,7 @@ title: Add API to Policy Manager 8.0
 description: Learn how to add a simple API to the Policy Manager Management Console, configure associated Policies and Contracts, and send a test request. 
 product: sp
 category: gs	
-sub-nav-class: 
+sub-nav-class: API Management
 weight: 4
 type: page
 nav-title: Add API to Policy Manager 8.0
@@ -16,7 +16,7 @@ Add API to Policy Manager 8.0
 ### Table of Contents
 <div id="toc-marker"></div>
 
-* [Overview](#overview)
+* [Introduction](#introduction)
 * [Step 1: Install and Configure Policy Manager](#step-1-install-and-configure-policy-manager)
 * [Step 2: Add API to Policy Manager](#step-2-add-api-to-policy-manager)
 * [Step 3: Configure Policies](#step-3-configure-policies)
