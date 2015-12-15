@@ -75,7 +75,7 @@ When you've finished, you'll have two services: a physical and a virtual service
 5. Add a **WSDL Port Name** and click **Next**.
 5. Under the *HTTP Details* section, enter the API web address for our example: [http://demo.akana-dev.net:3005/posts](http://demo.akana-dev.net:3005/posts) in the **Location** field and click **Finish**.
 
-## Step 5: Configure Policies
+## Step 3: Configure Policies
 
 Next you will configure your API’s with the policies you want Akana to enforce. 
 
@@ -89,7 +89,7 @@ Next you will configure your API’s with the policies you want Akana to enforce
 
 You can find all descriptions of the policies in the Organization Tree. 
 
-## Step 6: Create Contracts
+## Step 4: Create Contracts
 
 A contract gives someone (typcially another application,) authorization to access an API. 
 
@@ -106,7 +106,7 @@ Your contract is now in draft mode. Next you must activate it:
 3. Click on the contract. In this example it shows as "Anonymous."
 4. Review the contract, then in the *Contracts Actions Portlet* click **Activate Contract**, then **OK**.
 
-##Step 7: Send Test Request
+## Step 5: Send Test Request
 
 To send a test request you will need the end point. 
 
