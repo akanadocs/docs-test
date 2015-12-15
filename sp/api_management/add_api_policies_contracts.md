@@ -18,10 +18,10 @@ Add API to Policy Manager 8.0
 
 * [Overview](#overview)
 * [Step 1: Install and Configure Policy Manager](#step-1-install-and-configure-policy-manager)
-* [Step 2: Add API to Policy Manager](step-2-add-api-to-policy-manager)
-* [Step 3: Configure Policies](step-3-configure-policies)
-* [Step 4: Create Contracts](step-4-create-contracts)
-* [Step 5: Send Test Requests](step-5-send-test-requests)
+* [Step 2: Add API to Policy Manager](#step-2-add-api-to-policy-manager)
+* [Step 3: Configure Policies](#step-3-configure-policies)
+* [Step 4: Create Contracts](#step-4-create-contracts)
+* [Step 5: Send Test Requests](#step-5-send-test-requests)
 
 <div class = "divider1"></div>
 
