@@ -23,30 +23,30 @@ The following use case illustrates how to configure a Business Metrics policy to
 1. Create a physical service.
 2. Virtualize the physical service.
 ![](images/bus_service_level_polic_usecase1a.jpg)
-3. Configure the Business Metrics Policy:  
- * a. Select any dataset  
+3. In the *Policies > Operational* section, use **Add Policy** to configure a Business Metrics Policy:  
+ * a. Select any dataset.  
  ![](images/bus_service_level_polic_usecase1b.jpg)
- * b. Provide dimensions and metrics configuration  
+ * b. Provide dimensions and metrics configuration.  
  ![](images/bus_service_level_polic_usecase1c.jpg)  
  ![](images/bus_service_level_polic_usecase1d.jpg)
- * c. Activate the policy  
+ * c. Activate the policy.  
   ![](images/bus_service_level_polic_usecase1e.jpg)
-4. Configure the Business service level policy:  
-  * a. Select tehe same dataset as above  
+4. In the *Policies > QoS* section, use **Add Policy** to configure a Business Service Level Policy:  
+  * a. Select the same dataset as above.  
   ![](images/bus_service_level_polic_usecase1f.jpg)
-  * b. Select filters (by dimensions)  
+  * b. Select Filters (by dimensions).  
   ![](images/bus_service_level_polic_usecase1g.jpg)
-  * c. Select desired condition based on the metrics in the dataset(data is loaded into the metrics as per the configuration in Business metrics policy)  
+  * c. Select desired condition based on the metrics in the dataset (data is loaded into the metrics as per the configuration in Business Metrics Policy).  
   ![](images/bus_service_level_polic_usecase1h.jpg)
-  * d. Select alert code
-  * e. Select the days and durations for which alert to be triggered  
+  * d. Select alert code.
+  * e. Select the Days and Durations for which the alert will be triggered.  
   ![](images/bus_service_level_polic_usecase1i.jpg)
-  * f. Activate the policy  
+  * f. Activate the policy.  
   ![](images/bus_service_level_polic_usecase1j.jpg)
-5. Attach Business metrics policy in operational policies
-6. Attach Business service level policy in qos policies  
+5. Attach Business Metrics Policy in *Operational Policies* section.
+6. Attach Business Service Level Policy in *QoS Policies* section.  
 ![](images/bus_service_level_polic_usecase1k.jpg)
-7. Send few requests to the virtual service so that the condition described in the Business service level policy is crossed.
-8. See alerts at service level.
-9. See SLA cleared alerts at service level (Similar to the below picture).
+7. Send several requests to the virtual service so that the condition described in the Business Service Level Policy is crossed.
+8. See alerts at the service level.
+9. See SLA cleared alerts at the service level (Similar to the illustration below).
 ![](images/bus_service_level_polic_usecase1l.jpg)<a href="#top">back to top</a>
