@@ -13,7 +13,7 @@ nav-title: Using the Business Service Level Policy
 ## Using the Business Service Level Policy
 Learn how to calculate service performance levels based on metrics in an Envision data set.
 
-<a href="policy_management.htm" class="button secondary">Managing Policies</a>  <a href="bus_service_level_policy_use_case_config_bus_metrics_pol_to_set_SLA_for_service.html" class="button secondary">Business Service Level Policy Use Case</a>  <a href="using_the_business_metrics_policy.html" class="button secondary">Using the Business Metrics Policy</a>  <a href="policies_use_case_toc.html" class="button secondary">Business Metrics Policy Use Cases</a> 
+<a href="policy_management.htm" class="button secondary">Managing Policies</a>  <a href="bus_service_level_policy_use_case_config_bus_metrics_pol_to_set_SLA_for_service.html" class="button secondary">Business Service Level Policy Use Case</a>  <a href="using_the_business_metrics_policy.html" class="button secondary">Using the Business Metrics Policy</a> <p></p> <a href="policies_use_case_toc.html" class="button secondary">Business Metrics Policy Use Cases</a> 
 
 <h5 class="stamp">Supported Platforms: 8.0 and greater.</h5>
 
