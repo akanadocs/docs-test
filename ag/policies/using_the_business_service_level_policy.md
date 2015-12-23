@@ -13,7 +13,7 @@ nav-title: Using the Business Service Level Policy
 ## Using the Business Service Level Policy
 Learn how to calculate service performance levels based on metrics in an Envision data set.
 
-<a href="policy_management.htm" class="button secondary">Managing Policies</a>  <a href="policies_use_case_toc.html" class="button secondary">Use Case</a> <a href="qos_policies.htm" class="button secondary">QoS Policies</a> <a href="using_the_business_metrics_policy.html" class="button secondary">Using the Business Metrics Policy</a>
+<a href="policy_management.htm" class="button secondary">Managing Policies</a>  <a href="using_the_business_metrics_policy.html" class="button secondary">Using the Business Metrics Policy</a>  <a href="policies_use_case_toc.html" class="button secondary">Business Metrics Policy Use Cases</a> 
 
 <h5 class="stamp">Supported Platforms: 8.0 and greater.</h5>
 
@@ -21,6 +21,7 @@ Learn how to calculate service performance levels based on metrics in an Envisio
 <div id="toc-marker"></div>
 * [Introduction](#introduction)
 * [Business Service Level Policy Options](#business-service-level-policy-options)
+* [Use Case](#use-case)
 
 
 ### Introduction
@@ -87,7 +88,7 @@ Allows you to define one or more "Access Days" (Sunday through Saturday). Each "
 * *You can also enter a new SLA Custom Alert Code directly into the Service Level Policy Rule line item.*
 * *Refer to [Alert Codes](http://docs.akana.com/ag/alerts/using_alert_codes.html) for more information on adding a new alert code.*
 
-### Configuration
+### Use Case
 
 Refer to the following Business Service Level Policy use case for a walk-through tutorial on adding and configuring a Business Service Level Policy. 
 
