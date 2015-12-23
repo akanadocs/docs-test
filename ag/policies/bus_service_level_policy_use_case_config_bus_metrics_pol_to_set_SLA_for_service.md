@@ -24,24 +24,24 @@ The following use case illustrates how to configure a Business Metrics policy to
 2. Virtualize the physical service.
 ![](images/bus_service_level_polic_usecase1a.jpg)
 3. In the *Policies > Operational* section, use **Add Policy** to configure a Business Metrics Policy:
-* 3a. Select any dataset.
+  * a. Select any dataset.
 ![](images/bus_service_level_polic_usecase1b.jpg)
-* 3b. Provide dimensions and metrics configuration.
+  * b. Provide dimensions and metrics configuration.
 ![](images/bus_service_level_polic_usecase1c.jpg)
 ![](images/bus_service_level_polic_usecase1d.jpg)
-* 3c. Activate the policy.
+  * c. Activate the policy.
 ![](images/bus_service_level_polic_usecase1e.jpg)
 4. In the *Policies > QoS* section, use **Add Policy** to configure a Business Service Level Policy:
-* 4a. Select the same dataset as above.
+  * a. Select the same dataset as above.
 ![](images/bus_service_level_polic_usecase1f.jpg)
-* 4b. Select Filters (by dimensions).
+  * b. Select Filters (by dimensions).
 ![](images/bus_service_level_polic_usecase1g.jpg)
-* 4c. Select desired condition based on the metrics in the dataset (data is loaded into the metrics as per the configuration in Business Metrics Policy).
+  * c. Select desired condition based on the metrics in the dataset (data is loaded into the metrics as per the configuration in Business Metrics Policy).
 ![](images/bus_service_level_polic_usecase1h.jpg)
-* 4d. Select alert code.
-* 4e. Select the Days and Durations for which the alert will be triggered.
+  * d. Select alert code.
+  * e. Select the Days and Durations for which the alert will be triggered.
 ![](images/bus_service_level_polic_usecase1i.jpg)
-* 4f. Activate the policy.
+  * f. Activate the policy.
 ![](images/bus_service_level_polic_usecase1j.jpg)
 5. Attach Business Metrics Policy in *Operational Policies* section.
 6. Attach Business Service Level Policy in *QoS Policies* section.
