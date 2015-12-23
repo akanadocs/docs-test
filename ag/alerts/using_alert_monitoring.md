@@ -13,7 +13,7 @@ nav-title: Using Alert Monitoring
 ## Using Alert Monitoring
 Learn how to view and manage alerts that are raised in your Policy Manager deployment.
 
-<a href="../alerts/Alerts_toc.html" class="button secondary">Alerts (Home)</a> <a href="../alerts/using_alerts_summary.html" class="button secondary">Using Alerts Summary</a>  <a href="../alerts/using_alert_codes.html" class="button secondary">Using Alert Codes</a> <a href="../alerts/using_management_scripts.html" class="button secondary">Using Management Scripts</a> <a href="../alerts/using_snmp_hosts.html" class="button secondary">Using SNMP Hosts</a><br><br><a href="../alerts/using_email_groups.html" class="button secondary">Using Email Groups</a> 
+<a href="../alerts/alerts_toc.html" class="button secondary">Alerts (Home)</a> <a href="../alerts/using_alerts_summary.html" class="button secondary">Using Alerts Summary</a>  <a href="../alerts/using_alert_codes.html" class="button secondary">Using Alert Codes</a> <a href="../alerts/using_management_scripts.html" class="button secondary">Using Management Scripts</a> <a href="../alerts/using_snmp_hosts.html" class="button secondary">Using SNMP Hosts</a><br><br><a href="../alerts/using_email_groups.html" class="button secondary">Using Email Groups</a> 
 
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
 
