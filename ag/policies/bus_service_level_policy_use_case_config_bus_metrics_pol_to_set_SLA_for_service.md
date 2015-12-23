@@ -26,8 +26,8 @@ The following use case illustrates how to configure a Business Metrics policy to
 3. In the *Policies > Operational* section, use **Add Policy** to configure a Business Metrics Policy:  
  * a. Select any dataset.  
  ![](images/bus_service_level_polic_usecase1b.jpg)
- * b. Provide dimensions and metrics configuration.  
- ![](images/bus_service_level_polic_usecase1c.jpg)  
+ * b. Provide dimensions and metrics configuration.
+ ![](images/bus_service_level_polic_usecase1c.jpg)
  ![](images/bus_service_level_polic_usecase1d.jpg)
  * c. Activate the policy.  
   ![](images/bus_service_level_polic_usecase1e.jpg)
@@ -36,7 +36,7 @@ The following use case illustrates how to configure a Business Metrics policy to
   ![](images/bus_service_level_polic_usecase1f.jpg)
   * b. Select Filters (by dimensions).  
   ![](images/bus_service_level_polic_usecase1g.jpg)
-  * c. Select desired condition based on the metrics in the dataset (data is loaded into the metrics as per the configuration in Business Metrics Policy).  
+  * c. Select desired condition based on the metrics in the dataset (data is loaded into the metrics as per the configuration in Business Metrics Policy).
   ![](images/bus_service_level_polic_usecase1h.jpg)
   * d. Select alert code.
   * e. Select the Days and Durations for which the alert will be triggered.  
