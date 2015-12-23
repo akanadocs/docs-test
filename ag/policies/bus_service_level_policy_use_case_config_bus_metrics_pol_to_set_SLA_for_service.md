@@ -25,7 +25,6 @@ The following use case illustrates how to configure a Business Metrics policy to
 ![](images/bus_service_level_polic_usecase1a.jpg)
 3. In the *Policies > Operational* section, use **Add Policy** to configure a Business Metrics Policy.
   * a. Select any dataset.
-![](images/bus_service_level_polic_usecase1b.jpg)
   * b. Provide dimensions and metrics configuration.
 ![](images/bus_service_level_polic_usecase1c.jpg)
 ![](images/bus_service_level_polic_usecase1d.jpg)
