@@ -11,7 +11,7 @@ nav-title: Admin Console Settings
 ---
 <h2 id="top">Admin Console Settings</h2>
 
-<p>When you install Community Manager, some additional settings become available in the Configuration section for the admin console of the container. This document provides information you can use to customize these settings for your installation.</p>
+<p>When you install Community Manager, some additional settings become available in the Configuration section for the Akana Administration Console of the container. This document provides information you can use to customize these settings for your installation.</p>
 <p>Note that although the configuration settings in Community Manager apply to the developer portal, the Admin Console settings apply only to the container, not the entire deployment. In some cases, configuration settings might need to be set differently in specific containers based on factors such as the Community Manager features installed in the container and the container's network access.</p>
 <p>The Site Admin for the developer portal might not have access to the Admin Console for the container; if you do not have access, work with the deployment operator and/or Administrator to change the configuration properties as needed.</p>
 <p>For general information regarding the Akana Administration Console, please refer to the applicable online help.</p>
@@ -24,8 +24,9 @@ nav-title: Admin Console Settings
 
 
 <ol class="table_of_contents">
-  <li><a href="#cm_settings_navigation">How do I get to the Community Manager Configuration Settings in the Akana Administration Console?</a></li>
-  <li><a href="#cm_settings_explanation">What are the Community Manager Configuration Settings in the Akana Administration Console?</a></li>
+  <li><a href="#ac_settings_cm_navigation">How do I get to the Community Manager Configuration Settings in the Akana Administration Console?</a></li>
+  <li><a href="#ac_settings_cm_explanation">What are the Community Manager Configuration Settings in the Akana Administration Console?</a></li>
+  <li><a href="#ac_settings_mongodb_installation">How do I get to the MongoDB Configuration Settings in the Akana Administration Console?</a></li>
 </ol>
 
 
@@ -34,8 +35,7 @@ nav-title: Admin Console Settings
 
 
 
-<a name="cm_settings_navigation"></a>
-<h3>How do I get to the Community Manager Configuration Settings in the Akana Administration Console?</h3>
+<a name="ac_settings_cm_navigation"></a><h3>How do I get to the Community Manager Configuration Settings in the Akana Administration Console?</h3>
 <p>To modify the Community Manager settings in the Admin Console, you must be a Site Admin for the Admin Console.</p>
 <h5>To navigate to the CM configuration settings:</h5>
 <ol>
@@ -48,8 +48,7 @@ nav-title: Admin Console Settings
 
 
 
-<a name="cm_settings_explanation"></a>
-<h3>What are the Community Manager Configuration Settings in the Akana Administration Console?</h3>
+<a name="ac_settings_cm_explanation"></a><h3>What are the Community Manager Configuration Settings in the Akana Administration Console?</h3>
 <p>The configuration settings allow you to set values for the specific container. They are in these categories:</p>
 <ul>
   <li><a href="#com_soa_api_security">com.soa.api.security</a></li>
@@ -57,10 +56,9 @@ nav-title: Admin Console Settings
   <li><a href="#com_soa_atmosphere_console">com.soa.atmosphere.console</a></li>
   <li><a href="#com_soa_atmosphere_forwardproxy">com.soa.atmosphere.forwardproxy</a></li>
   <li><a href="#com_soa_oauth">com.soa.oauth</a></li>
-  <li><a href="#com_soa_oauth_provider">com.soa.oauth.provider</a></li>
-  <li><a href="#com_soa_oauth_agent_client_cache">com.soa.oauth.agent.client.cache</a></li>
   <li><a href="#com_soa_oauth_client_cache">com.soa.oauth.client.cache</a></li>
   <li><a href="#com_soa_oauth_provider">com.soa.oauth.provider</a></li>
+  <li><a href="#com_soa_oauth_agent_client_cache">com.soa.oauth.agent.client.cache</a></li>
 </ul>
 <p>Some of the settings are explained below.</p>
 
@@ -94,9 +92,6 @@ nav-title: Admin Console Settings
   <dd>Default: false</dd>
 
 
-<!--<dt>atmosphere.config.contentPath</dt>
-<dd>(Doc not needed)</dd>-->
-
 
   <dt>atmosphere.config.csrfHttpWriteSkipUserAgents</dt>
   <dd>Allows you to specify values for the user-agent request header that will be allowed to use POST, PUT, and DELETE operations without providing the custom <a href="basics_glossary.htm#gl_xcsrf_token_fedmemberidheader">X-Csrf-Token_fedmemberID</a> header. If one of the specified values is in the user-agent request header, Community Manager does not check for the custom header. Separate multiple values with commas; use wildcard if needed. Example: Mozilla* allows all Mozilla Firefox versions.</dd>
@@ -111,16 +106,6 @@ nav-title: Admin Console Settings
 
 
 
-<!--<dt>atmosphere.config.loadContentFromWorkspace</dt>
-<dd>(debug option used internally)</dd>-->
-
-
-<!--<dt>atmosphere.config.loadResourcesFromWorkspace</dt>
-<dd>(debug option used internally)</dd>-->
-
-
-<!--<dt>atmosphere.config.resourcePath</dt>
-<dd>(Doc not needed)</dd>-->
 
 
   <dt>atmosphere.config.userRolesDenied</dt>
@@ -174,32 +159,65 @@ nav-title: Admin Console Settings
 
 
 
+<h4><a name="com_soa_oauth_client_cache"></a>com.soa.oauth.client.cache</h4>
+<p>The platform's OAuth provider and provider agent can add/retrieve OAuth client details to/from an in-memory cache. Configure the settings below in all containers where the OAuth provider and OAuth provider agent features are installed.</p>
+<p><strong>Note</strong>: These caching properties are node-specific. In a load balancing environment, the properties must be applied individually to each container. Each Network Director has a local cache, and the cache settings apply to that container property only. You must change the property on each Network Director container. The same property is applicable to all containers but must be manually applied on each container.</p>
+<dl>
+  <dt>com.soa.oauth.client.cache.dirtyCheckEnabled</dt>
+  <dd>Enable/Disable dirty checking of cached client objects.</dd>
+  <dd>When this property is enabled, each time the platform retrieves client details from cache it also retrieves the last updated timestamp of the OAuth client/application from the database and compares to see if the application has been modified since it was added to the cache. If there is a change, it retrieves the specific details from the database, returns them to the caller, and updates the cache. This means that app changes are immediately reflected in the OAuth Provider. However, there can be a performance impact.</dd>
+  <dd>If this property is set to <strong>false</strong>, caching is used.</dd>
+  <dd>Default: <strong>true</strong>.</dd>
+  <dt>com.soa.oauth.client.cache.lifeTime</dt>
+  <dd>The number of seconds for which the client details can be stored in cache. After this, the client details must be refreshed in the cache during the next scheduled job run.</dd>
+</dl>
+<p><a href="#top">Back to top</a></p>
+
+
+
 <h4><a name="com_soa_oauth_provider"></a>com.soa.oauth.provider</h4>
 <p>Indicates settings are applicable when the platform is used as an OAuth Provider. Tuning the settings to your installation can help you achieve better performance and make the OAuth Provider more scalable. To access the settings, log in to the Policy Manager console and go to <strong>Configuration</strong> > <strong>com.soa.oauth.provider</strong>.</p>
 <p>The following settings are available:</p>
 <dl>
+<dt>com.soa.oauth.provider.config.allowedAuthenticationTokenLength</dt>
+<dd>Indicates the allowable length for the OAuth token.</dd>
+
+<dt>com.soa.oauth.provider.config.allowedClockSkewInSecondsForJWT</dt>
+<dd>Indicates the allowable <a href="basics_glossary.htm#gl_clock_skew">clock skew</a> value, in seconds, for <a href="basics_glossary.htm#gl_jsonwebkey">JSON web key</a> tokens.</dd>
+
+<dt><a name="com_soa_oauth_provider_jwk_validityinseconds"></a>com.soa.oauth.provider.config.defaultJwkValidityInSeconds</dt>
+<dd>When asymmetric signature keys are used to sign ID tokens, the keys are rolled over by periodically adding new keys to the JWK Set. By default, All JSON Web Keys that the developer portal's OpenID Connect provider create will have a validity of 24 hours (86400 seconds). This setting allows you to modify the validity period.</dd>
+
 <dt>com.soa.oauth.provider.config.grantAttributesCacheExpirationTime</dt>
-<dd>The expiration time for grant attributes stored in the cache, in milliseconds. A scheduler takes care of refreshing the cache entries depending upon their expiration, as follows:</dd>
-</dl>
+<dd>The expiration time for grant attributes stored in the cache, in milliseconds. A scheduler takes care of refreshing the cache entries depending upon their expiration, as follows:
 <ul>
   <li>Value = 0: the cache is not cleared. Cache entries are retained.</li>
   <li>Value &lt; 0 (negative number): the cache is deleted.</li>
   <li>Value &gt; 0 (positive number): the scheduler checks the last access time of the entry. If the last access time is greater than the expiration time, the cache entry is expired since this indicates that probably the grant attributes are no longer required. If they are required, they are retrieved from the database.</li>
 </ul>
-<dl>
+</dd>
+
   <dt>com.soa.oauth.provider.config.grantAttributesCacheMaxSize</dt>
   <dd>Maximum cache size for OAuth Provider grants. The cache cannot exceed the max size. The scheduler uses the cache max size and cache expiration time to refresh and update the cache data.</dd>
+
   <dt>com.soa.oauth.provider.config.grantSequenceIDCacheExpirationTime</dt>
-  <dd>The cache expiration time for the Grant sequence ID (seqID) in the cache, in milliseconds. This property works in the same way as grantAttributesCacheExpirationTime above, for the grant seqID. The scheduler takes care of refreshing the cache entries depending upon their expiration, as follows:</dd>
-  </dl>
+  <dd>The cache expiration time for the Grant sequence ID (seqID) in the cache, in milliseconds. This property works in the same way as grantAttributesCacheExpirationTime above, for the grant seqID. The scheduler takes care of refreshing the cache entries depending upon their expiration, as follows:
 <ul>
   <li>Value = 0: the cache is not cleared. Cache entries are retained.</li>
   <li>Value &lt; 0 (negative number): the cache is deleted.</li>
   <li>Value > 0 (positive number): the scheduler checks the last access time of the entry . If the last access time is greater than the expiration time, the cache entry is expired since this indicates that probably the grant sequence ID is no longer required. If it is required, it is retrieved from the database.</li>
 </ul>
-<dl>
+</dd>
+
   <dt>com.soa.oauth.provider.config.grantSequenceIDCacheCacheMaxSize</dt>
   <dd>Maximum cache size for OAuth grantSeqID values. The grantSeqID represents a unique OAuth grant or token, and is the primary key of the OAUTH_GRANTS table as well as the OAUTH_TOKENS table. When doing a lookup for a grant or grant-related properties, instead of querying on huge grants or the tokens table it is faster to fetch it from cache.</dd>
+
+<dt>com.soa.oauth.provider.config.maxRedirectURLLength</dt>
+<dd>Indicates the maximum allowable length of a redirect URL when the platform is used as an OAuth Resource Server.</dd>
+
+<dt>com.soa.oauth.provider.config.rsaJwkKeySize</dt>
+<dd>Indicates the RSA JSON Web Key size when the platform is used as an OAuth Resource Server.</dd>
+
 </dl>
 
 <p><a href="#top">Back to top</a></p>
@@ -221,33 +239,14 @@ nav-title: Admin Console Settings
 
 
 
-<h4><a name="com_soa_oauth_client_cache"></a>com.soa.oauth.client.cache</h4>
-<p>The platform's OAuth provider and provider agent can add/retrieve OAuth client details to/from an in-memory cache. Configure the settings below in all containers where the OAuth provider and OAuth provider agent features are installed.</p>
-<p><strong>Note</strong>: These caching properties are node-specific. In a load balancing environment, the properties must be applied individually to each container. Each Network Director has a local cache, and the cache settings apply to that container property only. You must change the property on each Network Director container. The same property is applicable to all containers but must be manually applied on each container.</p>
-<dl>
-  <dt>com.soa.oauth.client.cache.dirtyCheckEnabled</dt>
-  <dd>Enable/Disable dirty checking of cached client objects.</dd>
-  <dd>When this property is enabled, each time the platform retrieves client details from cache it also retrieves the last updated timestamp of the OAuth client/application from the database and compares to see if the application has been modified since it was added to the cache. If there is a change, it retrieves the specific details from the database and returns them to the caller, and updates the cache.</dd>
-  <dd>True if enabled, false otherwise.</dd>
-  <dt>com.soa.oauth.client.cache.lifeTime</dt>
-  <dd>The number of seconds for which the client details can be stored in cache. After this, the client details must be refreshed in the cache during the next scheduled job run.</dd>
-</dl>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<h4><a name="com_soa_oauth_provider"></a>com.soa.oauth.provider</h4>
-
-<dl>
-<dt>com.soa.oauth.provider.config.allowedClockSkewInSecondsForJWT</dt>
-<dd>Indicates the allowable <a href="basics_glossary.htm#gl_clock_skew">clock skew</a> value, in seconds, for <a href="basics_glossary.htm#gl_jsonwebkey">JSON web key</a> tokens.</dd>
-<dt><a name="com_soa_oauth_provider_jwk_validityinseconds" id="com_soa_oauth_provider_jwk_validityinseconds"></a>com.soa.oauth.provider.jwk.validityInSeconds</dt>
-<dd>When asymmetric signature keys are used to sign ID tokens, the keys are rolled over by periodically adding new keys to the JWK Set. By default, All JSON Web Keys that the developer portal's OpenID Connect provider create will have a validity of 24 hours (86400 seconds). This setting allows you to modify the validity period.</dd>
-<dt>com.soa.oauth.provider.config.maxRedirectURLLength</dt>
-<dd>Indicates the maximum allowable length of a redirect URL when the platform is used as an OAuth Resource Server.</dd>
-<dt>com.soa.oauth.provider.config.rsaJwkKeySize</dt>
-<dd>Indicates the RSA JSON Web Key size when the platform is used as an OAuth Resource Server.</dd>
-</dl>
+<h3><a name="ac_settings_mongodb_installation"></a>How do I get to the MongoDB Configuration Settings in the Akana Administration Console?</h3>
+<p>Before you can access the MongoDB configuration settings, you'll need to install an additional optional product feature. This provides connectivity to a MongoDB instance for features that have NoSQL persistence capabilities.</p>
+<p>Once the add-on is installed, in the Akana Administration Console, go to <strong>Configuration</strong> &gt; <strong>com.soa.persistence.mongodb</strong> and configure the settings as needed. For additional information, refer to the MongoDB help on docs.akana.com. Notes on a few settings are below:</p>
+<ul>
+  <li><strong>com.akana.persistence.oidc.provider.dataset.8.0.0</strong>: indicates whether OAuth Provider collections are in the database.</li>
+  <li><strong>persistence.mongodb.async.thread</strong>: Number of threads to process asynchronous requests</li>
+</ul>
+<p><strong>Note</strong>: When the MongoDB plug-in is installed and MongoDB is configured, the auditing data automatically uses MongoDB; there is no option to use MongoDB for OAuth and the RDBMS for auditing information, unless different features are installed in different containers.</p>
 <p><a href="#top">Back to top</a></p>
 
 

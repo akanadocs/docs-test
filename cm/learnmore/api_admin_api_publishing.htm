@@ -42,6 +42,8 @@ nav-title: API Publishing
   <li><a href="#how_do_i_define_a_custom_content_type_for_a_rest_api">How do I define a custom content-type for a REST API?</a></li>
   <li><a href="#what_is_autoconnect">What is auto-connect?</a></li>
   <li><a href="#how_do_i_set_up_autoconnect_for_my_api">How do I set up auto-connect for my API?</a></li>
+  <li><a href="#how_do_i_set_up_my_api_to_support_cors">How do I set up my API to support CORS?</a></li>
+  <li><a href="#how_do_i_set_up_my_api_to_allow_anonymous_access">How do I set up my API to allow anonymous access?</a></li>
 </ol>
 
 
@@ -64,6 +66,7 @@ nav-title: API Publishing
   <li><a href="#how_do_i_edit_the_license_on_an_api_access_request_api_administrator">How do I edit the license on an API access request?</a></li>
   <li><a href="#what_is_scope_mapping_and_how_do_i_set_it_up">What is scope mapping and how do I set it up?</a></li>
   <li><a href="#how_do_i_inform_app_developers_about_available_licenses_and_app_access">How do I inform app developers about available licenses and API access?</a></li>
+  <li><a href="#i_want_to_exclude_an_operation">I want to exclude an operation so app developers can't use it. How do I do that?</a></li>
 </ol>
 
 
@@ -178,7 +181,8 @@ nav-title: API Publishing
     <tr class="t1row">
       <td>CORSAllowAll</td>
       <td><p><a href="basics_glossary.htm#gl_cors">CORS</a> (cross-origin resource sharing) enables users to access resources from within the browser serving a web page, and defines a way in which the browser and the server can interact to determine whether or not to allow the cross-origin request.</p>
-        <p>The CORSAllowAll policy allows all cross-origin requests.</p></td>
+        <p>The CORSAllowAll policy allows all cross-origin requests.</p>
+        <p>If you are using the platform as a proxy, you can add the <strong>CORSAllowAll</strong> policy to allow cross-origin requests to the proxy service.</p></td>
     </tr>
     <tr class="t2row">
       <td>DetailedAuditing</td>
@@ -279,7 +283,7 @@ nav-title: API Publishing
 <p>By default, the REST protocol is selected for your API, a Default Profile (Any in and out), and Default Operation are specified. After specifying the Target URL and Environment, you can optionally update the existing protocol (REST), or change the protocol to SOAP in the <em>Advanced Options</em> section.</p>
 <p><strong><em>Configure Protocol: </em></strong></p>
 <ol>
-  <li>On the <em>Advanced Options </em>line click <strong>Show</strong> to expand the section.</li>
+  <li>On the <em>Advanced Options </em>line, click <strong>Show</strong> to expand the section.</li>
 </ol>
 
 
@@ -422,6 +426,7 @@ nav-title: API Publishing
 <ol>
 <li>In the <em>Policies</em> section, select the policies that you would like the system to enforce on the proxy.
   Note: <em>You MUST select one security policy (for example, Category: Simple Header Security) and you should select a monitoring policy if you want to see charts and logs. If no policies display, consult your API Provider or Site Administrator. </em>See <a href="#what_security_and_monitoring_policies_are_supported">What security and monitoring policies are supported?</a></li>
+<li><strong>Tip</strong>: to select multiple policies, hold down the Ctrl key while selecting subsequent policies. To de-select a policy that was already selected, hold down Ctrl and click the policy again. </li>
  <li>Also note that if you select a monitoring policy<em>, </em>app data is not supported in <em>My APIs &gt; Monitoring</em> if Anonymous API Access is enabled. See <a href="#what_is_anonymous_api_access">What is Anonymous API Access?</a> for more information.</li>
  <li>If your API will be supporting OAuth, it's best to use the <strong>Edit</strong> function on the <em>API Details</em> page to select the OAuthSecurity policy after you have configured the API to support OAuth (i.e., adding an OAuth Provider in the <em>Site Admin &gt; Domains</em> section), and configuring the API using the <strong>OAuth Details</strong> function on the <em>API Details</em> page.</li>
  <li>After making your changes click <strong>Save</strong>. Your API is now registered.</li>
@@ -517,7 +522,7 @@ nav-title: API Publishing
 
 
 <p><strong><u>C. Test API </u></strong></p>
-<p>You can test the API with the Dev Console or with the REST clients mentioned in the <em>Pre-conditions</em> section above.</p>
+<p>You can test the API with the built-in Test Client tool or with the REST clients mentioned in the <em>Pre-conditions</em> section above.</p>
 <p>The request URL should be the added API URL with the same parameters for the physical service. For example:</p>
 <pre>
 http://{API_URL}/{API_path}?postalCode=90020&amp;o=xml&amp;key=AoCDRhKKY0Gy6hlx1Ncl1PwiV7GqoGU_MebxLQvmhxy_bsAtzVfmVtzFsjOYSCTZ</pre>
@@ -533,7 +538,7 @@ http://{API_URL}/{API_path}?postalCode=90020&amp;o=xml&amp;key=AoCDRhKKY0Gy6hlx1
 <p>When you enable anonymous access in the <strong>Add a New API Wizard</strong> by selecting <strong>Yes</strong> to <strong>Allow Anonymous Access</strong> on the <em>Proxy</em> page, the <strong>This API Requires Approval</strong> option is disabled. This means that app developers are not required to submit an API Access Request to access the API, except in the following scenarios:</p>
 <ul>
   <li>An approved API Access Request is required before you can view the <em>Apps Connected</em> list on the <em>API Details</em> page.</li>
-  <li>The <em>My Apps &gt; Dev Console</em> will only show the API from the API drop-down when an approved API Access Request exists.</li>
+  <li>The <em>My Apps &gt; Test Client</em> will only show the API from the API drop-down when an approved API Access Request exists.</li>
  </ul>
  <p><strong>API Charts / Logs with Anonymous API Access:</strong></p>
  <ul>
@@ -657,17 +662,12 @@ http://{API_URL}/{API_path}?postalCode=90020&amp;o=xml&amp;key=AoCDRhKKY0Gy6hlx1
     </tr>
     <tr class="t2row">
       <td>Content Types</td>
-      <td>The  Request and  Response sections (accessible by clicking <strong>Show</strong> for each operation), includes a list of  &quot;Pre-defined&quot;  content types that support different message processing requirements for Input and   Output messages. <br />
-        <br />
-        <em><u>Request Content-Type</u></em>&#8212;This option is used to describe the content type of the Request Message. The platform uses input serialization to correctly set the content type of the request being issued. The &quot;Pre-defined&quot; media types include API Default, Any, application/x-www-form-urlencoded, text/xml, application/xml, and application/json.<br />
-        <br />
-          1) If the request message is a GET or DELETE, the query string contains items that are appended  to the resulting XML or JSON message. <br />
-          <br />
-          2) If the request message is a PUT or POST, the  body contains a URL encoded string whose elements are appended to the resulting  XML or JSON message. A value of an XML-based content type assumes that the body  contains the whole XML message.<br />
-          <br />
-          <u><em>R</em></u><em><u>esponse Content-</u></em><u><em>Type</em></u>&#8212;This option is used to describe the content type of the response message when it is not a fault. The platform uses output serialization to correctly set the content type of the response sent back to the consumer when the response is not a fault. The &quot;Pre-defined&quot; media types include API Default, Any, text/xml, application/xml, application/json.<br />
-          <br />
-        <em>NOTE: If Proxy API = Yes, the selected content types are automatically synchronized to the specified proxy address. If you do not want the content type selections synchronized to the proxy address, click <strong>delete</strong> next to the &quot;sync to proxy&quot; icon. </em></td>
+      <td><p>The Request and  Response sections (accessible by clicking <strong>Show</strong> for each operation), includes a list of  &quot;Pre-defined&quot; content types that support different message processing requirements for Input and   Output messages.</p>
+        <p><em><u>Request Content-Type</u></em>&#8212;This option is used to describe the content type of the Request Message. The platform uses input serialization to correctly set the content type of the request being issued. The &quot;Pre-defined&quot; media types include API Default, Any, application/x-www-form-urlencoded, text/xml, application/xml, and application/json.</p>
+          <p>1) If the request message is a GET or DELETE, the query string contains items that are appended  to the resulting XML or JSON message.</p>
+          <p>2) If the request message is a PUT or POST, the  body contains a URL encoded string whose elements are appended to the resulting  XML or JSON message. A value of an XML-based content type assumes that the body  contains the whole XML message.</p>
+          <p><u><em>Response Content-Type</em></u>&#8212;This option is used to describe the content type of the response message when it is not a fault. The platform uses output serialization to correctly set the content type of the response sent back to the consumer when the response is not a fault. The &quot;Pre-defined&quot; media types include API Default, Any, text/xml, application/xml, application/json.</p>
+        <p><em>NOTE: If Proxy API = Yes, the selected content types are automatically synchronized to the specified proxy address. If you do not want the content type selections synchronized to the proxy address, click <strong>delete</strong> next to the &quot;sync to proxy&quot; icon. </em></p></td>
     </tr>
 </tbody>
 </table>
@@ -723,6 +723,25 @@ http://{API_URL}/{API_path}?postalCode=90020&amp;o=xml&amp;key=AoCDRhKKY0Gy6hlx1
   <li>Conditional: if your API uses the Licenses feature, a list of scopes is displayed for any environment you selected. Check one or more scopes that you want to allow for an auto-connect contract, for each environment selected.</li>
   <li>Click <strong>Finish</strong>.</li>
 </ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_do_i_set_up_my_api_to_support_cors"></a><h3>How do I set up my API to support CORS?</h3>
+<p>If you want your API to support cross-origin resource sharing (<a href="basics_glossary.htm#gl_cors">CORS</a>), you can do that in your API implementation in the platform.</p>
+<p>In your API setup, add the <strong>CorsAllowAll</strong> policy to the proxy API implementation (API &gt; Details &gt; Edit &gt; CorsAllowAll policy). When the API definition includes this policy, the proxy endpoint will accept request messages that come from a different domain, in the context of a browser.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+<a name="how_do_i_set_up_my_api_to_allow_anonymous_access"></a><h3>How do I set up my API to allow anonymous access?</h3>
+<p>The platform supports app developers testing an API without choosing a specific app (anonymous context).</p>
+<p>In order for developers to be able to test your API in this way, you must have some settings in place:</p>
+<ul>
+  <li>API setup, Proxy tab: <strong>Allow Anonymous Access</strong> is set to <strong>Yes</strong>.</li>
+  <li>API setup, Proxy tab: <strong>This API Requires Approval</strong> is set to <strong>No</strong>.</li>
+  <li>API setup, Proxy tab: there are no security policies added to the API.</li>
+  <li>API setup, API tab: if the API uses licenses, make sure the licenses do not use any private scopes.</li>
+</ul>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -872,7 +891,6 @@ http://{API_URL}/{API_path}?postalCode=90020&amp;o=xml&amp;key=AoCDRhKKY0Gy6hlx1
 <p>For example, let's say your API includes a set of operations relating to calendar functionality and another set of operations relating to email access and management. App A might only need access to the calendar functionality, and App B might include an email client and might require access to the operations relating to email. The scope mapping feature enables you to group individual operations into logical groups that can be separately packaged into a license for App A and another for App B.</p>
 <p>As another example, let's say you want to offer access to your GET operations, and a higher level of access, for a fee, to all operations including add, modify, and delete. The Business Admin defines READ and MODIFY scopes, and then assigns each to a separate license. The API Admin assigns GET operations to the READ scope and assigns all operations to the MODIFY scope. Users who choose the paid license get access to all scopes; users who choose the free license can only access the GET operations.</p>
 <p>At runtime, when a request is received to an API proxy from a particular app, the request is only passed through to the API if it is using one of the specific operations covered by the license governing the API contract.</p>
-<!--<p><em>Note: If your API is configured with OAuth, the scopes were defined as part of the initial OAuth Provider configuration in the Site Administration section. The Edit OAuth Details function on the API Details page includes a <strong>Scope Mapping</strong> function for this scenario.</em></p>-->
 <a name="to_perform_scope_mapping"></a><h5>To perform scope mapping:</h5>
 <ol>
   <li>First, make sure the Licenses feature is enabled in the API. From the <em>API Details</em> page, click<strong> Edit</strong>, and make sure the <strong>Use Licenses</strong> checkbox is checked.</li>
@@ -884,29 +902,24 @@ http://{API_URL}/{API_path}?postalCode=90020&amp;o=xml&amp;key=AoCDRhKKY0Gy6hlx1
     </ul>
    </li>
   
-  <li>Operation-specific mapping only: For each operation, in the <em>Scope</em> column, click <strong>Select</strong>. The <em>Select Scope</em> popup displays. Choose one or more scopes for the operation and click <strong>Confirm</strong>.</li>
+  <li>Operation-specific mapping only: For each operation, in the <em>Scope</em> column, click <strong>Select</strong>. The <em>Select Scope</em> popup displays. Choose one or more scopes for the operation and click <strong>Confirm</strong>. If you assign scopes to an operation, all apps with licenses that include one of those scopes can use the operation. If no scopes are defined for an operation, it means that no scopes are needed for that operation (the least secure scenario).</li>
   <li>Repeat for each operation.</li>
   <li>Click <strong>Save</strong>.</li>
 </ol>
-<!--<h5>To configure Scope Mapping (via <em>Edit OAuth Details &gt; Scope Mapping</em>):</h5>
-<ol>
-  <li>Refer to the Configure Scope Mapping section in <a href="publish_api_oauth_support.htm#how_do_i_configure_my_api_with_an_oauth_provider">How do I configure my API with an OAuth Provider?</a>.</li>
-</ol>-->
-
 <p><a href="#top">Back to top</a></p>
 
 
 
 <a name="how_do_i_inform_app_developers_about_available_licenses_and_app_access"></a><h3>How do I inform app developers about available licenses and API access?</h3>
 <p>As a standard practice, a list of available Licenses and the level of App Access provided by each License should be included in the documentation for your API.</p>
-
 <p><a href="#top">Back to top</a></p>
 
 
 
-
-
-
+<a name="i_want_to_exclude_an_operation"></a><h3>I want to exclude an operation so app developers can't use it. How do I do that?</h3>
+<p>You might have one or more operations that are part of your API but you don't want to make them available for app developers. Perhaps they are still under development or being tested.</p>
+<p>If you want to make sure no app can access these operations, the best way to do it is with scopes and licenses. You can use a scope that isn't assigned to any license, and use the API scope mapping wizard to assign that scope to the operation. When you're ready to share the operation, you can update the scope assignments, assigning a scope that's assigned to a license so that app developers can choose to access it.</p>
+<p><a href="#top">Back to top</a></p>
 
 
 

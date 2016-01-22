@@ -1,0 +1,863 @@
+---
+layout: page
+title: Domain Management | Site Administration | Community Manager Help
+description: Site configuration tasks&#8212;Configure authentication domains for APIs defined in the platform.
+product: cm
+category: learn
+sub-nav-class: Site Administration
+weight: 3216
+type: page
+nav-title: Domain Management
+---
+<h2 id="top">Domains</h2>
+<p>Configure domains that can be used for login or as authentication domains for APIs defined in the platform.</p>
+<p><strong>Note</strong>: For detailed information about OpenID Connect, and setting up the OpenID Connect domain, see <a href="site_admin_openidconnect_support.htm">OpenID Connect Support</a>.</p>
+<div class = "divider1"></div>
+
+
+<h3 style="color: gray;">Table of Contents</h3>
+
+
+
+<ol class="table_of_contents">
+  <li><a href="#what_domain_types_are_supported">What domain types are supported on the platform?</a></li>
+  <li><a href="#how_do_i_add_a_domain">How do I add a domain?</a></li>
+  <li><a href="#how_do_i_modify_a_domain">How do I modify a domain?</a></li>
+  <li><a href="#how_do_i_delete_a_domain">How do I delete a domain?</a></li>
+  <li><a href="#how_do_i_set_up_a_login_domain">How do I set up a login domain?</a></li>
+  <li><a href="#how_do_i_enable_a_domain_for_login">How do I enable a domain for login?</a></li>
+  <li><a href="#how_do_i_configure_a_platform_login_default_domain">How do I configure a Platform Login domain?</a></li>
+  <li><a href="#how_do_i_set_up_an_ldap_domain">How do I set up an LDAP domain?</a></li>
+  <li><a href="#domains_login_setup_facebook">How do I set up the platform to log in with Facebook (Facebook Connector domain)?</a></li>
+  <li><a href="#how_do_i_get_google_credentials_for_a_google_connector_domain">How do I get Google credentials for a Google Connector domain?</a></li>
+  <li><a href="#how_do_i_set_up_a_google_connector_domain">How do I set up a Google Connector domain?</a></li>
+  <li><a href="#domains_login_setup_google">How do I set up the platform to log in with Google?</a></li>
+  <li><a href="#what_value_should_i_use_for_the_redirect_uri_for_my_google_connector_domain">What value should I use for the Redirect URI for my Google Connector domain?</a></li>
+  <li><a href="#how_do_i_customize_google_user_consent_screen">How do I customize the Google user consent screen for my Google Connector domain?</a></li>
+</ol>
+
+
+<h5 style="color: gray;"><a href="#h_oauthproviderdomain">OAuth Provider Domain:</a></h5>
+<ol class="table_of_contents">
+  <li><a href="#how_does_the_authentication_provider_configuration_process_work">How does the authentication provider configuration process work?</a></li>
+  <li><a href="#how_do_i_set_up_a_platform_deployment_to_support_a_third_party_provider">How do I set up a platform deployment to support a third-party OAuth provider?</a></li>
+  <li><a href="#how_do_i_set_up_my_deployment_to_support_oauth">How do I set up my deployment to support OAuth?</a></li>
+  <li><a href="#how_do_i_set_up_and_configure_an_oauth_provider_domain">How do I set up and configure an OAuth Provider domain?</a></li>
+  <li><a href="#what_are_the_settings_on_the_oauth_provider_grant_types_page">What are the settings on the OAuth Provider Grant Types page and what options should I choose?</a></li>
+  <li><a href="#what_are_the_settings_on_the_oauth_provider_branding_page">What are the settings on the OAuth Provider Branding page and what options should I choose?</a></li>
+  <li><a href="#how_can_i_set_up_my_oauth_provider_domain_to_support_sso_login">How can I set up my OAuth Provider domain to support end-user login from an external identity provider?</a></li>
+  <li><a href="#what_is_an_authorization_server_url">What is an Authorization Server URL?</a></li>
+  <li><a href="#what_is_the_authorization_server_url_for_the_platform">What is the OAuth Authorization Server URL for the platform?</a></li>
+  <li><a href="#what_are_the_oauth_custom_headers">What are the OAuth custom headers?</a></li>
+  <li><a href="#what_is_a_jwt_bearer_assertion">What is a JWT Bearer Assertion, and what does the platform support for JWT Bearer Assertions?</a></li>
+</ol>
+
+
+<h5 style="color: gray;"><a href="#h_samlwebssoslodomain">SAML Web SSO/SLO Domain:</a></h5>
+<ol class="table_of_contents">
+  <li><a href="#domains_login_setup_saml_web_sso">How do I set up the platform to log in with SAML Web SSO?</a></li>
+  <li><a href="#domains_login_setup_saml_web_slo">How do I set up the platform for single logout (SLO) using SAML?</a></li>
+</ol>
+
+
+<h5 style="color: gray;"><a href="#h_casiteminderdomain">CA SiteMinder Domain:</a></h5>
+<ol class="table_of_contents">
+  <li><a href="#domains_login_setup_ca_siteminder">How do I set up the platform to log in with CA SiteMinder (CA SiteMinder domain)?</a></li>
+</ol>
+
+
+<h5 style="color: gray;"><a href="#h_pingfederatedomain">PingFederate Domain:</a></h5>
+<ol class="table_of_contents">
+  <li><a href="#how_do_i_configure_a_pingfederate_domain">How do I configure a PingFederate domain?</a></li>
+</ol>
+
+
+<div class = "divider1"></div>
+
+
+
+<a name="what_domain_types_are_supported"></a><h3>What domain types are supported on the platform?</h3>
+<p>The security domains configured on the platform can be used in multiple contexts, including:</p>
+<ul>
+  <li>Login domain, for logging in to the portal</li>
+  <li>Resource owner domain, for OAuth resource owners</li>
+  <li>App authentication in API runtime, for sending API requests</li>
+</ul>
+<p>One domain can be used for multiple purposes, or separate domains can be configured for separate purposes.</p>
+<p>When a specific domain is configured for the purpose of developer logins to the portal, it is called a <strong>login domain</strong>.</p>
+<p>The table below shows supported domains and how they are used.</p>
+<table cellspacing="0px" class="doctable" style="width: 98%;">
+  <thead>
+    <tr>
+      <th width="50%">Domain</th>
+      <th width="25%">Developer Portal Login?</th>
+      <th width="25%">OAuth Resource Owner Login?</th>
+      </tr>
+  </thead>
+  <tbody>
+    <tr class="t2row">
+      <td><a href="#how_do_i_configure_a_platform_login_default_domain">Platform Login</a> (no setup required)</td>
+      <td>Yes</td>
+      <td>No</td>
+      </tr>
+    <tr class="t1row">
+      <td><a href="#domains_login_setup_facebook">Facebook® Connector</a></td>
+      <td>Yes</td>
+      <td>Yes</td>
+    </tr>
+    <tr class="t2row">
+      <td><a href="#how_do_i_set_up_a_google_connector_domain">Google® Connector</a></td>
+      <td>Yes</td>
+      <td>Yes</td>
+    </tr>
+    <tr class="t1row">
+      <td><a href="#how_do_i_set_up_and_configure_an_oauth_provider_domain">OAuth Provider</a></td>
+      <td>No</td>
+      <td>Yes</td>
+    </tr>
+    <tr class="t2row">
+      <td><a href="site_admin_openidconnect_support.htm#domain_setup_openid_connect_relying_party">OpenID Connect Relying Party</a></td>
+      <td>Yes</td>
+      <td>Yes</td>
+    </tr>
+    <tr class="t1row">
+      <td><a href="#how_do_i_configure_a_pingfederate_domain">PingFederate&reg; Provider</a></td>
+      <td>No</td>
+      <td>No</td>
+      </tr>
+    <tr class="t2row">
+      <td><a href="#how_do_i_set_up_an_ldap_domain">LDAP</a> (must first be set up in Policy Manager)</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      </tr>
+    <tr class="t1row">
+      <td><a href="#domains_login_setup_ca_siteminder">CA SiteMinder</a> (Requires installation, and then setup in Policy Manager)</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      </tr>
+    <tr class="t2row">
+      <td><a href="basics_glossary.htm#gl_saml">SAML</a> (requires installation, and then setup in Policy Manager)</td>
+      <td>Yes</td>
+      <td>Yes</td>
+    </tr>
+  </tbody>
+</table>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_do_i_add_a_domain"></a><h3>How do I add a domain?</h3>
+<h5>To add a domain:</h5>
+<ol>
+  <li>Log in as the Site Admin and click the <em>Administration</em> quick filter (wrench icon).</li>
+  <li>Click <strong>Domains</strong>. The <em>Domains Summary</em> page displays.</li>
+  <li>On the right, click <strong>Add Domain</strong>.</li>
+  <li>Choose from the supported domain types, and then follow the applicable setup instructions. See <a href="#what_domain_types_are_supported">What domain types are supported on the platform?</a> above.
+  </li>
+  <li>When the domain is set up, if you want to offer it for login you must enable it as a separate configuration step. See <a href="site_admin_domains.htm#how_do_i_enable_a_domain_for_login">How do I enable a domain for login?</a></li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_do_i_modify_a_domain"></a><h3>How do I modify a domain?</h3>
+<h5>To modify a domain:</h5>
+<ol>
+  <li>Log in as the Site Admin and click the <em>Administration</em> quick filter (wrench icon).</li>
+  <li>Click <strong>Domains</strong>. The <em>Domains Summary</em> page displays.</li>
+  <li>Find the domain on the list and click <strong>Modify</strong>. The <em>Edit</em> wizard for the specific domain type displays.</li>
+  <li>Follow the setup instructions for the specific domain type (editing is similar to adding, although some fields, such as the domain name, cannot be changed). See <a href="#what_domain_types_are_supported">What domain types are supported on the platform?</a> above.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_do_i_delete_a_domain"></a><h3>How do I delete a domain?</h3>
+<h5>To delete a domain:</h5>
+<ol>
+  <li>Log in as the Site Admin and click the <em>Administration</em> quick filter (wrench icon).</li>
+  <li>Click <strong>Domains</strong>. The <em>Domains Summary</em> page displays.</li>
+  <li>In the right-hand column of the domain line item, click <strong>Delete</strong>. At the confirmation message, click <strong>OK</strong>.</li>
+  </ol>
+<p><strong>Note</strong>: Rather than deleting a domain, you might choose to disable the domain for login, in the Config options. For instructions, see <a href="site_admin_config.htm#how_do_i_disable_a_platform_login">How do I disable a platform login?</a></p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_do_i_set_up_a_login_domain"></a><h3>How do I set up a login domain?</h3>
+<p>To make a login domain available to users for logging in to the platform, you must perform two steps:</p>
+<ol>
+  <li>Configure the applicable domain: <em>Administration &gt; Domains &gt; Add Domain</em>. Domains applicable to login are:
+    <ul>
+      <li>Platform Login: see <a href="#how_do_i_configure_a_platform_login_default_domain">How do I configure a Platform Login domain?</a></li>
+      <li>Facebook Connector: see <a href="#domains_login_setup_facebook">How do I configure a Facebook Connector domain?</a></li>
+      <li>Google Connector: see <a href="#how_do_i_set_up_a_google_connector_domain">How do I configure a Google Connector domain?</a></li>
+      <li>OpenID Connect Relying Party: see <a href="site_admin_openidconnect_support.htm#domain_setup_openid_connect_relying_party">How do I set up the platform to log in with an OpenID Connect Relying Party domain?</a></li>
+      <li>LDAP: see <a href="#how_do_i_set_up_an_ldap_domain">How do I set up an LDAP domain?</a></li>
+      <li>CA SiteMinder: see <a href="#domains_login_setup_ca_siteminder">How do I set up the platform to log in with CA SiteMinder (CA SiteMinder domain)?</a></li>
+      <li>SAML Web SSO: see <a href="#domains_login_setup_saml_web_sso">How do I set up the platform to log in with SAML Web SSO?</a></li>
+    </ul>
+    </li>
+  
+  <li>Enable the domain for login. This is a configuration step: <em>Administration &gt; Config &gt; Logins</em> (<strong>Enable</strong> checkbox). For more information, see <a href="site_admin_domains.htm#how_do_i_enable_a_domain_for_login">How do I enable a domain for login?</a></li>
+</ol>
+<p>Once these two steps are complete, the login options you've configured and enabled are available for anyone logging in to the platform.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_do_i_enable_a_domain_for_login"></a><h3>How do I enable a domain for login?</h3>
+<p>To make a login domain available to users for logging in to the platform, you must perform two steps:</p>
+<ol>
+  <li>Configure the applicable domain: <em>Administration &gt; Domains &gt; Add Domain</em>. For information about domains that are applicable to login, see <a href="#what_domain_types_are_supported">What domain types are supported on the platform?</a></li>
+  <li>Enable the domain for login: <em>Administration &gt; Config &gt; Logins</em> (<strong>Enable</strong> checkbox). See below.</li>
+</ol>
+
+<h5><a name="p_enable_login_domain"></a>To enable a domain for login:</h5>
+<ol>
+  <li>Log in as the Site Admin and click the <em>Administration</em> quick filter (wrench icon).</li>
+  <li>Click <strong>Config</strong> &gt; <strong>Logins</strong>.</li>
+  <li>Check the <strong>Enable</strong> checkbox.</li>
+  <li>If you would like to configure a virtual host for the domain, enter it in the &quot;Target Host&quot; text box. For more information, see <a href="site_admin_config.htm#what_is_a_target_host">What is a Target Host?</a> below.</li>
+  <li>In the Logo/Avatar column, click <strong>Upload</strong> and select the logo you would like to display for the Login button. for more information, see <a href="basics_account_management.htm#how_do_i_upload_and_crop_icons">How do I upload and crop icons?</a> You can upload your own custom button or refer to information from the provider, if available. For example:
+    <ul>
+      <li>Facebook login button usage: <a href="https://www.facebookbrand.com" target="_blank">https://www.facebookbrand.com</a></li>
+      <li>LDAP: refer to the LDAP developer documentation for information on LDAP login button usage</li>
+      <li>Google login button usage: <a href="https://developers.google.com/+/branding-guidelines#sign-in-button" target="_blank">Google+ Sign-In button branding guidelines</a></li>
+    </ul>
+    </li>
+  <li>In the Mode column, click the applicable button to indicate whether you want the login domain to be a popup or to display in the main window. For more information, see <a href="site_admin_config.htm#what_login_page_integration_modes_are_supported">What login page integration modes are supported?</a></li>
+  <li>Click <strong>Save</strong>.</li>
+</ol>
+<p>Once the login domain is enabled, it is available to anyone logging in to the platform.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_do_i_configure_a_platform_login_default_domain"></a><h3>How do I configure a Platform Login  domain?</h3>
+<p>Installation of the platform automatically creates a Platform Login domain. This login domain type allows users who have signed up on the platform to log in via the default platform login page using their email and password login credentials.</p>
+<p>Although the Platform Login domain is created automatically, it must still be enabled for login by the Site Admin. This is a configuration step: <strong>Administration</strong><em> &gt; </em><strong>Config</strong><em> &gt; </em><strong>Logins</strong> page (<strong>Enable</strong> checkbox). For more information, see <a href="site_admin_domains.htm#how_do_i_enable_a_domain_for_login">How do I enable a domain for login?</a></p>
+<p>The default Platform Login domain cannot be deleted.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_do_i_set_up_an_ldap_domain"></a><h3>How do I set up an LDAP domain?</h3>
+<p>The platform provides support for users logging in using LDAP credentials.</p>
+<p>You must first define the LDAP domain via the <em>Configure &gt; Security &gt; Identity Systems</em> section of the <a href="basics_glossary.htm#gl_policy_manager">Policy Manager</a> Management Console. For more information, refer to the <strong>Add Identity System</strong> (Active Directory) topic in the Policy Manager Online Help.</p>
+<p>Once the domain is defined in Policy Manager, you can enable it for login in Community Manager. See <a href="#p_enable_login_domain">To enable a login domain</a>.</p>
+<p>Once setup is complete, when users sign in they will see the LDAP icon on the platform login page and will be able to choose LDAP for login.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="domains_login_setup_facebook"></a><h3>How do I set up the platform to log in with Facebook (Facebook Connector domain)?</h3>
+<p>The Facebook <a href="basics_glossary.htm#gl_connectordomain">Connector domain</a> allows users to log into the platform using Facebook credentials. Essentially, the Site Admin registers the platform with Facebook as a Facebook app, and then uses the values provided by Facebook for App ID and App Secret to set up the Facebook Connector domain.</p>
+<p>Once this is set up, the Facebook icon appears during signup and users can log in using Facebook credentials.</p>
+<p><strong>Note</strong>: For certain activities, such as creating an API or using the platform API, users must complete the standard platform signup process. Logging in with Facebook is not adequate for these activities.</p>
+<p>Before setting up the domain in the platform, you'll need to register the platform as an app on the Facebook developer site at <a href="https://developers.facebook.com/apps" target="_blank">https://developers.facebook.com/apps</a> and get the Facebook App ID and Shared Secret values for your instance of the platform.</p>
+<p>Once the domain is set up, the last step is to enable it.</p>
+<p>Once setup is complete, users signing in will see the Facebook icon on the platform login page and can choose Facebook for login.</p>
+<h5><a name="configure_domain_facebook"></a>To set up a Facebook Connector domain:</h5>
+<ol>
+  <li>Log in as the Site Admin and click the <em>Administration</em> quick filter (wrench icon).</li>
+  <li>Click <strong>Domains</strong>. The <em>Domains Summary</em> page displays.</li>
+  <li>Click <strong>Add Domain</strong>. The <strong>Select Domain Type</strong> drop-down menu displays.</li>
+  <li>Select <strong>Facebook Connector</strong> and click <strong>Select</strong>. The <em>Add Connector Domain</em> wizard opens at the Details page.</li>
+  <li>Specify values for Name and Description and then click <strong>Next</strong>.</li>
+  <li>For App ID and App Secret, provide the values that were assigned by Facebook when you registered your instance of the platform as an app at <a href="https://developers.facebook.com/apps" target="_blank">https://developers.facebook.com/apps</a>.</li>
+  <li>Click <strong>Save</strong>.</li>
+  <li>When the domain is set up, you must enable it on the <strong>Administration</strong> &gt; <strong>Config</strong> &gt; <strong>Logins</strong> page. See <a href="#p_enable_login_domain">To enable a login domain</a>. For information on Facebook login button usage, see <a href="https://www.facebookbrand.com" target="_blank">https://www.facebookbrand.com</a>.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_do_i_get_google_credentials_for_a_google_connector_domain"></a><h3>How do I get Google credentials for a Google Connector domain?</h3>
+<p>Before setting up a Google Connector domain in the platform, you'll need to register the platform as an app on the Google developer site at <a href="https://console.developers.google.com/project" title="Google Developers Console" target="_blank">https://console.developers.google.com/project</a> and get the Google App ID and Shared Secret values for your instance of the platform.</p>
+<p>If you're planning to use the Google Connector domain for user login associated with using OAuth, you'll also need to </p>
+<p>Once you have your credentials, you can set up your Google Connector domain. See <a href="#configure_domain_google">To set up a Google Connector domain in Community Manager</a> below.</p>
+
+
+<h5><a name="to_get_credentials_for_a_google_connector_domain"></a>To get credentials for a Google Connector domain:</h5>
+<p>Note: the instructions below relate to the Google developer site, which might change over time. Even if the details change, the basic steps will remain the same.</p>
+<ol>
+  <li>Go to the Google Developers Console at <a href="https://console.developers.google.com/project" title="Google Developers Console" target="_blank">https://console.developers.google.com/project</a> and choose <strong>Create Project</strong>.</li>
+  <li>Give your project a name and ID. For the ID, you can accept the suggested ID, click the Refresh icon to get a new suggestion, or choose your own ID. Click <strong>Create</strong>.</li>
+  <li>The next step is to subscribe to the Google+ API. On the left, click <strong>APIs &amp; Auth</strong> and then click <strong>APIs</strong>. Find the Google+ API on the list, and click the button to enable it. This is the API your app will use to allow users to log in with Google on the platform. Make sure the status for the Google+ API shows as <strong>ON</strong>. If the API status is OFF, your users will see an &quot;Unauthorized&quot; status code when they try to use the Google login.</li>
+  <li>Next, get the credentials for your app:
+    <ol>
+      <li> On the left, click <strong>APIs &amp; Auth</strong> and then click <strong>Credentials</strong>.</li>
+      <li>In the <strong>OAuth</strong> section, click <strong>Create New Client ID</strong>. 
+      <p><strong>Note</strong>: If credentials already exist for your app, find the correct set of credentials and then find the Client ID and Client Secret for the credentials. Your project might have several sets of credentials; for example, there might be different credentials for a web application, service account, Compute Engine, App Engine, and/or different installed applications such as Android, Chrome, or iOS. Some types of credentials might have a Client ID without a Client Secret. You can create additional credentials as needed.</p></li>
+      <li>Make sure Application Type is <strong>Web Application</strong>. </li>
+      <li>In the Authorized Redirect URI field, enter the applicable redirect URI. For a login domain, enter: {protocol}://{hostname}/api/login/ssoLogin. For example: https://www.example.com/api.ssoLogin. For other types of domain, refer to the table at <a href="#what_value_should_i_use_for_the_redirect_uri_for_my_google_connector_domain">What value should I use for Redirect URI for my Google Connector domain?</a> below. Google requires that the redirect URL is a public URL.</li>
+    </ol>
+  </li>
+  <li>Save the values on the Google website and also have them available for the next step, setting up your Google Connector domain in Community Manager. See <a href="#configure_domain_google">To set up a Google Connector domain in Community Manager</a> below.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_do_i_set_up_a_google_connector_domain"></a><h3>How do I set up a Google Connector domain?</h3>
+<p>The Google <a href="basics_glossary.htm#gl_connectordomain">Connector domain</a> allows users to log in to the platform using Google credentials, and can be used for other activities such as OAuth support. Essentially, the Site Admin registers the platform with Google as a Google app, and then uses the values provided by Google for Google AppID and Google App Shared Secret to set up the Google Connector domain.</p>
+<p><strong>Note</strong>: Earlier versions of the platform used the OpenID Relying party domain for Google login. It's important to now use Google Connector, which relies on a newer technology recommended and supported by Google; the OpenID Relying party domain uses an older API which Google has scheduled for end of life.</p>
+<p><strong>Note</strong>: For certain activities, such as creating an API or using the platform API, users must complete the standard platform signup process. Logging in with Google is not adequate for these activities.</p>
+<h5><a name="configure_domain_google" id="configure_domain_google"></a>To set up a Google Connector domain in Community Manager:</h5>
+<ol>
+  <li>First, get your credentials from the Google Developers Console. See <a href="#to_get_credentials_for_a_google_connector_domain">To get credentials for a Google Connector domain</a> above.</li>
+  <li>Log in as the Site Admin and click the <em>Administration</em> quick filter (wrench icon).</li>
+  <li>Click <strong>Domains</strong>. The <em>Domains Summary</em> page displays.</li>
+  <li>Click <strong>Add Domain</strong>. The <strong>Select Domain Type</strong> drop-down menu displays.</li>
+  <li>Select <strong>Google Connector</strong> and click <strong>Select</strong>. The <em>Add Connector Domain</em> wizard opens at the Details page.</li>
+  <li>Specify values for Name and Description and then click <strong>Next</strong> to go to the App Details page of the wizard.</li>
+  <li>For <strong>Google Client ID</strong> and <strong>Google Client Secret</strong>, provide the values that were assigned by Google when you registered your instance of the platform as a web application at <a href="https://console.developers.google.com/project" title="Google Developers Console" target="_blank">https://console.developers.google.com/project</a>.</li>
+  <li>Click <strong>Next</strong> to go to the Realm Details page.</li>
+  <li>Conditional: if you were using OpenID for Google login in an earlier version of the platform (OpenID Relying Party connector), and want to map values between the old and the new connectors, set up the following:
+    <ul>
+      <li>To map user accounts to your Google Connector domain, enter the Realm value for your OpenID Connector. It must be a fully qualified URL, including protocol, and must match the value set up on the Client Details page for your OpenID Relying Party domain.</li>
+      <li><strong>Use email address of the user to map the user login sessions with existing user accounts using Google domain</strong>: If your Realm values do not match, but you still want to map user login sessions using your existing OpenID Connect domain, click the <strong>Yes</strong> button. *See note below.</li>
+    </ul>
+  </li>
+  <li>If you are using the domain for login, you must enable it on the <strong>Administration</strong> &gt; <strong>Config</strong> &gt; <strong>Logins</strong> page. See below.</li>
+  <li>When the domain is set up, you must enable it on the <strong>Administration</strong> &gt; <strong>Config</strong> &gt; <strong>Logins</strong> page. See <a href="#p_enable_login_domain">To enable a login domain</a>. For information on Google login button usage, see <a href="https://developers.google.com/+/branding-guidelines#sign-in-button" target="_blank">Google+ Sign-In button branding guidelines</a>.</li>
+</ol>
+<p>*<strong>Use email address</strong> field: there is one side effect to using this option. Google allows users to create accounts using a non-Google email address, and to change the email address whenever they want. If a user creates an account on the portal using login with Google, and then changes the email address on Google, and the email mapping option is in place, the portal might interpret the new email address as a new user account. However, since we always give the preference to the OpenID identifier to map the user to the profile, using email mapping will work smoothly in most cases.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="domains_login_setup_google"></a><h3>How do I set up the platform to log in with Google?</h3>
+<p>If you want to allow your users to log in to the platform using Google credentials, follow these steps:</p>
+<ol>
+  <li>Register your platform as an app on the Google Developers Console and get credentials. See <a href="#how_do_i_get_google_credentials_for_a_google_connector_domain">How do I get Google credentials for a Google Connector domain?</a></li>
+  <li>Set up a domain on the platform. You have two choices:
+    <ul>
+      <li>Google Connector domain: <a href="#how_do_i_set_up_a_google_connector_domain">How do I set up a Google Connector domain?</a> Choose this option if you are migrating from OpenID for your Google login.</li>
+      
+      <li>OpenID Connect Relying Party domain: <a href="site_admin_openidconnect_support.htm#domain_setup_openid_connect_relying_party">How do I set up the platform to log in with an OpenID Connect Relying Party domain?</a></li>
+    </ul>
+  </li>
+  <li>Enable the Google platform login. See <a href="#p_enable_login_domain">To enable a login domain</a>.</li>
+</ol>
+<p>Once setup is complete, when users sign in they will see the Google icon on the platform login page and can log in using Google credentials.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="what_value_should_i_use_for_the_redirect_uri_for_my_google_connector_domain"></a><h3>What value should I use for the Redirect URI for my Google Connector domain?</h3>
+<p>The redirect URI that you set in <a href="https://console.developers.google.com/project" title="Google Developers Console" target="_blank">the Google Developers Console</a> determines where Google sends responses to your authentication requests.</p>
+<p>Depending on how you will be using the Google Connector domain, there are three possible redirect URI values that you could use when registering your platform as an app in the Google Developers Console. To find the redirect URIs for your login domain, or OAuth 2.0 domain using the Google+ API for authentication, choose the applicable value from the table below.</p>
+<p><strong>Note</strong>: Google requires that the redirect URL be a public URL. The Google Connector domain can only work if the portal is on a public URL.</p>
+<table cellspacing="0px" class="doctable" style="width: 98%;">
+<thead>
+  <tr>
+    <th width="50%">Environment Scenario</th>
+    <th width="50%">Redirect URL</th>
+  </tr>
+</thead>
+<tbody>
+  <tr class="t2row">
+    <td>Community Manager Login</td>
+    <td>{CMConsoleAddress}/api/login/ssoLogin</td>
+  </tr>
+  <tr class="t1row">
+    <td>OAuth Provider Resource Owner domain when OAuth Provider is deployed in the same container as the platform</td>
+    <td>{OAuthProviderAuthorizationServer}/oauth/auz/grants/provider/authcomplete</td>
+  </tr>
+  <tr class="t2row">
+    <td>OAuth Provider Resource Owner domain when OAuth Provider is deployed in the same container as the Network Director (OAuth Provider Agent scenario)</td>
+    <td>{NDHostAddress}/oauth/auz/grants/provider/authcomplete</td>
+  </tr>
+</tbody>
+</table>
+<p>For information on setting up your platform as an app in the Google Developers Console, refer to <a href="site_admin_domains.htm#domains_login_setup_google">How do I set up the platform to log in with Google?</a> above.</p>
+<p>If you will be using your Google Connector domain for OAuth, you will also need to customize the user consent screen. See <a href="#how_do_i_customize_google_user_consent_screen">How do I customize the Google user consent screen for my Google Connector domain?</a></p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_do_i_customize_google_user_consent_screen"></a><h3>How do I customize the Google user consent screen for my Google Connector domain?</h3>
+<p>If you want to use a Google Connector domain to support OAuth 2.0 authentication on the platform, you will need to provide values for customization of the user consent screen that's presented to users when your app is asking for approval to access the user's data.</p>
+<p>If you haven't already done so, register your app on the Google Developers Console. For instructions, see <a href="#to_get_credentials_for_a_google_connector_domain">To get credentials for a Google Connector domain</a>. Then follow the instructions below to customize the user consent screen.</p>
+
+<h5><a name="to_customize_the_google_consent_page"></a>To customize the Google user consent screen:</h5>
+<ol>
+  <li>Log in to the Google Developers Console and go to the page where you registered your platform as an app.</li>
+  <li>On the left, click <strong>APIs &amp; Auth</strong> and then click <strong>APIs</strong>. Make sure the status for the Google+ API shows as <strong>ON</strong>.</li>
+  <li>On the left, click <strong>APIs &amp; Auth</strong> &gt; <strong>Consent Screen</strong>.</li>
+  <li>Provide values you want your users to see, such as product name, homepage URL, and logo, and click <strong>Save</strong>.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<div class = "divider1"></div>
+<h3><a name="h_oauthproviderdomain"></a>OAuth Provider Domain:</h3>
+
+
+
+<a name="how_does_the_authentication_provider_configuration_process_work"></a><h3>How does the authentication provider configuration process work?</h3>
+<p>The platform provides the following add-on feature to provide authentication support for APIs:</p>
+<ul>
+  <li>Akana Community Manager OAuth Provider (see <a href="#how_do_i_set_up_and_configure_an_oauth_provider_domain">How do I set up and configure an OAuth Provider domain?</a>)</li>
+</ul>
+<p>Here's how authentication provider type configuration process works:</p>
+<ul>
+  <li>The Site Administrator installs the applicable feature into the platform container via the <em>Akana Administration Console</em>. This process is covered in the installation guide for the platform.</li>
+  <li>After the feature is installed, the authentication provider options are available to the Site Admin in the user interface by choosing <strong>Administration</strong> &gt; <strong>Domains</strong>.</li>
+  <li>The Site Admin can then choose the domain type that best suits the authentication protocol required for APIs that are part of the platform deployment, and complete configuration if needed.</li>
+  <li>The authentication domain is then available to the API Admin when configuring the API. For example, if an API uses OAuth 2.0, the API Admin can go into the OAuth configuration for the API (API Details page, <strong>OAuth Details</strong> button), choose the OAuth Provider domain and OAuth version, select grant types, and specify resources relative to the specified OAuth version. The API Admin could choose different OAuth providers for different APIs if multiple providers are defined.</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_do_i_set_up_a_platform_deployment_to_support_a_third_party_provider"></a><h3>How do I set up a platform deployment to support a third-party OAuth provider?</h3>
+<p>The <strong>OAuth Details</strong> function on the <em>API &gt; Details</em> page includes a pre-defined &quot;third-party provider&quot; domain that allows the API Admin to configure grants and resource mapping for OAuth versions 1.0a and 2.0. No setup is required by the Site Admin for this option. The purpose of this option is so that the API Admin can reference an external OAuth provider, if needed, rather than use one of the OAuth provider configurations provided by the platform implementation.</p>
+<p>For more information, see <a href="api_admin_oauth_support.htm#how_do_i_configure_my_api_with_an_oauth_provider">How do I configure my API with an OAuth Provider?</a> in the API Admin help.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_do_i_set_up_my_deployment_to_support_oauth"></a><h3>How do I set up my deployment to support OAuth?</h3>
+<p>If you are a Site Admin you can set up OAuth Provider definitions in the <em>Site Administration &gt; Domains</em> section. You create a domain for each OAuth Provider scenario you want to support; these configurations are then available for selection in the APIs that are part of your platform deployment during OAuth setup. For instructions, see <a href="#how_do_i_set_up_and_configure_an_oauth_provider_domain">How do I set up and configure an OAuth Provider domain?</a> below.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_do_i_set_up_and_configure_an_oauth_provider_domain"></a><h3>How do I set up and configure an OAuth Provider domain?</h3>
+<p>The <strong>Akana Community Manager OAuth Provider</strong> feature is an Akana Community Manager add-on. This domain type allows you to select a resource owner authentication domain, and configure grant types, access tokens, grant properties, and branding.</p>
+<p>Essentially, there are two steps:</p>
+<ol>
+  <li>Install the <strong>OAuth Provider</strong> feature via the <em>Akana Administration Console</em>. This installs the OAuth Provider domain, which the Site Admin can then access in the Community Manager user interface.</li>
+  <li>Set up the domain in Community Manager (see below).</li>
+</ol>
+<p>Once the domain is configured, it is available to API Admins on the <em>Edit OAuth Details</em> page on the <em>API Details</em> page.</p>
+<p>If API owners will be using a third-party provider, configuring an OAuth Provider domain is not needed.</p>
+<p><strong>Note</strong>: When you install the OAuth Provider domain, it is added to the list of choices in <strong>Administration &gt; Domains &gt; Add Domain</strong>. It is not available as a Login option in the <strong>Administration&nbsp;&gt; Config</strong>&nbsp;&gt; <strong>Logins</strong> page.</p>
+
+
+<h5><a name="to_configure_domain_oauth_provider"></a>To configure an OAuth provider domain in Community Manager:</h5>
+<ol>
+  <li>Click the <em>Administration</em> quick filter (wrench icon). The <em>Site Administration</em> page displays.</li>
+  <li>Click <strong>Domains</strong>. The <em>Domains Summary</em> page displays.</li>
+  <li>Click <strong>Add Domain</strong> and choose <strong>OAuth Provider</strong>. The Add OAuth Provider wizard opens at the Details page. This wizard has six pages:
+    <ul>
+      <li>Details</li>
+      <li>Grant Types</li>
+      <li>OpenID Connect</li>
+      <li>Scopes</li>
+      <li>Properties</li>
+      <li>Branding</li>
+      </ul>
+    </li>
+  
+  <li>Enter a name and description for your OAuth provider (for example, Name=OAuth 2-Legged, Description=OAuth 2-Legged Domain).</li>
+  <li>Click <strong>Next</strong> to go to the <strong>Grant Types</strong> page. Here you will specify information about one or more <a href="basics_glossary.htm#gl_oauth_granttypes">OAuth Grant Types</a> that you want the OAuth Provider domain to support. Specify values or choose options. For more information, see <a href="#what_are_the_settings_on_the_oauth_provider_grant_types_page">What are the settings on the OAuth Provider Grant Types page and what options should I choose?</a> </li>
+  <li>Click <strong>Next</strong> to go to the <strong>OpenID Connect</strong> page. If you want to use OpenID Connect for your OAuth Provider domain, specify the following:
+    <ul>
+      <li><strong>OpenID Connect 1.0 Enabled</strong>: check the box.</li>
+      <li><strong>Reserved Scopes</strong>: Scopes defined by OpenID Connect. Every OpenID Connect request must have at least one, the openid scope. Select additional scopes only if the underlying identity provider domain supports retrieval of the various types of information about the end-user (profile, email, address, and/or phone).</li>
+      <li><strong>ID Token Signing Algorithm</strong>: Defaults to HmacSHA256, but many other algorithms are supported. For more information on available options, see <a href="site_admin_openidconnect_support.htm#what_signature_algorithms_are_supported_by_openidconnect_oauthprovider">What signature algorithms are supported by the platform's OpenID Connect OAuth provider?</a></li>
+      <li><strong>ID Token Validity (seconds)</strong>: The expiration time for the token. Defaults to 3600 seconds.</li>
+      </ul>
+  </li>
+  
+  <li>Click <strong>Next</strong> to go to the <strong>Scopes</strong> page. Here you will define OAuth scopes; later, API Admins for APIs that are using this OAuth domain can map specific operations in the API to these scopes and thus control the functions that OAuth will be requesting access to. For example, you might define a scope called Read-Only and map all GET operations to it. For more information, see <a href="api_admin_oauth_support.htm#how_does_scope_mapping_work">How does Scope Mapping work?</a> Define one or more scopes, with the following values for each:
+    <ul>
+      <li><strong>Name</strong>, <strong>short description</strong>, and <strong>full description</strong>.</li>
+      <li><strong>Default scope</strong> checkbox: indicates whether this scope is always requested.</li>
+      <li><strong>User Authorization Required</strong>: indicates whether user authorization is required for scope access. Usually, it is. However, if an OAuth grant includes all scopes with this option disabled, the provider does not require the resource owner to authorize the grant request.</li>
+      </ul>
+  </li>
+  <li>Click <strong>Next</strong> to go to the <strong>Properties</strong> page. If you want to set up grant properties, click <strong>+Add</strong> to add one or more grant properties. For more information, see <a href="api_admin_oauth_support.htm#what_is_a_grant_property">What is a Grant Property?</a> For each property, specify the following values:
+    <ul>
+      <li><strong>Property Label</strong>: a text description, used only within the platform.</li>
+      <li><strong>Property ID</strong>: the object ID that references the property file stored on the OAuth Provider's site.</li>
+      </ul>
+  </li>
+  <li>Click <strong>Next</strong> to go to the <strong>Branding</strong> page. Here you can customize the page that app users will see when an API that is using this OAuth domain is requesting access to the user's resources. For more information, see <a href="#what_are_the_settings_on_the_oauth_provider_branding_page">What are the settings on the OAuth Provider Branding page and what options should I choose?</a>  </li>
+  <li>Click <strong>Save</strong>. The OAuth Provider domain is saved, and is now available for selection by API Admins when setting up OAuth details (<strong>API Details page</strong> &gt; <strong>OAuth Details</strong>).</li>
+</ol>
+<p><strong>Note</strong>: If your implementation will have a load balancer in front of the OAuth Provider container, there is an additional setup step for the Site Admin. As well as setting up the OAuth domain, the load balancer settings on your implementation must be set to the below two headers on the outbound request from the load balancer to the SOA platform containers:</p>
+<ul>
+  <li><strong>X-Forwarded-Host</strong>: the hostname used to access the load balancer. You could also keep the Host header as is rather than setting this header.</li>
+  <li><strong>X-Forwarded-Proto</strong>: the protocol used to access the load balancer; HTTPS if the <a href="basics_glossary.htm#gl_vip">VIP</a> (virtual address for the load balancer) is an HTTPS address, HTTP if the VIP is an HTTP address. You can skip this step if the protocol used from the load balancer to the SOA container is the same as the protocol used from the client to the load balancer.</li>
+</ul>
+<p>If needed, get help from the Policy Manager Site Admin to make sure these settings are correct.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="what_are_the_settings_on_the_oauth_provider_grant_types_page"></a><h3>What are the settings on the OAuth Provider Grant Types page and what options should I choose?</h3>
+<p>When you're setting up an OAuth Provider domain, the Grant Types page allows you to specify details about the grants your domain will support, including such things as the OAuth grant types and their associated settings, resource owner authentication domain, and access tokens.</p>
+<p>For information about the values set up on the <strong>Grant Types</strong> page (Tab 2), refer to the table below.</p>
+<table cellspacing="0px" class="doctable" style="width: 98%;">
+  <thead>
+    <tr>
+      <th width="29%">Option...</th>
+      <th width="71%">Meaning...</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="t2row">
+      <td>Grant Validity Period (days)</td>
+      <td>The number of days an authorization grant will be valid for. This value applies to all grant types.</td>
+    </tr>
+    <tr class="t1row">
+      <td>Supported Grant Types</td>
+      <td>Choose one or more grant types you want your domain to support, and then set values for each.</td>
+    </tr>
+    <tr class="t2row">
+      <td>Supported Grant Types: 3-Legged</td>
+      <td><p>Specify values:</p>
+        <ul class="apidoctable_ul">
+          <li><a href="basics_glossary.htm#gl_oauth_grant_authorizationcode">3-legged, Authorization Code</a>: specify timeout values for the <a href="basics_glossary.htm#gl_oauth_authorizationcode">authorization code</a> and <a href="basics_glossary.htm#gl_oauth_accesstoken">access token</a>, and choose whether or not to issue <a href="basics_glossary.htm#gl_oauth_refreshtoken">refresh tokens</a>.</li>
+          <li><a href="basics_glossary.htm#gl_oauth_grant_implicit">3-legged, Implicit</a>: specify an <a href="basics_glossary.htm#gl_oauth_accesstoken">access token</a> timeout value.</li>
+        </ul>        </td>
+    </tr>
+    <tr class="t1row">
+      <td>Supported Grant Types: 2-Legged</td>
+      <td><p>Specify values:</p>
+        <ul class="apidoctable_ul">
+          <li><a href="basics_glossary.htm#gl_oauth_grant_clientcredentials">2-legged, Client Credentials</a>: specify an <a href="basics_glossary.htm#gl_oauth_accesstoken">access token</a> timeout value.</li>
+          <li><a href="basics_glossary.htm#gl_oauth_grant_passwordcredentials">2-legged, Resource Owner Credentials</a>: specify an access token timeout value and choose whether or not to issue <a href="basics_glossary.htm#gl_oauth_refreshtoken">refresh tokens</a>.</li>
+        </ul></td>
+    </tr>
+    <tr class="t2row">
+      <td>Supported Grant Types: Extensions</td>
+      <td><p>The platform supports the JWT Bearer Assertion extension grant type. If you choose this, specify the following:</p>
+        <ul class="apidoctable_ul">
+      <li>Check or leave the <strong>Assertions Issued by this Provider</strong> box. <br />
+        <strong>Note</strong>: If you clear the box, you <strong>must</strong> choose an OpenID Connect provider as the Resource Owner Authentication domain.</li>
+      <li>Choose access token timeout.</li>
+      <li>Specify <a href="basics_glossary.htm#gl_clock_skew">clock skew</a>, in seconds. The default is 600 (10 minutes).</li>
+      <li>Specify whether or not to issue <a href="basics_glossary.htm#gl_oauth_refreshtoken">refresh tokens</a>.</li>
+    </ul>
+    <p>For more information, see <a href="#what_is_a_jwt_bearer_assertion">What is a JWT Bearer Assertion, and what does the platform support for JWT Bearer Assertions?</a></p></td>
+    </tr>
+    <tr class="t1row">
+      <td>Grant Scope Setting</td>
+      <td><p>These settings controls how scopes are processed. Choose <strong>Provider Scope</strong> or <strong>Client Default Scope</strong>. </p>
+        <p>Provider Scope is the default. With this option, the client app can request any scope configured for the access grant. </p>
+        <p><strong>Provider Scope</strong>: the scope value to be used for a grant is processed as follows:</p>
+  <ol class="apidoctable_ol">
+    <li>If the authorization request/token request has a <strong>scope</strong> parameter and values (space-delimited string values), the authorization server  validates whether the scopes are defined in the OAuth Provider. If they are, it uses the scope value as the grant scope.</li>
+          <li>If the authorization/token request does not have a <strong>scope</strong> parameter, the authorization server takes the default scopes that are set in the OAuth Provider and uses them as the grant scope. If no default scopes are defined, the authorization server rejects the request and sends an error response.</li>
+      </ol>
+  <p><strong>Client Default Scope</strong>: the scope value to be used for a grant is processed as follows:</p>
+        <ol class="apidoctable_ol">
+          <li>If the authorization request/token request has a <strong>scope</strong> parameter and values (space-delimited string values), the authorization server  first validates whether the scopes are defined in the OAuth Provider. It then checks that the scopes are valid for the Oauth client. Firstly it scans the APIs connected to the client, and cumulatively all the OAuth scopes defined for these APIs are collected. If the requested scopes are a subset of the app connection scopes, the request is valid and the request scope becomes the  value of the  grant scope.</li>
+          <li>If the authorization/token request does not have a <strong>scope</strong> parameter, the authorization server  scans the APIs connected to the client, and cumulatively all the OAuth scopes defined for these APIs are collected. These scopes are validated against the scope defined in the OAuth/OpenID Connect provider. If they are valid scopes, the request is valid. If they are not valid scopes, the authorization server rejects the request and sends an error message.</li>
+  </ol>
+</td>
+    </tr>
+    <tr class="t2row">
+      <td>Resource Owner Authentication Domain</td>
+      <td><p>This is the domain your OAuth Provider domain will use for end-user authentication as part of the OAuth process. It can be any domain set up on the platform. Choose from the drop-down list. If the domain you want isn't on the list, it must be installed and configured (see notes above). Some possible choices:</p>
+        <ul class="apidoctable_ul">
+      <li>Google: choose this for authentication with Google.</li>
+      <li>Facebook</li>
+      <li>LDAP Automation</li>
+      <li>Google Automation: this is present for backwards compatibility only. Choose Google.</li>
+    </ul></td>
+    </tr>
+    <tr class="t1row">
+      <td>Access Token Type</td>
+      <td>Choose the type of access token you want to use:
+    <ul class="apidoctable_ul">
+      <li><strong>Bearer</strong>: A simple token that's essentially an authorization header with a hash.</li>
+      <li><strong>MAC</strong>: A token that includes a digital signature and a <a href="basics_glossary.htm#gl_nonce">nonce</a>. It has more security than a Bearer token.</li>
+    </ul></td>
+    </tr>
+  </tbody>
+</table>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="what_are_the_settings_on_the_oauth_provider_branding_page"></a><h3>What are the settings on the OAuth Provider Branding page and what options should I choose?</h3>
+<p>When an end-user logs into an app that's connected to an API that uses the platform's OAuth Provider configuration, the user sees a Resource Owner Authentication page (login screen) that is custom branded for the app and for the OAuth provider. That page is configured in the OAuth Provider domain setup, on the <strong>Branding</strong> page.</p>
+<p>For information about the values set up on the <strong>Branding</strong> page, refer to the table below.</p>
+<table cellspacing="0px" class="doctable" style="width: 98%;">
+  <thead>
+    <tr>
+      <th width="29%">Option...</th>
+      <th width="71%">Meaning...</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="t2row">
+      <td>Site Logo</td>
+      <td>Optionally, you can upload a logo to display on the login page. It should be 50px high. For more information, see <a href="basics_account_management.htm#how_do_i_upload_and_crop_icons">How do I upload and crop icons?</a></td>
+    </tr>
+    <tr class="t1row">
+      <td>Footer Text</td>
+      <td>Custom text for the footer of the login page.</td>
+    </tr>
+    <tr class="t2row">
+      <td>Requires SSL</td>
+      <td>Select this checkbox if your OAuth provider should only accept requests over HTTPS.</td>
+    </tr>
+    <tr class="t1row">
+      <td>Authorization Server URL</td>
+      <td><p>The public URL that apps will use to access this OAuth provider. Can be HTTP or HTTPS. If the <strong>Requires SSL</strong> box is checked (see above), must be HTTPS.</p>
+        <p>Based on the Authorization Server URL specified, the platform derives these endpoints:</p>
+        <ul class="apidoctable_ul">
+          <li>Authorization Endpoint (for OAuth 1.0a and OAuth 2.0): {Authorization Server URL}/oauth/auz/authorize</li>
+          <li>OAuth 2.0 Token Endpoint: {Authorization Server URL}/oauth/oauth20/token</li>
+          <li>OAuth 1.0 Token Endpoint: {Authorization Server URL}/oauth/oauth10/token</li>
+        </ul>
+        <p>If the OAuth Provider uses OpenID Connect for authentication (OpenID Connect support is checked in OAuth Provider configuration Tab 3):</p>
+        <ul>
+          <li>Userinfo Endpoint: {Authorization Server URL}/oauth/userinfo</li>
+          <li>JWKS Endpoint: {Authorization Server URL}/oauth/jwks</li>
+        </ul>
+<p>For an OpenID Connect provider, all the endpoints and provider details are available via the discovery URL/well-known configuration URL:</p>
+<ul>
+  <li>{Authorization Server URL}/.well-known/openid-configuration
+  </li>
+</ul>
+        <p>For more information, including the specific paths for different OAuth URLs for the OAuth provider, see <a href="#what_is_the_authorization_server_url_for_the_platform">What is the OAuth Authorization Server URL for the platform?</a></p></td>
+    </tr>
+    <tr class="t2row">
+      <td>Additional Virtual Hosts</td>
+      <td><p>If your OAuth provider has one or more additional virtual hosts, as well as the hostname in the Authorization Server URL, enter the additional hostnames, separated by commas.</p>
+        <p><strong>Note</strong>: The authorization server must be able to resolve these virtual hosts to an IP address.</p></td>
+    </tr>
+    <tr class="t1row">
+      <td>Grant Provisioning UI URL</td>
+      <td>The URL for your OAuth provider&rsquo;s grant provisioning UI, if your provider has its own UI. To send the grant as a parameter in the URL, include the {GrantID} placeholder in the URL. If you want your OAuth provider to use the grant provisioning UI provided by the platform, leave this field blank.</td>
+    </tr>
+    <tr class="t2row">
+      <td>Grant Workflow Definition</td>
+      <td>The workflow definition that will apply to all new OAuth grants. You can use this field to implement a custom workflow for OAuth. For information on uploading a custom workflow, see <a href="site_admin_workflows.htm#to_upload_a_custom_workflow">to upload a custom workflow</a>. For help with developing a custom OAuth workflow, contact your Akana representative.</td>
+    </tr>
+  </tbody>
+</table>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_can_i_set_up_my_oauth_provider_domain_to_support_sso_login"></a><h3>How can I set up my OAuth Provider domain to support end-user login from an external identity provider?</h3>
+<p>You can set up an OAuth Provider domain to support SSO with an external identity provider with these two types of identity provider:</p>
+<ul>
+  <li>An identity provider that only has APIs rather than offering a user interface for login&#8212;such as LDAP or CA SiteMinder</li>
+  <li>An identity provider that provides a login application&#8212;such as OpenID Connect or SAML Web SSO Identity Provider. In this scenario, the platform can redirect the user to the login application and then have the login application redirect the user back to the OAuth Provider after authentication.</li>
+</ul>
+<p>Using this approach, depending on where your end-user identities are, you can configure different domains and use the appropriate domain as the resource owner authentication domain in the OAuth Provider configuration (Grant Types tab). For example, you would configure an <a href="site_admin_openidconnect_support.htm#how_do_i_configure_an_openid_connect_relying_party_domain">OpenID Connect Relying Party domain</a>, <a href="#domains_login_setup_saml_web_sso">SAML Web SSO domain</a>, or <a href="#how_do_i_set_up_an_ldap_domain">LDAP</a> or <a href="#domains_login_setup_ca_siteminder">CA SiteMinder</a> domain.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="what_is_an_authorization_server_url"></a><h3>What is an Authorization Server URL?</h3>
+<p>As part of setting up the OAuth domain, the Site Admin must specify the <a href="basics_glossary.htm#gl_oauth_authorizationserverurl">Authorization Server URL</a>. This is the URL for the server designated by the OAuth provider to perform the authorization steps to a) authenticate the resource owner, and b) get the resource owner's permission for the app to access the resources. The app directs the resource owner (user) to the authorization server URL; when the authorization steps are complete, the authorization server returns the user to the app, using the redirect URL provided by the app.</p>
+<p>It is the URL at which the OAuth Provider accesses the requests, for both <a href="basics_glossary.htm#gl_oauth_authorizationendpoint">Authorization Endpoint</a> and <a href="basics_glossary.htm#gl_oauth_tokenendpoint">Token Endpoint</a>.</p>
+<p><strong>Note</strong>: One deployment can support more than one OAuth Provider. If there is more than one, it is important that each OAuth Provider has a different Authorization Server URL, for both <a href="basics_glossary.htm#gl_oauth_authorizationendpoint">Authorization Endpoint</a> and <a href="basics_glossary.htm#gl_oauth_tokenendpoint">Token Endpoint</a>.</p>
+<p>When setting up the OAuth domain, once you have specified the Authorization Server URL it is important to make sure that requests are directed to this URL where either OAuth Provider or OAuth Provider Agent features are installed. This might include additional actions; for example, adding a DNS entry or configuring the load balancer if the URL is a virtual endpoint on F5.</p>
+<p>The URL you provide for the Authorization Server is the base of the URL for the Request Token URL, Access Token URL, and Authorize URL, with additional parts of the paths as shown below. The <a href="basics_glossary.htm#gl_oauth_callbackurl">Callback URL</a> is the Redirect URL that an app developer would provide in the App details page.</p>
+<p>For specific authorization server URLs for the platform, see <a href="#what_is_the_authorization_server_url_for_the_platform">What is the OAuth Authorization Server URL for the platform?</a> below.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="what_is_the_authorization_server_url_for_the_platform"></a><h3>What is the OAuth Authorization Server URL for the platform?</h3>
+<p>The URL you provide for the Authorization Server is the base of the URL for the Request Token URL, Access Token URL, and Authorize URL, with additional parts of the paths as shown below.</p>
+<p>When setting up the Authorization Server URL in the platform, enter only the base of the URL, including protocol, host, and port if needed. The platform appends the appropriate path as listed below after the {oauth.provider.url} variable.</p>
+<p>For example, if the Authorization Server URL you specified in the provider configuration was https://www.acmepaymentscorp.com:9800, use that value in place of the {oauth.provider.url} placeholder. The platform appends the rest of the URL in each case; for OAuth 2.0, OAuth Authorization Endpoint URL becomes https://www.acmepaymentscorp.com:9800/oauth/auz/authorize and OAuth Token Endpoint URL becomes  https://www.acmepaymentscorp.com:9800/oauth/oauth20/token.</p>
+<p>The full URLs for both supported OAuth versions are shown below.</p>
+<p>OAuth 1.0a:</p>
+<ul>
+  <li><strong>OAuth Authorization Endpoint URL</strong>: {oauth.provider.url}/oauth/auz/authorize</li>
+  <li><strong>OAuth Token Endpoint Request Token URL</strong>: {oauth.provider.url}/oauth/oauth10/initiate</li>
+  <li><strong>OAuth Token Endpoint Access Token URL</strong>: {oauth.provider.url}/oauth/oauth10/token</li>
+</ul>
+<p>OAuth 2.0:</p>
+<ul>
+  <li><strong>OAuth Authorization Endpoint URL</strong>: {oauth.provider.url}/oauth/auz/authorize</li>
+  <li><strong>OAuth Token Endpoint URL</strong>: {oauth.provider.url}/oauth/oauth20/token</li>
+</ul>
+<p><strong>Note</strong>: App developers need to know the Authorization Server URL in order to set up their apps to use the OAuth domain. This information must be made available to API Admins, who must make sure it is included in API documentation.</p>
+<p>For general information on authorization server URLs, see <a href="#what_is_an_authorization_server_url">What is an Authorization Server URL?</a> above.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="what_are_the_oauth_custom_headers"></a><h3>What are the OAuth custom headers?</h3>
+<p>When an API uses the platform as a proxy, in the API setup the API is the Target API and the platform is the Proxy API.</p>
+<p>When an app sends a request, if the API is using the platform as a proxy API and is using the OAuth policy, the platform adds custom headers in the outbound request from the proxy API. These custom headers include key information necessary for the transaction, such as resource owner identity and grant properties.</p>
+<p>For more detailed information about these headers, refer to <a href="api_admin_oauth_support.htm#how_does_proxy_api_send_oauth_headers">How does the proxy API send OAuth-related information to my API?</a> (API Admin documentation).</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="what_is_a_jwt_bearer_assertion"></a><h3>What is a JWT Bearer Assertion, and what does the platform support for JWT Bearer Assertions?</h3>
+<p>The platform supports the  <a href="basics_glossary.htm#gl_jwt_token">JWT Token</a>, or JWT Bearer Assertion, which is an <a href="basics_glossary.htm#gl_oauth_extensiongranttype">extension grant type</a> that is generally used when the app already has a JWT Assertion that represents the resource owner. The app sends the JWT Assertion to the authorization server&rsquo;s <a href="basics_glossary.htm#gl_oauth_tokenendpoint">Token Endpoint</a> to get an access token for later use.</p>
+<p>The JWT Bearer Assertion is generally issued by an <a href="basics_glossary.htm#gl_identityprovider">Identity Provider</a> and consumed by a <a href="basics_glossary.htm#gl_relyingparty">Relying Party</a> that relies on its content to identify the subject&#8212;that is, the user being authenticated.</p>
+<p>The platform supports JWT Bearer Assertions:</p>
+<ul>
+  <li><strong>Issued by the platform</strong>. To use JWT Bearer Assertions issued by the platform, they must be issued by the same OAuth Provider. If there are multiple OAuth Provider domains, you cannot use JWT Bearer Assertions issued by a different platform OAuth Provider. It <strong>must</strong> be the same OAuth Provider producing and consuming the JWT Bearer Assertion.</li>
+  <li><strong>Issued by a different provider</strong>. To use JWT Bearer Assertions issued by a different provider, the Resource Owner authentication domain must be an Open ID Connect Relying Party domain. The platform's OAuth Provider can use the JWT Bearer Assertions issued by the external OpenID Connect Provider.</li></ul>
+<p>In the context of the platform, when the JWT token is used as an access token, all the information needed for the access token is already part of the token. This is efficient in terms of processing.</p>
+<p>This grant type supports <a href="basics_glossary.htm#gl_oauth_refreshtoken">refresh tokens</a>.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<div class = "divider1"></div>
+<h3><a name="h_samlwebssoslodomain"></a>SAML Web SSO/SLO Domain:</h3>
+
+
+
+<a name="domains_login_setup_saml_web_sso"></a><h3>How do I set up the platform to log in with SAML Web SSO?</h3>
+<p>The <a href="basics_glossary.htm#gl_saml">SAML</a> Web SSO domain allows you to set up the platform so that users can log in via a SAML Identity Provider, using SAML Web SSO.</p>
+<p>First, you&rsquo;ll need to install the following optional plug-ins in the SOA Software Admin Console to one or more containers in your implementation:</p>
+<ul>
+  <li>SOA Software SAML 2.0 Web Browser SSO Service Provider</li>
+  <li>SOA Software SAML 2.0 Web Browser SSO Service Provider UI</li>
+</ul>
+<p>The next step is to define the SAML Web SSO domain in the <a href="basics_glossary.htm#gl_policy_manager">Policy Manager</a> Management Console (Configure &gt; Security &gt; Identity Systems). For more information, refer to the following external documentation:</p>
+<ul>
+  <li>The <strong>Add Identity System</strong> (Active Directory) topic in the Policy Manager Online Help.</li>
+  <li>White paper: <em>Using SAML for Single Sign-On in the Akana Platform</em>.</li>
+</ul>
+<p>Once the domain is defined in Policy Manager, you can configure and enable it in Community Manager:</p>
+<ul>
+  <li>To use it as a login domain: See <a href="#configure_domain_samlwebsso">To set up a SAML Web SSO login domain in Community Manager</a> below.</li>
+  <li>To use it as a resource owner authentication domain when defining an OAuth Provider (Grant Types tab): see <a href="#to_configure_domain_oauth_provider">To configure an OAuth Provider domain</a>.</li>
+</ul>
+<p>Once setup is complete, when users sign in they will see the icon for your login domain on the platform login page and will be able to choose to log in by authenticating with your Identity Provider.</p>
+<h5><a name="configure_domain_samlwebsso"></a>To set up a SAML Web SSO login domain in Community Manager:</h5>
+<ol>
+  <li>Define the SAML Web SSO domain in the <em>Configure &gt; Security &gt; Identity Systems </em>section of Policy Manager. See notes above.</li>
+  <li>In the platform, enable the domain for login. This is a configuration step: <em>Administration &gt; Config &gt; Logins</em> (<strong>Enable</strong> checkbox). For more information, see <a href="site_admin_domains.htm#how_do_i_enable_a_domain_for_login">How do I enable a domain for login?</a></li>
+  <li>Click <strong>Save</strong>.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="domains_login_setup_saml_web_slo"></a><h3>How do I set up the platform for single logout (SLO) using SAML?</h3>
+<p>The platform supports single logout (SLO) with an identity provider, using SAML.</p>
+<p>You can use the <a href="basics_glossary.htm#gl_saml">SAML</a> domain to set up the platform so that users can log in via a SAML Identity Provider, using SAML Web SSO, and then also when the user logs out of the platform the user is also logged out of the SAML domain (SLO).</p>
+<p>You must first define the SAML Web SSO domain in the <a href="basics_glossary.htm#gl_policy_manager">Policy Manager</a> Management Console (Configure &gt; Security &gt; Identity Systems).</p>
+<p>Refer to the supporting documentation referenced in <a href="#domains_login_setup_saml_web_sso">How do I set up the platform to log in with SAML Web SSO?</a> above.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<div class = "divider1"></div>
+<h3><a name="h_casiteminderdomain"></a>CA SiteMinder Domain:</h3>
+
+
+
+<a name="domains_login_setup_ca_siteminder"></a><h3>How do I set up the platform to log in with CA SiteMinder (CA SiteMinder domain)?</h3>
+<p>The CA SiteMinder domain allows users to log into the platform using <a href="basics_glossary.htm#gl_casiteminder">CA SiteMinder</a> credentials.</p>
+<p>You must first define the CA SiteMinder domain via the <em>Configure &gt; Security &gt; Identity Systems</em> section of the <a href="basics_glossary.htm#gl_policy_manager">Policy Manager</a> Management Console. For more information, refer to the following external documentation:</p>
+<ul>
+  <li>The <strong>Add Identity System</strong> (Active Directory) topic in the Policy Manager Online Help.</li>
+  <li>The <em>Integrating CA SiteMinder with Policy Manager 6.1 Guide </em>available via the Akana Support Site (support.akana.com &gt; Downloads &gt; PolicyManager &gt; PM61 &gt; PM61_CASiteMinder_Integration.pdf). This has instructions on how to set up CA SiteMinder and install the identity system (domain) in Policy Manager.</li>
+  <li>The <em>Enterprise API Platform Installation Guide</em> (for information on how to install a CA SiteMinder Identity System).</li>
+</ul>
+<p>Once the domain is defined in Policy Manager, you can configure and enable it in Community Manager:</p>
+<ul>
+  <li>To use it as a login domain: See <a href="#configure_domain_casiteminder">To set up a CA SiteMinder login domain in Community Manager</a> below.</li>
+  <li>To use it as a resource owner authentication domain when defining an OAuth Provider (Grant Types tab): see <a href="#to_configure_domain_oauth_provider">To configure an OAuth Provider domain</a>.</li>
+</ul>
+<p>Once setup is complete, when users sign in they will see the CA SiteMinder icon on the platform login page and will be able to choose CA SiteMinder for login.</p>
+<h5><a name="configure_domain_casiteminder"></a>To set up a CA SiteMinder login domain in Community Manager:</h5>
+<ol>
+  <li>Define the CA SiteMinder domain in the <em>Configure &gt; Security &gt; Identity Systems </em>section of Policy Manager. See notes above.</li>
+  <li>In the platform, enable the domain for login. This is a configuration step: <em>Administration &gt; Config &gt; Logins</em> (<strong>Enable</strong> checkbox). For more information, see <a href="site_admin_domains.htm#how_do_i_enable_a_domain_for_login">How do I enable a domain for login?</a></li>
+  <li>Click <strong>Save</strong>.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<div class = "divider1"></div>
+<h3><a name="h_pingfederatedomain"></a>PingFederate Domain:</h3>
+
+
+
+<a name="how_do_i_configure_a_pingfederate_domain"></a><h3>How do I configure a PingFederate domain?</h3>
+<p>The PingFederate&reg; <a href="basics_glossary.htm#gl_connectordomain">Connector domain</a> allows you to use <a href="basics_glossary.htm#gl_pingfederate">PingFederate</a> as an OAuth provider. Essentially, the Site Admin registers the platform with PingFederate as the resource server, and then uses the values provided by PingFederate to set up the PingFederate Provider domain in Community Manager.</p>
+<p class="apidoc_note"><strong>Note</strong>: For a walkthrough of the end-to-end sequence of steps, including API and app setup, refer to <a href="site_admin_ov_pf_endtoend.htm">PingFederate Usage Scenario: End to End</a>.</p>
+<p>To get everything configured correctly, you must perform some setup steps in PingFederate and Policy Manager before going ahead with the Community Manager setup. Follow the procedures given in the sections listed below, in sequence:</p>
+<ol>
+  <li><a href="#pf_config_1_pf">PingFederate Configuration</a></li>
+  <li><a href="#pf_config_2_pm">Policy Manager Configuration</a></li>
+  <li><a href="#pf_config_3_cm">Community Manager Configuration</a></li>
+</ol>
+
+
+<h4><a name="pf_config_1_pf"></a>1: PingFederate Configuration</h4>
+<p>You must have a working PingFederate installation.</p>
+<p>In your PingFederate server configuration, do the following:</p>
+<ul>
+  <li>In Server Configuration &gt; System Settings &gt; Server Settings, in the Federation Info section, make sure the base URL value is defined and is accessible from Community Manager.
+  <p><strong>Note</strong>: you will use this value in Community Manager later on, in the PingFederate domain setup, on the <strong>Provider Details</strong> page.</p></li>
+  <li>Validate and export the server certificate: In Server Configuration &gt; Security &gt; SSL Server Certificates, make sure there is a valid, activated certificate defined. The PingFederate server certificate must have a &quot;Common Name&quot; matching the hostname in the base URL. If necessary, create a new certificate. When you know the certificate is valid, click the Export link to export the certificate.</li>
+  </ul>
+<p>In PingFederate, create a client (application) to represent Community Manager. You must set up the client as a resource server in your PingFederate instance so that Community Manager can communicate with PingFederate. Follow the instructions below.</p>
+<h5>To create the Community Manager client in PingFederate</h5>
+<ol>
+  <li>In PingFederate, click OAuth Settings &gt; Client Management, and choose <strong>Add Client</strong>.</li>
+  <li>For <strong>Client Authentication</strong>, choose <strong>Client Secret</strong>.</li>
+  <li>Configure the client with the following settings:
+    <ul>
+      <li>Client ID: enter a unique ID for your Community Manager client. This is the equivalent of a login. For example, <strong>PingFederate</strong>.</li>
+      <li>Client Secret: click Generate Secret and copy the secret so that you can set up the same value in Community Manager in a later step.</li>
+    </ul>
+  </li>
+  <li>Choose a name.</li>
+  <li>Under <strong>Allowed Grant Types</strong>, choose <strong>Access Token Validation (Client is a Resource Server)</strong>.</li>
+  <li>Save your settings.</li>
+</ol>
+<p>In PingFederate, set up the password credential validator. This validates the credentials provided through the OAuth user interface when a token is requested. See below.</p>
+
+<h5>To set up password credential validation in PingFederate</h5>
+<ol>
+  <li>In PingFederate, in the settings for your Community Manager client, click Authentication &gt; Password Credential Validators.</li>
+  <li>Choose <strong>Create New Instance</strong>.</li>
+  <li>Specify Instance Name, Instance ID, and Type, and save the values.</li>
+  </ol>
+<p>That completes the initial PingFederate setup. The next step is to make sure Policy Manager configuration steps are in place.</p>
+
+<h4><a name="pf_config_2_pm"></a>2: Policy Manager Configuration (HTTPS only)</h4>
+<p>In Policy Manager, if your PingFederate implementation is expecting HTTPS connections, you must set up the PingFederate server certificate in two places.</p>
+<p><strong>Note</strong>: It's important to do this <strong>before</strong> setting up the domain in Community Manager.</p>
+<h5><a name="p_https_cert_setup"></a>To set up the PingFederate server certificate in Policy Manager</h5>
+<ol>
+  <li>Add the issuer of the PingFederate server certificate in the platform trust store.   In Policy Manager: Console &gt; Configure &gt; Security &gt; Certificates &gt; Trusted CA Certificates tab. This step is needed so that Community Manager will trust the PingFederate authorization server endpoints. Note that when you upload the certificate, it generally takes a couple of minutes to take effect. Allow some time after uploading the certificates before setting up the domain in Community Manager.</li>
+  <li>On the Community Manager container, add the PingFederate server certificate to the container's JVM cacerts file, located in <span class="apidoc_code">jre/lib/security/cacerts</span>, via the <strong>keytool</strong> command. Follow the example given below, replacing the {PINGFEDERATE_CERT_NAME} and {PINGFEDERATE_CERT_LOCATION} variables with the correct values for your implementation (and removing the curly brackets):
+    <pre>keytool -keystore cacerts -importcert -alias {PINGFEDERATE_CERT_NAME} -file {PINGFEDERATE_CERT_LOCATION}</pre></li>
+  <li>Restart the container so that the above change goes into effect.</li>
+</ol>
+<h4><a name="pf_config_3_cm"></a>3: Community Manager Configuration</h4>
+<p>When the PingFederate setup steps and Policy Manager setup steps are done, it's time to set up the PingFederate domain in Community Manager.</p>
+<h5><a name="configure_domain_google" id="configure_domain_pingfederate"></a>To set up a PingFederate Provider domain in Community Manager:</h5>
+<ol>
+  <li>In Community Manager, log in as the Site Admin and click the <em>Administration</em> quick filter (wrench icon).</li>
+  <li>Click <strong>Domains</strong>. The <em>Domains Summary</em> page displays.</li>
+  <li>Click <strong>Add Domain</strong>. The <strong>Select Domain Type</strong> drop-down menu displays.</li>
+  <li>Select <strong>PingFederate Provider</strong> and then click <strong>Select</strong>. The <em>Add Connector Domain</em> wizard opens.</li>
+  <li><strong>Details</strong> page: Specify values for Name and Description and then click <strong>Next</strong>.</li>
+  <li><strong>Provider Details</strong> page: Enter the base URL from the PingFederate server setup's Federation Info system settings; for example, https://{hostname}:{port}/{basepath}. The base URL is used to construct the OpenID Connect Well-Known Configuration URL to read the PingFederate OAuth 2.0 provider configuration. If PingFederate is expecting HTTPS connections, make sure you've added the issuer of the PingFederate server certificate in the platform trust store. Click <strong>Next</strong>.</li>
+  <li><strong>Provider Details</strong> page: Enter the following values:
+    <ul>
+      <li><strong>Client ID</strong>: The unique identifier that you specified when you created the OAuth client for this platform within PingFederate.</li>
+      <li><strong>Client Secret</strong>: The Client Secret value from the OAuth client setup in PingFederate.</li>
+      <li><strong>Subject Attribute Name</strong>: the attribute from the OAuth access token that should be used as the subject; for example, username. At runtime, the attribute's value is used as the Subject field for API resources with policies that validate access tokens.</li>
+      </ul>
+  </li>
+  <li>Click <strong>Save</strong>.</li>
+</ol>
+<p>The above steps complete the setup of the PingFederate domain. Once these steps are complete, authorized platform users can create APIs that use the PingFederate domain, and business admins or app developers can create apps that subscribe to those APIs.</p>
+<p><strong>Note</strong>: For each app that is using an API that uses PingFederate as an OAuth provider, the PingFederate Admin must set up the app as a PingFederate client so that the app can be authenticated. For an overview of the entire process, end to end, see <a href="site_admin_ov_pf_endtoend.htm">PingFederate Usage Scenario: End to End</a>.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
