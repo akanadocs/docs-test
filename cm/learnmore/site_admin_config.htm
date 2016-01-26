@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Configuration Tasks | Site Administration | Community Manager Help
+title: Configuration Tasks | Site Administration | Akana API Platform Help
 description: Site configuration tasks&#8212;Configure custom color schemes, define a platform login, upload documentation files and style sheets, and manage the platform legal agreement.
 product: cm
 category: learn
@@ -747,7 +747,7 @@ nav-title: Configuration Tasks
 <h5>To add a platform legal agreement</h5>
 <p>To add a legal agreement there are two steps:</p>
 <ol>
-  <li>First, upload the legal agreement file. You can do this in the user interface. See <a href="#p_legal_agreement_upload">Step 1: To upload a new legal agreement via the Community Manager user interface</a> below.</li>
+  <li>First, upload the legal agreement file. You can do this in the user interface. See <a href="#p_legal_agreement_upload">Step 1: To upload a new legal agreement via the Akana API Platform user interface</a> below.</li>
   <li>Then, make the new agreement the default for the platform. See <a href="#p_legal_agreement_specify">Step 2: To set a specific legal agreement as the default for the platform</a> below.</li>
 </ol>
 <h5><a name="p_legal_agreement_upload"></a>Step 1: To upload a new legal agreement to the platform</h5>
@@ -877,7 +877,6 @@ and DOCUMENT_ID in (select NAMEID from DISTINGUISHED_NAMES where OBJECTTYPE='agr
     </tr>
   </tbody>
 </table>
-
 <h5>To modify the default icon for apps, APIs, or other resources on the developer platform:</h5>
 <ol>
   <li>Log in as the Site Admin.</li>
@@ -1018,7 +1017,7 @@ and DOCUMENT_ID in (select NAMEID from DISTINGUISHED_NAMES where OBJECTTYPE='agr
 <p>For a full list of roles and the types of notifications that are sent to each role, see <a href="site_admin_users.htm#what_are_the_user_roles_for_notifications">What are the user roles for notifications sent out from the platform?</a></p>
 <p>When there are multiple themes configured for the tenant, you will need to run a script to load the TENANT_THEME_ROLES table and map the theme &gt; roles list. This table tells the platform which theme is used for which notifications.</p>
 <p>In the NOTIFICATION_ROLES table, each notification template is mapped to the role that it is meant for. Before a notification is sent out, the tenant.console.address variable is replace with the theme-specific URL for the role that the specific notification template is mapped to.</p>
-<p>In a few cases, multiple themes might be possible for the same notification. For example, a user of any theme might request a password reset. In this case, the platform uses the URL for the theme that caused the notification to be generated. The Forgot Password notification will include the address of the console for the theme in which the user initiated the Forgot Password request. In an upgrade scenario, or if the database modification to the the TENANT_THEME_ROLES table, as below, has not been done, no themes will be mapped to any roles. In that case, we use the default theme assigned to the tenant.</p>
+<p>In a few cases, multiple themes might be possible for the same notification. For example, a user of any theme might request a password reset. In this case, the platform uses the URL for the theme that caused the notification to be generated. The Forgot Password notification will include the address of the console for the theme in which the user initiated the Forgot Password request. In an upgrade scenario, or if the database modification to the TENANT_THEME_ROLES table, as below, has not been done, no themes will be mapped to any roles. In that case, we use the default theme assigned to the tenant.</p>
 <p>The theme-specific feature cannot be configured in the user interface. Instead, you must run a database script. A template is shown below; this uses variable placeholders for theme name, role name, and tenant name.</p>
 
 <pre>insert into TENANT_THEME_ROLES select TENANTID, '{theme}', '{rolename}' from TENANTS where FEDMEMBERID='{tenant-name}';</pre>
@@ -1072,10 +1071,10 @@ insert into TENANT_THEME_ROLES select TENANTID, 'simpledev', 'Developer' from TE
 
 <a name="csrf_prevention_custom_client"></a><h3>I want CSRF prevention, but we already have a custom client. What do I do?</h3>
 <p>If your implementation includes the <a href="basics_glossary.htm#gl_csrf_attack">CSRF</a> prevention feature, this requires all messages to POST, PUT, or DELETE operations to use the new <a href="basics_glossary.htm#gl_xcsrf_token_fedmemberidheader">X-Csrf-Token_fedmemberID</a> custom header.</p>
-<p>However, if you already have a client that sends and receives messages to Community Manager, when you implement the new feature, messages from the client will be refused because they don't have the custom header.</p>
+<p>However, if you already have a client that sends and receives messages to the Akana API Platform, when you implement the new feature, messages from the client will be refused because they don't have the custom header.</p>
 <p>To support this feature in scenarios where there is an existing client that doesn't use the custom headers, there is a configuration setting you can use to specify that your client is a trusted sender and the custom header is not required. When the sending client is listed in this configuration setting, the messages are processed without the custom header.</p>
-<p>In the configuration settings, under com.soa.atmosphere, choose atmosphere.config.csrfHttpWriteSkipUserAgents. This setting supports Network Director and federated Community Manager scenarios invoking Community Manager APIs without having to send the CSRF token.</p>
-<p>For more information about accessing and modifying this setting, see <a href="site_admin_admin_console_settings.htm#ac_settings_cm_navigation">How do I get to the Community Manager Configuration Settings in the Akana Administration Console?</a></p>
+<p>In the configuration settings, under com.soa.atmosphere, choose atmosphere.config.csrfHttpWriteSkipUserAgents. This setting supports Network Director and federated Akana API Platform scenarios invoking Akana API Platform APIs without having to send the CSRF token.</p>
+<p>For more information about accessing and modifying this setting, see <a href="site_admin_admin_console_settings.htm#ac_settings_cm_navigation">How do I get to the Akana API Platform Configuration Settings in the Akana Administration Console?</a></p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -1186,7 +1185,7 @@ insert into TENANT_THEME_ROLES select TENANTID, 'simpledev', 'Developer' from TE
   <li>Resources the user is following.</li>
 </ul>
 <p>The session cookie determines which resources the user can see and can modify, based on the user's role and permissions as above.</p>
-<p>The Csrf-Token cookie is used only as an additional mechanism that can be used to help prevent a CSRF attach. When adding, changing, or deleting platform resources, the CSRF-header is needed; the CSRF-Token is used in composing the CSRF header. For more information, see <a href="#what_is_the_csrf_prevention_feature">What is the CSRF prevention feature?</a> The CSRF settings can be turned off; in this case, the Csrf-Token cookie is not used.</p>
+<p>The Csrf-Token cookie is used only as an additional mechanism that can be used to help prevent a CSRF attack. When adding, changing, or deleting platform resources, the CSRF-header is needed; the CSRF-Token is used in composing the CSRF header. For more information, see <a href="#what_is_the_csrf_prevention_feature">What is the CSRF prevention feature?</a> The CSRF settings can be turned off; in this case, the Csrf-Token cookie is not used.</p>
 <p><a href="#top">Back to top</a></p>
 
 
