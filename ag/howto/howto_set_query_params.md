@@ -15,7 +15,7 @@ How to Add downstream query params
 
 This is short and sweet.  It provides a very simple script that appends a new string to the existing query string.  If you want an all new string ignoring anything inbound, that's a pretty simple code change.
 
-```
+```javascript
 var msg = processContext.getVariable("message");
 
 // Read the existing query string
