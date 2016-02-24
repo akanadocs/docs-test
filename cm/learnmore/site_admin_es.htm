@@ -34,6 +34,9 @@ nav-title: Configuring the Search/Indexing Feature
   <li><a href="#f_global_es">Elasticsearch Global Configuration: Field Values</a></li>
   <li><a href="#f_embedded_es">Configuring an Elasticsearch Embedded Node: Field Values</a></li>
   <li><a href="#es_delete_index">How do I delete an Elasticsearch search index?</a></li>
+  <li><a href="#es_force_rebuild">How do I force a rebuild of an Elasticsearch search index?</a></li>
+  <li><a href="#es_configure_embed_single_container">How do I configure Elasticsearch in embedded mode with a single CM container?</a></li>
+  <li><a href="#es_configure_embed_multiple_containers">How do I configure Elasticsearch in embedded mode with two CM containers?</a></li>
 </ol>
 
 
@@ -116,6 +119,7 @@ Elasticsearch is a search engine based on Lucene. It is more robust and extensib
 
 
 <a name="how_do_i_configure_elastic_search_in_pm"></a><h3>How do I configure Elasticsearch?</h3>
+<p>In some cases, if you are using Elasticsearch in embedded mode, you won't even need to do any configuration, just leave the default settings. See <a href="#es_configure_embed_single_container">How do I configure Elasticsearch in embedded mode with a single CM container?</a> below. However, you might have multiple containers or special requirements and want to configure Elasticsearch a certain way.</p>
 <p>First, review the information above and determine your deployment strategy.</p>
 <p>Then, when you've installed, or installed an upgrade, you're ready to configure Elasticsearch. Depending on the configuration you chose, you might have to follow one or both of the procedures listed below. If you do them both, complete the tasks in the order given below.</p>
 <ol>
@@ -169,6 +173,8 @@ Elasticsearch is a search engine based on Lucene. It is more robust and extensib
   <dd>The URL for the master host that this is a client for.</dd>
   <dt>Minimum Master Nodes (Embedded mode only)</dt>
   <dd>The minimum number of master nodes. Default: 2.</dd>
+<!--  <dt>Unicast Host Address</dt>
+  <dd>The address for the host in a <a href="basics_glossary.htm#gl_unicast">unicast</a> scenario.</dd>-->
   <dt>Multicast (Embedded or Client Only modes)</dt>
   <dd>If this is a <a href="basics_glossary.htm#gl_multicast">multicast</a> scenario, check the box.</dd>
 </dl>
@@ -198,7 +204,7 @@ Elasticsearch is a search engine based on Lucene. It is more robust and extensib
   <dt>Master Eligible</dt>
   <dd>Indicates whether the current node could be the master node.</dd>
   <dt>Data Node</dt>
-  <dd>Indicates whether the current node is a data node only.</dd>
+  <dd>Indicates whether the current node is a <a href="basics_glossary.htm#gl_data_node">data node</a> only. The data node is where the index is stored. Over the entire installation, there must be at least one data node.</dd>
 </dl>
 <p><a href="#top">Back to top</a></p>
 
@@ -218,7 +224,62 @@ Elasticsearch is a search engine based on Lucene. It is more robust and extensib
 
 
 
-<div class = "divider1"></div>
+<a name="es_force_rebuild"></a><h3>How do I force a rebuild of an Elasticsearch search index?</h3>
+<p>If you're working with the Elasticsearch index and want to force a rebuild, you can  delete everything from the INDEX_STATUS table. This will force a reindex of all the objects in the index.</p>
+<p><a href="#top">Back to top</a></p>
 
+
+
+<a name="es_configure_embed_single_container"></a><h3>How do I configure Elasticsearch in embedded mode with a single CM container?</h3>
+<p>To run Elasticsearch in embedded mode, you don't need to change any configuration settings at all. Just go with the default settings and Elasticsearch takes care of everything in the background.</p>
+<p><strong>Note</strong>: The Elasticsearch feature must be installed on the same container as the CM Scheduled Jobs.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="es_configure_embed_multiple_containers"></a>
+<h3>How do I configure Elasticsearch in embedded mode with two CM containers?</h3>
+<p>If there are two CM containers in your installation, you'll need to install Embedded Elasticsearch feature in both containers, and then configure the feature in both containers.</p>
+<p>In this scenario, you'll need to decide whether you want to replicate the index replicated in both containers or only have it in one container. Akana recommends configuring both containers, so that you have a failover for the index data.</p>
+<p>To configure both containers, follow the steps below.</p>
+<h5>To configure two containers so that the index is replicated in both containers</h5>
+<ol>
+  <li>For <strong>each</strong> container, choose <strong>Configure Elasticsearch Embedded Node</strong> and configure the settings below:
+    <ul>
+      <li><strong>Name</strong>: Enter any unique name for the node name in the cluster</li>
+      <li><strong>Index Location</strong>: Either leave blank or enter a folder path</li>
+      <li><strong>Bind to All</strong>: Check the checkbox, but leave the <strong>Network Bind Address</strong> blank.</li>
+      <li><strong>Network Publish Address</strong>: Enter the hostname/ipaddress.</li>
+      <li><strong>Transport Port</strong>: Enter an unused port. The default is 9300</li>
+      <li><strong>Http Port</strong>: Leave blank</li>
+      <li><strong>Http Enabled</strong>: Cleared</li>
+      <li><strong>Master Eligible</strong>: Checked</li>
+      <li><strong>Data Node</strong>: Checked</li>
+    </ul>
+  </li>
+  <li>Click <strong>Finish</strong> to save the configuration.</li>
+  <li>Restart the containers. This replicates the index in both containers.</li>
+  </ol>
+
+
+<p>In case there is an issue with search working in one container but not the other, follow the additional steps below:</p>
+<ol>
+  <li>Delete the index folder on both instances.</li>
+  <li>Restart both containers.</li>
+  <li>Empty the INDEX_STATUS table.</li>
+</ol>
+<p>In some cases, you might find that the index is built with the earlier Compass feature as well as the new Elasticsearch feature. To avoid building the index with Compass unnecessarily, follow the steps below.</p>
+<h5>To ensure the search index is only Elasticsearch, not Compass</h5>
+<ol>
+  <li>In the TENANTS table, change the INDEX_TARGET field to <strong>elastic</strong>.</li>
+  <li>Empty the INDEX_OBJECTS table.</li>
+  <li>Restart both containers.</li>
+  <li>Empty the INDEX_STATUS table.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<div class = "divider1"></div>
 
 
