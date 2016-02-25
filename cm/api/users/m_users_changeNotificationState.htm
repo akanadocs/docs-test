@@ -4,9 +4,9 @@
 		            <meta http-equiv="Content-type" content="text/html; charset=utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <title>Change Notification State | Users Service | Akana API Platform API</title>
-            <link href="http://soa.com/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
-            <link rel="stylesheet" href="http://soa.com/css/compiled/bootstrap-overrides.css" type="text/css" />
-            <link rel="stylesheet" type="text/css" href="http://soa.com/css/compiled/theme.css" />
+            <link href="http://akana.com/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+            <link rel="stylesheet" href="http://akana.com/css/compiled/bootstrap-overrides.css" type="text/css" />
+            <link rel="stylesheet" type="text/css" href="http://akana.com/css/compiled/theme.css" />
             <link rel="stylesheet" href="/docs-test/style/reset.css" type="text/css">
             <link rel="stylesheet" href="/docs-test/style/base.css" type="text/css">
             <link rel="stylesheet" href="/docs-test/style/style.css" type="text/css">
@@ -14,14 +14,14 @@
 	          <link rel="stylesheet" href="/docs-test/style/pygments.css" type="text/css">
 
             <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700' rel='stylesheet' type='text/css'>
-            <!-- <link rel="icon" type="image/png" href="http://soa.com/favicon.ico"> -->
+            <!-- <link rel="icon" type="image/png" href="http://akana.com/favicon.ico"> -->
 
+            <script src="/docs-test/js/soadocs.min.js"></script>
+            <script src="https://www.google.com/jsapi"></script>
 
             <!-- <link rel="stylesheet" href="/docs-test/style/site.min.css" type="text/css" media="screen" /> -->
             <!--[if lt IE 10]><link rel="stylesheet" href="style/ie.css" type="text/css"><![endif]-->
             <!--[if lt IE 9]><link rel="stylesheet" href="style/ie8.css" type="text/css"><![endif]-->
-          
-            <script src="/docs-test/js/soadocs.min.js"></script>
 
             <script type="text/javascript">
 
@@ -232,11 +232,10 @@
 		</div>
 
 					<div class="soa-ui-dc-topsearch-container">
-				<form class="soa-ui-dc-topsearch">
-					<label for="soa-control-dc-search" class="soa-ui-dc-label soa-ui-dc-label-hidden">Enter Search Text</label>
-					<input type="text" id="soa-control-dc-search-query" name="q" placeholder="Search" autocomplete="off" class="soa-ui-dc-topsearch-input">
-					<button class="soa-ui-dc-topsearch-button soa-ui-dc-icon-imgtxt soa-ui-dc-icon-magnifying-glass" type="button">Search</button>
-				</form>
+				<div class="soa-ui-dc-topsearch">
+		            <input type="text" class="soa-ui-dc-topsearch-input" id="my-search">
+		            <button class="soa-ui-dc-topsearch-button soa-ui-dc-icon-imgtxt soa-ui-dc-icon-magnifying-glass" type="button">Search</button>
+		        </div>
 				<div id="soa-control-dc-search-results" class="soa-ui-dc-inline-search-div soa-ui-dc-icon" style="display: none;">
 					<ul class="soa-ui-dc-buttons">
 						<li>
@@ -244,38 +243,46 @@
 						</li>
 					</ul>
 					<h3 class="soa-ui-dc-content-header">Search Results</h3>
-					<div id="soa-control-dc-search-result-entries">
-					</div>
+					<div id="soa-control-dc-search-results-target"></div>
 				</div>
 			</div>
 
-		    
-		    <script id="soa-control-dc-search-results-template" type="text/x-handlebars-template">
-				{{#entries}}
-					<div class="soa-ui-dc-content-catalog">
-						<ul class="soa-ui-dc-content-catalog-items">
-							<li class="soa-ui-dc-content-catalog-item soa-ui-dc-2col-with-avatar soa-ui-dc-clearthis">
-								<div class="soa-ui-dc-avatar-box">
-									<h4 class="soa-ui-dc-icon-imgtxt soa-ui-dc-document-type soa-ui-dc-icon-{{ type }}">
-									Document
-									</h4>
-								</div>
-								<div class="soa-ui-dc-details-box">
-									<div class="soa-ui-dc-section">
-										<h3 class="soa-ui-dc-section-header">
-											<a href="/docs-test{{ url }}"{{#if_eq type "pdf"}} target="_blank"{{/if_eq}}>{{ title }}</a>
-										</h3>
-										<p class="soa-ui-dc-section-paragraph">
-										{{ description }}
-										</p>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</div>
-				{{/entries}}
-		    </script>
-		    
+			<script type="text/javascript">
+			    google.load('search', '1');
+			    google.setOnLoadCallback(function(){
+			        var googleSearch = new google.search.CustomSearchControl('015728184064503700349:jpzy5nvltkm');
+
+			        var drawOptions = new google.search.DrawOptions();
+			        drawOptions.enableSearchResultsOnly();
+			        googleSearch.setLinkTarget(google.search.Search.LINK_TARGET_SELF);
+			        googleSearch.draw('soa-control-dc-search-results-target', drawOptions);
+
+			        $("#my-search").on("keyup", function(event){
+			            if (event.keyCode == 13) {
+			                googleSearch.execute($(event.target).val());
+			                $("#soa-control-dc-search-results").show();
+			                $('#soa-control-dc-overlay').addClass('soa-ui-dc-overlay-visible');
+			            }
+			        });
+			        $(".soa-ui-dc-topsearch-button").on("click", function(event){		           
+		                googleSearch.execute($("#my-search").val());
+		                $("#soa-control-dc-search-results").show();
+		                $('#soa-control-dc-overlay').addClass('soa-ui-dc-overlay-visible');
+			        });
+
+			        $("#soa-control-dc-close-results").on('click', function(){
+			            $("#soa-control-dc-search-results").hide();
+			            $('#soa-control-dc-overlay').removeClass('soa-ui-dc-overlay-visible');
+			        });
+			        $("#soa-control-dc-search-results").click( function(e){
+			            e.stopPropagation();
+			        });
+			        $("body").click( function(e){
+			            $('#soa-control-dc-search-results').hide();
+			            $('#soa-control-dc-overlay').removeClass('soa-ui-dc-overlay-visible');
+			        });
+			    }, true);
+			</script>
 		
 	</div>
 </div>
@@ -678,22 +685,6 @@ Akana API Platform<!-- #EndLibraryItem -->&nbsp;API error messages.</a></p>
 			<div id="soa-control-dc-overlay" class="soa-ui-dc-overlay"></div>
 			<script type="text/javascript">
 				$(function() {
-					$('#soa-control-dc-search-query').lunrSearch({
-						indexUrl: '/docs-test/search.json',
-						results:  '#soa-control-dc-search-results',
-						entries:  '#soa-control-dc-search-result-entries',
-						template: '#soa-control-dc-search-results-template'
-					});
-					$("#soa-control-dc-close-results").click(function(e){
-						e.preventDefault();
-						$('#soa-control-dc-search-results').hide();
-						$('#soa-control-dc-overlay').removeClass('soa-ui-dc-overlay-visible');
-					});
-					$("#soa-control-dc-overlay").click(function(e){
-						e.preventDefault();
-						$('#soa-control-dc-search-results').hide();
-						$('#soa-control-dc-overlay').removeClass('soa-ui-dc-overlay-visible');
-					});
 					$(".soa-ui-dc-container-main-left-nav-item-link").click(function(e){
 						if ( ! $(this).closest(".soa-ui-dc-container-main-left-nav-inner").length ) {
 							$(".soa-ui-dc-container-main-left-nav-item").removeClass('soa-ui-dc-container-main-left-nav-item-selected');
