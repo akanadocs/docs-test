@@ -234,7 +234,7 @@ nav-title: Customizing the User Interface
 <p>Then just add a new header.tmpl.htm file with the same path under theme/default in your CMS Deployment Package.</p>
 <p><a href="#top">Back to top</a></p>
 <a name="editing_the_custom_dashboard"></a><h3>Editing the Custom Dashboard</h3>
-<p>New in 6.5.0 is the custom dashboard available on #/home/customdashboard. This dashboard provides customers and their users with a way to create their own dashboard made up of a set of widgets – in a drag & drop way.</p>
+<p>New in 6.5.0 is the custom dashboard available on #/home/customdashboard. This dashboard provides customers and their users with a way to create their own dashboard made up of a set of widgets – in a drag and drop way.</p>
 <p>The architecture is very similar to the architecture described in the previous sections, with the exception that the metadata.json file has been effectively replaced by the ability to select widgets and drag them to appropriate locations on the page:</p>
 
 <p class="apidoc_image_p"><img src="images/04_custom_dashboard.jpg" alt="custom dashboard" /></p>
@@ -317,12 +317,37 @@ SOA.Framework.Common.I18N.globalize(key, replacements);</pre>
   </li>
 </ul>
 <p><a href="#top">Back to top</a></p>
+
+
+
 <a name="examples"></a><h3>Examples</h3>
 <h4>Adding a New Static Content View</h4>
-<p>A common customization is adding new views in the product to support static content from the CMS. For example, a site may benefit from a "Showcases" section that lists all the best Apps that have been built and provides links to them.</p>
-<p>The following metadata.json file shows how a "widget.document" widget can be added to a new view:</p>
-<!--<p class="apidoc_image_p"><img src="images/code_04.jpg" alt="adding to a new view" /></p>
--->
+<p>A common customization task is to add a new view in the developer portal to support static content from the CMS. For example, a site may benefit from a "Showcases" page that lists all the best apps that have been built and provides links to them.</p>
+<p>To set this up you'd have to create and upload two files:</p>
+<ol>
+  <li>Create <strong>metadata.json</strong> file and upload it to the platform in Resources:
+    <ol>
+      <li>Create the <strong>metadata.json</strong> file along the lines of the example shown below (<a href="#metadata_json_newpage">Sample metadata.json file for adding a new static content view</a>).</li>
+      <li>Upload the new file to the Resources folder structure (create folders as needed, be sure case is exact on folder names). In the developer portal: Administration &gt; Config &gt; Resources. At top of page, under Resources, click <strong>File Manager</strong>.</li>
+      <li>In the <strong>resources</strong> folder, create additional folders to create this path: <strong>resources/default/SOA/CM/extensions</strong></li>
+      <li>In the <strong>extensions</strong> folder, upload the <strong>metadata.json</strong> file.</li>
+    </ol>
+  </li>
+  <li>Create the new content page and upload it to the platform in Content:
+    <ol>
+      <li>Offline, develop your <strong>index.htm</strong> content file. Note the file extension should be <strong>htm</strong>, not html.</li>
+      <li>In the developer portal: Administration &gt; Config &gt; Resources. At bottom of page, under Content, click <strong>File Manager</strong>.</li>
+      <li>In the <strong>content</strong> folder, create additional folders to create this path: <strong>content/home/showcases</strong>.<br />
+        <strong>Note</strong>: the path is defined, in the sample file below, by the value of <strong>objType</strong>, which is <strong>home</strong>, and the value of <strong>view</strong>, which is <strong>showcases</strong>. </li>
+      <li>In the <strong>showcases</strong> folder, upload the <strong>index.htm file</strong>.</li>
+      </ol>
+  </li>
+  <li>Test. Go to the landing page, then change the URL from <strong>home/landing</strong> to <strong>home/showcases</strong> to view the new page. <br />
+    <strong>Note</strong>: You might need to refresh the page. </li>
+</ol>
+<h5><a name="metadata_json_newpage"></a>Sample metadata.json file for adding a new static content view</h5>
+<p>The following metadata.json file shows how a "widget.document" widget can be added to a new view.</p>
+<p><strong>Note</strong>: Line 27 of the file below references <strong>widget.document</strong> which is a standard widget that renders the index.htm file from the CMS system at the path corresponding to the browser URL. For example, "#/home/showcases" will automatically load "/home/showcases/index.htm" from the CMS.</p>
 <pre>{
   "layoutStructure": [{
     "objType": "home", 
@@ -349,10 +374,6 @@ SOA.Framework.Common.I18N.globalize(key, replacements);</pre>
       },
       {
         "widgetInstance": "Landing",
-              // &quot;widget.document&quot; is a standard widget that renders the 
-              // index.htm file from the CMS system at the path corresponding
-              // to the browser URL. For example, "#/home/showcases" will
-              // automatically load "/home/showcases/index.htm" from the CMS.
         "widget": "widget.document",
         "parentWidgetInstance": "Content-Widest",
         "parent": "widget.horiz.tiling",
@@ -369,6 +390,9 @@ SOA.Framework.Common.I18N.globalize(key, replacements);</pre>
   }]
 }</pre>
 <p><a href="#top">Back to top</a></p>
+
+
+
 <a name="appendix"></a><h3>Appendix</h3>
 <h4>Sample View</h4>
 <p>The following file is a very basic view template. These files are Mustache templates and are rendered by the controller, which is referenced at the top of the template as follows:</p>
