@@ -1,7 +1,7 @@
 ---
 layout: page
-title: Domain Management | Site Administration | Community Manager Help
-description: Site configuration tasks&#8212;Configure authentication domains for APIs defined in the platform.
+title: Domain Management | Site Administration | Akana API Platform Help
+description: Configure authentication domains for APIs defined in the platform.
 product: cm
 category: learn
 sub-nav-class: Site Administration
@@ -11,7 +11,11 @@ nav-title: Domain Management
 ---
 <h2 id="top">Domains</h2>
 <p>Configure domains that can be used for login or as authentication domains for APIs defined in the platform.</p>
-<p><strong>Note</strong>: For detailed information about OpenID Connect, and setting up the OpenID Connect domain, see <a href="site_admin_openidconnect_support.htm">OpenID Connect Support</a>.</p>
+<p>Detailed information about certain domains is in these additional files:</p>
+<ul>
+  <li> OpenID Connect domain: see <a href="site_admin_domains_oidc.htm">OpenID Connect Support</a></li>
+  <li>External OAuth Provider domain: see <a href="site_admin_domains_eoap.htm">External OAuth Provider Domain</a></li>
+</ul>
 <div class = "divider1"></div>
 
 
@@ -33,21 +37,66 @@ nav-title: Domain Management
   <li><a href="#how_do_i_set_up_a_google_connector_domain">How do I set up a Google Connector domain?</a></li>
   <li><a href="#domains_login_setup_google">How do I set up the platform to log in with Google?</a></li>
   <li><a href="#what_value_should_i_use_for_the_redirect_uri_for_my_google_connector_domain">What value should I use for the Redirect URI for my Google Connector domain?</a></li>
-  <li><a href="#domains_login_setup_ca_siteminder">How do I set up the platform to log in with CA SiteMinder (CA SiteMinder domain)?</a></li>
-  <li><a href="#domains_login_setup_saml_web_sso">How do I set up the platform to log in with SAML Web SSO?</a></li>
-  <li><a href="#domains_login_setup_saml_web_slo">How do I set up the platform for single logout (SLO) using SAML?</a></li>
+  <li><a href="#how_do_i_customize_google_user_consent_screen">How do I customize the Google user consent screen for my Google Connector domain?</a></li>
+  <li><a href="#do_i_choose_oidcrp_domain_or_eoap_domain">Do I choose the OpenID Connect Relying Party domain or the External OAuth Provider domain?</a></li>
+  <li><a href="#do_i_choose_pf_domain_or_eoap_domain">Do I choose the PingFederate domain or the External OAuth Provider domain?</a></li>
+  <li><a href="#why_platform_identity">Should I set up a platform identity, or provide the credentials in the domain configuration?</a></li>
+  <li><a href="#how_platform_identity">How do I set up a platform identity for my domain?</a></li>
+  <li><a href="#what_is_jwt">What is JWT?</a></li>
+  <li><a href="#encryption_options_jwt">What are the options for signing and encryption of JWT access tokens?</a></li>
+</ol>
+
+
+<h5 style="color: gray;"><a href="#h_oauthproviderdomain">OAuth Provider Domain:</a></h5>
+
+
+<ol class="table_of_contents">
   <li><a href="#how_does_the_authentication_provider_configuration_process_work">How does the authentication provider configuration process work?</a></li>
-  <li><a href="#how_do_i_set_up_a_platform_deployment_to_support_a_third_party_provider">How do I set up a platform deployment to support a third-party provider?</a></li>
+  <li><a href="#how_do_i_set_up_a_platform_deployment_to_support_a_third_party_provider">How do I set up a platform deployment to support a third-party OAuth provider?</a></li>
   <li><a href="#how_do_i_set_up_my_deployment_to_support_oauth">How do I set up my deployment to support OAuth?</a></li>
   <li><a href="#how_do_i_set_up_and_configure_an_oauth_provider_domain">How do I set up and configure an OAuth Provider domain?</a></li>
+  <li><a href="#what_are_the_settings_on_the_oauth_provider_grant_types_page">What are the settings on the OAuth Provider Grant Types page and what options should I choose?</a></li>
+  <li><a href="#what_are_the_settings_on_the_oauth_provider_token_page">What are the settings on the OAuth Provider Token page and what options should I choose?</a></li>
+  <li><a href="#should_i_choose_reference_bearer_or_jwt_bearer">Should I choose Referenced Bearer or Bearer token?</a></li>
+  <li><a href="#why_choose_to_include_resource_owner_userinfo_in_bearer_token">Why choose to include resource owner userinfo in the  Bearer Access token?</a></li>
+  <li><a href="#what_jwt_signing_algorithms_are_supported">What  signing algorithms are supported?</a></li>
+  <li><a href="#should_i_choose_verify_jwt_token_with_auth_server">Should I choose to verify the  access token with the Authorization Server?</a></li>
+  <li><a href="#what_are_the_settings_on_the_oauth_provider_oidc_page">What are the settings on the OAuth Provider OpenID Connect page and what options should I choose?</a></li>
   <li><a href="#what_are_the_settings_on_the_oauth_provider_branding_page">What are the settings on the OAuth Provider Branding page and what options should I choose?</a></li>
   <li><a href="#how_can_i_set_up_my_oauth_provider_domain_to_support_sso_login">How can I set up my OAuth Provider domain to support end-user login from an external identity provider?</a></li>
   <li><a href="#what_is_an_authorization_server_url">What is an Authorization Server URL?</a></li>
   <li><a href="#what_is_the_authorization_server_url_for_the_platform">What is the OAuth Authorization Server URL for the platform?</a></li>
   <li><a href="#what_are_the_oauth_custom_headers">What are the OAuth custom headers?</a></li>
-  <li><a href="#what_is_a_jwt_bearer_assertion">What is a JWT Bearer Assertion, and what does the platform support for JWT Bearer Assertions?</a></li>
-  <li><a href="#how_do_i_configure_a_pingfederate_domain">How do I configure a PingFederate domain?</a></li>
-  <li><a href="#how_do_i_customize_google_user_consent_screen">How do I customize the Google user consent screen for my Google Connector domain?</a></li>
+  <li><a href="#what_is_a_jwt_bearer_assertion">What is a  Bearer Assertion, and what does the platform support for  Bearer Assertions?</a></li>
+  <li><a href="#what_token_types_should_i_support">What token types should I support?</a></li>
+  <li><a href="#how_does_token_encryption_work">How does token encryption work?</a></li>
+  <li><a href="#how_manage_grant_revoked_cancelled">How does the platform manage validation of the JWT access tokens in the resource server when the grant is revoked or cancelled?</a></li>
+</ol>
+
+
+<h5 style="color: gray;"><a href="#h_samlwebssoslodomain">SAML Web SSO/SLO Domain:</a></h5>
+
+
+<ol class="table_of_contents">
+  <li><a href="#domains_login_setup_saml_web_sso">How do I set up the platform to log in with SAML Web SSO?</a></li>
+  <li><a href="#domains_login_setup_saml_web_slo">How do I set up the platform for single logout (SLO) using SAML?</a></li>
+</ol>
+
+
+<h5 style="color: gray;"><a href="#h_casiteminderdomain">CA SiteMinder Domain:</a></h5>
+
+
+<ol class="table_of_contents">
+  <li><a href="#domains_login_setup_ca_siteminder">How do I set up the platform to log in with CA SiteMinder (CA SiteMinder domain)?</a></li>
+</ol>
+
+
+<h5 style="color: gray;"><a href="#h_pingfederatedomain">PingFederate Domain:</a></h5>
+
+
+<ol class="table_of_contents">
+  <li><a href="#how_do_i_configure_eoap_pf">How do I configure an External OAuth Provider domain for PingFederate?</a> (recommended)</li>
+  <li><a href="#how_do_i_configure_a_pingfederate_domain">How do I configure a PingFederate Connector domain?</a> (legacy)</li>
 </ol>
 
 
@@ -80,41 +129,46 @@ nav-title: Domain Management
       <td>No</td>
       </tr>
     <tr class="t1row">
+      <td><a href="site_admin_domains_eoap.htm#domain_add_eoap">External OAuth Provider</a></td>
+      <td>No</td>
+      <td>Yes</td>
+    </tr>
+    <tr class="t2row">
       <td><a href="#domains_login_setup_facebook">Facebook® Connector</a></td>
       <td>Yes</td>
       <td>Yes</td>
     </tr>
-    <tr class="t2row">
+    <tr class="t1row">
       <td><a href="#how_do_i_set_up_a_google_connector_domain">Google® Connector</a></td>
       <td>Yes</td>
       <td>Yes</td>
     </tr>
-    <tr class="t1row">
+    <tr class="t2row">
       <td><a href="#how_do_i_set_up_and_configure_an_oauth_provider_domain">OAuth Provider</a></td>
       <td>No</td>
       <td>Yes</td>
     </tr>
-    <tr class="t2row">
-      <td><a href="site_admin_openidconnect_support.htm#domain_setup_openid_connect_relying_party">OpenID Connect Relying Party</a></td>
+    <tr class="t1row">
+      <td><a href="site_admin_domains_oidc.htm#domain_setup_openid_connect_relying_party">OpenID Connect Relying Party</a></td>
       <td>Yes</td>
       <td>Yes</td>
     </tr>
-    <tr class="t1row">
+    <tr class="t2row">
       <td><a href="#how_do_i_configure_a_pingfederate_domain">PingFederate&reg; Provider</a></td>
       <td>No</td>
       <td>No</td>
       </tr>
-    <tr class="t2row">
+    <tr class="t1row">
       <td><a href="#how_do_i_set_up_an_ldap_domain">LDAP</a> (must first be set up in Policy Manager)</td>
       <td>Yes</td>
       <td>Yes</td>
       </tr>
-    <tr class="t1row">
+    <tr class="t2row">
       <td><a href="#domains_login_setup_ca_siteminder">CA SiteMinder</a> (Requires installation, and then setup in Policy Manager)</td>
       <td>Yes</td>
       <td>Yes</td>
       </tr>
-    <tr class="t2row">
+    <tr class="t1row">
       <td><a href="basics_glossary.htm#gl_saml">SAML</a> (requires installation, and then setup in Policy Manager)</td>
       <td>Yes</td>
       <td>Yes</td>
@@ -171,7 +225,7 @@ nav-title: Domain Management
       <li>Platform Login: see <a href="#how_do_i_configure_a_platform_login_default_domain">How do I configure a Platform Login domain?</a></li>
       <li>Facebook Connector: see <a href="#domains_login_setup_facebook">How do I configure a Facebook Connector domain?</a></li>
       <li>Google Connector: see <a href="#how_do_i_set_up_a_google_connector_domain">How do I configure a Google Connector domain?</a></li>
-      <li>OpenID Connect Relying Party: see <a href="site_admin_openidconnect_support.htm#domain_setup_openid_connect_relying_party">How do I set up the platform to log in with an OpenID Connect Relying Party domain?</a></li>
+      <li>OpenID Connect Relying Party: see <a href="site_admin_domains_oidc.htm#domain_setup_openid_connect_relying_party">How do I set up the platform to log in with an OpenID Connect Relying Party domain?</a></li>
       <li>LDAP: see <a href="#how_do_i_set_up_an_ldap_domain">How do I set up an LDAP domain?</a></li>
       <li>CA SiteMinder: see <a href="#domains_login_setup_ca_siteminder">How do I set up the platform to log in with CA SiteMinder (CA SiteMinder domain)?</a></li>
       <li>SAML Web SSO: see <a href="#domains_login_setup_saml_web_sso">How do I set up the platform to log in with SAML Web SSO?</a></li>
@@ -224,7 +278,7 @@ nav-title: Domain Management
 <a name="how_do_i_set_up_an_ldap_domain"></a><h3>How do I set up an LDAP domain?</h3>
 <p>The platform provides support for users logging in using LDAP credentials.</p>
 <p>You must first define the LDAP domain via the <em>Configure &gt; Security &gt; Identity Systems</em> section of the <a href="basics_glossary.htm#gl_policy_manager">Policy Manager</a> Management Console. For more information, refer to the <strong>Add Identity System</strong> (Active Directory) topic in the Policy Manager Online Help.</p>
-<p>Once the domain is defined in Policy Manager, you can enable it for login in Community Manager. See <a href="#p_enable_login_domain">To enable a login domain</a>.</p>
+<p>Once the domain is defined in Policy Manager, you can enable it for login in Akana API Platform. See <a href="#p_enable_login_domain">To enable a login domain</a>.</p>
 <p>Once setup is complete, when users sign in they will see the LDAP icon on the platform login page and will be able to choose LDAP for login.</p>
 <p><a href="#top">Back to top</a></p>
 
@@ -254,7 +308,8 @@ nav-title: Domain Management
 
 <a name="how_do_i_get_google_credentials_for_a_google_connector_domain"></a><h3>How do I get Google credentials for a Google Connector domain?</h3>
 <p>Before setting up a Google Connector domain in the platform, you'll need to register the platform as an app on the Google developer site at <a href="https://console.developers.google.com/project" title="Google Developers Console" target="_blank">https://console.developers.google.com/project</a> and get the Google App ID and Shared Secret values for your instance of the platform.</p>
-<p>Once you have your credentials, you can set up your Google Connector domain. See <a href="#configure_domain_google">To set up a Google Connector domain in Community Manager</a> below.</p>
+<p>If you're planning to use the Google Connector domain for user login associated with using OAuth, you'll also need to </p>
+<p>Once you have your credentials, you can set up your Google Connector domain. See <a href="#configure_domain_google">To set up a Google Connector domain in the Akana API Platform</a> below.</p>
 
 
 <h5><a name="to_get_credentials_for_a_google_connector_domain"></a>To get credentials for a Google Connector domain:</h5>
@@ -262,16 +317,17 @@ nav-title: Domain Management
 <ol>
   <li>Go to the Google Developers Console at <a href="https://console.developers.google.com/project" title="Google Developers Console" target="_blank">https://console.developers.google.com/project</a> and choose <strong>Create Project</strong>.</li>
   <li>Give your project a name and ID. For the ID, you can accept the suggested ID, click the Refresh icon to get a new suggestion, or choose your own ID. Click <strong>Create</strong>.</li>
-  <li>The next step is to subscribe to the Google+ API. On the left, click <strong>APIs &amp; Auth</strong> and then click <strong>APIs</strong>. Find the Google+ API on the list, and click the button to enable it. This is the API your app will use to allow users to log in with Google on the platform. Make sure the status for the Google+ API shows as <strong>ON</strong>.</li>
+  <li>The next step is to subscribe to the Google+ API. On the left, click <strong>APIs &amp; Auth</strong> and then click <strong>APIs</strong>. Find the Google+ API on the list, and click the button to enable it. This is the API your app will use to allow users to log in with Google on the platform. Make sure the status for the Google+ API shows as <strong>ON</strong>. If the API status is OFF, your users will see an &quot;Unauthorized&quot; status code when they try to use the Google login.</li>
   <li>Next, get the credentials for your app:
     <ol>
       <li> On the left, click <strong>APIs &amp; Auth</strong> and then click <strong>Credentials</strong>.</li>
-      <li>In the <strong>OAuth</strong> section, click <strong>Create New Client ID</strong>.</li>
+      <li>In the <strong>OAuth</strong> section, click <strong>Create New Client ID</strong>. 
+      <p><strong>Note</strong>: If credentials already exist for your app, find the correct set of credentials and then find the Client ID and Client Secret for the credentials. Your project might have several sets of credentials; for example, there might be different credentials for a web application, service account, Compute Engine, App Engine, and/or different installed applications such as Android, Chrome, or iOS. Some types of credentials might have a Client ID without a Client Secret. You can create additional credentials as needed.</p></li>
       <li>Make sure Application Type is <strong>Web Application</strong>. </li>
       <li>In the Authorized Redirect URI field, enter the applicable redirect URI. For a login domain, enter: {protocol}://{hostname}/api/login/ssoLogin. For example: https://www.example.com/api.ssoLogin. For other types of domain, refer to the table at <a href="#what_value_should_i_use_for_the_redirect_uri_for_my_google_connector_domain">What value should I use for Redirect URI for my Google Connector domain?</a> below. Google requires that the redirect URL is a public URL.</li>
     </ol>
   </li>
-  <li>Save the values on the Google website and also have them available for the next step, setting up your Google Connector domain in Community Manager. See <a href="#configure_domain_google">To set up a Google Connector domain in Community Manager</a> below.</li>
+  <li>Save the values on the Google website and also have them available for the next step, setting up your Google Connector domain in the Akana API Platform. See <a href="#configure_domain_google">To set up a Google Connector domain in the Akana API Platform</a> below.</li>
 </ol>
 <p><a href="#top">Back to top</a></p>
 
@@ -281,7 +337,7 @@ nav-title: Domain Management
 <p>The Google <a href="basics_glossary.htm#gl_connectordomain">Connector domain</a> allows users to log in to the platform using Google credentials, and can be used for other activities such as OAuth support. Essentially, the Site Admin registers the platform with Google as a Google app, and then uses the values provided by Google for Google AppID and Google App Shared Secret to set up the Google Connector domain.</p>
 <p><strong>Note</strong>: Earlier versions of the platform used the OpenID Relying party domain for Google login. It's important to now use Google Connector, which relies on a newer technology recommended and supported by Google; the OpenID Relying party domain uses an older API which Google has scheduled for end of life.</p>
 <p><strong>Note</strong>: For certain activities, such as creating an API or using the platform API, users must complete the standard platform signup process. Logging in with Google is not adequate for these activities.</p>
-<h5><a name="configure_domain_google" id="configure_domain_google"></a>To set up a Google Connector domain in Community Manager:</h5>
+<h5><a name="configure_domain_google"></a>To set up a Google Connector domain in the Akana API Platform:</h5>
 <ol>
   <li>First, get your credentials from the Google Developers Console. See <a href="#to_get_credentials_for_a_google_connector_domain">To get credentials for a Google Connector domain</a> above.</li>
   <li>Log in as the Site Admin and click the <em>Administration</em> quick filter (wrench icon).</li>
@@ -313,7 +369,7 @@ nav-title: Domain Management
     <ul>
       <li>Google Connector domain: <a href="#how_do_i_set_up_a_google_connector_domain">How do I set up a Google Connector domain?</a> Choose this option if you are migrating from OpenID for your Google login.</li>
       
-      <li>OpenID Connect Relying Party domain: <a href="site_admin_openidconnect_support.htm#domain_setup_openid_connect_relying_party">How do I set up the platform to log in with an OpenID Connect Relying Party domain?</a></li>
+      <li>OpenID Connect Relying Party domain: <a href="site_admin_domains_oidc.htm#domain_setup_openid_connect_relying_party">How do I set up the platform to log in with an OpenID Connect Relying Party domain?</a></li>
     </ul>
   </li>
   <li>Enable the Google platform login. See <a href="#p_enable_login_domain">To enable a login domain</a>.</li>
@@ -324,7 +380,8 @@ nav-title: Domain Management
 
 
 <a name="what_value_should_i_use_for_the_redirect_uri_for_my_google_connector_domain"></a><h3>What value should I use for the Redirect URI for my Google Connector domain?</h3>
-<p>Depending on how you will be using the Google Connector domain, there are two possible redirect URI values that you could use on the Google site when registering your platform as an app on <a href="https://console.developers.google.com/project" title="Google Developers Console" target="_blank">the Google Developers Console</a>. Choose the applicable value from the table below.</p>
+<p>The redirect URI that you set in <a href="https://console.developers.google.com/project" title="Google Developers Console" target="_blank">the Google Developers Console</a> determines where Google sends responses to your authentication requests.</p>
+<p>Depending on how you will be using the Google Connector domain, there are three possible redirect URI values that you could use when registering your platform as an app in the Google Developers Console. To find the redirect URIs for your login domain, or OAuth 2.0 domain using the Google+ API for authentication, choose the applicable value from the table below.</p>
 <p><strong>Note</strong>: Google requires that the redirect URL be a public URL. The Google Connector domain can only work if the portal is on a public URL.</p>
 <table cellspacing="0px" class="doctable" style="width: 98%;">
 <thead>
@@ -335,12 +392,16 @@ nav-title: Domain Management
 </thead>
 <tbody>
   <tr class="t2row">
-    <td>Community Manager Login</td>
+    <td>Akana API Platform Login</td>
     <td>{CMConsoleAddress}/api/login/ssoLogin</td>
   </tr>
   <tr class="t1row">
-    <td>OAuth Provider Resource Owner domain</td>
+    <td>OAuth Provider Resource Owner domain when OAuth Provider is deployed in the same container as the platform</td>
     <td>{OAuthProviderAuthorizationServer}/oauth/auz/grants/provider/authcomplete</td>
+  </tr>
+  <tr class="t2row">
+    <td>OAuth Provider Resource Owner domain when OAuth Provider is deployed in the same container as the Network Director (OAuth Provider Agent scenario)</td>
+    <td>{NDHostAddress}/oauth/auz/grants/provider/authcomplete</td>
   </tr>
 </tbody>
 </table>
@@ -350,71 +411,226 @@ nav-title: Domain Management
 
 
 
-<a name="domains_login_setup_ca_siteminder"></a><h3>How do I set up the platform to log in with CA SiteMinder (CA SiteMinder domain)?</h3>
-<p>The CA SiteMinder domain allows users to log into the platform using <a href="basics_glossary.htm#gl_casiteminder">CA SiteMinder</a> credentials.</p>
-<p>You must first define the CA SiteMinder domain via the <em>Configure &gt; Security &gt; Identity Systems</em> section of the <a href="basics_glossary.htm#gl_policy_manager">Policy Manager</a> Management Console. For more information, refer to the following external documentation:</p>
-<ul>
-  <li>The <strong>Add Identity System</strong> (Active Directory) topic in the Policy Manager Online Help.</li>
-  <li>The <em>Integrating CA SiteMinder with Policy Manager 6.1 Guide </em>available via the Akana Support Site (support.akana.com &gt; Downloads &gt; PolicyManager &gt; PM61 &gt; PM61_CASiteMinder_Integration.pdf). This has instructions on how to set up CA SiteMinder and install the identity system (domain) in Policy Manager.</li>
-  <li>The <em>Enterprise API Platform Installation Guide</em> (for information on how to install a CA SiteMinder Identity System).</li>
-</ul>
-<p>Once the domain is defined in Policy Manager, you can configure and enable it in Community Manager:</p>
-<ul>
-  <li>To use it as a login domain: See <a href="#configure_domain_casiteminder">To set up a CA SiteMinder login domain in Community Manager</a> below.</li>
-  <li>To use it as a resource owner authentication domain when defining an OAuth Provider (Grant Types tab): see <a href="#to_configure_domain_oauth_provider">To configure an OAuth Provider domain</a>.</li>
-</ul>
-<p>Once setup is complete, when users sign in they will see the CA SiteMinder icon on the platform login page and will be able to choose CA SiteMinder for login.</p>
-<h5><a name="configure_domain_casiteminder"></a>To set up a CA SiteMinder login domain in Community Manager:</h5>
+<a name="how_do_i_customize_google_user_consent_screen"></a><h3>How do I customize the Google user consent screen for my Google Connector domain?</h3>
+<p>If you want to use a Google Connector domain to support OAuth 2.0 authentication on the platform, you will need to provide values for customization of the user consent screen that's presented to users when your app is asking for approval to access the user's data.</p>
+<p>If you haven't already done so, register your app on the Google Developers Console. For instructions, see <a href="#to_get_credentials_for_a_google_connector_domain">To get credentials for a Google Connector domain</a>. Then follow the instructions below to customize the user consent screen.</p>
+
+<h5><a name="to_customize_the_google_consent_page"></a>To customize the Google user consent screen:</h5>
 <ol>
-  <li>Define the CA SiteMinder domain in the <em>Configure &gt; Security &gt; Identity Systems </em>section of Policy Manager. See notes above.</li>
-  <li>In the platform, enable the domain for login. This is a configuration step: <em>Administration &gt; Config &gt; Logins</em> (<strong>Enable</strong> checkbox). For more information, see <a href="site_admin_domains.htm#how_do_i_enable_a_domain_for_login">How do I enable a domain for login?</a></li>
-  <li>Click <strong>Save</strong>.</li>
+  <li>Log in to the Google Developers Console and go to the page where you registered your platform as an app.</li>
+  <li>On the left, click <strong>APIs &amp; Auth</strong> and then click <strong>APIs</strong>. Make sure the status for the Google+ API shows as <strong>ON</strong>.</li>
+  <li>On the left, click <strong>APIs &amp; Auth</strong> &gt; <strong>Consent Screen</strong>.</li>
+  <li>Provide values you want your users to see, such as product name, homepage URL, and logo, and click <strong>Save</strong>.</li>
 </ol>
 <p><a href="#top">Back to top</a></p>
 
 
 
-<a name="domains_login_setup_saml_web_sso"></a><h3>How do I set up the platform to log in with SAML Web SSO?</h3>
-<p>The <a href="basics_glossary.htm#gl_saml">SAML</a> Web SSO domain allows you to set up the platform so that users can log in via a SAML Identity Provider, using SAML Web SSO.</p>
-<p>First, you&rsquo;ll need to install the following optional plug-ins in the SOA Software Admin Console to one or more containers in your implementation:</p>
+<a name="do_i_choose_oidcrp_domain_or_eoap_domain"></a><h3>Do I choose the OpenID Connect Relying Party domain or the External OAuth Provider domain?</h3>
+<p>Both these domain options, OpenID Connect Relying Party and External OAuth Provider, allow you to reference an external OAuth / OpenID Connect provider. So, how do you determine which option is best for you?</p>
+<p>These two options are used for different purposes, and collect different information. Essentially it depends on your purpose, authenticating users or securing OAuth requests:</p>
 <ul>
-  <li>SOA Software SAML 2.0 Web Browser SSO Service Provider</li>
-  <li>SOA Software SAML 2.0 Web Browser SSO Service Provider UI</li>
+  <li><strong>If you want to use an external OpenID Connect provider to authenticate end users</strong>: choose the OpenID Connect Relying Party domain.</li>
+  <li><strong>If you want to use an external OAuth Provider to secure API requests</strong>: choose the External OAuth Provider domain.</li>
 </ul>
-<p>The next step is to define the SAML Web SSO domain in the <a href="basics_glossary.htm#gl_policy_manager">Policy Manager</a> Management Console (Configure &gt; Security &gt; Identity Systems). For more information, refer to the following external documentation:</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="do_i_choose_pf_domain_or_eoap_domain"></a>
+<h3>Do I choose the PingFederate domain or the External OAuth Provider domain?</h3>
+<p>If you are using PingFederate, you have two domain options:</p>
 <ul>
-  <li>The <strong>Add Identity System</strong> (Active Directory) topic in the Policy Manager Online Help.</li>
-  <li>White paper: <em>Using SAML for Single Sign-On in the Akana Platform</em>.</li>
+  <li>PingFederate add-on/PingFederate domain: You can install the PingFederate add-on in Policy Manager and then set up a PingFederate domain in the Akana API Platform</li>
+  <li>External OAuth Provider: You can set up an External OAuth Provider domain in the Akana API Platform (no Policy Manager setup required).</li>
 </ul>
-<p>Once the domain is defined in Policy Manager, you can configure and enable it in Community Manager:</p>
+<p> We strongly recommend you choose External OAuth Provider, which requires less setup and includes additional features.</p>
+<p>The platform has supported the PingFederate domain for some time. However, the External OAuth Provider has all the features of the PingFederate domain and also includes additional functionality.</p>
+<p>Support of the PingFederate domain will be deprecated and removed in the future. We recommend that all PingFederate customers use the External OAuth Provider domain.</p>
+<p>An important advantage is that the External OAuth Provider domain supports the <a href="basics_glossary.htm#gl_client_registration_endpoint">Client Registration Endpoint</a>. This allows auto-configuration of apps that have active contracts with APIs that reference the External OAuth Provider domain. Manual configuration of the apps in PingFederate is not necessary.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="why_platform_identity"></a><h3>Should I set up a platform identity, or provide the credentials in the domain configuration?</h3>
+<p>Many domains, especially OAuth-related domains, require credentials. When you're setting up your domain, you can set up those credentials as part of the domain definition in the developer portal by entering and/or uploading applicable keys and certificates.</p>
+<p>However, as an alternative, you have the option of creating an organization identity in the Policy Manager console, and setting up the security information in Policy Manager. You can then reference the organization identity from the domain setup. With this approach, secure information is not included in the domain configuration.</p>
+<p>Keeping all secure information in the identity store, rather than setting up the credentials in the domain definition, is the best option for several reasons:</p>
 <ul>
-  <li>To use it as a login domain: See <a href="#configure_domain_samlwebsso">To set up a SAML Web SSO login domain in Community Manager</a> below.</li>
-  <li>To use it as a resource owner authentication domain when defining an OAuth Provider (Grant Types tab): see <a href="#to_configure_domain_oauth_provider">To configure an OAuth Provider domain</a>.</li>
+  <li>Domain configuration is not encrypted in the database, but is encrypted in the identity store.</li>
+  <li>Domain configuration is not transported securely from one machine to another within the platform infrastructure.</li>
+  <li>The identity store has additional security for storing the private keys, passwords, and shared secrets.</li>
 </ul>
-<p>Once setup is complete, when users sign in they will see the icon for your login domain on the platform login page and will be able to choose to log in by authenticating with your Identity Provider.</p>
-<h5><a name="configure_domain_samlwebsso"></a>To set up a SAML Web SSO login domain in Community Manager:</h5>
+<p><strong>Note</strong>:  On the platform, one OAuth Provider/External OAuth Provider domain can support one resource server and one associated platform identity (audience field, certificate, and private key or shared secret). If you want to set up a scenario where multiple resource servers can validate the tokens, use the Referenced Bearer option. A key feature of the  bearer access token is that validation can be done at the resource server; but only one resource server can be supported. You can support a scenario of multiple resource servers by choosing to have the  bearer access token validated at the Authorization Server; however, in this case you lose the key advantage of  Bearer access tokens.</p>
+<p>If you have multiple resource servers, and choose the same identity for all resource servers,  the platform treats it as a single resource server running on multiple machines.</p>
+<p>The table below shows which domains support referencing a platform identity, and in what capacity.</p>
+
+<table cellspacing="0px" class="doctable" style="width: 98%;">
+<thead>
+  <tr>
+    <th width="15%">Domain</th>
+    <th width="35%">Purpose</th>
+    <th width="50%">What configuration properties of the identity store are used?</th>
+  </tr>
+</thead>
+<tbody>
+  <tr class="t2row">
+    <td>OAuth Provider (Token tab)</td>
+    <td> Bearer Access Token signature (always required, since signature is always enabled)</td>
+    <td><p>Depending on the signature algorithm selected, either password/shared secret or the Private Key/certificate options are used:</p>
+      <ul>
+        <li>If symmetric signature algorithm is selected, set up shared secret/password in the platform identity.</li>
+        <li>If asymmetric signature algorithm is selected, set up private key with certificate in the platform identity.</li>
+      </ul>      </td>
+  </tr>
+  <tr class="t1row">
+    <td>OAuth Provider (Token tab)</td>
+    <td> Bearer Access Token encryption (Optional: enabled only if encryption is enabled)</td>
+    <td>If symmetric encryption algorithm is selected, set up shared secret/password in the platform identity. If asymmetric encryption algorithm is selected, set up <strong>only</strong> X.509 certificate. This is the certificate of the audience of the  access token. Obtain the certificate from the entity that is going to validate the  access token, and then upload it for this identity.</td>
+  </tr>
+  <tr class="t2row">
+    <td>OpenID Connect Relying Party Domain (App tab)</td>
+    <td>AppID of the relying party application. This domain provides the option to enter the AppID and shared secret within the domain or create a platform identity to represent this AppID.</td>
+    <td>It is best to create a platform identity for the OpenID Connect relying party application rather than entering the AppID and shared secret in the domain configuration. If the ID Token involved is using asymmetric encryption, creating a platform identity is the only choice, since the domain's inline configuration only supports shared secret, not private key.</td>
+  </tr>
+  <tr class="t1row">
+    <td>External OAuth Provider (Token Validation tab)</td>
+    <td> Access Token signature validation (Tab 4, Token Validation)</td>
+    <td>This domain supports inline configuration for symmetric signing key or shared secret, and also supports configuring these in a platform identity and referencing the platform identity. Shared secret and password are needed only if symmetric signatures are used: certificate is needed only if asymmetric signatures are used. This is the certificate of the provider that is issuing the  access token. Obtain the certificate from the provider and configure it in this domain (either inline or associated with a platform identity).</td>
+  </tr>
+  <tr class="t2row">
+    <td>External OAuth Provider (Token Validation tab)</td>
+    <td> Bearer Access Token decryption</td>
+    <td>The domain setup doesn't include any inline configuration encryption. If  Bearer access tokens are encrypted, you must configure a platform identity. If symmetric encryption is used, associate the shared secret; if asymmetric encryption is used, associate the private key. The corresponding certificate should be provided to the administrator of the external OAuth Provider domain so that the provider configuration can be set up for encryption with this certificate.</td>
+  </tr>
+  <tr class="t1row">
+    <td>External OAuth Provider when provider type is PingFederate  (Token Validation tab)</td>
+    <td>Bearer Access Token (validation by provider)</td>
+    <td>PingFederate needs to authenticate (with appropriate roles) the resource server that is asking for validating Bearer access tokens (either Referenced or ). This domain supports both inline configuration as well as platform identity option for the resource server credentials. If setting up platform identity, only configuration needed is shared secret/password.</td>
+  </tr>
+  <tr class="t2row">
+    <td>External OAuth Provider when provider type is PingFederate (Extensions tab)</td>
+    <td>Client registration</td>
+    <td>When client registration is enabled, the application that registers the clients must be set up with PingFederate and must have credentials with an appropriate role. This domain provides inline configuration as well as the platform identity reference option, to collect the application username/password. If setting up a platform identity for this, the platform identity needs only the password.</td>
+  </tr>
+</tbody>
+</table>
+
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_platform_identity"></a><h3>How do I set up a platform identity for my domain?</h3>
+<p>You might need to coordinate with the platform Sys Admin to set up a platform identity in Policy Manager. The procedure below explains very briefly the steps to be taken. For additional information refer to the Policy Manager online help.</p>
+<p><strong>Note</strong>: If the Certificate Authority is not yet set up, you'll need to do that before you can complete the steps below. In Policy Manager, click <strong>Configure</strong> &gt; <strong>Security</strong> &gt; <strong>Certificates</strong> &gt; <strong>Certificate Authority</strong>. Click <strong>Configure Certificate Authority</strong> and enter the information. You cannot upload the keys and certificates until you've set up the Certificate Authority.</p>
+<h5><a name="proc_pm_identity_set_up"></a>To set up a platform identity in Policy Manager for a domain in the developer portal</h5>
 <ol>
-  <li>Define the SAML Web SSO domain in the <em>Configure &gt; Security &gt; Identity Systems </em>section of Policy Manager. See notes above.</li>
-  <li>In the platform, enable the domain for login. This is a configuration step: <em>Administration &gt; Config &gt; Logins</em> (<strong>Enable</strong> checkbox). For more information, see <a href="site_admin_domains.htm#how_do_i_enable_a_domain_for_login">How do I enable a domain for login?</a></li>
-  <li>Click <strong>Save</strong>.</li>
+  <li>In Policy Manager, choose the tenant, and then, on the right, click <strong>Add Organization Identity</strong>.</li>
+  <li>Choose a name that will easily identify the purpose, and provide a description.</li>
+  <li>Set up password information and click <strong>Finish</strong>.</li>
+  <li>From the Actions menu, choose <strong>Manage PKI Keys</strong>.</li>
+  <li>Set up applicable information for your PKI keys and certificates and then click <strong>Finish</strong>.</li>
 </ol>
 <p><a href="#top">Back to top</a></p>
 
 
 
-<a name="domains_login_setup_saml_web_slo"></a><h3>How do I set up the platform for single logout (SLO) using SAML?</h3>
-<p>The platform supports single logout (SLO) with an identity provider, using SAML.</p>
-<p>You can use the <a href="basics_glossary.htm#gl_saml">SAML</a> domain to set up the platform so that users can log in via a SAML Identity Provider, using SAML Web SSO, and then also when the user logs out of the platform the user is also logged out of the SAML domain (SLO).</p>
-<p>You must first define the SAML Web SSO domain in the <a href="basics_glossary.htm#gl_policy_manager">Policy Manager</a> Management Console (Configure &gt; Security &gt; Identity Systems).</p>
-<p>Refer to the supporting documentation referenced in <a href="#domains_login_setup_saml_web_sso">How do I set up the platform to log in with SAML Web SSO?</a> above.</p>
+<a name="what_is_jwt"></a><h3>What is JWT?</h3>
+<p>A JWT token is a light weight equivalent to SAML for a security token. JWT (JSON Web Token) tokens are based on JSON and are used in new authentication and authorization protocols such as OpenID Connect and OAuth 2.0.
+
+There are two kinds of JWT tokens the platform uses in OAuth:</p>
+<ul>
+  <li><a href="basics_glossary.htm#gl_jwt_token_id">JWT ID token</a>. OpenID Connect 1.0 uses id_token to encode all the user's claims. For example, OpenID Connect could return the id_token with all the user attributes from the LDAP server. JWT ID tokens are signed and optionally encrypted. They are consumed by apps and are signed with either the app's shared secret (known to the app) or the OAuth provider's private key (generally rolling PKI keys published at the OAuth Provider's JWK Set URL).
+  <p>Depending on configuration, the OpenID Connect provider might issue the JWT ID token either from the Authorization Endpoint or the Token Endpoint.</p></li>
+  <li><a href="basics_glossary.htm#gl_jwt_token_access">JWT Access token</a>. A JWT token that is used as an access token. The JWT Access Token primarily includes the scope of the access token, though it might optionally also include the user's claims. JWT access tokens are issued by the OAuth provider, for consumption by the resource server.</li>
+</ul>
 <p><a href="#top">Back to top</a></p>
+
+
+
+<a name="encryption_options_jwt"></a><h3>What are the options for signing and encryption of JWT access tokens?</h3>
+<p>The table below shows what happens with different encryption options for signatures.</p>
+<table cellspacing="0px" class="doctable" style="width: 98%;">
+  <thead>
+    <tr>
+      <th width="15%">Signature algorithm</th>
+      <th width="35%">ID token signature</th>
+      <th width="50%">JWT token signature</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="t2row">
+      <td>asymmetric</td>
+      <td> <p>The ID token is signed with rolling keys. A separate PKI key is created each day (time period is configurable) and is used to sign the ID token that's issued.</p>
+        Clients must use the JWKSet endpoint to get the correct certificate/public key needed to verify the signature.</td>
+      <td><p>The JWT access token is signed with a fixed PKI key that is assigned to a platform identity. How signature verification works exactly depends on the nature of the resource server:</p>
+        <ul>
+          <li>If the Resource Server is the platform (Network Director), it retrieves the certificate/public key from the platform identity and uses it to validate the signature.</li>
+          <li>If the Resource Server is external, it cannot retrieve the certificate/public key dynamically. Instead, the Site Admin must export the certificate/key from  Policy Manager and share it with the external Resource Server.</li>
+        </ul>        </td>
+    </tr>
+    <tr class="t1row">
+      <td>symmetric</td>
+      <td> <p>The ID token is signed with the client's shared secret.</p>
+        <p>Since the client has its own shared secret, it can use the shared secret to validate the signature.</p></td>
+      <td><p>The JWT access token is signed with the password/shared secret set up for the associated platform identity. How it works exactly depends on the nature of the resource server:</p>
+        <ul>
+          <li>If the Resource Server is the platform (Network Director), it retrieves the key from the platform identity and uses it to validate the signature.</li>
+          <li>If the resource server is an external OAuth Provider, it cannot retrieve the key dynamically. Instead, the Site Admin must provide the signing key that the Resource Server must use to validate the signature.</li>
+        </ul>
+</td>
+    </tr>
+  </tbody>
+</table>
+<p>The table below shows what happens with different encryption options for key management.</p>
+<table cellspacing="0px" class="doctable" style="width: 98%;">
+  <thead>
+    <tr>
+      <th width="15%">Key management option</th>
+      <th width="35%">Encryption key for ID token</th>
+      <th width="50%">Encryption key for JWT access token</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="t2row">
+      <td><p>Direct</p></td>
+      <td><p>Client's shared secret is used to derive the encryption key for the ID token.</p></td>
+      <td><p>Password/shared secret set up in the configured platform identity is used to derive the encryption key for the JWT access token.</p></td>
+    </tr>
+    <tr class="t1row">
+      <td> Symmetric</td>
+      <td> <p>A random key is used as the encryption key for the ID token. This random key is also included in the ID token after encryption after encryption with a key encryption key or key management key that is derived using the client's shared secret.</p></td>
+      <td><p>A random key is used as the encryption key for the JWT access token. This random key is also included in the JWT access token after encryption with a key encryption key or key management key that is derived using the password/shared secret configured for the applicable platform identity.</p></td>
+    </tr>
+    <tr class="t2row">
+      <td><p>Asymmetric</p></td>
+      <td><p>A random key is used as the encryption key for the ID token. This random key is also included in the ID token after encryption with the client's certificate.</p>
+        <p>Since the client has its own private key, it can use the private key to decrypt the ID token.</p></td>
+      <td><p>A random key is used as the encryption key for the JWT access token. This random key is also included in the JWT access token after encryption with the certificate configured for the applicable platform identity. How it works exactly depends on the nature of the resource server:</p>
+        <ul>
+          <li>If the Resource Server is the platform (Network Director), it retrieves the private key from the platform identity and uses it to decrypt the JWT access token.</li>
+          <li>If the resource server is an external OAuth Provider, such as CA SiteMinder, the Admin for the external provider must export the p12 file of the platform identity and provide it.</li>
+        </ul>
+</td>
+    </tr>
+  </tbody>
+</table>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<div class = "divider1"></div>
+
+
+
+<h3><a name="h_oauthproviderdomain"></a>OAuth Provider Domain:</h3>
 
 
 
 <a name="how_does_the_authentication_provider_configuration_process_work"></a><h3>How does the authentication provider configuration process work?</h3>
 <p>The platform provides the following add-on feature to provide authentication support for APIs:</p>
 <ul>
-  <li>Akana Community Manager OAuth Provider (see <a href="#how_do_i_set_up_and_configure_an_oauth_provider_domain">How do I set up and configure an OAuth Provider domain?</a>)</li>
+  <li>Akana API Platform OAuth Provider (see <a href="#how_do_i_set_up_and_configure_an_oauth_provider_domain">How do I set up and configure an OAuth Provider domain?</a>)</li>
 </ul>
 <p>Here's how authentication provider type configuration process works:</p>
 <ul>
@@ -427,8 +643,8 @@ nav-title: Domain Management
 
 
 
-<a name="how_do_i_set_up_a_platform_deployment_to_support_a_third_party_provider"></a><h3>How do I set up a platform deployment to support a third-party provider?</h3>
-<p>The <strong>OAuth Details</strong> function on the <em>API &gt; Details</em> page includes a pre-defined &quot;third-party provider&quot; domain that allows the API Admin to configure grants and resource mapping for OAuth versions 1.0a and 2.0. No setup is required by the Site Admin for this option.</p>
+<a name="how_do_i_set_up_a_platform_deployment_to_support_a_third_party_provider"></a><h3>How do I set up a platform deployment to support a third-party OAuth provider?</h3>
+<p>The <strong>OAuth Details</strong> function on the <em>API &gt; Details</em> page includes a pre-defined &quot;third-party provider&quot; domain that allows the API Admin to configure grants and resource mapping for OAuth versions 1.0a and 2.0. No setup is required by the Site Admin for this option. The purpose of this option is so that the API Admin can reference an external OAuth provider, if needed, rather than use one of the OAuth provider configurations provided by the platform implementation.</p>
 <p>For more information, see <a href="api_admin_oauth_support.htm#how_do_i_configure_my_api_with_an_oauth_provider">How do I configure my API with an OAuth Provider?</a> in the API Admin help.</p>
 <p><a href="#top">Back to top</a></p>
 
@@ -441,18 +657,18 @@ nav-title: Domain Management
 
 
 <a name="how_do_i_set_up_and_configure_an_oauth_provider_domain"></a><h3>How do I set up and configure an OAuth Provider domain?</h3>
-<p>The <strong>Akana Community Manager OAuth Provider</strong> feature is an Akana Community Manager add-on. This domain type allows you to select a resource owner authentication domain, and configure grant types, access tokens, grant properties, and branding.</p>
+<p>The <strong>Akana API Platform OAuth Provider</strong> feature is an Akana API Platform add-on. This domain type allows you to select a resource owner authentication domain, and configure grant types, access tokens, grant properties, and branding.</p>
 <p>Essentially, there are two steps:</p>
 <ol>
-  <li>Install the <strong>OAuth Provider</strong> feature via the <em>Akana Administration Console</em>. This installs the OAuth Provider domain, which the Site Admin can then access in the Community Manager user interface.</li>
-  <li>Set up the domain in Community Manager (see below).</li>
+  <li>Install the <strong>OAuth Provider</strong> feature via the <em>Akana Administration Console</em>. This installs the OAuth Provider domain, which the Site Admin can then access in the Akana AKI Platform user interface.</li>
+  <li>Set up the domain in the Akana AKI Platform (see below).</li>
 </ol>
 <p>Once the domain is configured, it is available to API Admins on the <em>Edit OAuth Details</em> page on the <em>API Details</em> page.</p>
 <p>If API owners will be using a third-party provider, configuring an OAuth Provider domain is not needed.</p>
 <p><strong>Note</strong>: When you install the OAuth Provider domain, it is added to the list of choices in <strong>Administration &gt; Domains &gt; Add Domain</strong>. It is not available as a Login option in the <strong>Administration&nbsp;&gt; Config</strong>&nbsp;&gt; <strong>Logins</strong> page.</p>
 
 
-<h5><a name="to_configure_domain_oauth_provider"></a>To configure an OAuth provider domain in Community Manager:</h5>
+<h5><a name="to_configure_domain_oauth_provider"></a>To configure an OAuth provider domain:</h5>
 <ol>
   <li>Click the <em>Administration</em> quick filter (wrench icon). The <em>Site Administration</em> page displays.</li>
   <li>Click <strong>Domains</strong>. The <em>Domains Summary</em> page displays.</li>
@@ -460,6 +676,7 @@ nav-title: Domain Management
     <ul>
       <li>Details</li>
       <li>Grant Types</li>
+      <li>Token</li>
       <li>OpenID Connect</li>
       <li>Scopes</li>
       <li>Properties</li>
@@ -468,52 +685,9 @@ nav-title: Domain Management
     </li>
   
   <li>Enter a name and description for your OAuth provider (for example, Name=OAuth 2-Legged, Description=OAuth 2-Legged Domain).</li>
-  <li>Click <strong>Next</strong> to go to the <strong>Grant Types</strong> page. Here you will specify information about one or more <a href="basics_glossary.htm#gl_oauth_granttypes">OAuth Grant Types</a> applicable to the OAuth domain. Specify values or choose options for the following, as needed:
-    <ul>
-      <li><strong>Grant Validity Period (days)</strong>: specify the number of days an authorization grant will be valid for. This value applies to all grant types you choose.</li>
-      <li><strong>Grant types</strong>: choose one or more grant types, and then set values as specified in the steps below.</li>
-      </ul>
-    </li>
-  <li>If you choose <a href="basics_glossary.htm#gl_oauth_grant_authorizationcode">3-legged, Authorization Code</a>: specify timeout values for the <a href="basics_glossary.htm#gl_oauth_authorizationcode">authorization code</a> and <a href="basics_glossary.htm#gl_accesstoken">access token</a>, and choose whether or not to issue <a href="basics_glossary.htm#gl_oauth_refreshtoken">refresh tokens</a>.</li>
-  
-  <li>If you choose <a href="basics_glossary.htm#gl_oauth_grant_implicit">3-legged, Implicit</a>: specify an <a href="basics_glossary.htm#gl_oauth_accesstoken">access token</a> timeout value.</li>
-  <li>If you choose <a href="basics_glossary.htm#gl_oauth_grant_clientcredentials">2-legged, Client Credentials</a>: specify an <a href="basics_glossary.htm#gl_oauth_accesstoken">access token</a> timeout value.</li>
-  <li>If you choose <a href="basics_glossary.htm#gl_oauth_grant_passwordcredentials">2-legged, Resource Owner Credentials</a>: specify an access token timeout value and choose whether or not to issue <a href="basics_glossary.htm#gl_oauth_refreshtoken">refresh tokens</a>.</li>
-  <li>In the <strong>Extensions</strong> section, if you choose JWT Bearer Assertion, specify the following:
-<ul>
-      <li>Check or leave the <strong>Assertions Issued by this Provider</strong> box. <br />
-        <strong>Note</strong>: If you clear the box, you <strong>must</strong> choose an OpenID Connect provider as the Resource Owner Authentication domain.</li>
-      <li>Choose access token timeout.</li>
-      <li>Specify <a href="basics_glossary.htm#gl_clock_skew">clock skew</a>, in seconds. The default is 600 (10 minutes).</li>
-      <li>Specify whether or not to issue <a href="basics_glossary.htm#gl_oauth_refreshtoken">refresh tokens</a>.</li>
-    </ul>
-      <p>For more information, see <a href="#what_is_a_jwt_bearer_assertion">What is a JWT Bearer Assertion, and what does the platform support for JWT Bearer Assertions?</a></p>
-    </li>
-  
-  <li>In the <strong>Resource Owner Authentication Domain</strong> field, choose from the drop-down list. This is the domain your OAuth Provider domain will use for end-user authentication as part of the OAuth process. It can be any domain set up on the platform. If the domain you want isn't on the list, it must be installed and configured (see notes above). Some possible choices:
-    <ul>
-      <li>Google: choose this for authentication with Google.</li>
-      <li>Facebook</li>
-      <li>LDAP Automation</li>
-      <li>Google Automation: this is present for backwards compatibility only. Choose Google.</li>
-      </ul>
-  </li>
-  <li>Choose the type of access token you want to use:
-    <ul>
-      <li><strong>Bearer</strong>: A simple token that's essentially an authorization header with a hash.</li>
-      <li><strong>MAC</strong>: A token that includes a digital signature and a <a href="basics_glossary.htm#gl_nonce">nonce</a>. It has more security than a Bearer token.</li>
-      </ul>
-  </li>
-  
-  <li>Click <strong>Next</strong> to go to the <strong>OpenID Connect</strong> page. If you want to use OpenID Connect for your OAuth Provider domain, specify the following:
-    <ul>
-      <li><strong>OpenID Connect 1.0 Enabled</strong>: check the box.</li>
-      <li><strong>Reserved Scopes</strong>: Scopes defined by OpenID Connect. Every OpenID Connect request must have at least one, the openid scope. Select additional scopes only if the underlying identity provider domain supports retrieval of the various types of information about the end-user (profile, email, address, and/or phone).</li>
-      <li><strong>ID Token Signing Algorithm</strong>: Defaults to HmacSHA256, but many other algorithms are supported. For more information on available options, see <a href="site_admin_openidconnect_support.htm#what_signature_algorithms_are_supported_by_openidconnect_oauthprovider">What signature algorithms are supported by the platform's OpenID Connect OAuth provider?</a></li>
-      <li><strong>ID Token Validity (seconds)</strong>: The expiration time for the token. Defaults to 3600 seconds.</li>
-      </ul>
-  </li>
-  
+  <li>Click <strong>Next</strong> to go to the <strong>Grant Types</strong> page. Here you will specify information about one or more <a href="basics_glossary.htm#gl_oauth_granttypes">OAuth Grant Types</a> that you want the OAuth Provider domain to support. Specify values or choose options. For more information, see <a href="#what_are_the_settings_on_the_oauth_provider_grant_types_page">What are the settings on the OAuth Provider Grant Types page and what options should I choose?</a> </li>
+   <li>Click <strong>Next</strong> to go to the <strong>Token</strong> page. Here you will specify information about one or more token types that you want the OAuth Provider domain to support. Specify values or choose options. For more information, see <a href="#what_are_the_settings_on_the_oauth_provider_token_page">What are the settings on the OAuth Provider token page and what options should I choose?</a> </li>
+ <li>Click <strong>Next</strong> to go to the <strong>OpenID Connect</strong> page. Here, if you want to use an OpenID Connect Identity Provider for your OAuth Provider domain, you'll set up the necessary values. If not, you can skip this tab. For more information see <a href="#what_are_the_settings_on_the_oauth_provider_oidc_page">What are the settings on the OAuth Provider OpenID Connect page and what options should I choose?</a></li>
   <li>Click <strong>Next</strong> to go to the <strong>Scopes</strong> page. Here you will define OAuth scopes; later, API Admins for APIs that are using this OAuth domain can map specific operations in the API to these scopes and thus control the functions that OAuth will be requesting access to. For example, you might define a scope called Read-Only and map all GET operations to it. For more information, see <a href="api_admin_oauth_support.htm#how_does_scope_mapping_work">How does Scope Mapping work?</a> Define one or more scopes, with the following values for each:
     <ul>
       <li><strong>Name</strong>, <strong>short description</strong>, and <strong>full description</strong>.</li>
@@ -540,14 +714,268 @@ nav-title: Domain Management
 
 
 
-<a name="what_are_the_settings_on_the_oauth_provider_branding_page"></a><h3>What are the settings on the OAuth Provider Branding page and what options should I choose?</h3>
-<p>When an end-user logs into an app that's connected to an API that uses the platform's OAuth Provider configuration, the user sees a Resource Owner Authentication page (login screen) that is custom branded for the app and for the OAuth provider. That page is configured in the OAuth Provider domain setup, on the <strong>Branding</strong> page.</p>
-<p>For information about the values set up on the <strong>Branding</strong> page, refer to the table below.</p>
+<a name="what_are_the_settings_on_the_oauth_provider_grant_types_page"></a><h3>What are the settings on the OAuth Provider Grant Types page and what options should I choose?</h3>
+<p>When you're setting up an OAuth Provider domain, the Grant Types page allows you to specify details about the grants your domain will support, including such things as the OAuth grant types and their associated settings, and resource owner authentication domain.</p>
+<p>For information about the values set up on the <strong>Grant Types</strong> page (Tab 2), refer to the table below.</p>
 <table cellspacing="0px" class="doctable" style="width: 98%;">
   <thead>
     <tr>
-      <th width="40%">Option...</th>
-      <th width="60%">Meaning...</th>
+      <th width="29%">Option...</th>
+      <th width="71%">Meaning...</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="t2row">
+      <td>Supported Grant Types</td>
+      <td>Choose one or more grant types you want your domain to support, and then set values for each.</td>
+    </tr>
+    <tr class="t1row">
+      <td>Supported Grant Types: 3-Legged</td>
+      <td><p>Specify values:</p>
+        <ul class="apidoctable_ul">
+          <li><a href="basics_glossary.htm#gl_oauth_grant_authorizationcode">3-legged, Authorization Code</a>: specify <a href="basics_glossary.htm#gl_grantvalidityperiod">grant validity period</a>, specify timeout values for the <a href="basics_glossary.htm#gl_oauth_authorizationcode">authorization code</a> and <a href="basics_glossary.htm#gl_oauth_accesstoken">access token</a>, and choose whether or not to issue <a href="basics_glossary.htm#gl_oauth_refreshtoken">refresh tokens</a>.</li>
+          <li><a href="basics_glossary.htm#gl_oauth_grant_implicit">3-legged, Implicit</a>: specify <a href="basics_glossary.htm#gl_grantvalidityperiod">grant validity period</a> and <a href="basics_glossary.htm#gl_oauth_accesstoken">access token</a> timeout.</li>
+        </ul>        </td>
+    </tr>
+    <tr class="t2row">
+      <td>Supported Grant Types: 2-Legged</td>
+      <td><p>Specify values:</p>
+        <ul class="apidoctable_ul">
+          <li><a href="basics_glossary.htm#gl_oauth_grant_clientcredentials">2-legged, Client Credentials</a>: specify <a href="basics_glossary.htm#gl_grantvalidityperiod">grant validity period</a> and <a href="basics_glossary.htm#gl_oauth_accesstoken">access token</a> timeout.</li>
+          <li><a href="basics_glossary.htm#gl_oauth_grant_passwordcredentials">2-legged, Resource Owner Password Credentials</a>: specify <a href="basics_glossary.htm#gl_grantvalidityperiod">grant validity period</a> and <a href="basics_glossary.htm#gl_oauth_accesstoken">access token</a> timeout, and choose whether or not to issue <a href="basics_glossary.htm#gl_oauth_refreshtoken">refresh tokens</a>.</li>
+        </ul></td>
+    </tr>
+    <tr class="t1row">
+      <td>Supported Grant Types: Extensions</td>
+      <td><p>The platform supports the  Bearer Assertion extension grant type. If you choose this, specify the following:</p>
+        <ul class="apidoctable_ul">
+      <li>Check or leave the <strong>Assertions Issued by this Provider</strong> box. <br />
+        <strong>Note</strong>: If you clear the box, you <strong>must</strong> choose an OpenID Connect provider as the Resource Owner Authentication domain.</li>
+      <li>Choose access token timeout.</li>
+      <li>Specify <a href="basics_glossary.htm#gl_clock_skew">clock skew</a>, in seconds. The default is 600 (10 minutes).</li>
+      <li>Specify whether or not to issue <a href="basics_glossary.htm#gl_oauth_refreshtoken">refresh tokens</a>.</li>
+    </ul>
+    <p>For more information, see <a href="#what_is_a_jwt_bearer_assertion">What is a  Bearer Assertion, and what does the platform support for  Bearer Assertions?</a></p></td>
+    </tr>
+    <tr class="t2row">
+      <td>Grant Scope Setting</td>
+      <td><p>These settings control how scopes are processed. Choose <strong>Provider Scope</strong> or <strong>Client Default Scope</strong>. </p>
+        <p>Provider Scope is the default. With this option, the client app can request any scope configured for the access grant. </p>
+        <p><strong>Provider Scope</strong>: the scope value to be used for a grant is processed as follows:</p>
+  <ol class="apidoctable_ol">
+    <li>If the authorization request/token request has a <strong>scope</strong> parameter and values (space-delimited string values), the authorization server  validates whether the scopes are defined in the OAuth Provider. If they are, it uses the scope value as the grant scope.</li>
+          <li>If the authorization/token request does not have a <strong>scope</strong> parameter, the authorization server takes the default scopes that are set in the OAuth Provider and uses them as the grant scope. If no default scopes are defined, the authorization server rejects the request and sends an error response.</li>
+      </ol>
+  <p><strong>Client Default Scope</strong>: the scope value to be used for a grant is processed as follows:</p>
+        <ol class="apidoctable_ol">
+          <li>If the authorization request/token request has a <strong>scope</strong> parameter and values (space-delimited string values), the authorization server  first validates whether the scopes are defined in the OAuth Provider. It then checks that the scopes are valid for the OAuth client. Firstly it scans the APIs connected to the client, and cumulatively all the OAuth scopes defined for these APIs are collected. If the requested scopes are a subset of the app connection scopes, the request is valid and the request scope becomes the  value of the  grant scope.</li>
+          <li>If the authorization/token request does not have a <strong>scope</strong> parameter, the authorization server  scans the APIs connected to the client, and cumulatively all the OAuth scopes defined for these APIs are collected. These scopes are validated against the scope defined in the OAuth/OpenID Connect provider. If they are valid scopes, the request is valid. If they are not valid scopes, the authorization server rejects the request and sends an error message.</li>
+  </ol>
+</td>
+    </tr>
+    <tr class="t1row">
+      <td>Resource Owner Authentication Domain</td>
+      <td><p>This is the domain your OAuth Provider domain will use for end-user authentication as part of the OAuth process. It can be any domain set up on the platform. Choose from the drop-down list. If the domain you want isn't on the list, it must be installed and configured (see notes above). Some possible choices:</p>
+        <ul class="apidoctable_ul">
+      <li>Google: choose this for authentication with Google.</li>
+      <li>Facebook</li>
+      <li>LDAP Automation</li>
+      <li>Google Automation: this is present for backwards compatibility only. Choose Google.</li>
+    </ul></td>
+    </tr>
+  </tbody>
+</table>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="what_are_the_settings_on_the_oauth_provider_token_page"></a><h3>What are the settings on the OAuth Provider Token page and what options should I choose?</h3>
+<p>When you're setting up an OAuth Provider domain, the Token page allows you to specify details about the types of access token your domain will support.</p>
+<p>The platform supports these token types:</p>
+<ul class="apidoctable_ul">
+  <li><strong>Bearer</strong>: Two types of bearer tokens (bearer tokens are sent as-is in the API request, in the Authorization header):
+    <ul>
+      <li><strong>Referenced Bearer</strong></li>
+      <li><strong> Bearer</strong></li>
+    </ul>
+  </li>
+  <li><strong>MAC</strong></li>
+</ul>
+<p>For information about the values set up on the <strong>Token</strong> page (Tab 3), refer to the table below.</p>
+<table cellspacing="0px" class="doctable" style="width: 98%;">
+  <thead>
+    <tr>
+      <th width="29%">Option...</th>
+      <th width="71%">Meaning...</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="t2row">
+      <td>Referenced Bearer</td>
+      <td>A short random token that uniquely identifies the grant, sent as-is in the API request, in the Authorization header. If you enable this token type, you can specify the length of the bearer access token that will be generated. A longer token is stronger. Default: 40. For more information, see <a href="#should_i_choose_reference_bearer_or_jwt_bearer">Should I choose Referenced Bearer or Bearer token?</a></td>
+    </tr>
+    <tr class="t1row">
+      <td> Bearer</td>
+      <td><p>An access token that uses the  standard and contain all the information the resource server needs to confirm the user&rsquo;s grant to the application, sent as-is in the API request, in the Authorization header. An advantage of the  Bearer access token is that the Resource Server can validate by itself without having to go back to the Authorization Server. A  Bearer token includes more information and can be significantly longer than a referenced bearer token. For more information, see <a href="#should_i_choose_reference_bearer_or_jwt_bearer">Should I choose Referenced Bearer or Bearer token?</a> If you choose this option, specify values associated with  Bearer token support:</p>
+        <ul class="apidoctable_ul">
+          <li><strong>Issuer</strong>: The ID of the OAuth Provider that will be included in the  access token.</li>
+          <li><strong>ClientID Claim Name</strong>: Claim name the OAuth Provider uses for the Client ID in the  access token.</li>
+          <li><strong>Scope Claim Name</strong>: Claim name the OAuth Provider uses for a scope in the  access token. This claim contains space-delimited scopes that are in the grant scope.</li>
+          <li><strong>Resource Owner UID Claim Name</strong>: Claim name the OAuth Provider uses for the Resource Owner ID in the  access token.</li>
+          <li><strong>Include Resource Owner UserInfo</strong>: Indicates whether the resource owner UserInfo should be included in the  Bearer token. For more information, see <a href="#why_choose_to_include_resource_owner_userinfo_in_bearer_token">Why choose to include resource owner userinfo in the Bearer Access token?</a>.</li>
+          <li><strong> Signing Algorithm</strong>: The algorithm used to sign the  Bearer access token. For choices, see <a href="#what_jwt_signing_algorithms_are_supported">What  signing algorithms are supported?</a> below.</li>
+          <li><strong>Reference Signing Key from Platform Identity</strong>: Indicates that the signing key is stored in Policy Manager, associated with a platform identity. Enter the platform identity name exactly as it is set up in Policy Manager. For shared secret, setting up a platform identity is optional but recommended. However, if you are using an asymmetric signature algorithm for signing the  access token, you must use a platform identity, and make sure the certificate and private key are set up for this identity. For more information, see <a href="#why_platform_identity">Should I set up a platform identity, or provide the credentials in the domain configuration?</a></li>
+          <li><strong>Encrypt  Access Token</strong>: Indicates that the token should be encrypted. Check the box and specify applicable values. Indicates that the token should be encrypted. If resource owner user information is included in the  access token, encryption is important.</li>
+          <li><strong>Reference Encryption Key from Platform Identity</strong>: Indicates that the encryption key is stored in Policy Manager, associated with a platform identity. Enter the platform identity name exactly as it is set up in Policy Manager. This identity represents the identity of the application that will be decrypting the  access token. To support multiple resource servers, check the <strong>Verify  Access Token with Authorization server</strong> option and enter the same identity used for signing. For more information, see <a href="#why_platform_identity">Should I set up a platform identity, or provide the credentials in the domain configuration?</a></li>
+          <li><strong> Encryption Key Management Algorithm</strong>: The algorithm used to encrypt the encryption key. If you are using symmetric encryption, and when using the shared secret as the encryption key, choose <strong>Direct</strong>.</li>
+          <li><strong> Content Encryption Algorithm</strong>: The algorithm used to encrypt the  token body.</li>
+        </ul>        </td>
+    </tr>
+    <tr class="t2row">
+      <td>MAC</td>
+      <td>The <a href="basics_glossary.htm">MAC</a> token type. A MAC token includes a digital signature and a <a href="basics_glossary.htm#gl_nonce">nonce</a>, and is more secure than a bearer token. Use of a MAC token by a client is more complex than using a Bearer token; however, the MAC token offers non-repudiation and message replay attack prevention options to the API requests.</td>
+    </tr>
+    <tr class="t1row">
+      <td>Default Access Token Type</td>
+      <td>The access token type that will be used if more than one type is enabled and the client doesn&rsquo;t select the preferred access token type.</td>
+    </tr>
+    <tr class="t2row">
+      <td>Can Client Override Access Token Type</td>
+      <td>If checked, the app developer can select the specific type of access token for the application's grants.</td>
+    </tr>
+    <tr class="t1row">
+      <td>Access Token Validation</td>
+      <td><p>Specify general values relating to validating all types of access tokens. This configuration is used when the resource server validates the access token received in the requests. Values:</p>
+        <ul class="apidoctable_ul">
+          <li><strong>Clock Skew (in seconds)</strong>: The grace period an access token is allowed before effective timestamp and after expired timestamp, expressed in seconds; for example, 120 seconds. This is to accommodate the clock setting difference between the issuing machine and validating machine. At runtime, if clock skew is exceeded, validation fails.</li>
+          <li><strong>Verify  Access Token with Authorization Server</strong>: As an alternative to including userinfo in the token, you might choose to verify the token with the Authorization Server. This adds a processing step, but means that you can keep the token size fairly small, without the userinfo and the associated encryption that might be needed to protect it. There are other advantages. For more information, see <a href="#should_i_choose_verify_jwt_token_with_auth_server">Should I choose to verify the  access token with the Authorization Server?</a></li>
+        </ul>        </td>
+    </tr>
+  </tbody>
+</table>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="should_i_choose_reference_bearer_or_jwt_bearer"></a><h3>Should I choose Referenced Bearer or Bearer token?</h3>
+<p>A key advantage of the  Bearer token is that the Resource Server can validate the token, without having to go to the Authorization Server. This is more efficient in terms of performance, especially when the Resource Server and OAuth Provider are different vendors.</p>
+<p>If you have different vendors for Authorization Server and Resource Server, and want to be able to validate the token at the Resource Server, that is a key reason to choose  Bearer Token, so there is no need for  a proprietary call to the OAuth Provider. In this scenario, you can write a piece of code to decrypt the message, verify the signature, and then validate.</p>
+<p>The Referenced Bearer token is much smaller in size. If header size might be an issue, that would be a reason to choose Referenced Bearer, or at least to support it so that API Admins can choose this option if they want to.</p>
+<p>If you want to validate the token at the Authorization Server, you can choose to do that with your  access tokens by checking the checkbox, <strong>Verify  Access Token with Authorization Server</strong>. However, by doing so you lose some of the advantage of using an  access token and might therefore prefer to go with the smaller Referenced Bearer token.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="why_choose_to_include_resource_owner_userinfo_in_bearer_token"></a>
+<h3>Why choose to include resource owner userinfo in the Bearer Access token?</h3>
+<p>When you're setting up the OAuth Provider domain, Token tab, and choose the <strong> Bearer Access</strong> token type, you have the option to include resource owner userinfo in the  Bearer access token.</p>
+<ul>
+  <li><strong>Choose yes if</strong>:
+    <ul>
+      <li>You want the resource owner userinfo to be available either to the resource server or to the downstream service (target endpoint), and do not want to place an additional call to the Authorization Server (see <a href="#should_i_choose_verify_jwt_token_with_auth_server">Should I choose to verify the  access token with the Authorization Server?</a>).</li>
+      <li>Your network is completely secure and you have no concerns about the userinfo being compromised. In this scenario, it might be acceptable to include userinfo without encryption. However, if there is any possibility that userinfo might be exposed in an insecure environment, encryption is extremely important.</li>
+    </ul>
+  </li>
+  <li><strong>Choose no if</strong>:
+    <ul>
+      <li>You have concerns about the size of the  bearer token. The user information increases the size of the  bearer token, which is already larger than a Referenced Bearer token would be. In addition, if you include the userinfo in the token you should encrypt the information, which further increases the message size.</li>
+      <li>It's acceptable in your implementation for the Resource Server to make an additional call to the Authorization Server for the userinfo.</li>
+      </ul>
+  </li>
+  </ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="what_jwt_signing_algorithms_are_supported"></a><h3>What  signing algorithms are supported?</h3>
+<p>The platform supports the following algorithms for signing  bearer tokens:</p>
+<ul>
+  <li>HmacSHA256</li>
+  <li>HmacSHA384</li>
+  <li>HmacSHA512</li>
+  <li>SHA256withRSA</li>
+  <li>SHA384withRSA</li>
+  <li>SHA512withRSA</li>
+  <li>SHA256withECDSA</li>
+  <li>SHA384withECDSA</li>
+  <li>SHA512withECDSA</li>
+  <li>SHA256withRSAandMGF1</li>
+  <li>SHA384withRSAandMGF1</li>
+  <li>SHA512withRSAandMGF1</li>
+</ul>
+<p>The first three are symmetric; the rest are asymmetric.</p>
+<p>For more information on the algorithms, refer to the Glossary: <a href="basics_glossary.htm#gl_hmac">HMAC</a>, <a href="basics_glossary.htm#gl_sha256">SHA-256</a>, <a href="basics_glossary.htm#gl_rsa">RSA</a>, <a href="basics_glossary.htm#gl_ecdsa">ECDSA</a>, <a href="basics_glossary.htm#gl_mgf1">MGF1</a>.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="should_i_choose_verify_jwt_token_with_auth_server"></a><h3>Should I choose to verify the  access token with the Authorization Server?</h3>
+<p>As an alternative to including userinfo in the token, you might choose to verify the token with the Authorization Server. When you include userinfo in the  token, a call to the Authorization Server is not needed; however, this approach has drawbacks of its own, including size and the need for encryption (see <a href="#why_choose_to_include_resource_owner_userinfo_in_bearer_token">Why choose to include resource owner userinfo in the  Bearer Access token?</a>).</p>
+<p>If you choose to verify the  access token with the Authorization Server, this adds a processing step, but means that you can keep the token size fairly small, without the userinfo and the associated encryption that might be needed to protect it.</p>
+<p>In this scenario, you are no longer taking advantage of a key feature of the  access token, which is the ability for the Resource Server to validate the token. For this reason, you might consider choosing the Referenced Bearer option instead, which has a more compact token size.</p>
+<p>One reason why you might prefer to place a call with the Authorization Server is to ensure any grant revocations are considered when validating the access token. In a scenario where the user has revoked the grant, that information might be at the Authorization Server but not at the Resource Server. For more information, see <a href="#how_manage_grant_revoked_cancelled">How does the platform manage validation of the JWT access tokens in the resource server when the grant is revoked or cancelled?</a>.</p>
+<p>There are advantages to either approach; which decision is best depends on your unique scenario.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="what_are_the_settings_on_the_oauth_provider_oidc_page"></a><h3>What are the settings on the OAuth Provider OpenID Connect page and what options should I choose?</h3>
+<p>When you're setting up an OAuth Provider domain, and want to use OpenID Connect as the identity provider, the OpenID Connect page allows you to set up the values that will be needed to act as an OpenID Connect Relying Party to your Identity Provider.</p>
+<p>For information about the values set up on the <strong>OpenID Connect</strong> page (Tab 4), refer to the table below.</p>
+<table cellspacing="0px" class="doctable" style="width: 98%;">
+  <thead>
+    <tr>
+      <th width="29%">Option...</th>
+      <th width="71%">Meaning...</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="t2row">
+      <td>OpenID Connect 1.0 Enabled</td>
+      <td>If your OAuth Provider Domain will be a relying party for an OpenID Connect Identity Provider, check the box. If not, skip this tab.</td>
+    </tr>
+    <tr class="t1row">
+      <td>Reserved Scopes</td>
+      <td><p>Scopes defined by OpenID Connect. Two are selected by default as required:</p>
+        <ul class="apidoctable_ul">
+          <li><strong>openid</strong>: Every OpenID Connect request must have this scope.</li>
+          <li><strong>scope</strong>: The ID token doesn't normally include information about OAuth grant scopes. However, when this scope is present, this enables the client to request that when the domain issues an ID token the grant scope is included in the ID token. If an app's grant access request does not specify scopes, all scopes that have the Default scope option checked are included in the scope of the grant. If the app developer wants the scope information returned, he/she can include the <strong>scope</strong> parameter as part of the authorization request (OAuth details).</li>
+        </ul></td>
+    </tr>
+    <tr class="t2row">
+      <td>ID Token Signing Algorithm</td>
+      <td>Defaults to HmacSHA256, but many other algorithms are supported. For more information on available options, see <a href="site_admin_domains_oidc.htm#what_signature_algorithms_are_supported_by_openidconnect_oauthprovider">What signature algorithms are supported by the platform's OpenID Connect OAuth provider?</a></td>
+    </tr>
+    <tr class="t1row">
+      <td>ID Token Encryption Key Management Algorithm</td>
+      <td>Select the encryption algorithm that the provider will use to encrypt the ID token key.</td>
+    </tr>
+    <tr class="t2row">
+      <td>ID Token Content Encryption Algorithm</td>
+      <td>Select the encryption algorithm that the provider will use to encrypt the ID token content.</td>
+    </tr>
+    <tr class="t1row">
+      <td>ID Token Validity (seconds)</td>
+      <td>The expiration time on or after which the ID Token <strong>must not</strong> be accepted for processing. Defaults to 3600 seconds.</td>
+    </tr>
+    <tr class="t2row">
+      <td>JSON Web Key Validity (seconds)</td>
+      <td>The time, in seconds, indicating how often the asymmetric signature/encryption keys are rotated.</td>
+    </tr>
+  </tbody>
+</table>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="what_are_the_settings_on_the_oauth_provider_branding_page"></a><h3>What are the settings on the OAuth Provider Branding page and what options should I choose?</h3>
+<p>When an end-user logs into an app that's connected to an API that uses the platform's OAuth Provider configuration, the user sees a Resource Owner Authentication page (login screen) that is custom branded for the app and for the OAuth provider. That page is configured in the OAuth Provider domain setup, on the <strong>Branding</strong> page.</p>
+<p>For information about the values set up on the <strong>Branding</strong> page (Tab 7), refer to the table below.</p>
+<table cellspacing="0px" class="doctable" style="width: 98%;">
+  <thead>
+    <tr>
+      <th width="29%">Option...</th>
+      <th width="71%">Meaning...</th>
     </tr>
   </thead>
   <tbody>
@@ -565,11 +993,29 @@ nav-title: Domain Management
     </tr>
     <tr class="t1row">
       <td>Authorization Server URL</td>
-      <td>The public URL that apps will use to access this OAuth provider. For more information, including the specific paths for different OAuth URLs for the OAuth provider, see <a href="#what_is_the_authorization_server_url_for_the_platform">What is the OAuth Authorization Server URL for the platform?</a></td>
+      <td><p>The public URL that apps will use to access this OAuth provider. Can be HTTP or HTTPS. If the <strong>Requires SSL</strong> box is checked (see above), must be HTTPS.</p>
+        <p>Based on the Authorization Server URL specified, the platform derives these endpoints:</p>
+        <ul class="apidoctable_ul">
+          <li>Authorization Endpoint (for OAuth 1.0a and OAuth 2.0): {Authorization Server URL}/oauth/auz/authorize</li>
+          <li>OAuth 2.0 Token Endpoint: {Authorization Server URL}/oauth/oauth20/token</li>
+          <li>OAuth 1.0 Token Endpoint: {Authorization Server URL}/oauth/oauth10/token</li>
+        </ul>
+        <p>If the OAuth Provider uses OpenID Connect for authentication (OpenID Connect support is checked in OAuth Provider configuration Tab 3):</p>
+        <ul>
+          <li>Userinfo Endpoint: {Authorization Server URL}/oauth/userinfo</li>
+          <li>JWKS Endpoint: {Authorization Server URL}/oauth/jwks</li>
+        </ul>
+<p>For an OpenID Connect provider, all the endpoints and provider details are available via the discovery URL/well-known configuration URL:</p>
+<ul>
+  <li>{Authorization Server URL}/.well-known/openid-configuration
+  </li>
+</ul>
+        <p>For more information, including the specific paths for different OAuth URLs for the OAuth provider, see <a href="#what_is_the_authorization_server_url_for_the_platform">What is the OAuth Authorization Server URL for the platform?</a></p></td>
     </tr>
     <tr class="t2row">
       <td>Additional Virtual Hosts</td>
-      <td>If your OAuth provider has one or more additional virtual hosts, as well as the hostname in the Authorization Server URL, enter the additional hostnames, separated by commas.</td>
+      <td><p>If your OAuth provider has one or more additional virtual hosts, as well as the hostname in the Authorization Server URL, enter the additional hostnames, separated by commas.</p>
+        <p><strong>Note</strong>: The authorization server must be able to resolve these virtual hosts to an IP address.</p></td>
     </tr>
     <tr class="t1row">
       <td>Grant Provisioning UI URL</td>
@@ -581,7 +1027,6 @@ nav-title: Domain Management
     </tr>
   </tbody>
 </table>
-<p>&nbsp;</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -592,7 +1037,7 @@ nav-title: Domain Management
   <li>An identity provider that only has APIs rather than offering a user interface for login&#8212;such as LDAP or CA SiteMinder</li>
   <li>An identity provider that provides a login application&#8212;such as OpenID Connect or SAML Web SSO Identity Provider. In this scenario, the platform can redirect the user to the login application and then have the login application redirect the user back to the OAuth Provider after authentication.</li>
 </ul>
-<p>Using this approach, depending on where your end-user identities are, you can configure different domains and use the appropriate domain as the resource owner authentication domain in the OAuth Provider configuration (Grant Types tab). For example, you would configure an <a href="site_admin_openidconnect_support.htm#how_do_i_configure_an_openid_connect_relying_party_domain">OpenID Connect Relying Party domain</a>, <a href="#domains_login_setup_saml_web_sso">SAML Web SSO domain</a>, or <a href="#how_do_i_set_up_an_ldap_domain">LDAP</a> or <a href="#domains_login_setup_ca_siteminder">CA SiteMinder</a> domain.</p>
+<p>Using this approach, depending on where your end-user identities are, you can configure different domains and use the appropriate domain as the resource owner authentication domain in the OAuth Provider configuration (Grant Types tab). For example, you would configure an <a href="site_admin_domains_oidc.htm#how_do_i_configure_an_openid_connect_relying_party_domain">OpenID Connect Relying Party domain</a>, <a href="#domains_login_setup_saml_web_sso">SAML Web SSO domain</a>, or <a href="#how_do_i_set_up_an_ldap_domain">LDAP</a> or <a href="#domains_login_setup_ca_siteminder">CA SiteMinder</a> domain.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -638,27 +1083,176 @@ nav-title: Domain Management
 
 
 
-<a name="what_is_a_jwt_bearer_assertion"></a><h3>What is a JWT Bearer Assertion, and what does the platform support for JWT Bearer Assertions?</h3>
-<p>The platform supports the  <a href="basics_glossary.htm#gl_jwt_token">JWT Token</a>, or JWT Bearer Assertion, which is an <a href="basics_glossary.htm#gl_oauth_extensiongranttype">extension grant type</a> that is generally used when the app already has a JWT Assertion that represents the resource owner. The app sends the JWT Assertion to the authorization server&rsquo;s <a href="basics_glossary.htm#gl_oauth_tokenendpoint">Token Endpoint</a> to get an access token for later use.</p>
-<p>The JWT Bearer Assertion is generally issued by an <a href="basics_glossary.htm#gl_identityprovider">Identity Provider</a> and consumed by a <a href="basics_glossary.htm#gl_relyingparty">Relying Party</a> that relies on its content to identify the subject&#8212;that is, the user being authenticated.</p>
-<p>The platform supports JWT Bearer Assertions:</p>
+<a name="what_is_a_jwt_bearer_assertion"></a><h3>What is a  Bearer Assertion, and what does the platform support for  Bearer Assertions?</h3>
+<p>The platform supports the  <a href="basics_glossary.htm#gl_jwt_token"> Token</a>, or  Bearer Assertion, which is an <a href="basics_glossary.htm#gl_oauth_extensiongranttype">extension grant type</a> that is generally used when the app already has a  Assertion that represents the resource owner. The app sends the  Assertion to the authorization server&rsquo;s <a href="basics_glossary.htm#gl_oauth_tokenendpoint">Token Endpoint</a> to get an access token for later use.</p>
+<p>The  Bearer Assertion is generally issued by an <a href="basics_glossary.htm#gl_identityprovider">Identity Provider</a> and consumed by a <a href="basics_glossary.htm#gl_relyingparty">Relying Party</a> that relies on its content to identify the subject&#8212;that is, the user being authenticated.</p>
+<p>The platform supports  Bearer Assertions:</p>
 <ul>
-  <li><strong>Issued by the platform</strong>. To use JWT Bearer Assertions issued by the platform, they must be issued by the same OAuth Provider. If there are multiple OAuth Provider domains, you cannot use JWT Bearer Assertions issued by a different platform OAuth Provider. It <strong>must</strong> be the same OAuth Provider producing and consuming the JWT Bearer Assertion.</li>
-  <li><strong>Issued by a different provider</strong>. To use JWT Bearer Assertions issued by a different provider, the Resource Owner authentication domain must be an Open ID Connect Relying Party domain. The platform's OAuth Provider can use the JWT Bearer Assertions issued by the external OpenID Connect Provider.</li></ul>
-<p>In the context of the platform, when the JWT token is used as an access token, all the information needed for the access token is already part of the token. This is efficient in terms of processing.</p>
+  <li><strong>Issued by the platform</strong>. To use  Bearer Assertions issued by the platform, they must be issued by the same OAuth Provider. If there are multiple OAuth Provider domains, you cannot use  Bearer Assertions issued by a different platform OAuth Provider. It <strong>must</strong> be the same OAuth Provider producing and consuming the  Bearer Assertion.</li>
+  <li><strong>Issued by a different provider</strong>. To use  Bearer Assertions issued by a different provider, the Resource Owner authentication domain must be an OpenID Connect Relying Party domain. The platform's OAuth Provider can use the  Bearer Assertions issued by the external OpenID Connect Provider.</li></ul>
+<p>In the context of the platform, when the  token is used as an access token, all the information needed for the access token is already part of the token. This is efficient in terms of processing.</p>
 <p>This grant type supports <a href="basics_glossary.htm#gl_oauth_refreshtoken">refresh tokens</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
-<a name="how_do_i_configure_a_pingfederate_domain"></a><h3>How do I configure a PingFederate domain?</h3>
-<p>The PingFederate&reg; <a href="basics_glossary.htm#gl_connectordomain">Connector domain</a> allows you to use <a href="basics_glossary.htm#gl_pingfederate">PingFederate</a> as an OAuth provider. Essentially, the Site Admin registers the platform with PingFederate as the resource server, and then uses the values provided by PingFederate to set up the PingFederate Provider domain in Community Manager.</p>
-<p class="apidoc_note"><strong>Note</strong>: For a walkthrough of the end-to-end sequence of steps, including API and app setup, refer to <a href="site_admin_ov_pf_endtoend.htm">PingFederate Usage Scenario: End to End</a>.</p>
-<p>To get everything configured correctly, you must perform some setup steps in PingFederate and Policy Manager before going ahead with the Community Manager setup. Follow the procedures given in the sections listed below, in sequence:</p>
+
+<a name="what_token_types_should_i_support"></a><h3>What token types should I support?</h3>
+<p>When setting up your OAuth Provider domain, on the <strong>Token</strong> tab, there are three key choices for tokens: </p>
+<ul>
+  <li><strong>Bearer</strong>: Two types of bearer tokens (bearer tokens are sent as-is in the API request, in the Authorization header):
+    <ul>
+      <li><strong>Referenced Bearer</strong></li>
+      <li><strong> JWT Bearer</strong></li>
+    </ul>
+  </li>
+  <li><strong>MAC</strong></li>
+</ul>
+<p>Why would you choose one over the other? Should you support more than one option? Below is some information about the different types of access tokens, to help you decide. Of course, the available possibilities depend on the token types your external OAuth Provider supports.</p>
+<h5>Referenced Bearer</h5>
+<p>A short random token that uniquely identifies the grant, sent as-is in the API request, in the Authorization header. If you enable this token type, you can specify the length of the bearer access token that will be generated. A longer token is stronger. Default: 40. </p>
+<p>Referenced Bearer tokens and JWT bearer access tokens are similar, but validating a Referenced Bearer token requires a round trip to the OAuth provider to validate the bearer token and to obtain the scope and the user's claims.
+</p>
+<p>For more information, see <a href="#should_i_choose_reference_bearer_or_jwt_bearer">Should I choose Referenced Bearer or Bearer token?</a></p>
+<h5> JWT Bearer Access Token</h5>
+<p>An access token that uses the  standard and contain all the information the resource server needs to confirm the user&rsquo;s grant to the application, sent as-is in the API request, in the Authorization header. An advantage of the Bearer access token is that the Resource Server can validate by itself without having to go back to the Authorization Server. </p>
+<p>This token type provides the fastest option for security. However, a  Bearer token includes more information and can be significantly longer than a referenced bearer token. In addition, it does not include protection against a replay attack (the nonce in the MAC token); in addition, there is no specification to check whether a specific access token has been revoked. </p>
+<p>For more information, see <a href="#should_i_choose_reference_bearer_or_jwt_bearer">Should I choose Referenced Bearer or Bearer token?</a></p>
+<h5>MAC</h5>
+<p>A MAC token includes a digital signature and a <a href="basics_glossary.htm#gl_nonce">nonce</a>, and is more secure than a bearer token. Use of a MAC token by a client is more complex than using a Bearer token; however, the MAC token offers non-repudiation and message replay attack prevention options to the API requests.</p>
+<h5>Supporting multiple token types</h5>
+<p>Supporting multiple token types requires a more complex implementation but offers users more options.</p>
+<p>When you specify more than one token type, you can specify a default. You can also choose whether to allow users to override the default or not.</p>
+
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_does_token_encryption_work"></a><h3>How does token encryption work?</h3>
+<p>In general, most OAuth messages include some level of encryption, for security purposes.</p>
+<p>Symmetric is a lower level of security, implemented in the platform with the app Shared Secret. Asymmetric is a higher level of security, implemented with a public/private key pair and certificate. Within those two divisions there are different levels of security according to factors such as the specific algorithm used and the length of the token.</p>
+<p>  Normally, encryption is a two-step process:</p>
+<ol>
+  <li>  The entire message is encrypted using a symmetric encryption algorithm.</li>
+  <li>  For extra security, the second step is encryption of the random symmetric message key. There are three possible levels:
+    <ul>
+      <li><strong>  Maximum security</strong>: encryption of the message key with an asymmetric encryption algorithm.</li>
+      <li><strong>  Less secure but still very secure</strong>: encryption of the message key with a symmetric encryption algorithm (either the same one, or a different one).</li>
+      <li><strong>  Least security</strong>: no encryption of the key.</li>
+    </ul>
+    </li>
+</ol>
+<h5>Decryption</h5>
+<p>Decrypting the message is an exact reversal of the encryption process:</p>
+<ol>
+  <li>Decryption of the message key (assuming it was encrypted).</li>
+  <li>Decryption of the entire message using the decrypted message key.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_manage_grant_revoked_cancelled"></a><h3>How does the platform manage validation of the JWT access tokens in the resource server when the grant is revoked or cancelled?</h3>
+<p>By default, JWT access tokens are always validated at the gateway (Network Director). The gateway periodically downloads all revoked and cancelled grants that have unexpired access tokens, and keeps this information in local memory, to be used while processing a JWT token. It can then reject JWT access tokens for grants that have been revoked or cancelled.</p>
+<p>This is also true of other token types such as Referenced Bearer or MAC tokens.</p>
+<p>Initially, the grant corresponding to the token is stored in local memory at the resource server, for faster processing. If a grant is modified (via workflow, revocation, or any other means), the modified grant is updated in the local memory asynchronously, via the scheduled job, which runs at an interval of 1 minute. Until that time, requests continue to be successful.</p>
+<p>A possible drawback to this approach is that the JWT access token continues to be successful at the gateway until the scheduled job updates the local cache with cancelled/revoked grant information. This could mean that JWT access tokens for revoked grants could be accepted for a short period of time before they start to be rejected. The scheduled job runs at an interval of 1 minute.</p>
+<p>This scenario is similar to browsers downloading the Certificate Revocation List (CRL) from the certificate authorities (CAs).</p>
+<p><strong>Note</strong>: The Site Admin can configure the OAuth Provider to have the gateway verify JWT Access Tokens with the Authorization Server as well (OAuth Provider Domain, Tab 3, Token: <strong>Verify JWT Access Token with Authorization Server</strong>). In this scenario, validation is similar to that of the Referenced Bearer token. However, with this approach you lose a key feature of the JWT Access Token, the ability for the Resource Server to validate the token.</p>
+
+<p><a href="#top">Back to top</a></p>
+
+
+
+
+
+
+
+
+
+
+<div class = "divider1"></div>
+<h3><a name="h_samlwebssoslodomain"></a>SAML Web SSO/SLO Domain:</h3>
+
+
+
+<a name="domains_login_setup_saml_web_sso"></a><h3>How do I set up the platform to log in with SAML Web SSO?</h3>
+<p>The <a href="basics_glossary.htm#gl_saml">SAML</a> Web SSO domain allows you to set up the platform so that users can log in via a SAML Identity Provider, using SAML Web SSO.</p>
+<p>First, you&rsquo;ll need to install the following optional plug-ins in the Akana Administration Console to one or more containers in your implementation:</p>
+<ul>
+  <li>Akana SAML 2.0 Web Browser SSO Service Provider</li>
+  <li>Akana SAML 2.0 Web Browser SSO Service Provider UI</li>
+</ul>
+<p>The next step is to define the SAML Web SSO domain in the <a href="basics_glossary.htm#gl_policy_manager">Policy Manager</a> Management Console (Configure &gt; Security &gt; Identity Systems). For more information, refer to the following external documentation:</p>
+<ul>
+  <li>The <strong>Add Identity System</strong> (Active Directory) topic in the Policy Manager Online Help.</li>
+  <li>White paper: <em>Using SAML for Single Sign-On in the Akana Platform</em>.</li>
+</ul>
+<p>Once the domain is defined in Policy Manager, you can configure and enable it in the Akana API Platform:</p>
+<ul>
+  <li>To use it as a login domain: See <a href="#configure_domain_samlwebsso">To set up a SAML Web SSO login domain in the Akana API Platform</a> below.</li>
+  <li>To use it as a resource owner authentication domain when defining an OAuth Provider (Grant Types tab): see <a href="#to_configure_domain_oauth_provider">To configure an OAuth Provider domain</a>.</li>
+</ul>
+<p>Once setup is complete, when users sign in they will see the icon for your login domain on the platform login page and will be able to choose to log in by authenticating with your Identity Provider.</p>
+<h5><a name="configure_domain_samlwebsso"></a>To set up a SAML Web SSO login domain in the Akana API Platform:</h5>
+<ol>
+  <li>Define the SAML Web SSO domain in the <em>Configure &gt; Security &gt; Identity Systems </em>section of Policy Manager. See notes above.</li>
+  <li>In the platform, enable the domain for login. This is a configuration step: <em>Administration &gt; Config &gt; Logins</em> (<strong>Enable</strong> checkbox). For more information, see <a href="site_admin_domains.htm#how_do_i_enable_a_domain_for_login">How do I enable a domain for login?</a></li>
+  <li>Click <strong>Save</strong>.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="domains_login_setup_saml_web_slo"></a><h3>How do I set up the platform for single logout (SLO) using SAML?</h3>
+<p>The platform supports single logout (SLO) with an identity provider, using SAML.</p>
+<p>You can use the <a href="basics_glossary.htm#gl_saml">SAML</a> domain to set up the platform so that users can log in via a SAML Identity Provider, using SAML Web SSO, and then also when the user logs out of the platform the user is also logged out of the SAML domain (SLO).</p>
+<p>You must first define the SAML Web SSO domain in the <a href="basics_glossary.htm#gl_policy_manager">Policy Manager</a> Management Console (Configure &gt; Security &gt; Identity Systems).</p>
+<p>Refer to the supporting documentation referenced in <a href="#domains_login_setup_saml_web_sso">How do I set up the platform to log in with SAML Web SSO?</a> above.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<div class = "divider1"></div>
+<h3><a name="h_casiteminderdomain"></a>CA SiteMinder Domain:</h3>
+
+
+
+<a name="domains_login_setup_ca_siteminder"></a><h3>How do I set up the platform to log in with CA SiteMinder (CA SiteMinder domain)?</h3>
+<p>The CA SiteMinder domain allows users to log into the platform using <a href="basics_glossary.htm#gl_casiteminder">CA SiteMinder</a> credentials.</p>
+<p>You must first define the CA SiteMinder domain via the <em>Configure &gt; Security &gt; Identity Systems</em> section of the <a href="basics_glossary.htm#gl_policy_manager">Policy Manager</a> Management Console. For more information, refer to the following external documentation:</p>
+<ul>
+  <li>The <strong>Add Identity System</strong> (Active Directory) topic in the Policy Manager Online Help.</li>
+  <li>The <em>Integrating CA SiteMinder with Policy Manager 6.1 Guide </em>available via the Akana Support Site (support.akana.com &gt; Downloads &gt; PolicyManager &gt; PM61 &gt; PM61_CASiteMinder_Integration.pdf). This has instructions on how to set up CA SiteMinder and install the identity system (domain) in Policy Manager.</li>
+  <li>The <em>Enterprise API Platform Installation Guide</em> (for information on how to install a CA SiteMinder Identity System).</li>
+</ul>
+<p>Once the domain is defined in Policy Manager, you can configure and enable it in the Akana API Platform:</p>
+<ul>
+  <li>To use it as a login domain: See <a href="#configure_domain_casiteminder">To set up a CA SiteMinder login domain in the Akana API Platform</a> below.</li>
+  <li>To use it as a resource owner authentication domain when defining an OAuth Provider (Grant Types tab): see <a href="#to_configure_domain_oauth_provider">To configure an OAuth Provider domain</a>.</li>
+</ul>
+<p>Once setup is complete, when users sign in they will see the CA SiteMinder icon on the platform login page and will be able to choose CA SiteMinder for login.</p>
+<h5><a name="configure_domain_casiteminder"></a>To set up a CA SiteMinder login domain in the Akana API Platform:</h5>
+<ol>
+  <li>Define the CA SiteMinder domain in the <em>Configure &gt; Security &gt; Identity Systems </em>section of Policy Manager. See notes above.</li>
+  <li>In the platform, enable the domain for login. This is a configuration step: <em>Administration &gt; Config &gt; Logins</em> (<strong>Enable</strong> checkbox). For more information, see <a href="site_admin_domains.htm#how_do_i_enable_a_domain_for_login">How do I enable a domain for login?</a></li>
+  <li>Click <strong>Save</strong>.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<div class = "divider1"></div>
+<h3><a name="h_pingfederatedomain"></a>PingFederate Domain:</h3>
+
+
+
+<a name="how_do_i_configure_eoap_pf"></a><h3>How do I configure an External OAuth Provider domain for PingFederate?</h3>
+<p>To get everything configured correctly, you must perform some setup steps in PingFederate and Policy Manager before going ahead with the Akana API Platform setup. Follow the procedures given in the sections listed below, in sequence:</p>
 <ol>
   <li><a href="#pf_config_1_pf">PingFederate Configuration</a></li>
   <li><a href="#pf_config_2_pm">Policy Manager Configuration</a></li>
-  <li><a href="#pf_config_3_cm">Community Manager Configuration</a></li>
+  <li><a href="#pf_config_3_cm">Akana API Platform Configuration</a></li>
 </ol>
 
 
@@ -666,19 +1260,19 @@ nav-title: Domain Management
 <p>You must have a working PingFederate installation.</p>
 <p>In your PingFederate server configuration, do the following:</p>
 <ul>
-  <li>In Server Configuration &gt; System Settings &gt; Server Settings, in the Federation Info section, make sure the base URL value is defined and is accessible from Community Manager.
-  <p><strong>Note</strong>: you will use this value in Community Manager later on, in the PingFederate domain setup, on the <strong>Provider Details</strong> page.</p></li>
+  <li>In Server Configuration &gt; System Settings &gt; Server Settings, in the Federation Info section, make sure the base URL value is defined and is accessible from the Akana API Platform.
+  <p><strong>Note</strong>: you will use this value in the Akana API Platform later on, in the PingFederate domain setup, on the <strong>Provider Details</strong> page.</p></li>
   <li>Validate and export the server certificate: In Server Configuration &gt; Security &gt; SSL Server Certificates, make sure there is a valid, activated certificate defined. The PingFederate server certificate must have a &quot;Common Name&quot; matching the hostname in the base URL. If necessary, create a new certificate. When you know the certificate is valid, click the Export link to export the certificate.</li>
   </ul>
-<p>In PingFederate, create a client (application) to represent Community Manager. You must set up the client as a resource server in your PingFederate instance so that Community Manager can communicate with PingFederate. Follow the instructions below.</p>
-<h5>To create the Community Manager client in PingFederate</h5>
+<p>In PingFederate, create a client (application) to represent the Akana API Platform. You must set up the client as a resource server in your PingFederate instance so that the Akana API Platform can communicate with PingFederate. Follow the instructions below.</p>
+<h5>To create the Akana API Platform client in PingFederate</h5>
 <ol>
   <li>In PingFederate, click OAuth Settings &gt; Client Management, and choose <strong>Add Client</strong>.</li>
   <li>For <strong>Client Authentication</strong>, choose <strong>Client Secret</strong>.</li>
   <li>Configure the client with the following settings:
     <ul>
-      <li>Client ID: enter a unique ID for your Community Manager client. This is the equivalent of a login. For example, <strong>PingFederate</strong>.</li>
-      <li>Client Secret: click Generate Secret and copy the secret so that you can set up the same value in Community Manager in a later step.</li>
+      <li>Client ID: enter a unique ID for your Akana API Platform client. This is the equivalent of a login. For example, <strong>PingFederate</strong>.</li>
+      <li>Client Secret: click Generate Secret and copy the secret so that you can set up the same value in the Akana API Platform in a later step.</li>
     </ul>
   </li>
   <li>Choose a name.</li>
@@ -689,27 +1283,115 @@ nav-title: Domain Management
 
 <h5>To set up password credential validation in PingFederate</h5>
 <ol>
-  <li>In PingFederate, in the settings for your Community Manager client, click Authentication &gt; Password Credential Validators.</li>
+  <li>In PingFederate, in the settings for your Akana API Platform client, click Authentication &gt; Password Credential Validators.</li>
+  <li>Choose <strong>Create New Instance</strong>.</li>
+  <li>Specify Instance Name, Instance ID, and Type, and save the values.</li>
+  </ol>
+<p>That completes the initial PingFederate setup. The next step is to set up the PingFederate credentials in Policy Manager so that PingFederate is trusted.</p>
+
+<h4><a name="pf_config_2_pm"></a>2: Policy Manager Configuration (HTTPS only)</h4>
+<p>In Policy Manager, depending on the exact scenario, you might need to complete either or both of these steps:</p>
+<ul>
+  <li><strong>Set up the PingFederate server certificate in Policy Manager</strong>: if your PingFederate implementation is expecting HTTPS connections, you must set up the PingFederate server certificate. Follow the steps below.</li>
+  <li><strong>Set up a platform identity in Policy Manager for the PingFederate domain</strong>: see <a href="#proc_pm_identity_set_up">To set up a platform identity in Policy Manager for a domain in the developer portal</a>.</li>
+</ul>
+<p><strong>Note</strong>: It's important to complete any steps in Policy Manager <strong>before</strong> setting up the domain in the Akana API Platform.</p>
+<h5><a name="p_https_cert_setup"></a>To set up the PingFederate server certificate in Policy Manager</h5>
+<p>This step is needed if your PingFederate implementation is expecting HTTPS connections.</p>
+<ol>
+  <li>Add the issuer of the PingFederate server certificate in the platform trust store. In Policy Manager: <strong>Console</strong> &gt; <strong>Configure</strong> &gt; <strong>Security</strong> &gt; <strong>Certificates</strong> &gt; <strong>Trusted CA Certificates</strong> tab. This step is needed so that the Akana API Platform will trust the PingFederate authorization server endpoints. Note that when you upload the certificate, it generally takes a couple of minutes to take effect. Allow some time after uploading the certificates before setting up the domain in the Akana API Platform.</li>
+  <li><strong>Required only if you uploaded the CA certificate after configuring the domain</strong>: After waiting for five minutes for the trusted CA certificate information to get refreshed, update the PingFederate domain (even though there were no changes). This triggers each of the containers to re-initialize the provider with the new trusted CA certificates. Alternatively, you can restart each of the containers where the API platform is installed.</li>
+</ol>
+
+
+
+<h4><a name="pf_config_3_cm"></a>3: Akana API Platform Configuration</h4>
+<p>When the PingFederate setup steps and Policy Manager setup steps are done, it's time to set up the PingFederate domain in the Akana API Platform.</p>
+<h5><a name="configure_domain_eoap_pf"></a>To set up an External OAuth Provider domain in the Akana API Platform for PingFederate</h5>
+<p class="apidoc_note"><strong>Note</strong>: Instructions for setting up an External OAuth Provider domain are provided in <a href="site_admin_domains_eoap.htm#domain_add_eoap">How do I add an External OAuth Provider domain?</a> Specifically for PingFederate, there are two sections that include additional information, specifically for PingFederate, when you choose PingFederate as the provider and read in the configuration information. The additional information is on Tab 4, Access Token Validation, in the right column, and on Tab 5, Extensions.</p>
+<ol>
+  <li>In the Akana API Platform, log in as the Site Admin and click the <em>Administration</em> quick filter (wrench icon).</li>
+  <li>Click <strong>Domains</strong>. The <em>Domains Summary</em> page displays.</li>
+  <li>Click <strong>Add Domain</strong>. The <strong>Select Domain Type</strong> drop-down menu displays.</li>
+  <li>Select <strong>External OAuth  Provider</strong> and then click <strong>Select</strong>. The <em>Add Connector Domain</em> wizard opens.</li>
+  <li><strong>Details</strong> page: Specify values for Name and Description and then click <strong>Next</strong>.</li>
+  <li><strong>Configure</strong> page: For Provider Type, choose <strong>PingFederate</strong>. Choose to provide the well-known configuration URL, paste the configuration JSON, or set up manually. If you read or paste the information, all the PingFederate values are read in automatically. Click <strong>Next</strong>.</li>
+  <li><strong>Provider</strong> page: Review the values that were read in from the configuration, and adjust as needed. Click <strong>Next</strong>.</li>
+  <li><strong>Access Token Validation</strong> page: Review the values that were read in from the configuration, and adjust as needed. For information on the specific values relating to PingFederate, see <a href="site_admin_domains_eoap.htm#settings_eoap_token_validation_pf">What are the settings on the External OAuth Provider Token Validation page for PingFederate?</a> Click <strong>Next</strong>.</li>
+  <li><strong>Extensions</strong> page: the PingFederate extension information is displayed. For more information, see <a href="site_admin_domains_eoap.htm#settings_eoap_extensions_pf">What are the settings on the External OAuth Provider Extensions page for PingFederate, and what options should I choose?</a> Review the values and adjust as needed.</li>
+  <li>Click <strong>Save</strong>.</li>
+</ol>
+<p>The above steps complete the setup of the PingFederate domain. Once these steps are complete, authorized platform users can create APIs that use the PingFederate domain, and business admins or app developers can create apps that subscribe to those APIs.</p>
+<p><strong>Note</strong>: With the older PingFederate connector domain, for each app using an API that uses PingFederate as an OAuth provider, the PingFederate Admin had to set up the app as a PingFederate client so that the app can be authenticated. With the External OAuth Provider domain, this activity is automated.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_do_i_configure_a_pingfederate_domain"></a><h3>How do I configure a PingFederate Connector domain?</h3>
+<p class="apidoc_note"><strong>Note</strong>: We recommend that PingFederate users choose the External OAuth Provider domain rather than the legacy PingFederate domain. See <a href="site_admin_domains_eoap.htm">External OAuth Provider Domain</a>. PingFederate configuration is still required, as covered in <a href="site_admin_ov_pf_endtoend.htm">PingFederate Usage Scenario: End to End</a>.</p>
+<p>The PingFederate&reg; <a href="basics_glossary.htm#gl_connectordomain">Connector domain</a> allows you to use <a href="basics_glossary.htm#gl_pingfederate">PingFederate</a> as an OAuth provider. Essentially, the Site Admin registers the platform with PingFederate as the resource server, and then uses the values provided by PingFederate to set up the PingFederate Provider domain in the Akana API Platform.</p>
+<p>For a walkthrough of the end-to-end sequence of steps, including API and app setup, refer to <a href="site_admin_ov_pf_endtoend.htm">PingFederate Usage Scenario: End to End</a>.</p>
+<p>To get everything configured correctly, you must perform some setup steps in PingFederate and Policy Manager before going ahead with the Akana API Platform setup. Follow the procedures given in the sections listed below, in sequence:</p>
+<ol>
+  <li><a href="#pf_config_1_pf">PingFederate Configuration</a></li>
+  <li><a href="#pf_config_2_pm">Policy Manager Configuration</a></li>
+  <li><a href="#pf_config_3_cm">Akana API Platform Configuration</a></li>
+</ol>
+
+
+<h4><a name="pf_config_1_pf"></a>1: PingFederate Configuration</h4>
+<p>You must have a working PingFederate installation.</p>
+<p>In your PingFederate server configuration, do the following:</p>
+<ul>
+  <li>In Server Configuration &gt; System Settings &gt; Server Settings, in the Federation Info section, make sure the base URL value is defined and is accessible from the Akana API Platform.
+  <p><strong>Note</strong>: you will use this value in the Akana API Platform later on, in the PingFederate domain setup, on the <strong>Provider Details</strong> page.</p></li>
+  <li>Validate and export the server certificate: In Server Configuration &gt; Security &gt; SSL Server Certificates, make sure there is a valid, activated certificate defined. The PingFederate server certificate must have a &quot;Common Name&quot; matching the hostname in the base URL. If necessary, create a new certificate. When you know the certificate is valid, click the Export link to export the certificate.</li>
+  </ul>
+<p>In PingFederate, create a client (application) to represent the Akana API Platform. You must set up the client as a resource server in your PingFederate instance so that the Akana API Platform can communicate with PingFederate. Follow the instructions below.</p>
+<h5>To create the Akana API Platform client in PingFederate</h5>
+<ol>
+  <li>In PingFederate, click OAuth Settings &gt; Client Management, and choose <strong>Add Client</strong>.</li>
+  <li>For <strong>Client Authentication</strong>, choose <strong>Client Secret</strong>.</li>
+  <li>Configure the client with the following settings:
+    <ul>
+      <li>Client ID: enter a unique ID for your Akana API Platform client. This is the equivalent of a login. For example, <strong>PingFederate</strong>.</li>
+      <li>Client Secret: click Generate Secret and copy the secret so that you can set up the same value in the Akana AKI Platform in a later step.</li>
+    </ul>
+  </li>
+  <li>Choose a name.</li>
+  <li>Under <strong>Allowed Grant Types</strong>, choose <strong>Access Token Validation (Client is a Resource Server)</strong>.</li>
+  <li>Save your settings.</li>
+</ol>
+<p>In PingFederate, set up the password credential validator. This validates the credentials provided through the OAuth user interface when a token is requested. See below.</p>
+
+<h5>To set up password credential validation in PingFederate</h5>
+<ol>
+  <li>In PingFederate, in the settings for your Akana AKI Platform client, click Authentication &gt; Password Credential Validators.</li>
   <li>Choose <strong>Create New Instance</strong>.</li>
   <li>Specify Instance Name, Instance ID, and Type, and save the values.</li>
   </ol>
 <p>That completes the initial PingFederate setup. The next step is to make sure Policy Manager configuration steps are in place.</p>
 
 <h4><a name="pf_config_2_pm"></a>2: Policy Manager Configuration (HTTPS only)</h4>
-<p>In Policy Manager, if your PingFederate implementation is expecting HTTPS connections, you must set up the PingFederate server certificate in two places.</p>
-<p><strong>Note</strong>: It's important to do this <strong>before</strong> setting up the domain in Community Manager.</p>
-<h5><a name="p_https_cert_setup"></a>To set up the PingFederate server certificate in Policy Manager</h5>
+<p>In Policy Manager, depending on the exact scenario, you might need to complete either or both of these steps:</p>
+<ul>
+  <li><strong>Set up the PingFederate server certificate in Policy Manager</strong>: if your PingFederate implementation is expecting HTTPS connections, you must set up the PingFederate server certificate. Follow the steps below.</li>
+  <li><strong>Set up a platform identity in Policy Manager for the PingFederate domain</strong>: see <a href="#proc_pm_identity_set_up">To set up a platform identity in Policy Manager for a domain in the developer portal</a>.</li>
+</ul>
+<p><strong>Note</strong>: It's important to complete any steps in Policy Manager <strong>before</strong> setting up the domain in the Akana AKI Platform.</p>
+<h5><a name="p_https_cert_setup" id="p_https_cert_setup"></a>To set up the PingFederate server certificate in Policy Manager</h5>
+<p>This step is needed if your PingFederate implementation is expecting HTTPS connections.</p>
 <ol>
-  <li>Add the issuer of the PingFederate server certificate in the platform trust store.   In Policy Manager: Console &gt; Configure &gt; Security &gt; Certificates &gt; Trusted CA Certificates tab. This step is needed so that Community Manager will trust the PingFederate authorization server endpoints. Note that when you upload the certificate, it generally takes a couple of minutes to take effect. Allow some time after uploading the certificates before setting up the domain in Community Manager.</li>
-  <li>On the Community Manager container, add the PingFederate server certificate to the container's JVM cacerts file, located in <span class="apidoc_code">jre/lib/security/cacerts</span>, via the <strong>keytool</strong> command. Follow the example given below, replacing the {PINGFEDERATE_CERT_NAME} and {PINGFEDERATE_CERT_LOCATION} variables with the correct values for your implementation (and removing the curly brackets):
-    <pre>keytool -keystore cacerts -importcert -alias {PINGFEDERATE_CERT_NAME} -file {PINGFEDERATE_CERT_LOCATION}</pre></li>
-  <li>Restart the container so that the above change goes into effect.</li>
+  <li>Add the issuer of the PingFederate server certificate in the platform trust store. In Policy Manager: <strong>Console</strong> &gt; <strong>Configure</strong> &gt; <strong>Security</strong> &gt; <strong>Certificates</strong> &gt; <strong>Trusted CA Certificates</strong> tab. This step is needed so that the API platform will trust the PingFederate authorization server endpoints. Note that when you upload the certificate, it generally takes a couple of minutes to take effect. Allow some time after uploading the certificates before setting up the domain in the Akana AKI Platform.</li>
+  <li><strong>Required only if you uploaded the CA certificate after configuring the domain</strong>: After waiting for five minutes for the trusted CA certificate information to get refreshed, update the PingFederate domain (even though there were no changes). This triggers each of the containers to re-initialize the provider with the new trusted CA certificates. Alternatively, you can restart each of the containers where the API platform is installed.</li>
 </ol>
-<h4><a name="pf_config_3_cm"></a>3: Community Manager Configuration</h4>
-<p>When the PingFederate setup steps and Policy Manager setup steps are done, it's time to set up the PingFederate domain in Community Manager.</p>
-<h5><a name="configure_domain_google" id="configure_domain_pingfederate"></a>To set up a PingFederate Provider domain in Community Manager:</h5>
+
+
+<h4><a name="pf_config_3_cm"></a>3: Akana AKI Platform Configuration</h4>
+<p>When the PingFederate setup steps and Policy Manager setup steps are done, it's time to set up the PingFederate domain in the Akana AKI Platform.</p>
+<h5><a name="configure_domain_pf_connector"></a>To set up a PingFederate Provider domain in the Akana AKI Platform:</h5>
 <ol>
-  <li>In Community Manager, log in as the Site Admin and click the <em>Administration</em> quick filter (wrench icon).</li>
+  <li>In the Akana AKI Platform, log in as the Site Admin and click the <em>Administration</em> quick filter (wrench icon).</li>
   <li>Click <strong>Domains</strong>. The <em>Domains Summary</em> page displays.</li>
   <li>Click <strong>Add Domain</strong>. The <strong>Select Domain Type</strong> drop-down menu displays.</li>
   <li>Select <strong>PingFederate Provider</strong> and then click <strong>Select</strong>. The <em>Add Connector Domain</em> wizard opens.</li>
@@ -726,21 +1408,6 @@ nav-title: Domain Management
 </ol>
 <p>The above steps complete the setup of the PingFederate domain. Once these steps are complete, authorized platform users can create APIs that use the PingFederate domain, and business admins or app developers can create apps that subscribe to those APIs.</p>
 <p><strong>Note</strong>: For each app that is using an API that uses PingFederate as an OAuth provider, the PingFederate Admin must set up the app as a PingFederate client so that the app can be authenticated. For an overview of the entire process, end to end, see <a href="site_admin_ov_pf_endtoend.htm">PingFederate Usage Scenario: End to End</a>.</p>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<a name="how_do_i_customize_google_user_consent_screen"></a><h3>How do I customize the Google user consent screen for my Google Connector domain?</h3>
-<p>If you want to use a Google Connector domain to support OAuth 2.0 authentication on the platform, you will need to provide values for customization of the user consent screen that's presented to users when your app is asking for approval to access the user's data.</p>
-<p>If you haven't already done so, register your app on the Google Developers Console. For instructions, see <a href="#to_get_credentials_for_a_google_connector_domain">To get credentials for a Google Connector domain</a>. Then follow the instructions below to customize the user consent screen.</p>
-
-<h5><a name="to_customize_the_google_consent_page"></a>To customize the Google user consent screen:</h5>
-<ol>
-  <li>Log in to the Google Developers Console and go to the page where you registered your platform as an app.</li>
-  <li>On the left, click <strong>APIs &amp; Auth</strong> and then click <strong>APIs</strong>. Make sure the status for the Google+ API shows as <strong>ON</strong>.</li>
-  <li>On the left, click <strong>APIs &amp; Auth</strong> &gt; <strong>Consent Screen</strong>.</li>
-  <li>Provide values you want your users to see, such as product name, homepage URL, and logo, and click <strong>Save</strong>.</li>
-</ol>
 <p><a href="#top">Back to top</a></p>
 
 

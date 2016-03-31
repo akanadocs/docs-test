@@ -1,17 +1,17 @@
 ---
 layout: page
-title: Managing a Simple API
-description: A guide to install and configure the API Gateway to manage a simple API
+title: Managing a Simple API Using Policy Manager 7.x
+description: A guide to install and configure the API Gateway to manage a simple API using Policy Manager 7.x.
 product: sp
 category: gs	
-sub-nav-class: 
+sub-nav-class: API Management
 weight: 4
 type: page
-nav-title: Managing a Simple API
+nav-title: Managing a Simple API using Policy Manager 7.x
 ---
 
 
-Getting started: Managing a Simple API 
+Getting Started: Managing a Simple API 
 -------------------------------------
 
 <h3 style="color: grey;">Table of Contents</h3>
@@ -29,8 +29,6 @@ Getting started: Managing a Simple API
 
 
 ### <a name="Overview"></a>Overview
-
-
 
 This document will walk you through the steps to configure containers and then configure the Policy Manager to the Network Director. You will then register the API(s), create a contract, and then send a test request to check that the set up is complete and correct. 
 

@@ -14,7 +14,7 @@ nav-title: Using Alerts Summary
 
 Learn how to view and monitor alerts for a specific service or subsystem.
 
-<a href="../alerts/Alerts_toc.html" class="button secondary">Alerts (Home)</a> <a href="../alerts/using_alert_monitoring.html" class="button secondary">Using Alert Monitoring</a>  <a href="../alerts/using_alert_codes.html" class="button secondary">Using Alert Codes</a> <a href="../alerts/using_management_scripts.html" class="button secondary">Using Management Scripts</a> <a href="../alerts/using_snmp_hosts.html" class="button secondary">Using SNMP Hosts</a><br><br><a href="../alerts/using_email_groups.html" class="button secondary">Using Email Groups</a> 
+<a href="../alerts/alerts_toc.html" class="button secondary">Alerts (Home)</a> <a href="../alerts/using_alert_monitoring.html" class="button secondary">Using Alert Monitoring</a>  <a href="../alerts/using_alert_codes.html" class="button secondary">Using Alert Codes</a> <a href="../alerts/using_management_scripts.html" class="button secondary">Using Management Scripts</a> <a href="../alerts/using_snmp_hosts.html" class="button secondary">Using SNMP Hosts</a><br><br><a href="../alerts/using_email_groups.html" class="button secondary">Using Email Groups</a> 
 
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
 

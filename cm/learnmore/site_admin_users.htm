@@ -1,6 +1,6 @@
 ---
 layout: page
-title: User Accounts | Site Administration | Community Manager Help
+title: User Accounts | Site Administration | Akana API Platform Help
 description: Administer platform user accounts.
 product: cm
 category: learn
@@ -30,16 +30,21 @@ nav-title: User Accounts
   <li><a href="#how_do_i_delete_a_user_account">How do I delete a user account?</a></li>
   <li><a href="#what_user_account_status_displays_for_administrator_invitations">What user account status displays for Administrator invitations?</a></li>
   <li><a href="#how_do_i_search_for_a_user_account">How do I search for a user account?</a></li>
+  <li><a href="#why_dont_i_see_all_user_board_items_on_the_users_board">Why don't I see many Board items when I view the user's Board?</a></li>
   <li><a href="#how_do_i_exclude_roles">How do I exclude specific roles from platform access?</a></li>
   <li><a href="#how_do_i_protect_from_vulnerability_in_signup_and_forgot_password_scenarios">How can I protect from vulnerability in Signup and Forgot Password scenarios?</a></li>
-  <li><a href="#what_are_the_user_roles_for_notifications">What are the user roles for notifications sent out from the platform?</a></li></ol>
+  <li><a href="#what_are_the_user_roles_for_notifications">What are the user roles for notifications sent out from the platform?</a></li>
+  <li><a href="#how_do_i_implement_2fa">How do I implement two-factor authentication for platform users?</a></li>
+  <li><a href="#how_do_i_collect_user_phone">How do I collect the telephone number for platform users in the user interface?</a></li>
+  <li><a href="#how_do_i_add_custom_workflow_action_for_users">I want to add a custom workflow action for users - what do I do?</a></li>
+</ol>
 <div class = "divider1"></div>
 
 
 
 <a name="who_can_manage_user_accounts"></a><h3>Who can manage user accounts?</h3>
 <p>Only Site Administrators can access the <em>Administration &gt; Users</em> page and manage user accounts.</p>
-<p>Only a Site Administrator for the Akana Admin Console can configure the user role setting, which denies access to users with certain roles. For more information,  see <a href="#what_actions_can_i_perform_on_user_accounts">What actions can I perform on user accounts?</a></p>
+<p>Only a Site Administrator for the Akana Administration Console can configure the user role setting, which denies access to users with certain roles. For more information,  see <a href="#what_actions_can_i_perform_on_user_accounts">What actions can I perform on user accounts?</a></p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -47,7 +52,7 @@ nav-title: User Accounts
 <a name="how_do_i_manage_user_accounts_in_the_platform"></a><h3>How do I manage user accounts in the platform?</h3>
 <p>There are two ways to manage platform access:</p>
 <ul>
-  <li><strong>Exclude specific roles from access</strong>: this is controlled by a setting in the Akana Admin Console and requires installation of an add-on, <strong>Akana Scheduled Jobs</strong>. For more information, see <a href="#how_do_i_exclude_roles">How do I exclude specific roles from platform access?</a></li>
+  <li><strong>Exclude specific roles from access</strong>: this is controlled by a setting in the Akana Administration Console and requires installation of an add-on, <strong>Akana Scheduled Jobs</strong>. For more information, see <a href="#how_do_i_exclude_roles">How do I exclude specific roles from platform access?</a></li>
   <li><strong>Manage individual user accounts</strong>: the Site Admin can manage user accounts on the platform via <em>Administration&nbsp;&gt; Users</em>, on the List of Users page. This page provides a summary listing of user account details, statistics about each user's activity on the platform, and actions that a Site Admin can take on a user account. See <a href="#what_actions_can_i_perform_on_user_accounts">What actions can I perform on user accounts?</a></li>
 </ul>
 <p><a href="#top">Back to top</a></p>
@@ -55,7 +60,7 @@ nav-title: User Accounts
 
 
 <a name="what_actions_can_i_perform_on_user_accounts"></a><h3>What actions can I perform on user accounts?</h3>
-<p>The Site Admin can perform the following actions on user accounts:</p>
+<p>On the List of Users (Administration &gt; Users) The Site Admin can perform the following actions on user accounts:</p>
 <ul>
   <li>Add a user: see <a href="#how_do_i_add_a_user">How do I add a user?</a></li>
   <li>Activate: see <a href="#how_do_i_activate_a_user_account">How do I activate a user account?</a></li>
@@ -89,6 +94,15 @@ nav-title: User Accounts
     </tr>
   </tbody>
 </table>
+<p>When the Site Admin clicks through to a specific user account, additional actions are available on the left menu. By using these options the Site Admin can do the following:</p>
+<ul>
+  <li><strong>Details</strong>: View details about the user's account, such as name, email, profile name, and change certain values.</li>
+  <li><strong>Password</strong>: Change the user's password.</li>
+  <li><strong>Security</strong>: View the user's security challenge information.</li>
+  <li><strong>Settings</strong>: View or change the user's notification settings.</li>
+  <li><strong>Board</strong>: View items on the user's Board. You cannot make any changes; this option is for information only. For more information, see <a href="#why_dont_i_see_all_user_board_items_on_the_users_board">Why don't I see many Board items when I view the user's Board?</a></li>
+</ul>
+<p>For instructions about making changes, where applicable, see <a href="#how_do_i_edit_a_user_account">How do I edit a user account?</a></p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -153,7 +167,6 @@ nav-title: User Accounts
 
 
 <a name="how_do_i_add_a_user"></a><h3>How do I add a user?</h3>
-<!--<p>ATMO-12540/12624</p>-->
 <p>The Site Admin can add a new user to the platform by providing first name, last name, and email address. An email notification is sent to the user with login instructions, and a temporary password is generated and issued to the Site Admin.</p>
 <p>The Site Admin must securely convey the password to the user.</p>
 <p>To log in, the user must have the temporary password and must choose a new password. The user might also need to complete other steps such as accepting the platform legal agreement and providing answers to security challenge questions.</p>
@@ -168,11 +181,13 @@ nav-title: User Accounts
       <li>First name</li>
       <li>Last name</li>
       <li>Email address</li>
+      <li>Conditional, depending on platform settings: Country code and phone number</li>
       <li>Password. You can specify a password, or leave the Password/Confirm Password fields empty and the platform auto-generates a password.</li>
     </ul>
     </li>
   
-  <li>Specify whether the user will be forced to change the password when logging in for the first time. Click <strong>Save</strong>.</li>
+  <li>Specify whether the user will be forced to change the password when logging in for the first time. The default behavior is to force the user to change from the default password.</li>
+  <li>Click <strong>Save</strong>.</li>
   <li>At the notification message, <strong>copy the user's temporary password to a secure location</strong>, and then click <strong>OK</strong>.</li>
   <li>Convey the password securely to the user, who will also receive an email notification with login instructions.</li>
 </ol>
@@ -209,7 +224,7 @@ nav-title: User Accounts
   <li>Click the left menu item as needed to access different parts of the user profile. You can edit:
     <ul>
       <li>Details (firstname, lastname, profile name, email address, avatar)</li>
-      <li>Password</li>
+      <li>Password. You can also check the box to force the user to change the password at next login.</li>
       <li>Security (security questions and answers, if required)</li>
       <li>Settings</li>
     </ul>
@@ -311,21 +326,35 @@ nav-title: User Accounts
 
 
 
+<a name="why_dont_i_see_all_user_board_items_on_the_users_board"></a><h3>Why don't I see many Board items when I view the user's Board?</h3>
+<p>As the Site Admin, you can view a user's Board as it appears to the user (<strong>Administration</strong> &gt; <strong>Users</strong> &gt; click through on a specific user &gt; <strong>Board</strong> on left menubar).</p>
+<p>A user might have many apps and API contracts but yet not have many Board items. This is because most Board items post only to the Board of the resource they are applicable to, such as an app or API Board.</p>
+<p>For information on what types of Board items post to which Boards, see <a href="basics_boards.htm#what_types_of_board_items_show_up_on_which_boards">What types of Board items show up on which Boards?</a> (general user help).</p>
+<p>Because Board item types are long-lived, and the permissions of an individual user might change, Board items relating to apps and APIs are not posted to the user's individual Board. The user can see those items by visiting the Board of apps or APIs for which he/she has visibility.</p>
+<p>On a user's Board you might see:</p>
+<ul>
+  <li>Tickets written by the specific user if it doesn't relate to a specific app</li>
+  <li>Group membership invitations</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
 <a name="how_do_i_exclude_roles"></a><h3>How do I exclude specific roles from platform access?</h3>
-<p>You can exclude all users with a specific role or roles from accessing the platform, by installing an add-on and then setting values for a configuration property in the Akana Admin Console.</p>
+<p>You can exclude all users with a specific role or roles from accessing the platform, by installing an add-on and then setting values for a configuration property in the Akana Administration Console.</p>
 <h5>To exclude specific roles from platform access:</h5>
 <ol>
-  <li>Log in to the Akana Admin Console and install the <strong>Akana Scheduled Jobs</strong> feature. For instructions, refer to the Akana Administration Console help.</li>
+  <li>Log in to the Akana Administration Console and install the <strong>Akana Scheduled Jobs</strong> feature. For instructions, refer to the Akana Administration Console help.</li>
   <li>In the Admin Console, go to Configuration &gt; Settings.</li>
   <li>In the Configuration Categories on the left, choose <strong>com.soa.atmosphere</strong>.</li>
   <li>In the right pane, find this property: <strong>atmosphere.config.userRolesDenied</strong>.</li>
-  <li>Set one or more values, using comma separators as needed (additional info re valid values below). You can use Community Manager or Policy Manager roles, as shown below:
+  <li>Set one or more values, using comma separators as needed (additional info re valid values below). You can use Akana AKI Platform or Policy Manager roles, as shown below:
     <pre>Site Administrator,Business Administrator, ApiAdmin, BusinessAdmin, SiteAdmin</pre></li>
   <li> Click <strong>Apply Changes</strong>.</li>
 </ol>
 <p>Valid roles for the <strong>atmosphere.config.userRolesDenied</strong> property are as follows:</p>
 <ul>
-  <li>Community Manager roles: <strong>SiteAdmin</strong>, <strong>BusinessAdmin</strong>, and <strong>ApiAdmin</strong></li>
+  <li>Akana API Platform roles: <strong>SiteAdmin</strong>, <strong>BusinessAdmin</strong>, and <strong>ApiAdmin</strong></li>
   <li>Policy Manager roles: Log in to the Policy Manager console and then choose Workbench. On the left, select your organization, and then on the right, click the Security tab to view information about valid roles.</li>
 </ul>
 <p><a href="#top">Back to top</a></p>
@@ -455,6 +484,46 @@ nav-title: User Accounts
     </tr>
   </tbody>
 </table>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_do_i_implement_2fa"></a><h3>How do I implement two-factor authentication for platform users?</h3>
+<p>You can add a second layer of user security by implementing two-factor authentication, so that as well as logging in with credentials, the platform provides a one-time code that's dynamically generated and sent to the user, and the user then enters that code as part of the login process.</p>
+<p>The platform supports two-factor authentication by the use of an out-of-the-box platform workflow, and by generating a code that's sent to the user.</p>
+<p>The workflow supports sending the code to the user by email. Custom workflow could be implemented to send the code by voice or text, and to offer the user the option to choose how the code is delivered. The workflow does not support the additional functionality to send verification codes by voice or text; this would be an out of band process.</p>
+<p>2FA is available for:</p>
+<ul>
+  <li>Users who have created an account on the platform</li>
+  <li>LDAP users</li>
+</ul>
+<p>By default, the two-factor authentication feature is turned off. However, the platform out-of-the-box installation includes a user workflow that you can use to implement this functionality. The workflow name is: <strong>workflow:definition:user:v2</strong>.</p>
+<p>This user workflow, <strong>default-user-workflow-v2.xml</strong>, guides the user through entering a verification code after normal login is complete. The verification code, passed to the user in an out-of-band process, completes the login process.</p>
+<p>To log in, the user must provide normal credentials and then also enter the two-factor verification code.</p>
+<p>The workflow retrieves values set up for two-factor authentication in a platform Settings page. For information on the Settings page, see <a href="site_admin_settings.htm#how_do_i_configure_settings_for_users_2fa">How do I configure settings for two-factor authentication of users (2FA)?</a></p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_do_i_collect_user_phone"></a><h3>How do I collect the telephone number for platform users in the user interface?</h3>
+<p>You can modify the user interface so that pages that collect user information, such as the user's profile page (<strong>Profile</strong> &gt; <strong>Details</strong>) or the page where the Site Admin adds a user (<strong>Administration</strong> &gt; <strong>Users</strong> &gt; <strong>Add</strong>), include a telephone number field.</p>
+<p>If the telephone number field is present, a field for the telephone country code is also present, and both are required fields.</p>
+<p>To enable these fields in the platform user interface, you must first load the country codes that you want to support, in the database. </p>
+<p> The database table name is TENANT_COUNTRY_CODES.</p>
+<p>Once you've done that, the telephone number field automatically appears on applicable user pages.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_do_i_add_custom_workflow_action_for_users"></a>
+<h3>I want to add a custom workflow action for users - what do I do?</h3>
+<p>The platform's user workflow can be extended with additional functions to add or modify the capabilities of the user interface by means of a custom workflow.</p>
+<p>If you add custom actions that users can perform, they will be available on the user profile page (<strong>Profile</strong> &gt; <strong>Details</strong>). If you add custom actions that a Site Admin can perform on a specific user, they will be available form the User Details page that the Site Admin sees (<strong>Administration</strong> &gt; <strong>Users</strong> &gt; click through on a specific user).</p>
+<p>For example, you could implement a custom workflow that provides the full set of capabilities for self-sign users and a restricted set of capabilities for users added by the Site Admin (or vice versa). You could then manage the capabilities of these two basic user groups via custom workflow; for example, users added by the Site Admin can add both apps and APIs and self-sign users can only add apps. You could implement functionality so that the Site Admin can click through to the <strong>Details</strong> page for a specific user and switch that user between the two groups. This is an example of a custom workflow action that's available only to the Site Admin, who can perform this custom workflow action from the User Details page (<strong>Administration</strong> &gt; <strong>Users</strong> &gt; click through on a specific user).</p>
+<p>The example below illustrates the above scenario, as an example of custom functionality that you could enable via custom workflow.</p>
+<p><img src="assets/sa_wf_ex01.png" width="657" height="362" alt="sample custom user workflow action" /></p>
+<p>Up to two custom workflow actions are displayed as buttons, as shown above. If there are more than two, they are displayed in a drop-down list.</p>
+<p>If you want to implement custom workflow actions, and need assistance, <a href="basics_support.htm#how_do_i_contact_technical_support">contact Technical Support</a> for additional information. You can also check the workflow documentation to check which custom functions are available: see <a href="http://docs.akana.com/cm/assets/CM_WP_Workflow.pdf" title="Customizing Workflows" target="_blank">http://docs.akana.com/cm/assets/CM_WP_Workflow.pdf</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
 

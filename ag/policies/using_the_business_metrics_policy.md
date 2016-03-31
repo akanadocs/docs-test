@@ -4,165 +4,234 @@ title: Using the Business Metrics Policy
 description: Learn how to specify what business metrics should be gathered from the contents of messages being exchanged.
 product: ag
 category: learn
-sub-nav-class: Operational Policies
+sub-nav-class: Integration Policies
 weight:	7
 type: page
 nav-title: Using the Business Metrics Policy
 ---
 
 ## Using the Business Metrics Policy
-Learn how to specify what business metrics should be gathered from the contents of
-messages being exchanged.
+Learn how to specify what business metrics should be gathered from the contents of messages being exchanged.
 
+<a href="policy_management.htm" class="button secondary">Managing Policies</a>  <a href="policies_use_case_toc.html" class="button secondary">Use Cases</a> <a href="using_the_business_service_level_policy.html" class="button secondary">Using the Business Service Level Policy</a>
 
-<h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
+<h5 class="stamp">Supported Platforms: 8.0 and greater.</h5>
+
 ### Table of Contents
 <div id="toc-marker"></div>
 * [Introduction](#introduction)
-* [Configuration](#configuration)
-	* [Data Set Selection](#data-set-selection)
-		* [Dimensions](#dimensions)
-		* [Metrics](#metrics)
-	* [Variable Definition](#variable-definition)
-		* [Sample Messages](#sample-messages)
-		* [Variables](#variables)
-		* [Extraction Instructions](#extraction-instructions)
-		* [Derivation Instructions](#derivation-instructions)
+* [Prerequisites](#prerequisites)
+* [Configuration Options](#configuration-options)
+	* [Select Data Set](#select-data-set)
+	* [Define Payload Structures](#define-payload-structures)	
+	* [Define Variables](#define-variables)
+	* [Define Dimensions](#define-dimensions)
+	* [Define Metrics](#define-metrics)
+	* [Extraction Examples](#extraction-examples)
+	* [Derivation Expression Types](#derivation-expression-types)
+	* [Test Message](#test-message)
 
 ### Introduction
 
-The Business Metrics Policy specifies what business  specific metrics should be gathered from the contents of the messages being exchanged. It differs from an Operational Metrics Policy in that the  information collected is not general to all messages but very specific using  data from message payloads, headers, or URLs. 
+The Business Metrics Policy specifies what business specific metrics should be gathered from the contents of the messages being exchanged. It differs from an Operational Metrics Policy in that the information collected is not general to all messages but very specific using data from message payloads, headers, or URLs. 
 
-The Business Metrics Policy Details displays a summary of the policy configuration including:
+The *Business Metrics Policy Details* displays a summary of the policy configuration including:
 
-* Data Set - Name of the data set the policy collects metrics for.
-* Dimensions - List of dimensions the policy is collecting.
-* Metrics - List of metrics the policy is collecting. 
+* **Data Set** - Name of the data set the policy collects metrics for.
+* **Dimensions** - List of dimensions the policy is collecting.
+* **Metrics** - List of metrics the policy is collecting. 
+* **Payload Structures** - List of payload structures that will be extracted from the request or response.
 
-### Configuration
+<a href="#top">back to top</a>
 
-Let's take a quick walk-through of the Business Metrics Policy configuration process to get your started.
+### Prerequisites
 
-#### Data Set Selection
+  * Completion of the [Policy Manager / Envision Integration Installation](http://docs.akana.com/docs-test/ev/envision_install/installing_pm_env_integration_v11.html). Note that this policy is used with the Envision product and is installed as part of the *Envision Console Extension Feature* which is included in this installation. . 
+  * MongoDB must be started to log into the *Policy Manager Management Console* and modify a Business Metrics Policy. 
+  * A data set must be previously defined so it can be selected as part of the policy configuration. Data sets can be defined using the Envision Console, or can be imported into MongoDB. 
 
-* **Data Set Pull Down** - Displays the data sets that can be viewed by the user. The one selected determines what dimensions and metrics will be collected. The tables below are filled with the information of the data set selected in the pull down
+### Configuration Options
 
-##### Dimensions
-Displays the dimensions of the selected data set. The columns are as follows:
-* **Name** - Read only column displaying the name of the dimension.
-* **Description** - Read only column displaying the description of the dimension.
-* **Type** - Read only column displaying the type of the dimension. Possible types are Currency, Number, Location, Text, Date, and Multi-Valued (where values could be of the other types already listed).
+#### Select Data Set
 
-##### Metrics
-Displays the metrics of the selected data set.
-* **Name** - Read only column displaying the name of the metric.
-* **Description** - Read only column displaying the description of the metric.
-* **Type** - Read only column displaying the type of the metric. Possible types are Currency, Number, Location, Text, Date, and Multi-Valued (where values could be of the other types already listed).
+This screen allows you to select the data set the policy will define the collection of metrics for and then define data you want to *extract* or *derive* from them. Data displayed for data sets is read only.
 
-#### Variable Definition
+##### **Data Set Drop-Down** 
 
-This page is the second page of the wizard used to modify a business metrics policy. This purpose of this page is to define variables that can be used when defining dimensions or metrics on later pages of the wizard. No variables are required so the page can be skipped over. Descriptions of the page components are as follows:
+* Allows you to select a data set. Available data sets are those created using the *Envision Console* or imported into MongoDB. 
+* The data set selected determines what Dimensions and Metrics will be collected. 
+* You can view the Dimensions and Metrics of the selected data set in the read-only tables.
 
-##### Sample Messages
+<a href="#top">back to top</a>
 
-* **Sample Messages Frame** – Frames the sample messages the user can type in and use while testing expressions. The contents of this frame are persisted across pages in the wizard so they don’t have to be re-entered over and over again. Any changes made on the current page are available on subsequent pages. Sample messages are optional so nothing need be entered in this frame.
-* **URL Text Box** – Text box in which a user can type in a sample URL including query parameters.
-* **Request Tab** – Text area in which a user can type in a sample request message.
-* **Response Tab** – Text area in which a user can type in a sample response message.
-* **Fault Tab** – Text area in which a user can type in a sample faultText area in which a user can type in a sample request message.
+#### Define Payload Structures
 
-##### Variables
+This screen allows you to configure payload structures. By default, the entire request and response body content (payloads) can be used as the context from which to extract information. However in some cases the payloads may be complex with 0 to many nested structures.
 
-* **Variables Table** – Table that holds the variables used by other variables, dimensions, or metrics. The cells of the table are editable.
-	* **Completion** – Displays a check mark if the variable has been completed by filling either extraction or derivation information for it.
-	* **Name** – Name of the variable.
-	* **Description** – Optional description of the variable.
-	* **Type** – Pull down for available types of variables. Available types are Currency, Number, Location, Text, Date, and Multi-Valued (where values could be of the other types already listed).
-* **Add Link** – When selected a new row in the Variables Table is created.
-* **Delete Link** – When selected the highlighted row is deleted. Any variable, dimension, or metric definitions that reference the deleted variable would be deleted.
-* **Extract Radio Button** – Radio button that when selected displays the Extraction Instructions for the highlighted row in the Variables table. The radio button is only enabled if a row is highlighted.
-* **Derive Radio Button** – Radio button that when selected displays the Derivation Instructions for the highlighted row in the Variables table. The radio button is only enabled if a row is highlighted.
-* **Apply Button** – Button that when selected applies the values in the Extraction instructions or Derivation Instructions to the selected row in the Variables Table. The button is only enabled if a row is highlighted.
+* When extracting multiple items from nested structures it may be important to preserve the relationships between those items. 
+* For example, a purchase transaction may have multiple nested item structures with both a name and a price. 
+* You could collect two separate arrays of names and prices easily, but if you want to match the prices collected with their names you will need to identify the item as a payload structure on the page.
 
-##### Extraction Instructions
+You define a Payload structure using the **Add** function, and identify what portion of the message will be extracted (i.e., Source) using a path language. 
 
-![Business Metrics Policy](images/business_metrics_policy_extraction1.jpg "Extraction Instructions")
+##### Configuration Options
 
-* **Source Pull Down** – Pull down for selecting the Request, Response, Fault, Header, Query Param, or Path Param.
-* **Multi-Valued Check Box** – Check box that when selected enables the Multi-Valued Aggregation Pull Down.
-* **Multi-Valued Aggregation Pull Down** – Pull Down of aggregation functions for multi-valued extraction results. The options that are always available Count, First, Last, Contains, Exclude and Include. The additional options that are available for items of type Number are Sum, Avg, Count, Max, Min, Equal To, Greater Than, and Less Than. The additional options that are available for items of type Text are Begins With and Ends With. The additional options that are available for items of type Date are Max, Min, Greater Than, and Less Than. Only enabled when the Multi-Valued Check Box is selected.
-* **Aggregation Comparator Pull Down** – Pull Down of variables to use if the Multi-Valued Aggregation Pull Down value is either Equal To, Begins With, Ends With, Contains, Exclude, Include, Greater Than, or Less Than. See image below. The pull down is not displayed if one of these values is not selected.
+* **Add** - Define a payload structure by specifying Name and optional Description. 
+* **Delete** - Delete a payload structure by highlighting row.
+* **Source** - Identify if the structure will be extracted from the Request, Response, or Fault portion of a message. 
+* **Path** - Specify the method used to identify the location of the structure using XPath, JsonPath, or RegEx path languages. 
+* **Test Message** - Specify the test message to be used for testing expressions in the text box. Test messages are optional.
+* **Apply** – Button that applies the values in the Extraction instructions or Derivation Instructions to the selected row in the Payload Structures Table. 
 
-![Business Metrics Policy](images/business_metrics_policy_extraction2.jpg "Extraction Instructions")
+<a href="#top">back to top</a>
 
-* **Path Expression Language Pull Down** – Pull Down for selecting the language for specifying the path in the message to extract. The possible options are XPath, JSONPath, and Regex. Only displayed when Source is Request, Response, or Fault.
-* **Path Expression Text Box** – Text box for entering the path expression for extraction. Only displayed when Source is Request, Response, or Fault.
-* **Path Test Button** – Button that when pressed will attempt to perform the expression in the Path Expression Text Box against the sample message identified by the Source Pull Down and perform any aggregation functions if multi-valued.
-* **Path Result Text Box** – Text box that will display the results of the test attempted by selecting the Path Test Button. The text box is not editable.
+#### Define Variables
 
-![Business Metrics Policy](images/business_metrics_policy_extraction3.jpg "Extraction Instructions")
+You can optionally define variables to identify what to extract from the payload. Variables can be used later in an expression for deriving dimension or metric values.
 
-* **Header/Param Name Text Box** – Text box for entering the header, query parameter, or path parameter name to extract from. Only visibile if the Source is Header, Query Param, or Path Param.
-* **Param Test Button** – Button that when pressed will attempt to extract the query parameter from the sample URI text box and perform any aggregation functions if multi-valued. Only displayed when the Source is Query Param.
-* **Param Result Text Box** – Text box that will display the results of the test attempted by selecting the Param Test Button. The text box is not editable.
+* You begin by adding a variable and assigning a particular type (Currency, Number, or Text). 
+* You can “extract” data from a selected “source” (e.g., Payload, Header, or Param), or “derive” data by selecting an expression type and defining an expression of how you want to extract data. 
+* Payload source types provide an option for testing the response message. XPath, JsonPath, and RegEX examples are provided for Payload source options, and expression examples are provided for simple and spring expression types. 
 
-![Business Metrics Policy](images/business_metrics_policy_extraction4.jpg "Extraction Instructions")
+##### Configuration Options
 
-* **Format Text Box** – Text box for entering the format of data values that will be extracted. The format is constructed using Y for year, M for month, D for day, h for hour, m for minute, s for second, S for millisecond, and Z for timezone. Only displayed if data item is of type Date.
+* **Variables Table** – Holds the variables used by other variables, dimensions, or metrics. The table cells are editable.
+	* **Name** – Variable name. 
+	* **Description** – Variable description. This field is optional.
+	* **Type** – Drop down menu of available types of variables including 3 LETTER COUNTRY CODE, AREA NAME, AREA POSTAL CODE, CITY, CONTINENT, COUNT, COUNTRY ABBREVIATION NAME, COUNTY, CURRENCY, DATE, IP-ADDRESS, KEY-NAME, LAT-LONG, NUMBER, SIZE, STATE, TEXT, TIME.
+* **Add** – Adds a new row in the Variables table. 
+* **Delete** – Deletes the selected row. Any variable, dimension, or metric definitions that reference the deleted variable will be deleted.
+* **Extract** – Radio button displays the Extraction Instructions for the highlighted row in the Variables table. 
+	* **Source** – Drop down for selecting the Request Header, Response Payload, Response Header, Fault Payload, Fault Header, Form Param, Path Param, and Query Param.
+	* **Path** - Specify the method used to identify the location of the structure using XPath, JsonPath, or RegEx path languages. 
+	* **Multi-Valued** – Check-box enables the Multi-Valued Aggregation Pull. Options include Number of Records, Get First, and Get Last.
+	* **Name (text box)** - Enter query or path parameter name to extract from. Only visible if the Source is Query Param, Form Param, or Path Param.
+	*  **Name (drop-down)** - Select area of header to extract from. Only visible if the Source is Header.
+	* **Test Message** -  Specify the test message to be used for testing expressions in the text box. Test messages are optional.
+* **Derive** – Radio button that displays the Derivation Instructions for the highlighted row in the Variables table. Options include Constant, Simple Expression, Spring Expression, and Operational Dimension. 
+	* **Derivation** – For Constant, Simple Expression, or Spring Expression options, enter a definition in the text box. For Operational Metric or Operational Dimension select a metric or dimension from the drop-down.
+	* Use the **Test** button to perform the expression in the Derivation Text Box against the sample message identified by the Source Pull Down. 
+	* The results will display in the text box. 
+* **Apply** – Button that applies the values in the Extraction or Derivation Instructions to the selected row in the Variables table. 
+* **Clear** - Clears the contents of the selected table row. 
 
-##### Derivation Instructions
+<a href="#top">back to top</a>
 
-![Business Metrics Policy](images/business_metrics_policy_derivation1.jpg "Extraction Instructions")
+#### Define Dimensions
 
-* **Constant Radio Button** – Radio Button that when selected indicates the content of the Derivation Text Box is a constant value. A constant value can be:
+A dimension is an organization property of a transaction. Merchant or style is an example of a dimension. Metrics are partitioned or grouped into dimensions. This section allows you to define the constructions of dimensions in the data set by selecting one or more dimensions that you would like to map, and defining how to collect the data into the data set.
+
+* You can “extract” data from a selected “source” (e.g., Payload, Header, or Param), or “derive” data by selecting an expression type and defining an expression of how you want to extract data. 
+* Payload source types provide an option for testing the response message. XPath examples are provided for Payload source options, and expression examples are provided for simple and spring expression types.
+* You can also use Variables you defined in the previous section in your expressions. 
+
+##### Configuration Options
+
+* **Dimensions Table** – Table that holds the dimensions collected. The cells of the table are not editable. They are filled when the page is displayed based on the data set selected on the Select Data Set page. 
+	* **Name** – Dimension name.
+	* **Description** – Dimension description. This field is optional. 
+	* **Type** – Dimension type. Possible types include Currency, Number, Location, Text, Date, and Multi-Valued.
+* **Extract** – Radio button displays the Extraction Instructions for the highlighted row in the Dimensions table. 
+	* **Source** – Drop-down for identifying if the dimension will be extracted from the Request Header, Response Payload, Response Header, Fault Payload, Fault Header, Form Param, Path Param, or Query Param portion of the message. 
+	* **Name (text box)** - Enter query or path parameter name to extract from. Only visible if the Source is Query Param, Form Param, or Path Param.
+	* **Name (drop-down)** - Select area of header to extract from. Only visible if the Source is Header.
+	* **Path** - Specify the method used to identify the location of the structure using XPath, JsonPath, or RegEx path languages. 
+	* **Multi-Valued** – Check-box enables the Multi-Valued Aggregation Pull. Options include Number of Records, Get First, and Get Last.
+	* **Test Message** -  Specify the test message to be used for testing expressions in the text box. Test messages are optional.
+* **Derive** – Radio button that displays the Derivation Instructions for the highlighted row in the Dimensions table. Options include Constant, Simple Expression, Spring Expression, and Operational Dimension. 
+	* **Derivation** – For Constant, Simple Expression, or Spring Expression options, enter a definition in the text box. For Operational Metric or Operational Dimension select a metric or dimension from the drop-down. 
+	* Use the **Test** button to perform the expression in the Derivation Text Box against the sample message identified by the Source Pull Down. 
+	* The results will display in the text box. 
+* **Apply** – Button that applies the values in the Extraction or Derivation Instructions to the selected row in the Dimensions table. 
+* **Clear** - Clears the contents of the selected table row. 
+
+<a href="#top">back to top</a>
+
+#### Define Metrics
+
+Metrics represent numeric values such as a price or quantity. The Metrics section allows you to select one or more Metrics that you would like to map, and define how to collect the data into the data set. 
+
+* You can “extract” data from a selected “source” (e.g., Payload, Header, or Param), or “derive” data by selecting an expression type and defining an expression of how you want to extract data. 
+* Payload source types provide an option for testing the response message. XPath examples are provided for Payload source options, and expression examples are provided for simple and spring expression types. 
+* You can also use Variables you defined in the previous section in your expressions. 
+
+The Metrics section displays the following read-only metrics information of the selected data set:
+
+* **Metrics Table** – Table that holds the metrics collected. The cells of the table are not editable. They are filled when the page is displayed based on the data set selected on the Select Data Set page. 
+	* **Name** - Metric name. 
+	* **Description** - Metric description. 
+	* **Type** - Metric type. Possible types include Currency, Number, Location, Text, Date, and Multi-Valued.
+***Extract** – Radio button displays the Extraction Instructions for the highlighted row in the Metrics table. 
+	* **Source** – Drop-down for identifying if the metric will be extracted from the Request Header, Response Payload, Response Header, Fault Payload, Fault Header, Form Param, Path Param, or Query Param portion of the message.
+	* **Name (text box)** - Enter query or path parameter name to extract from. Only visible if the Source is Query Param, Form Param, or Path Param.
+	*  **Name (drop-down)** - Select area of header to extract from. Only visible if the Source is Header.
+	* **Multi-Valued** – Check-box enables the Multi-Valued Aggregation Pull. Options include Number of Records, Get First, Get Last, Get Maximum, Get Minimum, Add All
+	* **Path** - Specify the method used to identify the location of the structure using XPath, JsonPath, or RegEx path languages. 
+	* **Test Message** -  Specify the test message to be used for testing expressions in the text box. Test messages are optional.
+* **Derive** – Radio button that displays the Derivation Instructions for the highlighted row in the Metrics table. Options include Constant, Simple Expression, Spring Expression, and Operational Metric. 
+	* **Derivation** – For Constant, Simple Expression, or Spring Expression options, enter a definition in the text box. For Operational Metric or Operational Dimension select a metric or dimension from the drop-down. 
+	* Use the **Test** button to perform the expression in the Derivation Text Box against the sample message identified by the Source Pull Down. 
+	* The results will display in the text box. 
+* **Apply** – Button that applies the values in the Extraction or Derivation Instructions to the selected row in the Dimensions table. 
+* **Clear** - Clears the contents of the selected table row. 
+
+<a href="#top">back to top</a>
+
+### Extraction Examples
+
+#### Request, Response, and Fault Payload Examples
+
+*  XPath Example
+
+	![Request Payload XPath Example](images/bus_metrics_req_payload_xpath_example.jpg "Request Payload XPath Example")
+
+*  JsonPath Example
+
+	![Request Payload JSON Example](images/bus_metrics_req_payload_json_example.jpg "Request Payload JSON Example")
+
+*  RegEX Example
+
+	![Request Payload RegEX Example](images/bus_metrics_req_payload_regex_example.jpg "Request Payload RegEX Example")
+
+<a href="#top">back to top</a>
+
+### Derivation Expression Types
+
+After you select the Derive radio button, the following expression types can be selected.
+
+* **Constant** – Indicates the content of the Derivation Text Box is a constant value. A constant value can be:
 	* A number
 	* A string
 	* An array of numbers/strings in the form of: 1, 2, 3 or “ a”, “b”, “c”
 	* A map of numbers/strings to numbers/strings in the form of: “a”=1, 2=”b”, “c”=”d”
-* **Expression Radio Button** – Radio Button that when selected indicates the content of the Derivation Text Box is a mathematical expression. The functions available are addition, subtraction, multiplication, division, and modulus.
-* **Derivation Text Box** – Text box for entering a constant’s definition or an expression depending on the radio button selected.
-* **Derivation Test Button** – Button that when pressed will attempt to perform the expression in the Derivation Text Box against the sample message identified by the Source Pull Down. Only visible if the Expression Radio Button is selected.
-* **Derivation Result Text Box** – Text box that will display the results of the test attempted by selecting the Derivation Test Button. The text box is not editable. Only visible if the Expression Radio button is selected.
+* **Simple Expression** – Indicates the content of the Derivation Text Box is a mathematical expression. The functions available are addition, subtraction, multiplication, division, and modulus.
 
-#### Dimension Definition
+	![Simple Expression Example](images/bus_metrics_simple_expression_example.jpg "Simple Expression Example")
 
-This page is the third page of the wizard used to modify a business metrics policy. This purpose of this page is to define the construction of dimensions in the data set. 
+* **Spring Expression** – Indicates the content of the Derivation Text Box is a valid expression string. 
 
-Descriptions of the page components are as follows:
+	![Spring Expression Example](images/bus_metrics_spring_expression_example.jpg "Spring Expression Example")
 
-##### Sample Messages
+* **Operational Dimension** – Allows you to define the derive instructions for the selected Dimension by selecting a property of the data set from a drop-down menu.  
 
-* **Sample Messages Frame** – Frames the sample messages the user can type in and use while testing expressions. The contents of this frame are persisted across pages in the wizard so they don’t have to be re-entered over and over again. Any changes made on the current page are available on subsequent pages.
-* **URL Text Box** – Text box in which a user can type in a sample URL.
-* **Request Tab** – Text area in which a user can type in a sample request message.
-* **Response Tab** – Text area in which a user can type in a sample response message.
-* **Fault Tab** – Text area in which a user can type in a sample faultText area in which a user can type in a sample request message.
-* **Response Tab** – Text area in which a user can type in a sample response message.
-* **Fault Tab** – Text area in which a user can type in a sample fault message.
-
-##### Dimensions
-
-* **Dimensions Table** – Table that holds the dimensions collected. The cells of the table are not editable. They are filled when the page is displayed based on the data set selected on the Data Set page. 
-	* **Completion** – Displays a check mark if the dimension has been completed by filling either extraction or derivation information for it.
-	* **Name** – Name of the dimension.
-	* **Description** – Optional description of the dimension.
-	* **Type** – Type of the dimension.
-* **Extract Radio Button** – Radio button that when selected displays the Extraction Instructions for the highlighted row in the Dimensions table. The radio button is only enabled if a row is highlighted.
-* **Derive Radio Button** – Radio button that when selected displays the Derivation Instructions for the highlighted row in the Dimensions table. The radio button is only enabled if a row is highlighted.
-* **Apply Button** – Button that when selected applies the values in the Extraction instructions or Derivation Instructions to the selected row in the Dimensions Table. The button is only enabled if a row is highlighted.
-
-#### Metrics Definition
-
-#### Step 2: Add Policy
-1. In Policy Manager, you can create a Business Metrics Policy instance using <strong>Add Policy</strong> in the <em>Policies &gt; Operational Policies</em> section. 
- 
-#### Step 3: Attach Policy
-After you have saved your policy you can  attach it to a web service  or operation that you would like to capture roll-up data for.
-
-#### Step 4: Test Policy and View Monitoring Data
-
-After you attached the Business Metrics Policy to a service or operation, send a request to your service and go to the *Services \> Monitoring* section to view the results for Logs, Real Time Charts, and Historical Charts. 
+	![Operational Dimension Example](images/bus_metrics_pol_op_dimension.jpg "Operational Dimension Example")
 
 
+<a href="#top">back to top</a>
 
+##### Test Message
+
+* **Test Message** – Specify the test message to be used for testing expressions in the text box. Changes made on the current page are available on subsequent pages. Test messages are optional. *Option available for Request Payload, Response Payload, and Fault Payload.*  
+* **URL** – Specify a sample URL including query parameters. *Option available for Path Param.* 
+
+<a href="#top">back to top</a>
+
+### Configuration
+
+Refer to the following Business Metrics Policy use cases for walk-through tutorials on adding and configuring a Business Metrics Policy. 
+
+* [Extracting Data Using Path Param](bus_metrics_policy_use_case_extract_data_using_path_param.html) 
+* [Extracting Data Using XPath, JsonPath, or Regex](bus_metrics_policy_use_case_extract_data_using_xpath_jsonpath_regex.html)
+
+<p></p>
 <a href="#top">back to top</a>
