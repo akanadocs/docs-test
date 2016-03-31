@@ -27,6 +27,8 @@ nav-title: Database Maintenance
 
 This document describes the types of data that require regular archiving and ways to implement it.
 
+**Note:** This document only applies to versions 7.x of the Policy Manager and Community Manager products. Slight changes to the database schema have been introduced in 8.x that will require updating the scripts below.
+
 ### <a name="data"></a>Types of Volatile Data
 
 There are several key tables that require regular maintenance:
@@ -49,7 +51,7 @@ There are several key tables that require regular maintenance:
 | MO\_ROLL\_ORG_D | stores daily rollups per business (organization) derived by the Policy Manager Scheduled Jobs
 
 
-** Note: these tables can potentially contain VERY large quantities of data and will require special handling such as partitioning
+**Note:** these tables can potentially contain VERY large quantities of data and will require special handling such as partitioning
 
 
 #### Community Manager Tables:
@@ -308,6 +310,7 @@ CREATE TABLE MO_USAGEDATA_NEW (
 CREATE  INDEX MO_USAGEDATA_PK1 ON MO_USAGEDATA_NEW(REQUESTDTS DESC,REQUESTMILLIS DESC);
 CREATE  INDEX MO_USAGEDATA_PK2 ON MO_USAGEDATA_NEW(OPERATIONID);
 CREATE  INDEX MO_USAGEDATA_PK3 ON MO_USAGEDATA_NEW(CONTRACTID);
+CREATE  INDEX MO_USAGEDARA_IX1 ON MO_USAGEDATA_NEW(SERVICEID);
 
 ```
 
@@ -412,6 +415,8 @@ CREATE TABLE MO_USAGEDATA_NEW (
 CREATE INDEX MO_USAGEDATA_PK1 ON MO_USAGEDATA_NEW(REQUESTDTS DESC,REQUESTMILLIS DESC);
 CREATE INDEX MO_USAGEDATA_PK2 ON MO_USAGEDATA_NEW(OPERATIONID);
 CREATE INDEX MO_USAGEDATA_PK3 ON MO_USAGEDATA_NEW(CONTRACTID);
+CREATE INDEX MO_USAGEDARA_IX1 ON MO_USAGEDATA_NEW(SERVICEID);
+
 
 CREATE TABLE MO_USAGE_NEXTHOP_NEW (
 	NEXTHOPID BIGINT AUTO_INCREMENT NOT NULL,
