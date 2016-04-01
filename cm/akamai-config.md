@@ -18,117 +18,160 @@ This document will walk you through setting up all the rules, and the fields wit
 ### Prerequisite
 This document assumes that you have an Akamai account and know how to use their system. 
  
-##Creating a new Property
-Do not use the Luna Property  Manager Assistant.
+## Creating new Properties
 
-###Default Rule Settings
+You need to create two properties:
+
+•	One for the portal - (typically with an origin in the *.eap.soa.com or *.apiportal.akana.com domains)
+
+•	One for the APIs - (typically with an origin in the *.broker.soa.com or *.gateway.akana.com domains)
+
+Note: Do not use the Luna Property  Manager Assistant.
+
+## Creating a new Property for Portal
+
+### Default Rule Settings
 In the "Property Version Information" section, check the Security Options: **Secure (Customer Certificate)**
 
 
 
-Origin Server Field  | Input
+Origin Server | Input
 ------------- | -------------
 Origin Type  | Your Origin
-Origin Server Hostname  | **eap.soa.com**
+Origin Server Hostname  | [Your issued domain here] 
 Forward Host Header | Incoming Host Header
 Cache Key Hostname | **Incoming Host Header**
-Support Gzip Compression | Yes
+Supports Gzip Compression | Yes
 Send True Client IP Header | **Yes**
-True Client Header Name | True-Client-IP
+True Client IP Header Name | True-Client-IP
+Allow clients To Set True Client IP Header | Yes
 
 
-Origin SSL Certificate Verification Field | Input
+Origin SSL Certificate Verification | Input
 ------------- | -------------
 Verification Settings | **Choose Your Own (Recommended)**
 Match CN/SAN To | \{\{Forward Host Header\}\}; **\*.eap.soa.com;** \{\{Origin Hostname\}\} 
 Trust | Akamai-managed Certificate Authorities Sets
-Akamai-managed Certifcate Authority Sets | Akamai Certificate Store
+Akamai-managed Certificate Authority Sets | Akamai Certificate Store
 
-Ports Field | Input
+
+Ports | Input
 ------------- | -------------
 HTTP Port | 80
 HTTPS Port | 443
 
-Content Provider Code Field | Input
-------------- | -------------
-Content Provider Code | **Your Akamai-provided code**
 
-Caching Field | Input
+Caching  | Input
 ------------- | -------------
 Caching option | No Store
 
-SureRoute Field | Input
+
+SureRoute | Input
 ------------- | -------------
 Enable | On
 Optimization Type | Performance
-SureRoute Test Object | **/sureroute-test-object.html**
-Forward HOST Header | Same and incoming Host header
+SureRoute Test Object | **sureroute/sureroute-test-object.html**
+Forward HOST Header | Same as incoming Host header
 Cache Life for Race Results | 30 minutes
 Force SSL Protocol for Races | Off
-Race Results Key | Race Destination (default) 
+Race Result Key | Race Destination (default) 
 
-Tiered Distribution Field | Input
+
+Tiered Distribution | Input
 ------------- | -------------
 Enable | On
 
-Prefetch Objects Field | Input
+
+Prefetch Objects | Input
 ------------- | -------------
 Enable | On
 
-Allow POST Field | Input
+
+Allow POST | Input
 ------------- | -------------
 Behavior | Allow
 Allow without Content-Length | **Allow**
 
-### Add Behaviors to the Default Rule
-Click the **Add Behavior** to add the following behaviors:
 
-* Allow DELETE
-* Allow PUT
+Allow DELETE | Input
+------------- | -------------
+ | Allow
+
+
+Allow PUT | Input
+------------- | -------------
+ | Allow
+
+
+
 
 ### Content Compression Settings
+
 On the left side click on **Content Compression** and input the following:
 
-Content Compression Field | Input
+Content Compression | Input
 ------------- | -------------
 Criteria | Match All
 IF | Content Type
 is one of | **text/html\*;  text/css\*; 	application/x-javascript\*; 	application/json; text/javascript**
-Behaviors - Compress Response | Always
+
+
+Behaviors | Input
+------------- | ------------- 
+Last Mile Acceleration (GZIP Compression) | 
+Compress Response | Always
+
 
 ### Static Content Settings
+
 On the side side click **Static Content** and enter the following: 
 
-Static Content Field | Input
+Static Content  | Input
 ------------- | -------------
-Criteria | **Match Any**
-IF | File Extension 
+Criteria   | **Match Any**
+IF   | File Extension 
 Is one of | **aif; aiff; au; avi; bin; bmp; cab; carb; cct; cdf; class; css; doc; dcr; dtd; exe; flv; gcf; gff; gif; grv; hdml; hqx; ico; ini; jpeg; jpg; js; mov; mp3; nc; pct; pdf; png; ppc; pws; swa; swf; txt; vbs; w32; wav; wbmp; wml; wmlc; wmls; wmlsc; xsd; zip; properties; html; htm; json**
-OR Path matches one of | **/\*/avatar; /\*/metadata**
 
-Caching Fields | Input
+OR 
+
+Path matches one of | **/\*/avatar; /\*/metadata**
+
+#### Behaviors
+
+Caching | Input
 ------------- | -------------
 Caching Option | **Honor Origin Cache Control and Expires**
 Force Revalidation of Stale Objects | Serve stale if unable to validate
 Default Max-age | **7 Days**
 Prefetch Objects Enable | Off
-Prefetchable Objects Enable | **Off**
 
 
-###Dynamic Content settings
-Dynamic Content fields | Input
+### Dynamic Content settings
+Dynamic Content | Input
 ------------- | -------------
 Criteria | Match All
 IF | "Response cacheability" "is not" "cacheable"
-Behaviors - Downstream Cacheability Caching option | Pass cacheability headers from origin
 
-###Add rule to Redirect to HTTPS
-Click the **Add Rule** button and choose **Redirect to HTTPS** to enter the parameters for this rule: 
 
-Redirect to HTTPS fields | Input
+#### Behaviors
+Downstream Cacheability | Input
+------------- | -------------
+Caching option | Pass cacheability headers from origin
+
+### Add rule to Redirect to HTTPS
+Click the **Add Rule** button and choose **Redirect to HTTPS** to enter the parameters for this rule.
+
+Redirect to the same URL on HTTPS protocol, issuing a 301 response code (Moved Permanently). You may change the response code to 302 if needed. 
+
+Redirect to HTTPS | Input
 ------------- | -------------
 Criteria | Match All
 IF | Request Protocol - HTTP
+
+
+#### Behaviors
+Redirect | Input
+------------- | -------------
 Redirect Type | Default
 Destination Protocol | HTTPS
 Destination Hostname | Same as request
@@ -136,18 +179,113 @@ Destination Path | Same as request
 Include Query String | Yes
 Redirect Status Code | 301 Moved Permanently
 
-###Add rule for Advanced Metadata
-By default, Akamai does not support chunked encoding on HTTP POST requests. To enable this suport, contact Akamai support and ask them to enable chunked-encoding by adding an Advanced XML rule:
+### Add rule for Advanced Metadata
 
-````
-<edgeservices:enable-chunked-post>
-	on
-</edgeservices:enable-chunked-post>
-````
+Advanced Metadata | Input
+------------- | -------------
+Criteria | Match All
 
 
+#### Behaviors
+Advanced | Input
+------------- | -------------
+Advanced XML | <edgeservices:enable-chunked-post> on </edgeservices:enable-chunked-post>
 
 
+## Creating a new Property for API
+
+
+### Default Rule Settings
+
+Origin Server | Input
+------------- | -------------
+Origin Type  | Your Origin
+Origin Server Hostname  | [Your issued domain here]
+Forward Host Header | Incoming Host Header
+Cache Key Hostname | **Incoming Host Header**
+Supports Gzip Compression | Yes
+Send True Client IP Header | **Yes**
+True Client IP Header Name | True-Client-IP
+Allow clients To Set True Client IP Header | Yes
+
+
+Origin SSL Certificate Verification | Input
+------------- | -------------
+Verification Settings | **Choose Your Own (Recommended)**
+Match CN/SAN To | \{\{Forward Host Header\}\}; **\*.broker.soa.com;** \{\{Origin Hostname\}\} 
+Trust | Specific Certificates (pinning)
+
+
+Specific Certificates (pinning) | Input | Input
+------------- | ------------- | -------------
+Common Name | Exp. Date | SHA-1 Fingerprint
+\*.broker.soa.com | August 1 2016 | dba2e24c8a3742ecdeccb3dfae65667db8ae5b4c
+
+
+Ports | Input
+------------- | -------------
+HTTP Port | 80
+HTTPS Port | 443
+
+
+Caching  | Input
+------------- | -------------
+Caching option | Bypass Cache
+
+
+
+SureRoute | Input
+------------- | -------------
+Enable | On
+Optimization Type | Performance
+SureRoute Test Object | **sureroute/sureroute-test-object.html**
+Forward HOST Header | Same as incoming Host header
+Cache Life for Race Results | 30 minutes
+Force SSL Protocol for Races | Off
+Race Result Key | Race Destination (default) 
+
+
+Allow POST | Input
+------------- | -------------
+Behavior | Allow
+Allow without Content-Length | **Allow**
+
+Allow DELETE | Input
+------------- | -------------
+ | Allow
+
+Allow PUT | Input
+------------- | -------------
+ | Allow
+
+
+
+### Content Compression Settings
+
+Content Compression | Input
+------------- | -------------
+Criteria | Match All
+IF | Content Type
+is one of | **text/html\*;  text/css\*; 	application/x-javascript\*; 
+
+Behaviors | Input
+------------- | ------------- 
+Last Mile Acceleration (GZIP Compression) | 
+Compress Response | Always
+
+
+### Add rule for Advanced Metadata
+
+Advanced Metadata | Input
+------------- | -------------
+Criteria | Match All
+
+
+#### Behaviors
+Advanced | Input
+------------- | -------------
+Description | To enable chunked POST
+Advanced XML | <edgeservices:enable-chunked-post> on </edgeservices:enable-chunked-post>
 
 
  
