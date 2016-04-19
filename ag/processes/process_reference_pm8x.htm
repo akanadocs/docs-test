@@ -18,8 +18,8 @@ nav-title: Policy Manager 8.x Process Reference
 
 
 <p><a href="getting_started_with_processes_pm8x.htm" class="button secondary"> Getting Started (PM8x)</a>
-  
-  
+
+
 <a href="process_management_pm8x.htm" class="button secondary">Managing Processes (PM8x)</a>
 
 <h5 class="stamp">Supported Platforms: 8.x</h5>
@@ -31,33 +31,22 @@ nav-title: Policy Manager 8.x Process Reference
 
 
 <ol class="table_of_contents">
-
  <li><a href="#processes">About Processes</a></li>
  <li><a href="#processeditor">Process Editor</a></li>
-
  <li><a href="#faultsequenceeditor">Fault Sequence Editor</a></li>
-
-  <li><a href="#variableeditor">Variable and Faults Editor</a></li>
-
-    <li><a href="#receiveactivity">Receive Activity</a></li>
-        <li><a href="#replyactivity">Reply Activity</a></li>
-
-         <li><a href="#invokeactivity">Invoke Activity</a></li>
-
-
-    <li><a href="#scriptactivity">Script Activity</a></li>
-
-                <li><a href="#branchactivity">Branch Activity</a></li>
-  <li><a href="#transformationactivity">Transformation Activity</a></li>
-
-    <li><a href="#auditactivity">Audit Activity</a></li>
-
-    <li><a href="#insertcontentactivity">Insert Content Activity</a></li>
-
-        <li><a href="#processactivity">Process Activity</a></li>
-        
-         <li><a href="#throwactivity">Throw Activity</a></li>
-      
+ <li><a href="#variableeditor">Variable and Faults Editor</a></li>
+ <li><a href="#receiveactivity">Receive Activity</a></li>
+ <li><a href="#replyactivity">Reply Activity</a></li>
+ <li><a href="#invokeactivity">Invoke Activity</a></li>
+ <li><a href="#scriptactivity">Script Activity</a></li>
+ <li><a href="#branchactivity">Branch Activity</a></li>
+ <li><a href="#splitactivity">Split Activity</a></li>
+ <li><a href="#joinactivity">Join Activity</a></li>
+ <li><a href="#transformationactivity">Transformation Activity</a></li>
+ <li><a href="#auditactivity">Audit Activity</a></li>
+ <li><a href="#insertcontentactivity">Insert Content Activity</a></li>
+ <li><a href="#processactivity">Process Activity</a></li>
+ <li><a href="#throwactivity">Throw Activity</a></li>
 </ol>
 
 
@@ -80,7 +69,7 @@ nav-title: Policy Manager 8.x Process Reference
     <br />
   </li>
   <li>As a standalone process (Processes Folder) that can be invoked by another process to achieve reusability. </li>
-   
+
 </ul>
 <p> In all contexts, a graphical editor is provided to construct the process. </p>
 
@@ -307,6 +296,7 @@ Auditing the message as it  is sent over the wire to the access point can be ach
 </p>
 <p>When using XPath as the expression language a field for selecting a message variable to use as the context of the expression is displayed. The expression will be evaluated against that variable’s content. The variable’s content must be XML or an error will be generated at runtime.</p>
 <p> When using a script language the script is evaluated and the last line of execution is expected to result in a boolean true or false. The context of the script is provided with a subset of the variables described in the Script Activity above: </p>
+
 <ul class="usingOrderedList">
 
 <li>
@@ -325,6 +315,31 @@ Auditing the message as it  is sent over the wire to the access point can be ach
 <p><img src="images/javascript_branch_condition.jpg" width="569" height="163"></p>
 <p>Figure. JavaScript Branch Condition</p>
 
+<p><a href="#top">Back to top</a></p>
+
+<a name="splitactivity">
+<h3><img src="images/split-32px.gif" width="31" height="24"> Split Activity</h3></a>
+<p>The Split Activity provides a mechanism to split the process into multiple concurrent flows, or branches. Drop the Split Activity on the Process page and connect the last activity to be executed before the split to the Split Activity.<br>
+  <br>
+  <img src="images/adding_a_split_activity.jpg" width="262" height="120">
+</p>
+<p>Figure. Adding a Split Activity</p>
+<p>When the activity that connects to the Split activity completes the process engine will execute all flows originating from the Split activity in parallel with their own threads. Each flow can have any of the activities
+  from the pallete except those that would prematurely end the flow of execution before a required Join activity, such as a Reply activity. It is recommended that the same process variable not be used
+  from different flows because it can lead to unpredictable results. All flows that originate from the Split activity must be terminated by the same Join activity. All flows will execute
+  concurrently and then wait for each other to finish before resuming execution after the Join activity.</p>
+<p><a href="#top">Back to top</a></p>
+
+<a name="joinactivity">
+<h3><img src="images/join-32px.gif" width="31" height="24"> Join Activity</h3></a>
+<p>The Join Activity terminates multiple concurrent flows, or branches. Drop the Join Activity on the Process page and connect the last activity in each of the concurrent flows originating from
+a Join activity to the Split activity.</a><br>
+  <br>
+  <img src="images/adding_a_join_activity.jpg" width="262" height="190">
+</p>
+<p>Figure. Adding a Join Activity</p>
+<p>All flows originating from a Split activity must be terminated by the same Join activity. The activity after the Join activity will be executed in the same thread as the originating
+Split activity, but it will not execute until all the flows complete their execution.</p>
 <p><a href="#top">Back to top</a></p>
 
 <a name="transformationactivity"><h3><img src="images/transformation_activity_icon.jpg" width="40" height="36">Transformation Activity</h3></a>
@@ -408,7 +423,7 @@ Auditing the message as it  is sent over the wire to the access point can be ach
   <p>Figure. Process Activity Editor</p>
 
   <p>When a process is called from another process, the calling process’s context is passed to the called process. All the variables and their values from the calling process are passed through. If the called process defines variables with the same names as ones in the calling process, the calling process’s variables will be used.</p>
-  
+
   <a name="throwactivity">
 <h3><img src="images/throw_activity_icon.jpg" width="30" height="29"> Throw Activity</h3></a>
 <p>The Throw Activity exits the current flow of activities and enters the fault flow. You can add a Throw Activity at any point in the process  (not in the fault flow). At the conclusion of the Throw Activity the current flow will be terminated and either the fault flow defined for the thrown fault will be executed (if defined) or the default flow will be executed. </p>
