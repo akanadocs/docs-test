@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Creating a Dashboard
-description: Learn how add and reposition charts on an Envision Dashboard and display in Live Mode. 
+description: Learn how to add and reposition charts on an Envision Dashboard and display in Live Mode. 
 product: ev
 category: ref
 weight: 8
@@ -10,7 +10,7 @@ nav-title: Creating a Dashboard
 ---
 
 ## Creating a Dashboard
-Learn how add and reposition charts on an Envision Dashboard and display in Live Mode.
+Learn how to add and reposition charts on an Envision Dashboard and display in Live Mode.
 
 <a href="env_toc.html" class="button secondary">Envision Reference (Main Topic)</a>  <a href="../envision_install/installing_envision.htm" class="button secondary">Installing Envision 1.0</a>
 <h5 class="stamp">Supported Platforms: 8.0, 8.1</h5>  <h5 class="stamp">Supported Envision Versions: 1.0, 1.1</h5><br>
