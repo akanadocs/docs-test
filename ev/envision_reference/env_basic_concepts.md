@@ -27,6 +27,7 @@ Provides a technical overview of the Envision product.
 * [Data Aggregation](#data-aggregation)
 
 <div class = "divider1"></div>
+
 ### <a id="introduction"></a>Introduction
 
 Envision is an analytics platform that allows you to slice and dice your data to analyze every aspect of your business and digital strategy. It can help you collect data and identify patterns, trends, violations, baselines, or historical context. The domain of the data you wish to analyze is open ended. You may wish to analyze:

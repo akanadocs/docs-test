@@ -10,7 +10,7 @@ nav-title: Creating a Map
 ---
 
 ## Creating a Map
-Learn how to create an Envision map.
+Learn how to create a map in Envision.
 
 <a href="env_toc.html" class="button secondary">Envision Reference (Main Topic)</a>  <a href="../envision_install/installing_envision.htm" class="button secondary">Installing Envision 1.0</a>
 <h5 class="stamp">Supported Platforms: 8.0, 8.1</h5>  <h5 class="stamp">Supported Envision Versions: 1.0, 1.1</h5><br>
@@ -25,9 +25,10 @@ Learn how to create an Envision map.
 * [Point Map](#map-point)
 * [Heat Map](#map-heat)
 
+<div class = "divider1"></div>
 
 
-## Creating a Map
+## <a id="create-map"></a>Creating a Map
 A map is a special kind of chart that plots data in a geographical fashion. A map image is selected as a background and then the aggregated data is overlaid on the image in different ways depending on what kind of map you choose. For example a Bubble Map will overlay circles on the map image in sizes proportional to each other based on the metric being plotted.
 In order to create a map a geographical dimension must be defined as part of the data set. When defining a dimension use the Address type.
 
@@ -72,11 +73,14 @@ The standard map is limited in that it only supports dimensions that correspond 
 
 
 
+<a href="#top">back to top</a>
+
 ### <a id="map-bubble"></a>Bubble Map
 The bubble map uses latitude and longitude for plotting data so there are no limitations as long as the latitude and longitude of an Address dimension has been filled in. Each data point is plotted as a circle. The circle size is larger or smaller based on the value of the metric being used.
 
 ![Envision](images/env_map_08.png "Bubble Map")
 
+<a href="#top">back to top</a>
 
 
 
@@ -85,6 +89,7 @@ The point map is almost identical to the bubble map but it does not draw differe
 
 ![Envision](images/env_map_09.png "Point Map")
 
+<a href="#top">back to top</a>
 
 
 

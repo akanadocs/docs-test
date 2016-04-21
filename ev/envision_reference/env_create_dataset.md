@@ -31,6 +31,7 @@ Learn how to create an Envision data set and configure dimensions and metrics.
 	* [Metrics Options](#metrics-options)
 
 <div class = "divider1"></div>
+
 ### <a id="introduction"></a>Introduction
 
 In the previous topics we described the concept of a data set. In this chapter we will describe how a data set is created in the Envision product.

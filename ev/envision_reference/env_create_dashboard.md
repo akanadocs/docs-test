@@ -33,6 +33,7 @@ Learn how add and reposition charts on an Envision Dashboard and display in Live
 	* [View Chart Filters in Live Mode](#view-chart-filters)
 
 <div class = "divider1"></div>
+
 ### <a id="introduction"></a>Introduction
 
 To present working Charts to Envision users those Charts need to be placed on a *Dashboard*. 

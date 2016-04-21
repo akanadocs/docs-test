@@ -48,6 +48,7 @@ Learn how to create a chart with Envision and configure datasets, use chart opti
 	* [Create Combination Charts](#create-combination-charts)
 
 <div class = "divider1"></div>
+
 ### <a id="introduction"></a>Introduction
 
 Once a data set has been created a Chart can be created that will display the metrics collected for the data set. There are several kinds of Charts that are available in Envision. This topic will describe the common concepts of all charts. The options specific to each chart and examples of their use can be found in [Envision Appendix](../envision_reference/env_appendix.html).

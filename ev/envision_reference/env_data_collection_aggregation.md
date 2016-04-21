@@ -25,6 +25,7 @@ Learn how Envision performs data collection and data aggregation.
 * [Data Aggregation Using Time Intervals](#data-aggregation-using-time-intervals)
 
 <div class = "divider1"></div>
+
 ### <a id="introduction"></a>Introduction
 
 In the previous topic we introduced the concept of a data set, how metrics are defined, their aggregation, and collection intervals. In this topic we will describe how the data in a data set is actually collected and how the aggregation is performed.
