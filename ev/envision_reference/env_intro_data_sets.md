@@ -24,6 +24,7 @@ Learn about Envision data sets, metrics, and dimensions.
 * [Data Set Examples](#data-set-examples)
 
 <div class = "divider1"></div>
+
 ### <a id="what-is-a-data-set"></a>What is a Data Set?
 
 A data set is a group of metrics that are collected so that they can be analyzed through queries based on different criteria, or dimensions. It is the foundation on top of which all analysis can be performed. Take a company named Acme that manufactures shoes, for example. Acme provides an API for merchants to order shoes that are sold to the public. Acme wishes to collect metrics on those sales such as: 
