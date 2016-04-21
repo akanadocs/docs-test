@@ -3,7 +3,7 @@ layout: page
 title: Appendix
 description: Provides a list of chart properties used in the Envision Dashboard.
 product: ev
-category:ref
+category: ref
 weight: 9
 type: page
 nav-title: Appendix 

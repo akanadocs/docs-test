@@ -5,7 +5,7 @@ description: Learn how to create an Envision data set and configure dimensions a
 product: ev
 category: ref
 weight: 5
-type: pagedura
+type: page
 nav-title: Creating a Data Set
 ---
 

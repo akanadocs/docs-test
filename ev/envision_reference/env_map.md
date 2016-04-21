@@ -5,7 +5,7 @@ description: Learn how to create a map in Envision.
 product: ev
 category: ref
 weight: 7
-type: pagedura
+type: page
 nav-title: Creating a Map
 ---
 
