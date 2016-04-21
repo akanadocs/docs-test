@@ -13,7 +13,7 @@ nav-title: Appendix
 Provides a list of chart properties used in the Envision Dashboard.
 
 <a href="env_toc.html" class="button secondary">Envision Reference (Main Topic)</a>  <a href="../envision_install/installing_envision.htm" class="button secondary">Installing Envision 1.0</a>
-<h5 class="stamp">Supported Platforms: 8.0</h5>  <h5 class="stamp">Supported Envision Versions: 1.0, 1.1</h5>
+<h5 class="stamp">Supported Envision Versions: 1.0, 1.1</h5>
 
 <div class = "divider1"></div>
 

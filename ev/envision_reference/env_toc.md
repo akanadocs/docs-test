@@ -16,7 +16,7 @@ Provides a technical overview the Envision product and how to create Data Sets, 
 
 <a href="../envision_install/installing_envision.htm" class="button secondary">Installing Envision 1.0</a>
 
-<h5 class="stamp">Supported Platforms: 8.0, 8.1</h5><h5 class="stamp">Supported Envision Version: 1.0, 1.1</h5>
+<h5 class="stamp">Supported Envision Version: 1.0, 1.1</h5>
 
 <div class = "divider1"></div>
 
