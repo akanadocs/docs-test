@@ -16,6 +16,7 @@ nav-title: Domain Management
   <li> OpenID Connect domain: see <a href="site_admin_domains_oidc.htm">OpenID Connect Support</a></li>
   <li>External OAuth Provider domain: see <a href="site_admin_domains_eoap.htm">External OAuth Provider Domain</a></li>
 </ul>
+<h5 class="stamp">API Platform Version: 8.1</h5>
 <div class = "divider1"></div>
 
 
@@ -733,7 +734,7 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
       <td>Supported Grant Types: 3-Legged</td>
       <td><p>Specify values:</p>
         <ul class="apidoctable_ul">
-          <li><a href="basics_glossary.htm#gl_oauth_grant_authorizationcode">3-legged, Authorization Code</a>: specify <a href="basics_glossary.htm#gl_grantvalidityperiod">grant validity period</a>, specify timeout values for the <a href="basics_glossary.htm#gl_oauth_authorizationcode">authorization code</a> and <a href="basics_glossary.htm#gl_oauth_accesstoken">access token</a>, and choose whether or not to issue <a href="basics_glossary.htm#gl_oauth_refreshtoken">refresh tokens</a>.</li>
+          <li><a href="basics_glossary.htm#gl_oauth_grant_authorizationcode">3-legged, Authorization Code</a>: specify <a href="basics_glossary.htm#gl_grantvalidityperiod">grant validity period</a>, specify values for the <a href="basics_glossary.htm#gl_oauth_authorizationcode">authorization code</a> timeout (seconds) and <a href="basics_glossary.htm#gl_oauth_accesstoken">access token</a> timeout (seconds), and choose whether or not to issue <a href="basics_glossary.htm#gl_oauth_refreshtoken">refresh tokens</a>.</li>
           <li><a href="basics_glossary.htm#gl_oauth_grant_implicit">3-legged, Implicit</a>: specify <a href="basics_glossary.htm#gl_grantvalidityperiod">grant validity period</a> and <a href="basics_glossary.htm#gl_oauth_accesstoken">access token</a> timeout.</li>
         </ul>        </td>
     </tr>
@@ -774,6 +775,10 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
 </td>
     </tr>
     <tr class="t1row">
+      <td>Grant Provisioning Timeout (seconds)</td>
+      <td>The length of time for which the grant provisioning session is valid. By default, during grant provisioning, the authentication token is created upon successful resource owner authentication, and is valid until authorization (approval/rejection) is complete, or until the token expires, whichever happens first. By default, the token expires after 600 seconds (10 minutes). You can use this field to extend (or reduce) this default time. The token still expires after authorization is complete.</td>
+    </tr>
+    <tr class="t2row">
       <td>Resource Owner Authentication Domain</td>
       <td><p>This is the domain your OAuth Provider domain will use for end-user authentication as part of the OAuth process. It can be any domain set up on the platform. Choose from the drop-down list. If the domain you want isn't on the list, it must be installed and configured (see notes above). Some possible choices:</p>
         <ul class="apidoctable_ul">
@@ -1025,6 +1030,10 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
       <td>Grant Workflow Definition</td>
       <td>The workflow definition that will apply to all new OAuth grants. You can use this field to implement a custom workflow for OAuth. For information on uploading a custom workflow, see <a href="site_admin_workflows.htm#to_upload_a_custom_workflow">to upload a custom workflow</a>. For help with developing a custom OAuth workflow, contact your Akana representative.</td>
     </tr>
+    <tr class="t1row">
+      <td>Grant Administration Session Timeout (seconds)</td>
+      <td>The length of time for which the grant administration session is valid. By default, for grant administration, the authentication token is set upon successful authentication and is valid until the token expires, the token is renewed, or the user logs out, whichever happens first. By default, the token expires after 600 seconds (10 minutes). You can use this field to extend (or reduce) this default time.</td>
+    </tr>
   </tbody>
 </table>
 <p><a href="#top">Back to top</a></p>
@@ -1158,6 +1167,7 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
 <p>Initially, the grant corresponding to the token is stored in local memory at the resource server, for faster processing. If a grant is modified (via workflow, revocation, or any other means), the modified grant is updated in the local memory asynchronously, via the scheduled job, which runs at an interval of 1 minute. Until that time, requests continue to be successful.</p>
 <p>A possible drawback to this approach is that the JWT access token continues to be successful at the gateway until the scheduled job updates the local cache with cancelled/revoked grant information. This could mean that JWT access tokens for revoked grants could be accepted for a short period of time before they start to be rejected. The scheduled job runs at an interval of 1 minute.</p>
 <p>This scenario is similar to browsers downloading the Certificate Revocation List (CRL) from the certificate authorities (CAs).</p>
+
 <p><strong>Note</strong>: The Site Admin can configure the OAuth Provider to have the gateway verify JWT Access Tokens with the Authorization Server as well (OAuth Provider Domain, Tab 3, Token: <strong>Verify JWT Access Token with Authorization Server</strong>). In this scenario, validation is similar to that of the Referenced Bearer token. However, with this approach you lose a key feature of the JWT Access Token, the ability for the Resource Server to validate the token.</p>
 
 <p><a href="#top">Back to top</a></p>
@@ -1223,7 +1233,7 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
 <p>You must first define the CA SiteMinder domain via the <em>Configure &gt; Security &gt; Identity Systems</em> section of the <a href="basics_glossary.htm#gl_policy_manager">Policy Manager</a> Management Console. For more information, refer to the following external documentation:</p>
 <ul>
   <li>The <strong>Add Identity System</strong> (Active Directory) topic in the Policy Manager Online Help.</li>
-  <li>The <em>Integrating CA SiteMinder with Policy Manager 6.1 Guide </em>available via the Akana Support Site (support.akana.com &gt; Downloads &gt; PolicyManager &gt; PM61 &gt; PM61_CASiteMinder_Integration.pdf). This has instructions on how to set up CA SiteMinder and install the identity system (domain) in Policy Manager.</li>
+  <li>Information about integrating CA SiteMinder with Policy Manager is available on the Akana docs site (<a href="http://docs.akana.com/ag/ca_siteminder/ca_siteminder_integrate_with_pm.htm" title="Integrate CA SiteMinder with Policy Manager" target="_blank">http://docs.akana.com/ag/ca_siteminder/ca_siteminder_integrate_with_pm.htm</a>). This includes instructions on how to set up CA SiteMinder and install the identity system (domain) in Policy Manager.</li>
   <li>The <em>Enterprise API Platform Installation Guide</em> (for information on how to install a CA SiteMinder Identity System).</li>
 </ul>
 <p>Once the domain is defined in Policy Manager, you can configure and enable it in the Akana API Platform:</p>
@@ -1248,7 +1258,7 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
 
 
 <a name="how_do_i_configure_eoap_pf"></a><h3>How do I configure an External OAuth Provider domain for PingFederate?</h3>
-<p>To get everything configured correctly, you must perform some setup steps in PingFederate and Policy Manager before going ahead with the Akana API Platform setup. Follow the procedures given in the sections listed below, in sequence:</p>
+<p>To get everything configured correctly, you must perform some setup steps in PingFederate and Policy Manager before going ahead with the Akana API Platform setup. Follow the procedures listed below, in sequence:</p>
 <ol>
   <li><a href="#pf_config_1_pf">PingFederate Configuration</a></li>
   <li><a href="#pf_config_2_pm">Policy Manager Configuration</a></li>
@@ -1331,7 +1341,7 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
 <p class="apidoc_note"><strong>Note</strong>: We recommend that PingFederate users choose the External OAuth Provider domain rather than the legacy PingFederate domain. See <a href="site_admin_domains_eoap.htm">External OAuth Provider Domain</a>. PingFederate configuration is still required, as covered in <a href="site_admin_ov_pf_endtoend.htm">PingFederate Usage Scenario: End to End</a>.</p>
 <p>The PingFederate&reg; <a href="basics_glossary.htm#gl_connectordomain">Connector domain</a> allows you to use <a href="basics_glossary.htm#gl_pingfederate">PingFederate</a> as an OAuth provider. Essentially, the Site Admin registers the platform with PingFederate as the resource server, and then uses the values provided by PingFederate to set up the PingFederate Provider domain in the Akana API Platform.</p>
 <p>For a walkthrough of the end-to-end sequence of steps, including API and app setup, refer to <a href="site_admin_ov_pf_endtoend.htm">PingFederate Usage Scenario: End to End</a>.</p>
-<p>To get everything configured correctly, you must perform some setup steps in PingFederate and Policy Manager before going ahead with the Akana API Platform setup. Follow the procedures given in the sections listed below, in sequence:</p>
+<p>To get everything configured correctly, you must perform some setup steps in PingFederate and Policy Manager before going ahead with the Akana API Platform setup. Follow the procedures listed below, in sequence:</p>
 <ol>
   <li><a href="#pf_config_1_pf">PingFederate Configuration</a></li>
   <li><a href="#pf_config_2_pm">Policy Manager Configuration</a></li>
@@ -1412,3 +1422,37 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
 
 
 
+<div class = "divider1"></div>
+
+
+
+<h3 id="relatedtopics">Related Topics</h3>
+<table width="98%" border="0" cellspacing="0" cellpadding="2" class="doctable">
+  <tr>
+    <td width="33%"><ul>
+  <li><a href="site_admin_.htm">Site Admin Summary Page</a></li>
+  <li><a href="site_admin_overview.htm">Site Admin Responsibilities</a></li>
+  <li><a href="site_admin_users.htm">Managing User Accounts</a></li>
+  <li><a href="site_admin_site_admins.htm">Managing Site Admins</a></li>
+  <li><a href="business_admin_business_adm.htm">Managing Business Admins</a></li>
+  <li><a href="bus_site_api_admin_forum.htm">Forum Moderation</a></li>
+    </ul>
+</td>
+    <td width="33%"><ul>
+      <!--<li><a href="site_admin_domains.htm"> Domains</a></li>-->
+      <li><a href="site_admin_domains_eoap.htm">External OAuth Provider Domain</a></li>
+      <li><a href="site_admin_domains_oidc.htm">OpenID Connect Support</a></li>
+      <li><a href="site_admin_ov_pf_endtoend.htm">PingFederate Setup</a></li>
+      <li><a href="site_admin_config.htm"> Configuration</a></li>
+      <li><a href="site_admin_settings.htm"> Settings</a></li>
+    </ul></td>
+    <td width="33%"><ul>
+      <li><a href="site_admin_workflows.htm"> Workflows</a></li>
+      <li><a href="site_admin_tc.htm"> Test Client</a></li>
+      <li><a href="site_admin_es.htm"> Search Configuration</a></li>
+      <li><a href="site_admin_content_guidelines_sd.htm">Content Development Guidelines for Simple Dev Theme</a></li>
+    </ul>
+</td>
+  </tr>
+</table>
+<hr />

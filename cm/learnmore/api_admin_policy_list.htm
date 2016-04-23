@@ -11,6 +11,7 @@ nav-title: Policy List
 no-nav: true
 ---
 <h2 id="top">Policy List</h2>
+<h5 class="stamp">API Platform Version: 8.1</h5>
 
 <p>Includes information about the following policies:</p>
 <ol>
@@ -52,8 +53,11 @@ no-nav: true
   <tr class="t1row">
     <td>OAuthSecurity</td>
     <td><p>An Akana API Platform policy that enables API authorization using OAuth 2.0. It uses the OAuth configuration assigned to an API when enforcing OAuth tokens in a received request.</p>
-      <p>For more information, see <a href="http://docs.akana.com/ag/cm_policies/using_oauth_security_policy.htm" target="_blank">Using the OAuth Security Policy</a>.</p>
-      <p>There is an additional sub-policy to the OAuth Security policy, TokenTransformation, which you can use to ensure that the OAuth bearer token is relayed to the downstream service, rather than being stripped off from the request message after validation by the API Gateway. You can use this for scenarios where the target endpoint needs access to the original OAuth token that the API Gateway validated. The <strong>transform</strong> attribute of this policy determines whether to strip the headers or pass them through to the next hop. The possible values of this attribute are <strong>strip</strong> and <strong>pass-through</strong>.</p>
+      <p>For more information, see <a href="http://docs.akana.com/ag/cm_policies/using_oauth_security_policy.htm" target="_blank">Using the OAuth Security Policy</a>.</p></td>
+</tr>
+  <tr class="t2row">
+    <td>OAuthSecurity policy: TokenTransformation sub-policy</td>
+    <td><p>There is an additional sub-policy to the OAuth Security policy, TokenTransformation, which you can use to ensure that the OAuth bearer token is relayed to the downstream service, rather than being stripped off from the request message after validation by the API Gateway. You can use this for scenarios where the target endpoint needs access to the original OAuth token that the API Gateway validated. The <strong>transform</strong> attribute of this policy determines whether to strip the headers or pass them through to the next hop. The possible values of this attribute are <strong>strip</strong> and <strong>pass-through</strong>.</p>
 <p>An example of the  policy configuration with the nested sub-policy tag is shown below.</p>
 <pre>
 &lt;wsp:Policy Name=&quot;OAuthSecurity&quot; Description=&quot;OAuthSecurity policy uses OAuth
@@ -64,8 +68,20 @@ xmlns:wsp=&quot;http://schemas.xmlsoap.org/ws/2004/09/policy&quot;&gt;
       &lt;goap:TokenTransformation transform=&quot;strip&quot;/&gt;
     &lt;/wsp:Policy&gt;
   &lt;/goap:OAuthSecurity&gt;
-&lt;/wsp:Policy&gt; </pre></td>
-</tr>
+&lt;/wsp:Policy&gt; </pre>
+    <p>If you change this value to <strong>pass-through</strong>, the OAuth bearer token is relayed to the downstream service, rather than being stripped off from the request message after validation.</p></td>
+  </tr>
+  <tr class="t1row">
+    <td>OAuthSecurity policy: IncludeTokenAttributes node</td>
+    <td><p>In the IncludeTokenAttributes node of the OAuth Security Policy, you can disable the adding of custom headers. You can then use a custom policy to add the headers however you want to transfer this information to the target endpoint.</p>
+      <p> If the policy definition does not include the &lt;IncludeTokenAttributes&gt; node, or includes the default value as shown below, the API Gateway platform sends the OAuth grant details to the target endpoint in the custom http request headers.</p>
+      <p>Default value:</p>
+      <pre>&lt;goap:IncludeTokenAttributes Attributes=&quot;all&quot;/&gt; </pre>
+      <p>If the policy definition includes the &lt;IncludeTokenAttributes&gt; assertion with a value of <strong>none</strong>, as shown below, the API Gateway platform does not include OAuth grant details to the target endpoint.<br />
+        To disable the adding of custom headers, change the value as shown below:</p>
+      <pre>
+&lt;goap:IncludeTokenAttributes Attributes=&quot;none&quot;/&gt;</pre></td>
+  </tr>
 </tbody>
 </table>
 <p><a href="#top">Back to top</a></p>
@@ -196,7 +212,7 @@ xmlns:wsp=&quot;http://schemas.xmlsoap.org/ws/2004/09/policy&quot;&gt;
   </tr>
   <tr class="t1row">
     <td>Throughput Quota Policy</td>
-    <td><p>Allows you to monitor web service throughput performance by specifying a throughput limit (i.e., quota), queue size, and configuring fault and alert notifications.</p>
+    <td><p>Allows you to monitor web service throughput performance by specifying a throughput limit (quota), queue size, and configuring fault and alert notifications.</p>
 <p>If the quota is exceeded, a consumer fault message will be returned to the service consumer and an alert will be logged.</p>
 <p><em>Category:</em> QoS (Quality of Service Policy)</p></td>
   </tr>
@@ -207,13 +223,10 @@ xmlns:wsp=&quot;http://schemas.xmlsoap.org/ws/2004/09/policy&quot;&gt;
   </tr>
   <tr class="t1row">
     <td>Concurrency Quota Policy</td>
-    <td><p>Allows you to monitor the web service concurrency performance by specifying a concurrency limit (i.e., quota) that represents the maximum number of concurrency connections, and configuring fault and alert notifications.</p>
+    <td><p>Allows you to monitor the web service concurrency performance by specifying a concurrency limit (quota) that represents the maximum number of concurrency connections, and configuring fault and alert notifications.</p>
 <p>If the specified concurrency limit is exceeded, Policy Manager will return a fault and send an alert.</p>
 <p><em>Category:</em> QoS (Quality of Service Policy)</p></td>
   </tr>
 </tbody>
 </table>
 <p><a href="#top">Back to top</a></p>
-
-
-
