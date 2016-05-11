@@ -31,6 +31,8 @@ Akana Platform Hardening Guide
 		<li><a href="#secure-cookies">Configure secure cookies</a></li>
 		<li><a href="#disabling-sslv3">Disabling SSLv3</a></li>
 		<li><a href="#restrict-cipher-suites">Restrict the cipher suites used</a></li>
+		<li><a href="#tls12-only">Enforcing TLS 1.2 Only</a></li>
+		<li><a href="#disabling-outbound">Limiting Outbound SSL/TLS/Cipher support</a></li>
 		<li><a href="#prevent-forward-proxying">Prevent Forward Proxying</a></li>
 		<li><a href="#nd-header-propagation">Header Propagation in Network Director</a></li>
 		<li><a href="#cm-header-propagation">Header Propagation in Community Manager Subsystem</a></li>
@@ -190,8 +192,47 @@ In the admin console, configure the following:
 
 ```
 com.soa.transport.jetty ->
-http.incoming.transport.config.cipherSuites=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA,TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA,SSL_RSA_WITH_3DES_EDE_CBC_SHA,SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA
+http.incoming.transport.config.cipherSuites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,TLS_RSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_256_GCM_SHA384,SSL_RSA_WITH_3DES_EDE_CBC_SHA
+
 ```
+
+**Note**: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See http://docs.oracle.com/javase/7/docs/technotes/guides/security/SunProviders.html. This has to be added to the JRE.
+
+#### <a name="tls12-only"></a>Enforcing TLS 1.2 Only
+Depending on the level of security required, you may way to restrict the protocol to TLS 1.2 only. Note - This will limit the accesibility of the platform to certain clients.
+**Scope**: All Containers
+
+Enable TLSv1.2 only:
+
+```com.soa.transport.jetty ->http.incoming.transport.config.enabledProtocols=TLSv1.2
+```
+Further restrict the cipher suite:
+
+```
+com.soa.transport.jetty ->
+http.incoming.transport.config.cipherSuites=TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256
+
+```
+
+**Note**: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See http://docs.oracle.com/javase/7/docs/technotes/guides/security/SunProviders.html. This has to be added to the JRE.
+
+#### <a name="disabling-outbound"></a>Limiting Outbound SSL/TLS/Cipher support
+You may also want to limit the protcols and ciphers the the prodct will use for outbound connections.
+**Scope**: All Containers
+
+Configure the available protocols for outbound connections:
+
+```com.soa.http.client.core ->https.socket.factory.enabledProtocols=TLSv1.2
+```
+Configure the available cipher suites for outbound connections:
+
+```
+com.soa.http.client.core ->
+https.socket.factory.cipherSuites=TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256
+
+```
+
+**Note**: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See http://docs.oracle.com/javase/7/docs/technotes/guides/security/SunProviders.html. This has to be added to the JRE.
 
 #### <a name="prevent-forward-proxying"></a>Prevent Forward Proxying
 Prevent unauthenticated users from initiating arbitrary internal connections from the Community Manager portal.
