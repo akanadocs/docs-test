@@ -189,6 +189,7 @@ There are several packages that typically make up the solution for the Policy Ha
 2. xxx.xxx.akana.policy.xxxx.assertion
 4. xxx.xxx.akana.policy.xxxx.assertion.marshaller
 5. xxx.xxx.akana.policy.xxxx.assertion.model
+
 ##### xxx.xxx.akana.policy.xxxx.handler
 This package contains the implementation of the Policy Handler.
 
@@ -267,11 +268,12 @@ Two Spring beans need to be published by the policy handler by editing the /META
 		</bean>
 	</osgi:service>
 	```
-		
+
 #### Package Descriptions
 There are several packages that typically make up the solution for the Policy Handler:
 1. xxx.xxx.akana.console.policy.xxxx
 2. xxx.xxx.akana.console.policy.xxxx.bean
+
 ##### xxx.xxx.akana.console.policy.xxxx
 This package contains the renderer for the Policy Handler.
 
@@ -354,8 +356,9 @@ When the 'Save' button is clicked, the PolicyBean is called to process the form 
 #### Set up Felix console
 This is not necessary for anytime but the first time you deploy the Policy Handler. Its function is to simply to make sure that you know what is happening. Once you are comfortable with loading the Policy Handler you can disable this console.
 To start the TUI (Textual User Interface) console simply copy the lib/ext/org.apache.felix.shell.tui-x.x.x.jar file into the instances/[container name]/deploy directory. Immediately the “->” prompt should appear in your SSH session. 
+
 #### Deploy the Policy Handler Bundles
-The simplest way to deploy the policy handler is to copy the jar files into the  'instances/[CONTAINER NAME]/deploy' directory.
+The simplest way to deploy the policy handler is to copy the jar files into the 'instances/[CONTAINER NAME]/deploy' directory.
 
 The Policy Manager requires both the 'policy handler' and 'policy handler console' bundles, whereas the Network Director only requires the 'policy handler' bundle.
  
@@ -366,7 +369,7 @@ To check that the new bundles are active, simply type “ps” (without the quot
 
 ### <a name="testing"></a>Testing the Policy Handler
 The best way to test the Policy Handler is to use the remote debug features of Eclipse and the Felix Container.
-1.	Restart the container specifying the –debug option: (from  [SOA_HOME]/sm60/bin):
+1.	Restart the container specifying the –debug option: (from [SOA_HOME]/sm60/bin):
 	
 	```
 	./startup.sh <ND name> –debug 7777
@@ -385,7 +388,3 @@ For this to happen, you must attach the policy to a service in Policy Manager. H
 5.	Add the name in the “Policy Name” field and click the finished button.
 6.	The policy will now appear in the list of Operational Policies and is ready to be attached to a service when needed.
 <p><a href="#top">Back to top</a></p>
-
-
-
-
