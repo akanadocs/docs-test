@@ -28,9 +28,13 @@ nav-title: Custom Policy Development
 
 This document contains the information required to:
 1.	Develop;
+
 2.	Deploy; 
+
 3.	Test;
+
 4.	And run a custom Policy Handler with an Akana API Gateway
+
 It will begin with the design of the Custom Policy Handler Framework, then work through the required steps to guide a customer in creating a working custom Policy. 
 
 
@@ -58,7 +62,9 @@ The Policy Handler Factory is tied to the Assertion Marshaller by the framework 
 **Note:** The JavaDoc for these classes can be found in the [API Gateway Reference](reference.html) section.
 
 The Policy Handler framework works on the notion of Handler chains. These chains are associated with two criteria:
+
 1.	The direction of the message
+
 2.	The Actor that the Network Director is playing
 
 The following diagram shows how handler chains are processed for the IN message (such as an HTTP request):
@@ -68,6 +74,7 @@ The following diagram shows how handler chains are processed for the IN message 
 The following diagram shows how handler chains are processed for the OUT message (such as an HTTP response):
 
 ![OUT Message Processing](images/out_processing.png "OUT Message Processing")
+
 Keep this design and chain sequence in mind when creating the design for a Policy Handler.
 <p><a href="#top">Back to top</a></p>
 
@@ -90,6 +97,7 @@ A typical policy handler plug-in will also have these additional folders:
 #### Create the Assertion Model
 
 All policies are defined using an XML schema which forms the basis for the model object generation using JAXB v2. 
+
 1.	Create the XML Schema definition file:
 
 	```
@@ -115,6 +123,7 @@ Several Spring beans need to be published by the policy handler by editing the /
 * Handler Factories
 * Template
 * Assertion Marshaller
+
 1.	Define the Spring bean for the Policy Handler Factory and publish the OSGi services for the Policy Handler Factory. There should be one service definition per binding per role:
 	```
 <!-- The WS-Policy handler factory -->
@@ -185,9 +194,13 @@ Several Spring beans need to be published by the policy handler by editing the /
 	
 #### Package Descriptions
 There are several packages that typically make up the solution for the Policy Handler:
+
 1. xxx.xxx.akana.policy.xxxx.handler
+
 2. xxx.xxx.akana.policy.xxxx.assertion
+
 4. xxx.xxx.akana.policy.xxxx.assertion.marshaller
+
 5. xxx.xxx.akana.policy.xxxx.assertion.model
 
 ##### xxx.xxx.akana.policy.xxxx.handler
@@ -228,6 +241,7 @@ In the com.soa.examples.policy.handler.complex policy plug-in, the build/build.x
 Policies are configured in the Policy Manager console via one of two different mechanisms:
 
 1. **XML Policy** - the XML Policy is used when no Console Plug-in can be found for a policy. Users can simply type the XML assertion into a dialog box with the appropriate XML structure (namespace, localname, etc) and it will be passed into the Policy Handler as an assertion. This is the approached leveraged by the 'com.soa.examples.policy.handler.simple' example.
+
 2. **Custom Console Plugin** - a nicer way to interface with users is via a specific UI designed to render the policy. This is the approach used by the 'com.soa.examples.policy.handler.complex' example.
 
 The Policy Handler Console Plug-in is developed as an OSGi Plug-in. Please refer to the [OSGi Plug-in Development](osgi-plugin-development.html) document which describes how to set up an Eclipse workspace and create plug-in projects. Ensure that you have followed the directions for 'Compiling the complex policy handler example'.
@@ -249,6 +263,7 @@ Two Spring beans need to be published by the policy handler by editing the /META
 
 * Policy Renderer
 * Faces Config
+
 1.	Define the Spring bean for the Policy Renderer and publish the OSGi service:
 	```
 	<bean id="complex.policy.renderer" class="com.soa.examples.console.policy.complex.ComplexPolicyRenderer" />   
@@ -271,7 +286,9 @@ Two Spring beans need to be published by the policy handler by editing the /META
 
 #### Package Descriptions
 There are several packages that typically make up the solution for the Policy Handler:
+
 1. xxx.xxx.akana.console.policy.xxxx
+
 2. xxx.xxx.akana.console.policy.xxxx.bean
 
 ##### xxx.xxx.akana.console.policy.xxxx
@@ -348,9 +365,12 @@ When the 'Save' button is clicked, the PolicyBean is called to process the form 
 ### <a name="deploy"></a>Building and Deploying the Policy Handler Plug-ins
 
 #### Build the Policy Handler
+
 1.	Ensure the Java packages containing the HandlerFactory implementation (and any other classes referenced in the Spring wiring) are included in the Export-Package list in MANIFEST.MF
+
 2.	Ensure all Java packages imported from outside the new Handler bundle are included in the Import-Package list in MANIFEST.MF
 	*	Imported com.akana and com.digev packages should specify version="x.0.0" where x is the major version number of the API Gateway you have installed.
+	
 3.	Build the plug-ins as described in the [OSGi Plug-in Development](osgi-plugin-development.html) document.
 
 #### Set up Felix console
@@ -369,6 +389,7 @@ To check that the new bundles are active, simply type “ps” (without the quot
 
 ### <a name="testing"></a>Testing the Policy Handler
 The best way to test the Policy Handler is to use the remote debug features of Eclipse and the Felix Container.
+
 1.	Restart the container specifying the –debug option: (from [SOA_HOME]/sm60/bin):
 	
 	```
@@ -376,15 +397,22 @@ The best way to test the Policy Handler is to use the remote debug features of E
 	```
 	
 	* note: 7777 does not have to be used. It can be any port value not already used.
+	
 2.	Set up a remote debug session in Eclipse and connect to the process.
 
 #### Define and attach the Policy in Policy Manager
 Once deployment is completed the policy handler will be loaded and invoked once a service with the correct policy attached is detected by the Network Director.
 For this to happen, you must attach the policy to a service in Policy Manager. However, before this can happen, you must define the Policy in Policy Manager and attach it to a Service.
+
 1.	Log on to the Policy Manager console with administrator account
+
 2.	In the Organization Tree, click on <your organization>->Policies->Operational Policies
+
 3.	Click the “Add Policy” button on the bottom right of the screen.
-4.	The add policy dialog will be displayed. Select your policy from the list. Click next.
+
+4.	The add policy dialog will be displayed. Select your policy from the list. Click Next.
+
 5.	Add the name in the “Policy Name” field and click the finished button.
+
 6.	The policy will now appear in the list of Operational Policies and is ready to be attached to a service when needed.
 <p><a href="#top">Back to top</a></p>
