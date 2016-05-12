@@ -251,7 +251,7 @@ Two Spring beans need to be published by the policy handler by editing the /META
 
 1.	Define the Spring bean for the Policy Renderer and publish the OSGi service:
 
-	```
+	```xml
 	<bean id="complex.policy.renderer" class="com.soa.examples.console.policy.complex.ComplexPolicyRenderer" />   
 	    	         
 	<osgi:service ref="complex.policy.renderer" interface="com.soa.console.policy.renderer.OperationalPolicyRenderer"/>
@@ -260,7 +260,7 @@ Two Spring beans need to be published by the policy handler by editing the /META
 
 1.	Define the Spring bean for the Faces configuration and publish the OSGi service. This rarely needs any customization but is required for the policy to work correctly:
 
-	```
+	```xml
 	<osgi:service interface="com.soa.console.faces.config.FacesConfig">
 		<osgi:service-properties>
 			<entry key="name" value="com.soa.examples.complex.policy.faces.config"/>
@@ -331,9 +331,9 @@ public class ComplexPolicyRenderer extends OperationalPolicyRendererBase {
 In this case, the complex\_policy\_details.jsp JSP page is passed the PolicyBean and renders the policy details. It also contains a link to the page used to modify the policy. In this example:
 
 ```html
-	<td><b><workbench:message key="com.soa.examples.console.policy.complex.options.label"/></b>
-	  			&nbsp;&nbsp;|&nbsp;&nbsp;<a  href="javascript:(new createWindow('<%=request.getContextPath()%>/complexpolicy/modify_complex_policy_details.faces?policyKey=<%=policyKey%>', 'ActionWizardWindow', 10, 10, 550, 200, 'no', 'yes', 'no', 'no', 'no').openWindow());"><workbench:message key="com.soa.examples.console.policy.complex.modify.label"/></a>
-	</td>
+<td><b><workbench:message key="com.soa.examples.console.policy.complex.options.label"/></b>
+  			&nbsp;&nbsp;|&nbsp;&nbsp;<a  href="javascript:(new createWindow('<%=request.getContextPath()%>/complexpolicy/modify_complex_policy_details.faces?policyKey=<%=policyKey%>', 'ActionWizardWindow', 10, 10, 550, 200, 'no', 'yes', 'no', 'no', 'no').openWindow());"><workbench:message key="com.soa.examples.console.policy.complex.modify.label"/></a>
+</td>
 ``` 
 
 When the 'Save' button is clicked, the PolicyBean is called to process the form and save the assertion:
