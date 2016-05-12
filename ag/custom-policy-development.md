@@ -26,12 +26,12 @@ nav-title: Custom Policy Development
 
 ### <a name="introduction"></a>Overview
 
-This document contains the information required to:
+This document contains the information required to complete the following activities relating to a custom Policy Handler with the Akana API Gateway:
 
 1.	Develop
 2.	Deploy
 3.	Test
-4.	Run a custom Policy Handler with an Akana API Gateway
+4.	Run
 
 It will begin with the design of the Custom Policy Handler Framework, then work through the required steps to guide a customer in creating a working custom Policy. 
 
@@ -104,15 +104,15 @@ All policies are defined using an XML schema which forms the basis for the model
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema targetNamespace="http://soa.com/products/policymanager/examples/policy/complex" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cp="http://soa.com/products/policymanager/examples/policy/complex">
   <xs:element name="Complex">
-  	<xs:complexType>
-  		<xs:sequence>
-  			<xs:element name="HeaderName" type="xs:string"></xs:element>
-  			<xs:element name="Optional" type="xs:boolean"></xs:element>
-  		</xs:sequence>
-  	</xs:complexType>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="HeaderName" type="xs:string"></xs:element>
+        <xs:element name="Optional" type="xs:boolean"></xs:element>
+      </xs:sequence>
+    </xs:complexType>
   </xs:element>
 </xs:schema>
-	```
+```
 
 2.	Use JAXB v2 to generate Java classes for the schema that will end up in a Java package such as xxx.xxx.akana.policy.xxxx.assertion.model. Example build scripts, model objects and schema can be found in the /samples/com.soa.examples.policy.handler.complex policy plug-in that is distributed with the product. 
 
@@ -130,66 +130,66 @@ Several Spring beans need to be published by the policy handler by editing the /
 <!-- The WS-Policy handler factory -->
 	<bean id="complex.wsphandler.factory" class="com.soa.examples.policy.complex.handler.ComplexPolicyHandlerFactory"/>
 	
-	<osgi:service  ref="complex.wsphandler.factory" interface="com.soa.policy.wspolicy.handler.WSPHandlerFactory">
-        <osgi:service-properties>
-            <entry key="name" value="com.soa.examples.complex.in.http.wsphandler.factory"/>
-            <entry key="scope" value="concrete"/>
-            <entry key="binding" value="http"/>
-            <entry key="role" value="provider"/>
-        </osgi:service-properties>
-    </osgi:service>
-	```
+<osgi:service  ref="complex.wsphandler.factory" interface="com.soa.policy.wspolicy.handler.WSPHandlerFactory">
+    <osgi:service-properties>
+      <entry key="name" value="com.soa.examples.complex.in.http.wsphandler.factory"/>
+      <entry key="scope" value="concrete"/>
+      <entry key="binding" value="http"/>
+      <entry key="role" value="provider"/>
+    </osgi:service-properties>
+</osgi:service>
+```
 
 2. Define the Spring bean for the Policy Template that is used to describe aspects of the policy and publish the OSGi service:
 
 	```xml
-	<!-- Complex policy template -->
-	<bean id="complex.policy.template" class="com.soa.examples.policy.complex.template.ComplexPolicyTemplate"/>
-	
-	<!-- publish the complex policy template. An id property needs to be included that matches the template id -->
-	<osgi:service ref="complex.policy.template" interface="com.soa.policy.template.OperationalPolicyTemplate">
-		<osgi:service-properties>
-			<entry key="name" value="com.soa.examples.policy.complex.template"/>
-			<entry key="id" value="policy.complexexample"/>
-		</osgi:service-properties>
-	</osgi:service>
-	```
+<!-- Complex policy template -->
+<bean id="complex.policy.template" class="com.soa.examples.policy.complex.template.ComplexPolicyTemplate"/>
+
+<!-- publish the complex policy template. An id property needs to be included that matches the template id -->
+<osgi:service ref="complex.policy.template" interface="com.soa.policy.template.OperationalPolicyTemplate">
+  <osgi:service-properties>
+    <entry key="name" value="com.soa.examples.policy.complex.template"/>
+    <entry key="id" value="policy.complexexample"/>
+  </osgi:service-properties>
+</osgi:service>
+```
 
 3.	Define the Spring Bean for the new Policy Assertion Marshaller. This will be in the xxx.policy.xml file:
  
 	```xml
-   <!-- internal complex policy jaxb assertion marshaller, not published since no sub-policies -->
-    <bean id="complex.jaxb.marshaller" class="com.soa.policy.wspolicy.JaxbAssertionMarshaller"  init-method="init">
-    	<property name="assertionQNames">
-			<list>
-				<ref bean="complex.assertion.name"/>
-			</list>
-		</property>
-		<property name="jaxbPaths">
-			<list>
-				<value>com.soa.examples.policy.complex.assertion.model</value>
-			</list>
-		</property>
-	</bean>
-	
-	<!-- complex master/parent policy marshaller -->
-    <bean id="complex.assertion.marshaller" class="com.soa.examples.policy.complex.assertion.marshaler.ComplexAssertionMarshaller">
-        <property name="jaxbMarshaller" ref="complex.jaxb.marshaller"/>
-    </bean>
-    
-    <!-- publish the complex marshaller -->
-	<osgi:service ref="complex.assertion.marshaller" interface="com.soa.policy.wspolicy.AssertionMarshaller">
-		<osgi:service-properties>
-			<entry key="name" value="com.soa.examples.policy.complex.assertion.marshaller"/>
-		</osgi:service-properties>	
-	</osgi:service>
-	```
+<!-- internal complex policy jaxb assertion marshaller, not published since no sub-policies -->
+<bean id="complex.jaxb.marshaller" class="com.soa.policy.wspolicy.JaxbAssertionMarshaller"  init-method="init">
+  <property name="assertionQNames">
+    <list>
+      <ref bean="complex.assertion.name"/>
+    </list>
+  </property>
+  <property name="jaxbPaths">
+    <list>
+      <value>com.soa.examples.policy.complex.assertion.model</value>
+    </list>
+  </property>
+  </bean>
+
+<!-- complex master/parent policy marshaller -->
+<bean id="complex.assertion.marshaller" class="com.soa.examples.policy.complex.assertion.marshaler.ComplexAssertionMarshaller">
+    <property name="jaxbMarshaller" ref="complex.jaxb.marshaller"/>
+</bean>
+
+<!-- publish the complex marshaller -->
+<osgi:service ref="complex.assertion.marshaller" interface="com.soa.policy.wspolicy.AssertionMarshaller">
+  <osgi:service-properties>
+    <entry key="name" value="com.soa.examples.policy.complex.assertion.marshaller"/>
+  </osgi:service-properties>	
+</osgi:service>
+```
 
 5. Specify any cross-bundle references that are used by the new Handler Factory. For example, the need for specific XPATH or XML parsers. This will be in the xxx.policy-OSGi.policy file also.
 
 	```xml
 <osgi:reference id=“xpath.engine" interface="com.digev.fw.xpath.XPath" />
-	```
+```
 
 #### Package Descriptions
 There are several packages that typically make up the solution for the Policy Handler:
@@ -262,23 +262,23 @@ Two Spring beans need to be published by the policy handler by editing the /META
 1.	Define the Spring bean for the Policy Renderer and publish the OSGi service:
 
 	```xml
-	<bean id="complex.policy.renderer" class="com.soa.examples.console.policy.complex.ComplexPolicyRenderer" />   
-	    	         
-	<osgi:service ref="complex.policy.renderer" interface="com.soa.console.policy.renderer.OperationalPolicyRenderer"/>
-	```
+<bean id="complex.policy.renderer" class="com.soa.examples.console.policy.complex.ComplexPolicyRenderer" />   
+
+<osgi:service ref="complex.policy.renderer" interface="com.soa.console.policy.renderer.OperationalPolicyRenderer"/>
+```
 
 2. Define the Spring bean for the Faces configuration and publish the OSGi service. This rarely needs any customization but is required for the policy to work correctly:
 
 	```xml
-	<osgi:service interface="com.soa.console.faces.config.FacesConfig">
-		<osgi:service-properties>
-			<entry key="name" value="com.soa.examples.complex.policy.faces.config"/>
-		</osgi:service-properties>	
-		<bean class="com.soa.console.faces.myfaces.MyFacesConfigFactory">
-			<property name="location" value="classpath:faces/faces-config.xml"/>
-		</bean>
-	</osgi:service>
-	```
+<osgi:service interface="com.soa.console.faces.config.FacesConfig">
+  <osgi:service-properties>
+    <entry key="name" value="com.soa.examples.complex.policy.faces.config"/>
+  </osgi:service-properties>	
+  <bean class="com.soa.console.faces.myfaces.MyFacesConfigFactory">
+    <property name="location" value="classpath:faces/faces-config.xml"/>
+  </bean>
+</osgi:service>
+```
 
 #### Package Descriptions
 There are several packages that typically make up the solution for the Policy Handler:
@@ -322,27 +322,27 @@ The WebContent/xxxpolicy directory contains the files required to render the use
 ```
 public class ComplexPolicyRenderer extends OperationalPolicyRendererBase {
 
-	public String getId() {
-		return "policy.complexexample";
-	}
+  public String getId() {
+    return "policy.complexexample";
+  }
 
-	public String getContentLocation(String policyKey) throws GException{
-		return "/complexpolicy/complex_policy_details.jsp?policyKey="+policyKey;
-	}
+  public String getContentLocation(String policyKey) throws GException{
+    return "/complexpolicy/complex_policy_details.jsp?policyKey="+policyKey;
+  }
 
-	public String getContentLocation(HttpServletRequest request)
-			throws GException {
-		return getContentLocation(getPolicyKey(request));
-	}
+  public String getContentLocation(HttpServletRequest request)
+      throws GException {
+    return getContentLocation(getPolicyKey(request));
+  }
 }
 ```
 
 In this case, the complex\_policy\_details.jsp JSP page is passed the PolicyBean and renders the policy details. It also contains a link to the page used to modify the policy. In this example:
 
 ```
-	<td><b><workbench:message key="com.soa.examples.console.policy.complex.options.label"/></b>
-	  			&nbsp;&nbsp;|&nbsp;&nbsp;<a  href="javascript:(new createWindow('<%=request.getContextPath()%>/complexpolicy/modify_complex_policy_details.faces?policyKey=<%=policyKey%>', 'ActionWizardWindow', 10, 10, 550, 200, 'no', 'yes', 'no', 'no', 'no').openWindow());"><workbench:message key="com.soa.examples.console.policy.complex.modify.label"/></a>
-	</td>
+<td><b><workbench:message key="com.soa.examples.console.policy.complex.options.label"/></b>
+  &nbsp;&nbsp;|&nbsp;&nbsp;<a  href="javascript:(new createWindow('<%=request.getContextPath()%>/complexpolicy/modify_complex_policy_details.faces?policyKey=<%=policyKey%>', 'ActionWizardWindow', 10, 10, 550, 200, 'no', 'yes', 'no', 'no', 'no').openWindow());"><workbench:message key="com.soa.examples.console.policy.complex.modify.label"/></a>
+</td>
 ```
 
 When the 'Save' button is clicked, the PolicyBean is called to process the form and save the assertion:
