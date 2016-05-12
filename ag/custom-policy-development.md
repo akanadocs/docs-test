@@ -27,13 +27,11 @@ nav-title: Custom Policy Development
 ### <a name="introduction"></a>Overview
 
 This document contains the information required to:
-1.	Develop;
 
-2.	Deploy; 
-
-3.	Test;
-
-4.	And run a custom Policy Handler with an Akana API Gateway
+1.	Develop
+2.	Deploy
+3.	Test
+4.	Run a custom Policy Handler with an Akana API Gateway
 
 It will begin with the design of the Custom Policy Handler Framework, then work through the required steps to guide a customer in creating a working custom Policy. 
 
@@ -57,14 +55,16 @@ Given that the Policy Handler Framework is a specialization of the Message Handl
 How a Handler determines which Policy it will act on is determined by the associated Policy classes as shown below:
 
 ![Policy UML](images/policy_uml.png "Policy UML")
+
 The assertion Marshaller retrieves the policies from Policy Manager then calls the Policy Handler Factory to determine if it should create a Policy handler.
+
 The Policy Handler Factory is tied to the Assertion Marshaller by the framework via the Spring wiring in the xx-policy-osgi.xml file on your build.
+
 **Note:** The JavaDoc for these classes can be found in the [API Gateway Reference](reference.html) section.
 
 The Policy Handler framework works on the notion of Handler chains. These chains are associated with two criteria:
 
 1.	The direction of the message
-
 2.	The Actor that the Network Director is playing
 
 The following diagram shows how handler chains are processed for the IN message (such as an HTTP request):
@@ -125,6 +125,7 @@ Several Spring beans need to be published by the policy handler by editing the /
 * Assertion Marshaller
 
 1.	Define the Spring bean for the Policy Handler Factory and publish the OSGi services for the Policy Handler Factory. There should be one service definition per binding per role:
+
 	```
 <!-- The WS-Policy handler factory -->
 	<bean id="complex.wsphandler.factory" class="com.soa.examples.policy.complex.handler.ComplexPolicyHandlerFactory"/>
@@ -137,7 +138,6 @@ Several Spring beans need to be published by the policy handler by editing the /
             <entry key="role" value="provider"/>
         </osgi:service-properties>
     </osgi:service>
-    
 	```
 2. Define the Spring bean for the Policy Template that is used to describe aspects of the policy and publish the OSGi service:
 
@@ -153,7 +153,6 @@ Several Spring beans need to be published by the policy handler by editing the /
 		</osgi:service-properties>
 	</osgi:service>
 	```
-	
 3.	Define the Spring Bean for the new Policy Assertion Marshaller. This will be in the xxx.policy.xml file:
  
 	```
@@ -185,7 +184,6 @@ Several Spring beans need to be published by the policy handler by editing the /
 
 	
 	```
-	
 5. Specify any cross-bundle references that are used by the new Handler Factory. For example, the need for specific XPATH or XML parsers. This will be in the xxx.policy-OSGi.policy file also.
 
 	```
@@ -196,11 +194,8 @@ Several Spring beans need to be published by the policy handler by editing the /
 There are several packages that typically make up the solution for the Policy Handler:
 
 1. xxx.xxx.akana.policy.xxxx.handler
-
 2. xxx.xxx.akana.policy.xxxx.assertion
-
 4. xxx.xxx.akana.policy.xxxx.assertion.marshaller
-
 5. xxx.xxx.akana.policy.xxxx.assertion.model
 
 ##### xxx.xxx.akana.policy.xxxx.handler
@@ -241,7 +236,6 @@ In the com.soa.examples.policy.handler.complex policy plug-in, the build/build.x
 Policies are configured in the Policy Manager console via one of two different mechanisms:
 
 1. **XML Policy** - the XML Policy is used when no Console Plug-in can be found for a policy. Users can simply type the XML assertion into a dialog box with the appropriate XML structure (namespace, localname, etc) and it will be passed into the Policy Handler as an assertion. This is the approached leveraged by the 'com.soa.examples.policy.handler.simple' example.
-
 2. **Custom Console Plugin** - a nicer way to interface with users is via a specific UI designed to render the policy. This is the approach used by the 'com.soa.examples.policy.handler.complex' example.
 
 The Policy Handler Console Plug-in is developed as an OSGi Plug-in. Please refer to the [OSGi Plug-in Development](osgi-plugin-development.html) document which describes how to set up an Eclipse workspace and create plug-in projects. Ensure that you have followed the directions for 'Compiling the complex policy handler example'.
@@ -265,6 +259,7 @@ Two Spring beans need to be published by the policy handler by editing the /META
 * Faces Config
 
 1.	Define the Spring bean for the Policy Renderer and publish the OSGi service:
+
 	```
 	<bean id="complex.policy.renderer" class="com.soa.examples.console.policy.complex.ComplexPolicyRenderer" />   
 	    	         
@@ -288,7 +283,6 @@ Two Spring beans need to be published by the policy handler by editing the /META
 There are several packages that typically make up the solution for the Policy Handler:
 
 1. xxx.xxx.akana.console.policy.xxxx
-
 2. xxx.xxx.akana.console.policy.xxxx.bean
 
 ##### xxx.xxx.akana.console.policy.xxxx
@@ -312,7 +306,6 @@ policy.complexexample.name=Complex Example Policy
 com.soa.examples.console.policy.complex.options.label=Options
 com.soa.examples.console.policy.complex.headername.label=Header Name
 com.soa.examples.console.policy.complex.optional.label=Optional
-
 ```
 
 To localize text in the JSP pages, simply use the <workbench:message> tag:
@@ -320,6 +313,7 @@ To localize text in the JSP pages, simply use the <workbench:message> tag:
 ```
 <workbench:message key="com.soa.examples.console.policy.complex.headername.label"/>
 ```
+
 #### Web Content
 
 The WebContent/xxxpolicy directory contains the files required to render the user interface. The entry point is defined in the `PolicyRender.getContentLocation(String policyKey)` method. e.g:
@@ -345,11 +339,9 @@ public class ComplexPolicyRenderer extends OperationalPolicyRendererBase {
 In this case, the complex\_policy\_details.jsp JSP page is passed the PolicyBean and renders the policy details. It also contains a link to the page used to modify the policy. In this example:
 
 ```
-
 	<td><b><workbench:message key="com.soa.examples.console.policy.complex.options.label"/></b>
 	  			&nbsp;&nbsp;|&nbsp;&nbsp;<a  href="javascript:(new createWindow('<%=request.getContextPath()%>/complexpolicy/modify_complex_policy_details.faces?policyKey=<%=policyKey%>', 'ActionWizardWindow', 10, 10, 550, 200, 'no', 'yes', 'no', 'no', 'no').openWindow());"><workbench:message key="com.soa.examples.console.policy.complex.modify.label"/></a>
 	</td>
-	  	
 ``` 
 
 When the 'Save' button is clicked, the PolicyBean is called to process the form and save the assertion:
@@ -367,10 +359,8 @@ When the 'Save' button is clicked, the PolicyBean is called to process the form 
 #### Build the Policy Handler
 
 1.	Ensure the Java packages containing the HandlerFactory implementation (and any other classes referenced in the Spring wiring) are included in the Export-Package list in MANIFEST.MF
-
 2.	Ensure all Java packages imported from outside the new Handler bundle are included in the Import-Package list in MANIFEST.MF
 	*	Imported com.akana and com.digev packages should specify version="x.0.0" where x is the major version number of the API Gateway you have installed.
-	
 3.	Build the plug-ins as described in the [OSGi Plug-in Development](osgi-plugin-development.html) document.
 
 #### Set up Felix console
@@ -405,14 +395,9 @@ Once deployment is completed the policy handler will be loaded and invoked once 
 For this to happen, you must attach the policy to a service in Policy Manager. However, before this can happen, you must define the Policy in Policy Manager and attach it to a Service.
 
 1.	Log on to the Policy Manager console with administrator account
-
 2.	In the Organization Tree, click on <your organization>->Policies->Operational Policies
-
 3.	Click the “Add Policy” button on the bottom right of the screen.
-
 4.	The add policy dialog will be displayed. Select your policy from the list. Click Next.
-
 5.	Add the name in the “Policy Name” field and click the finished button.
-
 6.	The policy will now appear in the list of Operational Policies and is ready to be attached to a service when needed.
 <p><a href="#top">Back to top</a></p>
