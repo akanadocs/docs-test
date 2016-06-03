@@ -38,13 +38,13 @@ nav-title: Performance Tuning
 		<li><a href="#contract-policy-cache">Contract Policy Cache</a></li>
 		<li><a href="#cert-cache">Policy Manager Client (Certificate) Cache</a></li>
 		<li><a href="#az-cache">Contract Authorization Cache</a></li>
-		<li><a href="#cm-settings">Community Manager settings</a></li>
+		<li><a href="#cm-settings">Akana API Platform settings</a></li>
 	</ol>
 </ol>
 
 ### <a name="introduction"></a>Introduction
 
-This document describes the performance tuning parameters for Akana’s API Gateway and Community Manager products. 
+This document describes the performance tuning parameters for the Akana API Gateway and Akana API Platform products. 
 
 ### <a name="deployment-architecture"></a>Deployment Architecture
 There are several optional deployment choices that can improve the performance of the product.
@@ -129,14 +129,48 @@ After changing the limits.conf file, you will need to re-login for the setting t
 
 #### <a name="jre-memory"></a>Configuring the JVM memory settings
 
-Generally we do not advise changing the JVM memory settings. A better approach is to install more containers and load-balance across them. This is due to the overhead incurred in managing the increased memory. The container ships with the following defaults:
+Generally, we do not advise changing the JVM memory settings. A better approach is to install more containers and load-balance across them. This is due to the overhead incurred in managing the increased memory. The container ships with the following defaults:
 
 * For 32 bit machines: -Xmx1024M -XX:MaxPermSize=192M
 * For 64 bit machines: -Xmx2048M -XX:MaxPermSize=256M
 
-These settings are defined in the startup batch or shell scripts in the /bin directory.
+**To increase the settings**
 
-If you decide to increase the JVM memory settings anyway, always increase the MaxPermSize in proportion to the memory allocated and do not exceed 4096M. e.g. -Xmx4096M -XX:MaxPermSize=512M
+If you decide to increase the memory settings, first find the existing settings.
+
+In the **RegisterContainerService.bat** file, the existing 32-bit settings:
+
+```
+set JAVA_MEM=--JvmMx 1024
+set PERM_GEN_MEM=-XX:MaxPermSize=128M
+```
+
+The existing 64-bit settings:
+
+```
+set JAVA_MEM=--JvmMx 2048
+set PERM_GEN_MEM=-XX:MaxPermSize=256M
+```
+
+Change the existing settings as needed. Always increase the MaxPermSize in proportion to the memory allocated, and do not exceed 4096M; for example:
+
+```
+set JAVA_MEM=--JvmMx 4096
+set PERM_GEN_MEM=-XX:MaxPermSize=512M
+```
+
+For the changes to take effect, you must register the service by running the following command:
+
+```
+RegisterContainerService.bat {container name}
+```
+
+If the service was already present, you must first unregister it, and then register it: run the following commands, in sequence:
+
+```
+UnRegisterContainerService.bat {container name}
+RegisterContainerService.bat {container name}
+```
 
 **Scope**: All Containers
 
@@ -356,15 +390,15 @@ cached.auz.engine.operation.expirationTimeInSeconds=1800
 ```
 The time in seconds before the authorization descision will be removed from the cache. This time can be lengthened to ensure that the Network Directors can continue to function without the Policy Manager. This may cause a security vulnerability if a contract is revoked but the Policy Manager is unreachable.
 
-#### <a name="cm-settings"></a>Community Manager Settings
+#### <a name="cm-settings"></a>Akana API Platform Settings
 
-Community Manager also incorporates a number of cache settings. These include:
+The Akana API Platform also incorporates a number of cache settings. These include:
 
 * [com.soa.api.security](../../cm/learnmore/site_admin_admin_console_settings.htm#com_soa_api_security)
 * [com.soa.oauth.agent.client.cache](../../cm/learnmore/site_admin_admin_console_settings.htm#com_soa_oauth_agent_client_cache)
 * [com.soa.oauth.client.cache](../../cm/learnmore/site_admin_admin_console_settings.htm#com_soa_oauth_client_cache)
 
-For more information, please refer to the [Admin Console Settings](../../cm/learnmore/site_admin_admin_console_settings.htm) document for Community Manager.
+For more information, please refer to the [Admin Console Settings](../../cm/learnmore/site_admin_admin_console_settings.htm) document for the Akana API Platform.
 
 
 
