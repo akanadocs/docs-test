@@ -16,8 +16,8 @@ nav-title: Configure Java Runtime
 <ol class="table_of_contents">
 	<li><a href="#introduction">Introduction</a></li>
 	<li><a href="#finding_java">Find Your Java Installation</a></li>
-	<li><a href="#copy_provider_jar"></a>Copy the Provider Jar File</a></li>
-	<li><a href="#update_java_security"></a>Update java.security File</a></li>
+	<li><a href="#copy_provider_jar">Copy the Provider Jar File</a></li>
+	<li><a href="#update_java_security">Update java.security File</a></li>
 </ol>
 
 ### <a name="introduction"></a>Introduction
