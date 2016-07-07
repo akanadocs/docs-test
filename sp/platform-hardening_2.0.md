@@ -430,3 +430,5 @@ If you are using version 8.x:
 ```
 com.soa.platform.jetty -> jetty.server.sendServerVersion = false
 ```
+
+NOTE: this property does not exist by default, so you will most likely need to add it.
