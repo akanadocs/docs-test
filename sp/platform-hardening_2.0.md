@@ -46,6 +46,7 @@ Akana Platform Hardening Guide
 		<li><a href="#configuring-account-login-rules">Configuring Account Login Rules</a></li>
 		<li><a href="#configuring-password-complexity-rules">Configuring Password Complexity Rules</a></li>
 		<li><a href="#configuring-x-frame-options-header">Configuring X-FRAME-OPTIONS Header</a></li>
+		<li><a href="#configuring-server-header">Configuring Server Header</a></li>
 	</ol>
 </ol>
 
@@ -175,13 +176,16 @@ session.manager.factory.secureCookies=true
 ```
 
 #### <a name="disabling-sslv3"></a>Disabling SSLv3
-This configures the product to disable SSLv3.
-**Scope**: All Containers
+This configures the product to disable SSLv3.
+**Scope**: All Containers
 
 In the admin console, configure the following:
 
-```com.soa.transport.jetty ->http.incoming.transport.config.enabledProtocols=SSLv2HELLO,TLSv1,TLSv1.1, TLSv1.2
-```
+```
+com.soa.transport.jetty ->
+http.incoming.transport.config.enabledProtocols=SSLv2HELLO,TLSv1,TLSv1.1, TLSv1.2
+```
+
 #### <a name="restrict-cipher-suites"></a>Restrict the cipher suites used
 
 Use only stronger cipher suites for SSL
@@ -199,13 +203,16 @@ http.incoming.transport.config.cipherSuites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA25
 **Note**: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See http://docs.oracle.com/javase/7/docs/technotes/guides/security/SunProviders.html. This has to be added to the JRE.
 
 #### <a name="tls12-only"></a>Enforcing TLS 1.2 Only
-Depending on the level of security required, you may way to restrict the protocol to TLS 1.2 only. Note - This will limit the accesibility of the platform to certain clients.
-**Scope**: All Containers
+Depending on the level of security required, you may way to restrict the protocol to TLS 1.2 only. Note - This will limit the accesibility of the platform to certain clients.
+**Scope**: All Containers
 
 Enable TLSv1.2 only:
 
-```com.soa.transport.jetty ->http.incoming.transport.config.enabledProtocols=TLSv1.2
-```
+```
+com.soa.transport.jetty ->
+http.incoming.transport.config.enabledProtocols=TLSv1.2
+```
+
 Further restrict the cipher suite:
 
 ```
@@ -217,13 +224,16 @@ http.incoming.transport.config.cipherSuites=TLS_RSA_WITH_AES_256_CBC_SHA256, TLS
 **Note**: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See http://docs.oracle.com/javase/7/docs/technotes/guides/security/SunProviders.html. This has to be added to the JRE.
 
 #### <a name="disabling-outbound"></a>Limiting Outbound SSL/TLS/Cipher support
-You may also want to limit the protcols and ciphers the the prodct will use for outbound connections.
-**Scope**: All Containers
+You may also want to limit the protcols and ciphers the the prodct will use for outbound connections.
+**Scope**: All Containers
 
 Configure the available protocols for outbound connections:
 
-```com.soa.http.client.core ->https.socket.factory.enabledProtocols=TLSv1.2
-```
+```
+com.soa.http.client.core ->
+https.socket.factory.enabledProtocols=TLSv1.2
+```
+
 Configure the available cipher suites for outbound connections:
 
 ```
@@ -235,11 +245,19 @@ https.socket.factory.cipherSuites=TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_
 **Note**: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See http://docs.oracle.com/javase/7/docs/technotes/guides/security/SunProviders.html. This has to be added to the JRE.
 
 #### <a name="prevent-forward-proxying"></a>Prevent Forward Proxying
-Prevent unauthenticated users from initiating arbitrary internal connections from the Community Manager portal.
-**Scope**: Community Manager ContainersIn the admin console, configure the following:
+Prevent unauthenticated users from initiating arbitrary internal connections from the Community Manager portal.
+**Scope**: Community Manager Containers
+
+In the admin console, configure the following:
 
 ```
-com.soa.atmosphere.forwardproxy ->forward.proxy.allowedHosts=<Network Director Host(s) and/or Load Balancer host>```Values are comma separated.#### <a name="nd-header-propagation"></a>Header Propagation in Network Director
+com.soa.atmosphere.forwardproxy ->
+forward.proxy.allowedHosts=<Network Director Host(s) and/or Load Balancer host>
+```
+
+Values are comma separated.
+
+#### <a name="nd-header-propagation"></a>Header Propagation in Network Director
 
 Prevent the automatic propagation of certain HTTP headers through the Network Director and also configure a translation of the X-Forwarded-Host header. 
 
@@ -284,9 +302,9 @@ com.soa.api.security.cache.refreshTime=300000
 ```
 
 #### <a name="configure-the-anti-virus-policy-to-scan-for-uploaded-files"></a>Configure the Anti-virus Policy to scan for uploaded files
-The Anti-virus policy scans for files that are uploaded from the Community Manager Portal.
-**Scope**: All Community Manager Containers
-In the Policy Manager Console, create an Anti-Virus Operational Policy and configure the policy.
+The Anti-virus policy scans for files that are uploaded from the Community Manager Portal.
+**Scope**: All Community Manager Containers
+In the Policy Manager Console, create an Anti-Virus Operational Policy and configure the policy.
 
 ![Create Anti Virus Policy](images/modify-av-policy.png "Create Anti Virus Policy")
 
@@ -295,71 +313,120 @@ Attach this policy to the ConsoleResourceAPIService and the ContentAPIService in
 ![Attach Anti Virus Policy](images/attach-av-policy.png "Attach Anti Virus Policy")
 
 #### <a name="enabling-csrf-protection"></a>Enabling CSRF Protection
-You can enable and disable CSRF protection in the Policy Manager and Community Manager User Interfaces.
-***Scope***:  All Community Manager and Policy Manager ContainersDue to the fact that Policy Manager is not Internet-facing, it is disabled by default. You can enable the CSRF protection in the Policy Manager in the admin console:
+You can enable and disable CSRF protection in the Policy Manager and Community Manager User Interfaces.
+***Scope***:  All Community Manager and Policy Manager Containers
 
-```com.soa.console.csrf ->org.owasp.csrfguard.Enabled=true```
-In Community Manager, CSRF configuration can be found under Administration -> Config -> Security Settings:
+Due to the fact that Policy Manager is not Internet-facing, it is disabled by default. You can enable the CSRF protection in the Policy Manager in the admin console:
+
+```
+com.soa.console.csrf ->
+org.owasp.csrfguard.Enabled=true
+```
+In Community Manager, CSRF configuration can be found under Administration -> Config -> Security Settings:
 
 ![Enable CSRF Support](images/enable-csrf-support.png "Enable CSRF Support")
 
 #### <a name="adding-xss-exclusions"></a>Adding XSS exclusions
-Cross-site-scripting (XSS) is an way to inject client-side script into Web pages viewed by other users. 
-***Scope***:  All Community Manager and Policy Manager Containers
-To configure any exceptions to the exclusion policy:
+Cross-site-scripting (XSS) is an way to inject client-side script into Web pages viewed by other users. 
+***Scope***:  All Community Manager and Policy Manager Containers
+To configure any exceptions to the exclusion policy:
 
-```com.soa.console.xss ->exceptionURLs=[COMMA DELIMITED LIST]```
-To configure any new keywords that should be excluded:
+```
+com.soa.console.xss ->
+exceptionURLs=[COMMA DELIMITED LIST]
+```
+To configure any new keywords that should be excluded:
 
-```com.soa.console.xss ->keywords=[COMMA DELIMITED LIST]```
-To turn XSS validation on/off:
+```
+com.soa.console.xss ->
+keywords=[COMMA DELIMITED LIST]
+```
+To turn XSS validation on/off:
 
-```com.soa.console.xss ->validate=[true|false]```
+```
+com.soa.console.xss ->
+validate=[true|false]
+```
 
 #### <a name="turning-off-user-account-enumeration"></a>Turning off User Account Enumeration
-User Account Enumeration occurs when the Community Manager user interface provides direct feedback to a user during the signup and registration processes to the effect that a user account already exists or is already registered. If this is turned off, no useful feedback is provided to the user, minimizing the security risk, but decreasing usability.
-***Scope***:  All Community Manager Containers
-In Community Manager, User Account Enumeration configuration can be found under Administration -> Config -> Security Settings:
+User Account Enumeration occurs when the Community Manager user interface provides direct feedback to a user during the signup and registration processes to the effect that a user account already exists or is already registered. If this is turned off, no useful feedback is provided to the user, minimizing the security risk, but decreasing usability.
+***Scope***:  All Community Manager Containers
+In Community Manager, User Account Enumeration configuration can be found under Administration -> Config -> Security Settings:
 
 ![Allow User Enumeration](images/allow-user-enum.png "Allow User Enumeration")
 
 #### <a name="configuring-challenge-questions-and-answers"></a>Configuring Challenge Questions and Answers
-Challenge Questions/Answers are often required to increase security around password reset. When signing up to the platform, the user must provide the answer to one or more security questions, if the platform is set up to require them. The user's answers are stored in the database, and the user must answer one or more security questions on demand to perform certain functions such as resetting a password or changing the user profile.
-***Scope***:  All Community Manager Containers
-In Community Manager, the Challenge Questions/Answers configuration can be found under Administration -> Config -> Users:
->Enforce Challenge Questions on Login -> EnabledAdditional settings can be found under Administration -> Config -> Security Settings:
+Challenge Questions/Answers are often required to increase security around password reset. When signing up to the platform, the user must provide the answer to one or more security questions, if the platform is set up to require them. The user's answers are stored in the database, and the user must answer one or more security questions on demand to perform certain functions such as resetting a password or changing the user profile.
+***Scope***:  All Community Manager Containers
+In Community Manager, the Challenge Questions/Answers configuration can be found under Administration -> Config -> Users:
+>Enforce Challenge Questions on Login -> Enabled
+
+Additional settings can be found under Administration -> Config -> Security Settings:
 
 ![Encrypt Challenge Answers](images/encrypt-challenge-answers.png "Encrypt Challenge Answers")
 
 Configuration of the actual questions available can be done via an [API call](http://docs.akana.com/cm/api/businesses/m_businesses_saveChallenges.htm) into the system.
 
 #### <a name="disallowing-user-profile-modification"></a>Disallowing User Profile Modification
-User Profile Modification permits a user access to their own profile for modification. In some circumstances, you may wish to prevent this (e.g. when user accounts are pre-provisioned).
-***Scope***:  All Community Manager Containers
-In Community Manager, User Profile Modification configuration can be found under Administration -> Config -> Security Settings:
+User Profile Modification permits a user access to their own profile for modification. In some circumstances, you may wish to prevent this (e.g. when user accounts are pre-provisioned).
+***Scope***:  All Community Manager Containers
+In Community Manager, User Profile Modification configuration can be found under Administration -> Config -> Security Settings:
 
-![User Profile Modification](images/user-profile-modification.png "User Profile Modification")#### <a name="configuring-account-login-rules"></a>Configuring Account Login Rules
-The account login rules may include many options regarding failure attempts allowed, account suspension times, auto-login, etc.
-***Scope***: Community Manager
-These login policies may be set via an [API call](http://docs.soa.com/cm/api/businesses/m_businesses_updateLoginPolicy.htm) into the system or a direct DB query. 
-If using a DB query, the syntax will be something like:
+![User Profile Modification](images/user-profile-modification.png "User Profile Modification")
 
-```-- Login Rulesupdate LOGIN_RULES set MAXATTEMPTS=3, ATTEMPTSPERIOD=1, SUSPENSIONTIME=30, AUTO_LOGIN_EXT_DOMAIN=’com.soa.feature.enabled’ where TENANTID = (select TENANTID from TENANTS where FEDMEMBERID='[YOUR TENANT ID]');
+#### <a name="configuring-account-login-rules"></a>Configuring Account Login Rules
+The account login rules may include many options regarding failure attempts allowed, account suspension times, auto-login, etc.
+***Scope***: Community Manager
+These login policies may be set via an [API call](http://docs.soa.com/cm/api/businesses/m_businesses_updateLoginPolicy.htm) into the system or a direct DB query. 
+If using a DB query, the syntax will be something like:
+
+```
+-- Login Rules
+update LOGIN_RULES set MAXATTEMPTS=3, ATTEMPTSPERIOD=1, SUSPENSIONTIME=30, AUTO_LOGIN_EXT_DOMAIN=’com.soa.feature.enabled’ where TENANTID = (select TENANTID from TENANTS where FEDMEMBERID='[YOUR TENANT ID]');
 ```
 
 #### <a name="configuring-password-complexity-rules"></a>Configuring Password Complexity Rules
-Password requirements (rules) may include many options regarding length, special characters, etc.
-***Scope***: Community Manager
-These password rules may be set via an [API call](http://docs.soa.com/cm/api/businesses/m_businesses_updatePasswordPolicy.htm) into the system or a direct DB query.
-If using a DB query, the syntax will be something like:
+Password requirements (rules) may include many options regarding length, special characters, etc.
+***Scope***: Community Manager
+These password rules may be set via an [API call](http://docs.soa.com/cm/api/businesses/m_businesses_updatePasswordPolicy.htm) into the system or a direct DB query.
+If using a DB query, the syntax will be something like:
 
-```-- Password Rulesupdate PASSWORD_RULES set MINLENGTH=8, MAXLENGTH=20, MINLETTERS=1, MINNUMBERS=1, ALLOWEDSPECCHARS='%&_?#=-', CANCONTAINSPACES='N', ISCASESENSITIVE='N' where TENANTID = (select TENANTID from TENANTS where FEDMEMBERID='[YOUR TENANT ID]');```
+```
+-- Password Rules
+update PASSWORD_RULES set MINLENGTH=8, MAXLENGTH=20, MINLETTERS=1, MINNUMBERS=1, ALLOWEDSPECCHARS='%&_?#=-', CANCONTAINSPACES='N', ISCASESENSITIVE='N' where TENANTID = (select TENANTID from TENANTS where FEDMEMBERID='[YOUR TENANT ID]');
+```
 
 #### <a name="configuring-x-frame-options-header"></a>Configuring X-FRAME-OPTIONS Header
-The X-FRAME-OPTIONS header plays a role in determining if and how the user interface can be embedded within an iFrame in a 3rd party site. 
-***Scope***:  All Community Manager and Policy Manager ContainersTo configure Community Manager:
+The X-FRAME-OPTIONS header plays a role in determining if and how the user interface can be embedded within an iFrame in a 3rd party site. 
+***Scope***:  All Community Manager and Policy Manager Containers
 
-```com.soa.atmosphere.console ->atmosphere.console.config.xFrameOptions=[DESIRED HEADER]```
-To configure Policy Manager:
+To configure Community Manager:
 
-```com.soa.console.xss ->xFrameOptions=[DESIRED HEADER]```
+```
+com.soa.atmosphere.console ->
+atmosphere.console.config.xFrameOptions=[DESIRED HEADER]
+```
+
+To configure Policy Manager:
+
+```
+com.soa.console.xss ->
+xFrameOptions=[DESIRED HEADER]
+```
+
+#### <a name="configuring-server-header"></a>Configuring Server Header
+You may want to prevent the Server header from being returned in responses.
+ 
+***Scope***: All Community Manager and Policy Manager Containers
+ 
+In the admin console, configure the following:
+
+```
+com.soa.transport.jetty -> jetty.server.sendServerVersion = false
+```
+
+If you are using version 8.x:
+
+```
+com.soa.platform.jetty -> jetty.server.sendServerVersion = false
+```
