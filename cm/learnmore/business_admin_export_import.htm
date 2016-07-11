@@ -21,11 +21,12 @@ nav-title: Export and Import
 <ol class="table_of_contents">
   <li><a href="#what_business_information_can_i_export">What business information can I export?</a></li>
   <li><a href="#how_do_i_export_business_information">How do I export business information?</a></li>
+  <li><a href="#what_export_options_choose">What export options should I choose?</a></li>
   <li><a href="#how_do_i_export_a_license">How do I export a license?</a></li>
   <li><a href="#how_do_i_export_a_scope">How do I export a scope?</a></li>
   <li><a href="#what_are_the_contents_of_the_business_export_file">What are the contents of the business export file?</a></li>
   <li><a href="#how_do_i_import_site_app_or_api_information_from_an_export_file">How do I import site, app, or API information from an export file?</a></li>
-  <li><a href="#what_is_the_import_properties_file_and_when_do_i_need_it">What is the import properties file and when do I need it?</a></li>
+  <li><a href="#import_properties_file">What is the import properties file and when do I need it?</a></li>
 </ol>
 <div class = "divider1"></div>
 
@@ -33,6 +34,7 @@ nav-title: Export and Import
 
 <a name="what_business_information_can_i_export"></a><h3>What business information can I export?</h3>
 <p>You can export business information to an external file. You can then import that file to another instance of the platform. One use of this feature is to move the entire set of resources associated with a business from one environment to another, such as from a development environment to a testing environment.</p>
+<p><strong>Note</strong>: If you export a subset of platform data, you'll need to consider interdependencies between different resources. For recommendations about export options and information about dependencies, see <a href="#what_export_options_choose">What export options should I choose?</a></p>
 <p>You can choose whether or not to include the following information:</p>
 <ul>
   <li>API:
@@ -43,7 +45,7 @@ nav-title: Export and Import
       <li>Export API Administrators<br />
         <strong>Note</strong>: the relationship of the user as an API admin is exported, but the user is not exported. The user must exist in the target environment. If the user does not exist when the information is imported, the API is created without that admin. From there, either a) the user can sign up and be invited to be an admin, b) the user can sign up and the API data can be reimported, c) another individual can be designated as an API admin.</li>
       <li>Export API Implementation Services<br />
-        <strong>Note</strong>: If the API was created using an existing service (see How do I add an API from an existing API Gateway service (Publish an existing service as an API)?), this option allows you to choose whether or not to export the API implementation services, as set up in Policy Manager. If the API was created as a new service (see How do I add a new API (Add a new API?), implementation services are always exported along with API.</li>
+        <strong>Note</strong>: If the API was created using an existing service, this option allows you to choose whether or not to export the API implementation services, as set up in Policy Manager. If the API was created as a new service, implementation services are always exported along with API.</li>
     </ul>
   </li>
   <li>Policy:
@@ -94,9 +96,20 @@ nav-title: Export and Import
   <li>Log in as the Business Admin and click the <em>Administration</em> quick filter (wrench icon).</li>
   <li>Click <strong>Actions</strong>.</li>
   <li>Click <strong>Export</strong>.</li>
-  <li>In the Export dialog, choose the information you want to include in the export file. For information about the options, see <a href="#what_business_information_can_i_export">What business information can I export?</a> above. </li>
+  <li>In the Export dialog, choose the information you want to include in the export file. For information about the options, see <a href="#what_business_information_can_i_export">What business information can I export?</a> above. For information about dependencies between different types of platform data, see <a href="#what_export_options_choose">What export options should I choose?</a> below.</li>
   <li>Choose to save or open the export file.</li>
 </ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="what_export_options_choose"></a><h3>What export options should I choose?</h3>
+<p>If you choose to export a subset of platform data, it's important to consider interdependencies between different resources, such as apps and APIs. The specific relationships between resources might vary depending on the iinstance of the platform that you're exporting from; for example, if no APIs use licenses, exporting APIs without exporting licenses is not an issue. Examples of possible interdependencies:</p>
+<ul>
+  <li>If there are contracts between apps and APIs, and you export contracts and apps, but not APIs, or export contracts and APIs, but not apps, the import data will not work correctly unless the missing resources already exist in the platform version you're importing to. A contract is between an app and an API, so both resources must be available for the import data to be valid.</li>
+  <li>If you export one or more APIs that are using the Licenses feature, but don't export licenses and scopes, the same licenses and scopes would need to be available in the platform version you're importing to, otherwise the APIs will not work as expected.</li>
+</ul>
+<p>In general, it's best to preserve interdependencies when you're exporting data. For example, you could choose all export options, or at least choose API, Policy, Scopes, Licenses, and Apps.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -175,14 +188,14 @@ nav-title: Export and Import
   <li>Navigate to <em>Administration &gt; Actions</em>.</li>
   <li>Click <em>Import.</em></li>
   <li>Browse to the location of the export package file (ZIP file) and choose it.</li>
-  <li>Optional: browse to the location of the configuration migration properties file and choose it. For more information, see <a href="#what_is_the_import_properties_file_and_when_do_i_need_it">What is the import properties file and when do I need it?</a></li>
+  <li>Optional: browse to the location of the configuration migration properties file and choose it. For more information, see <a href="#import_properties_file">What is the import properties file and when do I need it?</a></li>
   <li>Click <strong>Import</strong>.</li>
 </ol>
 <p><a href="#top">Back to top</a></p>
 
 
 
-<a name="what_is_the_import_properties_file_and_when_do_i_need_it"></a>
+<a name="import_properties_file"></a>
 <h3>What is the import properties file and when do I need it?</h3>
 <p>When you import a file, you can also provide an optional configuration migration properties file.</p>
 <p>Migration properties allow for URL mapping of physical service endpoints between the source environment that the information was exported from and the target environment you're importing it to.</p>
@@ -252,14 +265,15 @@ migration.service.qname.matching=true</pre>
 <table width="700" border="0" cellspacing="0" cellpadding="2" class="doctable">
   <tr>
     <td width="300"><ul>
-  <li><a href="business_admin_.htm">Business Admin Summary Page</a></li>
-  <li><a href="business_admin_overview.htm">Business Admin Responsibilities</a></li>
-  <li><a href="business_admin_business_adm.htm">Business Admins</a></li>
-  <li><a href="bus_site_api_admin_forum.htm">Forum Moderation</a></li>
-  <!--<li><a href="business_admin_export_import.htm">Export/Import</a></li>-->
+      <li><a href="business_admin_.htm">Business Admin Summary Page</a></li>
+      <li><a href="business_admin_overview.htm">Business Admin Responsibilities</a></li>
+      <li><a href="business_admin_business_adm.htm">Business Admins</a></li>
+      <li><a href="bus_site_admin_dzs.htm">Managing Deployment Zones</a></li>
+      <li><a href="bus_site_api_admin_forum.htm">Forum Moderation</a></li>
     </ul>
 </td>
     <td width="400"><ul>
+  <!--<li><a href="business_admin_export_import.htm">Export/Import</a></li>-->
       <li><a href="business_admin_scopes.htm">Scopes</a></li>
       <li><a href="business_admin_licenses.htm">Licenses</a></li>
       <li><a href="business_admin_workflows.htm">Workflows</a></li>

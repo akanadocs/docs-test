@@ -11,7 +11,7 @@ nav-title: Glossary of Terms
 ---
 <h2 id="top">Glossary of Terms</h2>
 <p>Key terminology used in the platform.</p>
-<h5 class="stamp">API Platform Version: 8.1</h5>
+<h5 class="stamp">API Platform Version: 8.2</h5>
 <div class = "divider1"></div>
 
 
@@ -153,8 +153,8 @@ nav-title: Glossary of Terms
 
 
 
-<dt>authorization server URL</dt>
-<dd>See <a href="#gl_oauth_authorizationserverurl">OAuth authorization server URL</a>.</dd>
+<dt>Authorization Server URL</dt>
+<dd>See <a href="#gl_oauth_authorizationserverurl">OAuth Authorization Server URL</a>.</dd>
 
 
 
@@ -254,6 +254,11 @@ nav-title: Glossary of Terms
 
 
 
+<dt>client node (in Elasticsearch)</dt>
+<dd>See <a href="#gl_es_client_node">Elasticsearch client node</a>.</dd>
+
+
+
 <dt><a name="gl_client_registration_endpoint"></a>client registration endpoint</dt>
 <dd>In OpenID Connect, the provider's endpoint to which client registration requests should be sent. For example, if the platform is set up with an OAuth Provider that supports this endpoint, and an API is referencing that OAuth Provider (External OAuth Provider Domain setup), when an app connects to the API the app is automatically registered with the applicable provider. This occurs in the background by sending a message to the provider's client registration endpoint as specified in the domain setup. For more information, refer to <a href="http://connect2id.com/products/server/docs/api/client-registration" target="_blank">OAuth 2.0 / OpenID Connect client registration endpoint</a> (external page).</dd>
 
@@ -347,6 +352,11 @@ nav-title: Glossary of Terms
 
 
 
+<dt><a name="gl_custom_en_us_json"></a>custom_en-us.json file</dt>
+<dd>The Site Admin, in customizing the site, might implement a <strong>custom_en-us.json</strong> file with customization information in it. If this file exists, the platform implements the information in the file; if it doesn't exist, the platform uses the defaults. Specific customization tasks require specific entries in this file, which is uploaded to the <strong>/resources/theme/{your_theme_name}/locales</strong> folder for the applicable theme. For more information, see <a href="site_admin_config.htm#h_page_customization">Site Page Customization</a>.</dd>
+
+
+
 <dt><a name="gl_dashboard"></a>Dashboard</dt>
 <dd>The user's Dashboard, also called home page or feed, is the first page the user sees after logging in. The Dashboard includes information relating to apps and APIs the user is associated with. An individual user's Dashboard is an aggregation of all the Board items from all the resources that the user is following. An individual user can modify the types of information that are displayed on his/her Dashboard. See also <a href="#gl_dashboardentry">Dashboard entry</a>.</dd>
 <dd>Navigation: <em>Dashboard</em> tab.</dd>
@@ -358,8 +368,8 @@ nav-title: Glossary of Terms
 
 
 
-<dt><a name="gl_data_node"></a>data node (in Elasticsearch)</dt>
-<dd>For the Site Manager, in configuring the <a href="#gl_elasticsearch">Elasticsearch</a> search feature, setting up a container as a data node indicates that the search index will be stored at that location.</dd>
+<dt>data node (in Elasticsearch)</dt>
+<dd>See <a href="#gl_es_data_node">Elasticsearch data node</a>.</dd>
 
 
 
@@ -425,7 +435,47 @@ nav-title: Glossary of Terms
 
 
 <dt><a name="gl_elasticsearch"></a>Elasticsearch</dt>
-<dd>The search server used by the platform. Elasticsearch is based on Apache Lucene; it is Java-based and open source. It provides a distributed, full-text search engine, capable of supporting a multi-tenant environment. It uses HTTP and JSON.</dd>
+<dd>The search server used by the platform. Elasticsearch is based on Apache Lucene; it is Java-based and open source. It provides a distributed, full-text search engine, capable of supporting a multi-tenant environment. It uses HTTP and JSON. For more information, see <a href="site_admin_es.htm">Elasticsearch: Information for Site Admins</a>.</dd>
+
+
+
+<dt><a name="gl_es_client_node"></a>Elasticsearch client node</dt>
+<dd>(Information for Site Admins) In Elasticsearch, the client node is the node that makes the search or indexing request. All nodes can be client nodes.</dd>
+<dd>Any container, even if it isn't configured to be a <a href="#gl_es_master_eligible_node">master eligible node</a> or a <a href="#gl_es_data_node">data node</a>, is at least a client node. If it is a data node, it does the local searches; if it isn't a data node, it is still a client node. As such, it sends a search request or index request to a remote data node and receives the results.</dd>
+<dd>The client node makes the call to the platform's Search API, which in turn requests the search results from the data node.</dd>
+
+
+
+<dt><a name="gl_es_data_node"></a>Elasticsearch data node</dt>
+<dd>(Information for Site Admins) In Elasticsearch, a data node is where the index data resides.
+Regardless of where the API platform feature is running, when an object is indexed, the data for that index is in the data node.
+When a user is searching, the data is accessed from the data node.</dd>
+<dd>For the Site Admin, in configuring the <a href="#gl_elasticsearch">Elasticsearch</a> search feature, setting up a container as a data node indicates that the search index will be stored at that location.</dd>
+
+
+
+<dt><a name="gl_es_embedded_mode"></a>Elasticsearch embedded mode</dt>
+<dd>(Information for Site Admins) In Elasticsearch embedded mode, all you need to do is install the embedded feature in one or more containers. In this mode, there is no external software needed. Elasticsearch runs within each container it's installed in.</dd>
+<dd>Choose this option if you don't have a standalone Elasticsearch server.</dd>
+
+
+
+<dt><a name="gl_es_master_eligible_node"></a>Elasticsearch master eligible node</dt>
+<dd>(Information for Site Admins) A master eligible node is one that <strong>can</strong> become a master of the cluster.
+There is always a cluster, even if there is only one node, so a single node will always be master eligible.</dd>
+
+
+
+<dt><a name="gl_es_shard"></a>Elasticsearch shard</dt>
+<dd>The <a href="#gl_elasticsearch">Elasticsearch</a> search feature can be configured so that the search index is stored in multiple index partitions, called shards. &quot;Elasticsearch distributes shards amongst all nodes in the cluster<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/glossary.html#glossary-cluster"></a>, and can move shards automatically from one   node to another in the case of node failure, or the addition of new nodes.&quot;</dd>
+  <dd>For more information, refer to the Elasticsearch glossary of terms: <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/glossary.html#glossary-shard" title="Elasticsearch glossary definition for shard" target="_blank">https://www.elastic.co/guide/en/elasticsearch/reference/current/glossary.html#glossary-shard</a>.</dd>
+
+
+
+<dt><a name="gl_es_standalone_mode"></a>Elasticsearch standalone mode</dt>
+<dd>(Information for Site Admins) With Elasticsearch standalone mode, your installation will need to include a standalone external Elasticsearch server. Just as with a relational database, you'll need to provide the software and hardware required.</dd>
+<dd>If you choose to run Elasticsearch in standalone mode, like a database server, all containers running the Akana API Platform can use it. In this scenario, it's important to provide a cluster capability to help prevent outage.</dd>
+<dd>Generally, in this scenario, all containers are working as <a href="#gl_es_client_node">client nodes</a>. There is no <a href="#gl_es_master_eligible_node">master eligible node</a> or <a href="#gl_es_data_node">data node</a> within the product.</dd>
 
 
 
@@ -461,8 +511,8 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_oauth_extensiongranttype"></a>extension grant type</dt>
 <dd>In addition to the four standard grant types, the OAuth 2.0 specification defines Extension Grant Types. These are governed by the OAuth specification, which says:</dd>
-<dd>&quot;<em>The client uses an extension grant type by specifying the grant type using an absolute URI (defined by the authorization server) as the value of the "grant_type" parameter of the token endpoint, and by adding any additional parameters necessary.</em>&quot;</dd>
-<dd>A Bearer Assertion is an extension grant type that is generally used when the app already has an Assertion that represents the resource owner. The app sends the Assertion to the authorization server's Token Endpoint to get an access token for later use.</dd>
+<dd>&quot;<em>The client uses an extension grant type by specifying the grant type using an absolute URI (defined by the Authorization Server) as the value of the "grant_type" parameter of the token endpoint, and by adding any additional parameters necessary.</em>&quot;</dd>
+<dd>A Bearer Assertion is an extension grant type that is generally used when the app already has an Assertion that represents the resource owner. The app sends the Assertion to the Authorization Server's Token Endpoint to get an access token for later use.</dd>
 
 
 
@@ -567,9 +617,19 @@ nav-title: Glossary of Terms
 
 
 
+<dt><a name="gl_implementationpattern"></a>implementation pattern</dt>
+<dd>The implementation pattern determines how the implementation is created, which also governs capabilities of the implementation. The platfor supports the following options for implementation pattern:
+<ul>
+  <li>Proxy: appropriate for a simple scenario where the API implementation has a 1:1 relationship with a back-end physical service/API.</li>
+  <li>Orchestration: appropriate for a more complex API implementation that might include one or more services, processes, or additional steps.</li>
+</ul></dd>
+  <dd>Note that if you change the pattern for an existing implementation, all data associated with the implementation is lost. For example, if an implementation has a pattern of Orchestration, with processes set up, and you change it to Proxy, the orchestration information is lost.</dd>
+
+
+
 <dt><a name="gl_import"></a>import</dt>
 <dd>When information is <a href="#gl_export">exported</a> from one instance of the platform to an <a href="#gl_packagefile">export file (package file)</a>, it can be imported to another instance of the platform.</dd>
-<dd>Only a Site Admin or Business Admin has permission to perform functions relating to import.</dd>
+  <dd>Only a Site Admin or Business Admin has permission to perform functions relating to import.</dd>
 
 
 
@@ -580,15 +640,15 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_monitoring_interval"></a>interval (on monitoring charts)</dt>
 <dd>In the app and API monitoring charts, the duration and interval controls work together to allow you to narrow down the dataset you're interested in.</dd>
-<dd>The duration allows you to select the time period to be shown on the chart; for example, one week, one day, one hour.</dd>
-<dd>The interval defines the subdivision of time shown on one increment of the chart; for example, 1 week, 5 sec.</dd>
-<dd>Options adjust based on the selected Duration. For example, if Duration is 5 minutes, Interval is 5 sec. If Duration is 1 year, Interval is 1 week.</dd>
+  <dd>The duration allows you to select the time period to be shown on the chart; for example, one week, one day, one hour.</dd>
+  <dd>The interval defines the subdivision of time shown on one increment of the chart; for example, 1 week, 5 sec.</dd>
+  <dd>Options adjust based on the selected Duration. For example, if Duration is 5 minutes, Interval is 5 sec. If Duration is 1 year, Interval is 1 week.</dd>
 
 
 
 <dt><a name="gl_code_user_invitation"></a>invitation code</dt>
 <dd>A unique code generated and sent to a specific user in an email if a platform member invites the user to a platform group, such as an app team, API Admin group, or independent group.</dd>
-<dd>This is one of the several types of codes use to manage user signup and login. For information on the others, see <a href="#gl_code_user">code (user)</a>.</dd>
+  <dd>This is one of the several types of codes use to manage user signup and login. For information on the others, see <a href="#gl_code_user">code (user)</a>.</dd>
 
 
 
@@ -619,7 +679,7 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_jwt_token"></a>JWT token</dt>
 <dd>A JSON web token; a type of bearer token, where the information is structured as a JSON object in a predefined format. It is URL-safe, and is digitally signed with an RSA or HMAC (hashed message authentication code) key.</dd>
-<dd>A JWT token contain all the information the resource server needs to confirm the user's grant to the application, sent as-is in the API request header. One advantage of the JWT Bearer access token is that the Resource Server can validate by itself, without having to go back to the Authorization Server. Another advantage is that there are flexible options for encryption; a higher or lower level of security can be used, depending on needs.</dd>
+  <dd>A JWT token contain all the information the resource server needs to confirm the user's grant to the application, sent as-is in the API request header. One advantage of the JWT Bearer access token is that the Resource Server can validate by itself, without having to go back to the Authorization Server. Another advantage is that there are flexible options for encryption; a higher or lower level of security can be used, depending on needs.</dd>
 
 
 
@@ -635,7 +695,7 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_jwt_token_id"></a> ID token (OpenID Connect) / bearer assertion</dt>
 <dd>In the context of OpenID Connect, an ID token (also called a Bearer Assertion) is a a compact, URL-safe means of representing <a href="#gl_claim">claims</a> to be sent from one party to another over the web. The claims in an ID token are encoded as a JSON object that is used either as the payload of a JSON Web Signature (JWS) structure or as the plain text of a JSON Web Encryption (JWE) structure. This enables the claims to be digitally signed and/or encrypted.</dd>
-<dd>The OpenID Connect Provider can issue a ID token from either the Authorization Endpoint or the Token Endpoint. This is one of the two ways offered by the OpenID Connect specification for the app to learn information about the end user. The other is by publishing a <a href="#gl_userinfoendpoint">UserInfo endpoint</a>.</dd>
+  <dd>The OpenID Connect Provider can issue a ID token from either the Authorization Endpoint or the Token Endpoint. This is one of the two ways offered by the OpenID Connect specification for the app to learn information about the end user. The other is by publishing a <a href="#gl_userinfoendpoint">UserInfo endpoint</a>.</dd>
 
 
 
@@ -651,13 +711,13 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_legalagreement_api"></a>legal agreement (API)</dt>
 <dd>The platform allows the API Admin or Business Admin to upload one or more legal agreements associated with an API. When a legal agreement is active for an API, an app developer must accept the legal agreement in order to request a <a href="#gl_contract">contract</a> with the API.</dd>
-<dd>The platform supports the following file formats for legal agreements associated with an API: HTML (htm or html extension) or text (txt extension).</dd>
+  <dd>The platform supports the following file formats for legal agreements associated with an API: HTML (htm or html extension) or text (txt extension).</dd>
 
 
 
 <dt><a name="gl_license"></a>license</dt>
 <dd>A License is a tailored API access package designed by the Business Admin/API Admin and offered to the app developer. A license includes one or more <a href="#gl_licenseterm">license terms</a>, each of which can include multiple <a href="#gl_scope">scopes</a>, giving access to specifically designated operations, and multiple <a href="#gl_qospolicy">quality of service (QoS) policies</a>, and also one or more <a href="#gl_legalagreement_api">legal agreements</a> applicable to the license.</dd>
-<dd>For more information on the License feature, see <a href="ov_licenses.htm">Licenses: Feature Overview</a>.</dd>
+  <dd>For more information on the License feature, see <a href="ov_licenses.htm">Licenses: Feature Overview</a>.</dd>
 
 
 
@@ -671,8 +731,14 @@ nav-title: Glossary of Terms
 
 
 
+<!--<dt><a name="gl_listener"></a>listener</dt>
+<dd>In Java, a listener is an object that executes some code when triggered by an event. A listener monitors things happening in the program and acts based on how it’s programmed to act in certain events. Basically, you tell it what event to look for, and tell it what to do if that event happens.</dd>-->
+
+
+
 <dt><a name="gl_mac"></a>MAC</dt>
 <dd>Acronym for Message Authentication Code; a code used in message authentication. The MAC code is generated with a specific type of algorithm called a MAC algorithm, which takens input of a secret key and a message, and generates a MAC. To decrypt the message, the receiver must have the secret key.</dd>
+
 
 
 <dt><a name="gl_oauth_mactoken"></a>MAC token</dt>
@@ -690,13 +756,18 @@ nav-title: Glossary of Terms
 
 
 
+<dt><a name="gl_master_node"></a>master node (in Elasticsearch)</dt>
+<dd>In Elasticsearch, The master nodes of the cluster manage the cluster, including such tasks as a) Keeping track of all containers that are part of the cluster, and updating as needed when nodes join or leave the cluster, b) Keeping track of which nodes are master eligible, and c) Keeping track of which shards are in which data node. For more information, see <a href="site_admin_es.htm#es_define_me_node">In Elasticsearch, what is a master eligible node?</a></dd>
+
+
+
 <dt><a name="gl_member"></a>member</dt>
 <dd>In the context of an <a href="#gl_apicontextgroup">API Context Group</a>, a group member has access to all information relating to the Private API and the group, including tickets and discussions. Members cannot invite additional members or change the status of other members. A member can be promoted to <a href="#gl_leader">leader</a> status by the API Admin or by another leader.</dd>
 
 
 
 <dt><a name="gl_membershiprequest"></a>membership request (invitation)</dt>
-<dd>An invitation to another individual, whether a registered user or not, to join a<!-- #BeginLibraryItem "/library/_PlatformName.lbi" -->Akana API Platform<!-- #EndLibraryItem -->group or team such as an app team. API Administrators can invite others to be API Administrators; app team members can invite others to the app team. A Site Administrator, Private API Administrator, or Independent Group member can also issue a membership request in the same way.</dd>
+<dd>An invitation to another individual, whether a registered user or not, to join an <!-- #BeginLibraryItem "/library/_PlatformName.lbi" -->Akana API Platform<!-- #EndLibraryItem --> group or team such as an app team. API Administrators can invite others to be API Administrators; app team members can invite others to the app team. A Site Administrator, Private API Administrator, or Independent Group member can also issue a membership request in the same way.</dd>
 
 
 
@@ -727,13 +798,13 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_my_apis"></a>My APIs</dt>
 <dd>The <em>My APIs</em> quick filter provides a list of APIs that a member who is an API Provider has added. Each API includes functional and usage documentation, and download files.</dd>
-<dd>Navigation: <em>My APIs</em> quick filter</dd>
+  <dd>Navigation: <em>My APIs</em> quick filter</dd>
 
 
 
 <dt><a name="gl_my_apps"></a>My Apps</dt>
 <dd>The <em>My Apps</em> quick filter is a dashboard that displays all the apps defined by a member. The dashboard is used to manage your app workflow from setup to live.</dd>
-<dd>Navigation: <em>My Apps</em> quick filter</dd>
+  <dd>Navigation: <em>My Apps</em> quick filter</dd>
 
 
 
@@ -749,29 +820,30 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_oauth_accesstoken"></a>OAuth access token</dt>
 <dd>In OAuth, an access token is essentially a pass, a credential that gives authorization to access the requested and approved resource or resources for as long as the access token remains valid. In some cases, access tokens can be renewed by means of a <a href="#gl_oauth_refreshtoken">refresh token</a>; in some cases they cannot. For more information, refer to <a href="http://tools.ietf.org/html/rfc6749" target="_blank">the OAuth 2.0 specification</a> (external site).</dd>
-<dd>For more information on access tokens, see <a href="api_admin_oauth_support.htm#what_is_an_access_token">What is an access token?</a></dd>
+  <dd>For more information on access tokens, see <a href="api_admin_oauth_support.htm#what_is_an_access_token">What is an access token?</a></dd>
 
 
 
 <dt><a name="gl_oauth_authorizationcode"></a>OAuth authorization code</dt>
-<dd>With the OAuth <a href="#gl_oauth_grant_authorizationcode">2.0 Authorization Code grant type</a>, the resource owner (consumer; for example, the app user) is redirected to the authorization server and gives authorization for the app to access the resource. The authorization server then redirects the consumer back to the client app with an authorization code. The client app presents this authorization code, along with the app's authentication credentials, back to the authorization server, requesting an <a href="#gl_oauth_accesstoken">access token</a> (and optionally a <a href="#gl_oauth_refreshtoken">refresh token</a>). The client then uses the access token to call the service on behalf of the resource owner. A refresh token can be used to extend the lifetime of this session.</dd>
+<dd>With the OAuth <a href="#gl_oauth_grant_authorizationcode">2.0 Authorization Code grant type</a>, the resource owner (consumer; for example, the app user) is redirected to the Authorization Server and gives authorization for the app to access the resource. The Authorization Server then redirects the consumer back to the client app with an authorization code. The client app presents this authorization code, along with the app's authentication credentials, back to the Authorization Server, requesting an <a href="#gl_oauth_accesstoken">access token</a> (and optionally a <a href="#gl_oauth_refreshtoken">refresh token</a>). The client then uses the access token to call the service on behalf of the resource owner. A refresh token can be used to extend the lifetime of this session.</dd>
 
 
 
 <dt><a name="gl_oauth_authorizationendpoint"></a>OAuth authorization endpoint</dt>
-<dd>The endpoint for the OAuth Authorization Server. This is the endpoint on the authorization server where the resource owner provides credentials, such as username and password, in and grants authorization to the client app to access the resources or a specified subset of the resources.</dd>
-<dd>When setting up an OAuth domain, Site Admins must specify this value. Additionally, if an API is using a third-party OAuth provider rather than an OAuth domain set up on the platform, the API Admin must specify this value in the OAuth setup wizard. For more information, see <a href="api_admin_oauth_support.htm#what_are_the_oauth_20_endpoints_and_how_do_they_work">What are the OAuth 2.0 Endpoints and how do they work?</a> and <a href="http://tools.ietf.org/html/rfc6749" target="_blank">the OAuth 2.0 specification</a> (external site).</dd>
+<dd>The endpoint for the OAuth Authorization Server. This is the endpoint on the Authorization Server where the resource owner provides credentials, such as username and password, in and grants authorization to the client app to access the resources or a specified subset of the resources.</dd>
+  <dd>When setting up an OAuth domain, Site Admins must specify this value. Additionally, if an API is using a third-party OAuth provider rather than an OAuth domain set up on the platform, the API Admin must specify this value in the OAuth setup wizard. For more information, see <a href="api_admin_oauth_support.htm#what_are_the_oauth_20_endpoints_and_how_do_they_work">What are the OAuth 2.0 endpoints and how do they work?</a> and <a href="http://tools.ietf.org/html/rfc6749" target="_blank">the OAuth 2.0 specification</a> (external site).</dd>
 
 
 
-<dt><a name="gl_oauth_authorizationserver"></a>OAuth authorization server</dt>
-<dd>In an OAuth implementation, the authorization server collects the resource owner's credentials, gets the resource owner's permission for the app to access the resources, and passes back the authorization token to the app so that the app can then access the resources.</dd>
+<dt><a name="gl_oauth_authorizationserver"></a>OAuth Authorization Server</dt>
+<dd>In an OAuth implementation, the Authorization Server collects the resource owner's credentials, gets the resource owner's permission for the app to access the resources, and passes back the authorization token to the app so that the app can then access the resources.</dd>
 
 
 
-<dt><a name="gl_oauth_authorizationserverurl"></a>OAuth authorization server URL</dt>
+<dt><a name="gl_oauth_authorizationserverurl"></a>OAuth Authorization Server URL</dt>
 <dd>As part of setting up the OAuth domain, the Site Admin must specify the Authorization Server URL. This is the URL that the browser for the resource owner (app user) will be accessing for the OAuth grant. It is the URL at which the OAuth Provider accesses the requests, for both Authorization Endpoint and Token Endpoint.</dd>
-<dd>The URL must be accessible to all the apps and end users that might use APIs that are referencing the OAuth domain. The Authorization Endpoint and Token Endpoint for OAuth 10.a and OAuth 2.0 will use different paths according to the specific OAuth version. Firewalls and DNS servers must be set up for this URL so that end users and apps can access the URL.</dd>
+  <dd>The URL must be accessible to all the apps and end users that might use APIs that are referencing the OAuth domain. The Authorization Endpoint and Token Endpoint for OAuth 10.a and OAuth 2.0 will use different paths according to the specific OAuth version. Firewalls and DNS servers must be set up for this URL so that end users and apps can access the URL.</dd>
+  <dd>For more information, see <a href="site_admin_domains.htm#what_is_the_authorization_server_url_for_the_platform">What is the OAuth Authorization Server URL for the platform?</a></dd>
 
 
 
@@ -782,13 +854,13 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_oauth_grantprovisioningui"></a>OAuth grant provisioning UI</dt>
 <dd>In the platform, the OAuth grant provisioning UI is the HTML page, used in <a href="#gl_testclient">Test Client</a>, where the resource owner signs in and authorizes access, for the purposes of using Test Client.</dd>
-<dd>The grant provisioning UI has the potential to include the logo for the application, pulled from the application information, and for the OAuth provider, as set up in the Branding tab in the OAuth Provider domain setup.</dd>
+  <dd>The grant provisioning UI has the potential to include the logo for the application, pulled from the application information, and for the OAuth provider, as set up in the Branding tab in the OAuth Provider domain setup.</dd>
 
 
 
 <dt><a name="gl_oauth_granttypes"></a>OAuth grant types</dt>
 <dd>OAuth 2.0 supports four different grant types; each has a different process flow. Grant types are designated as <a href="#gl_oauth_grant_2legged">2-legged</a> or <a href="#gl_oauth_grant_3legged">3-legged</a> depending on the number of parties involved. The 2-legged grant types are <a href="#gl_oauth_grant_clientcredentials">Client Credentials</a> and <a href="#gl_oauth_grant_passwordcredentials">Resource Owner Password Credentials</a>; the three-legged grant types are <a href="#gl_oauth_grant_authorizationcode">Authorization Code</a> and <a href="#gl_oauth_grant_implicit">Implicit</a>.</dd>
-<dd> For more information on OAuth grant types (for API admins) see <a href="api_admin_oauth_support.htm#what_grant_types_does_oauth_support">What grant types does OAuth support?</a> and <a href="api_admin_oauth_support.htm#how_does_oauth_2legged_and_3legged_authorization_work">How does OAuth 2-Legged and 3-Legged Authorization work?</a></dd>
+  <dd> For more information on OAuth grant types (for API admins) see <a href="api_admin_oauth_support.htm#what_grant_types_does_oauth_support">What grant types does OAuth support?</a> and <a href="api_admin_oauth_support.htm#how_does_oauth_2legged_and_3legged_authorization_work">How does OAuth 2-Legged and 3-Legged Authorization work?</a></dd>
 
 
 
@@ -818,15 +890,15 @@ nav-title: Glossary of Terms
 
 
 <dt><a name="gl_oauth_grant_passwordcredentials"></a>OAuth grant types: Resource Owner Password Credentials</dt>
-<dd>A <a href="#gl_oauth_grant_2legged">2-legged</a> OAuth 2.0 grant type: The client collects the resource owner's password and exchanges it at the OAuth authorization server for an access token, and often also a refresh token. This grant type is suitable in cases where the resource owner has a trust relationship with the client, such as its computer operation system or a highly privileged application, since the client must discard the password after using it to obtain the access token.</dd>
+<dd>A <a href="#gl_oauth_grant_2legged">2-legged</a> OAuth 2.0 grant type: The client collects the resource owner's password and exchanges it at the OAuth Authorization Server for an access token, and often also a refresh token. This grant type is suitable in cases where the resource owner has a trust relationship with the client, such as its computer operation system or a highly privileged application, since the client must discard the password after using it to obtain the access token.</dd>
 
 
 
 <dt><a name="gl_oauth_refreshtoken"></a>OAuth refresh token</dt>
 <dd>In OAuth 2.0, certain grant types support use of refresh tokens to facilitate longer access periods. This is useful in scenarios that extend over time, such as as a regular monthly payment amount.</dd>
-<dd>In OAuth 1.0a, once an <a href="#gl_oauth_accesstoken">access token</a> is generated it is valid until revoked by the user. OAuth 2.0 introduces expiration of access tokens and adds a second type of token, a refresh token, that can be used in conjunction with the access token to allow users to give long-term permissions but yet maintain security. This process helps ensure that if a specific access token is compromised, a new one can be generated from the refresh token, which can be stored in the database on the server.</dd>
-<dd>The access token grants immediate access but only for a limited time. The access token comes with two additional values: expires_in, which indicates the life of the access token, and refresh_token which can be used to get a new access token when the current token expires. Additional user approval is not needed, but the expiration and renewal add security to the process. When (or before) the access token expires, the refresh token can be used to generate a new access token.</dd>
-<dd>For more information, see <a href="api_admin_oauth_support.htm#what_is_a_refresh_token">What is a Refresh Token?</a></dd>
+  <dd>In OAuth 1.0a, once an <a href="#gl_oauth_accesstoken">access token</a> is generated it is valid until revoked by the user. OAuth 2.0 introduces expiration of access tokens and adds a second type of token, a refresh token, that can be used in conjunction with the access token to allow users to give long-term permissions but yet maintain security. This process helps ensure that if a specific access token is compromised, a new one can be generated from the refresh token, which can be stored in the database on the server.</dd>
+  <dd>The access token grants immediate access but only for a limited time. The access token comes with two additional values: expires_in, which indicates the life of the access token, and refresh_token which can be used to get a new access token when the current token expires. Additional user approval is not needed, but the expiration and renewal add security to the process. When (or before) the access token expires, the refresh token can be used to generate a new access token.</dd>
+  <dd>For more information, see <a href="api_admin_oauth_support.htm#what_is_a_refresh_token">What is a Refresh Token?</a></dd>
 
 
 
@@ -836,7 +908,7 @@ nav-title: Glossary of Terms
 
 
 <dt><a name="gl_oauth_tokenendpoint"></a>OAuth token endpoint</dt>
-<dd>In OAuth 2.0, the token endpoint is the endpoint on the <a href="#gl_oauth_authorizationserver">authorization server</a> where the client app sends the authorization code, client ID, and client secret and receives in exchange an access token which allows the app to access the approved resources. For more information, see <a href="api_admin_oauth_support.htm#what_are_the_oauth_20_endpoints_and_how_do_they_work">What are the OAuth 2.0 Endpoints and how do they work?</a> and <a href="http://tools.ietf.org/html/rfc6749" target="_blank">the OAuth 2.0 specification</a> (external site).</dd>
+<dd>In OAuth 2.0, the token endpoint is the endpoint on the <a href="#gl_oauth_authorizationserver">Authorization Server</a> where the client app sends the authorization code, client ID, and client secret and receives in exchange an access token which allows the app to access the approved resources. For more information, see <a href="api_admin_oauth_support.htm#what_are_the_oauth_20_endpoints_and_how_do_they_work">What are the OAuth 2.0 endpoints and how do they work?</a> and <a href="http://tools.ietf.org/html/rfc6749" target="_blank">the OAuth 2.0 specification</a> (external site).</dd>
 
 
 
@@ -851,17 +923,18 @@ nav-title: Glossary of Terms
 
 
 <dt><a name="gl_openidconnect"></a>OpenID Connect</dt>
-<dd>An identity layer on top of the OAuth 2.0 protocol that allows the client to verify the identity of an end-user based on authentication by an authorization server. OpenID Connect was released in February 2014 and is gaining popularity. For example, Google has moved from OpenID to OpenID Connect for products such as the Google+ API, used by the platform's Google login domain. For more information, see <a href="http://openid.net/connect/" target="_blank">Welcome to OpenID Connect</a> (external site).</dd>
+<dd>An identity layer on top of the OAuth 2.0 protocol that allows the client to verify the identity of an end-user based on authentication by an Authorization Server. OpenID Connect was released in February 2014 and is gaining popularity. For example, Google has moved from OpenID to OpenID Connect for products such as the Google+ API, used by the platform's Google login domain. For more information, see <a href="http://openid.net/connect/" target="_blank">Welcome to OpenID Connect</a> (external site).</dd>
 
 
 
 <dt><a name="gl_orchestration"></a>orchestration (API)</dt>
-<dd>An orchestration creates a service that is implemented with a process, rather than being simply a proxy of another service. The orchestration process itself might invoke multiple APIs and might aggregrate responses or take other actions to process a request. A <a href="#gl_mockservice">mock service</a> is a type of orchestration. An orchestration is at an operation level, nor a service level.</dd>
+<dd>An orchestration creates a service that is implemented with a process, rather than being simply a proxy of another service. The orchestration process itself might invoke multiple APIs (but does not necessarily) and might aggregrate responses or take other actions to process a request. A <a href="#gl_mockservice">mock service</a> is a type of orchestration. An orchestration is at an operation level, nor a service level.</dd>
 
 
 
 <dt><a name="gl_overloaded_operation"></a>overloaded operation (API)</dt>
-<dd>An overloaded operation is one that has two or more implementations that have the same basic URL but with different arguments or, commonly, different media types. For example, one implementation might be constructed to take a response media type of application/xml and to return the response information in the form of an RSS channel, and a second implementation might take a response media type of application/json and return the response information as a JSON object.</dd>
+<dd>An overloaded operation is one that has two or more implementations that have the same basic URL but with different arguments or, commonly, different media types. Often, there might be two operations that share the same path and HTTP verb but but have different media types for Consumes (request media type) and Produces (response media type) elements.</dd>
+  <dd>For example, the platform API itself has a small number of overloaded operations that  take a response media type of <strong>application/json</strong> or <strong>application/xml</strong> to return the response information in the form of an RSS channel, and the same path and verb with a media type of <strong>application/vnd.soa.v81+json</strong> or <strong>application/vnd.soa.v81+xml</strong> returns the response information as a model object in JSON or XML format.</dd>
 
 
 
@@ -877,7 +950,7 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_pingfederate"></a>PingFederate</dt>
 <dd>A federated identity management system based on the <a href="#gl_saml">SAML</a> protocol. PingFederate&reg; supports SSO, SLO, and other federated identity standards. It can also be used as an OAuth 2.0 provider.</dd>
-<dd>The platform supports PingFederate provider as a domain type (set up by the Site Admin).</dd>
+  <dd>The platform supports PingFederate provider as a domain type (set up by the Site Admin).</dd>
 
 
 
@@ -893,7 +966,7 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_policy_manager"></a>Policy Manager</dt>
 <dd>Akana Policy Manager is the core product that provides the underlying infrastructure for the platform. Message handling intermediaries integrate with Policy Manager which attaches policies and provides a policy decision point as well as the policy administration point.</dd>
-<dd>The Policy Manager console is the user interface for the Akana <a href="#gl_api_gateway">API Gateway</a>.</dd>
+  <dd>The Policy Manager console is the user interface for the Akana <a href="#gl_api_gateway">API Gateway</a>.</dd>
 
 
 
@@ -904,7 +977,7 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_proxyapi"></a>proxy API</dt>
 <dd>When an API Admin or Business Admin sets up an API on the<!-- #BeginLibraryItem "/library/_PlatformName.lbi" -->Akana API Platform<!-- #EndLibraryItem -->and chooses to use the Proxy feature, all traffic to the API endpoints is channeled via the platform. This offers significant benefits, including the ability to apply policies and monitor traffic at the proxy.</dd>
-<dd>When an API uses a proxy, the platform receives the API traffic and directs it to the target (actual) endpoint, which is not exposed to API users.</dd>
+  <dd>When an API uses a proxy, the platform receives the API traffic and directs it to the target (actual) endpoint, which is not exposed to API users.</dd>
 
 
 
@@ -915,7 +988,7 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_profile"></a>profile</dt>
 <dd>In the context of the Akana API Platform user interface, the user profile page allows you to edit your user details (firstname, lastname, username, and avatar) and settings (email, password, and notifications settings).</dd>
-<dd>Navigation: <em>Profile</em> (to the right of <em>Logout</em> in the top navigation)</dd>
+  <dd>Navigation: <em>Profile</em> (to the right of <em>Logout</em> in the top navigation)</dd>
 
 
 
@@ -926,7 +999,7 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_pki"></a>Public Key Integration</dt>
 <dd>The Public Key Integration section of <em>My Apps &gt; App Details &gt; Security</em> allows you to use Public Key Infrastructure (PKI) for secure message signing. When you initially create your app, a shared secret is generated by default. If you would like to override the shared secret, you can upload a Certificate Signing Request (CSR). The Certificate Authority associated with the platform will generate a public/private key pair using the uploaded CSR.</dd>
-<dd>Navigation: <em>My Apps</em> &gt; <em>Details &gt; Security</em></dd>
+  <dd>Navigation: <em>My Apps</em> &gt; <em>Details &gt; Security</em></dd>
 
 
 
@@ -947,10 +1020,10 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_redirectionendpoint"></a>redirection endpoint</dt>
 <dd>In general, a redirection endpoint or URL is a URL that an application provides to another app, when directing the user to the second app to perform some function and then return the user once the function is complete. For example:
-<ul>
-  <li><strong>Login</strong>: If the user is logging in with Google, the platform directs the user to Google and provides a redirect URL. When Google has authenticated the user, Google redirects the user back to the platform using the redirect URL.</li>
-  <li><strong>OAuth</strong>: if an app is requesting access to one or more of the user's Facebook resources, such as the Calendar, the app directs the user to a Facebook authorization page, and provides a redirect URL. Facebook authenticates the user, collects the user's permission for the app to access the resources, and then uses the redirect URL to return the user to the app.</li>
-</ul>
+  <ul>
+    <li><strong>Login</strong>: If the user is logging in with Google, the platform directs the user to Google and provides a redirect URL. When Google has authenticated the user, Google redirects the user back to the platform using the redirect URL.</li>
+    <li><strong>OAuth</strong>: if an app is requesting access to one or more of the user's Facebook resources, such as the Calendar, the app directs the user to a Facebook authorization page, and provides a redirect URL. Facebook authenticates the user, collects the user's permission for the app to access the resources, and then uses the redirect URL to return the user to the app.</li>
+    </ul>
 </dd>
 
 
@@ -967,7 +1040,7 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_code_user_registration"></a>registration code</dt>
 <dd>A unique code generated and sent to a specific user in an email if the Site Admin adds the user (currently supported only via the API). The code is only valid for the account it is generated for, and expires after a pre-set period.</dd>
-<dd>This is one of the several types of codes use to manage user signup and login. For information on the others, see <a href="#gl_code_user">code (user)</a>.</dd>
+  <dd>This is one of the several types of codes use to manage user signup and login. For information on the others, see <a href="#gl_code_user">code (user)</a>.</dd>
 
 
 
@@ -978,17 +1051,24 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_code_passwordreset"></a>reset code</dt>
 <dd>A unique code generated and sent to a specific user as a result of a password reset request. The code is only valid for the account that requested it, and expires after two days by default. Expiration time is configurable by the Site Admin.</dd>
-<dd>This is one of the several types of codes use to manage user signup and login. For information on the others, see <a href="#gl_code_user">code (user)</a>.</dd>
+  <dd>This is one of the several types of codes use to manage user signup and login. For information on the others, see <a href="#gl_code_user">code (user)</a>.</dd>
 
 
 
-<dt><a name="gl_apiaccess_restricted"></a>restricted API access</dt>
-<dd>Restricted access for an app means that the app's access to the API is restricted to a subset of the API, as defined by scope mapping, or to a specified, agreed-upon quota as defined by a QoS policy. Compare: <a href="#gl_apiaccess_unrestricted">unrestricted API access</a>.</dd>
+<dt><a name="gl_reset_css"></a>reset.css</dt>
+<dd>In Web-based applications and web pages that use CSS styling, a stylesheet called <strong>reset.css</strong> is often used to reset the styles of core HTML elements, such as headings and lists, to a consistent baseline. Custom styles are then applied as a next step.</dd>
+<dd>The reason this is important is that there are inconsistencies in the way that different browsers interpret basic styles. Resetting to a consistent baseline, and building from there, helps ensure a consistent user experience across different browsers.</dd>
+<dd>The platform uses reset.css as part of its style implementation.</dd>
 
 
 
 <dt><a name="gl_resource"></a>resource</dt>
 <dd>In the<!-- #BeginLibraryItem "/library/_PlatformName.lbi" -->Akana API Platform<!-- #EndLibraryItem -->, a Resource is an item, such as an App or API, which has its own Board and set of activities.</dd>
+
+
+
+<dt><a name="gl_apiaccess_restricted"></a>restricted API access</dt>
+<dd>Restricted access for an app means that the app's access to the API is restricted to a subset of the API, as defined by scope mapping, or to a specified, agreed-upon quota as defined by a QoS policy. Compare: <a href="#gl_apiaccess_unrestricted">unrestricted API access</a>.</dd>
 
 
 
@@ -999,17 +1079,17 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_review"></a>review</dt>
 <dd>Users can write reviews for any apps, APIs, or groups that they have access to. In the developer portal, reviews are created from the Details page for the resource. Each review includes a subject line and a comment.</dd>
-<dd>Other users can comment on the review, and can <a href="#gl_mark">mark</a> reviews that they like.</dd>
-<dd>Depending on the platform configuration, reviews might be moderated. If so, the review must be approved by an Administrator before it is published.</dd>
-<dd>A review is actually a <a href="#gl_boarditem">Board item</a> even though, in the user interface, reviews are not displayed on the Board for the resource, but instead are displayed on the Details page.</dd>
-<dd>In terms of using the API, all operations that work for Board items work for reviews also.</dd>
+  <dd>Other users can comment on the review, and can <a href="#gl_mark">mark</a> reviews that they like.</dd>
+  <dd>Depending on the platform configuration, reviews might be moderated. If so, the review must be approved by an Administrator before it is published.</dd>
+  <dd>A review is actually a <a href="#gl_boarditem">Board item</a> even though, in the user interface, reviews are not displayed on the Board for the resource, but instead are displayed on the Details page.</dd>
+  <dd>In terms of using the API, all operations that work for Board items work for reviews also.</dd>
 
 
 
 <dt><a name="gl_role"></a>role</dt>
 <dd>Within an <a href="#gl_apicontextgroup">API Context Group</a>, each group member has a role, either as <a href="#gl_member">Member</a> or <a href="#gl_leader">Leader</a>. The Private API Admin cam invite team members and designate roles.</dd>
-<dd>Within an <a href="#gl_independentgroup">independent group</a>, each group member has a role, either as Member, Admin, or Leader. An Admin can invite or remove other team members and designate roles.</dd>
-<dd>Other roles on the platform include App Team Member, Site Administrator, API Administrator, and Site User. An additional role, API Owner, is defined in the underlying infrastructure.</dd>
+  <dd>Within an <a href="#gl_independentgroup">independent group</a>, each group member has a role, either as Member, Admin, or Leader. An Admin can invite or remove other team members and designate roles.</dd>
+  <dd>Other roles on the platform include App Team Member, Site Administrator, API Administrator, and Site User. An additional role, API Owner, is defined in the underlying infrastructure.</dd>
 
 
 
@@ -1020,7 +1100,7 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_saml"></a>SAML</dt>
 <dd>Acronym for Security Assertion Markup Language. SAML is an identity federation standard that enables single sign-on. It is an XML-based standard for exchanging authentication and authorization data between a <a href="#gl_saml_service_provider">service provider</a> (providing a service to the user) and an <a href="#gl_identityprovider">identity provider</a> (providing user identity verification for the service provider).</dd>
-<dd>One usage, in the context of the platform, is by OpenID Connect where it is used to provide single sign-on. The plaform acts as the <a href="#gl_relyingparty">relying party</a>.</dd>
+  <dd>One usage, in the context of the platform, is by OpenID Connect where it is used to provide single sign-on. The plaform acts as the <a href="#gl_relyingparty">relying party</a>.</dd>
 
 
 
@@ -1031,7 +1111,7 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_saml_assertion"></a>SAML assertion</dt>
 <dd>A <a href="#gl_saml">SAML</a> assertion is an XML document returned by the Identity Provider to the Service Provider after authentication of the user. The assertion has a very specific structure, as defined by the SAML standard. A SAML assertion has a &lt;Subject&gt; element which contains information about the user. It might have conditions and attributes associated with the information being conveyed. It is digitally signed and asserts that the user has been authenticated.</dd>
-<dd><strong>Note</strong>: the above definition applies to an authentication assertion, which applies in the context of the platform's support of SAML. There are other types of SAML assertions.</dd>
+  <dd><strong>Note</strong>: the above definition applies to an authentication assertion, which applies in the context of the platform's support of SAML. There are other types of SAML assertions.</dd>
 
 
 
@@ -1042,7 +1122,7 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_sandbox_endpoint_url"></a>sandbox endpoint URL</dt>
 <dd>A unique gateway URL (service endpoint) that provides access to an APIs sandbox environment. The Sandbox Endpoint URL becomes available after requesting access an API using the <strong>Request API Access Wizard</strong>.</dd>
-<dd>Navigation: <strong>Add APIs</strong> in <em>My Apps &gt; API Management</em>, or <strong>Request API Access</strong> in <strong>My Apps</strong>.</dd>
+  <dd>Navigation: <strong>Add APIs</strong> in <em>My Apps &gt; API Management</em>, or <strong>Request API Access</strong> in <strong>My Apps</strong>.</dd>
 
 
 
@@ -1068,7 +1148,7 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_search"></a>search</dt>
 <dd>The platform includes search functionality on certain specific pages and on platform-wide content. For example, a user can search on the apps list or APIs list for a specific app or API; the Site Admin can search for a specific user in the Users List. Search is available on many other areas of the user interface. Some examples: <em>Board</em> posts, tickets, and alerts; help documentation (question mark at top right; then, Browse Docs).</dd>
-<dd>Search results are limited to those resources the user performing the search has permission to see. For example, a user who does not have access to a specific private API will not see it on the list.</dd>
+  <dd>Search results are limited to those resources the user performing the search has permission to see. For example, a user who does not have access to a specific private API will not see it on the list.</dd>
 
 
 
@@ -1079,13 +1159,20 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_securitydomain"></a>security domain</dt>
 <dd>An application or collection of applications that all share, and trust, common security. The same security mechanism is used for all within the security domain, for authentication, authorization, and/or session management. A user who is authorized on one part of the security domain is considered authorized for other parts.</dd>
-<dd>In a tenant/partner scenario, all tenants share the same security domain and are considered to be trusted. So, for example, app owners on one tenant have access to API information on another tenant seamlessly and without any additional security authorization.</dd>
+  <dd>In a tenant/partner scenario, all tenants share the same security domain and are considered to be trusted. So, for example, app owners on one tenant have access to API information on another tenant seamlessly and without any additional security authorization.</dd>
+
+
+
+<dt><a name="gl_sni"></a>Server Name Indication (SNI)</dt>
+<dd>An abbreviation for Server Name Indication, SNI is an extension of the TLS protocol that allows a single server to connect multiple SSL certificates to one IP address. When the client attempts to connect to the server, the client indicates the hostname it is attempting to connect to. The server sends the applicable digital certificate, which the browser then verifies; upon verification, the connection goes ahead.</dd>
+<dd>The API platform's support of SNI means that multiple certificates can be used for one HTTPS endpoint. This means that each API can use its own certificate for its own clients. The deployment zone must support HTTPS; the API implementation must have the <strong>Use Implementation's Key/Certificate for SSL</strong> option checked in the HTTPS tab for the deployment, and there must be a certificate in place for the implementation.</dd>
+<dd>For general information on SNI, see <a href="https://en.m.wikipedia.org/wiki/Server_Name_Indication" title="https://en.m.wikipedia.org/wiki/Server_Name_Indication" target="_blank">https://en.m.wikipedia.org/wiki/Server_Name_Indication</a>.</dd>
 
 
 
 <dt><a name="gl_saml_service_provider"></a>Service Provider</dt>
 <dd>In terms of <a href="#gl_saml">SAML</a>, the Service Provider (SP) offers a service to the user and allows the user to sign in by using SAML. When the user attempts to sign in, the SP sends a SAML authentication request to the Identity Provider (IdP). The IdP validates the request, authenticates the user, and creates a SAML assertion that represents the user's identity and, in some cases, sends additional information about the user in the form of associated attributes. The SAML assertion is digitally signed and encrypted and then sent back to the service provider that initiated the request.</dd>
-<dd>Identity federation software at the SP receives the assertion, verified the authenticity, decrypts, and shares the information with the application.</dd>
+  <dd>Identity federation software at the SP receives the assertion, verified the authenticity, decrypts, and shares the information with the application.</dd>
 
 
 
@@ -1096,7 +1183,7 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_sha1"></a>SHA-1</dt>
 <dd>SHA-1 is a cryptographic hash function, broadly used and trusted.</dd>
-<dd>When you hash a value with SHA-1, the hash function returns a 160-bit string. This is the message digest. The value is hashed and sent with the message; at the receipt point, the value is hashed again, and the two hash values are compared. When the two hash values match, it is a secure, reliable indication that the message hasn't changed; the message at the receipt point is an accurate duplication of the message at the send point.</dd>
+  <dd>When you hash a value with SHA-1, the hash function returns a 160-bit string. This is the message digest. The value is hashed and sent with the message; at the receipt point, the value is hashed again, and the two hash values are compared. When the two hash values match, it is a secure, reliable indication that the message hasn't changed; the message at the receipt point is an accurate duplication of the message at the send point.</dd>
 
 
 
@@ -1105,15 +1192,20 @@ nav-title: Glossary of Terms
 
 
 
+<dt>shard (in Elasticsearch)</dt>
+<dd>See <a href="#gl_es_shard">Elasticsearch shard</a>.</dd>
+
+
+
 <dt><a name="gl_shared_secret"></a>Shared Secret</dt>
 <dd>A shared secret is a value generated for an app developer within the secure environment of the platform. The shared secret is known only to the app developer and the platform, and is used for authentication in secure send/receive communications.</dd>
-<dd>Navigation: <em>My Apps</em> &gt; <em>Details &gt; Security </em></dd>
+  <dd>Navigation: <em>My Apps</em> &gt; <em>Details &gt; Security </em></dd>
 
 
 
 <dt><a name="gl_code_user_signup"></a>signup code</dt>
 <dd>A unique code generated and sent to a specific user in an email when the user signs up for the platform. The code is only valid for the account that requested it, and expires after seven days.</dd>
-<dd>This is one of the several types of codes use to manage user signup and login. For information on the others, see <a href="#gl_code_user">code (user)</a>.</dd>
+  <dd>This is one of the several types of codes use to manage user signup and login. For information on the others, see <a href="#gl_code_user">code (user)</a>.</dd>
 
 
 
@@ -1124,8 +1216,13 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_theme_simpledev"></a>Simple Developer theme</dt>
 <dd>Simple Developer <a href="#gl_theme">theme</a>, also called Simple Dev, is an additional customizable code base, with a separate URL, that you can choose as an additional installation option. During installation, when you install Default Theme (the standard user interface which includes all admin capabilities), you can choose to also install Simple Dev. This new theme includes a streamlined user interface, providing a simplified user experience for app developers.</dd>
-<dd>The API admin, Site Admin, and Business Admin capabilities available in the Default Theme are excluded from the Simple Developer theme for the sake of simplicity. One installation can have both themes, with multiple customizations of each, sharing the same database. Each theme has a different URL.</dd>
-<dd>Simple Developer theme offers an easily customizable look and feel, and is easily extensible.</dd>
+  <dd>The API admin, Site Admin, and Business Admin capabilities available in the Default Theme are excluded from the Simple Developer theme for the sake of simplicity. One installation can have both themes, with multiple customizations of each, sharing the same database. Each theme has a different URL.</dd>
+  <dd>Simple Developer theme offers an easily customizable look and feel, and is easily extensible.</dd>
+
+
+
+<dt>SNI</dt>
+<dd>See <a href="#gl_sni">Server Name Indication (SNI)</a>.</dd>
 
 
 
@@ -1146,7 +1243,7 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_sso"></a>SSO</dt>
 <dd>Abbreviation for single sign-on, a feature allowing a user to sign in once for more than one system rather than signing in separately to each system.</dd>
-<dd>If an app offers single sign-on, this means that the app, acting as a Service Provider (providing services to an end user) uses an Identity Provider, an entity that provides authentication and possibly authorization services, to verify the identity of an end user logging on to the app. The user signs in to the Service Provider, and the Service Provider either implicitly or explicitly requests authentication from the Identity Provider. Once authentication is received, the Service Provider delivers the requested service to the end user.</dd>
+  <dd>If an app offers single sign-on, this means that the app, acting as a Service Provider (providing services to an end user) uses an Identity Provider, an entity that provides authentication and possibly authorization services, to verify the identity of an end user logging on to the app. The user signs in to the Service Provider, and the Service Provider either implicitly or explicitly requests authentication from the Identity Provider. Once authentication is received, the Service Provider delivers the requested service to the end user.</dd>
 
 
 
@@ -1157,13 +1254,13 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_swagger"></a>Swagger</dt>
 <dd>Swagger (<a href="http://swagger.io" target="_blank">http://swagger.io</a>) is a specification and framework implementation for dynamically generating API documentation for RESTful webservices. The platform includes an implementation of Swagger that works in conjunction with the <strong>Add a New API Wizard</strong>. For more information, see <a href="api_admin_content_guidelines.htm#what_is_swagger_and_how_does_it_work">What is Swagger and how does it work?</a></dd>
-<dd><strong>Note</strong>: As of January 2016, the Swagger specification has been donated to the Open API Initiative. It is now known as the OpenAPI Specification.</dd>
+  <dd><strong>Note</strong>: As of January 2016, the Swagger specification has been donated to the Open API Initiative. It is now known as the OpenAPI Specification.</dd>
 
 
 
 <dt><a name="gl_tag"></a>tag</dt>
 <dd>A tag is essentially a keyword or key phrase that's added to a piece of content, or information associated with a resource, to assist in search results. Several different types of resources can have tags assigned to them; for example, apps, APIs, groups, and tickets. Multiple tags are separated by commas.</dd>
-<dd>For example, if an app is a movie general knowledge game, the app owner might assign tags of movie, game, general knowledge; or an API owner can add a category or product line to the metadata for certain APIs so those APIs will come up in search results for that term.</dd>
+  <dd>For example, if an app is a movie general knowledge game, the app owner might assign tags of movie, game, general knowledge; or an API owner can add a category or product line to the metadata for certain APIs so those APIs will come up in search results for that term.</dd>
 
 
 
@@ -1179,13 +1276,13 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_tenant"></a>tenant</dt>
 <dd>The tenant is a distinct developer portal and community that is logical separated from any other communities that may be hosted in the same product instance.</dd>
-<dd>The Tenant is managed by the Site Administrator.</dd>
+  <dd>The Tenant is managed by the Site Administrator.</dd>
 
 
 
 <dt><a name="gl_testclient"></a>Test Client</dt>
 <dd>The platform includes an API testing interface, called Test Client, that acts as an easy-to-use test client for any API that is fully integrated, with an API definition in the platform. This test tool allows developers to thoroughly test all capabilities of the API. It can be used for prototyping, testing, and troubleshooting apps against an API. It includes OAuth support for retrieving the OAuth token in order to process the message.</dd>
-<dd>For more information, see <a href="app_testing_tc.htm">Trying Out APIs in Test Client</a> (for app developers), <a href="api_admin_testing_tc.htm">API Testing with Test Client</a> (for API Admins), or <a href="site_admin_tc.htm">Test Client</a> (for Site Admins).</dd>
+  <dd>For more information, see <a href="app_testing_tc.htm">Trying Out APIs in Test Client</a> (for app developers), <a href="api_admin_testing_tc.htm">API Testing with Test Client</a> (for API Admins), or <a href="site_admin_tc.htm">Test Client</a> (for Site Admins).</dd>
 
 
 
@@ -1206,13 +1303,13 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_oauth_tokenendpoint"></a>token endpoint (OAuth)</dt>
 <dd>The token endpoint first authenticates the client application. It then allows the client application to send the code received from the authorization endpoint; in exchange, it generates an access token and sends it to the client application.</dd>
-<dd>Users connect to the <a href="#gl_oauth_authorizationendpoint">authorization endpoint</a>; apps connect to the token endpoint.</dd>
+  <dd>Users connect to the <a href="#gl_oauth_authorizationendpoint">authorization endpoint</a>; apps connect to the token endpoint.</dd>
 
 
 
 <dt><a name="gl_trusted_certificate_authority"></a>Trusted Certificate Authority</dt>
 <dd>A Trusted Certificate Authority (CA) is a third party identity that is qualified with a specified level of trust. Trusted CA Certificates are used when an identity is being validated as the entity it claims to be. Certificates imported into the Platform Tenant (Host) must be issued by a Trusted Authority. Trusted CA Certificates must be configured prior to importing X.509 certificates for applications running on the platform.</dd>
-<dd>Navigation: <em>My Apps</em> &gt; <em>Details &gt; Security </em></dd>
+  <dd>Navigation: <em>My Apps</em> &gt; <em>Details &gt; Security </em></dd>
 
 
 
@@ -1248,8 +1345,13 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_userinfoendpoint"></a>UserInfo Endpoint (OpenID Connect)</dt>
 <dd>One of the two ways offered by the OpenID Connect specification for the app to learn information about the end user. The OpenID Connect Provider can publish a UserInfo endpoint, which is a protected resource that returns <a href="#gl_claim">claims</a> about the authenticated end-user.</dd>
-<dd>The client sends a request to the UserInfo Endpoint using an access token. The UserInfo Endpoint returns the user info to the client app.</dd>
-<dd>The OpenID Connect Provider can issue an ID Token (<a href="#gl_jwt_token">token</a>) from either the <a href="#gl_oauth_authorizationendpoint">Authorization Endpoint</a> or the <a href="#gl_oauth_tokenendpoint">Token Endpoint</a>.</dd>
+  <dd>The client sends a request to the UserInfo Endpoint using an access token. The UserInfo Endpoint returns the user info to the client app.</dd>
+  <dd>The OpenID Connect Provider can issue an ID Token (<a href="#gl_jwt_token">token</a>) from either the <a href="#gl_oauth_authorizationendpoint">Authorization Endpoint</a> or the <a href="#gl_oauth_tokenendpoint">Token Endpoint</a>.</dd>
+
+
+
+<dt><a name="gl_vanityhostname"></a>vanity hostname</dt>
+<dd>A vanity hostname is generally memorable, easy to understand, and clearly identifiable. An API might have an actual hostname that has more complexity, but maps to a vanity hostname that's easy for customers to remember. Customers can use the vanity hostname and do not even need to be aware that it isn't the actual API processing endpoint. The vanity hostname cannot include the underscore character.</dd>
 
 
 
@@ -1265,26 +1367,26 @@ nav-title: Glossary of Terms
 
 <dt><a name="gl_visibility"></a>visibility</dt>
 <dd>A setting that controls the types of users who can see a resource, such as an app, API, group, license, or scope, and any associated items such as discussions and tickets.</dd>
-<dd>There are three possible values. The first two are applicable to all resources that have visibility settings; the third is applicable only to apps, APIs, and groups.
-<ol>
-  <li><strong>Public</strong>: anyone can see the resource, even anonymous users.</li>
-  <li><strong>Private</strong>: the resource is restricted to those who have been specifically invited to have visibility of the resource, usually by joining a private group that has visibility of the resource.</li>
-  <li><strong>Registered Users</strong>: the resource is visible to all users who have logged in, but is not visible to anonymous users.</li>
-</ol>
-</dd>
+  <dd>There are three possible values. The first two are applicable to all resources that have visibility settings; the third is applicable only to apps, APIs, and groups.
+    <ol>
+      <li><strong>Public</strong>: anyone can see the resource, even anonymous users.</li>
+      <li><strong>Private</strong>: the resource is restricted to those who have been specifically invited to have visibility of the resource, usually by joining a private group that has visibility of the resource.</li>
+      <li><strong>Registered Users</strong>: the resource is visible to all users who have logged in, but is not visible to anonymous users.</li>
+      </ol>
+  </dd>
 
 
 
 <dt><a name="gl_wellknownconfigurationurl"></a>well-known configuration URL (OpenID Connect)</dt>
 <dd>In the <a href="#gl_openidconnect">OpenID Connect</a> protocol, the Well-Known Configuration URL is a specific URL published by the OpenID Connect provider. The platform can use this URL to retrieve other values it needs such as Authorization Server URL, Token Endpoint URL, UserInfo Endpoint URL, and security parameters used for tokens.</dd>
-<dd><strong>Note</strong>: If the well-known configuration URL uses the HTTPS protocol, the issuer certificate of the server must be trusted by the platform. Also, the issuer certificate of the server must be part of the <strong>cacerts</strong> file on the Akana API Platform container JRE.</dd>
+  <dd><strong>Note</strong>: If the well-known configuration URL uses the HTTPS protocol, the issuer certificate of the server must be trusted by the platform. Also, the issuer certificate of the server must be part of the <strong>cacerts</strong> file on the Akana API Platform container JRE.</dd>
 
 
 
 <dt><a name="gl_workflow"></a>workflow</dt>
 <dd>Workflow defines the sequence of steps that are followed in a business process, including such related data as conditions (for example, a ticket must be resolved before it can be closed), state (for example, a ticket can have states of Open, Resolved, and Closed), or role (for example, a certain step can only be completed by an Administrator).</dd>
-<dd>Defining the workflow for a business process gives you control over the process and allows you to monitor and customize as needed to streamline the business process.</dd>
-<dd>The platform includes default out-of-the-box workflows for certain resources, such as API contracts, and allows you to customize the workflow for several key resources.</dd>
+  <dd>Defining the workflow for a business process gives you control over the process and allows you to monitor and customize as needed to streamline the business process.</dd>
+  <dd>The platform includes default out-of-the-box workflows for certain resources, such as API contracts, and allows you to customize the workflow for several key resources.</dd>
 
 
 

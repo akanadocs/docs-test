@@ -52,6 +52,7 @@ nav-title: Admin Console Settings
 <a name="ac_settings_cm_explanation"></a><h3>What are the Akana API Platform Configuration Settings in the Akana Administration Console?</h3>
 <p>The configuration settings allow you to set values for the specific container. They are in these categories:</p>
 <ul>
+  <li><a href="#com_akana_elasticsearch">com.akana.elasticsearch</a></li>
   <li><a href="#com_soa_api_security">com.soa.api.security</a></li>
   <li><a href="#com_soa_api_atmosphere">com.soa.atmosphere</a></li>
   <li><a href="#com_soa_atmosphere_console">com.soa.atmosphere.console</a></li>
@@ -64,6 +65,23 @@ nav-title: Admin Console Settings
 <p>Some of the settings are explained below.</p>
 
 
+<!--<dt>xxx</dt>
+<dd>xxx</dd>-->
+
+
+<h4><a name="com_akana_elasticsearch"></a>com.akana.elasticsearch</h4>
+<p>Configuration settings that you can use to manage how the Elasticsearch index is distributed across nodes.</p>
+<dl class="apidoc_dl">
+<dt>elastic.config.index.number.of.replicas</dt>
+  <dd>The number of replicas (additional copies) of the Elasticsearch index. Each replica includes a replica of each shard, so one replica might be distributed across multiple nodes, just as the index itself is split into shards which are distributed across nodes.</dd>
+  <dd>Default: 1</dd>
+<dt>elastic.config.index.number.of.shards</dt>
+  <dd>The number of <a href="basics_glossary.htm#gl_es_shard">shards</a> (splits) for the Elasticsearch index. </dd>
+  <dd><strong>Note</strong>: This is a one-time setting. An Elasticsearch index cannot be re-sharded; if you want to change the number of shards, after changing the setting you'll need to delete the /index folder that the search index is stored in and then rebuild the index.</dd>
+  <dd>Default: 2</dd>
+</dl>
+
+
 
 <h4><a name="com_soa_api_security"></a>com.soa.api.security</h4>
 <p>When the request comes in, the API Security Policy validates whether the request has the correct security values. To do that, it must retrieve the app's shared secret or certificate. This policy caches the app's shared secret, app certificate, or both; these configuration properties manage the caching of these values.</p>
@@ -73,10 +91,12 @@ nav-title: Admin Console Settings
 <dd>Default: 86400000 milliseconds (1 day)</dd>
 
 
+
 <dt>com.soa.api.security.cache.refreshTime</dt>
 <dd>Indicates how long an app's shared secret, certificate, or both are stored in the cache without checking whether the cached data is out of date. </dd>
 <dd>If values are used, they are kept in the cache, but the refresh time governs how often the platform checks to make sure the cached values are still current.</dd>
-<dd>Default: 900000 milliseconds (15 minutes)</dd></dl>
+<dd>Default: 900000 milliseconds (15 minutes)</dd>
+</dl>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -91,6 +111,12 @@ nav-title: Admin Console Settings
   <dd>Allows security configuration changes to be implemented immediately. When set to false, configuration settings might take up to 5 minutes to take effect due to caching.</dd>
   <dd><strong>Note</strong>: The configuration only works when there is no load balancing set up, since the in-memory configuration update is limited to the container instance, not all the instances in the cluster.</dd>
   <dd>Default: false</dd>
+
+
+<!--<dt>atmosphere.config.contentPath</dt>
+<dd>(Doc not needed)</dd>-->
+
+
   <dt>atmosphere.config.csrfHttpWriteSkipUserAgents</dt>
   <dd>Allows you to specify values for the user-agent request header that will be allowed to use POST, PUT, and DELETE operations without providing the custom <a href="basics_glossary.htm#gl_xcsrf_token_fedmemberidheader">X-Csrf-Token_fedmemberID</a> header. If one of the specified values is in the user-agent request header, the Akana API Platform does not check for the custom header. Separate multiple values with commas; use wildcard if needed. Example: Mozilla* allows all Mozilla Firefox versions.</dd>
   <dd>Default: No default.</dd>
@@ -101,6 +127,21 @@ nav-title: Admin Console Settings
   <dd>In an enterprise install, the user identity and the user profile name are the same; for example, <strong>johnsmith</strong>.</dd>
   <dd>In a multi-tenant install, the user identity name is formatted as tenantid-username, for example, <strong>acmepaymentscorp-johnsmith</strong>.</dd>
   <dd>This helps ensure that if the same user has an account on two different tenants there is no conflict and each account is treated separately.</dd>
+
+
+
+<!--<dt>atmosphere.config.loadContentFromWorkspace</dt>
+<dd>(debug option used internally)</dd>-->
+
+
+<!--<dt>atmosphere.config.loadResourcesFromWorkspace</dt>
+<dd>(debug option used internally)</dd>-->
+
+
+<!--<dt>atmosphere.config.resourcePath</dt>
+<dd>(Doc not needed)</dd>-->
+
+
   <dt>atmosphere.config.userRolesDenied</dt>
   <dd>Allows you to set up one or more roles that cannot use this implementation. For example, you might want to dedicate a special container for administrator use only.</dd>
   <dd>Use comma separators as needed. For example:

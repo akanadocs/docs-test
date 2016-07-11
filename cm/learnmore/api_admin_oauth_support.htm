@@ -5,7 +5,7 @@ description: Configure an API with OAuth.
 product: cm
 category: learn
 sub-nav-class: API Admin
-weight: 272
+weight: 2620
 type: page
 nav-title: OAuth Support
 ---
@@ -28,8 +28,8 @@ nav-title: OAuth Support
   <li><a href="#what_is_an_access_token">What is an access token?</a></li>
   <li><a href="#what_is_a_grant_property">What is a Grant Property?</a></li>
   <li><a href="#how_does_resource_owner_authentication_page_login_branding_work">How does Resource Owner Authentication Page Login Branding work?</a></li>
-  <li><a href="#what_is_an_authorization_server_and_how_does_it_work">What is an Authorization Server and how does it work?</a></li>
-  <li><a href="#what_are_the_oauth_20_endpoints_and_how_do_they_work">What are the OAuth 2.0 Endpoints and how do they work?</a></li>
+  <li><a href="#oauth_authorization_server_define">What is the OAuth Authorization Server and how does it work?</a></li>
+  <li><a href="#what_are_the_oauth_20_endpoints_and_how_do_they_work">What are the OAuth 2.0 endpoints and how do they work?</a></li>
   <li><a href="#what_are_the_oauth_10a_endpoints">What are the OAuth 1.0a Endpoints?</a></li>
   <li><a href="#what_is_an_authorization_server_client_authentication_policy">What is an Authorization Server Client Authentication Policy?</a></li>
   <li><a href="#how_does_scope_mapping_work">How does Scope Mapping work?</a></li>
@@ -40,24 +40,23 @@ nav-title: OAuth Support
 
 
 <a name="what_is_oauth"></a><h3>What is OAuth?</h3>
-<p>OAuth is an open standard security protocol for authorization that allows you to share private resources stored on one site with another site without having to share credentials.</p>
-<p>One advantage of OAuth is that it supports both authentication and authorization in such a way that an application does not need to give access to the user's credentials. For example, in the platform you can sign in using your Facebook&reg; credentials, or on the <em>API Details</em> page you can share an API to Facebook, Twitter, and LinkedIn. These elements of the platform are configured as private resources.</p>
-<p>In addition, OAuth can potentially extend the userbase of your APIs and applications by providing a flexible, familiar way to access them. For example, if you have multiple APIs added to the platform repository, and each API has granted access to multiple apps, you then have a broadened developer community, in addition the substantial number of users that are using the applications.</p>
-<p>Access permissions are initially established by supplying a Resource that is dictated by the application (for example, username/password, email address). For example, if you supply username and password tokens, each token grants access to a specific site for a specific resource for a defined duration. This allows you to grant a third party site access to their information stored with another service provider, without sharing their access permissions or the full extent of their data.</p>
+<p>OAuth is an open standard security protocol for authorization that allows users to share private resources stored on one site with another site without having to share credentials.</p>
+<p>OAuth can potentially extend the userbase of your APIs by providing a flexible, familiar way for app users to authenticate and grant permission for the app to access their resources. It makes it very easy for the API audience of app developers to manage the process whereby their users, consumers, authenticate and authorize. If you have multiple APIs added to the platform repository, and each API has granted access to multiple apps, you then have a broadened developer community, in addition to the substantial number of users that are using the apps.</p>
+<p>An OAuth provider set up on the platform might reference an external identity provider, such as Google or Facebook, for user authentication.</p>
+<p>Access permission is initially established by authenticating the user via credentials such as username and password, and then by getting the user's explicit permission for the app to access the user's resources (in the case of two-legged OAuth flows, the second step is not needed).</p>
 <p>OAuth 2.0 defines the following roles of users and applications:</p>
 <ul>
-  <li><strong>Resource Owner</strong>&#8212;The resource owner is the person or application that owns the data that is to be shared. For example, a user on Facebook could be a resource owner. The resource they own is their data. The resource owner is typically a person, but could also be an application.</li>
-  <li><strong>Resource Server</strong>&#8212;The resource server is the server hosting the resource owner's data. For example, Facebook is a resource server.</li>
-  <li><strong>Client Application</strong>&#8212;The client application is the application requesting access to the resources stored on the resource server. The resources, which are owned by the resource owner. A client application could be a game requesting access to a user's Facebook account.</li>
-  <li><strong>Authorization Server</strong>&#8212;The OAuth authorization server is the OAuth service provider's server, which authorizes the client app to access the resources of the resource owner. The authorization server and the resource server might be the same server, but might be different.</li>
+  <li><strong>Resource Owner</strong>&#8212;The person or application that owns the data that is to be shared. For example, a user on Facebook could be a resource owner. The resource they own is their data. The resource owner is typically a person, but could also be an application.</li>
+  <li><strong>Resource Server</strong>&#8212;The server hosting the resource owner's data. For example, Facebook is a resource server.</li>
+  <li><strong>Client Application</strong>&#8212;The application requesting access to the resources stored on the resource server. The resources, which are owned by the resource owner. A client application could be a game requesting access to a user's Facebook account.</li>
+  <li><strong>Authorization Server</strong>&#8212;The OAuth service provider's server, which verifies that the resource owner has authenticated and has authorized the client app to access specific resources, and then issues a code to the client app. The Authorization Server and the Resource Server might be the same server, but might be different.</li>
 </ul>
 <p>OAuth in the context of an API in the platform includes the following:</p>
   <ul>
     <li><strong>Client Application</strong>&#8212;The application that wants to access the resource owner's data, which the API can provide access to. For example, the client application directs the user to the OAuth Provider with a request for the user to authorize access to resource information. The user must authenticate with credentials (for example, username or email address, password).</li>
     <li><strong>OAuth Provider</strong>&#8212;An application that keeps track of which user has given authorization to which application and has the ability to issue tokens to represent authorizations. A single OAuth Provider can support multiple APIs.</li>
-    <li><strong>Resource Owner</strong>&#8212;User of an API and application.</li>
-    <li><strong>Resource</strong>&#8212;User's credentials (for example, username or email address, password)</li>
-    <li><strong>API</strong>&#8212;Works closely with OAuth Provider to trust tokens issued by the provider to let the client application access the resource owner's resource held at the API.</li>
+    <li><strong>Resource Owner</strong>&#8212;User of an API and app, with resources, such as a bank account, online photo account, or Google or Facebook account, that the app wants to access to provide goods or services to the resource owner.</li>
+    <li><strong>API</strong>&#8212;Works closely with OAuth Provider to trust tokens issued by the provider to allow the client app to access the resource owner's resource held at the API.</li>
   </ul>
 <p><a href="#top">Back to top</a></p>
 
@@ -70,7 +69,8 @@ nav-title: OAuth Support
 
 
 <a name="how_do_i_configure_my_api_with_an_oauth_provider"></a><h3>How do I configure my API with an OAuth Provider?</h3>
-<p>If your API currently supports OAuth it must be associated with an OAuth Provider configuration that represents the OAuth use case that is most appropriate for the intended usage of the API, and resource mapping must be configured for selected operations to establish authorization permissions. To set this up, go to the <strong>API Details</strong> page and, at the top right, click <strong>OAuth Details</strong>.</p>
+<p>If your API is coded to support OAuth, you must associate it with an OAuth Provider set up on the platform. If there are multiple options, choose the OAuth Provider configuration that represents the most appropriate OAuth use case for the intended usage of your API, and then configure resource mapping to map specific operations within your API to  establish authorization permissions.</p>
+<p>To set this up: <strong>API</strong> &gt; <strong>Details</strong> &gt; on right, <strong>OAuth Details</strong>.</p>
 <p><strong>Process:</strong></p>
 <p><u><strong>A. API Administrator Installs OAuth Provider Features</strong></u></p>
 <p>After you add an API, define one or more OAuth Provider configurations:</p>
@@ -82,7 +82,7 @@ nav-title: OAuth Support
 <p><u><strong>B. Launch OAuth Details Wizard and Select OAuth Provider</strong></u></p>
 <p>The first step is to select an OAuth Provider for both the Sandbox and <!-- #BeginLibraryItem "/library/environ_live.lbi" -->Live<!-- #EndLibraryItem --> endpoints of your API.</p>
 <ol>
-  <li>On the <strong>API Details</strong> page, click <strong> OAuth Details</strong>. The <em>API OAuth Wizard</em> launches and the <em>Provider</em> page displays.</li>
+  <li>On the <strong>API Details</strong> page, on the right, click <strong> OAuth Details</strong>. The <em>API OAuth Wizard</em> launches and the <em>Provider</em> page displays.</li>
   <li>Based on your API configuration you will have one or more Sandbox or <!-- #BeginLibraryItem "/library/environ_live.lbi" -->Live<!-- #EndLibraryItem --> endpoints. In the OAuth Provider section select a provider name for each endpoint you would like to configure.
     <ul>
     <li>If you are configuring a Proxy API, select a pre-defined <strong>OAuth Provider.</strong></li>
@@ -98,14 +98,14 @@ nav-title: OAuth Support
   <li>Select an OAuth version. Version 2.0 and 1.0a are supported.</li>
   <li>Specify the required endpoint URLs for each OAuth version
     <ul>
-      <li>Click <a href="#what_are_the_oauth_20_endpoints_and_how_do_they_work">here</a> for information on OAuth 2.0 endpoints.</li>
-      <li>Click <a href="#what_are_the_oauth_10a_endpoints">here</a> for information on OAuth 1.0a endpoints.</li>
+      <li><strong>OAuth 2.0</strong>: for more information, see <a href="#what_are_the_oauth_20_endpoints_and_how_do_they_work">What are the OAuth 2.0 endpoints and how do they work?</a></li>
+      <li><strong>OAuth 1.0a</strong>: for more information, see <a href="#what_are_the_oauth_10a_endpoints">What are the OAuth 1.0a Endpoints?</a>.</li>
     </ul>
 </li>
   <li>If you selected OAuth 2.0, select an Authorization Grant Type and Authorization Server Client Authentication Policy.
     <ul>
-      <li>Click <a href="#what_grant_types_does_oauth_support">here</a> for information on Authorization Grants.</li>
-      <li>Click <a href="#what_are_the_oauth_10a_endpoints">here</a> for information on Client Authentication Policies.</li>
+      <li>Authorization Grants: see <a href="#what_grant_types_does_oauth_support">What grant types does OAuth support?</a></li>
+      <li>Client Authentication Policies: see <a href="#what_is_an_authorization_server_client_authentication_policy">What is an Authorization Server Client Authentication Policy?</a></li>
     </ul>
   </li>
   </ol>
@@ -114,7 +114,7 @@ nav-title: OAuth Support
 <p>For example, Application1 includes a calendar and may need access to the API's calendar operation, and Application2 includes an email client and may require access to the API's address operation.</p>
 <ol>
   <li>Click the applicable button: <strong>API-Wide Mapping</strong> or <strong>Operation-Specific Mapping</strong>.</li>
-  <li>In the <em>Scope</em> column, click <strong>Select</strong>. The <em>Select Scope</em> popup displays. Use the checkboxes to assign scopes to the API or specific operation, and then click <strong>Confirm</strong>.</li>
+  <li>In the <em>Scope</em> column, click <strong>Select</strong>. The <em>Select Scope</em> popup displays. Use the check boxes to assign scopes to the API or specific operation, and then click <strong>Confirm</strong>.</li>
   <li>Click <strong>Save</strong>.</li>
 </ol>
 <p><a href="#top">Back to top</a></p>
@@ -122,21 +122,22 @@ nav-title: OAuth Support
 
 
 <a name="whats_the_difference_between_an_oauth_provider_and_a_3rd_party_provider"></a><h3>What's the difference between an OAuth Provider and a Third-Party Provider?</h3>
-<p>An Identity Provider is a central OAuth-enabled provider that provides both user  authentication and user authorization. Using the <strong>API OAuth</strong> function, you can select a pre-defined OAuth Provider or a third-party provider:</p>
+<p>If you choose an OAuth Provider defined by the platform, values required for the OAuth provider to work are already set up. If you want to choose an OAuth provider not supported by the platform, you can do that by choosing the Third-Party option, when setting up your API's OAuth Details. In this scenario, you'll have to provide all the information needed for the OAuth Provider to work.</p>
+<p>Additional details:</p>
 <ul>
-  <li><em>OAuth Provider</em>&#8212;If you select a pre-defined OAuth Provider the configuration will be applied to the Proxy API only<em>.</em> Pre-defined providers are filtered to contain OAuth versions, grants, policies, and resource mapping information that relate to specific OAuth use cases. Tokens issued by this OAuth Provider could be validated by all agents from Akana.<br />
+  <li><strong>OAuth Provider</strong>&#8212;If you select a pre-defined OAuth Provider the configuration will be applied to the Proxy API only<em>.</em> Pre-defined providers are filtered to contain OAuth versions, grants, policies, and resource mapping information that relate to specific OAuth use cases. Tokens issued by this OAuth Provider could be validated by all agents from Akana.<br />
     <strong>Note</strong>: OAuth providers are set up by the Site Admin in Administration / Domains / OAuth Provider. If the OAuth provider you need is not on the drop-down list, contact your Site Admin.</li>
-  <li><em>3rd Party Provider</em>&#8212;Choose this option if the physical endpoint will be authorizing the OAuth requests. The app still needs to send the OAuth token as part of the request, but the platform passes the token through to the physical endpoint. This allows us to support the API in the Test Client so that apps can test against it. Provide all the information needed based on OAuth version and security configuration a specific API supports.</li>
+  <li><strong>Third-Party Provider</strong>&#8212;Choose this option if the physical endpoint will be authorizing the OAuth requests. The app still needs to send the OAuth token as part of the request, but the platform passes the token through to the physical endpoint. This allows the platform to support the API in the Test Client so that apps can test against it. Provide all the information needed based on the OAuth version and security configuration your API supports.</li>
 </ul>
-<p>Reference: <em>API &gt; API Details &gt; OAuth Details &gt; OAuth Provider</em></p>
+<p>Reference: <strong>API</strong> &gt; <strong>Details</strong> &gt; on right, <strong>OAuth Details</strong> &gt; <strong>OAuth Provider</strong>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
 <a name="what_grant_types_does_oauth_support"></a><h3>What grant types does OAuth support?</h3>
-<p>Access or permission to use a resource by an OAuth Provider is facilitated using grants.</p>
-<p><em>Note: The platform supports all four grant types for OAuth 2.0, and Authentication Code only for OAuth 1.0a.</em></p>
-<p>OAuth defines the following grant types that reflect different authorization mechanisms:</p>
+<p>The API platform supports all OAuth grant types, as detailed below. However, the OAuth Provider that your API references is preconfigured by the Site Admin. Depending on the configuration of the specific OAuth Provider, it might support only a subset of OAuth grant types. When you choose the OAuth Provider you'll see which options are supported.</p>
+<p><strong>Note</strong>: The platform supports all four grant types for OAuth 2.0, and Authentication Code only for OAuth 1.0a.</p>
+<p>OAuth defines the following grant types:</p>
 <p><strong>2-Legged </strong></p>
 <p>The following grant types are used in the 2-Legged OAuth scenario.</p>
 <table cellspacing="0px" class="doctable" style="width: 98%;">
@@ -178,7 +179,6 @@ nav-title: OAuth Support
   </tr>
   </tbody>
 </table>
-<p>Reference: <em>Site Administrator &gt; Domains &gt; Configure OAuth Provider &gt; Grant Types &gt; 3-Legged / 2-Legged Grant Types</em></p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -216,7 +216,7 @@ nav-title: OAuth Support
 
 
 <a name="how_are_tokens_generated_and_used_in_oauth"></a><h3>How are tokens generated and used in OAuth?</h3>
-<p>OAuth tokens are generated by the platform. When a Site Administrator or API Provider defines an OAuth Provider, they select the supported OAuth grant types, whether the authorization server supports Refresh Tokens, and what type of access token is supported. The type of token issued is based on the configuration of the OAuth Provider that is assigned to the API.</p>
+<p>OAuth tokens are generated by the platform. When a Site Administrator or API Provider defines an OAuth Provider, they select the supported OAuth grant types, whether the Authorization Server supports Refresh Tokens, and what type of access token is supported. The type of token issued is based on the configuration of the OAuth Provider that is assigned to the API.</p>
 <ul>
   <li>Tokens are used so that an app's private credentials do not have to be shared with an API.</li>
   <li>Instead of OAuth sending the password, it provides a token so the API does not need to see the app password.</li>
@@ -228,13 +228,14 @@ nav-title: OAuth Support
 
 
 <a name="what_is_a_refresh_token"></a><h3>What is a Refresh Token?</h3>
-<p>Refresh Tokens are credentials used to obtain access token:</p>
+<p>In some cases, an OAuth Access Token might be renewable. If the Access Token is renewable, a Refresh Token is issued. The app can use the Refresh Token to extend the duration of the grant.</p>
+<p>Some general information about refresh tokens:</p>
 <ul>
-  <li>They are issued as a string and represent the authorization granted to the client by the resource owner.</li>
+  <li>A refresh token is  issued as a string and represents the authorization granted to the client by the resource owner.</li>
   <li>The token denotes an identifier used to retrieve the authorization information.</li>
-  <li>They are issued to the client by the authorization server and are used to obtain a new access token when the current access token becomes invalid or expires, or to obtain additional access tokens with identical or narrower scope.</li>
-  <li>Issuing a refresh token is optional at the discretion of the authorization server. If the authorization server issues a refresh token, it is included when issuing an access token.</li>
-  <li>Unlike access tokens, refresh tokens are intended for use only with authorization servers and are never sent to resource servers.</li>
+  <li>The refresh token is  issued to the client by the Authorization Server and is used to obtain a new access token when the current access token becomes invalid or expires, or to obtain additional access tokens with identical or narrower scope.</li>
+  <li>Issuing a refresh token is optional at the discretion of the Authorization Server. If the Authorization Server issues a refresh token, it is included when issuing an access token.</li>
+  <li>Unlike access tokens, refresh tokens are intended for use only with Authorization Servers and are never sent to resource servers.</li>
 </ul>
 <p>Reference: <em>Site Administrator &gt; Domains &gt; Configure OAuth Provider &gt; Grant Types &gt; Issue Refresh Tokens</em></p>
 <p><a href="#top">Back to top</a></p>
@@ -242,7 +243,7 @@ nav-title: OAuth Support
 
 
 <a name="what_is_an_access_token"></a><h3>What is an access token?</h3>
-<p>An access token is issued as a string that represents an access authorization issued to the client. It is used by the client to access protected resources hosted by the resource server. Access tokens are issued to clients by an authorization server with the approval of the resource owner. Each access token includes an expiration attribute that indicates how long the token is valid.</p>
+<p>An access token is issued as a string that represents an access authorization issued to the client. It is used by the client to access protected resources hosted by the resource server. Access tokens are issued to clients by an Authorization Server with the approval of the resource owner. Each access token includes an expiration attribute that indicates how long the token is valid.</p>
 <p><em>Note: An access token timeout is typically 15 days (or 1296000 seconds). </em></p>
 <p><strong>OAuth 2.0:</strong></p>
 <p>There are two types of access tokens:</p>
@@ -285,35 +286,35 @@ nav-title: OAuth Support
 
 
 
-<a name="what_is_an_authorization_server_and_how_does_it_work"></a><h3>What is an Authorization Server and how does it work?</h3>
-<p>An authentication server is an application that facilitates authentication of an entity that attempts to access a network. Such an entity may be a human user or another server. An authentication server can reside in a dedicated computer, an Ethernet switch, an access point or a network access server.</p>
-<p>Authentication Servers can be set up in a variety of ways, depending upon the security scheme of the network they are serving. The basic process for authenticating a user includes the following steps:</p>
-<ul>
-  <li>A user dials into a network through a communications server, or Network Access Server.</li>
-  <li>The Network Access Server forwards the user identification and password to the Authentication Server.</li>
-  <li>Then the Authentication Server validates the user and provides access privileges to the network.</li>
-</ul>
+<a name="oauth_authorization_server_define"></a><h3>What is the OAuth Authorization Server and how does it work?</h3>
+<p>In OAuth, the Authorization Server gets the user's authorization for the app to have access to the user's resources. Then, the Authorization Server issues the grant to the app.</p>
+<p>There are two steps that the user participates in, in sequence: authentication and authorization. The user must first authenticate, usually with credentials such as a username and password. When authentication is complete, the user must then authorize the specific access to the user's resources, which the app is requesting.</p>
+<p>In some cases these steps might flow together. For example, if Google is being used for authentication and the user is already logged in to Google, the login is recognized and the authentication step is skipped. The user then sees only the authorization page.</p>
+<p>In other cases, the user might log in and then see the authorization page.</p>
+<p>In both scenarios, authentication is completed or verified and then the Authorization Server requests, and collects, the resource owner's authorization and as a result issues a grant to the app.</p>
+<p>On the platform, as part of setting up the OAuth domain, the Site Admin must specify the Authorization Server URL. This is the URL that the browser for the Resource Owner (app user) will be accessing for the OAuth grant. It is the URL at which the OAuth Provider accesses the requests, for both Authorization Endpoint and Token Endpoint.</p>
+The URL must be accessible to all the apps and end users that might use APIs that are referencing the OAuth domain. The Authorization Endpoint and Token Endpoint for OAuth 10.a and OAuth 2.0 will use different paths according to the specific OAuth version. Firewalls and DNS servers must be set up for this URL so that end users and apps can access the URL.
 <p><a href="#top">Back to top</a></p>
 
 
 
-<a name="what_are_the_oauth_20_endpoints_and_how_do_they_work"></a><h3>What are the OAuth 2.0 Endpoints and how do they work?</h3>
+<a name="what_are_the_oauth_20_endpoints_and_how_do_they_work"></a><h3>What are the OAuth 2.0 endpoints and how do they work?</h3>
 <p>OAuth 2.0 defines an Authorization, Token, and Redirection endpoints. They are typically a URI on a web server.</p>
 <p>API Administrators who are defining OAuth Providers using the <strong>Add OAuth Wizard</strong> (via <em>Site Administration &gt; Domains</em>) or are configuring OAuth for a specific API using the <strong>API OAuth Wizard</strong> (via <em>API &gt; Details</em>) will specify an Authorization URL, Token Endpoint URL, and Redirection URL if they are using OAuth 2.0.</p>
 <p>This section provides a brief overview of how an <a href="basics_glossary.htm#gl_oauth_authorizationserver">Authorization Server</a> works in respect to each endpoint:</p>
 <p><strong>OAuth 2.0 Endpoints</strong>:</p>
 <ul>
-  <li><strong> Authorization Endpoint</strong> is the endpoint on the authorization server where the resource owner provides credentials, such as username and password, in and grants authorization to the client app to access the resources or a specified subset of the resources.</li>
-  <li><strong>Token Endpoint</strong> is the endpoint on the authorization server where the client application exchanges the authorization code, client ID, and client secret and receives in exchange an access token which allows the app to access the approved resources.</li>
+  <li><strong> Authorization Endpoint</strong> is the endpoint on the Authorization Server where the resource owner provides credentials, such as username and password, in and grants authorization to the client app to access the resources or a specified subset of the resources.</li>
+  <li><strong>Token Endpoint</strong> is the endpoint on the Authorization Server where the client application exchanges the authorization code, client ID, and client secret and receives in exchange an access token which allows the app to access the approved resources.</li>
   <li><strong>Redirection Endpoint</strong> is the endpoint in the client application where the resource owner is redirected to, after having granted authorization at the authorization endpoint.</li>
 </ul>
 <p><strong>Authorization Server Workflow:</strong></p>
 <ul>
   <li>When a client application wants access to the resources of a resource owner, hosted on a resource server, the client application must first obtain an authorization grant.</li>
-  <li>Before a client application can request access to resources on a resource server, the client application must first register with the authorization server associated with the resource server. After the registration is complete, the registration remains valid, unless the client app registration is revoked.</li>
-  <li>At registration the client application is assigned a client ID and a client secret (password) by the authorization server. The client ID and secret is unique to the client application on that authorization server. If a client application registers with multiple authorization servers (for example, Facebook, Twitter, or Google), each authorization server will issue its own unique client ID to the client application.</li>
-  <li>Whenever the client application requests access to resources stored on that same resource server, the client application needs to authenticate itself by sending along the client ID and the client secret to the authorization server.</li>
-  <li>During the registration the client also registers a redirect URI. This redirect URI is used when a resource owner grants authorization to the client application. When a resource owner has successfully authorized the client application via the authorization server, the resource owner is redirected back to the client application, to the redirect URI.</li>
+  <li>Before a client application can request access to resources on a resource server, the client application must first register with the Authorization Server associated with the resource server. After the registration is complete, the registration remains valid, unless the client app registration is revoked.</li>
+  <li>At registration the client application is assigned a client ID and a client secret (password) by the Authorization Server. The client ID and secret is unique to the client application on that Authorization Server. If a client application registers with multiple Authorization Servers (for example, Facebook, Twitter, or Google), each Authorization Server will issue its own unique client ID to the client application.</li>
+  <li>Whenever the client application requests access to resources stored on that same resource server, the client application needs to authenticate itself by sending along the client ID and the client secret to the Authorization Server.</li>
+  <li>During the registration the client also registers a redirect URI. This redirect URI is used when a resource owner grants authorization to the client application. When a resource owner has successfully authorized the client application via the Authorization Server, the resource owner is redirected back to the client application, to the redirect URI.</li>
 </ul>
 <p><a href="#top">Back to top</a></p>
 
@@ -426,7 +427,7 @@ OAuth_Signature_Method: HMACSHA256</pre>
     </tr>
     <tr class="t2row">
       <td>OAuth_Signature_Method</td>
-      <td><p>The signature method used in the request message for signing the oauth token, indicating the strength of the security used in the request message. This applies only for OAuth 1.0a tokens and OAuth 2.0 MAC token. Example: HMACSHA256. We support the following OAuth signature methods:</p>
+      <td><p>The signature method used in the request message for signing the OAuth token, indicating the strength of the security used in the request message. This applies only for OAuth 1.0a tokens and OAuth 2.0 MAC token. Example: HMACSHA256. We support the following OAuth signature methods:</p>
         <ul class="apidoctable_ul">
           <li>HmacSHA1/hmac-sha1/hmac-sha-1</li>
           <li>HMACSHA256/hmac-sha-256/sha-256</li>

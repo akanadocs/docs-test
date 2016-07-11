@@ -18,7 +18,7 @@ nav-title: Configuring the Search/Indexing Feature
 <h3 style="color: gray;">Table of Contents</h3>
 
 
-<h5 style="color: gray;"><a href="#h_es_feature_info">Elasticsearch feature information:</a></h5>
+<h5 style="color: gray;"><a href="#h_es_feature_info">Elasticsearch feature overview:</a></h5>
 
 
 <ol class="table_of_contents">
@@ -33,19 +33,21 @@ nav-title: Configuring the Search/Indexing Feature
   <li><a href="#es_define_me_node_why_not">Why would I configure a node so that it is not master eligible?</a></li>
   <li><a href="#es_define_client_node">In Elasticsearch, what is a client node?</a></li>
   <li><a href="#es_default_configuration_mode">What is the default configuration mode for Elasticsearch?</a></li>
-  <li><a href="#es_out_of_box_config">What is the basic configuration needed to get Elasticsearch working out of the box with the API Platform?</a></li>
   <li><a href="#es_mode_s_deployment_options_available">What deployment options are available for Elasticsearch in standalone mode?</a></li>
   <li><a href="#es_mode_e_deployment_options_available">What deployment options are available for Elasticsearch in embedded mode?</a></li>
   </ol>
 
 
-<h5 style="color: gray;"><a href="#h_es_configuring">Configuring Elasticsearch:</a></h5>
+<h5 style="color: gray;"><a href="#h_es_configuring">Installing and Configuring Elasticsearch:</a></h5>
 
 
 <ol class="table_of_contents">
+  <li><a href="#es_upgrade_options">I'm upgrading; what are my options?</a></li>
+  <li><a href="#es_out_of_box_config">What is the basic configuration needed to get Elasticsearch working out of the box with the API Platform?</a></li>
   <li><a href="#es_what_need">What do I need to use Elasticsearch?</a></li>
   <li><a href="#es_mode_s_how_transition">How do I transition from Compass to Elasticsearch standalone mode?</a></li>
   <li><a href="#es_mode_e_how_transition">How do I transition from Compass to Elasticsearch embedded mode?</a></li>
+  <li><a href="#how_do_i_install_elastic_search_in_pm">How do I install the Elasticsearch feature?</a></li>
   <li><a href="#how_do_i_configure_elastic_search_in_pm">How do I configure Elasticsearch?</a></li>
   <li><a href="#es_default_ports">What are the default ports for Elasticsearch configuration?</a></li>
   <li><a href="#fv_es_global">Elasticsearch Global Configuration: Field Values</a></li>
@@ -56,7 +58,6 @@ nav-title: Configuring the Search/Indexing Feature
   <li><a href="#es_configure_embed_multiple_containers">How do I configure Elasticsearch in embedded mode with multiple CM containers (two or more)?</a></li>
   <li><a href="#es_config_settings">How do I configure the number of nodes and shards?</a></li>
 </ol>
-
 
 
 
@@ -134,7 +135,7 @@ nav-title: Configuring the Search/Indexing Feature
 <a name="es_data_nodes_how_many"></a><h3>How many Elasticsearch data nodes should I configure?</h3>
 <p>It's best to configure as many nodes as possible as data nodes, because if the data node goes down and there are no other data nodes, the search feature goes down. If there are no data nodes available, the data is inaccessible, so the index fails and the search feature fails entirely.</p>
 <p>When you configure multiple data nodes, the internal logic of the Elasticsearch feature determines which data nodes will hold which data. Generally, all data is available in all data nodes.</p>
-<p>Another scenario is that the Elasticsearch feature might be configured to use multiple index partitions, called <a href="basics_glossary.htm#gl_shard">shards</a>. Each data node could contain certain shards.</p>
+<p>Another scenario is that the Elasticsearch feature might be configured to use multiple index partitions, called <a href="basics_glossary.htm#gl_es_shard">shards</a>. Each data node could contain certain shards.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -151,7 +152,7 @@ nav-title: Configuring the Search/Indexing Feature
 <p>There can be more than one master node inside a cluster.</p>
 <p>Here are some scenarios:</p>
 <p><strong>Four containers, four master eligible nodes, two master nodes</strong></p>
-<p> If the Elasticsearch feature is installed in four containers, with each container being configured as master eligible, but the Elasticsearch settings are such that only two containers are <strong>required</strong> to be masters, the cluster uses the Elasticsearch logic to determine which two will act as master. In this scenario, the additional nodes are master eligible, but not master nodes.</p>
+<p>If the Elasticsearch feature is installed in four containers, with each container being configured as master eligible, but the Elasticsearch settings are such that only two containers are <strong>required</strong> to be masters, the cluster uses the Elasticsearch logic to determine which two will act as master. In this scenario, the additional nodes are master eligible, but not master nodes.</p>
 <p>If one of the master nodes goes down, one of the additional master eligible nodes will become a master.</p>
 <p><strong>Two containers, one master eligible node, one master node</strong></p>
 <p>There must always be a master node; so, if only one node is configured as master eligible, that node is always the master node. Note that this scenario doesn't have any accommodation for redundancy.</p>
@@ -182,18 +183,6 @@ nav-title: Configuring the Search/Indexing Feature
 
 
 
-<a name="es_out_of_box_config"></a><h3>What is the basic configuration needed to get Elasticsearch working out of the box with the API Platform?</h3>
-<p>When you install the Elasticsearch feature, the product runs in embedded mode by just accepting the default settings.</p>
-<p>All containers need to have the embedded Elasticsearch feature installed. In this scenario, the container fulfills two roles:</p>
-<ul>
-  <li>Data node</li>
-  <li>Master eligible node</li>
-</ul>
-<p><strong>I</strong>f you want to run in standalone mode, or want to customize your installation, you'll need to specify values; if you just want to accept the default settings, no additional configuration is needed.</p>
-<p><a href="#top">Back to top</a></p>
-
-
-
 <a name="es_mode_s_deployment_options_available"></a><h3>What deployment options are available for Elasticsearch in standalone mode?</h3>
 <p>The Elasticsearch server is run outside the API Platform, in the same way as a database server. If you choose to run Elasticsearch in standalone mode, it's important to provide a cluster capability to prevent outage. In this scenario, all API Platform containers run in Client mode; in this mode, they send both search and index requests to the standalone Elasticsearch server.</p>
 <p><a href="#top">Back to top</a></p>
@@ -209,14 +198,133 @@ nav-title: Configuring the Search/Indexing Feature
 
 
 <div class = "divider1"></div>
-<h3><a name="h_es_configuring"></a>Configuring Elasticsearch:</h3>
+<h3><a name="h_es_configuring"></a>Installing and Configuring Elasticsearch:</h3>
+
+
+
+<a name="es_upgrade_options"></a>
+<h3>I'm upgrading; what are my options?</h3>
+<p>In setting  up the Elasticsearch feature, there are three possible scenarios; follow the applicable set of steps as listed below.</p>
+<p><strong>Elasticsearch, embedded mode</strong> (most likely scenario): If you are using Elasticsearch (recommended) in embedded mode (you don’t have a standalone Elasticsearch server) you’ll need to:</p>
+<ul>
+  <li>Install the feature: See <a href="#proc_install_es_embedded">Installing the Akana Embedded Elasticsearch Node feature</a>.</li>
+  <li>Configure the feature. Refer to these tasks:
+    <ul>
+      <li><a href="#proc_es_global_config">Elasticsearch configuration: global settings</a></li>
+      <li><a href="#es_available_configuration_modes">Elasticsearch embedded node settings</a></li>
+    </ul>
+  </li>
+  <li>Run database queries: see <a href="#proc_es_database_queries_switch_index">Database queries to switch the search index to Elasticsearch</a></li>
+</ul>
+<p><strong>Elasticsearch, standalone mode</strong>: If you are using Elasticsearch (recommended) in standalone mode (you have a standalone Elasticsearch server) you don’t need to install the feature. You’ll need to:</p>
+<ul>
+  <li>Configure global settings. See <a href="#proc_es_global_config">Elasticsearch configuration: global settings</a></li>
+  <li>Run database queries: see <a href="#proc_es_database_queries_switch_index">Database queries to switch the search index to Elasticsearch</a></li>
+</ul>
+<p><strong>No Elasticsearch</strong>: If you do <strong>not</strong> want to use Elasticsearch, you’ll just need to do a database update: </p>
+<ul>
+  <li><a href="#proc_es_use_compass">Steps to follow if you want to continue using Compass for search</a></li>
+</ul>
+
+
+<h5><a name="proc_install_es_embedded"></a>Installing the Akana Embedded Elasticsearch Node feature</h5>
+<ol>
+  <li>Log in to the Akana Administration Console.</li>
+  <li>Click the <strong>Available Features</strong> tab.
+  <p><img src="assets/03_install_es.jpg" alt="" /></p></li>
+  <li>Choose <strong>Akana Embedded Elasticsearch Node</strong> and click <strong>Install Feature</strong>.</li>
+  <li>When installation is complete, at the prompt, restart the system.</li>
+</ol>
+
+
+<h5><a name="proc_es_global_config"></a>Elasticsearch configuration: global settings </h5>
+<p>When you install the Elasticsearch feature, the product runs in embedded mode by just accepting the default settings. You don’t need to change anything. Follow the applicable procedure below:</p>
+<ul>
+  <li>Information for embedded mode</li>
+  <li>Information for standalone mode</li>
+</ul>
+
+
+<h5><a name="proc_es_global_config_embedded"></a>Embedded mode: Global configuration</h5>
+<ol>
+  <li>In the Akana Administration Console, on the <strong>Configuration</strong> tab, under <strong>Configuration Actions</strong>, choose <strong>Configure Elasticsearch Global Configuration</strong>. The wizard opens.</li>
+  <li>Make sure the Deployment Mode is set to <strong>Embedded</strong>, as shown below.
+  <p><img src="assets/02_06_configure_es.jpg" alt="" /></p></li>
+</ol>
+
+
+<h5><a name="proc_es_global_config_standalone"></a>Standalone mode: Global configuration</h5>
+<p>If you choose to run in standalone mode, you don’t need to install the Akana Embedded Elasticsearch Node feature. However, you must configure Elasticsearch.</p>
+<ol>
+  <li>In the Akana Administration Console, on the <strong>Configuration</strong> tab, under <strong>Configuration Actions</strong>, choose <strong>Configure Elasticsearch Global Configuration</strong>. The wizard opens.</li>
+  <li>Make sure the Deployment Mode is set to <strong>Transport Client</strong>.</li>
+  <li>Provide the ES Server URL.</li>
+</ol>
+
+
+<h5><a name="proc_es_embed_node_settings"></a>Elasticsearch embedded node settings</h5>
+<p>If you’re using Elasticsearch in embedded mode, the platform automatically configures. You don’t need to do anything to configure the embedded node settings.</p>
+
+
+<h5><a name="proc_es_database_queries_switch_index"></a>Database queries to switch the search index to Elasticsearch</h5>
+<p>Run the following queries to switch the search index to Elasticsearch and to trigger the index.</p>
+<ol>
+  <li>Change the index target to Elasticsearch only:
+    <pre>update TENANTS set INDEX_TARGET='elastic', LASTMODIFIEDDTS=&lt;current-timestamp&gt;;</pre>
+    <p> current-timestamp above is: </p>
+    <ul>
+      <li> utc_timestamp() for MySQL</li>
+      <li> sys_extract_utc(current_timestamp) for Oracle</li>
+      <li> getutcdate() for MSSQL</li>
+      <li> current_timestamp – current_timezone for DB2</li>
+      </ul>
+  </li>
+  <li>Note down the number of records in the INDEX_STATUS table, then delete the index metadata so the platform can trigger the indexing again, this time with Elasticsearch:
+    <pre>delete from INDEX_STATUS;</pre></li>
+  <li>Wait for a few minutes to see that the INDEX_STATUS table is populated to as many records as it had before emptying the table, and that the INDEX_QUEUE table is empty. This indicates that indexing is complete.</li>
+  <li>Now, run the query below to change the platform so that it uses the Elasticsearch index. Until you complete this step, the platform continues to service the search results with the Compass index that was built before the upgrade.
+    <pre>update TENANTS set SEARCH_SOURCE='elastic', LASTMODIFIEDDTS= &lt;current-timestamp&gt;;</pre>    <p>current-timestamp above is: </p>
+    <ul>
+      <li> utc_timestamp() for MySQL</li>
+      <li> sys_extract_utc(current_timestamp) for Oracle</li>
+      <li> getutcdate() for MSSQL</li>
+      <li> current_timestamp – current_timezone for DB2</li>
+      </ul>
+  </li>
+</ol>
+<p><strong>Example: database queries for MySQL database</strong></p>
+<p>For a MySQL database, the above database queries are as follows:</p>
+<pre>update TENANTS set INDEX_TARGET='elastic', LASTMODIFIEDDTS=utc_timestamp();
+delete from INDEX_STATUS;
+update TENANTS set SEARCH_SOURCE='elastic', LASTMODIFIEDDTS=utc_timestamp();</pre>
+
+
+<h5><a name="proc_es_use_compass"></a>Steps to follow if you want to continue using Compass for search</h5>
+<p>If you don’t want to move to Elasticsearch, but prefer to stay with the older Compass search feature, you’ll need to check some values in the database and make changes if needed.</p>
+<p>Make sure that the TENANTS table has these two fields set to <strong>compass</strong>:</p>
+<ul>
+  <li><strong>INDEX_TARGET</strong> field: value must be <strong>compass</strong> (post-upgrade default value is <strong>compass,elastic</strong>; remove <strong>elastic</strong>)</li>
+  <li><strong>SEARCH_SOURCE</strong> field, value must be <strong>compass</strong> (post-upgrade default value is <strong>elastic</strong>; change it)</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="es_out_of_box_config"></a><h3>What is the basic configuration needed to get Elasticsearch working out of the box with the API Platform?</h3>
+<p>When you install the Elasticsearch feature (see <a href="#how_do_i_install_elastic_search_in_pm">How do I install the Elasticsearch feature?</a>), the product runs in embedded mode by just accepting the default settings.</p>
+<p>All containers need to have the embedded Elasticsearch feature installed. In this scenario, the container fulfills two roles:</p>
+<ul>
+  <li>Data node</li>
+  <li>Master eligible node</li>
+</ul>
+<p><strong>I</strong>f you want to run in standalone mode, or want to customize your installation, you'll need to specify values; if you just want to accept the default settings, no additional configuration is needed.</p>
+<p><a href="#top">Back to top</a></p>
 
 
 
 <a name="es_what_need"></a><h3>What do I need to use Elasticsearch?</h3>
-<p>If you want to run Elasticsearch in embedded mode (see <a href="#es_mode_embedded_define">What is embedded mode?</a>), you'll need to install the Elasticsearch feature once you've installed or upgraded to version 8.0 or later.</p>
-<p>At the Akana Administration Console, install this feature: <strong>Akana Embedded Elasticsearch Node</strong>. You'll need to install this feature on every container that's running the Akana API Platform and also on the containers where the Community Manager Scheduled Jobs feature is installed.</p>
-<p><strong>Note</strong>: If you are using standalone mode (see <a href="#es_mode_standalone_define">What is standalone mode?</a>), you don't need to install the <strong>Akana Embedded Elasticsearch Node</strong> feature.</p>
+<p>If you want to run Elasticsearch in embedded mode (see <a href="#es_mode_embedded_define">What is embedded mode?</a>), you'll need to install the Elasticsearch feature once you've installed or upgraded to version 8.0 or later. See <a href="#how_do_i_install_elastic_search_in_pm">How do I install the Elasticsearch feature?</a></p>
+<p>If you are using standalone mode (see <a href="#es_mode_standalone_define">What is standalone mode?</a>), you don't need to install the <strong>Akana Embedded Elasticsearch Node</strong> feature.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -224,9 +332,9 @@ nav-title: Configuring the Search/Indexing Feature
 <a name="es_mode_s_how_transition"></a><h3>How do I transition from Compass to Elasticsearch standalone mode?</h3>
 <p>After installing an upgrade from a version before 8.0 to version 8.0 or later, you'll need to complete some post-upgrade tasks.</p>
 <ol>
-  <li>First, configure the global settings. See <a href="#proc_es_global">To set up global configuration of Elasticsearch in the Akana Administration Console</a>.</li>
-  <li>Install the Embedded Elasticsearch Container feature on all containers that have either the API Platform APIs installed or the API Platform Scheduled Jobs feature installed</li>
-  <li>Configure the settings for each node to run in client mode.</li>
+  <li>Install the Embedded Elasticsearch Container feature on all containers that have either the API Platform APIs installed or the API Platform Scheduled Jobs feature installed. See <a href="#how_do_i_install_elastic_search_in_pm">How do I install the Elasticsearch feature?</a></li>
+  <li>Configure the global settings. See <a href="#proc_es_global">To set up global configuration of Elasticsearch in the Akana Administration Console</a>.</li>
+  <li>Review the settings for each node to run in client mode. You should not need to change the settings.</li>
   <li>Change the INDEX_TARGET for all tenants to either just <strong>elastic</strong> (to index using only Elasticsearch) or <strong>elastic,compass</strong> (to index using both Elasticsearch and Compass).</li>
   <li>Empty the INDEX_STATUS table so that all entries are indexed again.</li>
 </ol>
@@ -237,9 +345,25 @@ nav-title: Configuring the Search/Indexing Feature
 <a name="es_mode_e_how_transition"></a><h3>How do I transition from Compass to Elasticsearch embedded mode?</h3>
 <p>After installing the upgrade, you'll need to complete some post-upgrade tasks.</p>
 <ol>
-  <li>First, configure the global settings. See <a href="#proc_es_global">To set up global configuration of Elasticsearch in the Akana Administration Console</a>.</li>
-  <li>Install the Embedded Elasticsearch Container feature on all containers that have either the API Platform APIs installed or the API Platform Scheduled Jobs feature installed.</li>
-  <li>Configure the settings for each node, with some nodes configured as a <a href="basics_glossary.htm#gl_data_node">data node</a>, some nodes configured as a <a href="basics_glossary.htm#gl_master_node">master node</a>, and some nodes configured as a <a href="basics_glossary.htm#gl_client_node">client node</a>. See <a href="#proc_es_embedded">To configure an Elasticsearch embedded node in the Akana Administration Console</a>.</li>
+  <li>Install the Embedded Elasticsearch Container feature on all containers that have either the API Platform APIs installed or the API Platform Scheduled Jobs feature installed. See <a href="#how_do_i_install_elastic_search_in_pm">How do I install the Elasticsearch feature?</a></li>
+  <li>Configure the global settings. See <a href="#proc_es_global">To set up global configuration of Elasticsearch in the Akana Administration Console</a>.</li>
+  <li>Configure the settings for each node, with some nodes configured as a <a href="basics_glossary.htm#gl_es_data_node">data node</a>, some nodes configured as a <a href="basics_glossary.htm#gl_master_node">master node</a>, and some nodes configured as a <a href="basics_glossary.htm#gl_es_client_node">client node</a>. See <a href="#proc_es_embedded">To configure an Elasticsearch embedded node in the Akana Administration Console</a>.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="how_do_i_install_elastic_search_in_pm"></a><h3>How do I install the Elasticsearch feature?</h3>
+<p>Installation of the Elasticsearch feature is done in the the Akana Administration Console. If you don't have access, get this step completed by the Administrator, following the procedure below.</p>
+<p>This feature must be installed on every container that's running the Akana API Platform and also on the containers where the Community Manager Scheduled Jobs feature is installed.</p>
+
+
+<h5><a name="proc_se_install"></a>To install the Elasticsearch feature</h5>
+<ol>
+  <li>Log in to the Akana Administration Console.</li>
+  <li>Click the <strong>Available Features</strong> tab.</li>
+  <li>Choose <strong>Akana Embedded Elasticsearch Node</strong> and click <strong>Install Feature</strong>.</li>
+  <li>When installation is complete, at the prompt, restart the system.</li>
 </ol>
 <p><a href="#top">Back to top</a></p>
 
@@ -308,7 +432,7 @@ nav-title: Configuring the Search/Indexing Feature
 </ul>
 </dd>
   <dt>Cluster Name (all modes)</dt>
-  <dd>Name of the cluster for the Elasticsearch feature. Required for all deployment modes. Default for embedded mode: <strong>default_xxxxxx</strong>.</dd>
+  <dd>Name of the cluster for the Elasticsearch feature. Required for all deployment modes. Default for embedded mode: <strong>default_xxxxxx</strong>. When you install the feature, a value is defaulted in this field.</dd>
   <dt>ES Server URL (Transport Client deployment mode only)</dt>
   <dd>The URL for the Elasticsearch server.</dd>
   <dt>Master Host URL (Client deployment mode only)</dt>
@@ -323,7 +447,7 @@ nav-title: Configuring the Search/Indexing Feature
 <p>In the Transport Client scenario, the request is sent to the master node. The master node then sends the request to both data nodes, receives the responses, merges the data, and sends back the merged data as the response to the query.</p>
 <p>In the Client Only scenario, the node has the information regarding which two data nodes are needed. It sends the request to both data nodes, receives the responses, and merges locally. The request is fulfilled with a smaller number of hops. Client-only mode is more efficient than transport client model.</p>
 <p>Transport Client mode is used when the container uses a TCP port to connect to a standalone Elasticsearch server.</p>
-<p> Client-only mode is used when a container running the embedded Elasticsearch feature becomes a node as part of an external standalone Elasticsearch server.</p>
+<p>Client-only mode is used when a container running the embedded Elasticsearch feature becomes a node as part of an external standalone Elasticsearch server.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -354,7 +478,7 @@ nav-title: Configuring the Search/Indexing Feature
   <dt>Master Eligible</dt>
   <dd>Indicates whether the current node could be the master node.</dd>
   <dt>Data Node</dt>
-  <dd>Indicates whether the current node is a <a href="basics_glossary.htm#gl_data_node">data node</a> only. The data node is where the index is stored. Over the entire installation, there must be at least one data node.</dd>
+  <dd>Indicates whether the current node is a <a href="basics_glossary.htm#gl_es_data_node">data node</a> only. The data node is where the index is stored. Over the entire installation, there must be at least one data node.</dd>
   <dd>Index location is required only for data nodes. It's vital because if the node doesn't hold the data, there is no storage of index location. Index location is where the index is saved, and the index is only saved on the data nodes. Therefore, for a data node, the index location needs to be provided.</dd>
   <dd>The default index location is a subfolder to the installation folder, <strong>/index</strong>, at the same level in the folder structure as the <strong>/lib</strong> and <strong>/bin</strong> folders. Index data is stored in this folder.</dd>
   <dd>If the node is not a data node, index location is not needed.</dd>
@@ -367,6 +491,8 @@ nav-title: Configuring the Search/Indexing Feature
 <a name="es_delete_index"></a><h3>How do I delete an embedded Elasticsearch search index I'm no longer using?</h3>
 <p>You might need to delete an Elasticsearch index that you previously created; for example, if you configure an index and then change to use an index with a different name. If you have a search index that you no longer want to use, you'll need to delete it using the Akana Administrative Console. For instructions, see below.</p>
 <p><strong>Note</strong>: This is only applicable to embedded Elasticsearch nodes. If you're using external Elasticsearch nodes, you'll need to delete redundant indexes using the Elasticsearch commands or user interface provided by your external Elasticsearch engine.</p>
+
+
 <h5><a name="proc_es_delete_index"></a>To delete an Elasticsearch index in the Akana Administration Console</h5>
 <ol>
   <li>In the Akana Administration Console, on the <strong>Configuration</strong> tab, under <strong>Configuration Actions</strong>, choose <strong>Delete Elasticsearch Index</strong>. The wizard opens.</li>
@@ -393,6 +519,8 @@ nav-title: Configuring the Search/Indexing Feature
 <p>If there are two CM containers in your installation, you'll need to install the embedded Elasticsearch feature in both containers, and then configure the feature in both containers.</p>
 <p>In this scenario, you'll need to decide whether you want to replicate the index in both containers or have it in only one container. Akana recommends configuring both containers, so that you have a failover for the index data.</p>
 <p>To configure both containers, follow the steps below.</p>
+
+
 <h5>To configure two containers so that the index is replicated in both containers</h5>
 <ol>
   <li>For <strong>each</strong> container, choose <strong>Configure Elasticsearch Embedded Node</strong> and configure the settings below:
@@ -420,6 +548,8 @@ nav-title: Configuring the Search/Indexing Feature
   <li>Empty the INDEX_STATUS table.</li>
 </ol>
 <p>In some cases, you might find that the index is built with the earlier Compass feature as well as the new Elasticsearch feature. To avoid building the index with Compass unnecessarily, follow the steps below.</p>
+
+
 <h5>To ensure the search index is only Elasticsearch, not Compass</h5>
 <ol>
   <li>In the TENANTS table, change the INDEX_TARGET field to <strong>elastic</strong>.</li>
@@ -449,7 +579,7 @@ nav-title: Configuring the Search/Indexing Feature
   <dd>The number of replicas (additional copies) of the Elasticsearch index. Each replica includes a replica of each shard, so one replica might be distributed across multiple nodes, just as the index itself is split into shards which are distributed across nodes.</dd>
   <dd>Default: 1</dd>
 <dt>elastic.config.index.number.of.shards</dt>
-  <dd>The number of <a href="basics_glossary.htm#gl_shard">shards</a> (splits) for the Elasticsearch index. </dd>
+  <dd>The number of <a href="basics_glossary.htm#gl_es_shard">shards</a> (splits) for the Elasticsearch index. </dd>
   <dd><strong>Note</strong>: This is a one-time setting. An Elasticsearch index cannot be re-sharded; if you want to change the number of shards, after changing the setting you'll need to delete the /index folder that the search index is stored in and then rebuild the index.</dd>
   <dd>Default: 2</dd>
 </dl>
@@ -487,23 +617,24 @@ nav-title: Configuring the Search/Indexing Feature
 <table width="98%" border="0" cellspacing="0" cellpadding="2" class="doctable">
   <tr>
     <td width="33%"><ul>
-  <li><a href="site_admin_.htm">Site Admin Summary Page</a></li>
-  <li><a href="site_admin_overview.htm">Site Admin Responsibilities</a></li>
-  <li><a href="site_admin_users.htm">Managing User Accounts</a></li>
-  <li><a href="site_admin_site_admins.htm">Managing Site Admins</a></li>
-  <li><a href="business_admin_business_adm.htm">Managing Business Admins</a></li>
-  <li><a href="bus_site_api_admin_forum.htm">Forum Moderation</a></li>
+      <li><a href="site_admin_.htm">Site Admin Summary Page</a></li>
+      <li><a href="site_admin_overview.htm">Site Admin Responsibilities</a></li>
+      <li><a href="site_admin_users.htm">Managing User Accounts</a></li>
+      <li><a href="site_admin_site_admins.htm">Managing Site Admins</a></li>
+      <li><a href="business_admin_business_adm.htm">Managing Business Admins</a></li>
+      <li><a href="bus_site_admin_dzs.htm">Managing Deployment Zones</a></li>
     </ul>
 </td>
     <td width="33%"><ul>
+      <li><a href="bus_site_api_admin_forum.htm">Forum Moderation</a></li>
       <li><a href="site_admin_domains.htm"> Domains</a></li>
       <li><a href="site_admin_domains_eoap.htm">External OAuth Provider Domain</a></li>
       <li><a href="site_admin_domains_oidc.htm">OpenID Connect Support</a></li>
       <li><a href="site_admin_ov_pf_endtoend.htm">PingFederate Setup</a></li>
-      <li><a href="site_admin_config.htm"> Configuration</a></li>
-      <li><a href="site_admin_settings.htm"> Settings</a></li>
     </ul></td>
     <td width="33%"><ul>
+      <li><a href="site_admin_config.htm"> Configuration</a></li>
+      <li><a href="site_admin_settings.htm"> Settings</a></li>
       <li><a href="site_admin_workflows.htm"> Workflows</a></li>
       <li><a href="site_admin_tc.htm"> Test Client</a></li>
       <!--<li><a href="site_admin_es.htm"> Search Configuration</a></li>-->
@@ -513,4 +644,3 @@ nav-title: Configuring the Search/Indexing Feature
   </tr>
 </table>
 <hr />
-
