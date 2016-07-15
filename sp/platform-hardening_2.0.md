@@ -214,6 +214,8 @@ http.incoming.transport.config.enabledProtocols=SSLv2Hello,TLSv1.2
 ```
 
 
+Note: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See http://docs.oracle.com/javase/7/docs/technotes/guides/security/SunProviders.html. This has to be added to the JRE.
+
 
 #### <a name="disabling-outbound"></a>Limiting Outbound SSL/TLS/Cipher support
 You may also want to limit the protcols and ciphers the the prodct will use for outbound connections.
