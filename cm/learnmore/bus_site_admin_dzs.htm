@@ -24,6 +24,7 @@ nav-title: Managing Deployment Zones
   <li><a href="#dz_manage_who">Who can manage deployment zones on the API Platform?</a></li>
   <li><a href="#dz_manage">How do I manage deployment zones on the API Platform?</a></li>
   <li><a href="#dz_add">How do I add a deployment zone?</a></li>
+  <li><a href="#dz_configure_hostname">How do I configure hostname settings for a deployment zone?</a></li>
   <li><a href="#dz_env_impl_associations">How do I manage environment/implementation associations for a deployment zone?</a></li>
   <li><a href="#dz_edit">How do I make changes to a deployment zone?</a></li>
   <li><a href="#dz_delete">How do I delete a deployment zone?</a></li>
@@ -89,13 +90,70 @@ nav-title: Managing Deployment Zones
   <li>On the right, click <strong>Add</strong>.</li>
   <li>Add information about the deployment zone:
     <ul>
-      <li>Name and description</li>
-      <li><strong>API Gateway</strong> field: From the drop-down list, choose the Network Director container name/container key that's applicable for the deployment zone. API implementations associated with this deployment zone will be deployed to this container. Note: API Gateways are added by the Policy Manager Administrator. If there are no API Gateways, or you don't see what you want on the list&#8212;for example, you need an HTTPS option and there isn't one&#8212;check with the Administrator.</li>
-      <li>Determine whether to allow APIs to specify their own vanity hostnames (which must be valid registered domain names).</li>
+      <li><strong>Name</strong> and <strong>Description</strong></li>
+      <li><strong>API Gateway</strong> field: From the drop-down list, choose the Network Director container name/container key that's applicable for the deployment zone. API implementations associated with this deployment zone will be deployed to this container. <br />
+        <strong>Note</strong>: API Gateways are added by the Policy Manager Administrator. If there are no API Gateways, or you don't see what you want on the list&#8212;for example, you need an HTTPS option and there isn't one&#8212;check with the Administrator.</li>
+      <li><strong>Allow APIs to specify vanity URLs (CNAMEs)</strong>: If this option is enabled, you can choose to allow APIs to specify their own vanity hostnames (which must be valid registered domain names).</li>
+      <li><strong>Hostname Generation</strong>: Choose a hostname generation method, out of the available options. If you choose <strong>Override API Gateway Hostname</strong>, specify a valid hostname. For more information, see <a href="#dz_configure_hostname">How do I configure hostname settings for a deployment zone?</a> below.</li>
     </ul>
     </li>
   <li>Click <strong>Save</strong>.</li>
 </ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="dz_configure_hostname"></a><h3>How do I configure hostname settings for a deployment zone?</h3>
+<p>When you're setting up a deployment zone, the configuration settings available to you are determined by the settings in the underlying API Gateway that you select.</p>
+<p>In terms of hostname configuration, the possible scenarios are:</p>
+<ul>
+  <li>Overriding the default API Gateway hostname with a specific vanity hostname might be:
+    <ul>
+      <li>Allowed (optional)</li>
+      <li>Not allowed</li>
+      <li>Required</li>
+    </ul>
+  </li>
+  <li>Adding a random prefix, to either the API Gateway hostname or a vanity hostname, might be:
+    <ul>
+      <li>Allowed (optional)</li>
+      <li>Not allowed</li>
+      <li>Required</li>
+    </ul>
+  </li>
+</ul>
+<p>In terms of configuration of a deployment zone in the developer portal, the possible options are listed below. These options might or might not be available depending on the underlying API Gateway settings.</p>
+<p><strong>Note</strong>: The underlying API Gateway settings always take precedence over the Deployment Zone settings. If the underlying API Gateway settings change after you've set up the deployment zone, you'll be prompted to confirm new choices the next time you edit the deployment zone.</p>
+<p>Deployment zone hostname settings and their explanations are shown in the table below.</p>
+<table cellspacing="0px" class="doctable" style="width: 98%;">
+  <thead>
+    <tr>
+      <th width="40%">This setting...</th>
+      <th width="60%">Means...</th>
+    </tr>
+    <tr class="t2row">
+      <td>Allow APIs to specify vanity URLs (CNAMEs)</td>
+      <td>If you choose this option, API Admins will have the option to specify a vanity URL for an API implementation (API &gt; Implementation &gt; Deployments Edit &gt; Provide Vanity Hostname).</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="t1row">
+      <td>Hostname Generation: <br />
+        Use API Gateway Hostname</td>
+      <td>If you choose this option, the API hostname will be the same as the hostname of the API Gateway container; for example, <strong>apigl.com</strong>.</td>
+    </tr>
+    <tr class="t2row">
+      <td>Hostname Generation: <br />
+        Override API Gateway Hostname</td>
+      <td><p>If you choose to override the API Gateway hostname, you must specify your own hostname; for example, <strong>api.mycompany.com</strong>.</p>
+        <p>In this scenario, all APIs in the business will have the same hostname. The API Admin must make sure that the DNS system is configured to resolve this hostname to the hostname for the API implementation.</p></td>
+    </tr>
+    <tr class="t1row">
+      <td>Append random prefix to hostname</td>
+      <td>To guarantee uniqueness in the environment, the platform can append a randomly-generated prefix to the hostname. For example, if the hostname is example.com, the generated API hostname will be something like api15633.example.com. Once the random prefix is assigned to the specific API, the API Admin must configure the DNS system for the API so that it resolves the hostname to the hostname for the API implementation.</td>
+    </tr>
+  </tbody>
+</table>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -127,13 +185,14 @@ nav-title: Managing Deployment Zones
 
 
 <a name="dz_edit"></a><h3>How do I make changes to a deployment zone?</h3>
-<p><strong>Note</strong>: If you make changes to an existing deployment zone, make sure you're not impacting current APIs that are using the deployment zone.</p>
+<p>You can modify a deployment zone, if needed, at any point. If you make changes to an existing deployment zone, make sure you're not impacting current APIs that are using the deployment zone.</p>
+<p><strong>Note</strong>: The underlying API Gateway hostname settings, as explained in <a href="#dz_configure_hostname">How do I configure hostname settings for a deployment zone?</a> above, always take precedence over the Deployment Zone settings. If the underlying API Gateway settings change after you've set up the deployment zone, you'll be prompted to confirm new choices the next time you edit the deployment zone. If you need assistance, contact the Administrator for the underlying infrastructure.</p>
 <h5><a name="proc_dz_edit"></a>To edit a deployment zone:</h5>
 <ol>
   <li>Log in as the Site Admin.</li>
   <li>Go to <em>Administration &gt; Deployment Zones</em>.</li>
   <li>Click the link for the deployment zone you want to edit.</li>
-  <li>In the top section, click <strong>Edit</strong> to modify basic values associated with the implementation. See <a href="#proc_dz_add">To add a deployment zone</a>.</li>
+  <li>In the top section, click <strong>Edit</strong> to modify basic values associated with the implementation. See <a href="#proc_dz_add">To add a deployment zone</a>. For information about hostname generation for the deployment zone, see <a href="#dz_configure_hostname">How do I configure hostname settings for a deployment zone?</a></li>
   <li>In the bottom section, click <strong>Edit</strong> to manage environment/implementation associations. See <a href="#proc_dz_manage_associations">To manage environment/implementation associations for a deployment zone</a>.</li>
   <li>When done, click <strong>Finish</strong> to save changes.</li>
 </ol>
@@ -157,7 +216,7 @@ nav-title: Managing Deployment Zones
 
 <a name="dz_support_https"></a><h3>How do I set up a deployment zone to support HTTPS?</h3>
 <p>When you add a deployment zone in the developer portal, you specify the Network Director container name/container key that's applicable for the deployment zone, in the <strong>API Gateway</strong> field. Within the developer portal, you can only select from available options. If there are no HTTPS deployment zones available, you'll need to ask the Policy Manager Administrator to set that up for you.</p>
-<p>If the  deployment zone doesn't support HTTPS, the API Admin won't be able to specify HTTPS for the API implementation protocol, and will not be able to use SNI.</p>
+<p>If the deployment zone doesn't support HTTPS, the API Admin won't be able to specify HTTPS for the API implementation protocol, and will not be able to use SNI.</p>
 <p><a href="#top">Back to top</a></p>
 
 
