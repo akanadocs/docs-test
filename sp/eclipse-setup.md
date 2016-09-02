@@ -10,7 +10,7 @@ type: page
 nav-title: Eclipse Workspace Setup
 ---
 
-##Eclipse Workspace Setup
+## Eclipse Workspace Setup
 
 <h3 style="color: grey;">Table of Contents</h3>
 <ol class="table_of_contents">
