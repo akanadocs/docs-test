@@ -43,8 +43,7 @@ The platform ships with a number of samples that can be found in the '/samples' 
 	2. local.tools.dependent.lib.dir=[product_installation_dir]/sm70/lib/X.Y.Z. Same as above
 5. Modify build.xml to build only the projects that are required. For example:
 	
-	```xml
-	
+```xml
 	...
 	<target name="clean" depends="
 		complex-policy-handler-clean,
@@ -56,7 +55,6 @@ The platform ships with a number of samples that can be found in the '/samples' 
 		complex-policy-console
 	"/>
 	...
-	
 	```
  
 ### <a name="project"></a>Creating a plug-in project
@@ -107,6 +105,7 @@ Now build both:
 1. Edit the master build file described in the previous section:
 
 ~~~ xml
+
 	...
 	<target name="clean" depends="
 		complex-policy-handler-clean,
@@ -118,6 +117,7 @@ Now build both:
 		complex-policy-console
 	"/>
 	...
+
 ~~~ xml
 
 2. Open the Ant view and drag the master build file file into it. Double-click on the 'samples' project to run the build script.
