@@ -72,8 +72,7 @@ The platform ships with a number of samples that can be found in the '/samples' 
 2. Build the project from top **Project ** menu and verify that there are no compilation errors.
 3. Edit the master build file described in the previous section:
 
-	```
-	
+~~~ xml
 	...
 	&lt;target name="clean" depends="
 		simple-policy-handler-clean
@@ -83,8 +82,7 @@ The platform ships with a number of samples that can be found in the '/samples' 
 		simple-policy-handler
 	"/&gt;
 	...
-	
-	```
+~~~
 
 4. Open the Ant view and drag the master build file file into it. Double-click on the 'samples' project to run the build script.
 4. If the build is successful, the resulting JAR file can be found in the master build project under the '/bin' sub-directory. It may be hidden from view, so look on the filesystem.
@@ -107,7 +105,7 @@ The console plug-in is the same:
 Now build both:
 
 1. Edit the master build file described in the previous section:
-```xml
+	{code:xml}
 
 	...
 	<target name="clean" depends="
@@ -120,7 +118,7 @@ Now build both:
 		complex-policy-console
 	"/>
 	...
-	```
+	{code}
 
 2. Open the Ant view and drag the master build file file into it. Double-click on the 'samples' project to run the build script.
 3. If the build is successful, the resulting JAR files can be found in a '/build/bin/' sub-directory in your Eclipse workspace root directory.
