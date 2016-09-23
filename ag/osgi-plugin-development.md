@@ -43,7 +43,7 @@ The platform ships with a number of samples that can be found in the '/samples' 
 	2. local.tools.dependent.lib.dir=[product_installation_dir]/sm70/lib/X.Y.Z. Same as above
 5. Modify build.xml to build only the projects that are required. For example:
 	
-	``` xml
+	```xml
 	
 	...
 	<target name="clean" depends="
