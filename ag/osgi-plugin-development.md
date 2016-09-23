@@ -29,7 +29,7 @@ This document describes how to create and compile an OSGi Plug-in project (such 
 
 * This configuration guide assumes that you’ve already installed the platform. If you need help installing the platform, please see the [install guide](http://docs.akana.com/sp/assets/SOA_Software_Platform_Install_Guide_v70.pdf). 
 * If writing policy components for the API Gateway, you will have to create and configure a Policy Manager (PM) and Network Directory (ND) container. This is described in the document [Managing a Simple API](simple-api.html#Installing)
-* Install and configure the Eclipse IDE as described in the document [Eclipse Workspace Setup](eclipse-setup.html)
+* Install and configure the Eclipse IDE as described in the document [Eclipse Workspace Setup](../sp/eclipse-setup.html)
 
 ### <a name="master"></a>Creating the build project
 
