@@ -43,7 +43,7 @@ The platform ships with a number of samples that can be found in the '/samples' 
 	2. local.tools.dependent.lib.dir=[product_installation_dir]/sm70/lib/X.Y.Z. Same as above
 5. Modify build.xml to build only the projects that are required. For example:
 	
-	```xml
+	``` xml
 	
 	...
 	<target name="clean" depends="
@@ -72,16 +72,16 @@ The platform ships with a number of samples that can be found in the '/samples' 
 2. Build the project from top **Project ** menu and verify that there are no compilation errors.
 3. Edit the master build file described in the previous section:
 
-	```xml
+	```
 	
 	...
-	<target name="clean" depends="
+	&lt;target name="clean" depends="
 		simple-policy-handler-clean
-	"/>
+	"/&gt;
 	
-	<target name="samples" depends="
+	&lt;target name="samples" depends="
 		simple-policy-handler
-	"/>
+	"/&gt;
 	...
 	
 	```
@@ -107,9 +107,8 @@ The console plug-in is the same:
 Now build both:
 
 1. Edit the master build file described in the previous section:
-
 ```xml
-	
+
 	...
 	<target name="clean" depends="
 		complex-policy-handler-clean,
@@ -121,7 +120,6 @@ Now build both:
 		complex-policy-console
 	"/>
 	...
-	
 	```
 
 2. Open the Ant view and drag the master build file file into it. Double-click on the 'samples' project to run the build script.
