@@ -27,8 +27,8 @@ This document describes how to create and compile an OSGi Plug-in project (such 
 
 #### <a name="data"></a>Prerequisites
 
-* This configuration guide assumes that you’ve already installed the platform. If you need help installing the platform, please see the [install guide](http://docs.akana.com/sp/assets/SOA_Software_Platform_Install_Guide_v70.pdf). 
-* If writing policy components for the API Gateway, you will have to create and configure a Policy Manager (PM) and Network Directory (ND) container. This is described in the document [Managing a Simple API](simple-api.html#Installing)
+* This configuration guide assumes that you’ve already installed the platform. If you need help installing the platform, please see the [install guide](../sp/assets/SOA_Software_Platform_Install_Guide_v70.pdf). 
+* If writing policy components for the API Gateway, you will have to create and configure a Policy Manager (PM) and Network Directory (ND) container. This is described in the document [Managing a Simple API](../sp/simple-api.html#Installing)
 * Install and configure the Eclipse IDE as described in the document [Eclipse Workspace Setup](../sp/eclipse-setup.html)
 
 ### <a name="master"></a>Creating the build project
@@ -44,6 +44,7 @@ The platform ships with a number of samples that can be found in the '/samples' 
 5. Modify build.xml to build only the projects that are required. For example:
 	
 	```
+	
 	...
 	
 	<target name="clean" depends="
@@ -74,6 +75,7 @@ The platform ships with a number of samples that can be found in the '/samples' 
 3. Edit the master build file described in the previous section:
 
 	```
+	
 	...
 	
 	<target name="clean" depends="
@@ -111,6 +113,7 @@ Now build both:
 1. Edit the master build file described in the previous section:
 
 	```
+	
 	...
 	
 	<target name="clean" depends="
