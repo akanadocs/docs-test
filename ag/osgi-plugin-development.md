@@ -76,7 +76,7 @@ The platform ships with a number of samples that can be found in the '/samples' 
 		simple-policy-handler-clean
 	"/>
 	
-	&lt;target name="samples" depends="
+	<target name="samples" depends="
 		simple-policy-handler
 	"/>
 	...
@@ -105,7 +105,6 @@ Now build both:
 1. Edit the master build file described in the previous section:
 
 ~~~ xml
-
 	...
 	<target name="clean" depends="
 		complex-policy-handler-clean,
@@ -117,7 +116,6 @@ Now build both:
 		complex-policy-console
 	"/>
 	...
-
 ~~~ xml
 
 2. Open the Ant view and drag the master build file file into it. Double-click on the 'samples' project to run the build script.
