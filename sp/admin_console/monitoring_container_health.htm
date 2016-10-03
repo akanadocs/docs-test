@@ -14,7 +14,7 @@ nav-title: Monitoring Container Health
 <p>This technical note provides information about the Akana System Health tool and its associated API.</p>
 
 
-<h5 class="stamp">Supported Platforms: 8.1</h5>
+<h5 class="stamp">Supported Platforms: 8.2</h5>
 
 
 <h3 style="color: gray;">Table of Contents</h3>
@@ -35,15 +35,22 @@ nav-title: Monitoring Container Health
 
 
 <a name="summary"></a><h3>Summary</h3>
-<p>Before API Platform version 8.2, container health statistics were only available visually through the Monitoring Tool: see <a href="using_admin_monitoring_tool.htm" title="monitoring tool" target="_blank">Using the Admin Monitoring Tool</a>. Since these statistics were only available on the GUI, there was no way to use the data for operational use. With the introduction of System Health Tool in version 8.2, you can now retrieve these health statistics by making a GET call to any Akana container. The health statistics available through this tool are the same as the Monitoring Tool, including but not limited to:</p>
+<p>Before API Platform version 8.2, container health statistics were only available visually through the Monitoring Tool (see <a href="http://docs.akana.com/sp/admin_console/using_admin_monitoring_tool.htm" title="monitoring tool" target="_blank">http://docs.akana.com/sp/admin_console/using_admin_monitoring_tool.htm</a>). 
+Since these statistics were only available through the GUI, there was no way to use the data for operational use. With the introduction of System Health Tool in version 8.2, you can now retrieve these health statistics by 
+making a GET call to any Akana container.  In addition, the System Health Tool allows thresholds to be configured for any monitored attributes, providing the means to get information on any values that
+fall outside normal or expected ranges.</p>
+<p>This is a feature of the core platform and can be leveraged by all containers, including Policy Manager, Community Manager, and Envision. A primary use case for this tool is to check the health of the container to determine if it is ready to handle traffic.</p>
+<p>The health statistics available are the same as the Monitoring Tool, which means that any standard OSGi <a href="https://osgi.org/javadoc/r4v42/org/osgi/service/monitor/Monitorable.html">Monitorable</a> instance 
+in the system can be tracked, including but not limited to:</p>
 <ul>
-<li>Incoming HTTP connections (com.soa.transport.httpclient)</li>
-<li>Database thread pools (com.soa.database.config.{db-config-id}-mon)</li>
-<li>Active/idle Policy Manager processes (com.soa.framework)</li>
-<li>Container memory usage (com.soa.vmstats)</li>
-<li>Incoming HTTP connections (com.soa.transport.jetty)</li>
-<li>Monitoring queues (com.soa.usage)</li>
-<li>JMS connections (com.soa.transport.jms)</li>
+<li>Outgoing HTTP connection pool statistics</li>
+<li>Incoming HTTP thread pools</li>
+<li>Database connection pools</li>
+<li>Container memory usage</li>
+<li>Usage monitoring queues</li>
+<li>JMS connections</li>
+<li>Container configuration state</li>
+<li>Container lifecycle</li>
 </ul>
 <p><a href="#top">Back to top</a></p>
 
@@ -52,143 +59,214 @@ nav-title: Monitoring Container Health
 <a name="configuration"></a><h3>Configuration</h3>
 <p>All 8.2 containers will have the System Health Tool installed when any of the PM, CM, or ND features are installed. No additional configuration is required.</p>
 <p>You can start exploring this feature through the <strong>Health</strong> tab in the Akana Administration Console:</p>
-<p><img src="images/containerhealth_01.jpg" alt="Health tab" /></p>
+<p><img src="images/health_screenshot_1.png" alt="Health tab" /></p>
 <p><a href="#top">Back to top</a></p>
 
 
 
 <a name="panels"></a><h3>Panels</h3>
-<p>To display a custom set of system health statistics, you can create a panel. A panel is a grouping of various types of system health information, and you can have any combination of types of system health information that you want to monitor.</p>
-<p>By default, the <strong>Health</strong> tab includes a number of pre-configured panels. You can expand them to view detailed monitoring information:</p>
-<p><img src="images/containerhealth_02.jpg" alt="detailed monitoring information" /></p>
+<p>A panel is a grouping of various types of system health information.  Each panel can have any combination of types of system health information that you want to monitor.</p>
+<p>Depending on the features installed, the <strong>Health</strong> tab will include a number of pre-configured panels. You can expand them to view detailed monitoring information:</p>
+<p><img src="images/health_screenshot_3.png" alt="detailed monitoring information" /></p>
 <p><a href="#top">Back to top</a></p>
 
 
 
 <a name="settings"></a><h3>Settings</h3>
-<p>The "gear" icon on the top right corner will give you setting options for the System Health Tool. You can change the frequency of the polling interval as well as authentication option when accessing the System Health Tool API:</p>
-<p><img src="images/containerhealth_03.jpg" alt="settings" /></p>
+<p>The slider in the top right corner allows you to change the frequency of the polling interval.  In addition, each panel has a toggle to enable or disable authentication when accessing the 
+System Health Tool API using the links provided:</p>
+<p><img src="images/health_screenshot_2.png" alt="settings" /></p>
 <p><a href="#top">Back to top</a></p>
 
 
 
 <a name="system_health_tool_api"></a><h3>System Health Tool API</h3>
 <p>You can access the API by using GET method on <strong>/admin/health</strong> context for any Akana container. For example, if the container Akana Administration Console URL is <strong>http://acme.akana.com:9900/admin</strong>, the URL for the System Health Tool API is <strong>http://acme.akana.com:9900/admin/health</strong>.</p>
-<p>The response is shown below.</p>
+<p>A sample response is shown below.</p>
 <h4>System Health API: Response</h4>
-<pre>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
-&lt;healthMeasurableSet&gt;
-  &lt;links rel="self" href="http://acme.akana.com:9900/admin/health/"/&gt;
-  &lt;links rel="options" href="http://acme.akana.com:9900/admin/health/options"/&gt;
-  &lt;links rel="measurables" href="http://acme.akana.com:9900/admin/health/measurables"/&gt;
-  &lt;links rel="available" href="http://acme.akana.com:9900/admin/health/available"/&gt;
-  &lt;measurables&gt;
-    &lt;id&gt;akana.system.health&lt;/id&gt;
-    &lt;name&gt;System Health&lt;/name&gt;
-    &lt;path&gt;akana.system.health&lt;/path&gt;
-    &lt;state&gt;NORMAL&lt;/state&gt;
-    &lt;editable&gt;false&lt;/editable&gt;
-    &lt;links&gt;
-      &lt;link rel="self" href="http://acme.akana.com:9900/admin/health/measurables/akana.system.health"/&gt;
-      &lt;link rel="children" href="http://acme.akana.com:9900/admin/health/measurables/akana.system.health/children"/&gt;
-      &lt;link rel="values" href="http://acme.akana.com:9900/admin/health/measurables/akana.system.health/values"/&gt;
-    &lt;/links&gt;
-  &lt;/measurables&gt;
-  &lt;measurables&gt;
-    &lt;id&gt;akana.service.container.readiness&lt;/id&gt;
-    &lt;name&gt;Service Container Readiness&lt;/name&gt;
-    &lt;path&gt;akana.service.container.readiness&lt;/path&gt;
-    &lt;state&gt;NORMAL&lt;/state&gt;
-    &lt;editable&gt;false&lt;/editable&gt;
-    &lt;links&gt;
-      &lt;link rel="self" href="http://acme.akana.com:9900/admin/health/measurables/akana.service.container.readiness"/&gt;
-      &lt;link rel="children" href="http://acme.akana.com:9900/admin/health/measurables/akana.service.container.readiness/children"/&gt;
-      &lt;link rel="values" href="http://acme.akana.com:9900/admin/health/measurables/akana.service.container.readiness/values"/&gt;
-    &lt;/links&gt;
-  &lt;/measurables&gt;
-&lt;/healthMeasurableSet&gt;</pre>
-The "measurables" tag on the response corresponds to the panel values shown on the Akana Administration Console.
+<pre>{
+    "links": [
+        {
+            "rel": "self",
+            "href": "http://acme.akana.com:9905/admin/health/"
+        },
+        {
+            "rel": "measurables",
+            "href": "http://acme.akana.com:9905/admin/health/measurables"
+        },
+        {
+            "rel": "available",
+            "href": "http://acme.akana.com:9905/admin/health/available"
+        }
+    ],
+    "measurables": [
+        {
+            "id": "akana.system.health",
+            "name": "System Health",
+            "path": "akana.system.health",
+            "state": "NORMAL",
+            "childCount": 2,
+            "editable": false,
+            "options": {
+                "enableAuth": false,
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "http://acme.akana.com:9905/admin/health/measurables/akana.system.health/configuration"
+                    }
+                ]
+            },
+            "links": [
+                {
+                    "rel": "self",
+                    "href": "http://acme.akana.com:9905/admin/health/measurables/akana.system.health"
+                },
+                {
+                    "rel": "brief",
+                    "href": "http://acme.akana.com:9905/admin/health/measurables/akana.system.health?brief=true"
+                },
+                {
+                    "rel": "children",
+                    "href": "http://acme.akana.com:9905/admin/health/measurables/akana.system.health/children"
+                },
+                {
+                    "rel": "options",
+                    "href": "http://acme.akana.com:9905/admin/health/measurables/akana.system.health/configuration"
+                },
+                {
+                    "rel": "values",
+                    "href": "http://acme.akana.com:9905/admin/health/measurables/akana.system.health/values"
+                }
+            ]
+        },
+        {
+            "id": "akana.service.container.readiness",
+            "name": "Service Container Readiness",
+            "path": "akana.service.container.readiness",
+            "state": "NORMAL",
+            "childCount": 6,
+            "editable": false,
+            "options": {
+                "enableAuth": false,
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "http://acme.akana.com:9905/admin/health/measurables/akana.service.container.readiness/configuration"
+                    }
+                ]
+            },
+            "links": [
+                {
+                    "rel": "self",
+                    "href": "http://acme.akana.com:9905/admin/health/measurables/akana.service.container.readiness"
+                },
+                {
+                    "rel": "brief",
+                    "href": "http://acme.akana.com:9905/admin/health/measurables/akana.service.container.readiness?brief=true"
+                },
+                {
+                    "rel": "children",
+                    "href": "http://acme.akana.com:9905/admin/health/measurables/akana.service.container.readiness/children"
+                },
+                {
+                    "rel": "options",
+                    "href": "http://acme.akana.com:9905/admin/health/measurables/akana.service.container.readiness/configuration"
+                },
+                {
+                    "rel": "values",
+                    "href": "http://acme.akana.com:9905/admin/health/measurables/akana.service.container.readiness/values"
+                }
+            ]
+        }
+    ]
+}</pre>
+This provides an overview of the available health monitors (named "measurables"), and a set of links that provide access to more detailed information.  Each of the "measurables" in the 
+response corresponds to a monitoring panel shown on the Akana Administration Console.
 <p><a href="#top">Back to top</a></p>
 
 
 
 <a name="links"></a><h3>System Health Tool API: Links</h3>
-<p>You can go to each of the links on the response to view different health dimensions as well as the configuration info.</p>
-<p>For example, you can view the configuration setting for the <strong>Health</strong> tab by going to <strong>http://acme.akana.com:9900/admin/health/options</strong>.</p>
-<p>Alternatively, if you want to view all the configurable options, you can check <strong>http://acme.akana.com:9900/admin/health/available</strong>.</p>
+<p>You can follow each of the links on the response to view different health dimensions as well as the configuration info.</p>
+<p>For example, to get detailed information on the "akana.system.health" category, you would perform a HTTP GET using the "self" link, in this case 
+<strong>http://acme.akana.com:9900/admin/health/measurables/akana.system.health</strong>.</p>
+<p>Or, for example, if you want to view all the available configurable options, you can fetch <strong>http://acme.akana.com:9900/admin/health/available</strong>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
 <a name="thresholds"></a><h3>Thresholds</h3>
-<p>Each health monitor will have a threshold setting. This setting is used to indicate current health status using three values: <strong>NORMAL</strong>, <strong>WARNING</strong>, or <strong>FAILURE</strong>.</p>
-<p>System default health monitors have the threshold ranges predefined. To view the values, go to the Akana Administration Console and click the status icon, as shown below.</p>
-<p><img src="images/containerhealth_04.jpg" alt="warning threshold" /></p>
+<p>Each health monitor may have a set of threshold settings. These settings are used to indicate current health status using three values: <strong>NORMAL</strong>, <strong>WARNING</strong>, or <strong>FAILURE</strong>.</p>
+<p>System default health monitors have the threshold ranges predefined. To view or modify the values, go to the Akana Administration Console and click the status icon, as shown below.</p>
+<p><img src="images/health_screenshot_5.png" alt="warning threshold" /></p>
+<p>Thresholds are defined using the Apache Java Expression Language syntax.  For more information, please see <a href="http://commons.apache.org/proper/commons-jexl/reference/syntax.html">here</a>.  Currently, only a single variable is accessible
+named "value", which is the current value of the monitored property.</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
 <a name="checking_health_stats"></a><h3>Checking Health Statistics</h3>
-<p>You can check the system default health information in two ways:</p>
-<ul>
-<li>Click on the link icon as shown above.</li>
-<li>Go to the URL; for example, <strong>http://acme.akana.com:9900/admin/health/measurables/akana.service.container.readiness/values</strong>.</li>
-</ul>
-<p>When performing a HTTP GET on these links, you can use this optional set of query parameters to control the HTTP status code returned for each of the normal, warning, or failure thresholds:</p>
+<p>You can check the system health information by following the links provided in the health monitor's panel.</p>
+<p>When performing a HTTP GET on these links, you can use an optional set of query parameters to control the HTTP status code returned for each of the normal, warning, or failure thresholds:</p>
 <ul>
 <li>normal-status</li>
 <li>warning-status</li>
 <li>failure-status</li>
 </ul>
 <p>An example of how you can use this feature is to provide load balancers with an appropriate status based on the health of any aspect of container operation.</p>
-<p><img src="images/containerhealth_05.jpg" alt="" /></p>
+<p><img src="images/health_screenshot_4.png" alt="links" /></p>
 
 <h4>Checking Health Statistics: Response</h4>
-<pre>[{
-  "name" : "akana.service.container.readiness/soa.transport.jetty/pool.low.on.threads",
-  "value" : "false",
-  "state" : "NORMAL"
-},{
-  "name" : "akana.service.container.readiness/soa.transport.jetty/pool.headroom.pct",
-  "value" : "95",
-  "state" : "NORMAL"
-},{
-  "name" : "akana.service.container.readiness/com.soa.container.config.stats/configuration.state",
-  "value" : "CONFIGURED",
-  "state" : "NORMAL"
-},{
-  "name" : "akana.service.container.readiness/com.soa.transport.http.client/pool.headroom.pct",
-  "value" : "100",
-  "state" : "NORMAL"
-},{
-  "name" : "akana.service.container.readiness/com.soa.usage/filtered.queue.headroom.pct",
-  "value" : "100",
-  "state" : "NORMAL"
-},{
-  "name" : "akana.service.container.readiness/com.soa.usage/rollup.queue.headroom.pct",
-  "value" : "100",
-  "state" : "NORMAL"
-},{
-  "name" : "akana.service.container.readiness/com.soa.usage/transaction.queue.headroom.pct",
-  "value" : "100",
-  "state" : "NORMAL"
-},{
-  "name" : "akana.service.container.readiness/com.soa.container.reg.stats/container.registered",
-  "value" : "true",
-  "state" : "NORMAL"
-}]</pre>
+<pre>{
+    "id": "akana.service.container.readiness",
+    "name": "Service Container Readiness",
+    "path": "akana.service.container.readiness",
+    "state": "NORMAL",
+    "childCount": 6,
+    "editable": false,
+    "options": {
+        "enableAuth": true,
+        "links": [
+            {
+                "rel": "self",
+                "href": "http://localhost:9905/admin/health/measurables/akana.service.container.readiness/configuration"
+            }
+        ]
+    },
+    "links": [
+        {
+            "rel": "self",
+            "href": "http://localhost:9905/admin/health/measurables/akana.service.container.readiness"
+        },
+        {
+            "rel": "brief",
+            "href": "http://localhost:9905/admin/health/measurables/akana.service.container.readiness?brief=true"
+        },
+        {
+            "rel": "children",
+            "href": "http://localhost:9905/admin/health/measurables/akana.service.container.readiness/children"
+        },
+        {
+            "rel": "options",
+            "href": "http://localhost:9905/admin/health/measurables/akana.service.container.readiness/configuration"
+        }
+    ]
+}</pre>
 <p><a href="#top">Back to top</a></p>
 
 
 
 <a name="custom_panel"></a><h3>Custom Panel</h3>
-<p>You can create your own panel; click the <strong>plus</strong> icon. Try creating the panel, and add your own combination of health monitors.</p>
+<p>To display a custom set of system health statistics, you can create your own panel. To create a new panel, click the <strong>plus</strong> icon. Once the panel has been created, you can then add your own combination of health monitors.</p>
 <p>The sample custom panel below is configured on the Policy Manager container and is called <strong>Health Monitoring for ACME</strong>. The failure threshold is set to anything below the currently provisioned number of PM APIs.</p>
-<p>The threshold below defines a failure condition.</p>
-<p><img src="images/containerhealth_06.jpg" alt="" /></p>
-<p>The threshold below defines a normal condition.</p>
-<p><img src="images/containerhealth_07.jpg" alt="" /></p>
-<p>To check the status of this custom panel, you would simple go to <strong>http://acme.akana.com:9900/admin/health/measurables/health.monitoring.for.acme/values</strong>.</p>
+<p>The threshold below defines a normal condition where there is greater than 20% of capacity remaining in the pool.</p>
+<p><img src="images/health_screenshot_6.png" alt="links" /></p>
+<p>The threshold below defines a warning condition where there is between 20% and 5% of room in the pool.</p>
+<p><img src="images/health_screenshot_7.png" alt="links" /></p>
+<p>The threshold below defines a failure condition when the pool is less than 5% of capacity.</p>
+<p><img src="images/health_screenshot_8.png" alt="links" /></p>
+<p>To check the status of this custom panel, you would simply follow the links provided, which in this case might be 
+<strong>http://acme.akana.com:9900/admin/health/measurables/health.monitoring.for.acme</strong>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
