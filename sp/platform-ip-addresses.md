@@ -26,7 +26,7 @@ This is the list of source IP addresses used by the Akana Platform.  Customers c
 
 52.86.162.172
 
-### US West (OR) (All)
+### US West (New) (All)
 
 52.37.241.46
 
