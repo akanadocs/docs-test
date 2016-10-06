@@ -12,6 +12,8 @@ nav-title: Platform IP Addresses
 
 ## Akana Platform IP Addresses
 
+This is the list of source IP addresses used by the Akana Platform.  Customers can use this list to restrict inbound traffic through their firewall.
+
 ### US West - Community Manager
 
 52.8.17.170, 52.8.172.138, 54.153.106.186, 52.8.199.3, 54.153.83.148, 54.153.108.173
