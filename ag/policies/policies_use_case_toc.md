@@ -23,5 +23,3 @@ Learn how to use the Business Metrics Policy to Extract Business information fro
 
 ### [Extracting Business Information from Service Usage Data from Path Parameters](../policies/bus_metrics_policy_use_case_extract_data_using_path_param.html)
 Learn how to use the Business Metrics Policy to extract business information from service usage data from path parameters.
-
-<div class = "divider1"></div>
