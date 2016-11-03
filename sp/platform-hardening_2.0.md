@@ -115,7 +115,7 @@ Secondly, the listeners for the applications in the container are configured fro
 
 As shown above, this is configurable in the /instances/[container_name]/system.properties file for each container. The Admin console (/admin) and the other features installed in the container should ideally not be configured on the same port. This will allow you to isolate the Admin console from the Internet.
 
-The system.properties file is updated with the following highlighted properties and also requires a configuration file placed in the container’s deploy directory (i.e /sm70/instances/[container]/deploy) to ensure the Admin console is only accessed from the defined port and host. 
+The system.properties file is updated with the following highlighted properties and also requires a configuration file placed in the container’s directory (/sm70/instances/{container}) to ensure the Admin console is only accessed from the defined port and host.
 
 **Scope**: All Containers
 
