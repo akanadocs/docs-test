@@ -35,7 +35,8 @@ nav-title: Configuring the Search/Indexing Feature
   <li><a href="#es_default_configuration_mode">What is the default configuration mode for Elasticsearch?</a></li>
   <li><a href="#es_mode_s_deployment_options_available">What deployment options are available for Elasticsearch in standalone mode?</a></li>
   <li><a href="#es_mode_e_deployment_options_available">What deployment options are available for Elasticsearch in embedded mode?</a></li>
-  </ol>
+  <li><a href="#es_limitations">Elasticsearch limitations: reserved characters</a></li>
+</ol>
 
 
 <h5 style="color: gray;"><a href="#h_es_configuring">Installing and Configuring Elasticsearch:</a></h5>
@@ -66,6 +67,7 @@ nav-title: Configuring the Search/Indexing Feature
 
 <ol class="table_of_contents">
   <li><a href="#es_ts_pre_upgrade_results_showing">Pre-upgrade search results are showing even though the index folder is populated with the Elasticsearch index: what do I do?</a></li>
+  <li><a href="#related_topics">Related Topics</a></li>
 </ol>
 
 
@@ -196,6 +198,17 @@ nav-title: Configuring the Search/Indexing Feature
 
 
 
+<a name="es_limitations"></a><h3>Elasticsearch limitations: reserved characters</h3>
+<p>Elasticsearch has certain characters that are reserved. If any of these characters are included in search terms, they'll need to be escaped, or the search feature will not work as expected.</p>
+<p>The reserved characters are:</p>
+<p><strong>+ - = &amp;&amp; || &gt; &lt; ! ( ) { } [ ] ^ &quot; ~ * ? : \ /</strong></p>
+<p>To use one of these characters in search results, users must escape them with a leading backslash.</p>
+<p>For example, to search for <strong>(123)app</strong>, a user would have to write this query: <strong>\(123\)app</strong>.</p>
+<p>It's best if users steer clear of special characters in naming platform resources such as apps and APIs.</p>
+<p>This information is documented for platform users here: <a href="basics_search.htm#search_special_characters">How do I use special characters in search?</a></p>
+<p><a href="#top">Back to top</a></p>
+
+
 
 <div class = "divider1"></div>
 <h3><a name="h_es_configuring"></a>Installing and Configuring Elasticsearch:</h3>
@@ -205,7 +218,7 @@ nav-title: Configuring the Search/Indexing Feature
 <a name="es_upgrade_options"></a>
 <h3>I'm upgrading; what are my options?</h3>
 <p>In setting  up the Elasticsearch feature, there are three possible scenarios; follow the applicable set of steps as listed below.</p>
-<p><strong>Elasticsearch, embedded mode</strong> (most likely scenario): If you are using Elasticsearch (recommended) in embedded mode (you don’t have a standalone Elasticsearch server) you’ll need to:</p>
+<p><strong>Elasticsearch, embedded mode</strong> (most likely scenario): If you are using Elasticsearch (recommended) in embedded mode (you don't have a standalone Elasticsearch server) you'll need to:</p>
 <ul>
   <li>Install the feature: See <a href="#proc_install_es_embedded">Installing the Akana Embedded Elasticsearch Node feature</a>.</li>
   <li>Configure the feature. Refer to these tasks:
@@ -216,12 +229,12 @@ nav-title: Configuring the Search/Indexing Feature
   </li>
   <li>Run database queries: see <a href="#proc_es_database_queries_switch_index">Database queries to switch the search index to Elasticsearch</a></li>
 </ul>
-<p><strong>Elasticsearch, standalone mode</strong>: If you are using Elasticsearch (recommended) in standalone mode (you have a standalone Elasticsearch server) you don’t need to install the feature. You’ll need to:</p>
+<p><strong>Elasticsearch, standalone mode</strong>: If you are using Elasticsearch (recommended) in standalone mode (you have a standalone Elasticsearch server) you don't need to install the feature. You'll need to:</p>
 <ul>
   <li>Configure global settings. See <a href="#proc_es_global_config">Elasticsearch configuration: global settings</a></li>
   <li>Run database queries: see <a href="#proc_es_database_queries_switch_index">Database queries to switch the search index to Elasticsearch</a></li>
 </ul>
-<p><strong>No Elasticsearch</strong>: If you do <strong>not</strong> want to use Elasticsearch, you’ll just need to do a database update: </p>
+<p><strong>No Elasticsearch</strong>: If you do <strong>not</strong> want to use Elasticsearch, you'll just need to do a database update: </p>
 <ul>
   <li><a href="#proc_es_use_compass">Steps to follow if you want to continue using Compass for search</a></li>
 </ul>
@@ -238,7 +251,7 @@ nav-title: Configuring the Search/Indexing Feature
 
 
 <h5><a name="proc_es_global_config"></a>Elasticsearch configuration: global settings </h5>
-<p>When you install the Elasticsearch feature, the product runs in embedded mode by just accepting the default settings. You don’t need to change anything. Follow the applicable procedure below:</p>
+<p>When you install the Elasticsearch feature, the product runs in embedded mode by just accepting the default settings. You don't need to change anything. Follow the applicable procedure below:</p>
 <ul>
   <li>Information for embedded mode</li>
   <li>Information for standalone mode</li>
@@ -254,7 +267,7 @@ nav-title: Configuring the Search/Indexing Feature
 
 
 <h5><a name="proc_es_global_config_standalone"></a>Standalone mode: Global configuration</h5>
-<p>If you choose to run in standalone mode, you don’t need to install the Akana Embedded Elasticsearch Node feature. However, you must configure Elasticsearch.</p>
+<p>If you choose to run in standalone mode, you don't need to install the Akana Embedded Elasticsearch Node feature. However, you must configure Elasticsearch.</p>
 <ol>
   <li>In the Akana Administration Console, on the <strong>Configuration</strong> tab, under <strong>Configuration Actions</strong>, choose <strong>Configure Elasticsearch Global Configuration</strong>. The wizard opens.</li>
   <li>Make sure the Deployment Mode is set to <strong>Transport Client</strong>.</li>
@@ -263,7 +276,8 @@ nav-title: Configuring the Search/Indexing Feature
 
 
 <h5><a name="proc_es_embed_node_settings"></a>Elasticsearch embedded node settings</h5>
-<p>If you’re using Elasticsearch in embedded mode, the platform automatically configures. You don’t need to do anything to configure the embedded node settings.</p>
+<p>If you're using Elasticsearch in embedded mode, the platform automatically configures. You don't need to do anything to configure the embedded node settings.</p>
+<p class="apidoc_note"><strong>Note</strong>: If you are using Embedded Node configuration, the developer portal must be available on the default port or whichever port you configure in the Admin Console.</p>
 
 
 <h5><a name="proc_es_database_queries_switch_index"></a>Database queries to switch the search index to Elasticsearch</h5>
@@ -300,7 +314,7 @@ update TENANTS set SEARCH_SOURCE='elastic', LASTMODIFIEDDTS=utc_timestamp();</pr
 
 
 <h5><a name="proc_es_use_compass"></a>Steps to follow if you want to continue using Compass for search</h5>
-<p>If you don’t want to move to Elasticsearch, but prefer to stay with the older Compass search feature, you’ll need to check some values in the database and make changes if needed.</p>
+<p>If you don't want to move to Elasticsearch, but prefer to stay with the older Compass search feature, you'll need to check some values in the database and make changes if needed.</p>
 <p>Make sure that the TENANTS table has these two fields set to <strong>compass</strong>:</p>
 <ul>
   <li><strong>INDEX_TARGET</strong> field: value must be <strong>compass</strong> (post-upgrade default value is <strong>compass,elastic</strong>; remove <strong>elastic</strong>)</li>
@@ -411,8 +425,8 @@ update TENANTS set SEARCH_SOURCE='elastic', LASTMODIFIEDDTS=utc_timestamp();</pr
 <a name="es_default_ports"></a><h3>What are the default ports for Elasticsearch configuration?</h3>
 <p>The default ports for Elasticsearch configuration are as follows:</p>
 <ul>
-  <li><strong>HTTP</strong>: Default is 9200, default range is 9200&#8211;9300</li>
-  <li><strong>TCP</strong>: Default is 9300, default range is TCP is 9300&#8211;9400</li>
+  <li><strong>HTTP</strong>: Default is 9200, default range is 9200&#8211;9299</li>
+  <li><strong>TCP</strong>: Default is 9300, default range is TCP is 9300&#8211;9399</li>
 </ul>
 <p>Range implies that if the first port is busy, the platform tries the next one and so on.</p>
 <p><a href="#top">Back to top</a></p>
@@ -435,13 +449,14 @@ update TENANTS set SEARCH_SOURCE='elastic', LASTMODIFIEDDTS=utc_timestamp();</pr
   <dd>Name of the cluster for the Elasticsearch feature. Required for all deployment modes. Default for embedded mode: <strong>default_xxxxxx</strong>. When you install the feature, a value is defaulted in this field.</dd>
   <dt>ES Server URL (Transport Client deployment mode only)</dt>
   <dd>The URL for the Elasticsearch server.</dd>
-  <dt>Master Host URL (Client deployment mode only)</dt>
+  <dt>Master Host URL (Client-Only deployment mode only)</dt>
   <dd>The URL for the master host that this is a client for.</dd>
   <dt>Minimum Master Nodes (Embedded mode only)</dt>
   <dd>The minimum number of master nodes. Default: 2. Example: let's say there are five master eligible nodes, but <strong>Minimum Master Nodes</strong> is set to 2. In this scenario, two nodes are master nodes. If there is a specific need, such as increased load, an additional node might be used as a master node; if there is an outage, an additional node will replace the one that is down. However, if the minimum number is configured to be a smaller number, such as 1, only one master node might be used (depending on the Elasticsearch logic).</dd>
   <dt>Multicast (Embedded or Client Only modes)</dt>
   <dd>If this is a <a href="basics_glossary.htm#gl_multicast">multicast</a> scenario, check the box. In this scenario, the cluster name is defaulted.</dd>
 </dl>
+
 <p><strong>Transport Client versus Client Only mode</strong></p>
 <p>Here is an example to illustrate the difference between these Transport Client and Client Only modes, both of which reference an external Elasticsearch server. Let's say there are two shards; one shard is on one node and the other shard is on a different node.</p>
 <p>In the Transport Client scenario, the request is sent to the master node. The master node then sends the request to both data nodes, receives the responses, merges the data, and sends back the merged data as the response to the query.</p>
@@ -477,8 +492,10 @@ update TENANTS set SEARCH_SOURCE='elastic', LASTMODIFIEDDTS=utc_timestamp();</pr
   <dd>The product does not depend on the HTTP port of any container. The <strong>HTTP enabled</strong> option really only comes into play to facilitate using some other interface, from outside the product, with HTTP interfaces. For example, you might want to use the HTTP interface of the Elasticsearch node for a third-party client, or for troubleshooting purposes. Internally, the platform does not depend on the HTTP port.</dd>
   <dt>Master Eligible</dt>
   <dd>Indicates whether the current node could be the master node.</dd>
+  <dd>There must be at least one master eligible node in a cluster.</dd>
   <dt>Data Node</dt>
-  <dd>Indicates whether the current node is a <a href="basics_glossary.htm#gl_es_data_node">data node</a> only. The data node is where the index is stored. Over the entire installation, there must be at least one data node.</dd>
+  <dd>Indicates whether the current node is a <a href="basics_glossary.htm#gl_es_data_node">data node</a> only. The data node is where the index is stored.</dd>
+  <dd>There must be at least one data node in a cluster.</dd>
   <dd>Index location is required only for data nodes. It's vital because if the node doesn't hold the data, there is no storage of index location. Index location is where the index is saved, and the index is only saved on the data nodes. Therefore, for a data node, the index location needs to be provided.</dd>
   <dd>The default index location is a subfolder to the installation folder, <strong>/index</strong>, at the same level in the folder structure as the <strong>/lib</strong> and <strong>/bin</strong> folders. Index data is stored in this folder.</dd>
   <dd>If the node is not a data node, index location is not needed.</dd>
@@ -613,34 +630,30 @@ update TENANTS set SEARCH_SOURCE='elastic', LASTMODIFIEDDTS=utc_timestamp();</pr
 
 
 
-<h3 id="relatedtopics">Related Topics</h3>
+<h3 id="related_topics">Related Topics</h3>
 <table width="98%" border="0" cellspacing="0" cellpadding="2" class="doctable">
   <tr>
     <td width="33%"><ul>
       <li><a href="site_admin_.htm">Site Admin Summary Page</a></li>
       <li><a href="site_admin_overview.htm">Site Admin Responsibilities</a></li>
-      <li><a href="site_admin_users.htm">Managing User Accounts</a></li>
+      <li><a href="site_admin_agreements.htm">Platform Legal Agreement</a></li>
+      <li><a href="site_admin_config.htm">Configuration</a></li>
+      <li><a href="site_admin_settings.htm">Settings</a></li>
+    </ul>
+    </td>
+    <td width="33%"><ul>
+      <li><a href="site_admin_site.htm">Site Settings</a></li>
       <li><a href="site_admin_site_admins.htm">Managing Site Admins</a></li>
-      <li><a href="business_admin_business_adm.htm">Managing Business Admins</a></li>
-      <li><a href="bus_site_admin_dzs.htm">Managing Deployment Zones</a></li>
+      <li><a href="site_admin_users.htm">Managing User Accounts</a></li>
+      <li><a href="site_admin_workflows.htm">Workflows</a></li>
     </ul>
-</td>
+    </td>
     <td width="33%"><ul>
-      <li><a href="bus_site_api_admin_forum.htm">Forum Moderation</a></li>
-      <li><a href="site_admin_domains.htm"> Domains</a></li>
-      <li><a href="site_admin_domains_eoap.htm">External OAuth Provider Domain</a></li>
-      <li><a href="site_admin_domains_oidc.htm">OpenID Connect Support</a></li>
-      <li><a href="site_admin_ov_pf_endtoend.htm">PingFederate Setup</a></li>
-    </ul></td>
-    <td width="33%"><ul>
-      <li><a href="site_admin_config.htm"> Configuration</a></li>
-      <li><a href="site_admin_settings.htm"> Settings</a></li>
-      <li><a href="site_admin_workflows.htm"> Workflows</a></li>
-      <li><a href="site_admin_tc.htm"> Test Client</a></li>
-      <!--<li><a href="site_admin_es.htm"> Search Configuration</a></li>-->
+
+      <li><a href="site_admin_tc.htm">Test Client</a></li>
       <li><a href="site_admin_content_guidelines_sd.htm">Content Development Guidelines for Simple Dev Theme</a></li>
+      <li><a href="basics_glossary.htm">Glossary of Terms</a></li>
     </ul>
-</td>
+    </td>
   </tr>
 </table>
-<hr />
