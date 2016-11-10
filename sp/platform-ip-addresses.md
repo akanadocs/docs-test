@@ -41,3 +41,7 @@ This is the list of source IP addresses used by the Akana Platform.  Customers c
 ### Smoke (All)
 
 52.9.19.172
+
+## Securing your inbound API Calls
+
+Please download the platform gateway [certificate](/sp/assets/gateway.cer) and use this to verify inbound calls from the Akana Platform Gateway instances.
