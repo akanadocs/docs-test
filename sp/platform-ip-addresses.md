@@ -44,4 +44,4 @@ This is the list of source IP addresses used by the Akana Platform.  Customers c
 
 ## Securing your inbound API Calls
 
-Please download the platform gateway [certificate](/sp/assets/gateway.cer) and use this to verify inbound calls from the Akana Platform Gateway instances.
+Please download the platform gateway [certificate](assets/gateway.cer) and use this to verify inbound calls from the Akana Platform Gateway instances.
