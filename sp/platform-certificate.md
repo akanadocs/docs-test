@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Platform SSL Certificate
+title: Securing the Connection to your Backend APIs
 description: Download the SSL certificate used by the SaaS platform
 product: sp
 category: ref
