@@ -5,7 +5,7 @@ description: Learn about tModels, which represent definitions of UDDI web servic
 product: ag
 category: learn
 sub-nav-class: Registry
-weight:	11
+weight: 111
 type: page
 nav-title: tModels
 ---

@@ -6,7 +6,7 @@ product: ag
 category: learn
 no-nav: true
 no-catalog: true
-weight: 5
+weight: 105
 sub-nav-class: Security Configuration
 type: page
 nav-title: Security Configuration

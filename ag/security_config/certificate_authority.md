@@ -5,7 +5,7 @@ description: Learn how to view, configure and manage the Certificate Authority (
 product: ag
 category: learn
 sub-nav-class: Security Configuration
-weight:	2
+weight: 102
 type: page
 nav-title: Certificate Authority
 ---
@@ -37,7 +37,8 @@ Learn how to view, configure and manage the Certificate Authority (CA).
 A Certificate Authority (CA) is the Policy Manager CA Provider. The CA issues certificates and guarantees the validity of the binding between the certificate owner and its public key. The CA is a trusted authority, and any certificate issued by the CA identifies the owner of the certificate. Therefore the private key that corresponds to the public key in the certificate is deemed to be known only by the specific owner.
 
 Only one Certificate Authority can be configured. A Certificate Authority can be regenerated, renewed, deleted, or exported. When the Certificate Authority is generated, a serial number and Issuer DN is assigned. The Issuer DN will be the same as the Subject DN.
-Two Certificate Authority options are supported: Policy Manager provides a simplified version of Certificate Authority that can issue and renew X.509 certificates, or one can be imported. 
+
+Two Certificate Authority options are supported: Policy Manager provides a simplified version of Certificate Authority that can issue and renew X.509 certificates, or one can be imported. 
 
 **Note**: *The Policy Manager Certificate Authority is intended to be used in test environments for verifying features related to Policy Manager. For production environments, importing a formal CA is recommended (e.g., VeriSign) that aligns with security policy requirements.*
 

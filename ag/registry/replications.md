@@ -5,7 +5,7 @@ description: Learn how Replication provides the ability to federate with 3rd par
 product: ag
 category: learn
 sub-nav-class: Registry
-weight:	13
+weight: 113
 type: page
 nav-title: replications
 ---
@@ -27,11 +27,15 @@ Learn how Replication provides the ability to federate with 3rd party UDDI-compl
 
 ## About Replications
 
-Replication provides the ability to federate with third-party UDDI-compliant registries, thereby extending the governance capabilities of the Workbench to a distributed development organization. Services defined in external registries will get pulled into the Workbench and be made available to users of the console in the same manner as other physical services.To make use of the Replication feature, the third-party registry must support the UDDI v3 standard, including Subscriptions. 
+Replication provides the ability to federate with third-party UDDI-compliant registries, thereby extending the governance capabilities of the Workbench to a distributed development organization. Services defined in external registries will get pulled into the Workbench and be made available to users of the console in the same manner as other physical services.
+
+To make use of the Replication feature, the third-party registry must support the UDDI v3 standard, including Subscriptions. 
 
 * A Subscription is first defined in the 3rd party registry to define the subset of services that must be replicated with the Workbench. 
 * Once defined, the subscription will be assigned a UDDI key of the form: uddi:665e237e-b4c3-11dc-a5b9-96cca7393881. 
-* The Replication can then be configured in the Workbench using the UDDI key and a set of remote credentials acceptable to the 3rd party registry.View the *Replications Summary* screen by going to **Configure > Registry** and then clicking on the **Replications** tab.
+* The Replication can then be configured in the Workbench using the UDDI key and a set of remote credentials acceptable to the 3rd party registry.
+
+View the *Replications Summary* screen by going to **Configure > Registry** and then clicking on the **Replications** tab.
 
 <a href="#top">back to top</a> 
 

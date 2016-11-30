@@ -5,7 +5,7 @@ description: Learn how to administer Policy Manager group accounts including add
 product: ag
 category: learn
 sub-nav-class: Security Administration
-weight:	7
+weight: 107
 type: page
 nav-title: User Group Administration
 ---
@@ -57,7 +57,8 @@ The *User Group Information* screen displays.
 ###Define User Group Information
 
 1. Enter account information into the *Details* section:
-  * **Group Name** - Required.  * **Description** - Optional.
+  * **Group Name** - Required.
+  * **Description** - Optional.
 2. Click **Next**  
 The *Users Information* screen displays where you can apply **filters** in the *Users Options* section to search for Users to add to the current user group definition. Users matching your selections display in the *Results* section of the screen.  
   * **Add all users from Domain [x]** - Select a local or external domain from the drop-down list. All its users will be added to the User Group.

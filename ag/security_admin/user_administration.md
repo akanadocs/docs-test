@@ -5,7 +5,7 @@ description: Learn how to administer Policy Manager user accounts including perf
 product: ag
 category: learn
 sub-nav-class: Security Administration
-weight:	6
+weight: 106
 type: page
 nav-title: User Administration
 ---
@@ -54,7 +54,8 @@ The *Define User Information* screen displays.
 ### Define User Information
 
 1. Enter account information into the *Details* section:
-  * **Username** - Required.  Up to 64 characters in length. Can be an abbreviation, nickname, etc.  * **Full Name** - Required.
+  * **Username** - Required.  Up to 64 characters in length. Can be an abbreviation, nickname, etc.
+  * **Full Name** - Required.
   * **Time Zone** - Use the drop-down list to select the "Time Zone" for the current user. Defaults to the system time zone unless modified.
   * **First Name** - Optional.
   * **Last** - Optional.
@@ -99,7 +100,9 @@ The "Modify User" screen presents user account information in a consolidated vie
 
 After you have completed configuring the *User Information*, click **Apply**. 
 
-If you do not edit these fields, the initial values are maintained.If you change the password generation method to "Auto Generated" and click the **View the generated password** check-box, the auto-generated password displays on the *Modify User* screen after you apply your changes.
+If you do not edit these fields, the initial values are maintained.
+
+If you change the password generation method to "Auto Generated" and click the **View the generated password** check-box, the auto-generated password displays on the *Modify User* screen after you apply your changes.
 
 1. Go to **Security > Users**.
 2. Click **Modify User**. 
@@ -117,7 +120,8 @@ The *Modify User* screen displays.
     * Check **Disabled** to deactivate the account.
 
 ### Password
-1. Configure a password by clicking the radio button next to the desired generation method.  
+
+1. Configure a password by clicking the radio button next to the desired generation method.  
   * **Manual Entry** - Enter a custom password key into the Password field and confirm it. 
       * Used when modifying an account for end users who are either accessing web services managed by Policy Manger or accessing the Policy Manager user Interface. 
       * Used for creating a user account for any custom application using our client SDKs.

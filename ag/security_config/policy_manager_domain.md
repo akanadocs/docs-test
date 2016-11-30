@@ -5,7 +5,7 @@ description: Learn how the Policy Manager Domain Name and Description are genera
 product: ag
 category: learn
 sub-nav-class: Security Configuration
-weight:	1
+weight: 101
 type: page
 nav-title: Policy Manager Domain
 ---

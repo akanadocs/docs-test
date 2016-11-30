@@ -5,7 +5,7 @@ description: Learn about Interfaces, which define the behavior of a service base
 product: ag
 category: learn
 sub-nav-class: Registry
-weight:	10
+weight: 110
 type: page
 nav-title: Interfaces
 ---
@@ -277,7 +277,8 @@ Examples of categories are:
 
 Each Organization, Service, tModel, Schema, Interface, or Binding can be assigned one or more Category Groups.
 
-1. Follow steps #1 through #5 as outlined earlier in this section, under "View Interface Categories."2. From the *Interface Categories Summary* screen, click **Assign Category Group**.  
+1. Follow steps #1 through #5 as outlined earlier in this section, under "View Interface Categories."
+2. From the *Interface Categories Summary* screen, click **Assign Category Group**.  
 The *Assign Category Group Wizard* launches and *Select Category Group* screen displays listing the Category Groups that exist for the current interface.
 3. Click the **radio button** next to the Category Group that you would like to assign a new category to.
 4. Click **Next**.  

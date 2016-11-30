@@ -5,7 +5,7 @@ description: Learn about supported Identity Systems (Claims-based, Cookie Authen
 product: ag
 category: learn
 sub-nav-class: Security Configuration
-weight:	5
+weight: 105
 type: page
 nav-title: Identity Systems
 ---
@@ -43,7 +43,8 @@ Learn about supported Identity Systems (Claims-based, Cookie Authentication Modu
 Identity management technologies provide tools for simplifying the management of data for users of an organization's information technology systems. 
 
 Identity management applications provide a method of storing data and making this data available to network users and administrators. Authentication Protocols provide authentication for client/server applications and validate the identity of a communicating entity. An identity management application is referred to as an "Identity System." Each Identity System provides a method for storing data and making this data available to network users and administrators. Data is typically stored in what is called a "Directory."
-Data for a single user is stored in a user account. A user account includes Name, Password, Phone Numbers, etc. This information can be accessed by authorized users on the same network. User accounts can also be assigned to a group. This is referred to as a "User Group" or "Group Account." Rights and permissions are assigned to the user group and members of the group assume these rights and permissions.
+
+Data for a single user is stored in a user account. A user account includes Name, Password, Phone Numbers, etc. This information can be accessed by authorized users on the same network. User accounts can also be assigned to a group. This is referred to as a "User Group" or "Group Account." Rights and permissions are assigned to the user group and members of the group assume these rights and permissions.
 
 ### Identity Management Functions  
 
@@ -65,10 +66,14 @@ View the *Identity Systems Summary* screen by going to **Configure > Security > 
 ## About Identity Integration
 
 The process of identity integration enables Policy Manager's Policy Manager Subsystem to authenticate with a third party identity system. The ability to connect to an enterprise organization's identity system significantly reduces the Policy Manager deployment time and increases the manageability of the security administration process.
-Identity integration is established between Policy Manager, the client application, and a third-party identity system using a set of business rules. These business rules are called "connector properties." Connector properties generally include configuration details for connecting to the host machine where the identity system resides, configuring the authentication method, and specifying user identity information (e.g., user/user group name, description, attributes, etc.). These connector properties are packaged in an "Identity System Option Pack."
-When an identity system is successfully integrated with Policy Manager, a trust is established between the client application user and the Policy Manager Subsystem and a domain name is added to the drop-down list box on the Policy Manager *Login* Screen and on the *User Groups Summary* screen in **Security > User Groups**. When a user who is present in the identity system directory logs into the Policy Manager "Management Console," the Management Console authenticates with the identity system, then sends a request for a token to the Policy Manager Subsystem. Once this trust is established, access is granted to all Policy Manager functions based on assigned privileges.
-Authentication credentials for identity system users that will be accessing Policy Manager are stored in the identity system. Policy Manager application users must be stored in the Policy Manager.
-Policy Manager provides an *Add Identity System Wizard* that is used to add an Identity System to Policy Manager (i.e., integrate) and maintain the associated connection properties (i.e, modify and delete). This wizard is accessible via the *Configure > Security > Identity Systems* section of the Management Console. Five types of identity systems are supported:
+
+Identity integration is established between Policy Manager, the client application, and a third-party identity system using a set of business rules. These business rules are called "connector properties." Connector properties generally include configuration details for connecting to the host machine where the identity system resides, configuring the authentication method, and specifying user identity information (e.g., user/user group name, description, attributes, etc.). These connector properties are packaged in an "Identity System Option Pack."
+
+When an identity system is successfully integrated with Policy Manager, a trust is established between the client application user and the Policy Manager Subsystem and a domain name is added to the drop-down list box on the Policy Manager *Login* Screen and on the *User Groups Summary* screen in **Security > User Groups**. When a user who is present in the identity system directory logs into the Policy Manager "Management Console," the Management Console authenticates with the identity system, then sends a request for a token to the Policy Manager Subsystem. Once this trust is established, access is granted to all Policy Manager functions based on assigned privileges.
+
+Authentication credentials for identity system users that will be accessing Policy Manager are stored in the identity system. Policy Manager application users must be stored in the Policy Manager.
+
+Policy Manager provides an *Add Identity System Wizard* that is used to add an Identity System to Policy Manager (i.e., integrate) and maintain the associated connection properties (i.e, modify and delete). This wizard is accessible via the *Configure > Security > Identity Systems* section of the Management Console. Five types of identity systems are supported:
 
 * [Claims-based](../security_config/configure_identity_system/claims_based.html)
 * [Cookie Authentication Module](../security_config/configure_identity_system/cookie_authentication_module.html)
@@ -82,13 +87,16 @@ The process of identity integration enables Policy Manager's Policy Manager Subs
 ## About Identity System Configuration
 
 The *Add Identity System Wizard* provides a method of integrating your Identity Management Application or Authentication Protocol with Policy Manager through the use of "Identity System Option Packs." Each Identity System Option Pack includes a set of connector properties and settings that must be configured to successfully integrate with Policy Manager.
-**Notes**:  
+
+**Notes**:  
 Two approaches are used for distributing option packs:
   
 * They can be distributed separately as a Feature and installed using the *Akana Administration Console*.
 * They can come pre-installed in a Policy Manager release. The distribution approach varies based on the Policy Manager release cycle. Installed option packs are accessible via a drop-down list box in the **Add Identity System Wizard**.
-After Policy Manager is updated with a new Option Pack, the feature set for the associated identity system is integrated with the *Add Identity System Wizard.* This wizard is used to configure and maintain identity system domains to be integrated with Policy Manager.
-When you add a new identity system to Policy Manager, the identity system domain is displayed in the *Configure > Security > Identity Systems* section of the *Policy Manager Management Console*. 
+
+After Policy Manager is updated with a new Option Pack, the feature set for the associated identity system is integrated with the *Add Identity System Wizard.* This wizard is used to configure and maintain identity system domains to be integrated with Policy Manager.
+
+When you add a new identity system to Policy Manager, the identity system domain is displayed in the *Configure > Security > Identity Systems* section of the *Policy Manager Management Console*. 
 
 <a href="#top">back to top</a> 
 

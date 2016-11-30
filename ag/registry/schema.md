@@ -5,7 +5,7 @@ description: Learn about Schemas, which are referenced when importing WSDL and d
 product: ag
 category: learn
 sub-nav-class: Registry
-weight:	9
+weight: 109
 type: page
 nav-title: Schema
 ---
@@ -60,7 +60,8 @@ A *browser window* loads and displays the content of the selected schema.
 The *Schema Summary* screen displays a *Number of References* column that indicates the number of services that are currently utilizing a specific schema. 
 
 You can view the specific service references using the **View Service References** action.
-**Note:** *The number of references column shows both references from bindings and services.*
+
+**Note:** *The number of references column shows both references from bindings and services.*
 
 1. Go to **Configure > Registry**.
 2. Click on the **Schema** tab.  

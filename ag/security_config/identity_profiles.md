@@ -5,7 +5,7 @@ description: Learn how to configure Identity Profiles for "Authentication Protoc
 product: ag
 category: learn
 sub-nav-class: Security Configuration
-weight:	6
+weight: 106
 type: page
 nav-title: Identity Profiles
 ---
