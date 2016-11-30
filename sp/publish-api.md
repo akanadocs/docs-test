@@ -32,7 +32,7 @@ Getting started: Publishing a Simple API
 This document will walk you through the steps to add and configure Community Manager (CM) on top of the Policy Manager container. Then it walks you through how to create a tenant, publish your API in CM, and send a test request from CM. 
 
 ### Prerequisites
-This document assumes that you've already installed the platform, created and started the Policy Manager and Network Director containers, and configured those containers. If you need instructions on how to complete those tasks, see our our document [Managing a Simple API](http://docs.akana.com/sp/simple-api.html).  
+This document assumes that you've already installed the platform, created and started the Policy Manager and Network Director containers, and configured those containers. If you need instructions on how to complete those tasks, see our our document [Managing a Simple API]({{ site.baseurl }}/sp/simple-api.html).  
 
 
 ## <a name="Installing"></a>Step: 1: Add the Community Manager

@@ -388,7 +388,7 @@ The time is seconds before the authorization descision is marked as expired from
 com.soa.auz.operation -> 
 cached.auz.engine.operation.expirationTimeInSeconds=1800
 ```
-The time in seconds before the authorization descision will be removed from the cache. This time can be lengthened to ensure that the Network Directors can continue to function without the Policy Manager. This may cause a security vulnerability if a contract is revoked but the Policy Manager is unreachable.
+The time in seconds before the authorization descision will be removed from the cache. This time can be lengthened to ensure that the Network Directors can continue to function without the Policy Manager. This may cause a security vulnerability if a contract is revoked but Policy Manager is unreachable.
 
 #### <a name="cm-settings"></a>Akana API Platform Settings
 

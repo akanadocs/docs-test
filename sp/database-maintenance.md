@@ -65,7 +65,7 @@ There are several key tables that require regular maintenance:
 
 ### <a name="built-in"></a>Using the built-in jobs
 
-The Policy Manager has a built-in capability to delete/archive data in the MO\_USAGE* and MO\_ROLL* tables. These jobs run every hour and can add significant overhead to the Policy Manager container so are best suited to low-throughput environments with limited retained data. 
+Policy Manager has a built-in capability to delete/archive data in the MO\_USAGE* and MO\_ROLL* tables. These jobs run every hour and can add significant overhead to the Policy Manager container so are best suited to low-throughput environments with limited retained data. 
 
 To configure the built-in jobs go to the Policy Manager Admin console -> Configuration tab -> com.soa.rollup.delete.old. The settings in this screen can be summarized as follows:
 
