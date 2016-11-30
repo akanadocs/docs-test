@@ -38,7 +38,8 @@ This document assumes that you've already installed the platform, created and st
 ## <a name="Installing"></a>Step: 1: Add the Community Manager
 
 The simplest way to install Community Manager is to install it into the same container as Policy Manager. Configuration consists of installing features, and managing schemas. 
-####Downloading Community Manager
+
+#### Downloading Community Manager
 1. Log into the support site [support.akana.com](http://support.akana.com).
 2. Under "Popular Knowledgebase Articles," click **CM/PM compatibility support matrix**. Review the matrix for your version of Policy Manager, and note the most recent version of Community Manager you can download. 
 3. Go back to the Support Center and click **Downloads**.
@@ -48,11 +49,11 @@ The simplest way to install Community Manager is to install it into the same con
 7. Download the zip file.
 8. Unzip the zip file into the sm70/lib directory. 
 
-####Installing features in the Policy Manager container
+#### Installing features in the Policy Manager container
 1. Log into the Container Administration Console.
-2. Click on the **Repository** tab, and click the **Refresh** icon in the top-right corner of the list. You should see "SOA Software Community Manager Repository" and "SOA Software OAuth Repository."
+2. Click on the **Repository** tab, and click the **Refresh** icon in the top-right corner of the list. You should see "Akana Community Manager Repository" and "Akana OAuth Repository."
 3. Click the "Available Features" tab.
-4. Check the **SOA Software Community Manager** and the **SOA Software Community Manager Default Theme**. In the lower-right corner, click **Install Feature**.
+4. Check the **Akana Community Manager** and the **Akana Community Manager Default Theme**. In the lower-right corner, click **Install Feature**.
 3. The Install Wizard will run through the installation steps. Click **Install Feature**.
 4. When the installation is complete, you will see a pop-up window. Click **Configure** to complete the deployment using the following wizard step.
 
@@ -68,16 +69,16 @@ After installing the schemas, the system will recommend a restart. Restart.
 #### Installing Plug-ins in the Policy Manager container####
 1. Log into the Container Administration Console.
 2. Click on the "Available Features" tab, and choose **Plug-in** from the filter drop down. 
-3. Check **SOA Software Community Manager Policy Console** and click **Install Feature**. 
+3. Check **Akana Community Manager Policy Console** and click **Install Feature**. 
 4.  The Install Wizard will run through the installation steps. Click **Install Feature**. 
 
 After installing the Plug-in, the system will recommend a restart. Restart.
 
-####Installing Plug-ins in the Network Director####
+#### Installing Plug-ins in the Network Director####
 1. Log into the Network Director Console. 
 2. Click on the **Available Features** tab. 
 3. Ensure your Filter is set to **Plug-in**.
-4. Select **SOA Software API Security Policy Handler**.
+4. Select **Akana API Security Policy Handler**.
 5. Click **Install Feature**. Then click **Install Feature** again.
 
 After installing the Plug-in, the system willl recommend a restart. Restart. 
@@ -108,11 +109,12 @@ To see an example of how it looks as a command string:
 ```
 ./jython.sh ../scripts/Lib/soa/atmosphere/tenant.py -a -v --url http://mytenant.local:9900 --email email@address.com --password Password1 --tenantName mytenant --tenantId mytenant --address http://mytenant.local:9900 --consoleAddress http://mytenant.local:9900/atmosphere --theme default --contactEmailAddress email@address.com --fromEmailAddress email@address.com --virtualHosts mytenant.local
 ```
-####Verify your Tenant
+#### Verify your Tenant
 You'll want to verify that your Tenant is set up correctly by entering your console address into a browser. Log into the Tenant using your email address and password you assigned in the parameter script. 
 
 Note that the landing page will not have any content until you add it. 
- ## <a name="register-nd"></a>Step 3: Publish the API from Policy Manager to Community Manager
+ 
+## <a name="register-nd"></a>Step 3: Publish the API from Policy Manager to Community Manager
 You can only create API's using Virtual Services, and these Virtual Services must be in your Tenant Organization. In this example, it is called "mytenant."
  
 1. Verify that your Virtual Service is in the Tenant Organization. You can either move it, or create it specifically in the Tenant Organization.
@@ -136,16 +138,16 @@ You can only create API's using Virtual Services, and these Virtual Services mus
 4. On the Target API screen, in the "Service Key" field, enter the name of the API you've entered into the Policy Manager. (You might need to log into Policy Manager to retrieve the name if you have forgotten it. ) Click **Finish**.
 
 
-##<a name="register-api"></a>Step 4: Send a test request from Community Manager
+## <a name="register-api"></a>Step 4: Send a test request from Community Manager
 To get the the end result of sending a test request from the Community manager, you'll need to create an app, register it, activate it, and then you can send the request. 
 
-####Create the App####
+#### Create the App####
 1. Log onto Community Manager. 
 2. Click the **plus sign** at the top-middle portion of your screen, click **Add a New App**. 
 3. Enter the details of the app, such as name, version id, tags, description.
 4. Click **Save**. 
 
-####Register the App####
+#### Register the App####
 1. Click on the **cogs** icon to access the API's.
 2. Find the API you want to connect, then click **Access**.
 3. You'll see your application name, click **Add**, then **Next**.
@@ -153,13 +155,13 @@ To get the the end result of sending a test request from the Community manager, 
 5. (Optional) You have the option to add legal agreements. If you have any, add them here. 
 6. Click **Save**. 
 
-####Activate the App 
+#### Activate the App 
 1. From the Community Manager, click the **cogs** icon to access the API's. 
 2. Find the API to activate and click on its link. 
 2. From the left navigation pane, click **Apps**.
 3. In the "Production" column, click the drop-down and select **Activate**. Then click **Confirm**. 
 
-####Send a test request####
+#### Send a test request####
 
 1. From the Community Manager, click the **Applications** icon.
 2. Select your App.

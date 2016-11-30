@@ -302,7 +302,7 @@ In the Policy Manager Console, create an Anti-Virus Operational Policy and confi
 
 ![Create Anti Virus Policy](images/modify-av-policy.png "Create Anti Virus Policy")
 
-Attach this policy to the ConsoleResourceAPIService and the ContentAPIService in the SOA Software Policy Manager -> SOA Software Community Manager node in the Policy Manager Console Organization tree.  
+Attach this policy to the ConsoleResourceAPIService and the ContentAPIService in the Policy Manager -> Community Manager node in the Policy Manager Console Organization tree.  
 
 ![Attach Anti Virus Policy](images/attach-av-policy.png "Attach Anti Virus Policy")
 

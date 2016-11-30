@@ -44,14 +44,19 @@ If you need help installing the platform, please see the detailed steps in Chapt
 ## <a name="Containers"></a>Step: 2: Create and Start the Policy Manager and Network Director containers
 
 
-You will create and configure a Policy Manager (PM) and Network Directory (ND) container. For detailed steps on how to create the containers, [see pages 34 & 35 of the Platform install guide v70.](http://docs.akana.com/sp/assets/SOA_Software_Platform_Install_Guide_v70.pdf) 
+You will create and configure a Policy Manager (PM) and Network Directory (ND) container. For detailed steps on how to create the containers, [see pages 34 & 35 of the Platform install guide v70.](http://docs.akana.com/sp/assets/SOA_Software_Platform_Install_Guide_v70.pdf) 
+
 
 ### <a name="Policy Manager Container"></a>Policy Manager Container
 
 1. Name your container something that makes sense for your environment. Enter the structure for PM properties. It is:
 
 	```
-	container.instance.name=pm	credential.username=administrator	credential.password=password	default.host=0.0.0.0	default.port=9900
+	container.instance.name=pm
+	credential.username=administrator
+	credential.password=password
+	default.host=0.0.0.0
+	default.port=9900
 	```
 
 2. Run the following command: 
@@ -71,14 +76,18 @@ This step is only necessary if using Oracle or MySQL.
 	* For Oracle, download the appropriate thin driver from the Oracle website.
 2. Copy the JAR file to the sm70/instances/pm/deploy directory for the PM container.
 
-You may also want to dedicate containers for the "SOA Software Policy Manager Services" feature. This feature provides the backend APIs to support the Network Directors and is often installed in the same containers as the "SOA Software Policy Manager Console" and/or "SOA Software Community Manager" features. The decision to install it on its own container can be driven by security requirements (e.g. network topology) or the minimization of load on the Web traffic containers. 
+You may also want to dedicate containers for the Akana Policy Manager Services feature. This feature provides the backend APIs to support the Network Directors and is often installed in the same containers as the Akana Policy Manager Console and/or Akana Community Manager features. The decision to install it on its own container can be driven by security requirements (e.g. network topology) or the minimization of load on the Web traffic containers. 
 
 ### <a name="Network Director Container"></a>Network Director Container
 
 1. Enter the structure for the ND properties. It is:
 
 	```
-	container.instance.name=nd	credential.username=administrator	credential.password=password	default.host=0.0.0.0	default.port=9901
+	container.instance.name=nd
+	credential.username=administrator
+	credential.password=password
+	default.host=0.0.0.0
+	default.port=9901
 	```
 	
 2. Run the following command: 
@@ -86,7 +95,8 @@ You may also want to dedicate containers for the "SOA Software Policy Manager Se
 	```
 	./startup.sh configurator -Dsilent=true -Dproperties=/[property file directory location]/nd.properties
 	```
-	#### Copying database driver (optional)
+	
+#### Copying database driver (optional)
 
 This step is only necessary if using Oracle or MySQL.
 
@@ -104,13 +114,13 @@ To ensure that the containers have started, open a browser, and access the conta
 
 ## <a name="Config"></a>Configure the Policy Manager and Network Director containers
 
-###<a name="config-pm"></a>Configuring Policy Manager
+### <a name="config-pm"></a>Configuring Policy Manager
 Once you've created the Policy Manager container, it needs to be configured. Configuration consists of installing features, configuring database options, managing schemas, and setting administrator credentials. 
-####Installing Policy Manager Features
+#### Installing Policy Manager Features
 1. Log into the Container Administration Console (http://[hostname]:[port]/admin) using the credentials you provided in your container properties file (administrator/password in our sample file).
 2. From the "Available Features" tab, check the boxes for the:
-	* SOA Software Policy Manager Console
-	* SOA Software Policy Manager Services
+	* Akana Policy Manager Console
+	* Akana Policy Manager Services
 3. In the bottom-right corner, click **Install Features**. The Install Wizard will run through the installation steps.
 4. When the installation is complete, you will see a pop-up window. Click **Configure** to complete the deployment using the following wizards steps - note: these may not appear in this order:
 
@@ -136,7 +146,7 @@ When the configuration is complete, you can click **Close**. You will be prompte
 
 ### <a name="config-nd"></a>Configuring the Network Director
 1. Log into the Container Administration Console (http://[hostname]:[port]/admin) using the credentials you provided in your container properties file (administrator/password in our sample file).
-2. From the "Available Features" tab, check the **SOA Software Network Director**. In the bottom right corner, click **Install Feature**.
+2. From the "Available Features" tab, check the Akana Network Director. In the bottom right corner, click **Install Feature**.
 3. You'll see the Installation Wizard screen. Click **Install Feature**. 
 4. Click **Configure** to complete the deployment using the following wizards steps - note: these may not appear in this order:
 
@@ -146,7 +156,7 @@ The connection between the ND and the PM is an important step of the Network Dir
 To find the URL:
 	1. Log into the Policy Manager.
 	2. Click the **Workbench** tab.
-	3. On the Left Pane (Called the "Organization Tree") click **SOA Software Policy Manager - Services - Metedata Exchange Service - Access Points.** 
+	3. On the Left Pane (Called the "Organization Tree") click **Akana Policy Manager - Services - Metedata Exchange Service - Access Points.** 
 	4. The URL will appear in the windows in the middle of the screen. 
 
 Back in the "Network Director Install Wizard," enter the URL you found in the Policy Manager. Then click **Finish**.
@@ -171,17 +181,17 @@ You'll need to tell the Policy Manager where to find the containers you created,
 6. Enter the **Instance Name** and name the **Network Director**. Then click **Finish, Close**.
 7. Check that the Container started. You can do this from the Organization Tree - click **Containers**- ***Container Name.*** In the "Container Overview," the State should say: "Started." ***Note: you may need to refresh or wait a few seconds before checking the State.***
 
-##<a name="register-api"></a>Step 4: Add the API to Policy Manager
+## <a name="register-api"></a>Step 4: Add the API to Policy Manager
 
 In this step we will use the Akana Demo REST API, available at [http://demo.akana-dev.net:3005](http://demo.akana-dev.net:3005). To keep it simple, we will just register the GET operation at [http://demo.akana-dev.net:3005/posts.](http://demo.akana-dev.net:3005/posts)
 
-###Adding an Organization
+### Adding an Organization
 1. From the Organization Tree, click **Registry**.
 2. On the right side of the screen, under "Actions," Click **Add Organization**. 
 3. Indicate where you'd like to place the organization on the Organization Tree. Click **Next**.
 4. Give your organization a name, Click **Finish**, then **Close**.
 
-###Registering an API
+### Registering an API
 1. From the Organization Tree, click on the organization you created. 
 2. Under the "Service Summary", click **Create Physical Service**.
 3. Click the radio button for **Create Without Using Service Descriptor Document**. Click **Next**.
@@ -207,7 +217,7 @@ In this step we will use the Akana Demo REST API, available at [http://demo.akan
 
 When you've finished, you'll have two services: a physical and a virtual service. 
 
-###Adding an Access Point to a physical service
+### Adding an Access Point to a physical service
 1. From the Organization Tree in the Policy Manager, click ***your organization*** - Services - ***the physical API you're registering***.
 2. Select the **Access Points**tab. 
 3. Click **Add Access Point**.
@@ -215,7 +225,7 @@ When you've finished, you'll have two services: a physical and a virtual service
 5. Under the "HTTP Details" Section, enter the API web address For our example: [http://demo.akana-dev.net:3005/posts](http://demo.akana-dev.net:3005/posts) in the **Location** field. Click **Finish**.
 
 
-##<a name="Configure Policies"></a>Step 5: Configure Policies
+## <a name="Configure Policies"></a>Step 5: Configure Policies
 
 Now you'll configure your API’s with the policies you want Akana to enforce. 
 
@@ -229,7 +239,7 @@ Now you'll configure your API’s with the policies you want Akana to enforce.
 
 You can find all descriptions of the policies in the Organization Tree. 
 
-##<a name="Create Contracts"></a>Step 6: Create Contracts
+## <a name="Create Contracts"></a>Step 6: Create Contracts
 
 A contract gives someone (typcially another application,) authorization to access an API. 
 
@@ -246,7 +256,7 @@ Your contract is now in draft mode. It needs to be activated by:
 3. Click on the Contract - in this example it shows as "Anonymous."
 4. Review the contract, then on the right side click **Activate Contract**. Then click **OK**.
 
-##<a name="Send a test request"></a>Step 7: Send a test request
+## <a name="Send a test request"></a>Step 7: Send a test request
 
 To send a test request you will need the end point. You can find this in the Policy Manager Organization Tree, under your organization's name - Services - API. Click on the **Access Points** tab. 
 

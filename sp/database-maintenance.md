@@ -10,7 +10,7 @@ type: page
 nav-title: Database Maintenance
 ---
 
-##Akana Platform Database Maintenance
+## Akana Platform Database Maintenance
 
 <h3 style="color: grey;">Table of Contents</h3>
 <ol class="table_of_contents">
@@ -88,7 +88,11 @@ monitoring.delete.rollup.MO_ROLLUP15.windowSize=1
 **Note:** to disable the built-in jobs for higher throughput environments, set all '*.enable' properties to false as follows:
 
 ```
-monitoring.delete.rollup.MO_ROLLUP15.enable=falsemonitoring.delete.rollup.MO_ROLLUPDATA.enable=falsemonitoring.delete.rollup.MO_ROLLUP_DAY.enable=falsemonitoring.delete.rollup.MO_ROLLUP_HOUR.enable=falsemonitoring.delete.rollup.MO_ROLL_ORG15.enable=false
+monitoring.delete.rollup.MO_ROLLUP15.enable=false
+monitoring.delete.rollup.MO_ROLLUPDATA.enable=false
+monitoring.delete.rollup.MO_ROLLUP_DAY.enable=false
+monitoring.delete.rollup.MO_ROLLUP_HOUR.enable=false
+monitoring.delete.rollup.MO_ROLL_ORG15.enable=false
 monitoring.delete.rollup.MO_ROLL_ORG_D.enable=false
 monitoring.delete.rollup.MO_ROLL_ORG_H.enable=false
 monitoring.delete.usage.enable=false
