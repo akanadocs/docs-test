@@ -39,12 +39,12 @@ Platform Installation is a very simple process, before version 8 you download an
 
 NOTE: with version 8 and after you may need to define some environment variables including the location of your JRE.
 
-If you need help installing the platform, please see the detailed steps in Chapter 1 of our [install guide](assets/SOA_Software_Platform_Install_Guide_v70.pdf).
+If you need help installing the platform, please see the detailed steps in Chapter 1 of our [install guide]({{ site.baseurl }}/sp/assets/SOA_Software_Platform_Install_Guide_v70.pdf).
 
 ## <a name="Containers"></a>Step: 2: Create and Start the Policy Manager and Network Director containers
 
 
-You will create and configure a Policy Manager (PM) and Network Directory (ND) container. For detailed steps on how to create the containers, [see pages 34 & 35 of the Platform install guide v70.](assets/SOA_Software_Platform_Install_Guide_v70.pdf) 
+You will create and configure a Policy Manager (PM) and Network Directory (ND) container. For detailed steps on how to create the containers, [see pages 34 & 35 of the Platform install guide v70.]({{ site.baseurl }}/sp/assets/SOA_Software_Platform_Install_Guide_v70.pdf) 
 
 
 ### <a name="Policy Manager Container"></a>Policy Manager Container

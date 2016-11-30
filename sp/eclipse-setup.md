@@ -25,7 +25,7 @@ This document describes how to set up an Eclipse workspace for platform developm
 
 #### <a name="data"></a>Prerequisites
 
-* This configuration guide assumes that you’ve already installed the platform. If you need help installing the platform, please see the [install guide](assets/SOA_Software_Platform_Install_Guide_v70.pdf). 
+* This configuration guide assumes that you’ve already installed the platform. If you need help installing the platform, please see the [install guide]({{ site.baseurl }}/sp/assets/SOA_Software_Platform_Install_Guide_v70.pdf). 
 * Install the **Eclipse IDE for Java EE Developers**. At the time of writing, Luna is the latest version, available at [http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/lunasr2](http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/lunasr2)
 
 ### <a name="java"></a>Configure the default JRE

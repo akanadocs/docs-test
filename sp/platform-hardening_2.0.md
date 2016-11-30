@@ -382,7 +382,9 @@ update LOGIN_RULES set MAXATTEMPTS=3, ATTEMPTSPERIOD=1, SUSPENSIONTIME=30, AUTO_
 #### <a name="configuring-password-complexity-rules"></a>Configuring Password Complexity Rules
 Password requirements (rules) may include many options regarding length, special characters, etc.
 ***Scope***: Community Manager
+
 These password rules may be set via an [API call]({{ site.baseurl }}/cm/api/businesses/m_businesses_updatePasswordPolicy.htm) into the system or a direct DB query.
+
 If using a DB query, the syntax will be something like:
 
 ```
