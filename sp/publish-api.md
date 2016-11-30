@@ -5,7 +5,7 @@ description: A guide to install and configure the Community Manager developer po
 product: sp
 category: gs	
 sub-nav-class: API Management
-weight: 4
+weight: 14
 type: page
 nav-title: Publishing a Simple API using Policy Manager 7.x
 ---

@@ -5,7 +5,7 @@ description: A guide to install and configure the API Gateway to manage a simple
 product: sp
 category: gs	
 sub-nav-class: API Management
-weight: 4
+weight: 14
 type: page
 nav-title: Managing a Simple API using Policy Manager 7.x
 ---

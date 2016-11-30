@@ -5,7 +5,7 @@ description: A guide on how to harden the platform for secure deployments
 product: sp
 category: ref
 sub-nav-class: 
-weight: 4
+weight: 14
 type: page
 nav-title: Platform Hardening
 ---

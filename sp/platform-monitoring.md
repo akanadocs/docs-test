@@ -5,7 +5,7 @@ description: A guide on how to monitor the platform using shell scripts and Nagi
 product: sp
 category: ref
 sub-nav-class: 
-weight: 4
+weight: 14
 type: page
 nav-title: Platform Monitoring
 ---
