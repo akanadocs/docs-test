@@ -18,7 +18,6 @@ Akana Platform Hardening Guide
 	<li><a href="#introduction">Introduction</a></li>
 	<li><a href="#deployment-architecture">Deployment Architecture</a></li>
 	<ol>
-		<li><a href="#install-internet-facing-and-administration-application-on-separate-containers">Install Internet-facing and Administration Applications on Separate Containers</a></li>
 		<li><a href="#install-network-director-on-a-separate-container">Install Network Director on a separate container</a></li>
 		<li><a href="#install-internet-facing-and-administration-applications-on-separate-containers">Install Internet-facing and administration applications on separate containers</a></li>
 		<li><a href="#configure-all-listeners-internal-and-external-as-htts-only">Configure all listeners, internal and external as HTTPS only</a></li>
