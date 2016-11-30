@@ -5,7 +5,7 @@ description: Learn how to view elements of a Binding definition including Key, Q
 product: ag
 category: learn
 sub-nav-class: Bindings
-weight:	6
+weight: 106
 type: page
 nav-title: Add Binding
 ---
@@ -41,7 +41,8 @@ Learn how to view elements of a Binding definition including Key, QName, Type, D
 <a href="#top">back to top</a> 
 
 ## Select Interfaces
-Use the *Select Interfaces* screen to model your service by selecting from the list of interfaces currently stored in the Policy Manager data repository.
+
+Use the *Select Interfaces* screen to model your service by selecting from the list of interfaces currently stored in the Policy Manager data repository.
 
 1. In the **Search Interfaces** text box, enter part of an "Interface QName" and/or "Localpart." Interface QNames that match your search criteria will be included in the **Interfaces** drop-down in the *Results* section.
 2. From the **Interfaces** drop-down, select an interface and click **Next**. The *Specify Binding Details* screen is displays.  

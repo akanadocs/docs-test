@@ -4,7 +4,7 @@ title: Business Metrics Policy Use Cases
 description: Learn how to use Business Metrics Policies in a variety of different usage scenarios. 
 product: ag
 category: learn
-weight:	8
+weight: 108
 sub-nav-class: Integration Policies
 type: page
 nav-title: Business Metrics Policy Use Cases

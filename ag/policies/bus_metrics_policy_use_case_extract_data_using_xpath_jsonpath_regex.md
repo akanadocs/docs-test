@@ -4,7 +4,7 @@ title: Business Metrics Policy Use Case - How Do I Extract Business Information 
 description: Learn how to use the Business Metrics Policy to Extract Business information from service usage data using XPath/JsonPath/RegEx from Request payload and derive operational metrics.   
 product: ag
 category: learn
-weight:	9
+weight: 109
 sub-nav-class: Integration Policies
 type: page
 nav-title: Business Metrics Policy Use Case - How Do I Extract Business Information from Service Usage Data Using XPath/JsonPath/RegEx?
@@ -41,7 +41,8 @@ The following use case illustrates how to use the Business Metrics Policy to Ext
 7. Launch the *Policy Manager Management Console* and create a service with [http://www.restfulwebservices.net/wcf/CurrencyService.svc?wsdl7](http://www.restfulwebservices.net/wcf/CurrencyService.svc?wsdl7).
 8. Virtualize the service on Network Director.  
 ![](images/bus_metrics_pol_usecase1k.jpg)
-9. Navigate to *Policies > Operational* and create a *Business Metrics Policy* using **Add Policy**.10. Configure the policy and select the dataset defined above.  
+9. Navigate to *Policies > Operational* and create a *Business Metrics Policy* using **Add Policy**.
+10. Configure the policy and select the dataset defined above.  
 ![](images/bus_metrics_pol_usecase1l.jpg)
 11. Provide Extract/Derive Configuration for each of the dimensions and metrics using the example illustrated below:  
   * a.	Dimension using Extract – To obtain a value in request payload using XPath/JsonPath/RegEx.
@@ -57,4 +58,7 @@ The following use case illustrates how to use the Business Metrics Policy to Ext
 ![](images/bus_metrics_pol_usecase1s.jpg)
 ![](images/bus_metrics_pol_usecase1t.jpg)
 ![](images/bus_metrics_pol_usecase1u.jpg)
-14. Check the data to be recorded in MongoDB and Dataset. The data should be appropriate per the requests sent.15. The chart should record information based on the data generated in the datasets from above requests. <a href="#top">back to top</a>
+14. Check the data to be recorded in MongoDB and Dataset. The data should be appropriate per the requests sent.
+15. The chart should record information based on the data generated in the datasets from above requests. 
+
+<a href="#top">back to top</a>

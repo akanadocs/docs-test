@@ -5,7 +5,7 @@ description: Learn about Intermediary for Microsoft, version 7.2 scripting suppo
 product: ag
 category: learn
 sub-nav-class: Intermediary for Microsoft
-weight:	7
+weight: 107
 type: page
 nav-title: Learn about Intermediary for Microsoft (Version 7.2) scripting support in Policy Manager 7.2.
 ---

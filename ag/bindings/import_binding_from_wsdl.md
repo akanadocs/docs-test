@@ -5,7 +5,7 @@ description: Learn how to import bindings and interfaces from a WSDL file into t
 product: ag
 category: learn
 sub-nav-class: Bindings
-weight:	6
+weight: 106
 type: page
 nav-title: Import Binding from WSDL
 ---

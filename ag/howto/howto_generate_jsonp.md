@@ -5,7 +5,7 @@ description: A how to guide for mediating responses to JSONP
 product: ag
 category: learn
 sub-nav-class: Mediation
-weight: 4
+weight: 104
 type: page
 nav-title: Generate JSONP Response
 ---

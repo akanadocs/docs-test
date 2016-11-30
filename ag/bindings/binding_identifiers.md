@@ -5,7 +5,7 @@ description: Learn how to review and assign or unassign identifiers that are def
 product: ag
 category: learn
 sub-nav-class: Bindings
-weight:	6
+weight: 106
 type: page
 nav-title: Binding Identifiers
 ---

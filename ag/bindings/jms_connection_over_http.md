@@ -4,7 +4,7 @@ title: Configure JMS Connection over HTTP
 description: Learn how to configure JMS or AMQP to initiate an HTTP/SOAP call that is then sent to JMS in a queue.   
 product: ag
 category: learn
-weight: 4
+weight: 104
 sub-nav-class: Bindings
 type: page
 nav-title: Configure JMS Connection over HTTP

@@ -5,7 +5,7 @@ description: Learn how to review the number of services that are currently imple
 product: ag
 category: learn
 sub-nav-class: Bindings
-weight:	6
+weight: 106
 type: page
 nav-title: View Service References (Binding)
 ---

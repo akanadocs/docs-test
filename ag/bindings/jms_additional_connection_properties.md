@@ -4,7 +4,7 @@ title: JMS Additional Connection Properties
 description: Learn how to configure additional JMS connection properties.   
 product: ag
 category: learn
-weight: 5
+weight: 105
 sub-nav-class: Bindings
 type: page
 nav-title: JMS Additional Connection Properties

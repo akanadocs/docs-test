@@ -5,7 +5,7 @@ description: Learn how to delete a binding.
 product: ag
 category: learn
 sub-nav-class: Bindings
-weight:	6
+weight: 106
 type: page
 nav-title: Delete Binding
 ---

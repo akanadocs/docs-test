@@ -5,7 +5,7 @@ description: Learn how to view current binding category schemes, and assign and 
 product: ag
 category: learn
 sub-nav-class: Bindings
-weight:	6
+weight: 106
 type: page
 nav-title: Binding Categories
 ---

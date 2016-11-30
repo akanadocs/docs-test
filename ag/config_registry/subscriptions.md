@@ -5,7 +5,7 @@ description: In addition to being used to obtain updates regarding business enti
 product: ag
 category: learn
 sub-nav-class: Registry
-weight:	12
+weight: 112
 type: page
 nav-title: subscriptions
 ---
@@ -28,7 +28,9 @@ In addition to being used to btain updates regarding business entity or business
 
 ## About Subscriptions
 
-Policy Manager provides UDDI 3.0-compliant "Subscription" functionality that allows clients with third-party registries (i.e., subscribers) to monitor a subset of data within the Policy Manager "Registry." Subscriptions can be used to obtain updates regarding any type of business entity or business service change that would be of interest to your organization.The relationship between a subscriber and the Policy Manager "Registry" is established through the following steps:
+Policy Manager provides UDDI 3.0-compliant "Subscription" functionality that allows clients with third-party registries (i.e., subscribers) to monitor a subset of data within the Policy Manager "Registry." Subscriptions can be used to obtain updates regarding any type of business entity or business service change that would be of interest to your organization.
+
+The relationship between a subscriber and the Policy Manager "Registry" is established through the following steps:
 
 * Define a subscription request in the *Configure > Registry > Subscriptions* section of the Policy Manager Management Console
 * Configure one-way replication between the third-party registry (i.e., slave registry) and Policy Manager "Registry" (i.e., master registry)
@@ -41,7 +43,9 @@ View the *Subscriptions Summary* screen by going to **Configure > Registry** and
 ## Define Subscription
 
 In this example we create a Systinet Registry subscription:
-* Create any provider to place virtual services.* Assign category to provider created above "Replicated Businesses" of "digev.com:metadata" category scheme.  
+
+* Create any provider to place virtual services.
+* Assign category to provider created above "Replicated Businesses" of "digev.com:metadata" category scheme.  
 **Note**: *Use this provider when creating physical or virtual services.*
 
 1. Go to **Configure > Registry**.
@@ -53,7 +57,11 @@ The *Add Subscription* screen displays.
   * **Subscription Key** - The system-generated subscription key that you will configure in the registry you are subscribing to.
   * **Subscription Filter** - Find_business by category "Replicated Businesses" from digev.com:metadata category scheme.  
 *Filter Example*:  
-&lt;find&#95;business xmlns="urn:uddi-org:api&#95;v3"&gt;  &lt;categoryBag&gt;  &lt;keyedReference tModelKey="uddi:digev.com:metadata" keyName="Replicated Businesses" keyValue="repl&#95;business"/&gt;  &lt;/categoryBag&gt;  &lt;/find&#95;business&gt;
+&lt;find&#95;business xmlns="urn:uddi-org:api&#95;v3"&gt;  
+&lt;categoryBag&gt;  
+&lt;keyedReference tModelKey="uddi:digev.com:metadata" keyName="Replicated Businesses" keyValue="repl&#95;business"/&gt;  
+&lt;/categoryBag&gt;  
+&lt;/find&#95;business&gt;
   * **Max Entries** - 10
   * **Expires After** - Select an entry date from the Calendar Pop-up. For example, one month from today.
 5. (Optional) Check the **Retrieve Data in Brief Format** checkbox if you would like a summary of data to be retrieved versus complete data.
@@ -99,7 +107,11 @@ The *Modify Subscription* screen displays.
 *Simple Filter Example*:  
 find_business by category "Replicated Businesses" from digev.com:metadata category scheme  
 *Advanced Filter Example*:   
-&lt;find&#95;business xmlns="urn:uddi-org:api&#95;v3"&gt;  &lt;categoryBag&gt;  &lt;keyedReference tModelKey="uddi:digev.com:metadata" keyName="Replicated Businesses" keyValue="repl&#95;business"/&gt;  &lt;/categoryBag&gt;  &lt;/find&#95;business&gt;
+&lt;find&#95;business xmlns="urn:uddi-org:api&#95;v3"&gt;  
+&lt;categoryBag&gt;  
+&lt;keyedReference tModelKey="uddi:digev.com:metadata" keyName="Replicated Businesses" keyValue="repl&#95;business"/&gt;  
+&lt;/categoryBag&gt;  
+&lt;/find&#95;business&gt;
   * **Max Entries** - 10
   * **Expires After** - Select an entry date from the Calendar Pop-up. For example, one month from today.
 6. (Optional) Check the **Retrieve Data in Brief Format** checkbox if you would like a summary of data to be retrieved versus complete data.

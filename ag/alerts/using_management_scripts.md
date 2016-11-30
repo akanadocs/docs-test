@@ -5,7 +5,7 @@ description: Learn how to create and manage a Management Script that will execut
 product: ag
 category: learn
 sub-nav-class: Alerts
-weight:	10
+weight: 110
 type: page
 nav-title: Using Management Scripts
 ---

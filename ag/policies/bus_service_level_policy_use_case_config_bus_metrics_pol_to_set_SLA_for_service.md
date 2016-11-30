@@ -4,7 +4,7 @@ title: Business Service Level Policy Use Case - How Do I Configure a Business Me
 description: Learn how to configure a Business Metrics policy to set SLA for a service.   
 product: ag
 category: learn
-weight:	9
+weight: 109
 sub-nav-class: Integration Policies
 type: page
 nav-title: Business Service Level Policy Use Case - How Do I Configure a Business Metrics policy to set SLA for a service?
@@ -49,4 +49,6 @@ The following use case illustrates how to configure a Business Metrics policy to
 7. Send several requests to the virtual service so that the condition described in the Business Service Level Policy is crossed.
 8. See alerts at the service level.
 9. See SLA cleared alerts at the service level (Similar to the illustration below).
-![](images/bus_service_level_polic_usecase1l.jpg)<a href="#top">back to top</a>
+![](images/bus_service_level_polic_usecase1l.jpg)
+
+<a href="#top">back to top</a>

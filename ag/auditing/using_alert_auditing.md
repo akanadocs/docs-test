@@ -5,7 +5,7 @@ description: Learn how to monitor system activity using alert notifications.
 product: ag
 category: learn
 sub-nav-class: Auditing
-weight:	7
+weight: 107
 type: page
 nav-title: Using Alert Auditing
 ---

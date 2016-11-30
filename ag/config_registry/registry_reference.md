@@ -5,7 +5,7 @@ description: Includes Identifier Scheme Types, WSDL Entity Type tModels, UDDI Ca
 product: ag
 category: learn
 sub-nav-class: Registry
-weight:	14
+weight: 114
 type: page
 nav-title: Registry Reference
 ---
@@ -37,14 +37,16 @@ Identifier Schemes (also referred to as Identifier  tModels) are used to logical
   * Global Location Number (GLM)
   * Tax identifiers
 * Inclusion of identifiers in your business providers and services definitions enhances the search process by providing a mechanism that allows you to more efficiently target your business searches.
-The Identifier information is configured using a <keyedReference> tag that is stored in the businessEntity under the identifyBag construct. The "key" data includes:
+
+The Identifier information is configured using a <keyedReference> tag that is stored in the businessEntity under the identifyBag construct. The "key" data includes:
 
 * **tModelKey** - The tModel key associated with the identifier information.
 * **keyName ()** - The human readable name assigned to the identifier.
 * **keyValue()** - The internal system identifier id of the identifier.
 
 The *Identifiers Summary* screen allows you to view current identifiers, assign identifiers, and unassign identifiers for the current Provider definition.
-The following identifier schemes are provided with the default installation:
+
+The following identifier schemes are provided with the default installation:
 
 * **digev-com:clientsdk_url_lookup** - Policy Manager WSClientSDK Identifier Binding lookup scheme.
 * **digev-com:identification** - SOA Software Subsystem Identification System.

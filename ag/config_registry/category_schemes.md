@@ -5,7 +5,7 @@ description: Define your own custom category schemes that align with your specif
 product: ag
 category: learn
 sub-nav-class: Registry
-weight:	6
+weight: 116
 type: page
 nav-title: Category Schemes
 ---
@@ -28,15 +28,19 @@ To view the category schemes summary, in the *Management Console*, go to **Confi
 ## About Category Schemes Types
 
 Categories Schemes (also referred to as Category tModels) are a set of classification codes that represent different aspects of a web service (e.g., products, services, technical specifications). Within UDDI, a categorization tModel is used for structuring category content. This category structure is referred to as an "information taxonomy." Each category scheme contains Key Names and Key Values for each category item.  Key Names are typically defined as a physical description of the category item, and Key Values are internal reference numbers for that category item. The use of categorization tModels enhances the search process by providing a broader scope of choices for targeting information.
-The "Registry" provides a Category Hierarchy that includes WSDL Entity Type tModels, UDDI Category tModels, Policy Manager Category tModels, and a series of industry standard category schemes referred to as Business Taxonomy tModels. You can navigate the tiers of the Category Hierarchy by clicking the main hyperlink of a specific category scheme, and continuing with this same approach to perform additional drill-downs.
-When you register a service with Policy Manager using the *Create Physical Service* Wizard, a default set of category schemes are added to the service and access points categories section. Category tModels added to the **Registry > Category Schemes** section include tModels that comprise a wsdl:service. Category tModels added to the **Workbench > Services > Access Points** section include tModels that comprise a wsdl:port. This section can also include tModels associated with the wsdl:binding extensions.
-The following  category schemes comprise the category hierarchy:
+
+The "Registry" provides a Category Hierarchy that includes WSDL Entity Type tModels, UDDI Category tModels, Policy Manager Category tModels, and a series of industry standard category schemes referred to as Business Taxonomy tModels. You can navigate the tiers of the Category Hierarchy by clicking the main hyperlink of a specific category scheme, and continuing with this same approach to perform additional drill-downs.
+
+When you register a service with Policy Manager using the *Create Physical Service* Wizard, a default set of category schemes are added to the service and access points categories section. Category tModels added to the **Registry > Category Schemes** section include tModels that comprise a wsdl:service. Category tModels added to the **Workbench > Services > Access Points** section include tModels that comprise a wsdl:port. This section can also include tModels associated with the wsdl:binding extensions.
+
+The following  category schemes comprise the category hierarchy:
 
 * WSDL Entity Type tModels
 * UDDI Category tModels
 * Policy Manager Category tModels
 * Business Taxonomy tModels
-The *Category Schemes Summary* screen allows you to view current category schemes, assign and unassign categories to the baseline of Categories Schemes that can be utilized when performing service management activities.
+
+The *Category Schemes Summary* screen allows you to view current category schemes, assign and unassign categories to the baseline of Categories Schemes that can be utilized when performing service management activities.
 
 <a href="#top">back to top</a> 
 
@@ -63,7 +67,8 @@ The system saves the new definition and you are returned to the *Category Scheme
 ## Modify Category Scheme
 
 The process of modifying a category scheme involves selecting the category scheme line item from the *Category Scheme Summary* screen, and clicking **Modify Category Scheme**.  From there, follow steps #3 - #5 as outlined in the [Add Category Scheme](#add-category-scheme) section of this page.
-**Notes:**  
+
+**Notes:**  
 
 * *Updates to the category schema name must conform to one of the Uniform Resource Identifier (URI) Schemes.*
 * *Changing the underlying properties of a category scheme after it has been used to associate a category with an entity will "automatically" update the associations.*

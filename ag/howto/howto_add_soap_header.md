@@ -5,7 +5,7 @@ description: A how to guide for adding a SOAP header to a downstream request
 product: ag
 category: learn
 sub-nav-class: Mediation
-weight: 4
+weight: 104
 type: page
 nav-title: Add SOAP Header
 ---
