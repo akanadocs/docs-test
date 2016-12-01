@@ -5,7 +5,7 @@ description: Provides a summary of Policy Manager auditing functionality.
 product: ag
 category: learn
 sub-nav-class: Auditing
-weight: 106
+weight: 05
 type: page
 nav-title: About Auditing
 ---

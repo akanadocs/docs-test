@@ -5,7 +5,7 @@ description: Learn how to view, configure and manage Trusted CA Certificates.
 product: ag
 category: learn
 sub-nav-class: Security Configuration
-weight: 103
+weight: 05
 type: page
 nav-title: Trusted CA Certificates
 ---

@@ -5,7 +5,7 @@ description: A guide to developing a custom policy component
 product: ag
 category: learn
 sub-nav-class: Custom Development
-weight: 10
+weight: 05
 type: page
 nav-title: Custom Policy Development
 ---

@@ -5,7 +5,7 @@ description: Learn how to view elements of a Binding definition including Key, Q
 product: ag
 category: learn
 sub-nav-class: Bindings
-weight: 106
+weight: 05
 type: page
 nav-title: View Binding Details
 ---

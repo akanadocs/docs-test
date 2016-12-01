@@ -5,7 +5,7 @@ description: Learn how to use Policy Manager to implement mutual authentication 
 product: ag
 category: learn
 sub-nav-class: Mediation
-weight:	4
+weight: 15
 type: page
 nav-title: Implement 2-Way SSL using Policy Manager 7.x
 ---

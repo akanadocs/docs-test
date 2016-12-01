@@ -5,7 +5,7 @@ description: Learn how to view and manage alerts that are raised in your Policy 
 product: ag
 category: learn
 sub-nav-class: Alerts
-weight: 107
+weight: 05
 type: page
 nav-title: Using Alert Monitoring
 ---

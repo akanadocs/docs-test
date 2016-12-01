@@ -5,7 +5,7 @@ description: Define your own custom category schemes that align with your specif
 product: ag
 category: learn
 sub-nav-class: Registry
-weight: 106
+weight: 05
 type: page
 nav-title: Category Schemes
 ---

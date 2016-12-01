@@ -5,7 +5,7 @@ description: Learn how to administer Policy Manager user accounts including perf
 product: ag
 category: learn
 sub-nav-class: Security Administration
-weight: 106
+weight: 05
 type: page
 nav-title: User Administration
 ---

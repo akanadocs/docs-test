@@ -5,7 +5,7 @@ description: Learn how to display  WSDL metadata associated with the current bin
 product: ag
 category: learn
 sub-nav-class: Bindings
-weight: 106
+weight: 05
 type: page
 nav-title: View WSDL (Binding)
 ---

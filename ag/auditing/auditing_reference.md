@@ -5,7 +5,7 @@ description: Includes search criteria, field descriptions, and audit trail job u
 product: ag
 category: learn
 sub-nav-class: Auditing
-weight: 109
+weight: 05
 type: page
 nav-title: Auditing Reference
 ---

@@ -4,7 +4,7 @@ title: Registry Table of Contents
 description: Use the Management Console to manage the classification of data associated with business organization and service definitions - Configure notifications when business providers or service definitions have changed, as well as registry subscriptions.
 product: ag
 category: learn
-weight: 105
+weight: 05
 sub-nav-class: Registry
 type: page
 nav-title: Summary of Registry Topics

@@ -6,7 +6,7 @@ product: ag
 category: learn
 no-nav: true
 no-catalog: true
-weight: 105
+weight: 05
 sub-nav-class: Bindings
 type: page
 nav-title: Messaging Binding Use Cases

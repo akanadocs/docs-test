@@ -6,7 +6,7 @@ product: ag
 category: learn
 no-nav: true
 no-catalog: true
-weight: 5
+weight: 05
 sub-nav-class: Alerts
 type: page
 nav-title: Policy Manager Alerts

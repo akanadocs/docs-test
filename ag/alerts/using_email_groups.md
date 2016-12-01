@@ -5,7 +5,7 @@ description: Learn how to define and manage Email Groups used to facilitate Aler
 product: ag
 category: learn
 sub-nav-class: Alerts
-weight: 112
+weight: 05
 type: page
 nav-title: Using Email Groups
 ---

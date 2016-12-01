@@ -5,7 +5,7 @@ description: Learn how to view and monitor alerts for a specific service or subs
 product: ag
 category: learn
 sub-nav-class: Alerts
-weight: 106
+weight: 05
 type: page
 nav-title: Using Alerts Summary
 ---

@@ -5,7 +5,7 @@ description: Learn how to add, modify and delete SNMP Hosts that are assigned to
 product: ag
 category: learn
 sub-nav-class: Alerts
-weight: 111
+weight: 05
 type: page
 nav-title: Using SNMP Hosts
 ---

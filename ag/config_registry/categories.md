@@ -5,7 +5,7 @@ description: Review Category Hierarchy and Add or delete sub-categories.
 product: ag
 category: learn
 sub-nav-class: Registry
-weight: 117
+weight: 05
 type: page
 nav-title: Categories
 ---

@@ -5,7 +5,7 @@ description: Learn about Interfaces, which define the behavior of a service base
 product: ag
 category: learn
 sub-nav-class: Registry
-weight: 110
+weight: 05
 type: page
 nav-title: Interfaces
 ---

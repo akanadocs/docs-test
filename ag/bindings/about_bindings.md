@@ -5,7 +5,7 @@ description: Learn how bindings are managed and configured in Policy Manager.
 product: ag
 category: learn
 sub-nav-class: Bindings
-weight: 106
+weight: 05
 type: page
 nav-title: About Bindings
 ---

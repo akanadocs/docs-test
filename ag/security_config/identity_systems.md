@@ -5,7 +5,7 @@ description: Learn about supported Identity Systems (Claims-based, Cookie Authen
 product: ag
 category: learn
 sub-nav-class: Security Configuration
-weight: 105
+weight: 05
 type: page
 nav-title: Identity Systems
 ---

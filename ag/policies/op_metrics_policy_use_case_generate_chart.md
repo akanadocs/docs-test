@@ -4,7 +4,7 @@ title: Operational Metrics Policy Use Case - Generate a Chart from Operational M
 description: Learn how to generate a chart from Operational Metrics obtained from Service Operational Data.   
 product: ag
 category: learn
-weight: 109
+weight: 05
 sub-nav-class: Integration Policies
 type: page
 nav-title: Operational Metrics Policy Use Case - Generate a Chart from Operational Metrics Obtained from Service Operational Data

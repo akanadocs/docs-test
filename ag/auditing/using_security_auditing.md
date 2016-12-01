@@ -5,7 +5,7 @@ description: Learn how to use auditing functions and tools to monitor system act
 product: ag
 category: learn
 sub-nav-class: Auditing
-weight: 108
+weight: 05
 type: page
 nav-title: Using Security Auditing
 ---

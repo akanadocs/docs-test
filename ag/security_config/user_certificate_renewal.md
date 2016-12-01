@@ -5,7 +5,7 @@ description: Learn about custom "Reminder" and "Expiration" email notifications 
 product: ag
 category: learn
 sub-nav-class: Security Configuration
-weight: 104
+weight: 05
 type: page
 nav-title: User Certificate Renewal
 ---

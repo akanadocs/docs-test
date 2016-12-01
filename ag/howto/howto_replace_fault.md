@@ -5,7 +5,7 @@ description: A how to guide for providing custom fault content for any fault res
 product: ag
 category: learn
 sub-nav-class: Mediation
-weight: 104
+weight: 05
 type: page
 nav-title: Replace Fault Messages
 ---

@@ -5,7 +5,7 @@ description: A how to guide using the messenger service to invoke a service from
 product: ag
 category: learn
 sub-nav-class: Mediation
-weight: 104
+weight: 05
 type: page
 nav-title: Scripted Invoke
 ---

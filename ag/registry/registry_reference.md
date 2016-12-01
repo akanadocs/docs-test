@@ -5,7 +5,7 @@ description: Includes Identifier Scheme Types, WSDL Entity Type tModels, UDDI Ca
 product: ag
 category: learn
 sub-nav-class: Registry
-weight: 114
+weight: 05
 type: page
 nav-title: Registry Reference
 ---

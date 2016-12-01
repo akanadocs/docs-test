@@ -5,7 +5,7 @@ description: A how to guide for providing a specific CSV response for a message
 product: ag
 category: learn
 sub-nav-class: Mediation
-weight: 104
+weight: 05
 type: page
 nav-title: Generate CSV Response
 ---

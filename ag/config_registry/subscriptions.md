@@ -5,7 +5,7 @@ description: In addition to being used to obtain updates regarding business enti
 product: ag
 category: learn
 sub-nav-class: Registry
-weight: 112
+weight: 05
 type: page
 nav-title: subscriptions
 ---

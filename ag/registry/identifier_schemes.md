@@ -5,7 +5,7 @@ description: Define your own custom identifier schemes that align with your spec
 product: ag
 category: learn
 sub-nav-class: Registry
-weight: 108
+weight: 05
 type: page
 nav-title: Identifier Schemes
 ---

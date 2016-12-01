@@ -5,7 +5,7 @@ description: Learn about Schemas, which are referenced when importing WSDL and d
 product: ag
 category: learn
 sub-nav-class: Registry
-weight: 119
+weight: 05
 type: page
 nav-title: Schema
 ---

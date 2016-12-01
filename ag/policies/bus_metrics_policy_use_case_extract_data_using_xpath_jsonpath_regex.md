@@ -4,7 +4,7 @@ title: Business Metrics Policy Use Case - How Do I Extract Business Information 
 description: Learn how to use the Business Metrics Policy to Extract Business information from service usage data using XPath/JsonPath/RegEx from Request payload and derive operational metrics.   
 product: ag
 category: learn
-weight: 109
+weight: 05
 sub-nav-class: Integration Policies
 type: page
 nav-title: Business Metrics Policy Use Case - How Do I Extract Business Information from Service Usage Data Using XPath/JsonPath/RegEx?

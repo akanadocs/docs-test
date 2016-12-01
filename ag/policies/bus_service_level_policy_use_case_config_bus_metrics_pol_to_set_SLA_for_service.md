@@ -4,7 +4,7 @@ title: Business Service Level Policy Use Case - How Do I Configure a Business Me
 description: Learn how to configure a Business Metrics policy to set SLA for a service.   
 product: ag
 category: learn
-weight: 109
+weight: 05
 sub-nav-class: Integration Policies
 type: page
 nav-title: Business Service Level Policy Use Case - How Do I Configure a Business Metrics policy to set SLA for a service?

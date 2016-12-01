@@ -5,7 +5,7 @@ description: Learn how to configure and manage the Alert Codes that comprise you
 product: ag
 category: learn
 sub-nav-class: Alerts
-weight: 108
+weight: 05
 type: page
 nav-title: Using Alert Codes
 ---

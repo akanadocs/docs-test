@@ -4,7 +4,7 @@ title: Using the Messaging Binding
 description: Learn about messaging binding configuration options and how to configure a virtual service with AMQP or JMS messaging. 
 product: ag
 category: learn
-weight: 102
+weight: 05
 sub-nav-class: Bindings
 type: page
 nav-title: Using the Messaging Binding

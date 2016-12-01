@@ -5,7 +5,7 @@ description: A how to guide for hardcoding downstream query params for http serv
 product: ag
 category: learn
 sub-nav-class: Mediation
-weight: 104
+weight: 05
 type: page
 nav-title: Add Query Params
 ---

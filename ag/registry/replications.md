@@ -5,7 +5,7 @@ description: Learn how Replication provides the ability to federate with 3rd par
 product: ag
 category: learn
 sub-nav-class: Registry
-weight: 113
+weight: 05
 type: page
 nav-title: replications
 ---
