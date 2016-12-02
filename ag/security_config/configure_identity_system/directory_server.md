@@ -5,7 +5,7 @@ description: Learn how to configure a Directory Server (i.e. Active Directory) I
 product: ag
 category: learn
 sub-nav-class: Security Configuration
-weight:	10
+weight: 05
 type: page
 nav-title: Configure Directory Server (i.e. Active Directory) Identity System
 ---
@@ -82,7 +82,10 @@ The *Custom Queries* screen displays.
 16. Update the custom queries as needed to optimize your environment.  
 **Notes**:  
   * *This screen includes a default set of custom queries that are used to interact with the identity system.  The following custom queries are supported:*  
-*LDAP search filter when searching user based on user name*  *LDAP search filter when searching user based on full name*  *LDAP search filter when searching group based on group name*  *LDAP search filter when searching groups based on member DN*
+*LDAP search filter when searching user based on user name*  
+*LDAP search filter when searching user based on full name*  
+*LDAP search filter when searching group based on group name*  
+*LDAP search filter when searching groups based on member DN*
   * *A "Reset to default" button is included with each query type to reset a changed query back to the default setting.*
   * *Search filters can be customized to conform with the search performance requirements for a specific identity system. Note that the $USERNAME, $FULLNAME, and $GROUPNAME are macro variables that are replaced with the actual Username, Full Name, or Group Name entered when a search is performed. These macro variables must be used when developing custom queries. The User and Group attributes used in custom queries must match the User and Group attribute names configured on the "Attribute Details" screen.* 
 17. Click **Next**.  

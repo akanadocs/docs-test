@@ -5,7 +5,7 @@ description: Learn how to configure a Kerberos Identity System.
 product: ag
 category: learn
 sub-nav-class: Security Configuration
-weight:	11
+weight: 05
 type: page
 nav-title: Configure Kerberos Identity System
 ---
@@ -25,20 +25,28 @@ Learn how to configure a Kerberos Identity System.
 
 
 ## About Kerberos
-Policy Manager includes an "Identity System Option Pack" that is pre-installed into the product that implements the OASIS Web Services Security, Kerberos Token Profile 1.1 (wss-v1.1-spec-os-KerberosToken Profile).  The "KerberosToken" is initially added to Policy Manager via the *Add Identity System* function in the *Configure > Identity Systems* section of the Policy Manager *Management Console*.  Then an Identity Profile is configured which utilizes the "KerberosToken" Identity System. Kerberos is an authentication service developed at MIT that allows users and services to demonstrate their identity to each other using a "shared secret" which is known by the user and service, and is used as an encryption key.
-The encryption mechanism used, called "Symmetric Cryptography," uses one key that is shared by two endpoints. The key is used to encrypt a message (i.e, user), and the same key is used to decrypt that message (i.e., service). Secret keys are designed for long-term use and typically last for weeks or months.
-This authentication approach is designed to free the services from having to maintain their own user account records which then in turn allows both user and service to implicitly trust the Kerberos authentication server. Note that Kerberos does not use public-key cryptography.
-Authenticating a user to an end service involves the following steps:
+Policy Manager includes an "Identity System Option Pack" that is pre-installed into the product that implements the OASIS Web Services Security, Kerberos Token Profile 1.1 (wss-v1.1-spec-os-KerberosToken Profile).  The "KerberosToken" is initially added to Policy Manager via the *Add Identity System* function in the *Configure > Identity Systems* section of the Policy Manager *Management Console*.  Then an Identity Profile is configured which utilizes the "KerberosToken" Identity System. 
+Kerberos is an authentication service developed at MIT that allows users and services to demonstrate their identity to each other using a "shared secret" which is known by the user and service, and is used as an encryption key.
+
+The encryption mechanism used, called "Symmetric Cryptography," uses one key that is shared by two endpoints. The key is used to encrypt a message (i.e, user), and the same key is used to decrypt that message (i.e., service). Secret keys are designed for long-term use and typically last for weeks or months.
+
+This authentication approach is designed to free the services from having to maintain their own user account records which then in turn allows both user and service to implicitly trust the Kerberos authentication server. Note that Kerberos does not use public-key cryptography.
+
+Authenticating a user to an end service involves the following steps:
 
 * User sends a request to Kerberos Authentication Server requesting authentication to a service.
 * The Kerberos Authentication Server prepares to introduce the user and the service to each other by granting a "shared secret" which includes a random secret key (referred to as a "session key"). The user is sent a two part message:  
   * Part 1 contains the random key and service name encrypted with the user's "shared secret." This is called the "user's credentials."
   * Part 2 contains the same random key and the user name encrypted with the service's "shared secret." This is called the "ticket."  
 * When a user sends a message to a service, it is encrypted with the shared secret. The service then decrypts the message using the same shared secret. If the user sent the request using the wrong key, the service will not be able to decrypt the request and the service will reject the authentication request. Note that shared secrets are never revealed in a message passed over a network.
-Random keys (i.e., tickets) are generated using a "ticket granting server" referred to as the KDC (Key Distribution Center). The KDC generates the random keys (i.e., shared secret) which include a ticket and session key. The user only needs to enter a password one time and the ticket and session key obtained from the password is used for all future tickets.
-For large systems with a high volume of requests, realms are used to ensure optimum performance of the Kerberos Authentication Server and KDC. A realm represents a unique login space and is an artificial administrative boundary using one set of Kerberos authentication servers to manage and deploy a single set of unique identifiers.
-Access to the Kerberos Authentication Server and KDC is controlled by the Kerberos Configuration File. This file specifies per-realm configuration data to be used by the Kerberos Authentication Server and Key Distribution Center (AS/KDC). This includes libdefaults (i.e., default realm, default ticket lifetime), realms (i.e., where to find KDCs for each realm), instancemapping (maps client principle), domain_realm (maps domains to realms), logging (tells Kerberos where and how to log errors), appdefaults (lists default settings for outgoing Kerberized network connection applications and for incoming portal mode connections.
-To configure the use of Kerberos authentication with Policy Manager, you must first configure the Kerberos Authentication Protocol in the *Configure > Identity Systems* section of Policy Manager. This configuration process includes defining system domain information, mapping to the KDC Configuration File, and mapping Kerberos realms to Identity System Domain Names. After this process is complete you can then define Identity Profiles in the *Configure > Identity Profiles* section of Policy Manager to establish a communication between Policy Manager and services in the Kerberos system. These Identity Profiles are then available in the Identity Profiles section of the Service Details page and can be assigned to a service as needed.
+
+Random keys (i.e., tickets) are generated using a "ticket granting server" referred to as the KDC (Key Distribution Center). The KDC generates the random keys (i.e., shared secret) which include a ticket and session key. The user only needs to enter a password one time and the ticket and session key obtained from the password is used for all future tickets.
+
+For large systems with a high volume of requests, realms are used to ensure optimum performance of the Kerberos Authentication Server and KDC. A realm represents a unique login space and is an artificial administrative boundary using one set of Kerberos authentication servers to manage and deploy a single set of unique identifiers.
+
+Access to the Kerberos Authentication Server and KDC is controlled by the Kerberos Configuration File. This file specifies per-realm configuration data to be used by the Kerberos Authentication Server and Key Distribution Center (AS/KDC). This includes libdefaults (i.e., default realm, default ticket lifetime), realms (i.e., where to find KDCs for each realm), instancemapping (maps client principle), domain_realm (maps domains to realms), logging (tells Kerberos where and how to log errors), appdefaults (lists default settings for outgoing Kerberized network connection applications and for incoming portal mode connections.
+
+To configure the use of Kerberos authentication with Policy Manager, you must first configure the Kerberos Authentication Protocol in the *Configure > Identity Systems* section of Policy Manager. This configuration process includes defining system domain information, mapping to the KDC Configuration File, and mapping Kerberos realms to Identity System Domain Names. After this process is complete you can then define Identity Profiles in the *Configure > Identity Profiles* section of Policy Manager to establish a communication between Policy Manager and services in the Kerberos system. These Identity Profiles are then available in the Identity Profiles section of the Service Details page and can be assigned to a service as needed.
 
 <a href="#top">back to top</a> 
 

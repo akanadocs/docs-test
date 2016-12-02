@@ -5,7 +5,7 @@ description: Learn how to configure a SAML Identity System.
 product: ag
 category: learn
 sub-nav-class: Security Configuration
-weight:	12
+weight: 05
 type: page
 nav-title: Configure SAML Identity System
 ---

@@ -5,7 +5,7 @@ description: Learn how to configure a Cookie Authentication Module Identity Syst
 product: ag
 category: learn
 sub-nav-class: Security Configuration
-weight:	9
+weight: 05
 type: page
 nav-title: Configure Cookie Authentication Module Identity System
 ---
