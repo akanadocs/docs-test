@@ -14,31 +14,31 @@ nav-title: Platform IP Addresses
 
 This is the list of source IP addresses used by the Akana Platform.  Customers can use this list to restrict inbound traffic through their firewall.
 
-### US West - Community Manager
+### Global Cloud
 
-52.8.17.170, 52.8.172.138, 54.153.106.186, 52.8.199.3, 54.153.83.148, 54.153.108.173
-
-### US West - Gateway
-
-54.153.108.72, 52.8.143.252, 54.153.80.34, 52.8.193.154
-
-### US East (All)
+#### US East
 
 52.86.162.172
 
-### US West (New) (All)
+#### US West
 
 52.37.241.46
 
-### EU West (All)
+#### EU East
+
+52.28.145.221
+
+### EU Cloud
+
+#### EU West
 
 52.31.74.247
 
-### EU East (All)
+#### EU East
 
 52.29.195.59
 
-### Smoke (All)
+### Smoke Testing Cloud
 
 52.9.19.172
 
