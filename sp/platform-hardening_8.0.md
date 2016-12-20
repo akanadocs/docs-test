@@ -13,6 +13,8 @@ nav-title: Platform Hardening 8.0
 Akana Platform Hardening Guide
 -------------------------------------
 
+> This document applies to versions 8.0 and later only, please see [here](platform-hardening_2.0.html) for 7.2 and earlier.
+
 <h3 style="color: grey;">Table of Contents</h3>
 <ol class="table_of_contents">
 	<li><a href="#introduction">Introduction</a></li>
@@ -415,12 +417,6 @@ You may want to prevent the Server header from being returned in responses.
 ***Scope***: All Community Manager and Policy Manager Containers
  
 In the admin console, configure the following:
-
-```
-com.soa.transport.jetty -> jetty.server.sendServerVersion = false
-```
-
-If you are using version 8.x:
 
 ```
 com.soa.platform.jetty -> jetty.server.sendServerVersion = false
