@@ -1,19 +1,17 @@
 ---
 layout: page
-title: Platform Hardening - 7.2
-description: A guide on how to harden version 7.2 of the platform for secure deployments
+title: Platform Hardening 8.0
+description: A guide on how to harden version 8.0 and greater of the platform for secure deployments
 product: sp
 category: ref
 sub-nav-class: 
 weight: 14
 type: page
-nav-title: Platform Hardening 7.2
+nav-title: Platform Hardening 8.0
 ---
 
 Akana Platform Hardening Guide
 -------------------------------------
-
-> This document applies to versions 7.2 and earlier only, please see [here](platform-hardening_8.0.html) for 8.0 and above.
 
 <h3 style="color: grey;">Table of Contents</h3>
 <ol class="table_of_contents">
@@ -172,7 +170,7 @@ This sets the product to only use secure cookies.
 In the admin console, configure the following:
 
 ```
-com.soa.transport.jetty ->
+com.soa.platform.jetty ->
 session.manager.factory.secureCookies=true
 ```
 
@@ -183,7 +181,7 @@ This configures the product to disable SSLv3.
 In the admin console, configure the following:
 
 ```
-com.soa.transport.jetty ->
+com.soa.platform.jetty ->
 http.incoming.transport.config.enabledProtocols=SSLv2HELLO,TLSv1,TLSv1.1, TLSv1.2
 ```
 
@@ -196,7 +194,7 @@ Use only stronger cipher suites for SSL
 In the admin console, configure the following:
 
 ```
-com.soa.transport.jetty ->
+com.soa.platform.jetty ->
 http.incoming.transport.config.cipherSuites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,TLS_RSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_256_GCM_SHA384,SSL_RSA_WITH_3DES_EDE_CBC_SHA
 
 ```
@@ -210,7 +208,7 @@ Depending on the level of security required, you may way to restrict the protoco
 Enable TLSv1.2 only:
 
 ```
-com.soa.transport.jetty ->
+com.soa.platform.jetty ->
 http.incoming.transport.config.enabledProtocols=SSLv2Hello,TLSv1.2
 ```
 
