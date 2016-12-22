@@ -13,7 +13,7 @@ nav-title: Using the Business Metrics Policy
 ## Using the Business Metrics Policy
 Learn how to specify what business metrics should be gathered from the contents of messages being exchanged.
 
-<a href="policy_management.htm" class="button secondary">Managing Policies</a>  <a href="policies_use_case_toc.html" class="button secondary">Use Cases</a> <a href="using_the_business_service_level_policy.html" class="button secondary">Using the Business Service Level Policy</a>
+<p><a href="policy_management.htm" class="button secondary">Managing Policies</a>  <a href="policies_use_case_toc.html" class="button secondary">Use Cases</a> <a href="using_the_business_service_level_policy.html" class="button secondary">Using the Business Service Level Policy</a></p>
 
 <h5 class="stamp">Supported Platforms: 8.0 and greater.</h5>
 
