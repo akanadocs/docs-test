@@ -7,7 +7,7 @@ category: learn
 sub-nav-class: Policies - Integration
 weight: 05
 type: page
-nav-title: Using the Business Service Level Policy
+nav-title: Business Service Level Policy - Using
 ---
 
 ## Using the Business Service Level Policy

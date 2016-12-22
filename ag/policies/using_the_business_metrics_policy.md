@@ -7,7 +7,7 @@ category: learn
 sub-nav-class: Policies - Integration
 weight: 05
 type: page
-nav-title: Using the Business Metrics Policy
+nav-title: Business Metrics Policy - Using
 ---
 
 ## Using the Business Metrics Policy
