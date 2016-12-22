@@ -5,7 +5,7 @@ description: Learn how to calculate service performance levels based on metrics 
 product: ag
 category: learn
 sub-nav-class: Policies - Integration
-weight: 05
+weight: 04
 type: page
 nav-title: Business Service Level Policy - Using
 ---

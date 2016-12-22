@@ -5,7 +5,7 @@ description: Learn how to specify what business metrics should be gathered from 
 product: ag
 category: learn
 sub-nav-class: Policies - Integration
-weight: 05
+weight: 04
 type: page
 nav-title: Business Metrics Policy - Using
 ---
