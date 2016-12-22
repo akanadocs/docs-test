@@ -4,7 +4,7 @@ title: Using the Business Metrics Policy
 description: Learn how to specify what business metrics should be gathered from the contents of messages being exchanged.
 product: ag
 category: learn
-sub-nav-class: Integration Policies
+sub-nav-class: Policies - Integration
 weight: 05
 type: page
 nav-title: Using the Business Metrics Policy

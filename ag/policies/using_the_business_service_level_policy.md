@@ -4,7 +4,7 @@ title: Using the Business Service Level Policy
 description: Learn how to calculate service performance levels based on metrics in an Envision data set. 
 product: ag
 category: learn
-sub-nav-class: Integration Policies
+sub-nav-class: Policies - Integration
 weight: 05
 type: page
 nav-title: Using the Business Service Level Policy

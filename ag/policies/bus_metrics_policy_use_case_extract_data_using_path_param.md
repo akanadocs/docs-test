@@ -1,11 +1,11 @@
 ---
 layout: page
 title: Business Metrics Policy Use Case - How Do I Extract Business Information from Service Usage Data Using Path Parameters?
-description: Learn how to use the Business Metrics Policy to extract business information from service usage data from path parameters.  
+description: Learn how to use the Business Metrics Policy to extract business information from service usage data from path parameters.
 product: ag
 category: learn
 weight: 05
-sub-nav-class: Integration Policies
+sub-nav-class: Policies - Integration
 type: page
 nav-title: Business Metrics Policy Use Case - How Do I Extract Business Information from Service Usage Data Using Path Parameters?
 ---
