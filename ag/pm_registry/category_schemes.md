@@ -20,7 +20,7 @@ To view the category schemes summary, in the *Management Console*, go to **Confi
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
 
 
-### Table of Contents
+<h3 style="color: gray;">Table of Contents</h3>
 <div id="toc-marker"></div>
 * [About Category Schemes Types](#about-category-schemes-types)
 * [Add Category Scheme](#add-category-scheme)

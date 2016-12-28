@@ -20,7 +20,7 @@ View the *Identifier Schemes Summary* screen by going to **Configure > Registry*
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
 
 
-### Table of Contents
+<h3 style="color: gray;">Table of Contents</h3>
 <div id="toc-marker"></div>
 * [Add Identifier Scheme](#add-identifier-scheme)
 * [Modify Identifier Scheme](#modify-identifier-scheme)
