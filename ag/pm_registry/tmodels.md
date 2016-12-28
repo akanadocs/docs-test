@@ -11,7 +11,7 @@ nav-title: tModels
 ---
 
 
-## tModels
+<h2 id="top">tModels</h2>
 Learn about tModels, which represent definitions of UDDI web service types and are used to define pointers to the technical specification of a web service and for configuring identifier and category taxonomies to facilitate advanced discovery.
 
 

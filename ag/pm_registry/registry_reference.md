@@ -11,16 +11,16 @@ nav-title: Registry Reference
 ---
 
 
-## Regeistry Reference
+## Registry Reference
 Includes WSDL Entity Type tModels, UDDI Category tModels, Policy Manager Category tModels and Business Taxonomy tModels.
 
 <a href="registry_toc.html" class="button secondary">Registry (Home)</a> <a href="category_schemes.html" class="button secondary">Category Schemes</a> <a href="categories.html" class="button secondary">Categories</a> <a href="identifier_schemes.html" class="button secondary">Identifier Schemes</a> <a href="schema.html" class="button secondary">Schema</a> <a href="interfaces.html" class="button secondary">Interfaces</a> <a href="tmodels.html" class="button secondary">tModels</a> <br><br> <a href="subscriptions.html" class="button secondary">Subscriptions</a> <a href="replications.html" class="button secondary">Replications</a>
 
 
 
-Supported Platforms: 7.0 and greater.</h5>
+<h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
 
-### Table of Contents
+<h3 style="color: gray;">Table of Contents</h3>
 <div id="toc-marker"></div>
 * [Identifier Scheme Types](#identifier-scheme-types)
 * [WSDL Entity Type tModels](#wsdl-entity-type-tmodels)
@@ -132,28 +132,28 @@ The following identifier schemes are provided with the default installation:
 ## Business Taxonomy tModels
 
 
-###ntis-gov:naics:2002
+<h3>ntis-gov:naics:2002</h3>
 
 NORTH AMERICAN INDUSTRY CLASSIFICATION SYSTEM (NAICS) taxonomy. Provides common definitions of the industries within the three countries and a common statistical framework for analyzing statistical data relating to industry and the economy.
 
 ![](images/CategorySchemesBusTaxTModelsntis-gov-naics-2002.png)
 
 
-###uddi-org:general_keywords
+<h3>uddi-org:general_keywords</h3>
 
 GENERAL KEYWORDS TAXONOMY. Provides a method of defining unchecked taxonomies, each consisting of a namespace identifier and an associated set of category values. Unlike other taxonomies, the "Key Name" and "Key Value" attributes of the keyedReference elements are semantically meaningful. See http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm for technical information on the use of this tModel.
 
 ![](images/CategorySchemesBusTaxTModelsuddi-org-general_keywords.png)
 
 
-###uddi-org:iso-ch:3166-1999
+<h3>uddi-org:iso-ch:3166-1999</h3>
 
 ISO 3166 GEOGRAPHIC TAXONOMY. A geographic taxonomy that provides codes for names of countries and their subdivisions. This categorization scheme can be used to indicate that a business or service serves a particular geographic area.
 
 ![](images/CategorySchemesBusTaxTModelsuddi-org-iso-ch-3166-1999.png)
 
 
-###unspsc-org:unspsc:73
+<h3>unspsc-org:unspsc:73</h3>
 
 UNIVERSAL STANDARD PRODUCTS AND SERVICES CLASSIFICATION (UNSPSC). An industry-focused category scheme that allows you to code products and services according to an industry-agreed naming standard.
 
