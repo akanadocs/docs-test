@@ -32,7 +32,7 @@ Includes WSDL Entity Type tModels, UDDI Category tModels, Policy Manager Categor
 
 ## Identifier Scheme Types
 
-Identifier Schemes (also referred to as Identifier  tModels) are used to logically group Providers by a common form of identification. 
+Identifier Schemes (also referred to as Identifier tModels) are used to logically group Providers by a common form of identification. 
 
 * Identifiers are optional descriptions and are intended to enhance the discovery of business providers and services in search operations.
 * Identifiers are generally trade-focused and indicate the identity of the businessEntity or publishing party associated with the business providers and services.  Some examples are:  

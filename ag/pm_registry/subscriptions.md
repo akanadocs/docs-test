@@ -1,18 +1,18 @@
 ---
 layout: page
 title: Subscriptions
-description: In addition to being used to obtain updates regarding business entity or business service changes, Subscription functionality allows clients with third-party registries (i.e., subscribers) to monitor a subset of data within the Policy Manager "Registry."
+description: In addition to being used to obtain updates regarding business entity or business service changes, Subscription functionality allows clients with third-party registries (subscribers) to monitor a subset of data within the Policy Manager Registry.
 product: ag
 category: learn
 sub-nav-class: Registry
 weight: 05
 type: page
-nav-title: subscriptions
+nav-title: Subscriptions
 ---
 
 
 ## Subscriptions
-In addition to being used to btain updates regarding business entity or business service changes, Subscription functionality allows clients with third-party registries (i.e., subscribers) to monitor a subset of data within the Policy Manager "Registry."
+In addition to being used to btain updates regarding business entity or business service changes, Subscription functionality allows clients with third-party registries (subscribers) to monitor a subset of data within the Policy Manager Registry.
 
 
 
@@ -92,7 +92,7 @@ The following example illustrates replicating to the Systinet Registry.
 3. Save replication.  
 **Note**: *Replication starts as soon as you save*.
 
-**Note**: *Use this link for Systinet setup: http://www.systinet.com/doc/sr-60/html/toc.html#adm.replication.mgmt.*
+**Note**: *Use this link for Systinet setup: [http://www.systinet.com/doc/sr-60/html/toc.html#adm.replication.mgmt](#http://www.systinet.com/doc/sr-60/html/toc.html#adm.replication.mgmt).*
 
 <a href="#top">back to top</a>
 
