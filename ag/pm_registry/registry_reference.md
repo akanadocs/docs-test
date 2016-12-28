@@ -49,7 +49,7 @@ The *Identifiers Summary* screen allows you to view current identifiers, assign 
 The following identifier schemes are provided with the default installation:
 
 * **digev-com:clientsdk_url_lookup** - Policy Manager WSClientSDK Identifier Binding lookup scheme.
-* **digev-com:identification** - SOA Software Subsystem Identification System.
+* **digev-com:identification** - Subsystem Identification System.
 * **digev-com:jms_properties** - Policy Manager Properties to support SOAP over JMS.
 * **dnb-com:D-U-N-S** - The Dun & Bradstreet registry is an industry-focused identifier scheme that specifies the Dun & Bradstreet D-U-N-S Number identifier.
 * **thomasregister-com:supplierID** - The Thomas Registry is an industry-focused identifier scheme that provides a comprehensive online resource for finding companies and products manufactured in North America.
@@ -83,15 +83,15 @@ The following identifier schemes are provided with the default installation:
 
 ## Policy Manager Category tModels
 
-* **digev-com:categorization** - SOA Software Subsystem Category System
-* **digev-com:managementpoint:discoveredservice:relationship** - SOA Software Services MP Relationships Category System
-* **digev-com:service type categorization** - SOA Software Service Type Category System
-* **digev.com:metadata** - SOA Software Custom Metadata Category System
-* **digev.com:notification_status** - SOA Software Notification Status System
+* **digev-com:categorization** - Subsystem Category System
+* **digev-com:managementpoint:discoveredservice:relationship** - Services MP Relationships Category System
+* **digev-com:service type categorization** - Service Type Category System
+* **digev.com:metadata** - Custom Metadata Category System
+* **digev.com:notification_status** - Notification Status System
 * **ntis-gov:naics:2002** - 2002 North American Industry Classification System
-* **soa-com:organization type categorization** - SOA Software Organization Type Category System
-* **soa-com:servicelifecyclestage** - SOA Software Service Lifecycle Stages
-* **soa-com:servicemanager:servicerelationship** - SOA Software Policy Manager Service Relationships Category System
+* **soa-com:organization type categorization** - Organization Type Category System
+* **soa-com:servicelifecyclestage** - Service Lifecycle Stages
+* **soa-com:servicemanager:servicerelationship** - Policy Manager Service Relationships Category System
 * **soa-com:serviceversion** - Service Version
 * **soa-com:wsdl:location** - Main WSDL Location
 * **uddi-org:category_types** - UDDI Types Category System

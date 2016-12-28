@@ -78,8 +78,8 @@ The following example illustrates replicating to the Systinet Registry.
 1. Logon to Systinet Registry with an administrator account.
 2. Create Replication:  
   * **Master tab**  
-  Enter Policy Manager administrator account.  
-  Enter SOA Registry Manager url for Inquiry/Subscription/Security URLs. For example, http://akofman-gx270.digev.com:9901/rmengine.  
+  Enter the Policy Manager administrator account.  
+  Enter the Registry Manager url for Inquiry/Subscription/Security URLs. For example, http://akofman-gx270.digev.com:9901/rmengine.  
   Enter SOA subscription key as defined in the [subscription definition](#define-subscription).
   * **Slave tab**  
   Enter Systinet Registry administrator account.  

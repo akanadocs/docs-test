@@ -54,7 +54,7 @@ The process of building your category taxonomy involves defining a standard set 
 
 To build a category taxonomy using the Registry Categories feature, you must define a "Key Name" and "Key Value" for each subcategory (or subject category) definition. The "Key Name" represents the subcategory name that will display in the Category Hierarchy. The "Key Value" is the internal system reference name of the subcategory.
 
-**Note:** *Updating the default set of category schemes is not recommended and not supported. SOA Software advices against any modifications since it may impact the functionality of the product. This includes the industry-focused set of category schemes, and the Service Manager category schemes.*
+**Note:** *Updating the default set of category schemes is not recommended and not supported. Akana advises against any modifications since it may impact the functionality of the product. This includes the industry-focused set of category schemes, and the Service Manager category schemes.*
 
 After you have the necessary information, you can follow the steps below to Add a Subcategory.
 
