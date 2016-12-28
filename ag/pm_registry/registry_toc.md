@@ -41,6 +41,8 @@ Learn about Schemas, which are referenced when importing WSDL and describe the m
 ### [Interfaces](../registry/interfaces.html)
 Learn about Interfaces, which define the behavior of a service based on a set of defined operations that it implements.
 
+<div class = "divider1"></div>
+
 ### [tModels](../registry/tmodels.html)
 Learn about tModels, which represent definitions of UDDI web service types and are used to define pointers to the technical specification of a web service and for configuring identifier and category taxonomies to facilitate advanced discovery.
 
