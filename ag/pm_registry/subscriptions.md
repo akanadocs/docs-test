@@ -80,7 +80,7 @@ After you have [defined a subscription](#define-subscription) in Policy Manager,
 
 The following example illustrates replicating to the Systinet Registry.
 
-1. Logon to Systinet Registry with an administrator account.
+1. Log on to Systinet Registry with an administrator account.
 2. Create Replication:  
   * **Master tab**  
   Enter the Policy Manager administrator account.  
@@ -91,8 +91,6 @@ The following example illustrates replicating to the Systinet Registry.
   Enter Replication period. For example, 5 minutes.
 3. Save replication.  
 **Note**: *Replication starts as soon as you save*.
-
-**Note**: *Use this link for Systinet setup: [http://www.systinet.com/doc/sr-60/html/toc.html#adm.replication.mgmt](#http://www.systinet.com/doc/sr-60/html/toc.html#adm.replication.mgmt).*
 
 <a href="#top">back to top</a>
 
