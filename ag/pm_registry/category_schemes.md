@@ -16,7 +16,7 @@ The **Configure > Registry > Category Schemes** section of the *Management Conso
 
 To view the category schemes summary, in the *Management Console*, go to **Configure > Registry** and then click the **Category Schemes** tab.
 
-<a href="../registry/registry_toc.html" class="button secondary">Registry (Home)</a> <a href="../registry/categories.html" class="button secondary">Categories</a> <a href="../registry/identifier_schemes.html" class="button secondary">Identifier Schemes</a> <a href="../registry/schema.html" class="button secondary">Schema</a> <a href="../registry/interfaces.html" class="button secondary">Interfaces</a> <a href="../registry/tmodels.html" class="button secondary">tModels</a> <a href="../registry/subscriptions.html" class="button secondary">Subscriptions</a> <br><br> <a href="../registry/replications.html" class="button secondary">Replications</a> <a href="../registry/registry_reference.html" class="button secondary">Registry Reference</a>
+<a href="registry_toc.html" class="button secondary">Registry (Home)</a> <a href="categories.html" class="button secondary">Categories</a> <a href="identifier_schemes.html" class="button secondary">Identifier Schemes</a> <a href="schema.html" class="button secondary">Schema</a> <a href="interfaces.html" class="button secondary">Interfaces</a> <a href="tmodels.html" class="button secondary">tModels</a> <a href="subscriptions.html" class="button secondary">Subscriptions</a> <br><br> <a href="replications.html" class="button secondary">Replications</a> <a href="registry_reference.html" class="button secondary">Registry Reference</a>
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
 
 

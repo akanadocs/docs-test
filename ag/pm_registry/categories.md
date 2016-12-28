@@ -14,7 +14,7 @@ nav-title: Categories
 ## Categories
 Review Category Hierarchy and add or delete sub-categories.
 
-<a href="../registry/registry_toc.html" class="button secondary">Registry (Home)</a> <a href="../registry/category_schemes.html" class="button secondary">Category Schemes</a> <a href="../registry/identifier_schemes.html" class="button secondary">Identifier Schemes</a> <a href="../registry/schema.html" class="button secondary">Schema</a> <a href="../registry/interfaces.html" class="button secondary">Interfaces</a> <a href="../registry/tmodels.html" class="button secondary">tModels</a> <a href="../registry/subscriptions.html" class="button secondary">Subscriptions</a> <br><br> <a href="../registry/replications.html" class="button secondary">Replications</a> <a href="../registry/registry_reference.html" class="button secondary">Registry Reference</a>
+<a href="registry_toc.html" class="button secondary">Registry (Home)</a> <a href="category_schemes.html" class="button secondary">Category Schemes</a> <a href="identifier_schemes.html" class="button secondary">Identifier Schemes</a> <a href="schema.html" class="button secondary">Schema</a> <a href="interfaces.html" class="button secondary">Interfaces</a> <a href="tmodels.html" class="button secondary">tModels</a> <a href="subscriptions.html" class="button secondary">Subscriptions</a> <br><br> <a href="replications.html" class="button secondary">Replications</a> <a href="registry_reference.html" class="button secondary">Registry Reference</a>
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
 
 ### Table of Contents
@@ -29,7 +29,7 @@ Review Category Hierarchy and add or delete sub-categories.
 
 ## About Categories
 
-The Policy Manager default installation includes a default category hierarchy that includes industry specific and custom category schemes. Category schemes must be defined before they can be added to the category hierarchy (see [Add Category Schemes](../registry/category_schemes.html)).
+The Policy Manager default installation includes a default category hierarchy that includes industry specific and custom category schemes. Category schemes must be defined before they can be added to the category hierarchy (see [Add Category Schemes](category_schemes.html)).
 
 To view the categories summary, including a browse-able Category Hierarchy, in the *Management Console*, go to **Configure > Registry** and then click the **Categories** tab.
 
