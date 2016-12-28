@@ -10,6 +10,7 @@ type: page
 nav-title: Registry Reference
 ---
 
+
 ## Regeistry Reference
 Includes WSDL Entity Type tModels, UDDI Category tModels, Policy Manager Category tModels and Business Taxonomy tModels.
 
@@ -18,6 +19,7 @@ Includes WSDL Entity Type tModels, UDDI Category tModels, Policy Manager Categor
 
 
 Supported Platforms: 7.0 and greater.</h5>
+
 ### Table of Contents
 <div id="toc-marker"></div>
 * [Identifier Scheme Types](#identifier-scheme-types)
@@ -26,6 +28,7 @@ Supported Platforms: 7.0 and greater.</h5>
 * [Policy Manager Category tModels](#policy-manager-category-tmodels)
 * [Business Taxonomy tModels](#business-taxonomy-tmodels)
 * 
+
 
 ## Identifier Scheme Types
 
@@ -57,6 +60,7 @@ The following identifier schemes are provided with the default installation:
 
 <a href="#top">back to top</a> 
 
+
 ## WSDL Entity Type tModels
 
 **Note:** *The WSDL Technote Category Schemes are reserved for system use and cannot be deleted.*
@@ -74,12 +78,14 @@ The following identifier schemes are provided with the default installation:
 
 <a href="#top">back to top</a> 
 
+
 ## UDDI Category tModels
 
 * **uddi-org:category_types** - UDDI TYPES CATEGORY SYSTEM. A category scheme that provides a listing of "valid values" from uddi-org:types for categorizing tModels that will be published.
 * **uddi-org:xml:namespace** - A category system used to indicate namespaces.
 
 <a href="#top">back to top</a> 
+
 
 ## Policy Manager Category tModels
 
@@ -122,7 +128,9 @@ The following identifier schemes are provided with the default installation:
 
 <a href="#top">back to top</a> 
 
+
 ## Business Taxonomy tModels
+
 
 ###ntis-gov:naics:2002
 
@@ -130,17 +138,20 @@ NORTH AMERICAN INDUSTRY CLASSIFICATION SYSTEM (NAICS) taxonomy. Provides common 
 
 ![](images/CategorySchemesBusTaxTModelsntis-gov-naics-2002.png)
 
+
 ###uddi-org:general_keywords
 
 GENERAL KEYWORDS TAXONOMY. Provides a method of defining unchecked taxonomies, each consisting of a namespace identifier and an associated set of category values. Unlike other taxonomies, the "Key Name" and "Key Value" attributes of the keyedReference elements are semantically meaningful. See http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm for technical information on the use of this tModel.
 
 ![](images/CategorySchemesBusTaxTModelsuddi-org-general_keywords.png)
 
+
 ###uddi-org:iso-ch:3166-1999
 
 ISO 3166 GEOGRAPHIC TAXONOMY. A geographic taxonomy that provides codes for names of countries and their subdivisions. This categorization scheme can be used to indicate that a business or service serves a particular geographic area.
 
 ![](images/CategorySchemesBusTaxTModelsuddi-org-iso-ch-3166-1999.png)
+
 
 ###unspsc-org:unspsc:73
 

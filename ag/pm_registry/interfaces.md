@@ -10,6 +10,7 @@ type: page
 nav-title: Interfaces
 ---
 
+
 ## Interfaces
 Learn about Interfaces, which define the behavior of a service based on a set of defined operations that it implements.
 
@@ -21,6 +22,7 @@ View the *Interfaces Summary* screen by going to **Configure > Registry** and th
 
 <a href="../registry/registry_toc.html" class="button secondary">Registry (Home)</a> <a href="../registry/category_schemes.html" class="button secondary">Category Schemes</a> <a href="../registry/categories.html" class="button secondary">Categories</a> <a href="../registry/identifier_schemes.html" class="button secondary">Identifier Schemes</a> <a href="../registry/schema.html" class="button secondary">Schema</a> <a href="../registry/tmodels.html" class="button secondary">tModels</a> <a href="../registry/subscriptions.html" class="button secondary">Subscriptions</a> <br><br> <a href="../registry/replications.html" class="button secondary">Replications</a> <a href="../registry/registry_reference.html" class="button secondary">Registry Reference</a>
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
+
 ### Table of Contents
 <div id="toc-marker"></div>
 * [View Interface Details](#view-interface-details)
@@ -31,6 +33,7 @@ View the *Interfaces Summary* screen by going to **Configure > Registry** and th
 * [View or Export WSDL for Interfaces](#view-or-export-wsdl-for-interfaces)
 * [View Service References for Interfaces](#view-service-references-for-interfaces)
 * [Delete Interface](#delete-interface)
+
 
 
 
@@ -52,6 +55,7 @@ The *Interface Details* screen displays.
 
 <a href="#top">back to top</a> 
 
+
 ## Perform Interface Search
 
 Query Policy Manager to see specified interface details, references (i.e., services that are implementing a specific interface), and impact analysis.
@@ -68,6 +72,7 @@ A list of interfaces that match your defined search criteria is displayed.
 5. (Optional) Apply **Interface Actions** to each search result via the *Actions* drop-down list box.
 
 <a href="#top">back to top</a> 
+
 
 ## Add Interface
 
@@ -87,6 +92,7 @@ The following three initial steps are applicable to all Interface addition metho
 The *Interfaces Summary* screen displays.
 3. Click **Add Interface**.  
 The *Select Interface Creation Option* screen displays.
+
 
 ### Import Interface from WSDL
 
@@ -111,6 +117,7 @@ The *Select Interface* screen displays, showing a list of "Interface QNames" tha
   * To select **Specific Interfaces** - Click the **checkbox** next to each interface you would like imported. The "Status" column provides an indicator reflecting whether the interface exists and is already stored in the Policy Manager data repository, or is new.
 9. Click **Finish**.  
 The import process is initiated.  Once complete, your imported Interfaces will appear on the *Interfaces Summary* screen.
+
 
 ### Model Interface Using Existing Schemas
 
@@ -140,6 +147,7 @@ If the current operation is the last in the sequence, the **Finish** button is d
 The *Completion Summary* screen displays.
 10. Review the Summary Information.
 11. Click **Close**.
+
 
 
 ### Model Interface Using Existing Interface
@@ -180,7 +188,9 @@ The new "Interface" is displayed on the *Interfaces Summary* screen.
 
 <a href="#top">back to top</a> 
 
+
 ## Interface Identifiers
+
 
 ### View Interface Identifiers
 
@@ -191,6 +201,7 @@ The *Interfaces Summary* screen displays.
 The *Interface Details* screen displays.
 4. Click the **Identifiers** tab.  
 The *Interface Identifiers Summary* screen displays.
+
 
 ### Assign Interface Identifiers
 
@@ -205,6 +216,7 @@ The *Assign Identifier* screen displays.
 6. Click **Apply**.  
 The system saves the definition and you are returned to the *Interface Identifier Summary* screen.
 7. (Optional) Click **Cancel** to exit without saving.
+
 
 ### Unassign Interface Identifiers
 
@@ -224,7 +236,9 @@ The identifier definition is removed and is no longer listed on the *Interfaces 
 
 <a href="#top">back to top</a> 
 
+
 ## Interface Categories
+
 
 ### View Interface Categories
 
@@ -239,6 +253,7 @@ The *Interface Details* screen displays.
 5. Click the **Categories** tab.  
 The *Interface Categories Summary* screen displays, showing all categories that are defined for the current interface.
 
+
 ### Assign Interface Categories
 
 1. Follow steps #1 through #5 as outlined directly above, under "View Interface Categories."
@@ -250,6 +265,7 @@ The *Select Categories* screen displays.
 The system assigns the selected category value to the current organization definition and you are returned to the *Add Categories Summary* screen.
 6. Click **Close** to exit.  
 The wizard exits and the new category assignments is displayed on the *Interface Categories Summary* screen.
+
 
 ### Unassign Interface Categories
 
@@ -264,6 +280,7 @@ A confirmation pop-up window is displayed:
 3. Click **OK** to unassign the category.  
 The category is removed and you are returned to the *Interface Categories Summary* screen.
 4. (Optional) Click **Cancel** to cancel the unassign operation.
+
 
 ### Assign Interface Category Groups
 
@@ -290,6 +307,7 @@ The system assigns the selected category value to the current organization defin
 8. Click **Close** to exit.  
 The wizard exits and the new category assignments is displayed on the *Interface Categories Summary* screen.
 
+
 ### Unassign Interface Category Groups
 
 Remove the category group association from the current Interface. 
@@ -305,6 +323,7 @@ The category is removed and you are returned to the *Interface Categories Summar
 4. (Optional) Click **Cancel** to cancel the unassign operation.
 
 <a href="#top">back to top</a> 
+
 
 ## View or Export WSDL for Interfaces
 
@@ -326,6 +345,7 @@ A *File Download* pop-up is displayed.
 
 <a href="#top">back to top</a> 
 
+
 ## View Service References for Interfaces
 
 The *Interfaces Summary* screen displays a "Number of References" column that indicates the number of services that are currently implementing a specific interface.
@@ -340,6 +360,7 @@ The *Interfaces Summary* screen displays.
 The *Workbench > Search* screen displays, showing the references associated with the selected interface.
 
 <a href="#top">back to top</a> 
+
 
 ## Delete Interface
 

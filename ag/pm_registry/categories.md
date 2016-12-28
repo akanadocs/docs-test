@@ -10,11 +10,13 @@ type: page
 nav-title: Categories
 ---
 
+
 ## Categories
 Review Category Hierarchy and add or delete sub-categories.
 
 <a href="../registry/registry_toc.html" class="button secondary">Registry (Home)</a> <a href="../registry/category_schemes.html" class="button secondary">Category Schemes</a> <a href="../registry/identifier_schemes.html" class="button secondary">Identifier Schemes</a> <a href="../registry/schema.html" class="button secondary">Schema</a> <a href="../registry/interfaces.html" class="button secondary">Interfaces</a> <a href="../registry/tmodels.html" class="button secondary">tModels</a> <a href="../registry/subscriptions.html" class="button secondary">Subscriptions</a> <br><br> <a href="../registry/replications.html" class="button secondary">Replications</a> <a href="../registry/registry_reference.html" class="button secondary">Registry Reference</a>
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
+
 ### Table of Contents
 <div id="toc-marker"></div>
 * [About Categories](#about-categories)
@@ -24,6 +26,7 @@ Review Category Hierarchy and add or delete sub-categories.
 * [Delete Category](#delete-category)
 
 
+
 ## About Categories
 
 The Policy Manager default installation includes a default category hierarchy that includes industry specific and custom category schemes. Category schemes must be defined before they can be added to the category hierarchy (see [Add Category Schemes](../registry/category_schemes.html)).
@@ -31,6 +34,7 @@ The Policy Manager default installation includes a default category hierarchy th
 To view the categories summary, including a browse-able Category Hierarchy, in the *Management Console*, go to **Configure > Registry** and then click the **Categories** tab.
 
 <a href="#top">back to top</a> 
+
 
 ## Navigate Category Hierarchy
 
@@ -47,6 +51,7 @@ The *Categories Summary* screen displays.
   * *Subcategories at the very bottom (with no elements below them) are called "leaves."*
 
 <a href="#top">back to top</a> 
+
 
 ## Add Sub Category
 
@@ -76,6 +81,7 @@ The system writes the category information to the Category Hierarchy.
 
 <a href="#top">back to top</a> 
 
+
 ## Modify Category
 
 The process of modifying a subcategory involves selecting the category line item in the Category Hierarchy, selecting **Modify Category** and updating the "Key Name" and "Key Value" based on your requirements.
@@ -97,6 +103,7 @@ The system writes the category information to the Category Hierarchy.
 8. (Optional) To exit with saving, click **Cancel**. 
 
 <a href="#top">back to top</a> 
+
 
 ## Delete Category
 

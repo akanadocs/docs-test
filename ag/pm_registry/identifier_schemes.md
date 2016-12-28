@@ -10,6 +10,7 @@ type: page
 nav-title: Identifier Schemes
 ---
 
+
 ## Identifier Schemes
 Define your own custom identifier schemes that align with your specific business requirements.
 
@@ -17,11 +18,14 @@ View the *Identifier Schemes Summary* screen by going to **Configure > Registry*
 
 <a href="../registry/registry_toc.html" class="button secondary">Registry (Home)</a> <a href="../registry/category_schemes.html" class="button secondary">Category Schemes</a> <a href="../registry/categories.html" class="button secondary">Categories</a> <a href="../registry/schema.html" class="button secondary">Schema</a> <a href="../registry/interfaces.html" class="button secondary">Interfaces</a> <a href="../registry/tmodels.html" class="button secondary">tModels</a> <a href="../registry/subscriptions.html" class="button secondary">Subscriptions</a> <br><br> <a href="../registry/replications.html" class="button secondary">Replications</a> <a href="../registry/registry_reference.html" class="button secondary">Registry Reference</a>
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
+
+
 ### Table of Contents
 <div id="toc-marker"></div>
 * [Add Identifier Scheme](#add-identifier-scheme)
 * [Modify Identifier Scheme](#modify-identifier-scheme)
 * [Delete Identifier Scheme](#delete-identifier-scheme)
+
 
 ## Add Identifier Scheme
 
@@ -40,6 +44,7 @@ The system saves the new definition and returns to the *Identifier Schemes Summa
 8. (Optional) To exit with saving, click **Cancel**. 
 
 <a href="#top">back to top</a> 
+
 
 ## Modify Identifier Scheme
 
@@ -60,6 +65,8 @@ The system saves the new definition and returns to the *Identifier Schemes Summa
 
 <a href="#top">back to top</a> 
 
+
+
 ## Delete Identifier Scheme
 
 1. Go to **Configure > Registry**.
@@ -69,6 +76,5 @@ The *Identifier Schemes Summary* screen displays.
 A pop-up requesting confirmation of your delete request is displayed: "Are you sure you want to delete this Identifier Scheme?"
 5. Click **OK** to confirm your delete request.
 The Identifier Scheme is permanently removed from the Category Hierarchy.
-6. (Optional) Click **Cancel** to cancel the delete operation.
 
 <a href="#top">back to top</a> 

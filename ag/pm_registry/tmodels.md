@@ -10,6 +10,7 @@ type: page
 nav-title: tModels
 ---
 
+
 ## tModels
 Learn about tModels, which represent definitions of UDDI web service types and are used to define pointers to the technical specification of a web service and for configuring identifier and category taxonomies to facilitate advanced discovery.
 
@@ -17,6 +18,7 @@ Learn about tModels, which represent definitions of UDDI web service types and a
 
 <a href="../registry/registry_toc.html" class="button secondary">Registry (Home)</a> <a href="../registry/category_schemes.html" class="button secondary">Category Schemes</a> <a href="../registry/categories.html" class="button secondary">Categories</a> <a href="../registry/identifier_schemes.html" class="button secondary">Identifier Schemes</a> <a href="../registry/schema.html" class="button secondary">Schema</a> <a href="../registry/interfaces.html" class="button secondary">Interfaces</a> <a href="../registry/subscriptions.html" class="button secondary">Subscriptions</a> <br><br> <a href="../registry/replications.html" class="button secondary">Replications</a> <a href="../registry/registry_reference.html" class="button secondary">Registry Reference</a>
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
+
 ### Table of Contents
 <div id="toc-marker"></div>
 * [About tModels](#about-tmodels)
@@ -37,6 +39,7 @@ Learn about tModels, which represent definitions of UDDI web service types and a
 
 
 
+
 ## About tModels
 
 * The tModel definition is stored in a businessEntity construct in a bindingTemplate and contains a key (tModelKey) that provides a unique technical fingerprint.
@@ -48,6 +51,7 @@ Learn about tModels, which represent definitions of UDDI web service types and a
 
 
 <a href="#top">back to top</a> 
+
 
 ## View tModels Summary
 
@@ -64,6 +68,7 @@ The default installation includes several industry-focused tModels including:
 
 
 <a href="#top">back to top</a>
+
 
 ## View tModel Details
 
@@ -82,6 +87,7 @@ The *tModel Details* screen displays, showing:
 
 <a href="#top">back to top</a>
 
+
 ## Category Group tModels ????????
 
 Categories can also be grouped together. The process of creating a Category Group involves adding a new tModel, assigning the "uddi-org:category_types" category, and identifying this tModel as a "Category Group System" and specifying whether the Category Group will be used for tModels or for Binding Templates.
@@ -93,6 +99,7 @@ The *Add tModel* pop up window is displayed.
 3. 
 
 <a href="#top">back to top</a> 
+
 
 
 ## Add tModel
@@ -125,6 +132,7 @@ The new tModel definition is displayed on the *tModel Summary* screen.
 
 <a href="#top">back to top</a> 
 
+
 ## Delete tModel
 
 1. Go to **Configure > Registry > tModels**.  
@@ -138,6 +146,7 @@ The system permanently removes the tModel definition from the system.
 5. (Optional) Click **Cancel** to cancel the delete operation.
 
 <a href="#top">back to top</a> 
+
 
 ## Modify tModel
 
@@ -157,6 +166,7 @@ The *Modify tModel* screen displays.
 5. Follow steps 5 through 10 of the [Add tModel](#add-tmodel) section of this page.
 
 <a href="#top">back to top</a> 
+
 
 ## About tModel Identifiers
 
@@ -179,6 +189,7 @@ The *tModel Identifiers Summary* screen displays.
 
 <a href="#top">back to top</a> 
 
+
 ## Assign tModel Identifiers
 
 Assign an Identifier Scheme, Key Name, and Key Value that represent lookup elements that will be invoked during a search.
@@ -194,6 +205,7 @@ The system saves the definition and you returned to the *tModel Identifiers Summ
 7. (Optional) Click **Cancel** to exit the *Assign Identifier* pop up without saving.
 
 <a href="#top">back to top</a> 
+
 
 ## Unassign tModel Identifiers
 
@@ -211,6 +223,7 @@ The Identifier is removed form the system and no longer appears on the *Identifi
 5. (Optional) Click **Cancel** to cancel the unassign operation.
 
 <a href="#top">back to top</a> 
+
 
 ## About tModel Categories
 
@@ -230,6 +243,7 @@ The *tModel Categories Summary* screen displays.
 
 <a href="#top">back to top</a> 
 
+
 ## Assign tModel Categories
 
 
@@ -245,6 +259,7 @@ The wizard exits and the new category assignments are displayed on the *Categori
 
 
 <a href="#top">back to top</a> 
+
 
 ## Unassign tModel Categories
 
@@ -262,6 +277,7 @@ The Category is removed form the system and no longer appears on the *Categories
 5. (Optional) Click **Cancel** to cancel the unassign operation.
 
 <a href="#top">back to top</a> 
+
 
 
 ## Assign tModel Category Group
@@ -297,6 +313,7 @@ The system assigns the selected category value to the current Category Group ass
 
 
 <a href="#top">back to top</a> 
+
 
 ## Unassign tModel Category Group
 

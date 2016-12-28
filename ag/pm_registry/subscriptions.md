@@ -10,6 +10,7 @@ type: page
 nav-title: subscriptions
 ---
 
+
 ## Subscriptions
 In addition to being used to btain updates regarding business entity or business service changes, Subscription functionality allows clients with third-party registries (i.e., subscribers) to monitor a subset of data within the Policy Manager "Registry."
 
@@ -17,6 +18,7 @@ In addition to being used to btain updates regarding business entity or business
 
 <a href="../registry/registry_toc.html" class="button secondary">Registry (Home)</a> <a href="../registry/category_schemes.html" class="button secondary">Category Schemes</a> <a href="../registry/categories.html" class="button secondary">Categories</a> <a href="../registry/identifier_schemes.html" class="button secondary">Identifier Schemes</a> <a href="../registry/schema.html" class="button secondary">Schema</a> <a href="../registry/interfaces.html" class="button secondary">Interfaces</a> <a href="../registry/tmodels.html" class="button secondary">tModels</a> <br><br> <a href="../registry/replications.html" class="button secondary">Replications</a> <a href="../registry/registry_reference.html" class="button secondary">Registry Reference</a>
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
+
 ### Table of Contents
 <div id="toc-marker"></div>
 * [About Subscriptions](#about-subscriptions)
@@ -25,6 +27,7 @@ In addition to being used to btain updates regarding business entity or business
 * [Modify Subscription](#modify-subscription)
 * [View Filter](#view-filter)
 * [Delete Subscription](#delete-subscription)
+
 
 ## About Subscriptions
 
@@ -38,6 +41,7 @@ The relationship between a subscriber and the Policy Manager "Registry" is estab
 View the *Subscriptions Summary* screen by going to **Configure > Registry** and then clicking on the **Subscriptions** tab.
 
 <a href="#top">back to top</a> 
+
 
 
 ## Define Subscription
@@ -69,6 +73,7 @@ The *Add Subscription* screen displays.
 
 <a href="#top">back to top</a>
 
+
 ## Configure a Third Party Registry
 
 After you have [defined a subscription](#define-subscription) in Policy Manager, replication information must be configured in the third-party registry. 
@@ -80,7 +85,7 @@ The following example illustrates replicating to the Systinet Registry.
   * **Master tab**  
   Enter the Policy Manager administrator account.  
   Enter the Registry Manager url for Inquiry/Subscription/Security URLs. For example, http://akofman-gx270.digev.com:9901/rmengine.  
-  Enter SOA subscription key as defined in the [subscription definition](#define-subscription).
+  Enter the subscription key as defined in the [subscription definition](#define-subscription).
   * **Slave tab**  
   Enter Systinet Registry administrator account.  
   Enter Replication period. For example, 5 minutes.
@@ -90,6 +95,7 @@ The following example illustrates replicating to the Systinet Registry.
 **Note**: *Use this link for Systinet setup: http://www.systinet.com/doc/sr-60/html/toc.html#adm.replication.mgmt.*
 
 <a href="#top">back to top</a>
+
 
 ## Modify Subscription
 
@@ -119,6 +125,7 @@ find_business by category "Replicated Businesses" from digev.com:metadata catego
 
 <a href="#top">back to top</a>
 
+
 ## View Filter
 
 Use your mouse to "hover" over the "View Filter" hyperlink included in a Subscription line item as displayed on the *Subscription Summary* screen.
@@ -130,6 +137,7 @@ The *Subscription Summary* screen displays showing a list of registry subscripti
 The contents of the Subscription filter for the selected entry displays in a pop up window.
 
 <a href="#top">back to top</a>
+
 
 ## Delete Subscription
 

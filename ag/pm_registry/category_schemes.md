@@ -10,6 +10,7 @@ type: page
 nav-title: Category Schemes
 ---
 
+
 ## Category Schemes
 The **Configure > Registry > Category Schemes** section of the *Management Console* provides the ability to define your own custom category schemes that align with your specific business requirements. The Policy Manager default installation includes a set  of default identifier schemes that include industry specific and custom category schemes. Configuring category schemes is a prerequisite to defining a category hierarchy. This is because category schemes are used to build the category hierarchy.
 
@@ -18,12 +19,14 @@ To view the category schemes summary, in the *Management Console*, go to **Confi
 <a href="../registry/registry_toc.html" class="button secondary">Registry (Home)</a> <a href="../registry/categories.html" class="button secondary">Categories</a> <a href="../registry/identifier_schemes.html" class="button secondary">Identifier Schemes</a> <a href="../registry/schema.html" class="button secondary">Schema</a> <a href="../registry/interfaces.html" class="button secondary">Interfaces</a> <a href="../registry/tmodels.html" class="button secondary">tModels</a> <a href="../registry/subscriptions.html" class="button secondary">Subscriptions</a> <br><br> <a href="../registry/replications.html" class="button secondary">Replications</a> <a href="../registry/registry_reference.html" class="button secondary">Registry Reference</a>
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
 
+
 ### Table of Contents
 <div id="toc-marker"></div>
 * [About Category Schemes Types](#about-category-schemes-types)
 * [Add Category Scheme](#add-category-scheme)
 * [Modify Category Scheme](#modify-category-scheme)
 * [Delete Category Scheme](#delete-category-scheme)
+
 
 
 ## About Category Schemes Types
@@ -47,6 +50,7 @@ The *Category Schemes Summary* screen allows you to view current category scheme
 
 
 
+
 ## Add Category Scheme
 
 The process of adding a category scheme involves defining the "Name" and "Description" of the category scheme and assigning an optional "Key." The category scheme naming convention must conform to one of the Uniform Resource Identifier (URI) Schemes.
@@ -65,6 +69,7 @@ The system saves the new definition and you are returned to the *Category Scheme
 
 <a href="#top">back to top</a>
 
+
 ## Modify Category Scheme
 
 The process of modifying a category scheme involves selecting the category scheme line item from the *Category Scheme Summary* screen, and clicking **Modify Category Scheme**.  From there, follow steps #3 - #5 as outlined in the [Add Category Scheme](#add-category-scheme) section of this page.
@@ -75,6 +80,7 @@ The process of modifying a category scheme involves selecting the category schem
 * *Changing the underlying properties of a category scheme after it has been used to associate a category with an entity will "automatically" update the associations.*
 
 <a href="#top">back to top</a>
+
 
 ## Delete Category Scheme
 

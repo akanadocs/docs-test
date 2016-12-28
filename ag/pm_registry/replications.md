@@ -10,6 +10,7 @@ type: page
 nav-title: replications
 ---
 
+
 ## Replications
 Learn how Replication provides the ability to federate with 3rd party UDDI-compliant registries, thereby extending the governance capabilities of the Workbench to a distributed development organization.
 
@@ -17,12 +18,14 @@ Learn how Replication provides the ability to federate with 3rd party UDDI-compl
 
 <a href="../registry/registry_toc.html" class="button secondary">Registry (Home)</a> <a href="../registry/category_schemes.html" class="button secondary">Category Schemes</a> <a href="../registry/categories.html" class="button secondary">Categories</a> <a href="../registry/identifier_schemes.html" class="button secondary">Identifier Schemes</a> <a href="../registry/schema.html" class="button secondary">Schema</a> <a href="../registry/interfaces.html" class="button secondary">Interfaces</a> <a href="../registry/tmodels.html" class="button secondary">tModels</a> <br><br> <a href="../registry/subscriptions.html" class="button secondary">Subscriptions</a> <a href="../registry/registry_reference.html" class="button secondary">Registry Reference</a>
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
+
 ### Table of Contents
 <div id="toc-marker"></div>
 * [About Replications](#about-replications)
 * [Add Replications](#add-replications)
 * [Modify Replications](#modify-replications)
 * [Delete Replications](#delete-replications)
+
 
 
 ## About Replications
@@ -38,6 +41,7 @@ To make use of the Replication feature, the third-party registry must support th
 View the *Replications Summary* screen by going to **Configure > Registry** and then clicking on the **Replications** tab.
 
 <a href="#top">back to top</a> 
+
 
 
 ## Add Replications
@@ -60,6 +64,7 @@ The *Add Replication* screen displays.
 
 <a href="#top">back to top</a> 
 
+
 ## Modify Replications
 
 1. Go to **Configure > Registry**.
@@ -71,6 +76,7 @@ The *Modify Replication* screen displays.
 5. Follow steps #4 through #6 of the [Add Replications](#add-replications) section included earlier on this page.
 
 <a href="#top">back to top</a> 
+
 
 ## Delete Replications
 

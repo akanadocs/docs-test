@@ -10,6 +10,7 @@ type: page
 nav-title: Schema
 ---
 
+
 ## Schema
 Learn about Schemas, which are referenced when importing WSDL and describe the messages used by the services.
 
@@ -19,6 +20,7 @@ View the *Schema Summary* screen by going to **Configure > Registry** and then c
 
 <a href="../registry/registry_toc.html" class="button secondary">Registry (Home)</a> <a href="../registry/category_schemes.html" class="button secondary">Category Schemes</a> <a href="../registry/categories.html" class="button secondary">Categories</a> <a href="../registry/identifier_schemes.html" class="button secondary">Identifier Schemes</a> <a href="../registry/interfaces.html" class="button secondary">Interfaces</a> <a href="../registry/tmodels.html" class="button secondary">tModels</a> <a href="../registry/subscriptions.html" class="button secondary">Subscriptions</a> <br><br>  <a href="../registry/replications.html" class="button secondary">Replications</a> <a href="../registry/registry_reference.html" class="button secondary">Registry Reference</a>
 <h5 class="stamp">Supported Platforms: 7.0 and greater.</h5>
+
 ### Table of Contents
 <div id="toc-marker"></div>
 * [About Schemas](#about-schemas)
@@ -28,6 +30,7 @@ View the *Schema Summary* screen by going to **Configure > Registry** and then c
 * [Add Schema](#add-schema)
 * [Schema Identifiers](#schema-identifiers)
 * [Schema Categories](#schema-categories)
+
 
 ## About Schemas
 
@@ -39,6 +42,7 @@ When importing WSDL, all referenced schemas that describe the messages used by t
 * To preserve the integrity of the metadata repository, each schema should have a unique and sensible namespace to allow for their successful correlation and discovery.
 
 <a href="#top">back to top</a> 
+
 
 ## View Schema
 
@@ -55,6 +59,7 @@ A *browser window* loads and displays the content of the selected schema.
 
 <a href="#top">back to top</a> 
 
+
 ## View Service References for Schema
 
 The *Schema Summary* screen displays a *Number of References* column that indicates the number of services that are currently utilizing a specific schema. 
@@ -70,6 +75,7 @@ The *Schemas Summary* screen displays.
 The *Workbench > Search* screen displays, showing the references associated with the selected schema.
 
 <a href="#top">back to top</a> 
+
 
 ## Perform Schema Search
 
@@ -88,6 +94,7 @@ A list of schemas that match your defined search criteria is displayed.
 5. (Optional) Apply **Schema Actions** to each search result via the *Actions* drop-down list box.
 
 <a href="#top">back to top</a> 
+
 
 ## Add Schema
 
@@ -108,6 +115,7 @@ The *Completion Summary* screen displays.
 
 <a href="#top">back to top</a> 
 
+
 ## Schema Identifiers
 
 To see a listing of Schema Identifiers that are defined for the current Schema definition:
@@ -117,6 +125,7 @@ To see a listing of Schema Identifiers that are defined for the current Schema d
 The *Schemas Summary* screen displays.
 3. For the Schema you would like to review, select **View Schema Details** from the **Actions** drop-down list box.  
 The *Schema Details* screen displays.
+
 
 ### Assign Schema Identifiers
 Assign an Identifier Scheme, Key Name, and Key Value that represent lookup elements that will be invoked during a search.
@@ -137,6 +146,7 @@ The *Assign Identifier* screen displays.
 10. Click **Apply**.  
 The system saves the definition and you are returned to the *Schema Identifier Summary* screen.
 11. (Optional) Click **Cancel** to exit the *Assign Identifier* screen without saving.
+
 
 ### Unassign Schema Identifiers
 
@@ -161,6 +171,7 @@ A confirmation pop-up is displayed:
 
 <a href="#top">back to top</a> 
 
+
 ## Schema Categories
 To view the Schema Categories Summary:
 
@@ -172,6 +183,7 @@ The *Schemas Summary* screen displays.
 The *Schema Details* screen displays.
 5. Click the **Categories** tab.  
 The *Schema Categories Summary* screen displays, presenting all the Categories that are defined for the current Schema.
+
 
 
 ### Assign Schema Category
@@ -194,6 +206,7 @@ The system assigns the selected category value to the current organization defin
 6. Click **Close**.  
 You are returned to the *Categories Summary* screen where any new category assignments are displayed.
 
+
 ### Unassign Schema Category
 
 Remove the category association from the current Schema definition. 
@@ -206,6 +219,7 @@ Removing a category could become necessary, among other reasons, if the establis
 "Are you sure you want to unassign this category?"
 7. Click **OK** to unassign the category.
 8. (Optional) Click **Cancel** to cancel the operation.
+
 
 ### Assign Schema Group
 
@@ -237,6 +251,7 @@ The *Select Categories* screen displays.
 The system assigns the selected category value to the current Category Group assigned to the schema, and you are returned to the *Add Category Group Summary* screen.
 7. Review the summary information.
 8. Click **Close** to exit the *Add Category Group* Wizard.
+
 
 
 ### Unassign Schema Group
