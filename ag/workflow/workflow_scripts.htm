@@ -1,0 +1,86 @@
+---
+layout: page
+title: Using Scripts in Workflows
+description: Information about using scripting with Policy Manager workflows.
+product: ag
+category: learn
+sub-nav-class: Workflow
+weight: 05
+type: page
+nav-title: Using Scripts in Workflows
+---
+<h2 id="top">Using Scripts in Workflows</h2>
+<p>Information about using scripting with Policy Manager workflows.</p>
+<p><a href="workflow_management.htm" class="button secondary">Workflow Management</a>
+<a href="workflow_library.htm" class="button secondary">Workflow Library</a>
+<a href="../../ag/assets/PM_workflow_developers_reference_61_7x.pdf" class="button secondary"> Workflow Developers Guide</a>
+</p>
+
+
+
+<div class = "divider1"></div>
+<h3 style="color: gray;">Table of Contents</h3>
+
+
+<ol class="table_of_contents">
+  <li><a href="#introduction">Introduction</a></li>
+  <li><a href="#variables">Built-In Script Variables</a></li>
+</ol>
+<div class = "divider1"></div>
+
+
+
+<a name="introduction"></a><h3>Introduction</h3>
+<p>Scripting can be used to provide customer-specific processing for workflow &lt;condition&gt; and &lt;function&gt; elements of service and contract workflow. Scripts can be embedded in the workflow XML definition or they can be referenced from the workflow to a file system location. Workflow scripting currently supports Beanshell and Jython scripts for PM61 and JavaScript for PM7x.</p>
+<p>The following Workflow function can be used to invoke a script to perform any special processing that is required. This same structure is used to invoke a script in a &lt;condition&gt; workflow element. In this case, the script must return a boolean value.</p>
+<p><img src="images/scripts.jpg" alt="invoking a script" /></p>
+
+
+
+<h5>Supported Arguments</h5>
+<dl class="apidoc_dl">
+<dt>&lt;arg name=&quot;lang&quot;&gt; beanshell | jython &lt;/arg&gt;</dt>
+<dd>Specify one of these values to select the language of the script. Beanshell (<a href="#" title="http://www.beanshell.org/" target="_blank">http://www.beanshell.org/</a>) or Jython (<a href="#" title="http://www.jython.org/" target="_blank">http://www.jython.org/</a>) are supported for PM61 and JavaScript for PM7x (<a href="#" title="https://developer.mozilla.org/en-US/docs/Rhino" target="_blank">https://developer.mozilla.org/en-US/docs/Rhino</a>).</dd>
+
+
+<dt>&lt;arg name=&quot;file&quot;&gt;script-file-path&lt;/arg&gt;</dt>
+<dt>&lt;arg name=&quot;script&quot;&gt; body of the script &lt;/arg&gt;</dt>
+
+
+<dd>The script to be executed can be either read from a file or included directly within the workflow definition XML file. Use one of these two arguments to specify the script body or its file system location accessible to the Policy Manager containers.</dd>
+<dt>&lt;arg name=&quot;var-name&quot;&gt;var-value&lt;/arg&gt;</dt>
+<dd>You can specify any number of additional arguments that will be passed into the script as native script variables.</dd>
+</dl>
+
+
+
+<a name="variables"></a><h3>Built-In Script Variables</h3>
+<p>The following native script variables related to the workflow context are assigned before the script begins execution.</p>
+
+<dl class="apidoc_dl">
+<dt>callerSubject</dt>
+<dd>The <strong>Subject</strong> for the current caller of the workflow action. This contains the actual Java Subject object while the <strong>${caller}</strong> workflow variable will only contain the user</dd>
+<dd>name of the current caller.</dd>
+
+
+<dt>transientVars</dt>
+<dd>A set of name/value pairs that can be referenced as workflow variables. This is a <strong>Map&lt;String,Object&gt;</strong> Java object. The information contained in this variable only exists for the current action execution (and any triggered automatic actions.)</dd>
+
+
+<dt>propertySet</dt>
+<dd>This is a collection of named data elements that can be accessed as workflow variables. The information contained in this variable is persisted throughout the lifetime of the workflow instance. This is an Open Symphony <strong>PropertySet</strong> Java object.</dd>
+
+
+<dt>serviceKey</dt>
+<dd>The unique key of the service. (Defined for service workflows only.)</dd>
+
+
+<dt>contractKey</dt>
+<dd>The unique key of the contract. (Defined for contract workflows only.)</dd>
+
+
+<dt>others</dt>
+<dd>Any additional <strong>&lt;arg&gt;</strong> elements present in the scripted function or condition definition will be assigned to script variables. For instance, if the script definition contains the element below, a script variable named <strong>myPhone</strong> will be defined and assigned the script value of <strong>555-1212</strong>:</dd>
+<dd><strong>&lt;arg name=&quot;myPhone&quot;&gt;555-1212&lt;/arg&gt;</strong></dd>
+</dl>
+<p><a href="#top">back to top</a></p>
