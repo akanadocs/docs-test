@@ -29,7 +29,7 @@ nav-title: Installing Lifecycle Manager 8.0
   <li><a href="#02_unzip_files">Step 2: Download and install Lifecycle Manager ZIP File</a></li>
   <li><a href="#03_lm_container">Step 3: Run Configurator to configure Lifecycle Manager container</a></li>
   <li><a href="#04_start_lm_instance">Step 4: Start the Lifecycle Manager instance</a></li>
-  <li><a href="#05_lm_install">Step 5: Install and configure the Lifecycle Manager feature</a></li>
+  <li><a href="#05_lm_install">Step 5: Install and configure the Lifecycle Manager Application feature</a></li>
   <li><a href="#06_lm_install_addons">Step 6 (Optional): Install and configure add-ons</a></li>
   <li><a href="#07_extract_client_zips">Step 7: Extract javaclients.zip file</a></li>
   <li><a href="#08_lm_config">Step 8: Update the Lifecycle Manager configuration settings</a></li>
@@ -80,7 +80,7 @@ nav-title: Installing Lifecycle Manager 8.0
   </li>
   <li><strong>DB2 9.5, 9.7, and 10.5</strong></li>
 </ul>
-<p><strong>Note</strong>: Depending on the type and version of the database you're using, you might also need to place the database driver in the correct location as part of <a href="#05_lm_install">Step 5: Install and configure the Lifecycle Manager Feature</a>. See <a href="#database_drivers">Database drivers</a>.</p>
+<p><strong>Note</strong>: Depending on the type and version of the database you're using, you might also need to place the database driver in the correct location as part of <a href="#05_lm_install">Step 5: Install and configure the Lifecycle Manager Application Feature</a>. See <a href="#database_drivers">Database drivers</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -183,9 +183,10 @@ nav-title: Installing Lifecycle Manager 8.0
 
 
 
-<a name="05_lm_install"></a><h3>Step 5: Install and configure the Lifecycle Manager Feature</h3>
+<a name="05_lm_install"></a>
+<h3>Step 5: Install and configure the Lifecycle Manager Application Feature</h3>
 <p>The next step is to configure the features you've just installed. Follow the steps below. Note that if you're continuing straight from the installation process in Windows, at the <strong>Installation Complete</strong> summary you can just click <strong>Complete Configuration</strong> to start the process.</p>
-<p>Once the container is configured, you can install and configure Lifecycle Manager. Follow the steps below.</p>
+<p>There are two features available for installation: <strong>Lifecycle Manager Application</strong> and <strong>Lifecycle Repository</strong>. However, when you install <strong>Lifecycle Manager Application</strong>, the repository is included. You only need to explicitly install the Repository if you want this feature but do not want Lifecycle Manager itself.</p>
 <p><strong>Note</strong>: Before configuring the database, make sure you have the applicable database driver in place. See <a href="#database_drivers">Database drivers</a>.</p>
 
 <h5>To install the Lifecycle Manager feature on a container</h5>
@@ -194,7 +195,7 @@ nav-title: Installing Lifecycle Manager 8.0
   <li>Log in to the <strong>Akana Administration Console</strong>, using the Admin username and password you specified in <a href="#03_lm_container">Step 3: Run Configurator to configure Lifecycle Manager container</a>. The URL is composed like this: <strong>{protocol}://{hostname}:{port}:/admin</strong>.
     <p>For example: <strong>http://lm.acmepaymentscorp.com:9900/admin</strong></p></li>
   <li>Go to the <strong>Available Features</strong> list.</li>
-  <li>Choose <strong>Akana Lifecycle Manager</strong> and click <strong>Install Feature</strong>. The feature is installed.</li>
+  <li>Choose <strong>Lifecycle Manager Application</strong> and click <strong>Install Feature</strong>. The feature is installed, including the repository (you do not need to install the Lifecycle Repository option).</li>
 </ol>
 <p>The next step is to configure the features you've just installed. You'll have these configuration actions to complete:</p>
 <ul>
@@ -271,7 +272,7 @@ ALTER DATABASE {db.instance.name}
 
 
 <a name="07_extract_client_zips"></a><h3>Step 7: Extract javaclients.zip file</h3>
-<p>To make the java client available on the <strong>Downloads Center</strong> page for a specific library, there are two steps:</p>
+<p>To make the java clients available on the <strong>Downloads Center</strong> page for a specific library, there are two steps:</p>
 <ol>
   <li>Extract the<strong> javaclients.zip</strong> file to a common directory of your choice, on an HTTP server of your choice that will be accessible to the platform. {{<span class="apidoc_red">Jake/Dawn: where do they get this file from?........I think we should include this in Step 2: Download and install Lifecycle Manager? Dawn: Per install 12/16/16 with Jarrud, he thinks it's not necessary to install these files, just do the config part?</span>}}</li>
   <li>Specify the URL to this common directory in the Admin Console Configuration Settings as shown below.</li>
@@ -285,11 +286,9 @@ ALTER DATABASE {db.instance.name}
   <li>On the left, under <strong>Configuration Categories</strong>, find the <strong>com.soa.repository</strong> category.</li>
   <li>Locate the <strong>repository.config.download</strong> property and set it to the URL of the common directory.</li>
   <li>Click <strong>Apply Changes</strong> (you might need to scroll down), and then click <strong>OK</strong> to confirm.</li>
+  <li>Restart so that the changes take effect.</li>
 </ol>
-
-
-
-<p><strong>Note</strong>: If you prefer, you can extract these ZIP files, and configure the setting, after completion of the installation. These steps are needed for the availability of the java client on the <strong>Downloads Center</strong> page for a specific library.</p>
+<p><strong>Note</strong>: You'll need to restart the container (Step #6) when you're setting up the URL for the first time. In a scenario where you're modifying an existing URL, restart is not necessary.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -607,4 +606,3 @@ default.port=9900</pre>
     </td>
   </tr>
 </table>
-<hr />
