@@ -33,7 +33,7 @@ Learn how to add a simple API to the Policy Manager Management Console, configur
 
 Install and configure Policy Manager 8.0. Refer to the following topic for coplete instructions:
 
-<a href="http://docs.akana.com/docs-test/sp/platform_install/installing_policy_manager_v80.htm" >Install Policy Manager 8.0</a> 
+<a href="../platform_install/installing_policy_manager_v80.htm" >Install Policy Manager 8.0</a> 
 
 ## Step 2: Add  API to Policy Manager
 
@@ -120,7 +120,7 @@ To send a test request you will need the end point.
 The following detailed use cases illustrate how to perform <em>basic</em> or <em>detailed</em> auditing of an entire message and view the message metrics in Policy Manager. 
 
 
-<a href="http://docs.akana.com/ag/assets/pm_qos/pm_basic_auditing_policy_use_cases.pdf" >Basic Auditing Usage Scenario for Policy Manager</a> 
+<a href="../../ag/assets/pm_qos/pm_basic_auditing_policy_use_cases.pdf" >Basic Auditing Usage Scenario for Policy Manager</a> 
 
-<a href="http://docs.akana.com/docs-test/ag/assets/pm_qos/pm_detailed_auditing_policy_use_cases.pdf" >Detailed Auditing Usage Scenarios for Policy Manager</a> 
+<a href="../../ag/assets/pm_qos/pm_detailed_auditing_policy_use_cases.pdf" >Detailed Auditing Usage Scenarios for Policy Manager</a> 
 
