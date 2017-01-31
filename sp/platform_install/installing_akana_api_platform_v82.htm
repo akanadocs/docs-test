@@ -3,8 +3,9 @@ layout: page
 title: Installing Akana API Platform 8.2
 description: Learn how to download, install, and configure the Akana API Platform 8.2.
 product: sp
+product: cm
 category: gs
-weight: 50
+weight: 5
 sub-nav-class: Akana API Platform Installation
 type: page
 nav-title: Installing Akana API Platform 8.2
@@ -61,10 +62,12 @@ nav-title: Installing Akana API Platform 8.2
   <li><a href="#wizard_configure_container_instance">Configure Container Instance Wizard</a></li>
   <li><a href="#starting_container">Starting a container</a></li>
   <li><a href="#stopping_container">Stopping a container</a></li>
-  <li><a href="#creating_container_silent">Creating a container using silent install</a></li>
+  <li><a href="#creating_container_silent">Creating a container using silent install (Linux)</a></li>
   <li><a href="#unregister_reregister_windows_service">Unregistering and re-registering the Windows service</a></li>
+<!--  <li><a href="#creating_container_linux">Creating a container using Linux {{is this too specific?}}</a></li>-->
   <li><a href="#linux_java_home_variable">Linux install: exporting the JAVA_HOME variable</a></li>
   <li><a href="#related_topics">Related Topics</a></li>
+<!--  <li><a href="#installation_notes">Installation Notes and Tips</a></li>-->
 </ol>
 
 
@@ -117,6 +120,7 @@ nav-title: Installing Akana API Platform 8.2
   <li><strong>Incremental updates to the Akana API Platform</strong>: download any that are available, up to the latest version.</li>
   <li><strong>Plug-ins</strong>: The ZIP file, and any updates, for any plug-ins you want to use in your installation.</li>
 </ul>
+<!--<p>For additional guidance on the files you might choose to download, see xxx link to separate file with "which features do I install?" and also "which ZIP files do I download?" Link to: <a href="_install_choosing_features_and_files.htm">Choosing Which Files and Features to Install</a>.</p>-->
 <p><a href="#top">back to top</a></p>
 
 
@@ -142,7 +146,7 @@ nav-title: Installing Akana API Platform 8.2
 <p>You can create a container in any of three different modes:</p>
 <ul>
   <li>Via the GUI, a Windows-based wizard that steps you through the installation process (see <a href="#proc_create_container_gui">To create a container via the GUI</a> below)</li>
-  <li>Silent install: see <a href="#creating_container_silent">Creating a container using silent install</a></li>
+  <li>Silent install: see <a href="#creating_container_silent">Creating a container using silent install (Linux)</a></li>
 </ul>
 
 <a name="proc_create_container_gui"></a><h5>To create a container via the GUI</h5>
@@ -330,8 +334,9 @@ nav-title: Installing Akana API Platform 8.2
 <a name="create_cm_tenant_using_jython"></a><h3>Step 9: Create developer portal tenant using the Jython script</h3>
 <p>The next step is to create the tenant for the developer portal. To do this, you'll:</p>
 <ol>
-  <li>Run a Jython script at the command line. The script includes various parameters that you can use to specify values for your tenant, such as the tenant name, the theme you want to use, the Administrator login, the &quot;from&quot; email address for notifications that the developer portal sends to users, and other values. See <a href="#9a_jython_script">Developing and running the Jython script</a> below.</li>
-  <li>Conditional: if you choose a tenant name other than the default (atmosphere), update a Policy Manager configuration setting to the new value. See <a href="#9b_update_config">Conditional: updating configuration setting for new tenant name</a> below.</li>
+  <li>Conditional, Linux users only: Export the JAVA_HOME location to your installation directory. See <a href="#linux_java_home_variable">Linux install: exporting the JAVA_HOME variable</a>.</li>
+  <li>All users: Run a Jython script at the command line. The script includes various parameters that you can use to specify values for your tenant, such as the tenant name, the theme you want to use, the Administrator login, the &quot;from&quot; email address for notifications that the developer portal sends to users, and other values. See <a href="#9a_jython_script">Developing and running the Jython script</a> below.</li>
+  <li>Conditional, for custom tenant name: If you choose a tenant name other than the default (<strong>atmosphere</strong>), update a configuration setting to the new value, in the Akana Administration Console for the CM container. See <a href="#9b_update_config">Conditional: updating configuration setting for new tenant name</a> below.</li>
 </ol>
 <p>For full details of the various parameters that make up the Jython script, and the values you can choose, see <a href="install_cm_jython_script.htm">Installation Jython Script</a>.</p>
 
@@ -463,7 +468,7 @@ nav-title: Installing Akana API Platform 8.2
   <li><strong>Oracle 12c</strong>: install this file:
     <p><strong>Ojdbc7.jar</strong></p>
   <p>Downloadable from: <a href="http://www.oracle.com/technetwork/database/features/jdbc/jdbc-drivers-12c-download-1958347.html" title="download location for Oracle 12c database driver" target="_blank">http://www.oracle.com/technetwork/database/features/jdbc/jdbc-drivers-12c-download-1958347.html</a> (requires accepting the agreement and logging in).</p>
-    <p>Also, for Oracle 12c, see note <a href="#note_oracle_12c">re database permissions needed</a>.</p>
+    <p>Also, for Oracle 12c, see <a href="#note_oracle_12c">note about database permissions needed</a>.</p>
   </li>
   <li><strong>Oracle 11g</strong>: install this file:
     <p><strong>Ojdbc5.jar</strong></p>
@@ -719,6 +724,17 @@ nav-title: Installing Akana API Platform 8.2
 
 
 
+<!--<a name="installation_notes"></a><h3>Installation Notes and Tips</h3>
+<p>This section includes some additional information about installation. This isn't necessary for you to complete the installation procedure as outlined above, but might help you determine a better path and/or understand the process better.</p>
+<ul>
+  <li>ZIP file sequence: It doesn't matter whether you download and install the Akana platform and then b) download and install the Akana API platform, or you a) download and expand <strong>all</strong> ZIP files and then b) install the Akana platform and then the Akana API platform. What is important with regard to sequence is:</li>
+  <li>You install the Akana Platform first, then the Akana API Platform, then any add-ons.</li>
+  <li>If there are updates, you unzip the oldest versions first, and then the latest versions.</li>
+</ul>
+<p><a href="#top">back to top</a></p>-->
+
+
+
 <a name="wizard_configure_container_instance"></a><h3>Configure Container Instance Wizard</h3>
 <h5>Configure Container Wizard pages:</h5>
 <ul>
@@ -822,16 +838,43 @@ nav-title: Installing Akana API Platform 8.2
 
 
 
-<a name="creating_container_silent"></a><h3>Creating a container using silent install</h3>
+<a name="creating_container_silent"></a><h3>Creating a container using silent install (Linux)</h3>
 <p>As part of Step 3, <a href="#run_configurator_pm">Step 3: Run Configurator to create the first container</a>, in some scenarios such as Linux installations, you'll create the container using silent install.</p>
 <p>Before you begin, make sure you have Administrator rights on the machine you’re using.</p>
 <p>A silent installation is an automatic process that installs the Akana Platform without any user interaction. Before running the silent install, you must configure the properties file (<strong>installer.properties</strong>). For example, you must specify a target installation directory, install set, and input options to be executed at the end of the installation. Once you’ve configured the properties file, you can deploy the platform onto multiple computers in a scripted, non-interactive way. </p>
 <p>To generate an <strong>installer.properties</strong> file, you must first perform a standard Akana Platform installation using the correct files for your installation. When platform installation is complete, the properties file is automatically saved in the directory from which you launched the setup file. The file includes the configuration settings you specified during setup; from here, you can customize further as needed.</p>
-<p>To run the properties file in a Linux environment, go to the <strong>{release_directory}\bin director</strong>y and run the following command:</p>
-<pre>startup.sh configurator -Dsilent=true -Dproperties=/{properties file path}\{filename}.properties</pre>
-<p>Then, continue with the rest of the procedure from <a href="#install_pm">Step 4: Install Policy Manager features on the container</a>.</p>
+<p>To run the properties file in a Linux environment, go to the <strong>{release_directory}/bin</strong> folder and run the following command:</p>
+<pre>startup.sh configurator -Dsilent=true -Dproperties={properties file path}/{filename}.properties</pre>
+<p>For example:</p>
+<pre>startup.sh configurator -Dsilent=true -Dproperties=properties/pm_silentinstall.properties</pre>
+<p>Then:</p>
+<ul>
+  <li>Start the container.</li>
+  <li>Continue with the rest of the procedure from <a href="#install_pm">Step 4: Install Policy Manager features on the container</a>.</li>
+</ul>
 <p>For full instructions, refer to: <a href="../container_management/configure_standalone_container.htm#container_silent">Configure Container (Silent Option)</a>.</p>
 <p class="apidoc_note"><strong>Note</strong>: Silent install is not supported for Windows machines.</p>
+
+<!--<a name="proc_create_container_silent_prepare"></a><h5>To prepare the properties file for a silent install</h5>
+<ol>
+  <li>xxx uptohere</li>
+  <li>In the properties file, add the following parameter:
+    <pre>
+INSTALLER_UI=silent
+</pre></li>
+  <li>xxx</li>
+</ol>-->
+
+<!--<a name="proc_create_container_silent"></a>
+<h5>To create a container using silent install</h5>
+<ol>
+  <li>Copy the ZIP files to a designated folder on a non-Windows machine.</li>
+  <li>To launch the silent installer, type the following:
+    <pre>
+xxx</pre>
+  </li>
+  <li>When installation is complete, the system returns to the command prompt. You'll see an installation log file in the xxx directory.</li>
+</ol>-->
 <p><a href="#top">back to top</a></p>
 
 
@@ -855,12 +898,54 @@ nav-title: Installing Akana API Platform 8.2
 
 
 
+<!--<a name="creating_container_linux"></a><h3>Creating a container using Linux</h3>
+<p>In some scenarios, such as Linux installations, you'll create the container using silent install. Before you begin, make sure you have Administrator rights on the machine you’re using.</p>
+<p>A silent installation is an automatic process that installs the Akana Platform without any user interaction. Before running the silent install, you must configure the properties file (<strong>installer.properties</strong>). For example, you must specify a target installation directory, install set, and input options to be executed at the end of the installation. Once you’ve configured the properties file, you can deploy the platform onto multiple computers in a scripted, non-interactive way. </p>
+<p>To generate an <strong>installer.properties</strong> file, you must first perform a standard Akana Platform installation using the correct files for your installation. When platform installation is complete, the properties file is automatically saved in the directory from which you launched the setup file. The file includes the configuration settings you specified during setup; from here, you can customize further as needed. {{<strong>no installer.properties file in my installation.</strong>}}</p>
+
+<h5>To create a container using Linux</h5>
+<ol>
+  <li>Create the {Container Name}.properties file in the directory that holds the unzipped files:
+  <pre>Command: "vi {Container Name}.properties.</pre>
+  <p>For example:</p>
+  <p><img src="images/03_linux_01.jpg" alt="Properties file" /></p>
+  </li>
+  <li>Save the file and close the editor.</li>
+  <li>Launch the <strong>startup.sh</strong> script, using the <strong>{container Name}.properties</strong> file from the <strong>../bin</strong> directory, as shown in the example and image below
+    <pre>./startup.sh configurator –Dsilent=true –Dproperties=/{location of properties file}</pre>
+    <p><img src="images/03_linux_02.jpg" alt="startup script" /></p>
+  </li>
+  <li>Make sure the correct database driver for your implementation is in place in the <strong>instances</strong> folder. See <a href="#database_drivers">Database drivers</a>.</li>
+  <li>Start the instance:
+  <pre>./startup.sh {Instance name from properties file} &amp;</pre>
+  </li>
+  <li>Using a web browser, launch the Akana Administration Console, and log in using the username/password you set in the properties file.</li>
+  <li>Continue to <a href="#install_pm">Step 4: Install Policy Manager features on the container</a>.</li>
+</ol>
+<p><a href="#top">back to top</a></p>
+-->
+
+
 <a name="linux_java_home_variable"></a><h3>Linux install: exporting the JAVA_HOME variable</h3>
 <p>Because Linux containers don't have a JAVA_HOME environment variable set, you'll need to export the JAVA_HOME location to your installation directory.</p>
 <p>For example:</p>
 <pre>export JAVA_HOME=/opt/akana/AP82/jre</pre>
 <p>If you omit this step, you'll get an error during the installation.</p>
 <p><a href="#top">back to top</a></p>
+
+
+
+<!--<a name="creating_container_commandline"></a><h3>Creating a container using command-line install</h3>
+<p>In some scenarios, you'll create the container using command-line install. Then, continue with the rest of the procedure from <a href="#install_pm">Step 4: Install Policy Manager features on the container</a>.</p>
+<a name="proc_create_container_commandline"></a><h5>To create a container using command-line install</h5>
+<ol>
+  <li>xxx</li>
+  <li>xxx
+    <pre>xxx uptohere</pre>
+  </li>
+  <li></li>
+</ol>
+<p><a href="#top">back to top</a></p>-->
 
 
 
@@ -873,6 +958,7 @@ nav-title: Installing Akana API Platform 8.2
   <tr>
     <td width="300" valign="top"><p><strong>Version 8.2:</strong></p>
       <ul>
+<!--        <li><a href="installing_akana_api_platform_v82.htm">Installing the Akana API Platform 8.2x</a></li>-->
         <li><a href="install_cm_jython_script.htm">Installation Jython Script</a></li>
         <li><a href="implementation_planning.htm">Planning Your Implementation</a></li>
       </ul>
@@ -886,3 +972,9 @@ nav-title: Installing Akana API Platform 8.2
   </tr>
 </table>
 <hr />
+
+
+
+</div>
+</body>
+</html>
