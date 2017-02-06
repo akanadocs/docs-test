@@ -29,7 +29,7 @@ nav-title: OSGi Development with IntelliJ IDEA
   <li>Name the project, select the location to store it in, and then click **Finish**.</li>
   <li>Add all required modules to the newly created project. Open the **Module** settings and then, in the left column, select **Libraries**.
     <p>![](images/04_OSGiDevelopmentWithIntelliJ.png</p>)</li>
-  <li>Click the **+** icon on the right.
+  <li>Click the **+** icon.
     <p>![](images/05_OSGiDevelopmentWithIntelliJ.png)</p></li>
   <li>Select the **Java** option.</li>
   <li>Go to the folder of the installation and select the required library ({install_dir}/lib/api/8.3.0). Click **Open**.</li>
