@@ -12,7 +12,15 @@ nav-title: OSGi Development with IntelliJ IDEA
 
 ## OSGi Development with IntelliJ IDEA
 
-### Create Project
+<h3 style="color: grey;">Table of Contents</h3>
+<ol class="table_of_contents">
+	<li><a href="#createproject">Create Project</a></li>
+	<li><a href="#debug">Configure the default JRE</a></li>
+	<li><a href="#test">Test</a></li>
+</ol>
+
+
+### <a name="createproject"></a>Create Project
 
 Select **Create New Project** (**File** -> **New** -> **Project**)
 
@@ -40,11 +48,18 @@ When done, click **OK**.
 
 After indexing, the projects should be compiled.
 
-### Running debug with IntelliJ IDEA
+### <a name="debug"></a>Running debug with IntelliJ IDEA
 
-From the **Run optio**n, select **Edit Configurations**.
+From the **Run option**, select **Edit Configurations**.
+
 Select the **+** option and select **Remote**.
+
 ![](images/06_OSGiDevelopmentWithIntelliJ.png)
+
 Name the **Run** configuration and select the debug port that the server will be running on:
+
 ![](images/07_OSGiDevelopmentWithIntelliJ.png)
-Test. Click in the border of the code to add a breakpoint.
+
+### <a name="test"></a>Test
+
+Click in the border of the code to add a breakpoint.
