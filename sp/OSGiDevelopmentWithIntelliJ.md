@@ -40,7 +40,7 @@ Click the **+** icon.
 
 Select the **Java** option.
 
-Go to the folder of the installation and select the required library ({install_dir}/lib/api/8.3.0). Click *Open* **Open** **Open**.
+Go to the folder of the installation and select the required library ({install_dir}/lib/api/8.3.0). Click **Open**.
 
 Repeat for all required libraries.
 
@@ -71,3 +71,5 @@ Name the **Run** configuration and select the debug port that the server will be
 ### <a name="test"></a>Test
 
 Click in the border of the code to add a breakpoint.
+
+<p><a href="#top">Back to top</a></p>
