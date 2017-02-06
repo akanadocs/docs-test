@@ -15,16 +15,16 @@ nav-title: OSGi Development with IntelliJ IDEA
 <h3 style="color: grey;">Table of Contents</h3>
 <ol class="table_of_contents">
 	<li><a href="#createproject">Create Project</a></li>
-	<li><a href="#debug">Configure the default JRE</a></li>
+	<li><a href="#debug">Running debug with IntelliJ IDEA</a></li>
 	<li><a href="#test">Test</a></li>
 </ol>
 
 
 ### <a name="createproject"></a>Create Project
 
-Select **Create New Project** (**File** -> **New** -> **Project**)
+Select **Create New Project** (**File** > **New** > **Project**)
 
-Select **Empty Projec**t and click **Next**.
+Select **Empty Project** and click **Next**.
 
 ![](images/03_OSGiDevelopmentWithIntelliJ.png)
 
@@ -34,7 +34,7 @@ Add all required modules to the newly created project. Open the **Module** setti
 
 ![](images/04_OSGiDevelopmentWithIntelliJ.png)
 
-Click the '+' icon.
+Click the **+** icon.
 
 ![](images/05_OSGiDevelopmentWithIntelliJ.png)
 
