@@ -10,7 +10,7 @@ type: page
 nav-title: OSGi Development with IntelliJ IDEA
 ---
 
-## OSGi Development with IntelliJ IDEA
+## <a name="top"></a>OSGi Development with IntelliJ IDEA
 
 <h3 style="color: grey;">Table of Contents</h3>
 <ol class="table_of_contents">
@@ -40,7 +40,7 @@ Click the **+** icon.
 
 Select the **Java** option.
 
-Go to the folder of the installation and select the required library (<install_dir>/lib/api/8.3.0). Click **Open**.
+Go to the folder of the installation and select the required library ({install_dir}/lib/api/8.3.0). Click *Open* **Open** **Open**.
 
 Repeat for all required libraries.
 
@@ -48,17 +48,25 @@ When done, click **OK**.
 
 After indexing, the projects should be compiled.
 
+<p><a href="#top">Back to top</a></p>
+
+
+
 ### <a name="debug"></a>Running debug with IntelliJ IDEA
 
-From the **Run option**, select **Edit Configurations**.
+From the **Run** option, select **Edit Configurations**.
 
 Select the **+** option and select **Remote**.
 
 ![](images/06_OSGiDevelopmentWithIntelliJ.png)
 
-Name the **Run** configuration and select the debug port that the server will be running on:
+Name the **Run** configuration and select the debug port that the server will be running on, as shown below.
 
 ![](images/07_OSGiDevelopmentWithIntelliJ.png)
+
+<p><a href="#top">Back to top</a></p>
+
+
 
 ### <a name="test"></a>Test
 
