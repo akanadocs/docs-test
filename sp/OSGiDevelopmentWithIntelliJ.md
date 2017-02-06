@@ -22,7 +22,7 @@ nav-title: OSGi Development with IntelliJ IDEA
 
 ### <a name="createproject"></a>Create Project
 
-1. Select **Create New Project** (**File** > **New** > **Project**)
+1. Select **Create New Project** (**File** > **New** > **Project**).
 
 2. Select **Empty Project** and click **Next**.
 
