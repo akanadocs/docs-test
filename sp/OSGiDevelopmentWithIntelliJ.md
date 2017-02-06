@@ -22,21 +22,32 @@ nav-title: OSGi Development with IntelliJ IDEA
 
 ### <a name="createproject"></a>Create Project
 
-<ol>
-  <li>Select **Create New Project** (**File** > **New** > **Project**).</li>
-  <li>Select **Empty Project** and click **Next**.
-    <p>![](images/03_OSGiDevelopmentWithIntelliJ.png)</p></li>
-  <li>Name the project, select the location to store it in, and then click **Finish**.</li>
-  <li>Add all required modules to the newly created project. Open the **Module** settings and then, in the left column, select **Libraries**.
-    <p>![](images/04_OSGiDevelopmentWithIntelliJ.png</p>)</li>
-  <li>Click the **+** icon.
-    <p>![](images/05_OSGiDevelopmentWithIntelliJ.png)</p></li>
-  <li>Select the **Java** option.</li>
-  <li>Go to the folder of the installation and select the required library ({install_dir}/lib/api/8.3.0). Click **Open**.</li>
-  <li>Repeat for all required libraries.</li>
-  <li>When done, click **OK**.</li>
-</ol>
+1. Select **Create New Project** (**File** > **New** > **Project**).
+	
+1. Select **Empty Project** and click **Next**.
+	
+  ![](images/03_OSGiDevelopmentWithIntelliJ.png)
+		
+1. Name the project, select the location to store it in, and then click **Finish**.
+	
+1. Add all required modules to the newly created project. Open the **Module** settings and then, in the left column, select **Libraries**.
+
+  ![](images/04_OSGiDevelopmentWithIntelliJ.png)
+		
+1. On the right, click the **+** icon.
+	
+    ![](images/05_OSGiDevelopmentWithIntelliJ.png)
+		
+1. Select the **Java** option.
+	
+1. Go to the folder of the installation and select the required library ({install_dir}/lib/api/8.3.0). Click **Open**.
+	
+1. Repeat for all required libraries.
+	
+1. When done, click **OK**.
+	
 After indexing, the projects should be compiled.
+
 <p><a href="#top">Back to top</a></p>
 
 
