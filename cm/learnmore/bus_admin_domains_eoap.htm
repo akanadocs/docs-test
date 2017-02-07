@@ -22,12 +22,12 @@ nav-title: External OAuth Provider Domain
 
 <ol class="table_of_contents">
   <li><a href="#why_choose_eoap">When would I choose an External OAuth Provider domain?</a></li>
+  <li><a href="#setup_eoap_pf">What do I need to do to use the External OAuth Provider domain for PingFederate access?</a></li>
   <li><a href="#domain_add_eoap">How do I add an External OAuth Provider domain?</a></li>
   <li><a href="#settings_eoap_configure">What are the settings on the External OAuth Provider Configure page and what options should I choose?</a></li>
-  
   <li><a href="#settings_eoap_provider">What are the settings on the Provider page and what options should I choose?</a></li>
-  <li><a href="#settings_eoap_token_validation">What are the settings on the External OAuth Provider Token Validation page and what options should I choose?</a></li>
-  <li><a href="#settings_eoap_token_validation_pf">What are the settings on the External OAuth Provider Token Validation page for PingFederate?</a></li>
+  <li><a href="#settings_eoap_token_validation">What are the settings on the External OAuth Provider Access Token Validation page and what options should I choose?</a></li>
+  <li><a href="#settings_eoap_token_validation_pf">What are the settings on the External OAuth Provider Access Token Validation page for PingFederate?</a></li>
   <li><a href="#settings_eoap_extensions_pf">What are the settings on the External OAuth Provider Extensions page for PingFederate, and what options should I choose?</a></li>
   <li><a href="#domain_modify_eoap">How do I modify an External OAuth Provider domain?</a></li>
   <li><a href="#domain_delete_eoap">How do I delete an External OAuth Provider domain?</a></li>
@@ -47,6 +47,17 @@ nav-title: External OAuth Provider Domain
 <p><strong>Note</strong>: If you are setting up the platform for the first time and want to use the External OAuth Provider domain to support PingFederate, note that the platform Administrator will also need to install the PingFederate options pack. If the PingFederate domain is not available on the domains list, it was not installed.</p>
 <p>You can also use this domain type for any other entity that could be an external OAuth provider for your installation; for example, if your APIs offer services to app developers who use Google services, you might want to set up Google as an external OAuth provider. In the External OAuth Provider Domain, under Provider Type, choose Other, and then provide the necessary values provided at the Well-Known Configuration URL (for Google, it is <a href="https://accounts.google.com/.well-known/openid-configuration" target="_blank">https://accounts.google.com/.well-known/openid-configuration</a>).</p>
 <p><strong>Note</strong>: If you want to use an external OAuth Provider domain for user login only, and the provider uses OpenID Connect for authentication, you don't need to configure an External OAuth Provider domain. Instead, choose the OpenID Connect Relying Party domain.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="setup_eoap_pf"></a><h3>What do I need to do to use the External OAuth Provider domain for PingFederate access?</h3>
+<p>It's best to use the External OAuth Provider for your PingFederate implementation, because this domain supports client registration.</p>
+<p>To do this, you'll need to:</p>
+<ul>
+  <li>Set up the domain, (see <a href="#domain_add_eoap">How do I add an External OAuth Provider domain?</a>&nbsp;below).</li>
+  <li>Implement a custom workflow.  For information on uploading a custom workflow, see <a href="site_admin_workflows.htm#to_upload_a_custom_workflow">to upload a custom workflow</a>. For help with developing a custom OAuth workflow, contact your Akana representative.</li>
+</ul>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -71,7 +82,7 @@ nav-title: External OAuth Provider Domain
   <li>Enter a name and description for your external OAuth provider (for example, Name=PingFederate, Description=PingFederate Domain).</li>
   <li>Click <strong>Next</strong> to go to the <strong>Configure</strong> page, where you can specify the type of external provider and how you want to configure the provider. Specify values or choose options. For more information, see <a href="#settings_eoap_configure">What are the settings on the External OAuth Provider Configure page and what options should I choose?</a> </li>
    <li>Click <strong>Next</strong> to go to the <strong>Provider</strong> page. This page includes information about the external OAuth Provider. If you provided a Well-Known Configuration URL, the information is read from the configuration file, but you can modify if needed. If you are doing manual configuration you must specify the values. For more information, see <a href="#settings_eoap_provider">What are the settings on the Provider page and what options should I choose?</a> </li>
- <li>Click <strong>Next</strong> to go to the <strong>Token Validation</strong> page. If you want the access token to be validated by the Resource Server, click the check box and specify values that will be needed for the validation, such as claim names and keys. For more information see <a href="#settings_eoap_token_validation">What are the settings on the External OAuth Provider Token Validation page and what options should I choose?</a></li>
+ <li>Click <strong>Next</strong> to go to the <strong>Access Token Validation page</strong>. If you want the access token to be validated by the Resource Server, click the check box and specify values that will be needed for the validation, such as claim names and keys. For more information see <a href="#settings_eoap_token_validation">What are the settings on the External OAuth Provider Access Token Validation page and what options should I choose?</a></li>
   <li>Click <strong>Next</strong> to go to the <strong>Extensions</strong> page. If your external OAuth Provider supports one or more extensions, you'll see them in this tab. Check the box if you want your External OAuth Provider Domain to support a specific extension that your external OAuth Provider offers, and then enter values associated with the extension. If you need help with any of the fields, check with your external OAuth Provider.</li>
   <li>Click <strong>Save</strong>. The OAuth Provider domain is saved, and is now available for selection by API Admins when setting up OAuth details (<strong>API</strong> &gt; <strong>Details</strong> &gt; on right, <strong>OAuth Details</strong>).</li>
 </ol>
@@ -186,9 +197,90 @@ nav-title: External OAuth Provider Domain
 
 
 
-<a name="settings_eoap_token_validation"></a><h3>What are the settings on the External OAuth Provider Token Validation page and what options should I choose?</h3>
-<p>When you're setting up an external OAuth Provider domain, the Token Validation page allows you to enter information applicable to the OAuth Provider's support of access tokens. The platform can support access tokens issued by PingFederate, the platform itself, or any other OAuth Provider.</p>
-<p>For information about the values set up on the <strong>Token Validation</strong> page (Tab 4), refer to the table below. For information about the additional fields available when the OAuth Provider is PingFederate, see <a href="#settings_eoap_token_validation_pf">What are the settings on the External OAuth Provider Token Validation page for PingFederate?</a></p>
+<a name="settings_eoap_token_validation"></a><h3>What are the settings on the External OAuth Provider Access Token Validation page and what options should I choose?</h3>
+<p>When you're setting up an external OAuth Provider domain, the Access Token Validation page allows you to enter information applicable to the OAuth Provider's support of access tokens. The platform can support access tokens issued by PingFederate, the platform itself, or any other OAuth Provider.</p>
+<p>For information about the values set up on the <strong>Access Token Validation page</strong> (Tab 4), refer to the table below. For information about the additional fields available when the OAuth Provider is PingFederate, see <a href="#settings_eoap_token_validation_pf">What are the settings on the External OAuth Provider Access Token Validation page for PingFederate?</a></p>
+<table cellspacing="0px" class="doctable" style="width: 98%;">
+  <thead>
+    <tr>
+      <th width="29%">Option...</th>
+      <th width="71%">Meaning...</th>
+    </tr>
+    <tr class="t2row">
+      <td>JWT Bearer Access Token/Referenced Bearer Access Token</td>
+      <td><p>Check the applicable checkbox to access fields for setting up values to support either or both of these token types:</p>
+        <ul>
+          <li><strong>JWT Bearer</strong>: An access token that uses the  standard and contain all the information the resource server needs to confirm the user&rsquo;s grant to the application, sent as-is in the API request, in the Authorization header.</li>
+          <li><strong>Referenced Bearer</strong>: A short random token that uniquely identifies the grant, sent as-is in the API request, in the Authorization header.</li>
+        </ul>        </td>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+
+
+<h5>Settings for JWT Bearer Access Token</h5>
+<table cellspacing="0px" class="doctable" style="width: 98%;">
+  <thead>
+    <tr>
+      <th width="29%">Option...</th>
+      <th width="71%">Meaning...</th>
+    </tr>
+  </thead>
+  <tbody>
+<!--    <tr class="t2row">
+      <td>Validate  Access token by Resource Server</td>
+      <td>If the external OAuth Provider domain will be issuing access tokens, check the box and then provide the configuration information so that the Network Director's security policy can validate the access tokens issued by this domain. 1/25/17 removing as this field is not in UI. Not sure when it changed or how this is accommodated now. Leaving it in for a bit.}}</td>
+    </tr>-->
+    <tr class="t2row">
+      <td>Issuer</td>
+      <td>Specify the issuer name that will be in the <strong>iss</strong> claim of the  token. The Resource Server will validate the issuer name against the value provided in this field.</td>
+    </tr>
+    <tr class="t1row">
+      <td>Audience</td>
+      <td>The value that should be included in the <strong>aud</strong> (audience) claim in the  token. This identifies the entity that will be consuming the  token. Enter the value exactly as it is set up in the configuration of your external OAuth Provider. The Resource Server will validate the audience name against the value provided in this field.</td>
+    </tr>
+    <tr class="t2row">
+      <td>Client ID Claim Name</td>
+      <td>Claim name the external OAuth Provider uses for the Client ID in the access token. The Resource Server will use the value from this claim to set up the app identity for the request.</td>
+    </tr>
+    <tr class="t1row">
+      <td>Scope Claim Name</td>
+      <td>Claim name the external OAuth Provider uses for a scope in the access token. This claim contains space-delimited scopes that are in the grant scope. The Resource Server will use the value of this claim to check if the request operation can be authorized with the scope of the  token.</td>
+    </tr>
+    <tr class="t2row">
+      <td>Grant ID Claim Name</td>
+      <td>Claim name the external OAuth Provider uses for the Grant ID. Each grant represents the resource owners' authorization to the application. <strong>jti</strong> is the closest standard claim for this.</td>
+    </tr>
+    <tr class="t1row">
+      <td>Resource Owner UID Claim Name</td>
+      <td>Claim name the external OAuth Provider uses for the Resource Owner ID in the access token.</td>
+    </tr>
+    <tr class="t2row">
+      <td>Allowed Clock Skew (In Seconds)</td>
+      <td>The grace period an access token is allowed before effective timestamp and after expired timestamp, expressed in seconds; for example, 120 seconds. This is to accommodate the clock setting difference between the issuing machine and validating machine. At runtime, if clock skew is exceeded, validation fails.</td>
+    </tr>
+    <tr class="t1row">
+      <td>Signing Keys</td>
+      <td><p>Choose one of the following:</p>
+        <ul class="apidoctable_ul">
+          <li><strong>Reference signing keys from an existing platform identity</strong>: Indicates that the signing key is associated with an identity in Policy Manager. Enter the identity name exactly as it is set up in Policy Manager. For more information, see <a href="bus_admin_domains.htm#why_platform_identity">Should I set up a platform identity, or provide the credentials in the domain configuration?</a></li>
+          <li><strong>Symmetric Key inline</strong>: Used when the access token is signed with a symmetric signature algorithm such as HMAC. Click the button, and then enter the symmetric key.</li>
+          <li><strong>Asymmetric Key inline</strong>: Used when the access token is signed with an asymmetric signature algorithm such as RSA. Click the button, specify the key source, and provide the details. There are three choices: <strong>X.509 Certificate</strong> (paste the certificate in the box), <strong>X.509 Certificate URL</strong> (paste the URL in the box), or <strong>JWK Set URL</strong> (used if the domain supports the JWK standard&#8212;there might be multiple public keys published at the URL; the platform determines the correct public key and uses it to verify the message). To use this option, you must first set up the JWK Set URL in the Provider tab, <strong>JWK Set URL</strong> field. For information on <a href="basics_glossary.htm#gl_jsonwebkey">JWK</a>, refer to the specification: <a href="https://tools.ietf.org/html/rfc7517" title="JWK specification" target="_blank">https://tools.ietf.org/html/rfc7517</a>.</li>
+        </ul></td>
+    </tr>
+    <tr class="t2row">
+      <td>Supports Encryption</td>
+      <td>Choose this option if you want to read in the certificate from the URL.</td>
+    </tr>
+    <tr class="t1row">
+      <td>Reference encryption keys from an existing platform identity</td>
+      <td>Indicates that the encryption key is stored in Policy Manager, associated with a platform identity. Enter the identity name exactly as it is set up in Policy Manager. Make sure the correct shared secret and/or private key are assigned to this identity. For symmetric encryption, shared secret/password credentials are required for the identity. For asymmetric encryption, make sure the private key needed for decryption is assigned to the platform identity. For more information, see <a href="bus_admin_domains.htm#why_platform_identity">Should I set up a platform identity, or provide the credentials in the domain configuration?</a></td>
+    </tr>
+  </tbody>
+</table>
+<h5>Settings for Referenced Bearer Access Token</h5>
 <table cellspacing="0px" class="doctable" style="width: 98%;">
   <thead>
     <tr>
@@ -198,53 +290,25 @@ nav-title: External OAuth Provider Domain
   </thead>
   <tbody>
     <tr class="t2row">
-      <td>Validate  Access token by Resource Server</td>
-      <td>If the external OAuth Provider domain will be issuing access tokens, check the box and then provide the configuration information so that the Network Director's security policy can validate the access tokens issued by this domain.</td>
+      <td>Token Validation Endpoint</td>
+      <td>The endpoint for Bearer access token validation.</td>
     </tr>
     <tr class="t1row">
-      <td>Issuer</td>
-      <td>Specify the issuer name that will be in the <strong>iss</strong> claim of the  token. The Resource Server will validate the issuer name against the value provided in this field.</td>
+      <td>Resource Owner Subject property name</td>
+      <td>Property name to be used to identify the resource owner in the Bearer access token validation response.</td>
     </tr>
     <tr class="t2row">
-      <td>Audience</td>
-      <td>The value that should be included in the <strong>aud</strong> (audience) claim in the  token. This identifies the entity that will be consuming the  token. Enter the value exactly as it is set up in the configuration of your external OAuth Provider. The Resource Server will validate the audience name against the value provided in this field.</td>
+      <td>Use Platform Identity</td>
+      <td>Indicates that the resource server identity information is associated with a platform identity in Policy Manager. Enter the identity name exactly as it is set up in Policy Manager. Make sure identity name and password credentials match with the configured identity for this resource server. Also, be sure to associate an appropriate role in the OAuth Provider to validate  bearer access tokens.</td>
     </tr>
     <tr class="t1row">
-      <td>Client ID Claim Name</td>
-      <td>Claim name the external OAuth Provider uses for the Client ID in the access token. The Resource Server will use the value from this claim to set up the app identity for the request.</td>
+      <td>&nbsp;&nbsp;Platform Client Identity</td>
+      <td>If you choose to use a platform identity, enter the identity name exactly as it is set up in Policy Manager. Make sure identity name and password credentials match with the configured identity for this resource server. Also, be sure to associate an appropriate role in the OAuth Provider to validate  bearer access tokens.</td>
     </tr>
     <tr class="t2row">
-      <td>Scope Claim Name</td>
-      <td>Claim name the external OAuth Provider uses for a scope in the access token. This claim contains space-delimited scopes that are in the grant scope. The Resource Server will use the value of this claim to check if the request operation can be authorized with the scope of the  token.</td>
-    </tr>
-    <tr class="t1row">
-      <td>Grant ID Claim Name</td>
-      <td>Claim name the external OAuth Provider uses for the Grant ID. Each grant represents the resource owners' authorization to the application. <strong>jti</strong> is the closest standard claim for this.</td>
-    </tr>
-    <tr class="t2row">
-      <td>Resource Owner UID Claim Name</td>
-      <td>Claim name the external OAuth Provider uses for the Resource Owner ID in the access token.</td>
-    </tr>
-    <tr class="t1row">
-      <td>Allowed Clock Skew (In seconds)</td>
-      <td>The grace period an access token is allowed before effective timestamp and after expired timestamp, expressed in seconds; for example, 120 seconds. This is to accommodate the clock setting difference between the issuing machine and validating machine. At runtime, if clock skew is exceeded, validation fails.</td>
-    </tr>
-    <tr class="t2row">
-      <td>Signing Keys</td>
-      <td><p>Choose one of the following:</p>
-        <ul class="apidoctable_ul">
-          <li><strong>Reference signing keys from an existing platform identity</strong>: Indicates that the signing key is associated with an identity in Policy Manager. Enter the identity name exactly as it is set up in Policy Manager. For more information, see <a href="bus_admin_domains.htm#why_platform_identity">Should I set up a platform identity, or provide the credentials in the domain configuration?</a></li>
-          <li><strong>Symmetric Key</strong>: Used when the access token is signed with a symmetric signature algorithm such as HMAC. Choose this button, and then enter the symmetric key.</li>
-          <li><strong>Asymmetric Key Source</strong>: Used when the access token is signed with an asymmetric signature algorithm such as RSA. Choose this button, specify the key source (certificate or certificate URL), and either paste the certificate or provide the URL.</li>
-        </ul>        </td>
-    </tr>
-    <tr class="t1row">
-      <td>Supports Encryption</td>
-      <td>Choose this option if you want to read in the certificate from the URL.</td>
-    </tr>
-    <tr class="t2row">
-      <td>Reference encryption keys from an existing platform identity</td>
-      <td>Indicates that the encryption key is stored in Policy Manager, associated with a platform identity. Enter the identity name exactly as it is set up in Policy Manager. Make sure the correct shared secret and/or private key are assigned to this identity. For symmetric encryption, shared secret/password credentials are required for the identity. For asymmetric encryption, make sure the private key needed for decryption is assigned to the platform identity. For more information, see <a href="bus_admin_domains.htm#why_platform_identity">Should I set up a platform identity, or provide the credentials in the domain configuration?</a></td>
+      <td>Resource Server Client ID/<br />
+        Resource Server Client Secret</td>
+      <td>If you choose not to use a platform identity, enter the Client ID and password credentials for the account with the external OAuth Provider.</td>
     </tr>
   </tbody>
 </table>
@@ -252,10 +316,10 @@ nav-title: External OAuth Provider Domain
 
 
 
-<a name="settings_eoap_token_validation_pf"></a><h3>What are the settings on the External OAuth Provider Token Validation page for PingFederate?</h3>
-<p>When you're setting up an external OAuth Provider domain, the Token Validation page allows you to enter information applicable to the OAuth Provider's support of access tokens. The platform can support access tokens issued by PingFederate, the platform itself, or any other OAuth Provider.</p>
+<a name="settings_eoap_token_validation_pf"></a><h3>What are the settings on the External OAuth Provider Access Token Validation page for PingFederate?</h3>
+<p>When you're setting up an external OAuth Provider domain, the Access Token Validation page allows you to enter information applicable to the OAuth Provider's support of access tokens. The platform can support access tokens issued by PingFederate, the platform itself, or any other OAuth Provider.</p>
 <p>When the OAuth Provider is PingFederate, specific fields are available in the right column, that are not available for other providers.</p>
-<p>For information about the values specific to PingFederate on the <strong>Token Validation</strong> page (Tab 4), refer to the table below.</p>
+<p>For information about the values specific to PingFederate on the <strong>Access Token Validation page</strong> (Tab 4), refer to the table below.</p>
 <table cellspacing="0px" class="doctable" style="width: 98%;">
   <thead>
     <tr>
@@ -383,6 +447,7 @@ nav-title: External OAuth Provider Domain
     </ul></td>
     <td width="33%"><ul>
       <li><a href="bus_admin_domains.htm">Domains</a></li>
+<!--      <li><a href="bus_admin_domains_eoap.htm">External OAuth Provider Domain</a></li>-->
       <li><a href="bus_admin_domains_oidc.htm">OpenID Connect Support</a></li>
       <li><a href="bus_admin_ov_pf_endtoend.htm">PingFederate Setup</a></li>
       <li><a href="basics_glossary.htm">Glossary of Terms</a></li>
