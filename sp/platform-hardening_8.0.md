@@ -243,6 +243,9 @@ https.socket.factory.cipherSuites=TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_
 Prevent unauthenticated users from initiating arbitrary internal connections from the Community Manager portal.
 **Scope**: Community Manager Containers
 
+> NOTE: this setting can be done at a container level as described here, or it can be delegated to the tenants by setting the container level to *.  If you are setting this at a container level then you MUST change the FWD_PROXY_FOR_HOSTS column for each tenant in the TENANTS table to an empty value (NULL). This will then allow you to control the hosts from the admin console.  
+After this change, you will have to restart or wait 5 minutes for the cache to clear.  If either of the two config settings (container config or DB) is set to * then the forward proxy allows everything through.
+
 In the admin console, configure the following:
 
 ```
