@@ -5,7 +5,7 @@ description: Learn how to use Business Metrics Policies in a variety of differen
 product: ag
 category: learn
 weight: 04
-sub-nav-class: Policies - Integration
+sub-nav-class: Policies - Compliance
 type: page
 nav-title: Business Metrics Policy Use Cases
 
