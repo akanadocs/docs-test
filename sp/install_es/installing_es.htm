@@ -1,0 +1,195 @@
+---
+layout: page
+title: Configuring Elasticsearch in Transport Client mode with Elasticsearch security
+description: Learn how to get Elasticsearch installed and configured in Transport Client mode with Elasticsearch security.
+product: cm
+category: gs
+weight: 05
+sub-nav-class: Configuring Elasticsearch with security
+type: page
+nav-title: Akana API Platform Installation
+---
+<h2 id="top">Configuring Elasticsearch in Transport Client mode with Elasticsearch security</h2>
+<p>If you're using Transport Client mode with Elasticsearch security, you'll need to complete some additional steps to get Elasticsearch installed and configured.</p>
+<h5 class="stamp">Supported Platforms: 8.4x</h5>
+<div class = "divider1"></div>
+<h3 style="color: gray;">Table of Contents</h3>
+
+
+
+<ol class="table_of_contents">
+  <li><a href="#01_gather_zip_files">Step 1: Gather ZIP files and download to the install folder</a></li>
+  <li><a href="#02_unzip_files">Step 2: Unzip installation files in the correct sequence</a></li>
+  <li><a href="#03_set_up_roles">Step 3: Set up user and user roles</a></li>
+  <li><a href="#04_configure_yaml">Step 4: Configure the elasticsearch.yaml file</a></li>
+  <li><a href="#05_transport_client_settings">Step 5: Configure transport client security settings</a></li>
+</ol>
+
+
+
+<div class = "divider1"></div>
+
+
+
+
+<a name="01_gather_zip_files"></a><h3>Step 1: Gather ZIP files and download to the install folder</h3>
+<h4>To download and install the Elasticsearch Shield feature</h4>
+<p>For details about Shield, see <a href="https://www.elastic.co/guide/en/shield/shield-1.3/installing-shield.html" title="Elasticsearch Shield website" target="_blank">https://www.elastic.co/guide/en/shield/shield-1.3/installing-shield.html</a>.</p>
+<h5>To download and install the Elasticsearch Shield feature</h5>
+<ol>
+  <li>Go to the Elasticsearch site (<a href="https://www.elastic.co/" title="Elasticsearch website" target="_blank">https://www.elastic.co/</a>) and download the Shield feature:
+    <ul>
+      <li><a href="https://download.elastic.co/elasticsearch/shield/shield-1.3.3.zip" title="Elasticsearch Shield install file" target="_blank">https://download.elastic.co/elasticsearch/shield/shield-1.3.3.zip</a></li>
+      </ul>
+    </li>
+  <li>Download the license ZIP file:
+    <ul>
+      <li><a href="https://download.elastic.co/elasticsearch/license/license-1.0.0.zip" title="Elasticsearch Shield license file" target="_blank">https://download.elastic.co/elasticsearch/license/license-1.0.0.zip</a></li>
+    </ul>
+  <p><strong>Note</strong>: This is the trial license, and can be used for development only. For the Production environment, you'll need to get a license from Elasticsearch support.</p></li>
+  <li>Copy the ZIP files to the machine where Elasticsearch is installed.</li>
+  </ol>
+<p><a href="#top">back to top</a></p>
+
+
+
+<a name="02_unzip_files"></a><h3>Step 2: Unzip installation files in sequence</h3>
+<p>Run bin/plugin with the -u option to install the plugins using the ZIP files.</p>
+<p>For example:</p>
+<ol>
+  <li>Change directory (cd) to the Elasticsearch installation folder and then run the following two commands:
+    <ol>
+      <li>bin/plugin -i license -u file:<span class="apidoc_red">///path/to/file</span>/license-1.0.0.zip </li>
+      <li>bin/plugin -i shield -u file:///path/to/file/shield-1.3.3.zip</li>
+    </ol>
+  </li>
+  </ol>
+<p class="apidoc_note"><strong>Note</strong>: You must specify an absolute path to the ZIP file after the <strong>file://</strong> protocol.</p>
+<p><a href="#top">back to top</a></p>
+
+
+
+<a name="03_set_up_roles"></a><h3>Step 3: Set up user and user roles</h3>
+<p>The next step is to add user and user roles<span class="apidoc_red"> for the client to user</span>.</p>
+<p>For detailed documentation about managing Elasticsearch users and user roles, see <a href="https://www.elastic.co/guide/en/shield/shield-1.3/_managing_users_in_an_esusers_realm.html" title="Elasticsearch Managing Users page" target="_blank">https://www.elastic.co/guide/en/shield/shield-1.3/_managing_users_in_an_esusers_realm.html</a>.</p>
+<p class="apidoc_note"><strong>Note</strong>: The Transport client user must have at least the user role of <strong>power_user</strong> for the container where the <strong>Community Manager Scheduled Jobs</strong> feature is installed. For the containers that are read-only (only search), the user role <strong>user</strong> is enough.</p>
+<ol>
+  <li>CD to the <strong>{elasticsearch}/bin/shield</strong> folder.</li>
+  <li>Run the following command to add a user:
+      <pre>esusers useradd {username} -p {secret}</pre>
+  <p>For example:</p>
+    <pre>esusers useradd es_power_user -p Password1</pre></li>
+  <li>Assign roles to user (this assigns the <strong>power_user</strong> role to the user <strong>es_power_user</strong>):
+    <pre>esusers roles es_power_user -a power_user</pre></li>
+  <li>Change user password:
+      <pre>esusers passwd {username} -p {secret}</pre></li>
+  <li>Remove roles assigned to a user (-r removes role "admin" for user "es_admin"):
+      <pre>esusers roles es_admin -r admin</pre></li>
+  <li>Deleting Users
+    <ul>
+      <li>The esusers userdel command deletes a user.</li>
+      <li>userdel 
+        {username}
+        </li>
+      </ul>
+    </li>
+</ol>
+<p><a href="#top">back to top</a></p>
+
+
+
+<a name="04_configure_yaml"></a><h3>Step 4: Configure the elasticsearch.yaml file</h3>
+<p>{<span class="apidoc_red">what does this do, what's the completion of this step?</span>}</p>
+<p>{<span class="apidoc_red">also, where do they find the elasticsearch.yml file?</span>}</p>
+<p>Add the following properties to elasticsearch.yml appropriately and restart the Elasticsearch cluster.</p>
+<p>You can have Shield installed and enabled but may not choose SSL to enabled if the cluster is within the firewall. If Shield is installed and even though the SSL disabled, it at least expects the transport client user authentication header. In the Admin Console, see the Transport Client user settings.</p>
+<h4>Sample YAML with SSL enabled</h4>
+<pre>shield.enabled: true
+shield.ssl.keystore.path: {path}\node01.jks
+shield.ssl.keystore.password: changeit
+shield.ssl.keystore.key_password: changeit
+shield.transport.ssl: true
+shield.http.ssl: true
+shield.https.ssl: true
+shield.ssl.hostname_verification: false
+#shield.ssl.hostname_verification.resolve_name: true
+#client specific settings
+#This enables SSL on the client profile. The default value for this setting is the value of shield.transport.ssl.
+transport.profiles.client.ssl: false
+#This setting keeps certificate authentication active for node-to-node traffic, but removes the requirement to distribute a signed certificate to transport clients. 
+#transport.profiles.client.shield.ssl.client.auth: no
+shield.http.ssl.client.auth: optional</pre>
+
+
+
+<h4>Sample YAML with SSL disabled</h4>
+<pre>shield.enabled: true
+shield.ssl.keystore.path: C:\SOA\ES\NodeCert\node01.jks
+shield.ssl.keystore.password: changeit
+shield.ssl.keystore.key_password: changeit
+shield.transport.ssl: false
+shield.http.ssl: false
+shield.https.ssl: false
+shield.ssl.hostname_verification: false
+#shield.ssl.hostname_verification.resolve_name: true
+#client specific settings
+#This enables SSL on the client profile. The default value for this setting is the value of shield.transport.ssl.
+transport.profiles.client.ssl: false
+#This setting keeps certificate authentication active for node-to-node traffic, but removes the requirement to distribute a signed certificate to transport clients. 
+#transport.profiles.client.shield.ssl.client.auth: no
+shield.http.ssl.client.auth: no</pre>
+<p><a href="#top">back to top</a></p>
+
+
+
+<a name="05_transport_client_settings"></a><h3>Step 5: Configure transport client security settings</h3>
+<p>Follow the steps below.</p>
+<p class="apidoc_note"><strong>Note</strong>: If Shield is not installed on the Elasticsearch cluster, you do not need to do anything. The default for enabling SSL is <strong>false</strong>.</p>
+<h5>To configure the transport client security settings</h5>
+<p>Go to <strong>Admin Console</strong> &gt; <strong>Configuration</strong> &gt; <strong>com.akana.es.client.security</strong>.</p>
+<p>You will see the settings shown below. Change values as needed.</p>
+<pre>elastic.client.enableSSL: false
+elastic.client.clientUser
+elastic.client.clientUserPassword
+elastic.client.alias
+elastic.client.aliasPassword
+elastic.client.keystorePassword
+elastic.client.keystorePath</pre>
+<p>Notes:</p>
+<ul>
+  <li>By default, SSL is disabled.</li>
+  <li>If SSL is disabled on the Elasticsearch cluster and Shield is installed, at minimum you must provide values for clientUser and clientUserPassword.</li>
+  <li>The transport client user is added in <a href="#03_set_up_roles">Step 3</a> with appropriate roles.</li>
+</ul>
+<p><a href="#top">back to top</a></p>
+
+
+
+<!--<a name="xxx"></a><h3>xxx</h3>
+<p>xxx</p>
+<p><a href="#top">back to top</a></p>-->
+
+
+
+<div class = "divider1"></div>
+
+
+
+<h3 id="related_topics">Related Topics</h3>
+<table width="700" border="0" cellspacing="0" cellpadding="2" class="doctable">
+  <tr>
+    <td width="300" valign="top"><p><strong>Version 8.2:</strong></p>
+      <ul>
+<!--        <li><a href="installing_akana_api_platform_v82.htm">Installing the Akana API Platform 8.2x</a></li>-->
+        <li><a href="../platform_install/install_cm_jython_script.htm">Installation Jython Script</a></li>
+        <li><a href="../platform_install/implementation_planning.htm">Planning Your Implementation</a></li>
+      </ul>
+    </td>
+    <td width="400" valign="top"><p><strong>Version 8.0:</strong></p>
+      <ul>
+        <li><a href="../platform_install/installing_akana_platform.htm">Installing Akana Platform 8.x</a></li>
+        <li><a href="../platform_install/installing_policy_manager_v80.htm">Installing Policy Manager 8.x</a></li>
+      </ul>
+    </td>
+  </tr>
+</table>
