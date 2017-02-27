@@ -1,15 +1,15 @@
 ---
 layout: page
-title: Elasticsearch Configuration
-description: Learn how to configure the Elasticsearch search feature for the developer portal.
+title: Installing and Configuring Elasticsearch
+description: Learn how to install and configure the Elasticsearch search feature for the developer portal.
 product: cm
 category: gs
 weight: 08
 sub-nav-class: Akana API Platform Installation
 type: page
-nav-title: Configuring Elasticsearch
+nav-title: Installing and Configuring Elasticsearch
 ---
-<h2><a name="top"></a>Configuring Elasticsearch</h2>
+<h2><a name="top"></a>Installing and Configuring Elasticsearch</h2>
 <p>This document provides reference information and examples relating to installation and configuration of the Elasticsearch search feature for the Akana API Platform developer portal.</p>
 <p>It includes:</p>
 <ul>
@@ -18,10 +18,11 @@ nav-title: Configuring Elasticsearch
   <li><a href="#es_config_highlevel">High-level steps for Elasticsearch configuration</a></li>
   <li><a href="#es_install_embedded">Installation instructions: Embedded Mode</a></li>
   <li><a href="#es_install_standalone">Installation instructions: Standalone Mode</a></li>
+<!--  <li><a href="#xxx">xxx</a></li>-->
   <li><a href="#es_ref_info">Links to additional information about Elasticsearch</a></li>
   <li><a href="#related_topics">Related Topics</a></li>
 </ul>
-<p><strong>Note</strong>: For information about secure configuration of Elasticsearch, see <a href="install_es_tc.htm">Configuring Elasticsearch with Transport Client security</a>.</p>
+<p><strong>Note</strong>: For information about secure configuration of Elasticsearch, see <a href="install_es_secure_tc.htm">Configuring Elasticsearch with Transport Client security</a>.</p>
 
 
 
@@ -41,6 +42,7 @@ nav-title: Configuring Elasticsearch
 <p>For example, unless you have your own Elasticsearch server, you’ll need to decide whether you want to install the feature on a single container or on multiple containers that can act as a cluster.</p>
 <p><strong>Note</strong>: If you don’t have your own external Elasticsearch servers and are just using Elasticsearch as part of the platform upgrade, you don’t need to do any custom configuration, just install the <strong>Akana Embedded Elasticsearch Node</strong> feature and accept the default settings. See <a href="../../cm/learnmore/site_admin_es.htm#how_do_i_configure_elastic_search_in_pm">How do I configure Elasticsearch?</a> (Akana API Platform Site Admin help).</p>
 <p>If you have your own Elasticsearch server, there's no need to install the <strong>Akana Embedded Elasticsearch Node</strong> feature.</p>
+<!--<p>{{Confirmed MM 9/9/16 no need to install if not using embedded mode.}}</p>-->
 <p><a href="#top">Back to top</a></p>
 
 
@@ -50,9 +52,9 @@ nav-title: Configuring Elasticsearch
 <p><strong>Elasticsearch, embedded mode:</strong></p>
 <p>To run Elasticsearch in embedded mode (you don’t have a standalone Elasticsearch server) you’ll need to:</p>
 <ul>
-  <li>Install the <strong>Akana Embedded Elasticsearch Node</strong> feature.</li>
-  <li>Configure the global settings: <strong>Configure Elasticsearch Global Configuration</strong> configuration action.</li>
-  <li>Configure the embedded mode settings: <strong>Configure Elasticsearch Embedded Node</strong> configuration action.</li>
+  <li>Install the <strong>Akana Embedded Elasticsearch Node</strong> feature on all CM containers.</li>
+  <li>Configure the global settings: <strong>Configure Elasticsearch Global Configuration</strong> configuration action (once per installation).</li>
+  <li>Configure the embedded mode settings: <strong>Configure Elasticsearch Embedded Node</strong> configuration action (once per CM container).</li>
 </ul>
 <p><strong>Elasticsearch, standalone mode</strong>:</p>
 <p>To run Elasticsearch in standalone mode (when you have a standalone Elasticsearch server), you don’t need to install the feature. You’ll need to:</p>
@@ -93,7 +95,8 @@ nav-title: Configuring Elasticsearch
 
 <a name="es_install_embedded"></a><h3>Installation instructions: Embedded Mode</h3>
 <p>If you don't have your own standalone Elasticsearch server, you'll install the <strong>Akana Embedded Elasticsearch Node</strong> feature.</p>
-<p>In this scenario, you don't have to do anything with regard to the <strong>Configure Elasticsearch Global Configuration</strong> step, except review the port numbers. When the feature is installed, it manages the global configuration. All you have to do is complete the configuration (<strong>Configure Elasticsearch Embedded Node</strong> step).</p>
+<p>In this scenario, you don't have to do anything with regard to the <strong>Configure Elasticsearch Global Configuration</strong> step. When you install the <strong>Akana Embedded Elasticsearch Node</strong> feature, the platform populates details about the Elasticsearch node, such as default node name and port number.</p>
+<p>All you have to do is complete the configuration (<strong>Configure Elasticsearch Embedded Node</strong> step).</p>
 <p>This section includes installation and configuration information for two scenarios:</p>
 <ul>
   <li><a href="#es_install_embedded_one_pmcm">Policy Manager and Community Manager in the same container</a></li>
@@ -104,14 +107,19 @@ nav-title: Configuring Elasticsearch
 <h5>Installation and configuration:</h5>
 <ol>
   <li>As part of installation, install the <strong>Akana Embedded Elasticsearch Node</strong> feature on the container.</li>
-  <li>Optional: In the Akana Administration Console, go to <strong>Configuration</strong> &gt; <strong>Configuration Actions</strong> &gt; <strong>Configure Elasticsearch Global Configuration</strong>. Here, you can review the settings, but it's not necessary. Nothing is needed.</li>
-  <li>In the <strong>Akana Administration Console, go to <strong>Configuration</strong> &gt; <strong>Configuration Actions</strong> &gt; Configure Elasticsearch Embedded Node</strong>. As part of installation, the platform retrieves appropriate values and pre-fills the settings. All you need to do is review the default configuration values and click <strong>Finish</strong>. For information on the settings, refer to the Site Admin help (see link above). Note:
-<ul>
+  <li>Optional: In the Akana Administration Console, go to <strong>Configuration</strong> &gt; <strong>Configuration Actions</strong> &gt; <strong>Configure Elasticsearch Global Configuration</strong>. Here, you can review the settings, but it's not necessary. Nothing is needed. See below.
+  <p><img src="images/es_config_global_01.jpg" alt="Elasticsearch global configuration" /></p></li>
+  <li>In the <strong>Akana Administration Console, go to <strong>Configuration</strong> &gt; <strong>Configuration Actions</strong> &gt; Configure Elasticsearch Embedded Node</strong>. See below.
+    <p><img src="images/es_config_embedded_01.jpg" alt="Elasticsearch embedded node" /></p>
+  </li>
+  <li>In versions 8.2 and later, as part of installation, the platform retrieves appropriate values and pre-fills the settings. All you need to do is review the default configuration values and click <strong>Finish</strong>. You can change the Network Bind Address and other values as needed. In earlier versions, you must provide all values. For information on the settings, refer to the Site Admin help (see link above). Note:
+    <ul>
       <li><strong>Name</strong>: the installation creates the node name.</li>
-      <li><strong>Transport Port</strong>: the platform pre-fills a value. Make sure that the default port is available, or change the value to an available port. You can also delete the existing entry and save; the platform retrieves the next available port.</li>
+      <li><strong>Transport Port</strong>: the platform pre-fills a value. Make sure that the default port is available, or change the value to an available port. You can also delete the existing entry and save; the platform retrieves the next available port. For information about default port numbers, see <a href="../../cm/learnmore/site_admin_es.htm#es_default_ports">What are the default ports for Elasticsearch configuration?</a> (Site Admin help).</li>
       <li><strong>HTTP Port</strong>: same as for Transport Port above.</li>
     </ul>
-    </li>
+<p><strong>Note</strong>: Each cluster must have at least one data node and at least one master eligible node. </p>
+  </li>
   <li>Click <strong>Finish</strong>.</li>
 </ol>
 
@@ -131,9 +139,18 @@ nav-title: Configuring Elasticsearch
 <h5>Configuration:</h5>
 <ol>
   <li>Optional: In the Akana Administration Console for the CM container, go to <strong>Configuration</strong> &gt; <strong>Configuration Actions</strong> &gt; <strong>Configure Elasticsearch Global Configuration</strong>. Here, you can review the settings, but it's not necessary. Nothing is needed.</li>
-  <li>In the <strong>Akana Administration Console</strong> for the PM container<strong>, go to <strong>Configuration</strong> &gt; <strong>Configuration Actions</strong> &gt; Configure Elasticsearch Embedded Node</strong>. All you need to do is specify a node name and check the <strong>HTTP Enabled</strong> box, as shown below.
-    <p><img src="images/config_es_embed_01.jpg" alt="configure Elasticsearch embedded node" /></p></li>
-  <li>Click <strong>Finish</strong>.</li>
+  <li>In the <strong>Akana Administration Console</strong> for the PM container, go to <strong>Configuration</strong> &gt; <strong>Configuration Actions</strong> &gt; <strong>Configure Elasticsearch Embedded Node</strong>, as shown below.
+    <p><img src="images/config_es_embed_01.jpg" alt="configure Elasticsearch embedded node" /></p>
+    <p>On this page:</p>
+    <ul>
+      <li>Specify a node name.</li>
+      <li>Check the <strong>HTTP Enabled</strong> box.</li>
+      <li>Specify port numbers if there are no defaults; you can also change the defaults if you prefer to use different ports.</li>
+      <li>Review additional options and choose settings as needed. For full information, refer to the Site Admin help: <a href="../../cm/learnmore/site_admin_es.htm#fv_es_embedded">Configuring an Elasticsearch Embedded Node: Field Values</a>.</li>
+    </ul>
+    </li>
+
+    <li>Click <strong>Finish</strong>.</li>
 </ol>
 <p><a href="#top">Back to top</a></p>
 
@@ -145,20 +162,38 @@ nav-title: Configuring Elasticsearch
 <h5>To configure the Elasticsearch global settings</h5>
 <p><strong>Note</strong>: for information on the field values, refer to the Site Admin help: <a href="../../cm/learnmore/site_admin_es.htm#fv_es_global">Elasticsearch Global Configuration: Field Values</a>.</p>
 <ol>
-  <li>After installing the product, in the Akana Administration Console, go to <strong>Configuration</strong> &gt; <strong>Configuration Actions</strong> &gt; <strong>Configure Elasticsearch Global Configuration</strong>. The fields are blank.</li>
-  <li>Set up the following values:
-    <ul>
-      <li><strong>Deployment Mode</strong>: choose <strong>Transport Client</strong>.</li>
-      <li><strong>Cluster Name</strong>: specify a cluster name.</li>
-      <li><strong>Minimum Master Nodes</strong>: the default is 2. Increase the value if needed.</li>
-      <li><strong>Multicast</strong>: leave cleared.</li>
-    </ul>
+  <li>After installing the product, in the Akana Administration Console, go to <strong>Configuration</strong> &gt; <strong>Configuration Actions</strong> &gt; <strong>Configure Elasticsearch Global Configuration</strong>. The fields are blank, as shown below. When you choose the deployment mode, additional fields appear.
+    <p><img src="images/es_config_global_01.jpg" alt="Elasticsearch global configuration" /></p>
     </li>
-  
+  <li>In the <strong>Deployment Mode</strong> field, choose <strong>Transport Client</strong>.</li>
+  <li>In the <strong>Cluster Name</strong> field, specify a cluster name.</li>
+  <li>In the <strong>ES Server URL</strong> field, specify the full URL for the Elasticsearch server.</li>
   <li>Click <strong>Finish</strong>.</li>
 </ol>
+
+<h5>Client-Only mode</h5>
+<p>Client-only mode is used when a container running the embedded Elasticsearch feature becomes a node as part of an external standalone Elasticsearch server. The node will be in the cluster, but will not be a master node. When you choose this option, additional fields are available as shown below:</p>
+<img src="images/es_config_global_client_only.jpg" alt="Elasticsearch global configuration, Client Only mode" />
+<p>Specify these values:</p>
+<ul>
+  <li><strong> Cluster Name</strong>: specify a cluster name.</li>
+  <li><strong>Master Host URL</strong>: The URL for the master host that this is a client for.</li>
+  <li><strong>Multicast</strong>: Leave cleared unless  it is a multicast scenario.</li>
+</ul>
 <p><a href="#top">Back to top</a></p>
 
+
+
+<!--<a name="xxx"></a><h3>xxx</h3>
+<p>xxx</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="xxx"></a><h3>xxx</h3>
+<p>xxx</p>
+<p><a href="#top">Back to top</a></p>
+-->
 
 
 <a name="es_ref_info"></a>
@@ -170,6 +205,9 @@ nav-title: Configuring Elasticsearch
   <li>Elasticsearch glossary: <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/glossary.html" title="Elasticsearch glossary of terms" target="_blank">https://www.elastic.co/guide/en/elasticsearch/reference/current/glossary.html</a></li>
 </ul>
 <p><a href="#top">Back to top</a></p>
+
+
+
 
 
 
@@ -195,4 +233,3 @@ nav-title: Configuring Elasticsearch
     </td>
   </tr>
 </table>
-<hr />
