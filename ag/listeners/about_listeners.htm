@@ -1,0 +1,227 @@
+---
+layout: page
+title: About Listeners
+description: Add and modify listeners for an API Gateway or API Gateway Cluster.
+product: ag
+category: learn
+weight: 05
+sub-nav-class: Listeners
+type: page
+nav-title: Policy Manager Listeners
+---
+<h2 id="top">About Listeners</h2>
+<p>In general, a listener is an object that executes some code when triggered by an event. A listener monitors events happening in the program and acts based on how it's programmed to act in certain events.</p>
+<p>In the context of the API platform, a listener is the server process that listens for and accepts incoming connection requests from client applications. Listeners are added to an API Gateway or an API Gateway cluster; they are then mapped based on matching listener names.</p>
+<h2>Supported Listener Types</h2>
+<p>Policy Manager supports the following listener types:</p>
+<ul>
+  <li>HTTP</li>
+  <li>HTTPS</li>
+  <li>JMS</li>
+  <li>AMQP</li>
+  <li>AMQPS</li>
+</ul>
+<p>Additional listener types can be installed as an update or option pack.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+<a name="proc_listener_add"></a><h2>Adding a Listener</h2>
+<p>Follow the procedure below to add a listener. Refer to the applicable section for details about how to configure a specific listener type, or use the help to the left of the page.</p>
+<h5>To add a listener</h5>
+<ol>
+  <li>Log in to Policy Manager.</li>
+  <li>Navigate to the Containers folder: <strong>Workbench</strong> &gt; <strong>Browse</strong> &gt; <strong>Organization</strong> &gt; <strong>Containers</strong>. The <strong>Containers</strong> summary page is displayed, as shown below.
+  <p><img src="images/ContainerSummary.jpg" alt="Container summary page" /></p>
+    </li>
+  <li>Click to select the container you want to add a listener for. The <strong>Container Overview</strong> page is displayed, with a summary of information about the current container. The <strong>Inbound Listeners</strong> Portlet displays the current listener configuration, as shown below.
+<p><img src="images/ContainerOverview.jpg" alt="Container Overview page" /></p></li>
+  <li>Click <strong>Add Container Listener</strong>. The <strong>Select Container Listener Type</strong> page is displayed. </li>
+  <li>Choose a listener type from the drop-down list and click <strong>Next</strong>. The <strong>Configure</strong> page for the specified listener type is displayed.</li>
+  <li>In the top section, configure the general listener properties (these are the same for all listener types):
+    <ul>
+      <li><strong>Listener Name</strong>&#8212;A unique instance name for the listener.</li>
+      <li><strong>Description</strong>&#8212;A short description for the listener.</li>
+    </ul>
+    </li>
+  <li>In the second section, configure the listener properties based on your specific requirements. This sectiion is different for each listener type. For information about specific configuration fields, refer to the applicable section:
+    <ul>
+      <li><a href="#listener_config_http">HTTP</a></li>
+      <li><a href="#listener_config_https">HTTPS</a></li>
+      <li><a href="#listener_config_jms">JMS</a></li>
+      <li><a href="#listener_config_amqp">AMQP</a></li>
+      <li><a href="#listener_config_amqps">AMQPS</a></li>
+    </ul>
+  </li>
+  <li><strong>HTTP, HTTPS, and JMS only</strong>: Configure thread pool values. The thread pool is used to manage the thread configuration for the estimated volume of transactions that will be processed through your production site. Each request requires one thread. If the thread pool configuration is configured with a maximum thread pool size of 256, the container will support 256 concurrent requests. If more concurrent requests are required in a container, the thread pool configuration for the specific listener can be updated within the container. The initial display shows default values. Choices:
+<ul>
+      <li><strong>Minimum</strong>&#8212;The minimum number of threads that are reserved for requests from applications. Default: <strong>5</strong>.</li>
+      <li><strong>Maximum</strong>&#8212;The maximum number of threads that are reserved for requests from applications. Default: <strong>500</strong>.</li>
+      <li><strong>Idle Thread Timeout (mls)</strong>&#8212;The number of milliseconds after which idle threads are removed from the thread pool. Default: <strong>60,000</strong> (1 minute).</li>
+    </ul>
+  <p><strong>Note</strong>: The thread pool is dynamically adjusted between the minimum and maximum values. The minimum thread pool setting signals the server to allocate at least that many threads in reserve for application requests. That number is increased up to the maximum specified thread pool size.</p>
+  </li>
+  <li><strong>HTTP and HTTPS only</strong>: In the <strong>Service Hosting</strong> section, if you want to clone services hosted on other listeners to match the services hosted on the current listener, select the <strong>Clone services hosted on other listener(s)</strong> checkbox, and then select a listener type out of available options. Possible choices: All Listeners, the default HTTP listener, or selected listeners that you have defined.
+    <p><strong>Note</strong>: Once you've saved the listener configuration, you cannot change the Service Hosting setting.</p></li>
+  <li>Click <strong>Finish</strong>.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="listener_config_http"></a><h2>Listener configuration: HTTP</h2>
+<p>Many of the listener configuration fields, such as name/description and thread pool fields, are the same for multiple listener types. These are briefly defined in the procedure above (see <a href="#proc_listener_add">Adding a listener</a> step 8).</p>
+<p><img src="images/listener_http.jpg" alt="HTTP listener" /></p>
+<p>The center section of each listener page includes values specific to the individual listener. For HTTP listeners, those fields are defined below.  You can also use the help to the left of the page.</p>
+<dl class="apidoc_dl">
+<dt>Bind to all interfaces</dt>
+<dd>Based on your network infrastructure and security requirements, you can configure a container listener to listen to <strong>all</strong> network interfaces through one port, or you can limit the container listener to <strong>one</strong> port.</dd>
+<dd><strong>Checked</strong>: The container listener is configured to listen to all network interfaces through one port.</dd>
+<dd><strong>Cleared</strong>: The container listener listens through one port only.</dd>
+
+
+<dt>Host Name</dt>
+<dd>The <strong>Host Name</strong> portion of the Listener URL.</dd>
+
+
+<dt>Port Number</dt>
+<dd>The <strong>Port Numbe</strong>r portion of the Listener URL.</dd>
+
+
+<dt>Context Path</dt>
+<dd>The <strong>Context Path</strong> portion of the Listener URL. Entering a Context Path is optional. This field only displays for Network Director containers and legacy containers.</dd>
+<dd><strong>Note</strong>: The Context Path <strong>only</strong> applies to services hosted in the container. It does not refer to or change the path of the Akana Policy Manager Console or the Akana Administration Console associated with a container.</dd>
+<dd>The <strong>Host Name</strong>, <strong>Port Number</strong>, and <strong>Context Path</strong> combined represent the full URL. The URL represents the name or address of the machine on which the container is running. Be sure to use a name or IP address that will be recognizable to all computers that will be accessing this container. For example, if computers outside your network will be using the container, use a fully-qualified domain name or an IP address that is visible and accessible outside the network.</dd>
+</dl>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="listener_config_https"></a><h2>Listener configuration: HTTPS</h2>
+<p>Many of the listener configuration fields, such as name/description and thread pool fields, are the same for multiple listener types. These are briefly defined in the procedure above (see <a href="#proc_listener_add">Adding a listener</a>).</p>
+<p><img src="images/listener_https.jpg" alt="HTTPS listener" /></p>
+<p>The center section of each listener page includes values specific to the individual listener. For HTTPS listeners, those fields are defined below. The fields are essentially the same as for an HTTP listener, with the addition of the <strong>Client Certificates</strong> field.</p>
+<p>You can also use the help to the left of the page.</p>
+<dl class="apidoc_dl">
+  <dt>Bind to all interfaces</dt>
+<dd>Based on your network infrastructure and security requirements, you can configure a container listener to listen to <strong>all</strong> network interfaces through one port, or you can limit the container listener to <strong>one</strong> port.</dd>
+<dd><strong>Checked</strong>: The container listener is configured to listen to all network interfaces through one port.</dd>
+<dd><strong>Cleared</strong>: The container listener is limited to listen through one port.</dd>
+
+
+<dt>Host Name</dt>
+<dd>The <strong>Host Name</strong> portion of the Listener URL.</dd>
+
+
+<dt>Port Number</dt>
+<dd>The <strong>Port Numbe</strong>r portion of the Listener URL.</dd>
+
+
+<dt>Context Path</dt>
+<dd>The <strong>Context Path</strong> portion of the Listener URL. Entering a Context Path is optional. This field only displays for Network Director containers and legacy containers.</dd>
+<dd><strong>Note</strong>: The Context Path <strong>only</strong> applies to services hosted in the container. It does not refer to or change the path of the Akana Policy Manager Console or the Akana Administration Console associated with a container.</dd>
+<dd>The <strong>Host Name</strong>, <strong>Port Number</strong>, and <strong>Context Path</strong> combined represent the full URL. The URL represents the name or address of the machine on which the container is running. Be sure to use a name or IP address that will be recognizable to all computers that will be accessing this container. For example, if computers outside your network will be using the container, use a fully-qualified domain name or an IP address that is visible and accessible outside the network.</dd>
+
+
+<dt>Client Certificates</dt>
+<dd>Defines behavior with regard to client certificates. Choices:
+<ul>
+  <li><strong>ignore</strong></li>
+  <li><strong>accept</strong></li>
+  <li><strong>require</strong></li>
+</ul></dd>
+  <dd>If you choose <strong>accept</strong> or <strong>require</strong>, you'll see additional fields for inbound and outbound certificates, where you can select and upload a certificate to include in your container configuration.</dd>
+</dl>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="listener_config_jms"></a><h2>Listener configuration: JMS</h2>
+<p>Many of the listener configuration fields, such as name/description and thread pool fields, are the same for multiple listener types. These are briefly defined in the procedure above (see <a href="#proc_listener_add">Adding a listener</a>).</p>
+<p><img src="images/listener_jms.jpg" alt="JMS listener" /></p>
+<p>The center section of each listener page includes values specific to the individual listener. For JMS listeners, those fields are defined below. You can also use the help to the left of the page.</p>
+<dl class="apidoc_dl">
+  <dt>JNDI URL</dt>
+  <dd>Enter the URL where the Java Naming and Directory Interface (JNDI) server can be accessed.</dd>
+
+
+  <dt>JNDI Initial Context</dt>
+  <dd>Enter the starting point for resolution of names for naming and directory operations.</dd>
+
+
+  <dt>JMS Destination Factory Name</dt>
+  <dd>Enter a topic name or queue with a physical resource for the Java Message Service (JMS) Destination Factory.</dd>
+
+
+  <dt>Connection Properties</dt>
+  <dd>Optional, user-defined additional properties that allow you to specify the messaging engine that an application will connect to. Only message properties of type <strong>String</strong> are supported. To configure a connection property, define a <strong>Name</strong> and <strong>Value</strong>. You can also remove an existing property and/or add a new one.</dd>
+
+
+</dl>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="listener_config_amqp"></a><h2>Listener configuration: AMQP</h2>
+<p>Many of the listener configuration fields, such as name/description, are the same for all listener types. These are briefly defined in the procedure above (see <a href="#proc_listener_add">Adding a listener</a>).</p>
+<p><img src="images/listener_amqp.jpg" alt="AMQP listener" /></p>
+<p>The center section of each listener page includes values specific to the individual listener. For AMQP listeners, those fields are defined below. You can also use the help to the left of the page.</p>
+<dl class="apidoc_dl">
+  <dt>AMQP Version</dt>
+  <dd>Supported versions include 1.0, 0.9.1, and 0.9.</dd>
+
+
+  <dt>Virtual Host Name</dt>
+  <dd>The virtual host name of the AMQP broker.</dd>
+
+
+  <dt>Host</dt>
+  <dd>The host name. You can also remove an existing host and/or add a host.</dd>
+
+
+  <dt>Port</dt>
+  <dd>Displays the default port, 5672, used for AMQP connections.</dd>
+
+
+  <dt>Authentication Required</dt>
+  <dd>If the AMQP binding will be used to authenticate an AMQP registry where AMQP destinations or targets are located, or to authenticate the AMQP system itself, authentication might be required. To enable authentication, select the checkbox and specify the <strong>Identity Source</strong>, <strong>Username</strong>, and <strong>Password</strong>.</dd>
+
+
+
+  <dt>Connection Properties</dt>
+  <dd>Optional, user-defined additional properties that allow you to specify the messaging engine that an application will connect to. Only message properties of type <strong>String</strong> are supported. Connection Properties are configured by entering a &quot;<strong>Property Name</strong>&quot; and &quot;<strong>Property Value</strong>. You can enter unlimited connection properties.</dd>
+</dl>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="listener_config_amqps"></a><h2>Listener configuration: AMQPS</h2>
+<p>Many of the listener configuration fields, such as name/description, are the same for all listener types. These are briefly defined in the procedure above (see <a href="#proc_listener_add">Adding a listener</a>).</p>
+<p><img src="images/listener_amqps.jpg" alt="AMQPS listener" /></p>
+<p>The center section of each listener page includes values specific to the individual listener. For AMQPS listeners, those fields are defined below. The fields are essentially the same as for an AMQP listener, but the default port name is different.</p>
+<p>You can also use the help to the left of the page.</p>
+<dl class="apidoc_dl">
+  <dt>AMQP Version</dt>
+  <dd>Supported versions include 1.0, 0.9.1, and 0.9.</dd>
+
+
+  <dt>Virtual Host</dt>
+  <dd>The virtual host name of the AMQP broker.</dd>
+
+
+  <dt>Host</dt>
+  <dd>The host name. You can also remove an existing host and/or add a host.</dd>
+
+
+  <dt>Port</dt>
+  <dd>Displays the default port, 5671, used for AMQPS connections.</dd>
+
+
+  <dt>Authentication Required</dt>
+  <dd>If the AMQP binding will be used to authenticate an AMQP registry where AMQP destinations or targets are located, or to authenticate the AMQP system itself, authentication might be required. To enable authentication, select the checkbox and specify the <strong>Identity Source</strong>, <strong>Username</strong>, and <strong>Password</strong>.</dd>
+
+
+
+  <dt>Connection Properties</dt>
+  <dd>Optional, user-defined additional properties that allow you to specify the messaging engine that an application will connect to. Only message properties of type <strong>String</strong> are supported. To configure a connection property, define a <strong>Name</strong> and <strong>Value</strong>. You can also remove an existing property and/or add a new one.</dd>
+</dl>
+<p><a href="#top">Back to top</a></p>
