@@ -1,4 +1,15 @@
----
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Akana API Platform Help</title>
+<link href="../style/document.css" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+<div class="documentation supportContent">
+<!-----
 layout: page
 title: Open ID Connect Support | Business Administration | Akana API Platform Help
 description: Configure a login domain or OpenID Relying Party domain to use the OpenID Connect protocol for authentication.
@@ -8,10 +19,10 @@ sub-nav-class: Business Administration
 weight: 3218
 type: page
 nav-title: Open ID Connect Support
----
+----->
 <h2 id="top">OpenID Connect Support</h2>
 <p>Configure an OpenID Connect Relying Party domain that you can use for platform login or to support an OAuth Provider domain using OpenID Connect for authentication.</p>
-<h5 class="stamp">API Platform Version: 8.1</h5>
+<h5 class="stamp">API Platform Version: 8.1 and later</h5>
 <div class = "divider1"></div>
 
 
@@ -33,6 +44,7 @@ nav-title: Open ID Connect Support
   <li><a href="#how_often_are_json_web_keys_rolled_over">How often are JSON web keys rolled over?</a></li>
   <li><a href="#how_do_i_configure_an_openid_connect_relying_party_domain">How do I configure an OpenID Connect Relying Party domain?</a></li>
   <li><a href="#how_do_i_choose_which_response_type_to_use">How do I choose which response type to use?</a></li>
+  <li><a href="#scopes_in_id_token">How do I send the scopes in the ID token instead of in the authorization request?</a></li>
   <li><a href="#related_topics">Related Topics</a></li>
 </ol>
 
@@ -128,7 +140,7 @@ nav-title: Open ID Connect Support
   <li><strong>UserInfo Endpoint</strong>: OAuth 2.0 defines an Authorization Endpoint that is used for the resource owner (end user) to give consent to the app's request for access to the user's resources, and a Token Endpoint for the relying party (app) to obtain an access token for use when invoking APIs. This access token invokes the request with the security context of the end-user.
     <p>However, there was no standard way for the relying party app to collect information about the end user (resource owner). The OpenID Connect specification includes two ways for the app to learn information about the end user:</p>
     <ul>
-      <li>The  OpenID Connect Provider can issue an ID Token ( token) from either the Authorization Endpoint or the Token Endpoint.</li>
+      <li>The  OpenID Connect Provider can issue an ID Token (token) from either the Authorization Endpoint or the Token Endpoint.</li>
       <li>The OpenID Connect Provider can publish a UserInfo endpoint. The relying party  app can then use the UserInfo endpoint to learn information about the end-user (who gave consent to the relying party).</li>
     </ul>
   </li>
@@ -161,7 +173,7 @@ nav-title: Open ID Connect Support
   <li>When using an Authorization Grant, OAuth issues an authorization code from the Authorization Endpoint. The Relying Party application should use the Token Endpoint to retrieve the access token. However, the OpenID Connect provider allows the relying party to obtain both the Authorization Code and the access token from the Authorization Endpoint.</li>
   <li>The OpenID Connect protocol extends the Authorization Endpoint to issue a  Token (id_token) from the Authorization Endpoint to the Relying Party. In this case, the Relying Party does not use the Token Endpoint or the UserInfo Endpoint.</li>
   <li>When using OpenID Connect, the OAuth Provider should issue a Bearer token only. Issuing a MAC token from the Authorization/Token Endpoint will limit the Relying Party from using the UserInfo Endpoint.</li>
-  <li>POST response from Authorization Endpoint: the OpenID Connect provider functionality supports a query parameter to the Authorization Endpoint that requires the Authorization Endpoint to return the response parameters to an HTTP POST request at the redirect URL, instead of using a HTTP GET.
+  <li>POST response from Authorization Endpoint: The OpenID Connect provider functionality supports a query parameter to the Authorization Endpoint that requires the Authorization Endpoint to return the response parameters to an HTTP POST request at the redirect URL, instead of using a HTTP GET.
     <p><strong>Note</strong>: The platform's OpenID Connect provider does not support this option.</p></li>
 </ul>
 <p><a href="#top">Back to top</a></p>
@@ -405,6 +417,9 @@ nav-title: Open ID Connect Support
 
 <dt>Transfer OAuth Grant ID</dt>
 <dd>Check this box if the domain will be used from the OAuth provider and you want to relay the Grant ID corresponding to the inbound authorization request. The Grant ID will be sent in the authorization request via this parameter: <strong>GrantID</strong>.</dd>
+
+<dt>Use Identity Token Claims as Scopes</dt>
+<dd>Extension property: check this box only if you want to send the claims not in the access token, as is normal, but in the ID Token. Then, in the <strong>Scopes Claim</strong> text box, specify the claim name; for example, <strong>roles</strong>. For more information, see <a href="#scopes_in_id_token">How do I send the scopes in the ID token instead of in the authorization request?</a></dd>
 </dl>
 
 <p><strong>Prompt</strong></p>
@@ -493,6 +508,7 @@ nav-title: Open ID Connect Support
 <p><a href="#top">Back to top</a></p>
 
 
+
 <a name="how_do_i_choose_which_response_type_to_use"></a><h3>How do I choose which response type to use?</h3>
 <p>When you're configuring your OpenID Connect Relying Party domain, you'll need to choose a <strong>Response Type</strong> in <strong>Tab 4, Authentication</strong>. See <a href="#how_do_i_configure_an_openid_connect_relying_party_domain">How do I configure an OpenID Connect Relying Party domain?</a> above.</p>
 <p>When you make choices earlier in the wizard, including manually providing values from your OpenID Connect Provider or reading in information from a Well-Known Configuration URL, the platform dynamically modifies the list so that you are only offered valid choices. However, there might be several options. The full set of possible options is shown below.</p>
@@ -539,6 +555,30 @@ nav-title: Open ID Connect Support
 
 
 
+<a name="scopes_in_id_token"></a><h3>How do I send the scopes in the ID token instead of in the authorization request?</h3>
+<p>In a rare case, the scopes might not be available at the point in the OAuth process when the user is redirected to the authentication provider. For example, if you have a single-page application (SPA) and want to secure your API with user roles, you might not be able to determine which roles to allow until you've authenticated the user.</p>
+<p>To support this scenario, the platform's OpenID Connect Domain includes a set of two extension properties that allow you to:</p>
+<ol>
+  <li>Choose to send the scopes, not in the initial request for the Authentication Token, but instead, in the ID Token.</li>
+  <li>Specify the scopes claim name to be used in the ID Token; for example, <strong>roles</strong>. For an illustration, see <a href="#xxx">xxx</a> below.</li>
+</ol>
+<p>Here's how it works in terms of the OAuth authentication and authorization process:</p>
+<ul>
+  <li><strong>In the usual case</strong>: information about the scopes being requested is sent in the request to the Authorization Endpoint, in the <strong>scope</strong> parameter. The user is asked to authenticate and then, after authentication, is asked to grant access to the requested scopes.</li>
+  <li><strong>In this modified case</strong>: Information about the scopes being requested is not sent in the request to the Authorization Endpoint. The other values that identify the end-user and the client are included in the normal way. The user is asked to authenticate. Once the user authenticates, the Authentication Provider specified the scopes and returns this information in the ID token. The user is then asked to grant access to the requested scopes.
+  <p>A Single-Page Application (SPA) might have some limitations sending scopes in the initial /authorize call in the OAuth 2.0 flow. This modified configuration approach has been designed to overcome that limitation.</p></li>
+</ul>
+<p>This difference in the OAuth process flow is seamless to the user, but enables you to use OAuth in a scenario where the scope information isn't available until after authentication is complete.</p>
+<p>In the user interface, the additional properties are set up in the OpenID Connect Domain wizard, Tab 4, <strong>Authentication</strong>. The fields are <strong>Use Identity Token Claims as Scopes</strong> and <strong>Scopes Claim</strong>. For information about setting up these fields, see <a href="#oidcrp_domain_tab4">Tab 4: Authentication</a>. For the overall process, see <a href="#how_do_i_configure_an_openid_connect_relying_party_domain">How do I configure an OpenID Connect Relying Party domain?</a></p>
+
+<a name="eg_scopes_claim"></a>
+<h5>Example: Decoded JWT token with custom claim</h5>
+<p>The example below shows a JWT token, decoded. The three parts are indicated in different colors for the purposes of illustration. The custom roles claim is indicated in yellow highlight, and holds the actual values. In the developer portal, <strong>Use Identity Token Claims as Scopes</strong> is checked, and <strong>roles</strong> is specified as the scopes claim.</p>
+<p><img src="assets/oidc_scopes_claim.jpg" alt="Scopes Claim example" /></p>
+<p><a href="#top">Back to top</a></p>
+
+
+
 <div class = "divider1"></div>
 
 
@@ -555,19 +595,27 @@ nav-title: Open ID Connect Support
     </ul>
 </td>
     <td width="33%"><ul>
-      <li><a href="bus_admin_apis.htm">Organization APIs</a></li>
-      <li><a href="bus_admin_apps.htm">Organization Apps</a></li>
+      <li><a href="bus_admin_org_apis.htm">Organization APIs</a></li>
+      <li><a href="bus_admin_org_apps.htm">Organization Apps</a></li>
       <li><a href="bus_admin_dzs.htm">Managing Deployment Zones</a></li>
       <li><a href="bus_api_admin_forum.htm">Forum Moderation</a></li>
+      <li><a href="bus_admin_gateways.htm">Managing Gateways</a></li>
       <li><a href="bus_admin_licenses.htm">Licenses</a></li>
       <li><a href="bus_admin_scopes.htm">Scopes</a></li>
     </ul></td>
     <td width="33%"><ul>
       <li><a href="bus_admin_domains.htm">Domains</a></li>
       <li><a href="bus_admin_domains_eoap.htm">External OAuth Provider Domain</a></li>
+<!--      <li><a href="bus_admin_domains_oidc.htm">OpenID Connect Support</a></li>-->
       <li><a href="bus_admin_ov_pf_endtoend.htm">PingFederate Setup</a></li>
       <li><a href="basics_glossary.htm">Glossary of Terms</a></li>
     </ul>
 </td>
   </tr>
 </table>
+
+
+
+</div>
+</body>
+</html>
