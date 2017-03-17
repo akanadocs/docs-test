@@ -16,7 +16,7 @@ nav-title: Domain Management
   <li> OpenID Connect domain: see <a href="bus_admin_domains_oidc.htm">OpenID Connect Support</a></li>
   <li>External OAuth Provider domain: see <a href="bus_admin_domains_eoap.htm">External OAuth Provider Domain</a></li>
 </ul>
-<h5 class="stamp">API Platform Version: 8.1</h5>
+<h5 class="stamp">API Platform Version: 8.1 and later</h5>
 <div class = "divider1"></div>
 
 
@@ -713,7 +713,7 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
   <li>Administrator: Install the <strong>OAuth Provider</strong> feature via the <em>Akana Administration Console</em>. This installs the OAuth Provider domain, which the Business Admin can then access in the Akana API Platform user interface.</li>
   <li>Business Admin: Set up the domain in the Akana API Platform (see below).</li>
 </ol>
-<p><strong>Note</strong>: When you install the OAuth Provider add-on, it is added to the list of choices in <strong>Administration &gt; Domains &gt; Add Domain</strong>. It is not available as a Login option in the <strong>Administration&nbsp;&gt; Config</strong>&nbsp;&gt; <strong>Logins</strong> page.</p>
+<p><strong>Note</strong>: When you install the OAuth Provider add-on, it is added to the list of choices in <strong>Administration &gt; Domains &gt; Add Domain</strong>. It is not available as a Login option in the <strong>Administration &gt; Config</strong> &gt; <strong>Logins</strong> page.</p>
 
 
 <h5><a name="to_configure_domain_oauth_provider"></a>To configure an OAuth provider domain:</h5>
@@ -752,10 +752,10 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
   <li>Click <strong>Next</strong> to go to the <strong>Branding</strong> page. Here you can customize the page that app users will see when an API that is using this OAuth domain is requesting access to the user's resources. For more information, see <a href="#what_are_the_settings_on_the_oauth_provider_branding_page">What are the settings on the OAuth Provider Branding page and what options should I choose?</a>  </li>
   <li>Click <strong>Save</strong>. The OAuth Provider domain is saved, and is now available for selection by API Admins when setting up OAuth details (<strong>API</strong> &gt; <strong>Details</strong> &gt; on right, <strong>OAuth Details</strong>).</li>
 </ol>
-<p><strong>Note</strong>: If your implementation will have a load balancer in front of the OAuth Provider container, there is an additional setup step for the Administrator. As well as setting up the OAuth domain, the load balancer settings on your implementation must be set to the below two headers on the outbound request from the load balancer to the SOA platform containers:</p>
+<p><strong>Note</strong>: If your implementation will have a load balancer in front of the OAuth Provider container, there is an additional setup step for the Administrator. As well as setting up the OAuth domain, the load balancer settings on your implementation must be set to the below two headers on the outbound request from the load balancer to the platform containers:</p>
 <ul>
   <li><strong>X-Forwarded-Host</strong>: the hostname used to access the load balancer. You could also keep the Host header as is rather than setting this header.</li>
-  <li><strong>X-Forwarded-Proto</strong>: the protocol used to access the load balancer; HTTPS if the <a href="basics_glossary.htm#gl_vip">VIP</a> (virtual address for the load balancer) is an HTTPS address, HTTP if the VIP is an HTTP address. You can skip this step if the protocol used from the load balancer to the SOA container is the same as the protocol used from the client to the load balancer.</li>
+  <li><strong>X-Forwarded-Proto</strong>: the protocol used to access the load balancer; HTTPS if the <a href="basics_glossary.htm#gl_vip">VIP</a> (virtual address for the load balancer) is an HTTPS address, HTTP if the VIP is an HTTP address. You can skip this step if the protocol used from the load balancer to the container is the same as the protocol used from the client to the load balancer.</li>
 </ul>
 <p>If needed, get help from the Policy Manager Administrator to make sure these settings are correct.</p>
 <p><a href="#top">Back to top</a></p>
@@ -807,7 +807,7 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
     </tr>
     <tr class="t2row">
       <td>Client Restriction Settings</td>
-      <td>By default, tokens are issued to all clients with a valid ID. This setting allows you to add a restriction so that tokens are issued only to clients that have a valid connection.</td>
+      <td>Defaults to<strong> All clients</strong>; tokens are issued to all clients with a valid ID. Change to <strong>Clients with activated connections to secured API implementations</strong> if you want to add a restriction so that tokens are issued only to clients that have a valid connection.</td>
     </tr>
     <tr class="t1row">
       <td>Grant Scope Setting</td>
@@ -889,7 +889,7 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
     </tr>
     <tr class="t2row">
       <td>MAC</td>
-      <td>The <a href="basics_glossary.htm">MAC</a> token type. A MAC token includes a digital signature and a <a href="basics_glossary.htm#gl_nonce">nonce</a>, and is more secure than a bearer token. Use of a MAC token by a client is more complex than using a Bearer token; however, the MAC token offers non-repudiation and message replay attack prevention options to the API requests.</td>
+      <td>The <a href="basics_glossary.htm#gl_oauth_mactoken">MAC token</a> type. A MAC token includes a digital signature and a <a href="basics_glossary.htm#gl_nonce">nonce</a>, and is more secure than a bearer token. Use of a MAC token by a client is more complex than using a Bearer token; however, the MAC token offers non-repudiation and message replay attack prevention options to the API requests.</td>
     </tr>
     <tr class="t1row">
       <td>Default Access Token Type</td>
@@ -1115,17 +1115,17 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
 
 
 <a name="what_is_the_authorization_server_url_for_the_platform"></a><h3>What is the OAuth Authorization Server URL for the platform?</h3>
-<p>When you are setting up an OAuth Provider domain on the platform, the URL you provide for the Authorization Server is the base of the URL for the Request Token URL, Access Token URL, and Authorize URL, with additional parts of the paths as shown below.</p>
-<p>When setting up the Authorization Server URL in the platform, enter only the base of the URL, including protocol, host, and port if needed. The platform appends the appropriate path as listed below after the {oauth.provider.url} variable.</p>
+<p>When you are setting up an OAuth Provider domain on the platform, the URL you provide for the Authorization Server (OAuth endpoint) is the base of the URL for the Request Token URL, Access Token URL, and Authorize URL, with additional parts of the paths as shown below.</p>
+<p>When setting up the OAUth Authorization Server URL in the platform, enter only the base of the URL, including protocol, host, and port if needed. The platform appends the appropriate path as listed below after the {oauth.provider.url} variable.</p>
 <p>For example, if the Authorization Server URL you specified in the provider configuration was https://www.acmepaymentscorp.com:9800, use that value in place of the {oauth.provider.url} placeholder. The platform appends the rest of the URL in each case; for OAuth 2.0, OAuth Authorization Endpoint URL becomes https://www.acmepaymentscorp.com:9800/oauth/auz/authorize and OAuth Token Endpoint URL becomes  https://www.acmepaymentscorp.com:9800/oauth/oauth20/token.</p>
 <p>The full URLs for both supported OAuth versions are shown below.</p>
-<p>OAuth 1.0a:</p>
+<p>OAuth endpoints for 1.0a:</p>
 <ul>
   <li><strong>OAuth Authorization Endpoint URL</strong>: {oauth.provider.url}/oauth/auz/authorize</li>
   <li><strong>OAuth Token Endpoint Request Token URL</strong>: {oauth.provider.url}/oauth/oauth10/initiate</li>
   <li><strong>OAuth Token Endpoint Access Token URL</strong>: {oauth.provider.url}/oauth/oauth10/token</li>
 </ul>
-<p>OAuth 2.0:</p>
+<p>OAuth endpoints for 2.0:</p>
 <ul>
   <li><strong>OAuth Authorization Endpoint URL</strong>: {oauth.provider.url}/oauth/auz/authorize</li>
   <li><strong>OAuth Token Endpoint URL</strong>: {oauth.provider.url}/oauth/oauth20/token</li>
@@ -1380,7 +1380,7 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
   <li><strong>Details</strong> page: Specify values for Name and Description and then click <strong>Next</strong>.</li>
   <li><strong>Configure</strong> page: For Provider Type, choose <strong>PingFederate</strong>. Choose to provide the well-known configuration URL, paste the configuration JSON, or set up manually. If you read or paste the information, all the PingFederate values are read in automatically. Click <strong>Next</strong>.</li>
   <li><strong>Provider</strong> page: Review the values that were read in from the configuration, and adjust as needed. Click <strong>Next</strong>.</li>
-  <li><strong>Access Token Validation</strong> page: Review the values that were read in from the configuration, and adjust as needed. For information on the specific values relating to PingFederate, see <a href="bus_admin_domains_eoap.htm#settings_eoap_token_validation_pf">What are the settings on the External OAuth Provider Token Validation page for PingFederate?</a> Click <strong>Next</strong>.</li>
+  <li><strong>Access Token Validation</strong> page: Review the values that were read in from the configuration, and adjust as needed. For information on the specific values relating to PingFederate, see <a href="bus_admin_domains_eoap.htm#settings_eoap_token_validation_pf">What are the settings on the External OAuth Provider Access Token Validation page for PingFederate?</a> Click <strong>Next</strong>.</li>
   <li><strong>Extensions</strong> page: the PingFederate extension information is displayed. For more information, see <a href="bus_admin_domains_eoap.htm#settings_eoap_extensions_pf">What are the settings on the External OAuth Provider Extensions page for PingFederate, and what options should I choose?</a> Review the values and adjust as needed.</li>
   <li>Click <strong>Save</strong>.</li>
 </ol>
@@ -1492,10 +1492,11 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
     </ul>
 </td>
     <td width="33%"><ul>
-      <li><a href="bus_admin_apis.htm">Organization APIs</a></li>
-      <li><a href="bus_admin_apps.htm">Organization Apps</a></li>
+      <li><a href="bus_admin_org_apis.htm">Organization APIs</a></li>
+      <li><a href="bus_admin_org_apps.htm">Organization Apps</a></li>
       <li><a href="bus_admin_dzs.htm">Managing Deployment Zones</a></li>
       <li><a href="bus_api_admin_forum.htm">Forum Moderation</a></li>
+      <li><a href="bus_admin_gateways.htm">Managing Gateways</a></li>
       <li><a href="bus_admin_licenses.htm">Licenses</a></li>
       <li><a href="bus_admin_scopes.htm">Scopes</a></li>
     </ul></td>
