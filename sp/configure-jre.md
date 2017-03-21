@@ -3,8 +3,8 @@ layout: page
 title: Configure Java Runtime
 description: A guide to how to setup an external JRE to run the Akana Platform
 product: sp
-category: gs
-sub-nav-class: Akana Platform Installation
+category: ref
+sub-nav-class: Installation - Akana Platform
 weight: 10
 type: page
 nav-title: Configure Java Runtime
