@@ -39,6 +39,7 @@ There are several key tables that require regular maintenance:
 | ------ | ------- |
 | AM_ALERTS |  stores the fired alerts in the system
 | AM\_ALERTS_SLAS | stores the fired SLA alerts in the system
+| AM_EMAILALERTS | stores the fired email alerts in the system
 | MO_USAGEDATA\** |  stores the metadata about the Service/API calls managed by the API Gateway. This is controlled by the auditing policy
 | MO\_USAGE_NEXTHOP\** |  stores references to downstream (next hop) usage data records
 | MO_USAGEMSGS\** |  stores the Service/API calls (request/response/fault) message contents. This is controlled by the auditing policy
@@ -61,6 +62,9 @@ There are several key tables that require regular maintenance:
 | BOARD_ITEMS |  stores the tickets, discussions and reviews
 | COMMENTS |  stores the comments on the board items above (Has FK with BOARD_ITEMS with cascading delete)
 | COMMENT_MARKS | stores the 'like/thumbs-up' votes for the comments (Has FK with COMMENTS with cascading delete)
+
+<p><a href="#top">Back to top</a></p>
+
 
 
 ### <a name="built-in"></a>Using the built-in jobs
@@ -98,6 +102,10 @@ monitoring.delete.rollup.MO_ROLL_ORG_H.enable=false
 monitoring.delete.usage.enable=false
 ```
 
+<p><a href="#top">Back to top</a></p>
+
+
+
 ### <a name="using-cron"></a>Leveraging cron to delete data
 
 For higher throughput environments its better to offload the task to delete/archive data by simply executing scripts directly against the database using a cron job. The following scripts will delete all:
@@ -112,7 +120,7 @@ For higher throughput environments its better to offload the task to delete/arch
 * 1-hour rollup data in MO\_ROLL\_ORG_H older than 3 months
 * 1-day rollup data in MO\_ROLLUP_DAY older than 1 year
 * 1-day rollup data in MO\_ROLL\_ORG_D older than 1 year
-* alerts in AM\_ALERTS and AM\_ALERTS_SLAS older than 1 month
+* alerts in AM_ALERTS, AM\_ALERTS_SLAS, and AM_EMAILALERTS older than 1 month
 
 ```
 delete from MO_USAGE_NEXTHOP where REQUESTDTS < TIMESTAMPADD(MONTH, -1, now());
@@ -135,6 +143,8 @@ delete from MO_ROLLUP_DAY where INTVLSTARTDTS < TIMESTAMPADD(YEAR, -1, now());
 
 delete from MO_ROLL_ORG_D where INTVLSTARTDTS < TIMESTAMPADD(YEAR, -1, now());
 
+delete e from AM_ALERTS a inner join AM_EMAILALERTS e on e.ALERTSID = a.ALERTSID where a.SOURCEDTS < TIMESTAMPADD(MONTH, -1, now());
+
 delete s from AM_ALERTS a inner join AM_ALERTS_SLAS s on s.ALERTSID = a.ALERTSID where a.SOURCEDTS < TIMESTAMPADD(MONTH, -1, now());
 
 delete from AM_ALERTS where SOURCEDTS < TIMESTAMPADD(MONTH, -1, now());
@@ -156,6 +166,10 @@ Once satisfied with the script, you can set up a cron job to execute it each nig
 ```
 0 1 * * * /xxx/bin/cleanup.sh
 ```
+
+<p><a href="#top">Back to top</a></p>
+
+
 
 ### <a name="partitioning"></a>Partitioning large data stores
 
@@ -350,6 +364,9 @@ These scripts would be called several times with different, incremental values o
 You also might want to call this from a shell script to automate the process - see the sample script merge.sh in [sample_scripts.zip](sample_scripts.zip).
 
 **Note:** Table definitions might change based on product version. You should check to make sure that the definition above matches your table structure and alter it as necessary.
+
+<p><a href="#top">Back to top</a></p>
+
 
 
 ### <a name="partitioning-verylarge"></a>Partitioning large data stores under load (MySQL Only)
@@ -552,6 +569,10 @@ INSERT INTO MO_USAGEMSGS
 These scripts would be called several times with different, incremental values of X and Y where X and Y represents a small time interval like 6 hours. This keeps the merging of data discrete and less error-prone.
 
 You also might want to call this from a shell script to automate the process - see the sample script merge.sh in [sample_scripts.zip](sample_scripts.zip).
+
+<p><a href="#top">Back to top</a></p>
+
+
 
 ### <a name="drop-partitions"></a>Dropping partitions
 
