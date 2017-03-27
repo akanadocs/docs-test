@@ -48,7 +48,6 @@ nav-title: Upgrade 8.2 to 8.4
 
 <ol class="table_of_contents">
   <li><a href="#02_00">Overview</a></li>
-  <li><a href="#02_0a">Step 2-0a: Conditional, Pre-Upgrade Task for upgrades from 8.0.5 or earlier</a></li>
   <li><a href="#02_0b">Step 2-0b: Conditional, if Akana Integration Services feature is installed: uninstall the feature</a></li>
   <li><a href="#02_01">Step 2-1: Turn off scheduled jobs</a></li>
   <li><a href="#02_02">Step 2-2: Back up Policy Manager 8.0 and stop container</a></li>
@@ -73,20 +72,6 @@ nav-title: Upgrade 8.2 to 8.4
 
 
 
-<h5 style="color: gray;"><a href="#h_post_upgrade_tasks_old">Post-Upgrade Tasks OLD</a></h5>
-
-
-
-<ol class="table_of_contents">
-  <li><a href="#03_00_old">Overview: Completing the API Platform Post-Upgrade Tasks (old)</a></li>
-  <li><a href="#03_01_old">Step 3-1: Upgrade CM Models</a></li>
-  <li><a href="#03_02_old">Step 3-2: Update CM API</a></li>
-  <li><a href="#03_03_old">Step 3-3: (Conditional): Update OAuth API</a></li>
-  <li><a href="#03_04_old">Step 3-4: (Conditional): Rebuild CM Styles</a></li>
-</ol>
-
-
-
 <h5 style="color: gray;"><a href="#h_post_upgrade_tasks">Post-Upgrade Tasks {{NEW}}</a></h5>
 
 
@@ -99,6 +84,17 @@ nav-title: Upgrade 8.2 to 8.4
   <li><a href="#03_04">Step 3-4: Post-Upgrade Task for upgrades to 8.4: MongoDB Updates</a></li>
   <li><a href="#03_05">Step 3-5: Post-Upgrade Task for upgrades to 8.4: Rebuild CM Styles</a></li>
 </ol>
+
+
+
+<!--<h5 style="color: gray;"><a href="#h_upgrade_tasks_reference">Upgrade Tasks/Reference:</a></h5>
+
+
+
+<ol class="table_of_contents">
+  <li><a href="#xxx">xxx</a></li>
+</ol>-->
+
 
 
 
@@ -131,7 +127,6 @@ nav-title: Upgrade 8.2 to 8.4
 <p><strong>Note</strong>: In version 8.2, some of the additional packages have been incorporated into the Akana API Platform along with Community Manager and Policy Manager. Depending on the additional features you’re using, you might not have to install updates. {{follow up for more info on features}}</p>
 <p>If one of the features is installed in a container that you copy over from the earlier version during the upgrade process, and you don’t upgrade the add-on, container startup might fail after you complete the upgrade process. When you upgrade, make sure you have the latest version for any features you’re using. See <a href="#02_13">Step 2-13: Verify that features were updated correctly</a>.</p>
 <p><strong>Note</strong>: The SAML Web SSO feature remains at version 8.0. There is no upgrade to version 8.4.</p>
-<p><strong>Note</strong>: If you’re upgrading from an earlier version up to and including 8.0.5, you’ll need to uninstall a specific bundle, com.soa.oauth.interfaces, as the first step before starting the upgrade procedure. For instructions, see <a href="#02_0a">Step 2-0a: Conditional, Pre-Upgrade Task for upgrades from 8.0.5 or earlier</a>.</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -184,41 +179,12 @@ nav-title: Upgrade 8.2 to 8.4
 
 <a name="02_00"></a><h4>Overview</h4>
 <p><strong>Note</strong>: The instructions in this document are for upgrade from Akana API Platform 8.2 to Akana API Platform 8.4. If you’re upgrading from a version earlier than 8.2, you’ll need to perform additional steps first, to upgrade to Policy Manager 8.0. For instructions, see http://docs.akana.com/ag/assets/AAP_80_82_Upgrade_Guide.pdf.</p>
-<p>There is a conditional first step, see <a href="#02_0a">Step 2-0a: Conditional, Pre-Upgrade Task for upgrades from 8.0.5 or earlier</a> below.</p>
-<p>Then, at a high level, to perform the upgrade, you’ll complete the following actions:</p>
+<p>At a high level, to perform the upgrade, you’ll complete the following actions:</p>
 <ol>
   <li>Install the Akana API Platform 8.4 in a new location.</li>
   <li>Copy the AP82 container instances to the instances folder for the AP84 installation.</li>
   <li>Perform the upgrade steps from the AP84 installation, following the exact sequence given below.</li>
 </ol>
-<p><a href="#top">back to top</a></p>
-
-
-
-<a name="02_0a"></a><h4>Step 2-0a: <span class="apidoc_red">Conditional, Pre-Upgrade Task for upgrades from 8.0.5 or earlier</span></h4>
-<p><strong>{{<span class="apidoc_red">need to determine whether we need to do this step.</span>}}</strong></p>
-<p>If you’re upgrading from an earlier version up to and including 8.0.5, and using Community Manager, and didn’t perform this step during a 7.2 to 8.0 upgrade, you’ll need to uninstall a specific bundle, com.soa.oauth.interfaces, as the first step before starting the upgrade procedure. </p>
-<p>Complete this step before any other tasks.</p>
-<p>Follow this procedure on all Policy Manager containers with Community Manager, or any Community Manager add-on features, installed.</p>
-<h5>To uninstall the com.soa.oauth.interfaces bundle</h5>
-<ol>
-  <li>Identify the ID of the com.soa.oauth.interfaces bundle:
-<ol>
-  <li>Log in to the Akana Administration Console for the container.</li>
-  <li>Click the <strong>Installed Features</strong> tab.</li>
-  <li>From the drop-down menu at the top left, choose Bundle, as shown below.
-<p><img src="images/000_00_bundle_com_soa_oauth_interfaces.jpg" alt="Choosing the com.soa.oauth.interfaces bundle" /></p>
-  </li>
-  <li>Look for the com.soa.oauth.interfaces bundle.</li>
-  <li>Note the ID of the bundle (in the Bundle ID column).</li>
-</ol></li>
-  <li>Open up the shell or command prompt that you use to start the container.</li>
-  <li>Run the following command to uninstall the bundle:
-<pre>uninstall {bundleID}</pre></li>
-  <li>{{note from Scott he is using a container that's already started, and he didn't start it from xxxand this command didn't work for him}}</li>
-  <li>Repeat Steps 1–3 for any additional containers that have Policy Manager plus any Community Manager features installed.</li>
-</ol>
-<p>Once these steps are complete, proceed with the standard upgrade process.</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -688,72 +654,8 @@ Once you’ve installed and run the upgrade tool, there are three more tasks to 
 
 
 <div class = "divider1"></div>
-<a name="h_post_upgrade_tasks_old"></a><h3>Post-Upgrade Tasks (<span class="apidoc_red">OLD: CARRIED OVER FROM 8.0 TO 8.2 DOC: VERIFY/DELETE</span>)</h3>
-
-
-
-
-<a name="03_00_old"></a><h3>Overview: Completing the API Platform Post-Upgrade Tasks</h3>
-<p>Once you’ve completed the product version update, there are additional post-upgrade tasks you’ll need to complete if you’re running the Akana API Platform developer portal. Run these tasks on one of the containers with the Akana API Platform feature installed. Some of these steps are conditional depending on platform features you’re using. They include:</p>
-<ul>
-  <li><a href="#03_01_old">Step 3-1: Upgrade CM Models</a></li>
-  <li><a href="#03_02_old">Step 3-2: Update CM API</a></li>
-  <li><a href="#03_03_old">Step 3-3: (Conditional): Update OAuth API</a></li>
-  <li><a href="#03_04_old">Step 3-4: (Conditional): Rebuild CM Styles</a></li>
-</ul>
-<p><a href="#top">back to top</a></p>
-
-
-
-<a name="03_01_old"></a><h4>Step 3-1: Upgrade CM Models</h4>
-<p>After upgrading, run the Upgrade CM Models post-upgrade task on one of the containers with the Akana API Platform feature installed:</p>
-<ol>
-  <li>In the Akana Administration Console, on the <strong>Configuration</strong> tab, under <strong>Configuration Actions</strong>, choose <strong>Upgrade CM Models</strong>.</li>
-  <li>When done, click <strong>Close</strong>.</li>
-</ol>
-<p><a href="#top">back to top</a></p>
-
-
-
-<a name="03_02_old"></a><h4>Step 3-2: Update CM API</h4>
-<p>Run the Update CM API task on one of the containers with the Akana API Platform feature installed. This task updates APIs that were already provisioned.</p>
-<ol>
-  <li>In the Akana Administration Console, on the <strong>Configuration</strong> tab, under <strong>Configuration Actions</strong>, choose <strong>Update CM API</strong>.</li>
-  <li>When done, click <strong>Close</strong>.</li>
-</ol>
-<p><a href="#top">back to top</a></p>
-
-
-
-<a name="03_03_old"></a><h4>Step 3-3: (Conditional): Update OAuth API</h4>
-Conditional, if the OAuth Provider feature is installed: run the Update OAuth API upgrade task. This task updates any changes to two key API services needed for OAuth:
-<ul>
-  <li>AuthorizationServerAgentAPI: Used when the OAuth Provider Agent feature is deployed in a container without database access.</li>
-  <li>ResourceServerAPI: Used by the API Gateway to validate OAuth access tokens when processing API requests.</li>
-</ul>
-<h5>To update OAuth API</h5>
-<ol>
-  <li>In the Akana Administration Console, on the <strong>Configuration</strong> tab, under <strong>Configuration Actions</strong>, choose <strong>Update OAuth API</strong>.</li>
-  <li>When done, click <strong>Close</strong>.</li>
-</ol>
-<p><a href="#top">back to top</a></p>
-
-
-
-<a name="03_04_old"></a><h4>Step 3-4: (Conditional): Rebuild CM Styles</h4>
-<p>As part of every upgrade, if you are using the developer portal, you’ll need to run the <strong>Rebuild CM Styles</strong> post-install task. This makes sure that you have the latest style updates, for all themes and tenants.</p>
-<h5>To rebuild CM styles</h5>
-<ol>
-  <li>In the Akana Administration Console, on the <strong>Configuration</strong> tab, under <strong>Configuration Actions</strong>, choose <strong>Rebuild CM Styles</strong>.</li>
-  <li>When done, click <strong>Close</strong>.</li>
-</ol>
-<p><a href="#top">back to top</a></p>
-
-
-
-
-<div class = "divider1"></div>
 <a name="h_post_upgrade_tasks"></a><h3>Post-Upgrade Tasks</h3>
+
 
 
 
@@ -771,6 +673,7 @@ Conditional, if the OAuth Provider feature is installed: run the Update OAuth AP
 
 
 <a name="03_01"></a><h4>Step 3-1: Run upgrade tool: "Akana 8.2 to 8.4 model upgrade"</h4>
+<!--<p>{{<span class="apidoc_red">MM 3/27/17: Upgrade CM Models need to be run once, order should not matter.</span>}}</p>-->
 <p>The next step is to run the 8.2 to 8.4 upgrade tool, to update Policy Manager database objects from version 8.2 to 8.4.</p>
 <p>Before running this tool, change the <strong>failure.data.capture.enabled</strong> setting in the configuration file. Changing this setting will save memory for logging events during the upgrade process. It’s important to change this setting; if you don’t, there might be memory issues during upgrade. If you want to, you can change the setting back afterwards. When set to true, this setting indents entries in the log file.</p>
 <p>Follow these two steps:</p>
@@ -821,14 +724,37 @@ Conditional, if the OAuth Provider feature is installed: run the Update OAuth AP
 
 
 <a name="03_03"></a><h4>Step 3-3: Upgrade task when upgrading to 8.4: delete and install object mappings</h4>
+<!--<p>{{<span class="apidoc_red">MM 3/27/17: Delete mappings can be done at any time after the upgrade.</span>}}</p>-->
 <p>Because of specific changes in the Elasticsearch mappings in version 8.3 and 8.4, as part of the upgrade process you’ll need to delete the object mappings, and then add the updated mappings. This is because an additional object, Organizations, was added.</p>
 <p>You’ll need to delete the existing Elasticsearch app and API mappings and then update app, API, and business organization mappings from the installation bundle.</p>
-<p>There are two steps to this:</p>
+<p>There are three steps to this:</p>
 <ol>
+  <li>In the Policy Manager console, grant admin permissions to send API calls, to the current user. This is needed so that Step 2 will be successful. If you don't complete this step, the API&nbsp;calls return a 401 (unauthorized) response.</li>
   <li>Delete mappings using the API: see To delete mappings using the API below.</li>
   <li>Run a database script: see To reindex objects using a database script below.</li>
 </ol>
-<h5>To delete mappings using the API</h5>
+
+
+
+<a name="03_03_01"></a><h5>To grant Admin permission</h5>
+<ol>
+  <li>Log in to the Policy Manager console as the Administrator.</li>
+  <li>Click the <strong>Workbench</strong> tab and then, on the left, click <strong>Registry</strong>.</li>
+  <li>On the right, click the <strong>Security</strong> tab, as shown below.
+<p><img src="images/03_03_01_add_permissions.jpg" alt="Add permissions: Security tab" /></p>
+  </li>
+  <li>In the right pane, scroll down to the <strong>Role Memberships</strong> section, and find the System Administrator role. On the right, click <strong>Manage Role</strong>, as shown below.
+    <p><img src="images/03_03_02_add_permissions.jpg" alt="Add permissions: modifying the permission" /></p>
+  </li>
+  <li>In the <strong>Object Based Security Role</strong> page, use the search feature to locate the user. In the example below, choosing Contains with no value and clicking Save will return a full list of users. Click the username in the left pane and click the arrow icon (<strong>&gt;&gt;</strong>) to move the admin user to the right pane, to assign the role.
+    <p><img src="images/03_03_03_add_permissions.jpg" alt="Add permissions: assigning user to role" /></p>
+  </li>
+  <li>Click <strong>Apply</strong>. The admin user now has the System Administrator role and can use the API.</li>
+  </ol>
+<p><strong>Note</strong>: You can also grand permissions in the developer portal: Administration &gt; Users. See <a href="docs.akana.com/cm/learnmore/bus_admin_organizations.htm#business_assign_roles_to_users">How do I assign security roles to users for my organization?</a> However, you might find that the System Administrator permission isn't displayed on the list.</p>
+
+
+<a name="03_03_02"></a><h5>To delete mappings using the API</h5>
 <ol>
   <li>Run the operation below to delete the existing API mappings:
 <pre>Accept: text/plain
@@ -851,7 +777,8 @@ http://open:9900/api/index/default/app/mapping</pre></li>
 PUT
 http://open:9900/api/index/default/business/mapping</pre></li>
 </ol>
-<h5>To reindex objects using a database script</h5>
+
+<a name="03_03_03"></a><h5>To reindex objects using a database script</h5>
 <p>When you’ve completed the above steps, you’ll need to reindex the API, app, and business objects by running this database command:</p>
 <pre>delete from INDEX_STATUS where OBJECTTYPE in ('api', 'app', ‘business’);</pre>
 <p>Now, complete the next step, Run upgrade tool: "Akana 8.2 to 8.4 model upgrade" below, before resuming the standard upgrade procedure.</p>
@@ -886,6 +813,7 @@ http://open:9900/api/index/default/business/mapping</pre></li>
   <tr>
     <td width="300" valign="top"><p><strong>Version 8.2:</strong></p>
       <ul>
+<!--        <li><a href="../platform_install/installing_akana_api_platform_v82.htm">Installing the Akana API Platform 8.2x</a></li>-->
         <li><a href="../platform_install/install_cm_jython_script.htm">Installation Jython Script</a></li>
         <li><a href="../platform_install/implementation_planning.htm">Planning Your Implementation</a></li>
       </ul>
