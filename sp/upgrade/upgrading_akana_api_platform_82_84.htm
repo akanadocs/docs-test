@@ -92,24 +92,13 @@ nav-title: Upgrade 8.2 to 8.4
 
 
 <ol class="table_of_contents">
-  <li><a href="#03_00">Upgrade task when upgrading to 8.4: Overview</a></li>
-  <li><a href="#03_01">Step 3-1: Upgrade task when upgrading to 8.4: delete and install object mappings</a></li>
-  <li><a href="#03_02">Step 3-2: Run upgrade tool: "Akana 8.2 to 8.4 model upgrade"</a></li>
-  <li><a href="#03_03">Step 3-3: Post-Upgrade Task for upgrades to 8.4: Provisioning and Upgrade CM Models tasks</a></li>
+  <li><a href="#03_00">Upgrade tasks when upgrading to 8.4: Overview</a></li>
+  <li><a href="#03_01">Step 3-1: Run upgrade tool: "Akana 8.2 to 8.4 model upgrade"</a></li>
+  <li><a href="#03_02">Step 3-2: Post-Upgrade Task for upgrades to 8.4: Provisioning and Upgrade CM Models tasks</a></li>
+  <li><a href="#03_03">Step 3-3: Upgrade task when upgrading to 8.4: delete and install object mappings</a></li>
   <li><a href="#03_04">Step 3-4: Post-Upgrade Task for upgrades to 8.4: MongoDB Updates</a></li>
   <li><a href="#03_05">Step 3-5: Post-Upgrade Task for upgrades to 8.4: Rebuild CM Styles</a></li>
 </ol>
-
-
-
-<!--<h5 style="color: gray;"><a href="#h_upgrade_tasks_reference">Upgrade Tasks/Reference:</a></h5>
-
-
-
-<ol class="table_of_contents">
-  <li><a href="#xxx">xxx</a></li>
-</ol>-->
-
 
 
 
@@ -207,6 +196,7 @@ nav-title: Upgrade 8.2 to 8.4
 
 
 <a name="02_0a"></a><h4>Step 2-0a: <span class="apidoc_red">Conditional, Pre-Upgrade Task for upgrades from 8.0.5 or earlier</span></h4>
+<p><strong>{{<span class="apidoc_red">need to determine whether we need to do this step.</span>}}</strong></p>
 <p>If you’re upgrading from an earlier version up to and including 8.0.5, and using Community Manager, and didn’t perform this step during a 7.2 to 8.0 upgrade, you’ll need to uninstall a specific bundle, com.soa.oauth.interfaces, as the first step before starting the upgrade procedure. </p>
 <p>Complete this step before any other tasks.</p>
 <p>Follow this procedure on all Policy Manager containers with Community Manager, or any Community Manager add-on features, installed.</p>
@@ -225,6 +215,7 @@ nav-title: Upgrade 8.2 to 8.4
   <li>Open up the shell or command prompt that you use to start the container.</li>
   <li>Run the following command to uninstall the bundle:
 <pre>uninstall {bundleID}</pre></li>
+  <li>{{note from Scott he is using a container that's already started, and he didn't start it from xxxand this command didn't work for him}}</li>
   <li>Repeat Steps 1–3 for any additional containers that have Policy Manager plus any Community Manager features installed.</li>
 </ol>
 <p>Once these steps are complete, proceed with the standard upgrade process.</p>
@@ -766,12 +757,12 @@ Conditional, if the OAuth Provider feature is installed: run the Update OAuth AP
 
 
 
-<a name="03_00"></a><h4>Upgrade task when upgrading to 8.4: Overview</h4>
+<a name="03_00"></a><h4>Upgrade tasks when upgrading to 8.4: Overview</h4>
 <p>Once you’ve completed the product version update, there are additional post-upgrade tasks you’ll need to complete. Run these tasks on one of the containers with the Akana API Platform feature installed. Some of these steps are conditional depending on platform features you’re using. They include:</p>
 <ul>
-  <li><a href="#03_01">Step 3-1: Upgrade task when upgrading to 8.4: delete and install object mappings</a></li>
-  <li><a href="#03_02">Step 3-2: Run upgrade tool: "Akana 8.2 to 8.4 model upgrade"</a></li>
-  <li><a href="#03_03">Step 3-3: Post-Upgrade Task for upgrades to 8.4: Provisioning and Upgrade CM Models tasks</a></li>
+  <li><a href="#03_01">Step 3-1: Run upgrade tool: "Akana 8.2 to 8.4 model upgrade"</a></li>
+  <li><a href="#03_02">Step 3-2: Post-Upgrade Task for upgrades to 8.4: Provisioning and Upgrade CM Models tasks</a></li>
+  <li><a href="#03_03">Step 3-3: Upgrade task when upgrading to 8.4: delete and install object mappings</a></li>
   <li><a href="#03_04">Step 3-4: Post-Upgrade Task for upgrades to 8.4: MongoDB Updates</a></li>
   <li><a href="#03_05">Step 3-5: Post-Upgrade Task for upgrades to 8.4: Rebuild CM Styles</a></li>
 </ul>
@@ -779,7 +770,57 @@ Conditional, if the OAuth Provider feature is installed: run the Update OAuth AP
 
 
 
-<a name="03_01"></a><h4>Step 3-1: Upgrade task when upgrading to 8.4: delete and install object mappings</h4>
+<a name="03_01"></a><h4>Step 3-1: Run upgrade tool: "Akana 8.2 to 8.4 model upgrade"</h4>
+<p>The next step is to run the 8.2 to 8.4 upgrade tool, to update Policy Manager database objects from version 8.2 to 8.4.</p>
+<p>Before running this tool, change the <strong>failure.data.capture.enabled</strong> setting in the configuration file. Changing this setting will save memory for logging events during the upgrade process. It’s important to change this setting; if you don’t, there might be memory issues during upgrade. If you want to, you can change the setting back afterwards. When set to true, this setting indents entries in the log file.</p>
+<p>Follow these two steps:</p>
+<ol>
+  <li>To change the <strong>failure.data.capture.enabled</strong> configuration setting (below)</li>
+  <li>To install the 8.2 to 8.4 upgrade tool (below)</li>
+</ol>
+<p><strong>Note</strong>: Perform these steps only once, on one container that has database connectivity and has Policy Manager Service installed.</p>
+<h5>To change the failure.data.capture.enabled configuration setting</h5>
+<ol>
+  <li>Log in to the Akana Administration Console for your upgraded installation, using Administrator credentials.</li>
+  <li>Click the <strong>Configuration</strong> tab.</li>
+  <li>Turn off <strong>failure.data.capture.enabled</strong>:
+<ol>
+  <li>On the left, under <strong>Configuration Categories</strong>, find the <strong>com.soa.framework</strong> category.</li>
+  <li>Locate the <strong>failure.data.capture.enabled</strong> property and change it to false.</li>
+  <li>Click <strong>Apply Changes</strong>.</li>
+</ol></li>
+</ol>
+<h5>To install the 8.2 to 8.4 upgrade tool</h5>
+<ol>
+  <li>Launch the Akana Administration Console for your upgraded installation, using Administrator credentials.</li>
+  <li>Click the <strong>Available Features</strong> tab.</li>
+  <li>From the <strong>Filter</strong> drop-down, select <strong>Tool</strong>.</li>
+  <li>Select <strong>Akana 8.2 to 8.4 model upgrade</strong>, as shown below, and click <strong>Install Feature</strong>. The upgrade tool is installed.
+  <p>uptohere UpgradeTool.png</p></li>
+</ol>
+<p>Now, continue with the standard upgrade process in the upgrade documentation; see http://docs.akana.com/sp/upgrade/upgrading_akana_api_platform_82_84.htm (Akana docs site).</p>
+<p><a href="#top">back to top</a></p>
+
+
+
+<a name="03_02"></a><h4>Step 3-2: Post-Upgrade Task for upgrades to 8.4: Provisioning and Upgrade CM Models tasks</h4>
+<p>If you’re upgrading from any previous version to version 8.4, you’ll need to complete the <strong>Provisioning</strong> and <strong>Upgrade CM Model</strong>s tasks as part of the upgrade process.</p>
+<p>Make sure the below steps are included in your upgrade process:</p>
+<ol>
+  <li>In the Akana Administration Console, click the <strong>Configuration</strong> tab.</li>
+  <li>In the <strong>Configuration Actions</strong> section, choose the <strong>Provisioning</strong> configuration action. You’ll be prompted for any input needed to complete the provisioning step.</li>
+  <li>Repeat as needed for additional containers.</li>
+  <li>Stop and restart all containers.</li>
+  <li>Complete the <strong>Upgrade CM Models</strong> post-upgrade task:
+<ol>
+  <li>In the Akana Administration Console, on the <strong>Configuration</strong> tab, under <strong>Configuration Actions</strong>, choose <strong>Upgrade CM Models</strong>.</li>
+  <li>When done, click <strong>Close</strong>.</li>
+</ol></li></ol>
+<p><a href="#top">back to top</a></p>
+
+
+
+<a name="03_03"></a><h4>Step 3-3: Upgrade task when upgrading to 8.4: delete and install object mappings</h4>
 <p>Because of specific changes in the Elasticsearch mappings in version 8.3 and 8.4, as part of the upgrade process you’ll need to delete the object mappings, and then add the updated mappings. This is because an additional object, Organizations, was added.</p>
 <p>You’ll need to delete the existing Elasticsearch app and API mappings and then update app, API, and business organization mappings from the installation bundle.</p>
 <p>There are two steps to this:</p>
@@ -818,56 +859,6 @@ http://open:9900/api/index/default/business/mapping</pre></li>
 
 
 
-<a name="03_02"></a><h4>Step 3-2: Run upgrade tool: "Akana 8.2 to 8.4 model upgrade"</h4>
-<p>The next step is to run the 8.2 to 8.4 upgrade tool, to update Policy Manager database objects from version 8.2 to 8.4.</p>
-<p>Before running this tool, change the <strong>failure.data.capture.enabled</strong> setting in the configuration file. Changing this setting will save memory for logging events during the upgrade process. It’s important to change this setting; if you don’t, there might be memory issues during upgrade. If you want to, you can change the setting back afterwards. When set to true, this setting indents entries in the log file.</p>
-<p>Follow these two steps:</p>
-<ol>
-  <li>To change the <strong>failure.data.capture.enabled</strong> configuration setting (below)</li>
-  <li>To install the 8.2 to 8.4 upgrade tool (below)</li>
-</ol>
-<p><strong>Note</strong>: Perform these steps only once, on one container that has database connectivity and has Policy Manager Service installed.</p>
-<h5>To change the failure.data.capture.enabled configuration setting</h5>
-<ol>
-  <li>Log in to the Akana Administration Console for your upgraded installation, using Administrator credentials.</li>
-  <li>Click the <strong>Configuration</strong> tab.</li>
-  <li>Turn off <strong>failure.data.capture.enabled</strong>:
-<ol>
-  <li>On the left, under <strong>Configuration Categories</strong>, find the <strong>com.soa.framework</strong> category.</li>
-  <li>Locate the <strong>failure.data.capture.enabled</strong> property and change it to false.</li>
-  <li>Click <strong>Apply Changes</strong>.</li>
-</ol></li>
-</ol>
-<h5>To install the 8.2 to 8.4 upgrade tool</h5>
-<ol>
-  <li>Launch the Akana Administration Console for your upgraded installation, using Administrator credentials.</li>
-  <li>Click the <strong>Available Features</strong> tab.</li>
-  <li>From the <strong>Filter</strong> drop-down, select <strong>Tool</strong>.</li>
-  <li>Select <strong>Akana 8.2 to 8.4 model upgrade</strong>, as shown below, and click <strong>Install Feature</strong>. The upgrade tool is installed.
-  <p>uptohere UpgradeTool.png</p></li>
-</ol>
-<p>Now, continue with the standard upgrade process in the upgrade documentation; see http://docs.akana.com/sp/upgrade/upgrading_akana_api_platform_82_84.htm (Akana docs site).</p>
-<p><a href="#top">back to top</a></p>
-
-
-
-<a name="03_03"></a><h4>Step 3-3: Post-Upgrade Task for upgrades to 8.4: Provisioning and Upgrade CM Models tasks</h4>
-<p>If you’re upgrading from any previous version to version 8.4, you’ll need to complete the <strong>Provisioning</strong> and <strong>Upgrade CM Model</strong>s tasks as part of the upgrade process.</p>
-<p>Make sure the below steps are included in your upgrade process:</p>
-<ol>
-  <li>In the Akana Administration Console, click the <strong>Configuration</strong> tab.</li>
-  <li>In the <strong>Configuration Actions</strong> section, choose the <strong>Provisioning</strong> configuration action. You’ll be prompted for any input needed to complete the provisioning step.</li>
-  <li>Repeat as needed for additional containers.</li>
-  <li>Stop and restart all containers.</li>
-  <li>Complete the <strong>Upgrade CM Models</strong> post-upgrade task:
-<ol>
-  <li>In the Akana Administration Console, on the <strong>Configuration</strong> tab, under <strong>Configuration Actions</strong>, choose <strong>Upgrade CM Models</strong>.</li>
-  <li>When done, click <strong>Close</strong>.</li>
-</ol></li></ol>
-<p><a href="#top">back to top</a></p>
-
-
-
 <a name="03_04"></a><h4>Step 3-4: Post-Upgrade Task for upgrades to 8.4: MongoDB Updates</h4>
 <p>Version 8.4 includes some changes to the MongoDB database schema. To implement these updates, the upgrade process includes a new configuration action, <strong>Install Configuration Data and Indexes in MongoDB</strong>. Make sure you complete this configuration action along with all others when upgrading.</p>
 <p>The upgrade wizard steps you through the configuration action; if you don’t complete the installation in one session, be sure to go back and make sure all configuration actions are complete. In the Akana Administration Console, Configuration tab, at the bottom left, the <strong>Configuration Actions</strong> section should be empty when the upgrade process is complete.</p>
@@ -895,7 +886,6 @@ http://open:9900/api/index/default/business/mapping</pre></li>
   <tr>
     <td width="300" valign="top"><p><strong>Version 8.2:</strong></p>
       <ul>
-<!--        <li><a href="../platform_install/installing_akana_api_platform_v82.htm">Installing the Akana API Platform 8.2x</a></li>-->
         <li><a href="../platform_install/install_cm_jython_script.htm">Installation Jython Script</a></li>
         <li><a href="../platform_install/implementation_planning.htm">Planning Your Implementation</a></li>
       </ul>
