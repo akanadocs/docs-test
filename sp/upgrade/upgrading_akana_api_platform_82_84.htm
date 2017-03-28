@@ -48,7 +48,6 @@ nav-title: Upgrade 8.2 to 8.4
 
 <ol class="table_of_contents">
   <li><a href="#02_00">Overview</a></li>
-  <li><a href="#02_0b">Step 2-0b: Conditional, if Akana Integration Services feature is installed: uninstall the feature</a></li>
   <li><a href="#02_01">Step 2-1: Turn off scheduled jobs</a></li>
   <li><a href="#02_02">Step 2-2: Back up Policy Manager 8.0 and stop container</a></li>
   <li><a href="#02_03">Step 2-3: Extract new ZIP files in sequence</a></li>
@@ -64,15 +63,13 @@ nav-title: Upgrade 8.2 to 8.4
   <li><a href="#02_13">Step 2-13: Verify that features were updated correctly</a></li>
   <li><a href="#02_14">Step 2-14: Run pending installation tasks and restart container</a></li>
   <li><a href="#02_15">Step 2-15: Upgrade all containers before installing the upgrade tool</a></li>
-  <li><a href="#02_16">Step 2-16: Install Akana AP 8.4 upgrade tool to upgrade database</a></li>
-  <li><a href="#02_17">Step 2-17: After installing upgrade tool, complete configuration</a></li>
-  <li><a href="#02_18">Step 2-18: Turn scheduled jobs back on</a></li>
-  <li><a href="#02_19">Step 2-19: Update container metadata and authentication options</a></li>
+  <li><a href="#02_16">Step 2-16: Turn scheduled jobs back on</a></li>
+  <li><a href="#02_17">Step 2-17: Update container metadata and authentication options</a></li>
 </ol>
 
 
 
-<h5 style="color: gray;"><a href="#h_post_upgrade_tasks">Post-Upgrade Tasks {{NEW}}</a></h5>
+<h5 style="color: gray;"><a href="#h_post_upgrade_tasks">Post-Upgrade Tasks</a></h5>
 
 
 
@@ -85,15 +82,6 @@ nav-title: Upgrade 8.2 to 8.4
   <li><a href="#03_05">Step 3-5: Post-Upgrade Task for upgrades to 8.4: Rebuild CM Styles</a></li>
 </ol>
 
-
-
-<!--<h5 style="color: gray;"><a href="#h_upgrade_tasks_reference">Upgrade Tasks/Reference:</a></h5>
-
-
-
-<ol class="table_of_contents">
-  <li><a href="#xxx">xxx</a></li>
-</ol>-->
 
 
 
@@ -139,8 +127,7 @@ nav-title: Upgrade 8.2 to 8.4
 <ol>
   <li><strong>The Akana Platform</strong>: an OSGI environment. Akana features run within this environment, obey its constraints, and make use of its facilities. The platform supports Windows and Unix (Linux, Solaris, AIX) environments.</li>
   <li><strong>The Akana API Platform</strong>.</li>
-  <li><strong>Add-Ons</strong>: Any platform add-ons you are using that are not included in the Akana API Platform. {{research}}
-<p><strong>Note</strong>: If your installation uses the Akana Integration Services add-on, you’ll have to complete an extra step before beginning the upgrade process. Integration Services are now part of the main Akana API Platform installation ZIP file; there is no longer a separate bundle to install. However, you must uninstall the Akana Integration Services feature as the first step of the installation procedure. See <a href="#02_0b">Step 2-0b: Conditional, if Akana Integration Services feature is installed: uninstall the feature</a>.</p></li>
+  <li><strong>Add-Ons</strong>: Any platform add-ons you are using that are not included in the Akana API Platform.</li>
 </ol>
 <h5>Gather ZIP files and create folder</h5>
 <ol>
@@ -189,28 +176,13 @@ nav-title: Upgrade 8.2 to 8.4
 
 
 
-<a name="02_0b"></a><h4>Step 2-0b: <span class="apidoc_red">Conditional, if Akana Integration Services feature is installed: uninstall the feature</span></h4>
-<p>If your previous installation included the Akana Integration Services feature, for integration with the Lifecycle Manager product, you won’t need to install that feature separately in 8.4. However, you’ll need to uninstall the existing version of the feature before continuing with the installation process.</p>
-<h5>To uninstall the Akana Integration Services feature</h5>
-<ol>
-  <li>Log in to the version 8.0 Akana Administration Console using Administrator credentials.</li>
-  <li>Click the <strong>Installed Features</strong> tab.</li>
-  <li>Click the Akana Integration Services feature.</li>
-  <li>In the right column, click the Uninstall icon.</li>
-  <li>Follow the prompts to uninstall the feature.</li>
-</ol>
-<p>The next step is to start the upgrade.</p>
-<p><a href="#top">back to top</a></p>
-
-
-
 <a name="02_01"></a><h4>Step 2-1: Turn off scheduled jobs</h4>
 <p>Before upgrading, you must turn off scheduled jobs in the configuration settings, including:</p>
 <ul>
   <li>com.soa.scheduler.quartz</li>
   <li>simple.scheduler.enabled</li>
 </ul>
-<p>When upgrade is complete, you’ll turn these properties back on again (see <a href="#02_18">Step 2-18: Turn scheduled jobs back on</a>). </p>
+<p>When upgrade is complete, you’ll turn these properties back on again (see <a href="#02_16">Step 2-16: Turn scheduled jobs back on</a>). </p>
 <p><strong>Note</strong>: Perform this step for all AP84 containers with Policy Manager features installed.</p>
 <h5>To turn off scheduled jobs</h5>
 <ol>
@@ -556,56 +528,8 @@ Before you install the Akana Upgrade Tool 8.4 (next step), make sure:
 
 
 
-<a name="02_16"></a><h4>Step 2-16: Install <span class="apidoc_red">Akana PM 8.4 upgrade tool</span> to upgrade database</h4>
-<p><strong>Note</strong>: Perform this step only once, on one container that has database connectivity and has Policy Manager Service installed.</p>
-<p>After the container has successfully restarted, the next step is to install the 8.4 upgrade tool. This upgrades the database to the new version. Follow the steps below.</p>
-<h5>To install the upgrade tool</h5>
-<ol>
-  <li>Launch the Akana Administration Console for AP84 using Administrator credentials.</li>
-  <li>Click the <strong>Available Features</strong> tab.</li>
-  <li>From the <strong>Filter</strong> drop-down, select <strong>Tool</strong>.</li>
-  <li>Select Akana PM 8.4 Upgrade and click <strong>Install Feature</strong>, as shown below. The upgrade tool is installed.
-<p><img src="images/01_14_upgrade_tool_82.jpg" alt="The upgrade tool" /></p></li>
-  <li>Click <strong>Configure</strong>. The 8.2 to 8.4 upgrade wizard appears, as shown below.
-    <p><img src="images/01_15_80_82_upgrade_tool.jpg" alt="Upgrade wizard" /></p></li>
-  <li>To complete the configuration, click <strong>Finish</strong>.</li>
-  <li>At the prompt, restart the container.</li>
-</ol>
-<p><a href="#top">back to top</a></p>
-
-
-
-<a name="02_17"></a><h4>Step 2-17: After installing upgrade tool, complete configuration</h4>
-Once you’ve installed and run the upgrade tool, there are three more tasks to run to complete the configuration:
-<ol>
-  <li>An additional pending configuration task: Upgrade Database Objects to the 8.4 Model. See To upgrade database objects to 8.4 below.</li>
-  <li>Run the provisioning task again, once for each Policy Manager container. See To run provisioning on all containers below.</li>
-  <li>Restart all containers. See To restart all containers below.</li>
-</ol>
-<h5>To upgrade database objects to 8.4</h5>
-<ol>
-  <li>Run the pending configuration task (once per installation):</li>
-  <li>In the Akana Administration Console, go to the <strong>Configuration</strong> tab.</li>
-  <li>At the bottom left, click <strong>Upgrade Database Objects to 8.4 model</strong>.</li>
-  <li>Follow the steps of the wizard.</li>
-  <li>Then, run the provisioning task again, once for each Policy Manager container.</li>
-  <li>Restart all containers.</li>
-</ol>
-<h5>To run provisioning on all containers</h5>
-<ol>
-  <li>In the Akana Administration Console for the first Policy Manager container, click the <strong>Configuration</strong> tab.</li>
-  <li>At the bottom left, under Configuration Actions, click <strong>Provisioning</strong>.</li>
-  <li>Make sure the checkbox is checked, and then click <strong>Finish</strong>.</li>
-  <li>Repeat steps 1–3 for each Policy Manager container.</li>
-</ol>
-<h5>To restart all containers</h5>
-<p>Shut down all the containers.</p>
-<p>Restart the containers. The recommended sequence is to start PM first, then CM, then ND.</p>
-<p><a href="#top">back to top</a></p>
-
-
-
-<a name="02_18"></a><h4>Step 2-18: Turn scheduled jobs back on</h4>
+<a name="02_16"></a><h4>Step 2-16: Turn scheduled jobs back on</h4>
+<p>{{<span class="apidoc_red">3/28 query whether this step should be later. Previously it was after installing and running the upgrade tool and running provisioning. Gagan?</span>}}</p>
 <p>Now it’s time to turn back on the properties that you turned off in Step 2-1.</p>
 <p><strong>Note</strong>: Perform this step for all the AP82 containers with Policy Manager features installed, which have now been upgraded to AP84. Before performing this step, make sure the container was restarted.</p>
 <h5>To turn scheduled jobs back on</h5>
@@ -629,7 +553,7 @@ Once you’ve installed and run the upgrade tool, there are three more tasks to 
 
 
 
-<a name="02_19"></a><h4>Step 2-19: Update container metadata and authentication options</h4>
+<a name="02_17"></a><h4>Step 2-17: Update container metadata and authentication options</h4>
 <p>The final step in the upgrade process is to update the Metadata URL and Authentication Options of each container you upgraded, in Policy Manager. This updates the container capabilities to support the latest features.</p>
 <h5>To update container metadata and authentication options</h5>
 <ol>
@@ -673,7 +597,6 @@ Once you’ve installed and run the upgrade tool, there are three more tasks to 
 
 
 <a name="03_01"></a><h4>Step 3-1: Run upgrade tool: "Akana 8.2 to 8.4 model upgrade"</h4>
-<!--<p>{{<span class="apidoc_red">MM 3/27/17: Upgrade CM Models need to be run once, order should not matter.</span>}}</p>-->
 <p>The next step is to run the 8.2 to 8.4 upgrade tool, to update Policy Manager database objects from version 8.2 to 8.4.</p>
 <p>Before running this tool, change the <strong>failure.data.capture.enabled</strong> setting in the configuration file. Changing this setting will save memory for logging events during the upgrade process. It’s important to change this setting; if you don’t, there might be memory issues during upgrade. If you want to, you can change the setting back afterwards. When set to true, this setting indents entries in the log file.</p>
 <p>Follow these two steps:</p>
@@ -724,14 +647,13 @@ Once you’ve installed and run the upgrade tool, there are three more tasks to 
 
 
 <a name="03_03"></a><h4>Step 3-3: Upgrade task when upgrading to 8.4: delete and install object mappings</h4>
-<!--<p>{{<span class="apidoc_red">MM 3/27/17: Delete mappings can be done at any time after the upgrade.</span>}}</p>-->
 <p>Because of specific changes in the Elasticsearch mappings in version 8.3 and 8.4, as part of the upgrade process you’ll need to delete the object mappings, and then add the updated mappings. This is because an additional object, Organizations, was added.</p>
 <p>You’ll need to delete the existing Elasticsearch app and API mappings and then update app, API, and business organization mappings from the installation bundle.</p>
 <p>There are three steps to this:</p>
 <ol>
-  <li>In the Policy Manager console, grant admin permissions to send API calls, to the current user. This is needed so that Step 2 will be successful. If you don't complete this step, the API&nbsp;calls return a 401 (unauthorized) response.</li>
-  <li>Delete mappings using the API: see To delete mappings using the API below.</li>
-  <li>Run a database script: see To reindex objects using a database script below.</li>
+  <li>In the Policy Manager console, grant admin permissions to send API calls, to the current user. This is needed so that Step 2 will be successful. If you don't complete this step, the API&nbsp;calls return a 401 (unauthorized) response. See <a href="#03_03_01">To grant Admin permission</a> below.</li>
+  <li>Delete mappings using the API: see <a href="#03_03_02">To delete mappings using the API</a> below.</li>
+  <li>Run a database script: see<a href="#03_03_03"> To reindex objects using a database script</a> below.</li>
 </ol>
 
 
@@ -813,7 +735,6 @@ http://open:9900/api/index/default/business/mapping</pre></li>
   <tr>
     <td width="300" valign="top"><p><strong>Version 8.2:</strong></p>
       <ul>
-<!--        <li><a href="../platform_install/installing_akana_api_platform_v82.htm">Installing the Akana API Platform 8.2x</a></li>-->
         <li><a href="../platform_install/install_cm_jython_script.htm">Installation Jython Script</a></li>
         <li><a href="../platform_install/implementation_planning.htm">Planning Your Implementation</a></li>
       </ul>
