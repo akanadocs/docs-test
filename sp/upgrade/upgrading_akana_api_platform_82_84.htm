@@ -8,8 +8,8 @@ sub-nav-class: Upgrade - Akana API Platform
 weight: 5
 type: page
 nav-title: Upgrade 8.2 to 8.4
----
-<h2 id="top">Upgrading Akana API Platform From Version 8.2 to Version 8.4x</h2>
+--
+<h2 id="top">Upgrading Akana API Platform from Version 8.2 to Version 8.4x</h2>
 <p>Learn how to upgrade from Akana API Platform 8.2x to 8.4x.</p>
 <p><strong>Note</strong>: If you're upgrading Policy Manager for DataPower, follow the steps in this document that you would use for upgrading Network Director.</p>
 <p><strong>Note</strong>: This document covers instructions for the combined features available in version 8.4x. For versions prior to 8.4x, see <a href="http://docs.akana.com/ag/assets/AAP_80_82_Upgrade_Guide.pdf" title="8.0 to 8.2 upgrade guide" target="_blank">http://docs.akana.com/ag/assets/AAP_80_82_Upgrade_Guide.pdf</a>.</p>
@@ -529,17 +529,18 @@ There are several ways you can start a container: Windows, as Windows service, o
 
 
 <a name="02_16"></a><h4>Step 2-16: Install and run upgrade tool: "Akana 8.2 to 8.4 model upgrade"</h4>
-<p>{<span class="apidoc_red">3/29: Need to verify with MM if this is the correct place for this step.</span>}</p>
 <p>The next step is to run the 8.2 to 8.4 upgrade tool, to update database objects from version 8.2 to 8.4.</p>
 <p>Before running this tool, change the <strong>failure.data.capture.enabled</strong> setting in the configuration file. Changing this setting will save memory for logging events during the upgrade process. It's important to change this setting; if you don't, there might be memory issues during upgrade. If you want to, you can change the setting back afterwards. When set to true, this setting indents entries in the log file.</p>
-<p>Follow these two steps:</p>
+<p>Follow these three steps:</p>
 <ol>
-  <li>To change the <strong>failure.data.capture.enabled</strong> configuration setting (below).</li>
-  <li>To install the 8.2 to 8.4 upgrade tool (below).</li>
+  <li><a href="#02_16_01">Step A: To turn off the <strong>failure.data.capture.enabled</strong> configuration setting</a></li>
+  <li><a href="#02_16_02">Step B: To install and run the 8.2 to 8.4 upgrade tool</a></li>
+  <li><a href="#02_16_03">Step C: To restore the <strong>failure.data.capture.enabled</strong> configuration setting</a></li>
 </ol>
 <p><strong>Note</strong>: Perform these steps only once, on one container that has database connectivity and has Policy Manager Service installed.</p>
-<p>{<span class="apidoc_red">TG/MM: we turn this setting off. Do we need to turn it back on again?</span>}</p>
-<h5>To change the failure.data.capture.enabled configuration setting</h5>
+
+
+<a name="02_16_01"></a><h5>Step A: To turn off the failure.data.capture.enabled configuration setting</h5>
 <ol>
   <li>Log in to the Akana Administration Console for your upgraded installation, using Administrator credentials.</li>
   <li>Click the <strong>Configuration</strong> tab.</li>
@@ -549,7 +550,7 @@ There are several ways you can start a container: Windows, as Windows service, o
   <li>Click <strong>Apply Changes</strong>.</li>
 </ol>
 
-<h5>To install and run the 8.2 to 8.4 upgrade tool</h5>
+<a name="02_16_01"></a><h5>Step B: To install and run the 8.2 to 8.4 upgrade tool</h5>
 <ol>
   <li>Launch the Akana Administration Console for your upgraded installation, using Administrator credentials.</li>
   <li>Click the <strong>Available Features</strong> tab.</li>
@@ -561,12 +562,15 @@ There are several ways you can start a container: Windows, as Windows service, o
     <p><img src="images/02_16_03_UpgradeTool.jpg" alt="Upgrade tool configuration" /></p></li>
   <li>At the system restart prompt, click <strong>OK</strong> to restart.</li>
 </ol>
+
+
+<a name="02_16_03"></a><h5>Step C: To restore the failure.data.capture.enabled configuration setting</h5>
+<p>Log in to the Akana Administration Console, using the instructions in <a href="#02_16_01">Step A: To turn off the <strong>failure.data.capture.enabled</strong> configuration setting</a>. Change the setting back to <strong>true</strong>, and save the changes.</p>
 <p><a href="#top">back to top</a></p>
 
 
 
 <a name="02_17"></a><h4>Step 2-17: Turn scheduled jobs back on</h4>
-<p>{<span class="apidoc_red">3/28 query whether this step should be later. Previously it was after installing and running the upgrade tool and running provisioning.</span>}</p>
 <p>Now it's time to turn back on the properties that you turned off in <a href="#02_01">Step 2-1</a>. Restart the scheduled jobs in the opposite sequence; first the simple scheduler, and then the Quartz scheduler.</p>
 <p><strong>Note</strong>: Perform this step for all the AP82 containers with Policy Manager features installed, which have now been upgraded to AP84. Before performing this step, make sure the container was restarted.</p>
 <h5>To turn scheduled jobs back on</h5>
@@ -673,7 +677,6 @@ There are several ways you can start a container: Windows, as Windows service, o
 
 
 <a name="03_04"></a><h4>Step 3-4: Post-Upgrade Task for upgrades to 8.4: Rebuild CM Styles</h4>
-<p>{<span class="apidoc_red">Question to Arjun: sequencing OK?</span>}</p>
 <p>As part of every upgrade, if you are using the developer portal, you'll need to run the <strong>Rebuild CM Styles</strong> configuration action as part of the upgrade process, in all containers where the Community Manager feature is installed.</p>
 <p> This makes sure that you have the latest style updates, for all themes and tenants.</p>
 <h5>To rebuild CM styles</h5>
@@ -759,7 +762,6 @@ PUT
 PUT
 {protocol}:{hostname}/api/index/default/business/mapping</pre>
 <p><strong>Note</strong>: Since business organization objects were introduced in version 8.3, you can skip this step if you're upgrading from 8.2 to 8.4.</p>
-<p>{<span class="apidoc_red">MM: do we need to add the mappings for Content?</span>}</p>
   </li>
 </ol>
 
@@ -827,16 +829,22 @@ PUT
 
 
 <h3 id="related_topics">Related Topics</h3>
-<table width="700" border="0" cellspacing="0" cellpadding="2" class="doctable">
+<table width="98%" border="0" cellspacing="0" cellpadding="2" class="doctable">
   <tr>
-    <td width="300" valign="top"><p><strong>Version 8.2:</strong></p>
+    <td width="40%" valign="top"><p><strong>All Versions/Latest Version</strong></p>
       <ul>
-<!--        <li><a href="../platform_install/installing_akana_api_platform_v82.htm">Installing the Akana API Platform 8.2x</a></li>-->
-        <li><a href="../platform_install/install_cm_jython_script.htm">Installation Jython Script</a></li>
         <li><a href="../platform_install/implementation_planning.htm">Planning Your Implementation</a></li>
+        <li><a href="../platform_install/install_cm_jython_script.htm">Installation Jython Script</a></li>
+        <li><a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a></li>
+        <li><a href="../platform_install/install_es_secure_tc.htm">Configuring Elasticsearch with Transport Client security</a></li>
       </ul>
     </td>
-    <td width="400" valign="top"><p><strong>Version 8.0:</strong></p>
+    <td width="30%" valign="top"><p><strong>Version 8.2:</strong></p>
+      <ul>
+        <li><a href="../platform_install/installing_akana_api_platform_v82.htm">Installing the Akana API Platform 8.2x</a></li>
+      </ul>
+    </td>
+    <td width="30%" valign="top"><p><strong>Version 8.0:</strong></p>
       <ul>
         <li><a href="../platform_install/installing_akana_platform.htm">Installing Akana Platform 8.x</a></li>
         <li><a href="../platform_install/installing_policy_manager_v80.htm">Installing Policy Manager 8.x</a></li>
