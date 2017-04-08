@@ -4,7 +4,7 @@ title: Performance Tuning
 description: A guide on how to tune the performance of the platform to support high load
 product: sp
 category: ref
-sub-nav-class: 
+sub-nav-class: Platform Management 
 weight: 14
 type: page
 nav-title: Performance Tuning

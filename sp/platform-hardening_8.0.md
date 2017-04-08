@@ -4,7 +4,7 @@ title: Platform Hardening 8.0
 description: A guide on how to harden version 8.0 and greater of the platform for secure deployments
 product: sp
 category: ref
-sub-nav-class: 
+sub-nav-class: Platform Management 
 weight: 14
 type: page
 nav-title: Platform Hardening 8.0

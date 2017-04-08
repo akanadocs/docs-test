@@ -4,7 +4,7 @@ title: Securing the Connection to your Backend APIs
 description: Download the SSL certificate used by the SaaS platform
 product: sp
 category: ref
-sub-nav-class: 
+sub-nav-class: Platform Management
 weight: 14
 type: page
 nav-title: Platform SSL Certificate

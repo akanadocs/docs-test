@@ -4,7 +4,7 @@ title: Database Maintenance
 description: A guide on how to maintain the database
 product: sp
 category: ref
-sub-nav-class: 
+sub-nav-class: Platform Management
 weight: 14
 type: page
 nav-title: Database Maintenance
