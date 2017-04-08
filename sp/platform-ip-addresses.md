@@ -5,7 +5,7 @@ description: A list of the IP addresses used by the SaaS platform
 product: sp
 category: ref
 sub-nav-class: Platform Management 
-weight: 14
+weight: 17
 type: page
 nav-title: Platform IP Addresses
 ---
