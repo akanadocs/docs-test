@@ -1,0 +1,534 @@
+---
+layout: apipage
+title: OAuth - Client Authentication with the Platform's OAuth Provider | Reference Material | OAuth API
+description: This topic provides information and examples for authenticating when using the platform's OAuth Provider. It includes-
+product: cm
+category: ref
+nav-title: OAuth - Client Authentication with the Platform's OAuth Provider 
+no-nav: api
+sub-nav: true
+sub-nav-class: aaref
+no-catalog: true
+---
+
+<h2><a name="top"></a>OAuth: Client Authentication with the Platform's OAuth Provider</h2>
+<p>This topic provides information and examples for authenticating when using the platform's OAuth Provider. It includes:</p>
+<ul>
+  <li><a href="#clients_supported">Types of OAuth Clients supported</a></li>
+  <li><a href="#confidential_clients">Confidential Clients: Types of authentication supported</a></li>
+  <li><a href="#getting_access_token_using_authorization_code_grant_type">Requesting an access token using the Authorization Code grant type</a></li>
+  <li><a href="#getting_access_token_using_client_credentials_grant_type">Requesting an access token using the Client Credentials grant type</a></li>
+  <li><a href="#getting_access_token_using_resource_owner_password_credentials_grant_type">Requesting an access token using the Resource Owner Password Credentials grant type</a></li>
+  <li><a href="#getting_access_token_using_refresh_token_grant_type">Requesting an access token using a Refresh Token grant type</a></li>
+  <li><a href="#getting_access_token_using_jwt_bearer_assertion_grant_type">Requesting an access token using a JWT Bearer Assertion grant type</a></li>
+  <li><a href="#the_response">Access token response</a></li>
+</ul>
+
+
+<h3><a name="clients_supported"></a>Types of OAuth Clients supported</h3>
+<p>There are two types of OAuth client supported by the platformâs OAuth Provider:</p>
+<ul>
+  <li><strong>Public</strong>: Public clients are those clients that do not need to be authenticated in order to obtain access tokens.</li>
+  <li><strong>Confidential</strong>: All confidential clients must be authenticated at the Token API to obtain an access token, using one of the supported authentication methods given below.</li>
+</ul>
+
+
+
+<h3><a name="confidential_clients"></a>Confidential Clients: Types of authentication supported</h3>
+<p>All confidential clients must be authenticated at the Token API to obtain an access token. The platform's OAuth 2.0 Token API supports the following authentication methods:</p>
+<ul>
+  <li><a href="#http_basic_authentication">HTTP Basic Authentication</a></li>
+  <li><a href="#form_based_authentication">Form-Based Authentication</a></li>
+  <li><a href="#https_2_way_authentication">HTTPS 2-way Authentication</a></li>
+  <li><a href="#jwt_authentication">JWT Authentication</a></li>
+</ul>
+
+
+<h4><a name="http_basic_authentication"></a>HTTP Basic Authentication</h4>
+<p>Basic authentication requires that users provide a valid user name and password to access content. All major browsers support this authentication method and it works across firewalls and proxy servers. The disadvantage of Basic authentication is that it transmits passwords across the network using weak encryption. You should use Basic authentication only when you know that the connection between the client and the server is secure.</p>
+<p>With HTTP Basic authentication, the client sends its credentials via an HTTP Authorization Header with scheme Basic as shown in the example below.</p>
+<pre>Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW</pre>
+
+
+<h4><a name="form_based_authentication"></a>Form-Based Authentication</h4>
+<p>Form-based authentication works well for sites or applications on public web servers that receive many requests.</p>
+<p>With this type of authentication, the client sends its credentials as part of the parameters. Depending on the HTTP method used to invoke the token API, the credentials might be sent in either of these ways:</p>
+<ul>
+  <li>query parameters</li>
+  <li>form-post</li>
+</ul>
+<p>An example is below.</p>
+<pre>client_id=[Client ID]&amp;client_secret=[Client shared secret]</pre>
+
+
+<h4><a name="https_2_way_authentication"></a>HTTPS 2-way Authentication</h4>
+<p>HTPS 2-way authentication requires that both the client and server authenticate each other with certificates.</p>
+<p>To use this form of authentication, the client must access the Token API over HTTPS. The client must send its X509 certificate as the client cert during HTTPS negotiation. The Authorization Server uses the client certificate to identify the client uniquely within the platform, thus completing the authentication.</p>
+
+
+<h4><a name="jwt_authentication"></a>JWT Authentication</h4>
+<p>JWT Authentication is an extension mechanism in which JWT assertion will be used as client credentials. The client must include the assertion and related information using the following HTTP request parameters.</p>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Parameter</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>client_assertion_type</td>
+      <td>The format of the assertion as identified by the Authorization Server. The value must be set to <strong>urn:ietf:params:oauth:client-assertion-type:jwt-bearer</strong>.</td>
+    </tr>
+    <tr>
+      <td>client_assertion</td>
+      <td>The assertion being used to authenticate the client. Only JWT compact serialization is allowed.</td>
+    </tr>
+  </tbody>
+</table>
+<p>The JWT assertion must be signed using a symmetric signature algorithm or an asymmetric signature algorithm.</p>
+<p>If the Client chooses to sign the JWT using a symmetric signature algorithm such as <strong>HS256</strong>, the client secret must be used as the cryptographic key.</p>
+<p>If the Client signs the JWT using an asymmetric signature algorithm such as <strong>RS256</strong>, the client must use its private key as the cryptographic key and must upload the corresponding public key certificate in the Akana platform so as to verify the signatures at the Token API.</p>
+<p>Below is an example of a JWT token (decoded form) used for client credentials.</p>
+<p><strong>JWT token header:</strong></p>
+<pre>{
+"alg": "HS256"
+}</pre>
+<p><strong>JWT token body:</strong></p>
+<pre>{
+  "exp": 1436268156,
+  "sub": "devconsole",
+  "nbf": 1436267256,
+  "aud": [
+    "http://acmepaymentscorp/oauth/oauth20/token"
+  ],
+  "iss": "devconsole",
+  "jti": "ffr45freui360aseqdh5",
+  "iat": 1436267256
+}</pre>
+<p><strong>JWT token signature:</strong></p>
+<pre>IFlwboCnB50gCMgAa3jC42kKppRvuHitN-j3vYuxG48</pre>
+<p><strong>Example JWT token in compact serialization form</strong></p>
+<pre>eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0MzYyNjgxNTYsInN1YiI6ImRldmNvbnNvbGUiLCJuYmYiO
+jE0MzYyNjcyNTYsImF1ZCI6WyJodHRwOlwvXC9hYnVqYWdvbmRhLTY0MzA6OTkwMFwvb2F1dGhcL29
+hdXRoMjBcL3Rva2VuIl0sImlzcyI6ImRldmNvbnNvbGUiLCJqdGkiOiJmZnI0NWZyZXVpMzYwYXNlc
+WRoNSIsImlhdCI6MTQzNjI2NzI1Nn0.IFlwboCnB50gCMgAa3jC42kKppRvuHitN-j3vYuxG48</pre>
+
+
+
+
+
+
+
+<p><strong>Example token request using a JWT assertion as client credentials</strong></p>
+<pre>grant_type=authorization_code&amp;code=n0esc3NRze7LTCu7iYzS6a5acc3f0ogp4<br />&amp;client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer<br />&amp;client_assertion=eyJhbGciO...[omitted for brevity]...48</pre>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
+<h3><a name="getting_access_token_using_authorization_code_grant_type"></a>Requesting an access token using the Authorization Code Grant Type</h3>
+<p>Operation: <span class="apidoc_code"><a href="../oauth_oauth10/m_oauth10_generateAccessTokenPOST_.htm">POST&nbsp;/oauth/oauth10/token</a></span> or <span class="apidoc_code"><a href="../oauth_oauth10/m_oauth10_generateAccessTokenGET.htm">GET&nbsp;/oauth/oauth10/token</a></span>.</p>
+<p>To request an access token using the Authorization Code grant type, the client must have already obtained the Authorization Code from the authorization server.</p>
+<p>An Authorization Code is a short-lived token issued to the client application by the authorization server upon successful authentication/authorization of an end-user (resource owner).  The client application then uses the authorization code to request an access token from the authorization server.</p>
+<h5>Request</h5>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>URL</td>
+      <td>{oauth-provider-base-url}/oauth/oauth20/token</td>
+    </tr>
+    <tr>
+      <td>Action</td>
+      <td>GET/POST</td>
+    </tr>
+    <tr>
+      <td>Request Headers</td>
+      <td>Accept: application/json</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h5>Request Parameters</h5>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>client_id</td>
+      <td><!-- #BeginLibraryItem "/Library/parm_oauth_client_id.lbi" -->Unique identifier of the client application.<!-- #EndLibraryItem --></td>
+    </tr>
+    <tr>
+      <td>client_secret</td>
+      <td><!-- #BeginLibraryItem "/Library/parm_oauth_client_secret.lbi" -->The client secret value; this value identifies the client with the provider.<!-- #EndLibraryItem --></td>
+    </tr>
+    <tr>
+      <td>grant_type</td>
+      <td>The grant type. The value must be set to <strong>authorization_code</strong>.</td>
+      </tr>
+    <tr>
+      <td>code</td>
+      <td><p><!-- #BeginLibraryItem "/Library/o_oauth_code.lbi" -->The authorization code.<!-- #EndLibraryItem --></p>
+        <p>It is the authorization code that was previously received by the client application after user authentication..</p></td>
+      </tr>
+    <tr>
+      <td>redirect_uri</td>
+      <td><p><!-- #BeginLibraryItem "/Library/parm_oauth_redirect_uri.lbi" -->OAuth 2.0: standard redirect_uri parameter. The redirect URI configured by the app. For more information, see <a href="Ref_OAuthParameters.htm">OAuth Parameters</a>.<!-- #EndLibraryItem --></p>
+        <p>It is the redirect URI where the client received the authorization code.</p></td>
+      </tr>
+    <tr>
+      <td>X_proxy_azp_client_id</td>
+      <td>Optionally, the client can send this parameter with the value of actual authorized party so it will be used in the ID token claims <strong>azp</strong> and <strong>aud</strong>.</td>
+    </tr>
+  </tbody>
+</table>
+<h5>Example</h5>
+<pre>client_id=xyzclient&amp;client_secret=xyzsecret&amp;grant_type=authorization_code
+&amp;code=SplxlOBeZQQYbYS6WxSbIA&amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb</pre>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
+<h3><a name="getting_access_token_using_client_credentials_grant_type"></a>Requesting an access token using the Client Credentials Grant Type</h3>
+<p>The client can request an access token using only its client credentials (or other supported means of authentication; refer to <a href="#confidential_clients">Confidential Clients: Types of Authentication Supported</a> above) when the client is requesting access to the protected resources under its control.</p>
+<h5>Request</h5>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>URL</td>
+      <td>{oauth-provider-base-url}/oauth/oauth20/token</td>
+      </tr>
+    <tr>
+      <td>Action</td>
+      <td>GET/POST</td>
+      </tr>
+    <tr>
+      <td>Request Headers</td>
+      <td>Accept: application/json</td>
+      </tr>
+  </tbody>
+</table>
+
+
+<h5>Request Parameters</h5>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>client_id</td>
+      <td><!-- #BeginLibraryItem "/Library/parm_oauth_client_id.lbi" -->Unique identifier of the client application.<!-- #EndLibraryItem --></td>
+    </tr>
+    <tr>
+      <td>client_secret</td>
+      <td><!-- #BeginLibraryItem "/Library/parm_oauth_client_secret.lbi" -->The client secret value; this value identifies the client with the provider.<!-- #EndLibraryItem --></td>
+    </tr>
+    <tr>
+      <td>grant_type</td>
+      <td>The grant type. The value must be set to <strong>client_credentials</strong>.</td>
+    </tr>
+    <tr>
+      <td>scope</td>
+      <td><p><!-- #BeginLibraryItem "/Library/parm_oauth_scope.lbi" -->OAuth 2.0: standard scope parameter. One or more <a href="../Ref_Glossary_CommunityPlatform.htm#gl_oauth_scope">scopes</a> configured in the OAuth provider. Space separator for multiple scopes.<!-- #EndLibraryItem --></p>
+        <p>The scope of the access request.</p></td>
+    </tr>
+    </tbody>
+</table>
+<h5>Example</h5>
+<pre>client_id=xyzclient&amp;client_secret=xyzsecret&amp;grant_type=client_credentials&amp;scope=READ%20profile%20email</pre>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
+<h3><a name="getting_access_token_using_resource_owner_password_credentials_grant_type"></a>Requesting an access token using the Resource Owner Password Credentials Grant Type</h3>
+<p>To request an access token using the Resource Owner Password Credentials grant type, the client must already have the password credentials from the resource owner.</p>
+<p>This grant type is suitable for clients capable of obtaining the resource owner's credentials (username and password, typically using an interactive form).</p>
+<h5>Request</h5>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>URL</td>
+      <td>{oauth-provider-base-url}/oauth/oauth20/token</td>
+      </tr>
+    <tr>
+      <td>Action</td>
+      <td>GET/POST</td>
+      </tr>
+    <tr>
+      <td>Request Headers</td>
+      <td>Accept: application/json</td>
+      </tr>
+  </tbody>
+</table>
+
+
+<h5>Request Parameters</h5>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>client_id</td>
+      <td><!-- #BeginLibraryItem "/Library/parm_oauth_client_id.lbi" -->Unique identifier of the client application.<!-- #EndLibraryItem --></td>
+      </tr>
+    <tr>
+      <td>client_secret</td>
+      <td><!-- #BeginLibraryItem "/Library/parm_oauth_client_secret.lbi" -->The client secret value; this value identifies the client with the provider.<!-- #EndLibraryItem --></td>
+      </tr>
+    <tr>
+      <td>grant_type</td>
+      <td>The grant type. The value must be set to <strong>password</strong>.</td>
+      </tr>
+    <tr>
+      <td>username</td>
+      <td>The resource owner's username.<!-- #BeginLibraryItem "/Library/parm_oauth_username.lbi" -->The resource owner's username.<!-- #EndLibraryItem --></td>
+      </tr>
+    <tr>
+      <td>password</td>
+      <td>The resource owner's password.</td>
+      </tr>
+    <tr>
+      <td>scope</td>
+      <td><p><!-- #BeginLibraryItem "/Library/parm_oauth_scope.lbi" -->OAuth 2.0: standard scope parameter. One or more <a href="../Ref_Glossary_CommunityPlatform.htm#gl_oauth_scope">scopes</a> configured in the OAuth provider. Space separator for multiple scopes.<!-- #EndLibraryItem --></p>
+        <p>The scope of the access request.</p></td>
+      </tr>
+  </tbody>
+</table>
+<h5>Example</h5>
+<pre>client_id=xyzclient&amp;client_secret=xyzsecret&amp;grant_type=password&amp;username=jdoe&amp;password=s3cret&amp;scope=READ%20profile%20email</pre>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
+<h3><a name="getting_access_token_using_refresh_token_grant_type"></a>Requesting an access token using the Refresh Token Grant Type</h3>
+<p>To request for access token using the refresh token grant type, the client must have already obtained the refresh token from the authorization server.</p>
+<p>A Refresh Token is a credential used to obtain an access token from an authorization server. Refresh tokens are issued to the client by the authorization server and are used to obtain a new access token when the current access token becomes invalid or expires.</p>
+<p>A refresh token is a string representing the authorization granted to the client by the resource owner. The string is usually opaque to the client. The token denotes an identifier used to retrieve the authorization information.</p>
+<p>Unlike access tokens, refresh tokens are intended for use only with authorization servers and are never sent to resource servers.</p>
+
+<h5>Request</h5>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>URL</td>
+      <td>{oauth-provider-base-url}/oauth/oauth20/token</td>
+      </tr>
+    <tr>
+      <td>Action</td>
+      <td>GET/POST</td>
+      </tr>
+    <tr>
+      <td>Request Headers</td>
+      <td>Accept: application/json</td>
+      </tr>
+  </tbody>
+</table>
+
+
+<h5>Request Parameters</h5>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+    <tr>
+      <td>client_id</td>
+      <td><!-- #BeginLibraryItem "/Library/parm_oauth_client_id.lbi" -->Unique identifier of the client application.<!-- #EndLibraryItem --></td>
+    </tr>
+    <tr>
+      <td>client_secret</td>
+      <td><!-- #BeginLibraryItem "/Library/parm_oauth_client_secret.lbi" -->The client secret value; this value identifies the client with the provider.<!-- #EndLibraryItem --></td>
+    </tr>
+    <tr>
+      <td>grant_type</td>
+      <td>The grant type. The value must be set to <strong>refresh_token</strong>.</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>refresh_token</td>
+      <td>The refresh token.</td>
+    </tr>
+  </tbody>
+</table>
+<h5>Example</h5>
+<pre>client_id=xyzclient&amp;client_secret=xyzsecret&amp;grant_type=refresh_token&amp;refresh_token=tGzv3JOkF0XG5Qx2TlKWIA</pre>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
+<h3><a name="getting_access_token_using_jwt_bearer_assertion_grant_type"></a>Requesting an access token using the JWT Bearer Assertion Grant Type</h3>
+<p>To request an access token using this grant type, the client must have already obtained the JWT Assertion from an issuer.</p>
+<p>Upon successful validation of the JWT assertion, The authorization server issues an access token to the client.</p>
+<h5>Request</h5>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>URL</td>
+      <td>{oauth-provider-base-url}/oauth/oauth20/token</td>
+      </tr>
+    <tr>
+      <td>Action</td>
+      <td>GET/POST</td>
+      </tr>
+    <tr>
+      <td>Request Headers</td>
+      <td>Accept: application/json</td>
+      </tr>
+  </tbody>
+</table>
+
+
+<h5>Request Parameters</h5>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+    <tr>
+      <td>client_id</td>
+      <td><!-- #BeginLibraryItem "/Library/parm_oauth_client_id.lbi" -->Unique identifier of the client application.<!-- #EndLibraryItem --></td>
+    </tr>
+    <tr>
+      <td>client_secret</td>
+      <td><!-- #BeginLibraryItem "/Library/parm_oauth_client_secret.lbi" -->The client secret value; this value identifies the client with the provider.<!-- #EndLibraryItem --></td>
+    </tr>
+    <tr>
+      <td>grant_type</td>
+      <td>The grant type. The value must be set to <strong>urn:ietf:params:oauth:grant-type:jwt-bearer</strong>.</td>
+    </tr>
+    <tr>
+      <td>refresh_token</td>
+      <td>The refresh token.</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>assertion</td>
+      <td><!-- #BeginLibraryItem "/Library/parm_oauth_assertion.lbi" -->JWT Bearer Assertion grant type only: The JWT Bearer Assertion.<!-- #EndLibraryItem --></td>
+    </tr>
+  </tbody>
+</table>
+<h5>Example</h5>
+<pre>client_id=xyzclient&amp;client_secret=xyzsecret&amp;grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer
+&amp;assertion=eyJhbGciOiJSUzI1NiIsImtpZCI6IjFlOWdkazcifQ. ewogImlzc
+[...omitted for brevity...].ggW8hZ1EuVLux[...omitted for brevity...]</pre>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
+<h3><a name="the_response"></a>Access token response</h3>
+
+<p>The response is the access token.</p>
+<h5>Sample Response</h5>
+<pre>{
+  "access_token": "SlAV32hkKG",
+  "token_type": "Bearer",
+  "refresh_token": "8xLOxBtZp8",
+  "expires_in": 3600,
+  "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjFlOWdkazcifQ.ewogImlzc
+    yI6ICJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwKICJzdWIiOiAiMjQ4Mjg5
+    NzYxMDAxIiwKICJhdWQiOiAiczZCaGRSa3F0MyIsCiAibm9uY2UiOiAibi0wUzZ
+    fV3pBMk1qIiwKICJleHAiOiAxMzExMjgxOTcwLAogImlhdCI6IDEzMTEyODA5Nz
+    AKfQ.ggW8hZ1EuVLuxNuuIJKX_V8a_OMXzR0EHR9R6jgdqrOOF4daGU96Sr_P6q
+    Jp6IcmD3HP99Obi1PRs-cwh3LO-p146waJ8IhehcwL7F09JdijmBqkvPeB2T9CJ
+    NqeGpe-gccMg4vfKjkM8FcGvnzZUN4_KSP0aAp1tOJ1zZwgjxqGByKHiOtX7Tpd
+    QyHE5lcMiKPXfEIQILVq0pc_E2DzL7emopWoaoZTF_m0_N0YzFC6g6EJbOEoRoS
+    K5hoDalrcvRYLSrQAZZKflyuVCyixEoV9GfNQC3_osjzw2PAithfubEEBLuVVk4
+    XUVrWOLrLl0nx7RkKU8NXNHq-rvKMzqg"
+}</pre>
+<p>The access token response includes the following information:</p>
+<h5>Response Parameters</h5>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Parameter</th>
+      <th width="80%">Description</th>
+    </tr>
+    <tr>
+      <td>access_token</td>
+      <td>The access token.</td>
+    </tr>
+    <tr>
+      <td>token_type </td>
+      <td><!-- #BeginLibraryItem "/Library/parm_oauth_token_type .lbi" -->The token type. Values supported by the platform's OAuth Provider: <strong>Bearer</strong> or <strong>MAC</strong>.<!-- #EndLibraryItem --></td>
+    </tr>
+    <tr>
+      <td>refresh_token</td>
+      <td><!-- #BeginLibraryItem "/Library/parm_oauth_refresh_token.lbi" -->The Refresh Token. Refresh tokens may be issued to the client by the authorization server and are used to obtain a new access token when the current access token becomes invalid or expires. A refresh token is a string representing the authorization granted to the client by the resource owner.Â  The string is usually opaque to the client. The token denotes an identifier used to retrieve the authorization information.Â  Unlike access tokens, refresh tokens are intended for use only with authorization servers and are never sent to resource servers.<!-- #EndLibraryItem --></td>
+    </tr>
+    <tr>
+      <td>expires_in</td>
+      <td>The lifetime in seconds of the access token.</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>id_token</td>
+      <td>The ID Token. The ID Token is a security token that contains Claims about the Authentication of an End-User by an Authorization Server when using a Client, and potentially other requested Claims. The ID Token is represented as a JWT.</td>
+    </tr>
+  </tbody>
+</table>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="relatedtopics">Related Topics</h3><!-- #BeginLibraryItem "/Library/_RelatedTopics.lbi" -->
+<table width="700" border="0" cellspacing="0" cellpadding="2">
+  <tr>
+    <td width="300"><ul>
+  <li><a href="../index_oauth.htm">OAuth API: Overview</a></li>
+  <li><a href="../Ref_Glossary_CommunityPlatform.htm">Glossary of Terms</a></li>
+</ul>
+</td>
+    <td width="400"><ul>
+  <li><a href="../Ref_DocConventions.htm">Documentation Conventions</a></li>
+  <li><a href="../Ref_API_Reference.htm">OAuth API: Reference Material</a></li>
+</ul>
+</td>
+  </tr>
+</table><!-- #EndLibraryItem --><hr />

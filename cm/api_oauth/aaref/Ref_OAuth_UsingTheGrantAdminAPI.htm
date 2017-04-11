@@ -1,0 +1,729 @@
+---
+layout: apipage
+title: Using the OAuth Grant Admin API | Reference Material | OAuth API
+description: This document provides information about using the GrantAdminAPI, including-
+product: cm
+category: ref
+nav-title: Using the OAuth Grant Admin API 
+no-nav: api
+sub-nav: true
+sub-nav-class: aaref
+no-catalog: true
+---
+
+<h2><a name="top"></a>OAuth: Using the Grant Admin API</h2>
+<p>This document provides information about using the GrantAdminAPI, including:</p>
+<ul>
+<li><a href="#authentication_with_the_oauth_provider">Authentication with the OAuth Provider</a></li>
+<li><a href="#renew_token">Renew Token</a></li>
+<li><a href="#logout">Logout</a></li>
+<li><a href="#query_for_list_of_grants">Query for List of Grants</a></li>
+<li><a href="#query_for_a_single_grant">Query for a Single Grant</a></li>
+<li><a href="#query_for_clients_list">Query for Clients List</a></li>
+<li><a href="#performing_an_action_on_a_grant">Performing an Action on a Grant</a></li>
+</ul>
+<h3><a name="authentication_with_the_oauth_provider"></a>Authentication with the OAuth Provider</h3>
+<p>To use the GrantAdminAPI, you must authenticate with the OAuth Provider. To do this, you can use any one of these options:</p>
+<ol>
+<li>Log in by providing the email address and password of the user registered in Community Manager.</li>
+<li>Log in by providing the username/password of the LDAP domain (or any other domain that supports login with credentials provided by user). This can also be considered SSO login.</li>
+<li>SSO login by letting the user be redirected to the authentication domain site (just like the end-user authentication in 3-legged grant types).</li>
+</ol>
+<p>Option 1 or option 2 are the most common scenarios.</p>
+<p>Below are the request/response formats for all three use cases:</p>
+<ul>
+<li><a href="#oauth_usecase_01">Use case 1: Log in by providing email address and password of the user registered in Community Manager  </a></li>
+<li><a href="#oauth_usecase_02">Use case 2: Log in by providing the username/password of the LDAP domain user or OpenID Connect Relying Party Domain user  </a></li>
+<li><a href="#oauth_usecase_03">Use case 3: SSO login with user authenticating to the identity provider and OAuth provider authenticating to SSO token  </a></li>
+</ul>
+<h4><a name="oauth_usecase_01"></a>Use case 1: Log in by providing email address and password of the user registered in Community Manager</h4>
+<p>Operation: <a href="../oauth_login/m_oauth_login_login.htm">POST&nbsp;/oauth/login</a>.</p>
+<h5>Request</h5>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>URL</td>
+      <td>[oauth-provider-host]/oauth/login</td>
+    </tr>
+    <tr>
+      <td>Action</td>
+      <td>POST</td>
+    </tr>
+    <tr>
+      <td>Request Headers</td>
+      <td><p>Content-Type: application/x-www-form-urlencoded</p>
+Accept: application/json</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h5>Request Payload</h5>
+<pre>identity_email=[EMAIL]&amp;secret_password=[PASSWORD]&amp;Domain=siteusers</pre>
+<h5>Response</h5>
+<ul>
+<li>The response includes a cookie that will be used for subsequent requests. For non-browser scenarios, the application must save this cookie and include it in every request. The cookie name includes the OAuth Provider name. Cookie name: OAuthToken_{OAuthProviderName}.</li>
+<li>The response includes the UserName and DomainName of the user. Example: { "DomainName" : "Local Domain", "UserName" : "Rep1" }</li>
+</ul>
+
+
+<h4><a name="oauth_usecase_02"></a>Use case 2: Log in by providing the username/password of the LDAP domain user or OpenID Connect Relying Party Domain user</h4>
+<p>Operation: <a href="../oauth_login/m_oauth_login_ssoLoginPost.htm">POST&nbsp;/oauth/login/ssoLogin</a>.</p>
+<h5>Request</h5>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>URL</td>
+      <td>[oauth-provider-host]/oauth/login/ssoLogin</td>
+    </tr>
+    <tr>
+      <td>Action</td>
+      <td>POST</td>
+    </tr>
+    <tr>
+      <td>Request Headers</td>
+      <td><p>Content-Type: application/x-www-form-urlencoded</p>
+        Accept: application/json</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h5>Request Parameters</h5>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Domain: (Optional)</td>
+      <td>Optional domain name parameter. If this parameter is missing, the platform uses the resource owner authentication domain.</td>
+    </tr>
+    <tr>
+      <td>identity_xxxx</td>
+      <td>All parameters that start with identity_ are used as identity parameters. For LDAP and OpenID Connect Relying Party domains, use identity_username.</td>
+    </tr>
+    <tr>
+      <td>secret_xxxx</td>
+      <td>All parameters that start with secret_ are used as secret parameters. For LDAP and OpenID Connect Relying Party domains, use secret_password.</td>
+    </tr>
+  </tbody>
+</table>
+<h5>Example</h5>
+<pre>identity_username=[USERNAME]&amp;secret_password=[PASSWORD]&amp;Domain=[domain-name]</pre>
+<h5>Response</h5>
+<ul>
+<li>The response includes a cookie that will be used for subsequent requests. For non-browser scenarios, the application must save this cookie and include it in every request. The cookie name includes the OAuth Provider name. Cookie name: OAuthToken_{OAuthProviderName}.</li>
+<li>The response includes the UserName and DomainName of the user. For example: { "DomainName" : &quot;ldap", "UserName" : &quot;eng100" }</li>
+</ul>
+<h4><a name="oauth_usecase_03"></a>Use case 3: SSO login with user authenticating to the identity provider and OAuth provider authenticating to SSO token</h4>
+<p>This is just the same as the way the OAuth Provider authenticates the end users when asked for a new grant. This is mostly used for resource owners wanting to administer their grants.</p>
+<p>Operation: <a href="../oauth_login/m_oauth_login_ssoLoginPost.htm">POST&nbsp;/oauth/login/ssoLogin</a> or <a href="../oauth_login/m_oauth_login_ssoLoginGET_.htm">GET&nbsp;/oauth/login/ssoLogin</a>.</p>
+
+<h5>Request</h5>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>URL</td>
+      <td>[oauth-provider-host]/oauth/login/ssoLogin</td>
+    </tr>
+    <tr>
+      <td>Action</td>
+      <td>Both GET and POST are supported</td>
+    </tr>
+    <tr>
+      <td>Request Headers</td>
+      <td>None required. However, if the domain uses a cookie to authenticate, include the cookie.</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<h5>Request Payload</h5>
+<ul>
+<li>Any SSO token, if available, that the identity provider domain can use.</li>
+<li>Domain=[domain-name] (Optional).</li>
+</ul>
+<h5>Response</h5>
+<p>The response is an html page that redirects the user to the identity provider to log in, and which then redirects the user back to the OAuth provider. The OAuth provider authenticates based on the SSO token, and then sets up the cookie as well as returning the JSON response with the authenticated user details.</p>
+<h5>Example: JSON response after redirects are done</h5>
+<pre>{ "DomainName" : &quot;OpenAM", "UserName" : &quot;eng100" }</pre>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
+<h3><a name="renew_token"></a>Renew Token</h3>
+<p>The OAuthToken cookie that is set up by the above login/ssologin API calls is valid for only 10 minutes. Before the token expires, you can renew it for another 10 minutes or make another login API call.</p>
+<p>To renew the OAuthToken, use the below API.</p>
+<p>Operation: <a href="../oauth_login/m_oauth_login_renewTokenPOST.htm">POST&nbsp;/oauth/login/renewToken</a> or <a href="../oauth_login/m_oauth_login_ssoLoginGET_.htm">GET&nbsp;/oauth/login/ssoLogin</a>.</p>
+<h5>Request</h5>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>URL</td>
+      <td>[oauth-provider-host]/oauth/login/renewToken</td>
+    </tr>
+    <tr>
+      <td>Action</td>
+      <td>Both GET and POST are supported</td>
+      </tr>
+    <tr>
+      <td>Request Headers</td>
+      <td><p>Content-Type: application/x-www-form-urlencoded</p>
+Accept: application/json</td>
+    </tr>
+    <tr>
+      <td>Request Headers</td>
+      <td>None</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h5>Response</h5>
+<ul>
+<li>The response includes a cookie that will be used for subsequent requests. For non-browser scenarios, the application must save this cookie and include it in every request. The cookie name includes the OAuth Provider name. Cookie name: OAuthToken_{OAuthProviderName}.</li>
+<li>The response includes the UserName and DomainName of the user.</li>
+</ul>
+<h5>Response Example</h5>
+<pre>{ "DomainName" : &quot;ldap", "UserName" : &quot;eng100" }</pre>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
+<h3><a name="logout"></a>Logout</h3>
+<p>Once the API calls are made, the logout API removes the OAuthToken cookie and forces users to log in again before invoking any protected API calls.</p>
+<p>Operation: <a href="../oauth_login/m_oauth_login_logout.htm">GET&nbsp;/oauth/login/logout</a>.</p>
+<h5>Request</h5>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>URL</td>
+      <td>[oauth-provider-host]/oauth/login/logout</td>
+    </tr>
+    <tr>
+      <td>Action</td>
+      <td>GET</td>
+      </tr>
+    <tr>
+      <td>Request Headers</td>
+      <td>Accept: application/json</td>
+      </tr>
+  </tbody>
+</table>
+
+
+<h5>Request Payload</h5>
+<p>None.</p>
+<h5>Response</h5>
+<ul>
+<li>The OAuthToken cookie is removed.</li>
+<li>The response payload is empty.</li>
+</ul>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
+<h3><a name="query_for_list_of_grants"></a>Query for List of Grants</h3>
+<p>As part of grant administration, you can query for the list of grants in a specific state, such as active state or in progress state. Grants are protected and can only be seen by resource owners (their own grants), client administrators (grants issued to their clients) and provider administrators (all grants).</p>
+<p>Using the login/ssoLogin API calls above, resource owners/client administrators/provider administrators can authenticate to the OAuth Provider. After authentication, you can invoke the below API to query for the list of grants available.</p>
+<p>Operation: <a href="../oauth_admin/m_admin_listGrants.htm">GET&nbsp;/oauth/admin/grants</a></p>
+<h5>Request</h5>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>URL</td>
+      <td>[oauth-provider-host]/oauth/admin/grants</td>
+    </tr>
+    <tr>
+      <td>Action</td>
+      <td>GET</td>
+    </tr>
+    <tr>
+      <td>Request Headers</td>
+      <td><p>Accept: application/xml (or application/json)</p>
+Cookie set up by the Authentication API</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h5>Request Query Parameters</h5>
+<p>All query parameters are optional. These query parameters restrict the data returned, and therefore act as a filter to query based on.</p>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>GrantSetupStartDate</td>
+      <td><!-- #BeginLibraryItem "/Library/parm_oauth_GrantSetupStartDate.lbi" -->Date when grant is set up (format: yyyy-MM-dd&rsquo;T&rsquo;HH:mm:ss) value in GMT timezone.<!-- #EndLibraryItem --></td>
+    </tr>
+    <tr>
+      <td>GrantSetupEndDate</td>
+      <td><!-- #BeginLibraryItem "/Library/parm_oauth_GrantSetupEndDate.lbi" -->Date before grant is set up (format: yyyy-MM-dd&rsquo;T&rsquo;HH:mm:ss) value in GMT timezone.<!-- #EndLibraryItem --></td>
+      </tr>
+    <tr>
+      <td>ClientID</td>
+      <td>client-id of the client to which grants are issued.</td>
+      </tr>
+    <tr>
+      <td>ResourceOwnerUID</td>
+      <td><!-- #BeginLibraryItem "/Library/parm_oauth_ResourceOwnerUID.lbi" -->The unique ID of the resource owner, as set up with the OAuth provider. This can be simply the UID, or can be the DOMAIN\UID if multiple domains are used and the same UID exists in different domains. DOMAIN here is the Resource Owner authentication domain of the Provider.<!-- #EndLibraryItem --></td>
+      </tr>
+    <tr>
+      <td>GrantStatus</td>
+      <td><!-- #BeginLibraryItem "/Library/parm_oauth_GrantStatus.lbi" -->The status of the grant. This parameter can be included multiple times to fetch the grants in different statuses. Valid values: <strong>Pending</strong>, <strong>Active</strong>, <strong>Rejected</strong>, <strong>Revoked</strong>, <strong>Expired</strong>, <strong>Cancelled</strong> (see <a href="Ref_Values.htm#values_oauthgrantstatus">OAuth Grant Status</a>).<!-- #EndLibraryItem --></td>
+      </tr>
+    <tr>
+      <td>SortBy</td>
+      <td><p>Sort criteria for the return list. Default value: Last Modified date descending.</p>
+        <p>Possible values:</p>
+        <ul class="apidoctable_ul">
+          <li>grant.modified.date: Last modified date Descending</li>
+          <li>grant.setup.date: Grant setup date Descending</li>
+          <li>grant.status: Grant Status Ascending alphabetically</li>
+          <li>grant.resource.owner: Resource Owner UID Ascending</li>
+          <li>grant.client: ClientID Ascending</li>
+        </ul></td>
+      </tr>
+    <tr>
+      <td>StartIndex</td>
+      <td><!-- #BeginLibraryItem "/Library/parm_start.lbi" --> An index number indicating the starting point for the results to be returned. If not specified, results start at position 0, the first result.<!-- #EndLibraryItem --></td>
+      </tr>
+    <tr>
+      <td>Count</td>
+      <td><!-- #BeginLibraryItem "/Library/parm_oauth_Count.lbi" -->The number of results to be returned, from the specified starting point. If not specified, all matching results are returned. Default: 100.<!-- #EndLibraryItem --></td>
+      </tr>
+  </tbody>
+</table>
+
+
+<h5>Response</h5>
+<p>The response is an RSS feed with one item for each grant. Each RSS item includes an extension object with the property name &quot;Grant&quot; with all the grant details. Below is an example payload. For each grant, you can get the GrantID from either the RSS item <strong>guid</strong> or by using the GrantID property of the RSS item extension property, Grant, as shown in the highlighted examples below. The GrantID will be useful in subsequent API calls to administer the grant.</p>
+<h5>JSON Example</h5>
+<pre>{
+  "channel": {
+    "title": "Grants",
+    "description": "",
+    "item": [
+      {
+        "title": "",
+        "guid": {
+          "value": "5dbv239gl72l"
+        },
+        "pubDate": "Tue, 12 May 2015 06:21:34 -0700",
+        "Grant": {
+          "GrantID": "5dbv239gl72l",
+          "GrantProvider": "Capital One OAuth Provider",
+          "GrantType": "authorization_code",
+          "OpenIdConnectGrant": false,
+          "GrantStatus": "Pending",
+          "GrantExpirationDateTime": 1432732894000,
+          "GrantClient": {
+            "ClientID": "open-88PPmUA46HgAdUTzmYJRsa6H"
+          },
+          "GrantClientRedirectUri": "http://developer.acmepaymentscorp.com/ui/apps/acmepaymentscorp/_VSPUvNSKEu9CFztvkjorQcg/resources/console/global/oauthclientredirect.html?dynamic=true",
+          "GrantResourceScope": {
+            "Resource": [
+              {
+                "Name": "READ"
+              },
+              {
+                "Name": "scope"
+              }
+            ]
+          },
+          "GrantIssuedDateTime": 1431436894000,
+          "GrantUpdatedDateTime": 1431436894000,
+          "ResponseType": "code"
+        }
+      },
+      {
+        "title": "",
+        "guid": {
+          "value": "cds24vlc2a82"
+        },
+        "pubDate": "Tue, 12 May 2015 06:23:46 -0700",
+        "Grant": {
+          "GrantID": "cds24vlc2a82",
+          "GrantProvider": "Capital One OAuth Provider",
+          "GrantType": "authorization_code",
+          "OpenIdConnectGrant": false,
+          "GrantStatus": "Pending",
+          "GrantExpirationDateTime": 1432733026000,
+          "GrantClient": {
+            "ClientID": "open-88PPmUA46HgAdUTzmYJRsa6H"
+          },
+          "GrantClientRedirectUri": "http://developer.acmepaymentscorp.com/ui/apps/acmepaymentscorp/_VSPUvNSKEu9CFztvkjorQcg/resources/console/global/oauthclientredirect.html?dynamic=true",
+          "GrantResourceScope": {
+            "Resource": [
+              {
+                "Name": "READ"
+              },
+              {
+                "Name": "scope"
+              }
+            ]
+          },
+          "GrantIssuedDateTime": 1431437026000,
+          "GrantUpdatedDateTime": 1431437026000,
+          "ResponseType": "code"
+        }
+      }
+    ]
+  },
+  "version": "1.0"
+}</pre>
+<h5>XML example</h5>
+<pre>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;rss 
+  xmlns:ns2="http://soa.com/xsd/rss/1.0" 
+  xmlns:ns3="http://soa.com/xsd/oauth/1.0" 
+  xmlns:ns4="http://soa.com/binding/http" version="1.0"&gt;
+  &lt;channel&gt;
+    &lt;title&gt;Grants&lt;/title&gt;
+    &lt;description&gt;&lt;/description&gt;
+    &lt;item&gt;
+      &lt;title&gt;&lt;/title&gt;
+      &lt;guid&gt;5dbv239gl72l&lt;/guid&gt;
+      &lt;pubDate&gt;Tue, 12 May 2015 06:21:34 -0700&lt;/pubDate&gt;
+      &lt;ns3:Grant&gt;
+        &lt;ns3:GrantID&gt;5dbv239gl72l&lt;/ns3:GrantID&gt;
+        &lt;ns3:GrantProvider&gt;Capital One OAuth Provider&lt;/ns3:GrantProvider&gt;
+        &lt;ns3:GrantType&gt;authorization_code&lt;/ns3:GrantType&gt;
+        &lt;ns3:OpenIdConnectGrant&gt;false&lt;/ns3:OpenIdConnectGrant&gt;
+        &lt;ns3:GrantStatus&gt;Pending&lt;/ns3:GrantStatus&gt;
+        &lt;ns3:GrantExpirationDateTime 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+          xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:dateTime"&gt;2015-05-27T13:21:34Z
+        &lt;/ns3:GrantExpirationDateTime&gt;
+        &lt;ns3:GrantClient&gt;
+          &lt;ns3:ClientID&gt;open-88PPmUA46HgAdUTzmYJRsa6H&lt;/ns3:ClientID&gt;
+        &lt;/ns3:GrantClient&gt;
+        &lt;ns3:GrantClientRedirectUri&gt;http://developer.acmepaymentscorp.com/ui/apps/acmepaymentscorp/_VSPUvNSKEu9CFztvkjorQcg/resources/console/global/oauthclientredirect.html?dynamic=true&lt;/ns3:GrantClientRedirectUri&gt;
+        &lt;ns3:GrantResourceScope&gt;
+          &lt;ns3:Resource&gt;
+            &lt;ns3:Name&gt;READ&lt;/ns3:Name&gt;
+          &lt;/ns3:Resource&gt;
+          &lt;ns3:Resource&gt;
+            &lt;ns3:Name&gt;scope&lt;/ns3:Name&gt;
+          &lt;/ns3:Resource&gt;
+        &lt;/ns3:GrantResourceScope&gt;
+        &lt;ns3:GrantIssuedDateTime 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+          xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:dateTime"&gt;2015-05-12T13:21:34Z
+        &lt;/ns3:GrantIssuedDateTime&gt;
+        &lt;ns3:GrantUpdatedDateTime 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+          xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:dateTime"&gt;2015-05-12T13:21:34Z
+        &lt;/ns3:GrantUpdatedDateTime&gt;
+        &lt;ns3:ResponseType&gt;code&lt;/ns3:ResponseType&gt;
+      &lt;/ns3:Grant&gt;
+    &lt;/item&gt;
+    &lt;item&gt;
+      &lt;title&gt;&lt;/title&gt;
+      &lt;guid&gt;cds24vlc2a82&lt;/guid&gt;
+      &lt;pubDate&gt;Tue, 12 May 2015 06:23:46 -0700&lt;/pubDate&gt;
+      &lt;ns3:Grant&gt;
+        &lt;ns3:GrantID&gt;cds24vlc2a82&lt;/ns3:GrantID&gt;
+        &lt;ns3:GrantProvider&gt;Capital One OAuth Provider&lt;/ns3:GrantProvider&gt;
+        &lt;ns3:GrantType&gt;authorization_code&lt;/ns3:GrantType&gt;
+        &lt;ns3:OpenIdConnectGrant&gt;false&lt;/ns3:OpenIdConnectGrant&gt;
+        &lt;ns3:GrantStatus&gt;Pending&lt;/ns3:GrantStatus&gt;
+        &lt;ns3:GrantExpirationDateTime 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+          xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:dateTime"&gt;2015-05-27T13:23:46Z
+        &lt;/ns3:GrantExpirationDateTime&gt;
+        &lt;ns3:GrantClient&gt;
+          &lt;ns3:ClientID&gt;open-88PPmUA46HgAdUTzmYJRsa6H&lt;/ns3:ClientID&gt;
+        &lt;/ns3:GrantClient&gt;
+        &lt;ns3:GrantClientRedirectUri&gt;http://developer.acmepaymentscorp.com/ui/apps/acmepaymentscorp/_VSPUvNSKEu9CFztvkjorQcg/resources/console/global/oauthclientredirect.html?dynamic=true&lt;/ns3:GrantClientRedirectUri&gt;
+        &lt;ns3:GrantResourceScope&gt;
+          &lt;ns3:Resource&gt;
+            &lt;ns3:Name&gt;READ&lt;/ns3:Name&gt;
+          &lt;/ns3:Resource&gt;
+          &lt;ns3:Resource&gt;
+            &lt;ns3:Name&gt;scope&lt;/ns3:Name&gt;
+          &lt;/ns3:Resource&gt;
+        &lt;/ns3:GrantResourceScope&gt;
+        &lt;ns3:GrantIssuedDateTime 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+          xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:dateTime"&gt;2015-05-12T13:23:46Z
+        &lt;/ns3:GrantIssuedDateTime&gt;
+        &lt;ns3:GrantUpdatedDateTime 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+          xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:dateTime"&gt;2015-05-12T13:23:46Z
+        &lt;/ns3:GrantUpdatedDateTime&gt;
+        &lt;ns3:ResponseType&gt;code&lt;/ns3:ResponseType&gt;
+      &lt;/ns3:Grant&gt;
+    &lt;/item&gt;
+  &lt;/channel&gt;
+&lt;/rss&gt;</pre>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
+<h3><a name="query_for_a_single_grant"></a>Query for a Single Grant</h3>
+<p>To query for a single grant, use the URLs below to provide different information relating to the grant. </p>
+<p>Returns all the information about the grant (operation: <a href="../oauth_admin/m_admin_getGrantDetails.htm">GET&nbsp;/oauth/admin/grants/{GrantID}</a>):</p>
+<pre>[oauth-provider-host]/oauth/admin/grants/{GrantID}</pre>
+<p>Returns the clientâs avatar image  (operation: <a href="../oauth_admin/m_admin_getGrantClientAvatar.htm">GET&nbsp;/oauth/admin/grants/{GrantID}/client/picture</a>):</p>
+<pre>[oauth-provider-host]/oauth/admin/grants/{GrantID}/client/picture</pre>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
+<h3><a name="query_for_clients_list"></a>Query for Clients List</h3>
+<p>To query for a list of client ids, use the below API. This API can only be invoked by Provider Administrators. Provider Administrators are site administrators in Community Manager.</p>
+<p>Operation: <a href="../oauth_admin/m_admin_getClients.htm">GET&nbsp;/oauth/admin/clients</a>.</p>
+<h5>Request</h5>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>URL</td>
+      <td>[oauth-provider-host]/oauth/admin/clients</td>
+    </tr>
+    <tr>
+      <td>Action</td>
+      <td>GET</td>
+    </tr>
+    <tr>
+      <td>Request Headers</td>
+      <td><p>Cookie set up by authentication APIs above.</p>
+Accept: application/json or application/xml</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h5>Request Query Parameters</h5>
+<p>Both parameters are optional. By default this API returns all client-ids with at least one grant in any state.</p>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>IncludeClientsWithActiveGrants</td>
+      <td>Default value true. Use false if you want to not include clients with active grants in the response list</td>
+    </tr>
+    <tr>
+      <td>IncludeClientsWithExpiredGrants</td>
+      <td>Default value true. Use false if you want to not include clients with expired grants in the response list</td>
+      </tr>
+  </tbody>
+</table>
+<p>If both the above query parameters are false, this API returns all client-ids with at least one grant in any state.</p>
+<h5>Response</h5>
+<p>The response is an RSS feed with one RSS item for each client ID. The only property available for each client is client-id. This API will be enhanced in future to include additional information about the Grant Client.</p>
+<h5>Example Response</h5>
+<pre>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt; 
+&lt;rss xmlns:ns2="http://soa.com/xsd/rss/1.0" xmlns:ns3="http://soa.com/xsd/oauth/1.0" xmlns:ns4="http://soa.com/binding/http" version="1.0&quot;&gt; 
+&lt;channel&gt; 
+  &lt;title&gt;Clients&lt;/title&gt; 
+  &lt;description&gt;Clients either have active grants or expired grants with the Oauth Provider&lt;/description&gt; 
+  &lt;item&gt; 
+     &lt;title&gt;&lt;/title&gt; 
+     &lt;guid&gt;open-13MqsHYGZs7U75kJokqRv4vl&lt;/guid&gt; 
+     &lt;ns3:GrantClient&gt; 
+      &lt;ns3:ClientID&gt;open-13MqsHYGZs7U75kJokqRv4vl&lt;/ns3:ClientID&gt; 
+     &lt;/ns3:GrantClient&gt;
+  &lt;/item&gt; 
+  &lt;item&gt; 
+     &lt;title&gt;&lt;/title&gt;
+     &lt;guid&gt;open-5ONp6iEvB9W1pAuemIyxnE9Q&lt;/guid&gt; 
+     &lt;ns3:GrantClient&gt; 
+      &lt;ns3:ClientID&gt;open-5ONp6iEvB9W1pAuemIyxnE9Q&lt;/ns3:ClientID&gt; 
+     &lt;/ns3:GrantClient&gt; 
+  &lt;/item&gt;  
+&lt;/channel&gt; 
+&lt;/rss&gt;</pre>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
+<h3><a name="performing_an_action_on_a_grant"></a>Performing an Action on a Grant</h3>
+<p>Grant administration is done by performing an action on a grant. For example, the action to revoke the grant could be done by the resource owner, client administrator, or provider administrator. There are reserved actions used by the provider as part of the grant issue process.</p>
+<p>Custom actions could be introduced by customizing the workflow definition. For example, each action could be restricted based on the userâs roles and can result in changing the grant state.</p>
+<p>Below are the API details to perform an action on a grant.</p>
+<p>Operation: <a href="../oauth_admin/m_admin_executeWorkflowAction.htm">POST&nbsp;/oauth/admin/grants/{GrantID}/actions</a>.</p>
+<h5>Request</h5>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>URL</td>
+      <td>[oauth-provider-host]/oauth/admin/grants/{GrantID}/actions</td>
+    </tr>
+    <tr>
+      <td>Action</td>
+      <td>POST</td>
+    </tr>
+    <tr>
+      <td>Request Headers</td>
+      <td><p>Content-Type: application/json<br />
+        Accept: application/json</p>
+Cookie set up with any of the authentication APIs above.</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h5>Request Payload</h5>
+<pre>{ 
+   "Action" : &quot;[ACTION]&quot;, 
+   "Comment" : &quot;[COMMENT]&quot; 
+}</pre>
+<h5>Notes</h5>
+<p>The possible values for ACTION when using the out-of-box workflow definition are below. For a custom workflow, the list could be different based on the workflow definition. Default values are:</p>
+<ul>
+<li>For Active grants, Actions allowed include:
+<ul>
+<li>resource.owner.revoked</li>
+<li>resource.owner.cancelled</li>
+<li>app.admin.cancelled</li>
+<li>provider.admin.cancelled</li>
+</ul></li>
+<li>For Revoked grants, Actions allowed include:
+<ul>
+<li>resource.owner.reinstated</li>
+<li>resource.owner.cancelled</li>
+<li>app.admin.cancelled</li>
+<li>provider.admin.cancelled</li>
+</ul></li></ul>
+<p>In the above list, some actions have restrictions, as follows:</p>
+<ul>
+<li>These actions are available to resource owner only:
+<ul>
+<li>resource.owned.revoked</li>
+<li>resource.owner.reinstated</li>
+<li>resource.owner.cancelled</li>
+</ul></li>
+<li>This action is available to app administrator only:
+<ul>
+<li>app.admin.cancelled</li>
+</ul></li>
+<li>This action is available to provider administrators only:
+<ul>
+<li>provider.admin.cancelled</li>
+</ul></li>
+</ul>
+<h5>Response</h5>
+<p>The Grant object is returned as JSON with the updated details.</p>
+<h5>Sample Response</h5>
+<pre>{
+    "GrantID": "hdoih0raf5q5",
+    "GrantProvider": "Capital One OAuth Provider",
+    "GrantType": "authorization_code",
+    "OpenIdConnectGrant": false,
+    "GrantStatus": "Cancelled",
+    "GrantExpirationDateTime": 1431760908000,
+    "GrantExpirationDateTimeInMillis": 1431760908000,
+    "GrantClient": {
+        "ClientID": "open-88PPmUA46HgAdUTzmYJRsa6H"
+    },
+    "GrantClientRedirectUri": "http://developer.acmepaymentscorp.com/ui/apps/acmepaymentscorp/_VSPUvNSKEu9CFztvkjorQcg/resources/console/global/oauthclientredirect.html?dynamic=true",
+    "AuthorizationCode": "ywslZ8X1GTCzxvakpn-C1DzmczokZ99GlxFLOw",
+    "AuthorizationCodeExpirationDateTime": 1430465508000,
+    "ResourceOwnerUserInfo": {
+        "DomainName": "OpenAM Connector",
+        "UID": "eng100",
+        "Attributes": {
+            "Attribute": [
+                {
+                    "Name": "sub",
+                    "Value": "eng100",
+                    "Type": "string"
+                }
+            ]
+        }
+    },
+    "GrantResourceScope": {
+        "Resource": [
+            {
+                "Name": "READ"
+            }
+        ]
+    },
+    "GrantIssuedDateTime": 1430464879000,
+    "GrantIssuedDateTimeInMillis": 1430464879000,
+    "GrantUpdatedDateTime": 1434652015000,
+    "GrantUpdatedDateTimeInMillis": 1434652015000,
+    "ResponseType": "code"
+}</pre>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+<h3 id="relatedtopics">Related Topics</h3><!-- #BeginLibraryItem "/Library/_RelatedTopics.lbi" -->
+<table width="700" border="0" cellspacing="0" cellpadding="2">
+  <tr>
+    <td width="300"><ul>
+  <li><a href="../index_oauth.htm">OAuth API: Overview</a></li>
+  <li><a href="../Ref_Glossary_CommunityPlatform.htm">Glossary of Terms</a></li>
+</ul>
+</td>
+    <td width="400"><ul>
+  <li><a href="../Ref_DocConventions.htm">Documentation Conventions</a></li>
+  <li><a href="../Ref_API_Reference.htm">OAuth API: Reference Material</a></li>
+</ul>
+</td>
+  </tr>
+</table><!-- #EndLibraryItem --><hr />

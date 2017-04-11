@@ -1,0 +1,166 @@
+---
+layout: apipage
+title: OAuth 1.0a Authorization Header | Reference Material | OAuth API
+description: OAuth 1.0a uses the Authorization header as a way to authenticate the client to the OAuth Provider itself. In OAuth 2.0, this header isn't used for authentication with the OAuth Provider. Instead, OAuth 2.0 uses query parameters in the payload.
+product: cm
+category: ref
+nav-title: OAuth 1.0a Authorization Header 
+no-nav: api
+sub-nav: true
+sub-nav-class: aaref
+no-catalog: true
+---
+
+<h2><a name="top"></a>OAuth 1.0a Authorization Header</h2>
+<p>OAuth 1.0a uses the Authorization header as a way to authenticate the client to the OAuth Provider itself. In OAuth 2.0, this header isn't used for authentication with the OAuth Provider. Instead, OAuth 2.0 uses query parameters in the payload.</p>
+<p>Both OAuth versions use the Authorization header when sending API requests to the Resource Server.</p>
+<p>The OAuth 1.0a  specification (<a href="http://tools.ietf.org/html/rfc5849#section-3.5.1" target="_blank">http://tools.ietf.org/html/rfc5849#section-3.5.1</a>) has this to say about the Authorization header:</p>
+<pre>Protocol parameters can be transmitted using the HTTP &quot;Authorization&quot; header field as 
+defined by [RFC2617] with the auth-scheme name set to &quot;OAuth&quot; (case insensitive).
+
+For example: 
+
+Authorization: OAuth realm=&quot;Example&quot;,
+  oauth_consumer_key=&quot;0685bd9184jfhq22&quot;,
+  oauth_token=&quot;ad180jjd733klru7&quot;,
+  oauth_signature_method=&quot;HMAC-SHA1&quot;,
+  oauth_signature=&quot;wOJIO9A2W5mFwDgiDvZbTSMK%2FPY%3D&quot;,
+  oauth_timestamp=&quot;137131200&quot;,
+  oauth_nonce=&quot;4572616e48616d6d65724c61686176&quot;,
+  oauth_version=&quot;1.0&quot;</pre>
+<p>The sections below show differences between how the Authorization header is used at different stages of the OAuth 1.0a message exchange process.</p>
+<h5>Step 1: Requesting and Receiving a Request Token</h5>
+<p><strong>Description:</strong></p>
+<p>Identifies the client (oauth_consumer_key), identifies the signature method used; uniquely identifies the message with a timestamp and nonce; specifies the URL the user will be redirected back to after authentication (oauth_callback); includes a signature.</p>
+<p><strong>Example: </strong></p>
+<pre>oauth_consumer_key=&quot;dpf43f3p2l4k3l03&quot;,
+oauth_signature_method=&quot;HMAC-SHA1&quot;,
+oauth_timestamp=&quot;137131200&quot;,
+oauth_nonce=&quot;wIjqoS&quot;,
+oauth_callback=&quot;http%3A%2F%2Fpaastime.example.com%2Fready&quot;,
+oauth_signature=&quot;74KNZJeDHnMBp0EMJ9ZHt%2FXKycU%3D&quot;
+</pre>
+
+
+<h5>Step 2: Getting the User's Authorization</h5>
+<p>The client doesn't send the Authorization Header in Step 2, which relates to the user authentication at the Resource Owner Authorization endpoint.</p>
+
+
+<h5>Step 3: Exchanging Request Token and OAuth Verifier for Access Token</h5>
+<p><strong>Description:</strong></p>
+<p>Includes <strong>oauth_token</strong>, the temporary credentials, and <strong>oauth_verifier</strong>, indicating that the user has been verified.</p>
+<p><strong>Example: </strong></p>
+<pre>oauth_consumer_key=&quot;dpf43f3p2l4k3l03&quot;,
+oauth_token=&quot;hh5s93j4hdidpola&quot;,
+oauth_signature_method=&quot;HMAC-SHA1&quot;,
+oauth_timestamp=&quot;137131201&quot;,
+oauth_nonce=&quot;walatlh&quot;,
+oauth_verifier=&quot;hfdp7dh39dks9884&quot;,
+oauth_signature=&quot;gKgrFCywp7rO0OXSjdot%2FIHF7IU%3D&quot;
+</pre>
+
+
+<h5>Step 4: Processing the Transaction</h5>
+<p><strong>Description:</strong></p>
+<p>Includes <strong>oauth_token</strong>, the value of which is now the token credentials.</p>
+<p><strong>Example: </strong></p>
+<pre>oauth_consumer_key=&quot;dpf43f3p2l4k3l03&quot;,
+oauth_token=&quot;nnch734d00sl2jdk&quot;,
+oauth_signature_method=&quot;HMAC-SHA1&quot;,
+oauth_timestamp=&quot;137131202&quot;,
+oauth_nonce=&quot;chapoH&quot;,
+oauth_signature=&quot;MdpQcU8iPSUjWoN%2FUDMsK2sui9I%3D&quot;
+</pre>
+<p>In some cases where certain standard OAuth activities are supported by both POST and GET operations, the key values can be sent in query parameters for GET, in the payload for POST, or in the Authorization header in both cases.</p>
+
+
+<h5>Parameter definitions</h5>
+<p>Below are the parameters that might be part of the OAuth 1.0a Authorization header, and their definitions.</p>
+<dl class="apidoc_dl">
+
+
+
+<dt><a name="def_realm"></a>realm</dt>
+<dd><!-- #BeginLibraryItem "/Library/oauth_realm.lbi" -->The domain name for the OAuth provider. For more information, see <a href="http://tools.ietf.org/html/rfc2617#section-1.2" target="_blank">http://tools.ietf.org/html/rfc2617#section-1.2</a>.<!-- #EndLibraryItem --></dd>
+
+
+
+<dt><a name="def_oauth_callback"></a>oauth_callback</dt>
+<dd>An absolute URI back to which the server will redirect the resource owner when the Resource Owner Authorization is completed. If the client is unable to receive callbacks or a callback URI has been established via other means, the parameter value MUST be set to &quot;oob&quot; (case sensitive), to indicate an out-of-band configuration.</dd>
+
+
+
+<dt><a name="def_oauth_consumer_key"></a>oauth_consumer_key</dt>
+<dd>The client identifier.</dd>
+
+
+
+<dt><a name="def_oauth_nonce"></a>oauth_nonce</dt>
+<dd>The random <a href="../Ref_Glossary_CommunityPlatform.htm#gl_nonce">nonce</a> value. The nonce value <strong>must</strong> be unique across all requests with the same timestamp, client credentials, and token combinations.</dd>
+
+
+
+<dt><a name="def_oauth_signature_method"></a>oauth_signature_method</dt>
+<dd>The signature method. For valid values, see <a href="Ref_Values.htm#values_oauth_signature_method">OAuth Signature Method (1.0a) values</a>.</dd>
+
+
+
+<dt><a name="def_oauth_signature"></a>oauth_signature</dt>
+<dd>
+  <p>The signature base string: a consistent, reproducible concatenation of several of the HTTP request elements into a single string. The string is used as an input to the signature method. The signature base string includes the following components of the HTTP request:</p>
+  <ul>
+    <li>The HTTP request method (GET or POST).</li>
+    <li>The authority, as declared by the HTTP <strong>host</strong> field in the request header.</li>
+    <li>The path and query components of the request resource URI.</li>
+    <li>The protocol parameters, excluding the <strong>oauth_signature</strong>.</li>
+</ul>
+  <p>The signature base string does not cover the entire HTTP request. Most important, it does not include the entity-body in most requests, nor does it include most HTTP entity-headers. It is important to note that the server cannot verify the authenticity of the excluded request components without using additional protections such as SSL/TLS or other methods.</p>
+</dd>
+
+
+
+<dt><a name="def_oauth_timestamp"></a>oauth_timestamp</dt>
+<dd>The timestamp value. Must be a positive integer. The timestamp is expressed in the number of seconds since January 1, 1970 00:00:00 GMT.</dd>
+
+
+
+<dt><a name="def_oauth_token"></a>oauth_token</dt>
+<dd>The temporary credentials identifier, if applicable. Returned in the response to Step 1; used in request and response for Step 2, and sent in the request message for Step 3.</dd>
+
+
+
+<dt><a name="def_oauth_token_secret"></a>oauth_token_secret</dt>
+<dd>Secret value for the  temporary credentials identifier, if applicable. If in use, sent whenever oauth_token is sent (see above).</dd>
+
+
+
+<dt><a name="def_oauth_verifier"></a>oauth_verifier</dt>
+<dd>A parameter verifying that the user has been authenticated and has granted the requested permission. Example: hfdp7dh39dks9884. Sent in the response to Step 2.</dd>
+
+
+
+<dt><a name="def_oauth_version"></a>oauth_version</dt>
+<dd>An optional parameter which, if present, must be set to <strong>1.0</strong>.</dd>
+
+
+
+</dl>
+
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+<h3 id="relatedtopics">Related Topics</h3><!-- #BeginLibraryItem "/Library/_RelatedTopics.lbi" -->
+<table width="700" border="0" cellspacing="0" cellpadding="2">
+  <tr>
+    <td width="300"><ul>
+  <li><a href="../index_oauth.htm">OAuth API: Overview</a></li>
+  <li><a href="../Ref_Glossary_CommunityPlatform.htm">Glossary of Terms</a></li>
+</ul>
+</td>
+    <td width="400"><ul>
+  <li><a href="../Ref_DocConventions.htm">Documentation Conventions</a></li>
+  <li><a href="../Ref_API_Reference.htm">OAuth API: Reference Material</a></li>
+</ul>
+</td>
+  </tr>
+</table><!-- #EndLibraryItem --><hr />

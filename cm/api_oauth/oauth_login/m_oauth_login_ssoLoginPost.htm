@@ -1,0 +1,247 @@
+---
+layout: apipage
+title: SSO Login (POST) | OAuth Authorization Server Login Service | OAuth API
+description: Allows a user to log in for OAuth authorization purposes by authenticating with an identity provider that has its own login screen, providing SSO is enabled for the OAuth Provider and the identity provider it's using. Examples- Facebook, Google. Sets the <a href="../aaref/Ref_CookiesOnThePlatform.htm">OAuthToken_{OAuthProviderName}</a> cookie and redirects the user. Also for LDAP users. Uses HTTP POST.
+product: cm
+category: ref
+nav-title: SSO Login (POST) 
+no-nav: api
+sub-nav: true
+sub-nav-class: oauth_login
+no-catalog: true
+---
+
+<!-- InstanceBeginEditable name="Heading" -->
+<h2><a name="top" id="top"></a>POST&nbsp;/oauth/login/ssoLogin</h2>
+<!-- InstanceEndEditable -->
+
+<!-- InstanceBeginEditable name="Intro_AuthRoles" -->
+<p><!-- #BeginLibraryItem "/Library/desc_oauth_login_ssoLoginPost.lbi" -->Allows a user to log in for OAuth authorization purposes by authenticating with an identity provider that has its own login screen, providing SSO is enabled for the OAuth Provider and the identity provider it's using. Examples: Facebook, Google. Sets the <a href="../aaref/Ref_CookiesOnThePlatform.htm">OAuthToken_{OAuthProviderName}</a> cookie and redirects the user. Also for LDAP users. Uses HTTP POST.<!-- #EndLibraryItem --></p>
+<p>In the payload, the domain name is required. Other parameters will be required depending on the domain. For example:</p>
+<ul>
+  <li>For a SAML Web SSO domain, the SAML assertion will be in the payload.</li>
+  <li>For an LDAP domain, the LDAP username and password will be in the payload.</li>
+  <li>For a CA SiteMinder domain configured with username/password, those are the required values; for a CA SiteMinder domain that uses the <a href="../Ref_Glossary_CommunityPlatform.htm#gl_smsession_cookie">SMSESSION</a> cookie, there is no content in the payload other than the domain, but the information is sent in the cookie.</li>
+  <li>For an OpenID Connect Relying Party domain, the ID token will be in the payload.</li>
+</ul>
+<p><span class="apidoc_note">For information on why you might choose one or the other, see <a href="../aaref/Ref_OAuthGETorPOST.htm">OAuth Operations: GET or POST?</a></span></p>
+<p class="apidoc_note"><strong>Note</strong>: If the LDAP domain name includes special characters, such as %, &amp;, or #, remember to encode them in the Domain input parameter. For example, for a domain name of OpenID Connector, you'd need to encode the URL with %25, like this: http://{oauth-provider-hostname}/oauth/login/ssoLogin?Domain=OpenID%25Connector.</p>
+<p id="id_roles"><strong>Authorization Roles/Permissions: </strong>Anyone can run this operation.</p>
+<!-- InstanceEndEditable --><!-- #BeginLibraryItem "/Library/_whatdoyouwanttoreadabout.lbi" -->
+<p>This topic includes the following sections:</p>
+<table width="600" border="0" cellspacing="0" cellpadding="2">
+  <tr>
+    <td width="200"><ul>
+  <li><a href="#httpmethod">HTTP Method</a></li>
+  <li><a href="#endpoint">URL</a></li>
+  <li><a href="#samplerequest">Sample Request</a></li>
+  <li><a href="#requestheaders">Request Headers</a></li>
+  <li><a href="#requestparameters">Request Parameters</a></li>
+</ul>
+</td>
+    <td width="400"><ul>
+  <li><a href="#response">Response</a></li>
+  <li><a href="#sampleresponse">Sample Response</a></li>
+  <li><a href="#responseheaders">Response Headers</a></li>
+  <li><a href="#responsebody">Response Body</a></li>
+  <li><a href="#errorcodes">Error Codes/Messages</a></li>
+</ul>
+</td>
+  </tr>
+</table><!-- #EndLibraryItem --><h3 id="httpmethod">HTTP Method</h3>
+<!-- InstanceBeginEditable name="HTTP Method" -->
+<p class="httpverb">POST</p>
+<!-- InstanceEndEditable -->
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+<h3 id="endpoint">URL</h3>
+<!-- InstanceBeginEditable name="URL" -->
+<pre class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/Library/_endpointbase_oauth.lbi" -->https://{oauth-provider-url}/oauth/<!-- #EndLibraryItem -->login/ssoLogin</pre>
+<!-- InstanceEndEditable -->
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+<!-- InstanceBeginEditable name="Sample Request" -->
+<h3 id="samplerequest">Sample Request</h3>
+<p id="id_samplerequest">The example below shows an SSO login request.</p>
+<p><strong>Request URL</strong></p>
+<pre><span class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/Library/_endpointbase_oauth.lbi" -->https://{oauth-provider-url}/oauth/<!-- #EndLibraryItem --></span>login/ssoLogin</pre>
+<p><strong>Sample request headers</strong></p>
+<pre>Content-Type: application/x-www-form-urlencoded
+Accept: application/json</pre>
+<p><strong>Sample request body #1</strong></p>
+<p>The request body is any SSO token, if available, that the identity provider domain can use. Also, optionally, the Domain parameter:</p>
+<pre>Domain=[domain-name]</pre>
+<p><strong>Sample request body #2: LDAP user login (resource owner)</strong></p>
+<p>When the resource owner is logging in, the Domain parameter is not needed. The platform uses the resource owner authentication domain specified for the OAuth Provider.</p>
+<pre>identity_username=ldapuser01&amp;secret_password=MyPassword123</pre>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Request Headers" -->
+<h3 id="requestheaders">Request Headers</h3>
+<p>For general information on request header values, refer to <a href="../aaref/Ref_HTTPHeaders.htm#ref_httprequestheaders">HTTP Request Headers</a>.</p>
+<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="../aaref/Ref_HTTPHeaders.htm#acceptheader">Accept</a></td>
+      <td><!-- #BeginLibraryItem "/Library/hdrval_appjson.lbi" --><strong>application/json</strong><!-- #EndLibraryItem --></td>
+    </tr>
+    <tr>
+      <td><a href="../aaref/Ref_HTTPHeaders.htm#contenttype_request">Content-Type</a></td>
+      <td><!-- #BeginLibraryItem "/Library/hdrval_form-urlencoded.lbi" --><strong>application/x-www-form-urlencoded</strong><!-- #EndLibraryItem --></td>
+    </tr>
+  </tbody>
+</table>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Request Parameters" -->
+<h3 id="requestparameters">Request Parameters</h3>
+<p>Request parameters are determined by the authentication domain. For more information, see <a href="../aaref/Ref_SSOLogin_oauth.htm">Managing SSO Login for OAuth on the Platform</a>.</p>
+<table width="100%" cellpadding="2" cellspacing="0" class="tableparmsresponse">
+  <thead>
+    <tr>
+      <th width="11%">Parameter</th>
+      <th width="9%">Parm Type</th>
+      <th width="11%">Data Type</th>
+      <th width="11%">Required</th>
+      <th width="58%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Domain</td>
+      <td>Path</td>
+      <td>string</td>
+      <td>Optional</td>
+      <td>Optional domain name parameter. If this parameter is missing, the platform uses the resource owner authentication domain.</td>
+    </tr>
+    <tr>
+      <td>identity_xxxx</td>
+      <td>Path</td>
+      <td>string</td>
+      <td>&nbsp;</td>
+      <td>All parameters that start with identity_ are used as identity parameters. For LDAP and OpenID Connect Relying Party domains, use identity_username.</td>
+    </tr>
+    <tr>
+      <td>secret_xxxx</td>
+      <td>Path</td>
+      <td>string</td>
+      <td>&nbsp;</td>
+      <td>All parameters that start with secret_ are used as secret parameters. For LDAP and OpenID Connect Relying Party domains, use secret_password.</td>
+    </tr>
+  </tbody>
+</table>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Response Description" -->
+<h3 id="response">Response</h3>
+<p id="id_successstatement">If successful, this operation returns HTTP status code 200, with a cookie that will be used for subsequent requests. For non-browser scenarios, the application must save this cookie and include it in every request. The cookie name includes the OAuth Provider name. Cookie name: <strong>OAuthToken_{OAuthProviderName}</strong>.</p>
+<p>The response includes the UserName and DomainName of the user. Example: { &quot;DomainName&quot; : &quot;Local Domain&quot;, &quot;UserName&quot; : &quot;Rep1&quot; }.</p>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Sample Response" -->
+<h3 id="sampleresponse">Sample Response</h3>
+<p id="id_sampleresponse">The sample response below shows successful completion of this operation.</p>
+<p><strong>Sample response headers</strong></p>
+<pre>Set-Cookie: AtmoAuthToken_acmepaymentscorp: TokenID%3D480a3a7c-240e-11e5-a1b9-8945fbb2b0eb%2Cclaimed_id%3Durn%3Aacmepaymentscorp%3Auser
+%3Aacmepaymentscorp%3A8fb17266-354a-4032-96fb-2208ae7b4da4%2CissueTime%3D1436207946162%2CexpirationTime%3D1436209746144%2CAttributes
+Included%3Dfalse%2CUserFDN%3D8fb17266-354a-4032-96fb-2208ae7b4da4%252Eacmepaymentscorp%2CUserName%3Dadminacmepaymentscorp%2Csig
+%3Dd5YEgxmZQaCgfp64gs0EL1ttryepO3kWTwu4gO12OxLF6sjpcrojVKUf0X8heu9eoi8WlEd9ZIN7vPNgi6pu-XZ883L-OkD9fYnN4ktbRPwHQ2Phaa1H1bXaCpfgpeI8q6u
+DjeqX_awH70N6-QQKrhF5n9Lm5PYCKciKNWTSWVooauthRedirectInfoCookie: %7B%22accessTokenUrl%22%3A%22%2Fapi%2Fdevconsole%2Foauth%2Faccesstoken%22
+%2C%22providerEndpoint%22%3A%22%2Fapi%2Fdevconsole%2Foauth%2Faccesstoken%22%2C%22queryString%22%3A%22session_key%3Dapiv%253D090888
+a5-27f8-454e-8319-c7900d1da4bc.acmepaymentscorp%2526scope%253DScope1%2526appRuntimeId%253D5tRKCWjfz599pLJ8Te4tvn1D.acmepaymentscorp
+%2526granttype%253Dauthorization_code%2526policy_type%253DOAuth%2525202.0%2526appsecret%253De4d5949f72473acc151b34065f69169099ebe732
+%2526appid%253Dacmepaymentscorp-5tRKCWjfz599pLJ8Te4tvn1D%2526token_url%253Dhttp%253A%252F%252F{hostname}%252Foauth%252Foauth20%252Ftoken%
+2526opname%253DGetDiscussions%2526policy_key%253Doauth%2526guid%253Daf880c48-1389-4da4-98e5-2fb29dcca155%2526auz_url%253Dhttp%253A
+%252F%252F{hostname}%252Foauth%252Fauz%252Fauthorize%2526callback%253Dhttp%253A%252F%252F{hostname}%252Fui%252Fapps%252Facmepaymentscorp
+%252F_VcuNfhlXb0PE8hHDxAx9OhA%252Fresources%252Fconsole%252Fglobal%252Foauthclientredirect.html%253Fdynamic%25253Dtrue
+%2526signature_method%253DSharedSecret%2526apienv%253DProduction%2526token_verb%253DPOST%22%7D
+OAuthToken_acmepaymentscorp: TokenID%3D57d30fc7-240e-11e5-a1b9-8945fbb2b0eb%2Cclaimed_id%3DLDAP_acmepaymentscorp%5Ceng100
+%2CissueTime%3D1436207972636%2CexpirationTime%3D1436208572626%2Csig%3DlOsIenU6JM-dYquJKhKMdKarQRtef4ALY5Abuls7KV5jaPgWapM1w0Y
+thq0I1hJvMJ7xlWj8haU3OvM4b6I3LgGWGvw5_Uws935JKLW57xiti_UC2IvxFDrAIg4xx2k-x-icqUDsWfVGNfjWlun43_uRM667RjGOkh_ZmU2xq0Q</pre>
+<p><strong>Sample response body</strong></p>
+<p>Not applicable.</p>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Response Headers" -->
+<h3 id="responseheaders">Response Headers</h3>
+<p>For general information on response header values, refer to <a href="../aaref/Ref_HTTPHeaders.htm#ref_httpresponseheaders">HTTP Response Headers</a>.</p>
+<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+  <thead>
+    <tr bgcolor="#DDDDDD">
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Set-Cookie</td>
+      <td>The <a href="../aaref/Ref_CookiesOnThePlatform.htm">OAuthToken_{OAuthProviderName}</a> cookie.</td>
+    </tr>
+  </tbody>
+</table>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Response Body" -->
+<h3 id="responsebody">Response Body</h3>
+<p>Not applicable.</p>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<h3 id="errorcodes">Error Codes/Messages</h3>
+<p>If the call is unsuccessful an error code/message is returned. One or more examples of possible errors for this operation are shown below.</p>
+<!-- InstanceBeginEditable name="Error Messages" -->
+<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+  <thead>
+    <tr bgcolor="#DDDDDD">
+      <th width="20%">Item</th>
+      <th width="80%">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="../aaref/Ref_HTTPStatusCodes.htm#http500">500</a></td>
+      <td>An error occurred processing the call. </td>
+    </tr>
+  </tbody>
+</table>
+<!-- InstanceEndEditable -->
+<p><a href="../aaref/Ref_ErrorMessages.htm">More information about&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;API error messages.</a></p>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+<h3 id="relatedtopics">Related Topics</h3><!-- #BeginLibraryItem "/Library/_RelatedTopics.lbi" -->
+<table width="700" border="0" cellspacing="0" cellpadding="2">
+  <tr>
+    <td width="300"><ul>
+  <li><a href="../index_oauth.htm">OAuth API: Overview</a></li>
+  <li><a href="../Ref_Glossary_CommunityPlatform.htm">Glossary of Terms</a></li>
+</ul>
+</td>
+    <td width="400"><ul>
+  <li><a href="../Ref_DocConventions.htm">Documentation Conventions</a></li>
+  <li><a href="../Ref_API_Reference.htm">OAuth API: Reference Material</a></li>
+</ul>
+</td>
+  </tr>
+</table><!-- #EndLibraryItem --><hr />

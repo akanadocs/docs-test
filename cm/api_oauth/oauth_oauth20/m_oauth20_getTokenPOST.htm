@@ -1,0 +1,396 @@
+---
+layout: apipage
+title: Get OAuth 2.0 Token (POST) | Authorization Server OAuth 2.0 Token Service | OAuth API
+description: Returns an OAuth 2.0 token using HTTP POST.
+product: cm
+category: ref
+nav-title: Get OAuth 2.0 Token (POST) 
+no-nav: api
+sub-nav: true
+sub-nav-class: oauth_oauth20
+no-catalog: true
+---
+
+<!-- InstanceBeginEditable name="Heading" -->
+<h2><a name="top" id="top"></a>POST&nbsp;/oauth/oauth20/token</h2>
+<!-- InstanceEndEditable -->
+
+<!-- InstanceBeginEditable name="Intro_AuthRoles" -->
+<p><!-- #BeginLibraryItem "/Library/desc_oauth_oauth20_getTokenPOST.lbi" -->Returns an OAuth 2.0 token using HTTP POST.<!-- #EndLibraryItem --></p>
+<p>To request an access token using this grant type, the client must have already obtained the <a href="../Ref_Glossary_CommunityPlatform.htm#gl_oauth_authorizationcode">Authorization Code</a> from the authorization server.  An Authorization Code is a short-lived token issued to the client application by the authorization server upon successful authentication/authorization of an end-user (resource owner).  The client application then uses the authorization code to request an access token from the authorization server.</p>
+<p>For detailed examples about the types of access tokens supported, with example for each type of access token, refer to <a href="../aaref/Ref_OAuth_ClientAuthenticationWithOAuthProvider.htm">OAuth: Client Authentication with the Platform's OAuth Provider</a>.</p>
+<p class="apidoc_note"><strong>Note</strong>: there is a corresponding operation that performs the same action using HTTP GET: <a href="m_oauth20_getTokenGET_.htm"><span class="apidoc_code">GET&nbsp;/oauth/oauth20/token</span></a>. For information on why you might choose one or the other, see <a href="../aaref/Ref_OAuthGETorPOST.htm">OAuth Operations: GET or POST?</a></p>
+<p id="id_roles"><strong>Authorization Roles/Permissions: </strong>Anyone can run this operation.</p>
+<!-- InstanceEndEditable --><!-- #BeginLibraryItem "/Library/_whatdoyouwanttoreadabout.lbi" -->
+<p>This topic includes the following sections:</p>
+<table width="600" border="0" cellspacing="0" cellpadding="2">
+  <tr>
+    <td width="200"><ul>
+  <li><a href="#httpmethod">HTTP Method</a></li>
+  <li><a href="#endpoint">URL</a></li>
+  <li><a href="#samplerequest">Sample Request</a></li>
+  <li><a href="#requestheaders">Request Headers</a></li>
+  <li><a href="#requestparameters">Request Parameters</a></li>
+</ul>
+</td>
+    <td width="400"><ul>
+  <li><a href="#response">Response</a></li>
+  <li><a href="#sampleresponse">Sample Response</a></li>
+  <li><a href="#responseheaders">Response Headers</a></li>
+  <li><a href="#responsebody">Response Body</a></li>
+  <li><a href="#errorcodes">Error Codes/Messages</a></li>
+</ul>
+</td>
+  </tr>
+</table><!-- #EndLibraryItem --><h3 id="httpmethod">HTTP Method</h3>
+<!-- InstanceBeginEditable name="HTTP Method" -->
+<p class="httpverb">POST</p>
+<!-- InstanceEndEditable -->
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+<h3 id="endpoint">URL</h3>
+<!-- InstanceBeginEditable name="URL" -->
+<pre class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/Library/_endpointbase_oauth.lbi" -->https://{oauth-provider-url}/oauth/<!-- #EndLibraryItem -->oauth20/token</pre>
+<!-- InstanceEndEditable -->
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+<!-- InstanceBeginEditable name="Sample Request" -->
+<h3 id="samplerequest">Sample Request</h3>
+<p id="id_samplerequest">The examples below shows token requests in an LDAP scenario, with several different grant types.</p>
+<p><strong>Request URL</strong></p>
+<pre><span class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/Library/_endpointbase_oauth.lbi" -->https://{oauth-provider-url}/oauth/<!-- #EndLibraryItem --></span><span class="soaapidoc_endpoint">oauth20/token</span></pre>
+<p><strong>Sample request headers</strong></p>
+<p><strong>Note</strong>: In the sample request headers below, the Authorization header consist of the clientâs Basic authentication header, as explained in <a href="../aaref/Ref_OAuth_ClientAuthenticationWithOAuthProvider.htm#http_basic_authentication">HTTP Basic Authentication</a>. This is one way of sending the authorization credentials. As an alternative, you can send this information in the POST body or, if you are using the GET operation, in the request parameters. For more information, see <a href="../aaref/Ref_OAuth_ClientAuthenticationWithOAuthProvider.htm">OAuth: Client Authentication with the Platform's OAuth Provider</a>.</p>
+<pre>POST /oauth/oauth20/token HTTP/1.1
+Host: http://{oauth-provider-hostname}
+Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json</pre>
+<p><strong>Sample request body: authorization_code grant type</strong></p>
+<p>In the sample request body shown below, the client ID and client secret are included. When the Authorization header is included with the request message, as shown above, you don't need to send the client ID and client secret in the parameters. Send them either in the header or in the parameters. The below is an example of sending these values in the POST request body if the Authorization header was not sent. Line breaks have been added for display purposes.</p>
+<pre>client_id=acmepaymentscorp-3rCEQzwEHMT9PPvuXcClpe3v
+&amp;client_secret=e5868ebb4445fc2ad9f949956c1cb9ddefa0d421
+&amp;code=T8Y2h7zvp-tviqe2gQQ_VGQKMizn8jRgxZ74hA
+&amp;redirect_uri=http%3A%2F%2Facmepaymentscorp.com%3A9900%2Fui%2Fapps%2Facmepaymentscorp%2F_VWQJeFH76RyfD6M6FRO5Svg%2Fresources%2Fconsole%2Fglobal%2Foauthclientredirect.html%3Fdynamic%3Dtrue
+&amp;grant_type=authorization_code
+&amp;scope=Scope1</pre>
+
+<p><strong>Sample request body: client_credentials grant type</strong><strong> (2-legged)</strong></p>
+<pre>client_id=acmepaymentscorp-3rCEQzwEHMT9PPvuXcClpe3v
+&amp;client_secret=e5868ebb4445fc2ad9f949956c1cb9ddefa0d421
+&amp;grant_type=client_credentials
+&amp;scope=Scope1</pre>
+
+<p><strong>Sample request body: Resource Owner Credentials grant type</strong><strong></strong></p>
+<pre>client_id=atmosphere-3rCEQzwEHMT9PPvuXcClpe3v
+&amp;client_secret=e5868ebb4445fc2ad9f949956c1cb9ddefa0d421
+&amp;grant_type=password
+&amp;scope=Scope1
+&amp;username=eng100
+&amp;password=password</pre>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Request Headers" -->
+<h3 id="requestheaders">Request Headers</h3>
+<p>For general information on request header values, refer to <a href="../aaref/Ref_HTTPHeaders.htm#ref_httprequestheaders">HTTP Request Headers</a>.</p>
+<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+  <thead>
+    <tr>
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="../aaref/Ref_HTTPHeaders.htm#acceptheader">Accept</a></td>
+      <td><!-- #BeginLibraryItem "/Library/hdrval_appjson.lbi" --><strong>application/json</strong><!-- #EndLibraryItem --></td>
+    </tr>
+    <tr>
+      <td><a href="../aaref/Ref_HTTPHeaders.htm#contenttype_request">Content-Type</a></td>
+      <td><!-- #BeginLibraryItem "/Library/hdrval_form-urlencoded.lbi" --><strong>application/x-www-form-urlencoded</strong><!-- #EndLibraryItem --></td>
+    </tr>
+    <tr>
+      <td><a href="../aaref/Ref_HTTPHeaders.htm#header_authorization">Authorization</a></td>
+      <td>Optional. The Authorization request header authenticates the client with the server.</td>
+    </tr>
+  </tbody>
+</table>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Request Parameters" -->
+<h3 id="requestparameters">Request Parameters</h3>
+<p><strong>Note</strong>: the parameters below are all standard parameters defined in the OAuth 2.0, OpenID Connect, or JSON Web Token (JWT) specifications.</p>
+<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+  <thead>
+    <tr>
+      <th width="11%">Parameter</th>
+      <th width="9%">Parm Type</th>
+      <th width="11%">Data Type</th>
+      <th width="11%">Required</th>
+      <th width="58%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>grant_type</td>
+      <td>Form</td>
+      <td>String</td>
+      <td>Required</td>
+      <td><p><!-- #BeginLibraryItem "/Library/parm_oauth_grant_type.lbi" -->The OAuth <a href="../aaref/Ref_Values.htm#values_oauthgranttypes">grant type</a>.<!-- #EndLibraryItem --></p>
+        <p>If the request is a request for a refresh token, the value must be set to <strong>refresh_token</strong>.</p></td>
+    </tr>
+    <tr>
+      <td>client_id</td>
+      <td>Form</td>
+      <td>String</td>
+      <td>Optional</td>
+      <td><p><!-- #BeginLibraryItem "/Library/parm_oauth_client_id.lbi" -->Unique identifier of the client application.<!-- #EndLibraryItem --></p>
+        <p>Must be sent; but can be sent as Authorization header.</p></td>
+    </tr>
+    <tr>
+      <td>client_secret</td>
+      <td>Form</td>
+      <td>String</td>
+      <td>Optional</td>
+      <td><p><!-- #BeginLibraryItem "/Library/parm_oauth_client_secret.lbi" -->The client secret value; this value identifies the client with the provider.<!-- #EndLibraryItem --></p>
+        <p>Can be sent as Authorization header. Also, not needed for public client, even if Authorization header is not sent.</p></td>
+    </tr>
+    <tr>
+      <td>refresh_token</td>
+      <td>Form</td>
+      <td>String</td>
+      <td>Optional</td>
+      <td>Refresh Token grant type only: The refresh token.</td>
+    </tr>
+    <tr>
+      <td>scope</td>
+      <td>Form</td>
+      <td>String</td>
+      <td>Optional</td>
+      <td><p><!-- #BeginLibraryItem "/Library/parm_oauth_scope.lbi" -->OAuth 2.0: standard scope parameter. One or more <a href="../Ref_Glossary_CommunityPlatform.htm#gl_oauth_scope">scopes</a> configured in the OAuth provider. Space separator for multiple scopes.<!-- #EndLibraryItem --></p>
+        <p>The scope of the access request.</p></td>
+    </tr>
+    <tr>
+      <td>code</td>
+      <td>Form</td>
+      <td>String</td>
+      <td>Optional</td>
+      <td>Authorization Code grant type only: The authorization code that was previously received by the client application.</td>
+    </tr>
+    <tr>
+      <td>redirect_uri</td>
+      <td>Form</td>
+      <td>String</td>
+      <td>Optional</td>
+      <td>Authorization Code grant type only: The redirect URI of the client application, where it received the authorization code.</td>
+    </tr>
+    <tr>
+      <td>username</td>
+      <td>Form</td>
+      <td>String</td>
+      <td>Optional</td>
+      <td>Resource Owner Password Credentials only: The resource owner's username.</td>
+    </tr>
+    <tr>
+      <td>password</td>
+      <td>Form</td>
+      <td>String</td>
+      <td>Optional</td>
+      <td>Resource Owner Password Credentials only: The resource owner's password.</td>
+    </tr>
+    <tr>
+      <td>client_assertion_type</td>
+      <td>Form</td>
+      <td>String</td>
+      <td>Optional</td>
+      <td><p>JWT Bearer Assertion grant type  only:</p>
+        <p>The format of the assertion as identified by the Authorization Server. The value must be set to <strong>urn:ietf:params:oauth:client-assertion-type:jwt-bearer</strong>.</p></td>
+    </tr>
+    <tr>
+      <td>client_assertion</td>
+      <td>Form</td>
+      <td>String</td>
+      <td>Optional</td>
+      <td>JWT Bearer Assertion grant type  only: The assertion being used to authenticate the client. Only JWT compact serialization is allowed.</td>
+    </tr>
+    <tr>
+      <td>assertion</td>
+      <td>Form</td>
+      <td>String</td>
+      <td>Optional</td>
+      <td><!-- #BeginLibraryItem "/Library/parm_oauth_assertion.lbi" -->JWT Bearer Assertion grant type only: The JWT Bearer Assertion.<!-- #EndLibraryItem --></td>
+    </tr>
+  </tbody>
+</table>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Response Description" -->
+<h3 id="response">Response</h3>
+<p id="id_successstatement">If successful, this operation returns HTTP status code 200, with the access token.</p>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Sample Response" -->
+<h3 id="sampleresponse">Sample Response</h3>
+<p id="id_sampleresponse">The sample response below shows successful completion of this operation.</p>
+<p><strong>Sample response headers: application/json</strong></p>
+<pre>HTTP/1.1 200 OK
+Content-Type: application/json
+<strong>Sample response body: application/json</strong></pre>
+<p><strong>Sample response body #1</strong></p>
+<pre>{
+  &quot;access_token&quot;: &quot;SlAV32hkKG&quot;,
+  &quot;token_type&quot;: &quot;Bearer&quot;,
+  &quot;refresh_token&quot;: &quot;8xLOxBtZp8&quot;,
+  &quot;expires_in&quot;: 3600,
+  &quot;id_token&quot;: &quot;eyJhbGciOiJSUzI1NiIsImtpZCI6IjFlOWdkazcifQ.ewogImlzc
+    yI6ICJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwKICJzdWIiOiAiMjQ4Mjg5
+    NzYxMDAxIiwKICJhdWQiOiAiczZCaGRSa3F0MyIsCiAibm9uY2UiOiAibi0wUzZ
+    fV3pBMk1qIiwKICJleHAiOiAxMzExMjgxOTcwLAogImlhdCI6IDEzMTEyODA5Nz
+    AKfQ.ggW8hZ1EuVLuxNuuIJKX_V8a_OMXzR0EHR9R6jgdqrOOF4daGU96Sr_P6q
+    Jp6IcmD3HP99Obi1PRs-cwh3LO-p146waJ8IhehcwL7F09JdijmBqkvPeB2T9CJ
+    NqeGpe-gccMg4vfKjkM8FcGvnzZUN4_KSP0aAp1tOJ1zZwgjxqGByKHiOtX7Tpd
+    QyHE5lcMiKPXfEIQILVq0pc_E2DzL7emopWoaoZTF_m0_N0YzFC6g6EJbOEoRoS
+    K5hoDalrcvRYLSrQAZZKflyuVCyixEoV9GfNQC3_osjzw2PAithfubEEBLuVVk4
+    XUVrWOLrLl0nx7RkKU8NXNHq-rvKMzqg&quot;
+}</pre>
+
+<p><strong>Sample response body: authorization_code grant type</strong></p>
+<pre>{
+  "access_token" : "d50d9fd00acf797ac409d5890fcc76669b727e63",
+  "token_type" : "Bearer",
+  "expires_in" : 1295998,
+  "refresh_token" : "TZzj2yvtWlNP6BvG6UC5UKHXY2Ey6eEo80FSYax6Yv8"
+}</pre>
+
+<p><strong>Sample response body: Client Credentials grant type (2-legged)</strong></p>
+<pre>{
+  "access_token" : "4484e52dc4744374aced826a4543cd28948816ff",
+  "token_type" : "Bearer",
+  "expires_in" : 1295999
+}</pre>
+
+<p><strong>Sample response body: Resource Owner Credentials grant type</strong></p>
+<pre>{
+  "access_token" : "49fad390491a5b547d0f782309b6a5b33f7ac087",
+  "token_type" : "Bearer",
+  "expires_in" : 1295999,
+  "refresh_token" : "USrAgmSf5MJ8N_RLQODa7rZ3zNs1Sj1GkSIsTsb4n-Y"
+}</pre>
+
+<p><strong>Sample response body: Error scenario</strong></p>
+<p><strong>Note</strong>: in the example below, the <strong>state</strong> parameter is included in the error response. This would be the case in any scenario where it was included in the request.</p>
+<pre>{
+  error=invalid_request,
+  error_description=Unsupported%20response_type%20value,
+  state=af0ifjsldkj
+}</pre>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Response Headers" -->
+<h3 id="responseheaders">Response Headers</h3>
+<p>For general information on response header values, refer to <a href="../aaref/Ref_HTTPHeaders.htm#ref_httpresponseheaders">HTTP Response Headers</a>.</p>
+<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+  <thead>
+    <tr bgcolor="#DDDDDD">
+      <th width="20%">Header</th>
+      <th width="80%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="../aaref/Ref_HTTPHeaders.htm#contenttype_response">Content-Type</a></td>
+      <td><!-- #BeginLibraryItem "/Library/hdrval_appjson.lbi" --><strong>application/json</strong><!-- #EndLibraryItem --></td>
+    </tr>
+  </tbody>
+</table>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<!-- InstanceBeginEditable name="Response Body" -->
+<h3 id="responsebody">Response Body: Success</h3>
+<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+  <thead>
+    <tr bgcolor="#DDDDDD">
+      <th width="20%">Name</th>
+      <th width="15%">Type</th>
+      <th width="65%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>AccessTokenResponse</td>
+      <td><a href="../obj/o_oauth_AccessTokenResponse.htm">AccessTokenResponse</a></td>
+      <td><!-- #BeginLibraryItem "/Library/o_oauth_Contains information about a request for an OAuth Access Token..lbi" -->Contains information about the response to a request for an OAuth Access Token. Used by the token endpoint.<!-- #EndLibraryItem --></td>
+    </tr>
+  </tbody>
+</table>
+<h3 id="responsebody1">Response Body: Error Scenario</h3>
+<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+  <thead>
+    <tr bgcolor="#DDDDDD">
+      <th width="20%">Name</th>
+      <th width="15%">Type</th>
+      <th width="65%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>AccessTokenErrorResponse</td>
+      <td><a href="../obj/o_oauth_AccessTokenErrorResponse.htm">AccessTokenErrorResponse</a></td>
+      <td><!-- #BeginLibraryItem "/Library/o_oauth_AccessTokenErrorResponse.lbi" --> Contains information about an error response returned by the OAuth Token Endpoint in response to a request for an OAuth 2.0 access token.<!-- #EndLibraryItem --></td>
+    </tr>
+  </tbody>
+</table>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+<!-- InstanceEndEditable -->
+
+
+<h3 id="errorcodes">Error Codes/Messages</h3>
+<p>If the call is unsuccessful an error code/message is returned. One or more examples of possible errors for this operation are shown below.</p>
+<!-- InstanceBeginEditable name="Error Messages" -->
+<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+  <thead>
+    <tr bgcolor="#DDDDDD">
+      <th width="20%">Item</th>
+      <th width="80%">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="../aaref/Ref_HTTPStatusCodes.htm#http500">500</a></td>
+      <td>An error occurred processing the call. </td>
+    </tr>
+  </tbody>
+</table>
+<!-- InstanceEndEditable -->
+<p><a href="../aaref/Ref_ErrorMessages.htm">More information about&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Enterprise API Platform<!-- #EndLibraryItem -->&nbsp;API error messages.</a></p>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+<h3 id="relatedtopics">Related Topics</h3><!-- #BeginLibraryItem "/Library/_RelatedTopics.lbi" -->
+<table width="700" border="0" cellspacing="0" cellpadding="2">
+  <tr>
+    <td width="300"><ul>
+  <li><a href="../index_oauth.htm">OAuth API: Overview</a></li>
+  <li><a href="../Ref_Glossary_CommunityPlatform.htm">Glossary of Terms</a></li>
+</ul>
+</td>
+    <td width="400"><ul>
+  <li><a href="../Ref_DocConventions.htm">Documentation Conventions</a></li>
+  <li><a href="../Ref_API_Reference.htm">OAuth API: Reference Material</a></li>
+</ul>
+</td>
+  </tr>
+</table><!-- #EndLibraryItem --><hr />
