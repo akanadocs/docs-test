@@ -1,0 +1,465 @@
+---
+layout: page
+title: Promotion Guide | Lifecycle Coordinator | Akana API Platform Help
+description: Learn how to use the Lifecycle Coordinator feature to manage the promotion feature
+product: cm
+category: learn
+sub-nav-class: Site Admin
+weight: 2630
+type: page
+nav-title: Promotion Guide
+---
+<h2 id="top">Promotion Guide</h2>
+<p>Provides information about how to use the Lifecycle Coordinator feature to manage the promotion feature.</p>
+<h5 class="stamp">API Platform Version: 8.4.3 and later</h5>
+<div class = "divider1"></div>
+
+
+<h3 style="color: gray;">Table of Contents</h3>
+<ol class="table_of_contents">
+  <li><a href="#overview">Overview</a></li>
+  <li><a href="#core_components">Core Components and Component Interaction</a></li>
+  <li><a href="#topology_model">Topology Model</a>
+    <ol>
+      <li><a href="#03_01">Topology</a></li>
+      <li><a href="#03_02">Tenants</a></li>
+      <li><a href="#03_03">Environments</a></li>
+      <li><a href="#03_04">Promotion Profiles</a></li>
+      <li><a href="#03_05">Asset Filters</a></li>
+      <li><a href="#03_06">Rules</a></li>
+      <li><a href="#03_07">Asset Model</a></li>
+    </ol>
+  </li>
+  <li><a href="#lc_installation">Lifecycle Coordinator Installation</a></li>
+  <li><a href="#topology_config">Topology Configuration</a>
+    <ol>
+      <li><a href="#05_01">Tenants</a></li>
+      <li><a href="#05_02">Environments</a></li>
+      <li><a href="#05_03">PromotionProfiles</a></li>
+      <li><a href="#05_04">Rules</a></li>
+      <li><a href="#05_05">Filters</a></li>
+    </ol>
+  </li>
+  <li><a href="#topology_api">Topology API</a></li>
+  <li><a href="#lm_console">Lifecycle Manager Console</a>
+    <ol>
+      <li><a href="#07_01">Logging In</a></li>
+      <li><a href="#07_02">Viewing Assets and Iterations</a></li>
+      <li><a href="#07_03">Promotion Requests</a></li>
+    </ol>
+  </li>
+</ol>
+<div class = "divider1"></div>
+
+
+
+<a name="overview"></a><h3>Overview</h3>
+<p>Promotion is the process of propagating versions of a software asset, such as an API, through a series of environments that correspond to the stages of the asset's lifecycle. For example, an API might originate in a development environment, be promoted on to a QA test environment, and finally be promoted to the production environment. Each environment has its own data model that is controlled independently. The Lifecycle Coordinator is a separate configurable component that governs the promotion process and the transfer of data between environments.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="core_components"></a>
+<h3>Core Components and Component Interaction</h3>
+<p>The core components in the promotion process are as follows:</p>
+<ul>
+  <li>Promotion Package</li>
+  <li>Source Environment</li>
+  <li>Target Environment</li>
+  <li>Lifecycle Coordinator</li>
+</ul>
+<h4>Promotion Package</h4>
+<p>The Promotion Package holds the data that needs to be promoted from the Source Environment to the Target Environment. The package contains two different artifacts:</p>
+<ul>
+  <li><strong>The environment data</strong>: The portion of the Source Environment's data model that needs to be promoted.</li>
+  <li><strong>A manifest</strong>: Contains configuration details that can be manipulated by rules within the Coordinator before importing the package into the target environment.</li>
+</ul>
+
+
+<h4>Source Environment</h4>
+<p>The Source Environment is the data container that holds the original information that needs to be promoted to the Target Environment. The Source Environment can be managed by its own product instance or it can be managed as a single tenant in a multi-tenant product instance.</p>
+
+<h4>Target Environment</h4>
+<p>The Target Environment is the data container that is the destination of the promoted data from the Source Environment. The Target Environment can be managed by its own product instance or it can be managed as a single tenant in a multi-tenant product instance.</p>
+
+<h4>Lifecycle Coordinator</h4>
+<p>The Lifecycle Coordinator is the component that requests an extraction, or export, of a promotion package from a Source Environment and then initiates the population, or import, of the promotion package to a Target Environment.</p>
+<p>The Coordinator processes the manifests contained in the Promotion Package and in the Target Environment's promotion response to maintain a model that reflects the relationship between objects in both environments. On subsequent promotions of the same objects from the Source Environment the Coordinator consults its model and generate a new manifest that will be delivered to the Target Environment.</p>
+<p>The Lifecycle Coordinator is a separate component from the environments but can be co-deployed on the same instance.</p>
+
+<h4>Component Interaction</h4>
+<p><img src="images/promotion_01.jpg" alt="Component interaction" /></p>
+<p>When promotion is requested from the Source Environment, the Lifecycle Coordinator exports a Promotion Package from that Environment and imports the package in the Target Environment.</p>
+<p>The Lifecycle Coordinator persists its own model of objects and their relationships in all the environments it has performed promotions for. The Coordinator consults its model to see if the objects identified in the Promotion Package's manifest are already present. If the objects are not in the model, the Coordinator adds them. If the objects are in the model the Coordinator extracts the corresponding object IDs of the Target Environment and create a new manifest with the Target Environment's object IDs.</p>
+<p>The Lifecycle Coordinator initiates an import of the Promotion Package in the Target Environment using an Import API. The Target Environment uses the manifest to identify the objects in its own data model that are in the Promotion Package; if objects already exist, a Modify action is performed. If the Promotion Package objects are new to the Target Environment an Add action is performed. The object IDs in the manifest are used in the Target Environment, not the object IDs found in the export content, which are still the IDs found in the Source Environment.</p>
+<p>Upon completion of the Import API call a response is returned to the Lifecycle Coordinator. A manifest is included in that response that identifies the objects and relationships that were the result of the import in the Target Environment. The Lifecycle Coordinator processes this manifest and updates its own model for subsequent promotion calls.</p>
+<p>The Lifecycle Coordinator can be deployed in a container separate from the API Platform(s) it governs promotions over. In this deployment, the interactions between the Lifecycle Coordinator and API Platform(s) are performed using RESTful interfaces. The Coordinator can promote between environments in the same system:</p>
+<p><img src="images/promotion_02.jpg" alt="Environments in the same system" /></p>
+<p>Or the Coordinator can promote between environments in separate systems.</p>
+<p><img src="images/promotion_03.jpg" alt="Environments in different systems" /></p>
+<p>The Lifecycle Coordinator can also be deployed in the same container as the API Platform. Whether multiple tenants are associated with Environments or just one tenant the deployment and interaction is the same. All interactions are performed using in-memory interfaces.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+
+<a name="topology_model"></a><h3>Topology Model</h3>
+
+<a name="03_01"></a><h4>Topology</h4>
+<p>A Topology defines a sequence of Environments and the specific behavior for promotion between these Environments.</p>
+<p><img src="images/promotion_04.jpg" alt="Promotion behavior between environments" /></p>
+
+<a name="03_02"></a><h4>Tenants</h4>
+<p>Tenants are defined at the top level of the Topology and represent a Community Manager (CM) tenant that may be local (within the same container) or remote from the Lifecycle Coordinator. Tenants are referenced by Environments via an id assigned to the tenant in its definition. While an Environment must reference a tenant, the same Tenant may be referenced by more than one Environment. Tenants contain information allowing the Lifecycle Coordinator to communicate with the associated CM Tenant, this includes the tenant's address, name and admin credentials.</p>
+<p>A Tenant that is local may also indicate that it should be used to as an authentication source for users approving promotion requests with the Lifecycle Coordinator.</p>
+
+<a name="03_03"></a><h4>Environments</h4>
+<p>An Environment represents a logical container to which an asset is deployed at a particular stage of its lifecycle. An Environment must specify the Tenant that supports it.</p>
+<p>Environments also define the possible transitions to the next Environment in the form of Promotion Profiles. At this time, only a single target Environment can be specified in the promotion chain (Environment fan-out is not currently supported).</p>
+
+<a name="03_04"></a><h4>Promotion Profiles</h4>
+<p>Promotion Profiles represent a transition to the next (<strong>target</strong>) Environment. A Promotion Profile specifies a target Environment and optionally a set of Rules to be applied to the manifest of the promotion package of the asset prior to promotion into the target Environment. A Promotion Profile might also, optionally, specify an Asset Filter. This allows multiple Promotion Profiles to be defined within an Environment with mutually exclusive filters, each with a different rule set. When promotion of an asset is requested from a source Environment, and more than one Promotion Profile exists, the Promotion Profile with an Asset Filter that the asset complies with is used. In the case where only one Promotion Profile exists (with no Asset Filter specified), that Promotion Profile is automatically selected for the promotion.</p>
+
+<a name="03_05"></a><h4>Asset Filters</h4>
+<p>Asset Filters contain a set of criteria for the custom properties of the assets being promoted. For example, an API asset may use a custom property indicating that it is PCI compliant. An Asset Filter can define criteria for that property such that only API assets that are PCI compliant will match the filter. This Asset Filter can then be assigned to a Promotion Profile such that a different set of Rules are applied to PCI-compliant and non-compliant API assets.</p>
+<p class="apidoc_note"><strong>Note</strong>: the use of Asset Filters requires custom properties to be enabled for the tenants involved in the promotion.</p>
+
+<a name="03_06"></a><h4>Rules</h4>
+<p>A Promotion Profile may optionally contain a set of rules to guide the need for changes in relationships and properties when assets are promoted. A rule consists of a condition and a behavior. The rule is provided a context when evaluated made up of an asset's properties. The condition of the rule is a Boolean expression evaluated against that context. The behavior of the rule is an expression that alters that context. The expression language used by the rule engine is JEXL. A set of syntax examples can be found at <a href="#" title="https://commons.apache.org/proper/commons-jexl/reference/syntax.html" target="_blank">https://commons.apache.org/proper/commons-jexl/reference/syntax.html</a>. Each asset in a promotion package is run through the rule engine. If any asset meets the condition of the rule, the behavior is performed against it. Some examples of rules are below.</p
+>
+<table cellspacing="0px" class="doctable" style="width: 98%;">
+  <thead>
+    <tr>
+      <th width="33%">Condition</th>
+      <th width="33%">Behavior</th>
+      <th width="33%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="t2row">
+      <td>vsep.containerKey = "ND1"</td>
+      <td>vsep.containerKey = "ND2"</td>
+      <td>Changes hosting relationship from ND1 to ND2</td>
+    </tr>
+    <tr class="t1row">
+      <td>apiversion.implType = "Sandbox"</td>
+      <td>vsep.containerKey = "ND2"</td>
+      <td>Changes hosting relationship for sandbox implementations</td>
+    </tr>
+    <tr class="t2row">
+      <td>vsep.containerKey = "ND1" &amp;&amp; vsep.listenerName = "http"</td>
+      <td>vsep.containerKey = "ND2";
+vsep.listenerName = "https"</td>
+      <td>Changes both the container and listener</td>
+    </tr>
+    <tr class="t1row">
+      <td>psep.url.startsWith("http://oldhost")</td>
+      <td>psep.url.replace("http://oldhost", "http://newhost")</td>
+      <td>Changes the host of a target endpoint</td>
+    </tr>
+    <tr class="t2row">
+      <td>apiversion.tags.contains("secret")</td>
+      <td>apiversion.tags.add("probation")</td>
+      <td>Adds a tag based on the presence of another.</td>
+    </tr>
+    <tr class="t1row">
+      <td>classifier:internal = "true"</td>
+      <td>vsep.containerKey = "ND3"</td>
+      <td>Sets container based on the value of a custom classifier</td>
+    </tr>
+  </tbody>
+</table>
+
+<a name="03_07"></a><h4>Asset Model</h4>
+<p>The Lifecycle Coordinator component is an extension of the Lifecycle Repository core functionality. As such, it uses an internal asset model to represent the topology and the assets promoted through the topology. Within the Lifecycle Coordinator, promotion requests result in the submission of an asset into the target environment, allowing for customized governance to be defined for this process.</p>
+<h5>Topology Asset Model</h5>
+<p>The topology asset model reflects the conceptual topology model defined earlier in this document with asset types for Environment, Tenant and Promotion Profile. The following diagram shows the asset structure for a Topology with three Environments (each box representing an asset):</p>
+<p><img src="images/promotion_05.jpg" alt="Topology asset model, three environments" /></p>
+<p>In addition to the relationships shown, Tenant assets contain connection information and credentials as classifiers while Promotion Profile assets hold Rules as a JSON artifact. Asset Filters are managed implicitly and optionally referenced by Promotion Profile assets.</p>
+<h5>Promotable Asset Model</h5>
+<p>Promotable assets such as APIs are represented by specific asset-types. These asset types reference an Environment asset and contain <strong>Iteration</strong> assets representing each promotion of that asset. Note that there is a difference between <strong>versions</strong> of assets such as APIs and <strong>iterations</strong>: a single version of an API may be promoted multiple times, resulting in multiple iterations of that version. In the following asset diagram, the asset AnAPI/v1 has been promoted from development to integration test and then to production environments once, followed by another promotion from development to integration test. This resulted in two iterations in the development and integration test environments with a single iteration at production. Notice that the iteration at production indicates that its source iteration is iteration 1 in integration test, even though there is a newer iteration (iteration 2) in that environment.</p>
+<p><img src="images/promotion_06.jpg" alt="Promotable asset model" /></p>
+<p>Iterations contain several items:</p>
+<ul>
+  <li>A timestamp indicating when the promotion took place</li>
+  <li>The user that requested the promotion</li>
+  <li>The status of the promotion. Values for the status are:
+    <ul>
+      <li><strong>Promotion Pending</strong>: Promotion has been requested but has not been completed. It may be pending one or more approvals.
+      <p><strong>Note</strong>: In the case where an approval process is in place and a promotion request is rejected, the Iteration will remain in a Promotion Pending state. However, the API platform UI will show it as <strong>Promotion Rejected</strong>, allowing promotion to be requested again</p>.</li>
+      <li><strong>Promoted</strong>: Promotion has completed.</li>
+      <li><strong>Promotion Failed</strong>: There was a failure in the promotion process. Promotion can be requested again for assets in this state. The next promotion attempt will replace the failed iteration.</li>
+    </ul>
+      <p><strong>Note</strong>: The API Platform UI also indicates a <strong>Not Promoted</strong> state. This corresponds to an asset not yet existing in the target environment. Such assets will not be present in Lifecycle Coordinator.</p>
+  </li>
+  <li>The promotion package that was imported into the target environment is held as an artifact called archive.zip.</li>
+  <li>In the case of a promotion failure the iteration includes a short summary of the exception causing the failure.</li>
+  <li>A relationship to the source iteration in the source environment</li>
+  <li>A relationship to the previous iteration (if one exists) in the target environment</li>
+  <li>A relationship to the Promotion Profile selected for promotion of the asset.</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+
+<a name="lc_installation"></a><h3>Lifecycle Coordinator Installation</h3>
+<p>For an on-premise installation of the Akana API Platform, the Lifecycle Coordinator feature must be separately installed from the admin console:</p>
+<p><img src="images/promotion_07.jpg" alt="Lifecycle Coordinator feature" /></p>
+<p>Installing Lifecycle Coordinator implicitly installs the Lifecycle Repository feature as well. After selecting Lifecycle Coordinator for installation, the user is guided through a number of configuration tasks for the Lifecycle Repository feature.</p>
+<p>In addition to these required tasks there is also a task to secure the Topology REST API, as shown below.</p>
+<p><img src="images/promotion_08.jpg" alt="Set Topology API Credentials task" /></p>
+<p>This sets up the credentials for basic authentication on calls to the Topology REST API.</p>
+<h5>Remote Configuration</h5>
+<p>In the case where the Lifecycle Coordinator is installed remotely, a URL to the remote container hosting the Lifecycle Coordinator instance must be configured for each container hosting tenants from which promotion can be requested. To set this, in the Akana Administration Console, open the <strong>Configuration</strong> tab, select the <strong>com.soa.promotion</strong> category, and set the <strong>remote.promoter.address</strong> property to the host address of the container hosting the Lifecycle Coordinator instance:</p>
+<p><img src="images/promotion_09.jpg" alt="Setting remote.provider.address" /></p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+
+<a name="topology_config"></a><h3>Topology Configuration</h3>
+<p>The Lifecycle Coordinator feature provides a REST API for maintaining topologies. This allows topologies to be defined in JSON structure. The following example shows the definition of a topology consisting of two environments supported by two local tenants.</p>
+<pre>{ 
+  "name":"Topology1",
+  "tenants":[ 
+    { 
+        "id":"DevelopmentTenant",
+        "name":"tenant1",      "credentials":{ 
+        "email":" administrator1@example.com ",
+        "password":"password1"
+      }
+    },
+    { 
+      "id":"ProductionTenant",
+      "name":"tenant2",
+      "userAuthenticationSource":true,
+      "credentials":{ 
+        "email":"administrator2@example.com",
+        "password":"password2"
+      }
+    }
+  ],
+  "environments":[ 
+    { 
+      "name":"development",
+      "displayName":"Development",
+      "description":"Development environment",
+      "tenant":"DevelopmentTenant",
+      "promotionProfiles":[ 
+        { 
+          "name":"Default Production Promotion",
+          "description":"Dev to production default profile",
+          "targetEnvironment":"production"
+        }
+      ]
+    },
+    { 
+      "name":"production",
+      "displayName":"Production",
+      "description":"Production environment",
+      "tenant":"ProductionTenant"
+    }
+  ]
+}</pre>
+
+
+
+<a name="05_01"></a><h4>Tenants</h4>
+<p>Tenant definitions in the topology provide the Lifecycle Coordinator the necessary information to communicate with the specified tenant. Tenants may be either local (on the same container as the Lifecycle Coordinator) or remote. When defining a local tenant, the name of that tenant should be specified in the <strong>name</strong> property as in the topology example above. When specifying a remote tenant, specify the address of the tenant in the <strong>address</strong> field in addition to the <strong>name</strong> field as in the following example:</p>
+<pre>{
+  "id":"ProductionTenant",
+  "name":"tenant2",
+  "address":"http://myProductionTenant:9900",
+  "credentials":{
+    "email":"administrator2@example.com",
+    "password":"password2"
+  }
+}</pre>
+<p class="apidoc_note"><strong>Note</strong>: The address value is unique to the tenant. It corresponds to the value specified for the <strong>address</strong> parameter when the tenant was created.</p>
+
+<h5>Tenant Ids</h5>
+<p>Tenants require an <strong>id</strong> property which is used to identify the tenant by environments within the topology. This id must be unique within the topology but need not correspond to the actual tenant name.</p>
+<h5>Delegated Authentication</h5>
+<p>The Boolean <strong>userAuthenticationSource</strong> property is used to indicate that authentication for the underlying Lifecycle Repository library console is to be delegated to the specified tenant. This means that users of the specified tenant may log-in to the topology library using their email and password for that tenant.</p>
+<p>Only one tenant may have the <strong>userAuthenticationSource</strong> property set to <strong>true</strong> and that tenant must be local to the Lifecycle Coordinator.</p>
+
+<a name="05_02"></a><h4>Environments</h4>
+<p>Environments reference a corresponding tenant and hold one or more promotionProfiles representing transitions to other environments.</p>
+
+
+<h5>Environment Names</h5>
+<p>The <strong>name</strong> property for an environment must be unique within the topology and should not be changed once defined. This is because this name is used as a key for mapping information between environments stored by the Lifecycle Coordinator. Given the invariability of the environment name, a <strong>displayName</strong> property is also supported. The display name is what appears to users in the API Platform UI and may be changed without affecting mapping information.</p>
+
+<a name="05_03"></a><h4>PromotionProfiles</h4>
+<p>PromotionProfiles are defined within the <strong>promotionProfiles</strong> property of an Environment. The <strong>targetEnvironment</strong> property of a PromotionProfile must correspond to the <strong>name</strong> of another Environment in the Topology.</p>
+<p>A PromotionProfile may optionally specify one or more filters by specifying filter names within the <strong>filterNames</strong> array property.</p>
+<p>Rule definitions might optionally be provided using the <strong>rules</strong> array property.</p>
+<p class="apidoc_note"><strong>Note</strong>: A PromotionProfile cannot create a cycle between Environments.</p>
+
+<a name="05_04"></a><h4>Rules</h4>
+<p>Rules are defined inline within the <strong>rules</strong> array property of a PromotionProfile. Each Rule consists of a <strong>scope</strong> property indicating the property in the archive manifest it applies to, an optional <strong>condition</strong> property indicating the conditions for which the Rule applies and a required <strong>action</strong> property indicating the action to perform on the manifest property.</p>
+<p>Here is an example Rule that changes the host name of the physical service endpoint (<strong>psep</strong>) for an API:</p>
+<pre>{
+  "scope":"psep",
+  "condition":"psep.url.indexOf(\"foo.com\") > 0",
+  "action":"psep.url = psep.url.replace(\"foo.com\",\"bar.com\")"
+}</pre>
+<p>Note the use of '\' to escape the double quotes in the condition and action.
+</p>
+<p>Here is another example Rule that changes the container that hosts an API's virtual service endpoints (<strong>vsep</strong>):</p>
+<pre>{
+  "scope":"vsep",
+  "condition":"vsep.containerKey == '54f85de7-8d3c-41a2-96c7-84e8d1ac' ",
+  "action":"vsep.containerKey = '6db90a54-fd66-4ac2-b670-c236e771' "
+}</pre>
+
+
+<a name="05_05"></a><h4>Filters</h4>
+<p>The <strong>filters</strong> property of a Topology allows asset filters to be defined for use in PromotionProfile selection. Filters contain criteria which apply to the classifiers associated with an asset.</p>
+<p>Filters correspond to the <strong>custom properties</strong> for an API in the API Platform UI.</p>
+<p>The following example defines filters used to differentiate between APIs that are PCI compliant and those that are not based on a <strong>pci-compliant</strong> classifier:</p>
+<pre>[
+  {
+    "name":"PCI Compliant",
+    "classifier-name":"pci-compliant",
+    "classifier-criteria":[
+      {
+        "values":[
+          {
+            "value":"true"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name":"PCI Non-Compliant",
+    "classifier-name":"pci-compliant",
+    "classifier-criteria":[
+      {
+        "values":[
+          {
+            "value":"false"
+          }
+        ]
+      }
+    ]
+  }
+]</pre>
+<p>With these filters defined, different transition paths between source and target Environments may be defined as in the following example <strong>promotionProfiles</strong> property for an Environment:</p>
+<pre>{
+  "promotionProfiles":[
+    {
+      "name":"PCI Production Promotion",
+      "targetEnvironment":"Production",
+      "filterNames":[
+        "PCI Compliant"
+      ],
+      "rules":[
+        {
+          "scope":"vsep",
+          "action":"vsep.containerKey = '{pci-container-key}' "
+        }
+      ]
+    },
+    {
+      "name":"Non-PCI Production Promotion",
+      "targetEnvironment":"Production",
+      "filterNames":[
+        "PCI Non-Compliant"
+      ],
+      "rules":[
+        {
+          "scope":"vsep",
+          "action":"vsep.containerKey = '{standard-container-key}' "
+        }
+      ]
+    }
+  ]
+}</pre>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="topology_api"></a><h3>Topology API</h3>
+<p>In this section:</p>
+<ul>
+  <li>Finding the Topology API Documentation</li>
+  <li>Using the Topology API</li>
+</ul>
+
+<h4>Finding the Topology API Documentation</h4>
+<p>You can find the Topology API documentation in the following locations:</p>
+<ul>
+  <li>In your deployment:
+    <ul>
+      <li>Once the Lifecycle Coordinator feature is deployed, a REST API for maintaining topologies is available from the path <strong>/lc/api/topologies</strong> relative to the container's URL. For example:
+      <p><strong>http://myHost:9900/lc/api/topologies</strong></p></li>
+      <li>You can find Swagger documentation for this API in the container deployment:
+      <p><strong>$INSTALL_DIR/docs/restApiDocs/api-platform/swagger-Topology_API.html</strong></p></li>
+    </ul>
+  </li>
+  <li>On the Akana docs site</li>
+</ul>
+<h4>Using the Topology API</h4>
+<p>The first step is to create a Topology. This is done by POST-ing the complete Topology JSON document to <strong>...lc/api/topologies</strong>. This can be done programmatically or with a browser plugin such as Firefox RESTClient:</p>
+<p><img src="images/promotion_10.jpg" alt="Creating the topology" /></p>
+<p>Note the inclusion of the content-type and basicAuth headers.</p>
+<p>Updates to the topology can be performed on the topology as a whole, or on specific properties within the document. For example, the Rules for a PromotionProfile can be updated with a PUT of an array of Rules such as:</p>
+<pre>[
+  {
+    "scope":"psep",
+    "condition":"psep.url.indexOf(\"foo.com\") > 0",
+    "action":"psep.url = psep.url.replace(\"foo.com\",\"bar.com\")"
+  }
+]</pre>
+<p>To:</p>
+<pre>http://myHost:9900/lc/api/topologies/{topology-name}/environments/{environment-name}/profiles/{promotionProfile-name}/rules</pre>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="lm_console"></a><h3>Lifecycle Manager Console</h3>
+<p>The Lifecycle Manager (<strong>LM</strong>) console is useful for accessing promoted assets and their iterations as well as approving promotion requests. Within Lifecycle Manager, a topology is represented as a <strong>library</strong> and the elements of a Topology along with the entities being promoted are represented as <strong>assets</strong>.</p>
+
+
+<a name="07_01"></a><h4>Logging In</h4>
+<p>The first step is to log in to the library that corresponds with the topology. There are two options:</p>
+<ul>
+  <li>If the admin user password has been set, you can log into the library as the Lifecycle Repository super user at the URL below:
+    <pre>{container-base-url}/lm/application/access/suLogin.do</pre></li>
+  <li>If the topology was configured to delegate authentication to a local tenant, you can log in at the URL below, using the tenant email and password for a user in the designated local tenant:
+  <pre>{container-base-url}/lm/application/access/challenge.do</pre></li>
+</ul>
+<a name="07_02"></a><h4>Viewing Assets and Iterations</h4>
+<p>The left pane of the LM console contains a search box which can be used for finding assets by name:</p>
+<p><img src="images/promotion_11.jpg" alt="Finding assets by name" /></p>
+<p>The search results include separate LM assets for each environment to which a promotable entity has been promoted or is pending promotion. Clicking on an asset in the search results brings up a details page:</p>
+<p><img src="images/promotion_12.jpg" alt="Published asset, Details page" /></p>
+<p>In this case, the <strong>Current Iteration</strong> relationship is referencing the third iteration of this API asset. Click on the iteration asset name to view details about the iteration, as shown below.</p>
+<p><img src="images/promotion_13.jpg" alt="Iteration details" /></p>
+<p>Here you can see the following details for this iteration:</p>
+<ul>
+  <li>The time the iteration was promoted</li>
+  <li>The user who requested the promotion</li>
+  <li>The status of the promotion</li>
+  <li>The actual archive.zip (after rule processing) that was imported into the target environment</li>
+  <li>The response from the Import</li>
+  <li>A relationship to the previous iteration for this environment</li>
+  <li>A relationship to the source iteration in the previous environment</li>
+  <li>A relationship to the PromotionProfile that was used to promote the iteration</li>
+</ul>
+<p>Additionally, in the case of a promotion failure (generally due to an invalid rule) error details are stored in the Artifacts section of the iteration asset:</p>
+<p><img src="images/promotion_14.jpg" alt="Error details" /></p>
+
+<a name="07_03"></a><h4>Promotion Requests</h4>
+<p>The configuration of the topology library can optionally be customized to require approvals for a promotion request. For assistance with customization, contact Akana Professional Services.</p>
+<p>In this scenario, a user with the required authorization role has a pending request notification message in the left pane after logging into the LM console:</p>
+<p><img src="images/promotion_15.jpg" alt="Pending requests" /></p>
+<p>Clicking on the details for that request allows the user to approve the request:</p>
+<p><img src="images/promotion_16.jpg" alt="Approving a pending request" /></p>
+<p>Clicking <strong>approve</strong> allows the promotion to succeed or proceed to the next role approval.</p>
+<h5>Rejecting Requests</h5>
+<p>A user may choose to reject the request by clicking on <strong>rejection properties</strong> and then clicking <strong>reject</strong>. In this case, the Iteration asset remains in a <strong>Promotion Pending</strong> state, however, the API Platform UI shows the state of the promotion as <strong>Promotion Rejected</strong> and allows the promotion to be requested again.</p>
+<p><a href="#top">Back to top</a></p>
