@@ -6,7 +6,7 @@ product: sp
 category: ref
 sub-nav-class: Platform Management 
 no-nav: true
-weight: 15
+weight: 17
 type: page
 nav-title: Platform Hardening 8.0.x
 ---
