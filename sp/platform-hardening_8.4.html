@@ -19,7 +19,7 @@ nav-title: Platform Hardening 8.4.x
 		<li><a href="#install-network-director-on-a-separate-container">Install Network Director on a separate container</a></li>
 		<li><a href="#install-internet-facing-and-administration-applications-on-separate-containers">Install Internet-facing and administration applications on separate containers</a></li>
 		<li><a href="#configure-all-listeners-internal-and-external-as-htts-only">Configure all listeners, internal and external as HTTPS only</a></li>
-		<li><a href="#config-admin-sep-port">Configure the Admin console (/admin) on a separate port</a></li>
+		<li><a href="#config-admin-sep-port">Configure the Akana Administration Console (/admin) on a separate port</a></li>
 	</ol></li>
 	<li><a href="#config-setting">Configuration Settings</a>
 	<ol>
@@ -56,7 +56,7 @@ nav-title: Platform Hardening 8.4.x
 
 <h4><a name="install-network-director-on-a-separate-container"></a>Install Network Director on a Separate Container</h4>
 <p>API traffic processing should be handled separately from Web traffic and Admin traffic. To this end, the Network Director should not be installed on the same container as Community Manager, or Policy Manager features:</p>
-<p><img src="images/ph_84_hardening-admin-console.png" alt="Admin Console" title="Admin Console" /></p>
+<p><img src="images/ph_84_hardening-admin-console.png" alt="Akana Administration Console" title="Akana Administration Console" /></p>
 
 
 <h4><a name="install-internet-facing-and-administration-applications-on-separate-containers"></a>Install Internet-facing and Administration Applications on Separate Containers</h4>
@@ -66,7 +66,7 @@ nav-title: Platform Hardening 8.4.x
   <li>The Community Manager User Interface and APIs provide both consumer-facing and administrative functions. If needed by your security constraints, the administrative functions can be disabled in Community Manager. This will allow you to install different instances of Community Manager on different containers – and disable the administration functionality in the Internet-facing instance. </li>
 </ol>
 <p>To disable the administrative functionality in the Community Manager:</p>
-<p>In the admin console, configure the following:</p>
+<p>In the Akana Administration Console, configure the following:</p>
 <pre>com.soa.atmosphere -&gt;
 atmosphere.config.denyUserRoles=SiteAdmin,BusinessAdmin,ApiAdmin,System Administrator,Security Administrator,Site Administrator</pre>
 
@@ -95,7 +95,7 @@ container.name=[container_name]</pre>
 <p>Secondly, the listeners for the applications in the container are configured from within Policy Manager at Containers-&gt;[container_name]-&gt;Details-&gt;Inbound Listeners. Options for configuring port and PKI are available.</p>
 
 
-<h4><a name="config-admin-sep-port"></a>Configure the Admin console (/admin) on a separate port</h4>
+<h4><a name="config-admin-sep-port"></a>Configure the Akana Administration Console (/admin) on a separate port</h4>
 <p>As shown above, this is configurable in the /instances/[container_name]/system.properties file for each container. The Admin console (/admin) and the other features installed in the container should ideally not be configured on the same port. This will allow you to isolate the Akana Administration Console from the Internet.</p>
 <p>The system.properties file is updated with the following highlighted properties and also requires a configuration file placed in the container's directory (/sm70/instances/[container_name]) to ensure the Akana Administration Console is only accessed from the defined port and host.</p>
 <p><strong>Scope</strong>: All Containers</p>
@@ -143,8 +143,8 @@ session.manager.factory.secureCookies=true</pre>
 
 
 <h4><a name="disabling-sslv3"></a>Disabling SSLv3</h4>
-<p>This configures the product to disable SSLv3.
-<strong>Scope</strong>: All Containers</p>
+<p>This configures the product to disable SSLv3.</p>
+<p><strong>Scope</strong>: All Containers</p>
 <p>In the Akana Administration Console, configure the following:</p>
 <pre>com.soa.platform.jetty -&gt;
 http.incoming.transport.config.enabledProtocols=SSLv2HELLO,TLSv1,TLSv1.1, TLSv1.2</pre>
@@ -160,8 +160,8 @@ http.incoming.transport.config.cipherSuites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA25
 
 
 <h4><a name="tls12-only"></a>Enforcing TLS 1.2 Only</h4>
-<p>Depending on the level of security required, you may way to restrict the protocol to TLS 1.2 only. Note - This will limit the accesibility of the platform to certain clients.
-<strong>Scope</strong>: All Containers</p>
+<p>Depending on the level of security required, you may way to restrict the protocol to TLS 1.2 only. Note - This will limit the accessibility of the platform to certain clients.</p>
+<p><strong>Scope</strong>: All Containers</p>
 <p>Enable TLSv1.2 only:</p>
 <pre>com.soa.platform.jetty -&gt;
 http.incoming.transport.config.enabledProtocols=SSLv2Hello,TLSv1.2</pre>
@@ -169,8 +169,8 @@ http.incoming.transport.config.enabledProtocols=SSLv2Hello,TLSv1.2</pre>
 
 
 <h4><a name="disabling-outbound"></a>Limiting Outbound SSL/TLS/Cipher support</h4>
-<p>You may also want to limit the protocols and ciphers the the product will use for outbound connections.
-<strong>Scope</strong>: All Containers</p>
+<p>You may also want to limit the protocols and ciphers the product will use for outbound connections.</p>
+<p><strong>Scope</strong>: All Containers</p>
 <p>Configure the available protocols for outbound connections:</p>
 <pre>com.soa.http.client.core -&gt;
 https.socket.factory.enabledProtocols=TLSv1.2</pre>
@@ -181,21 +181,21 @@ https.socket.factory.cipherSuites=TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_
 
 
 <h4><a name="prevent-forward-proxying"></a>Prevent Forward Proxying</h4>
-<p>Prevent unauthenticated users from initiating arbitrary internal connections from the Community Manager portal.
-<strong>Scope</strong>: Community Manager Containers</p>
+<p>Prevent unauthenticated users from initiating arbitrary internal connections from the Community Manager portal.</p>
+<p><strong>Scope</strong>: Community Manager Containers</p>
 <p>You can prevent forward proxying:</p>
 <ul>
   <li>Via the developer portal user interface: <strong>Administration</strong> &gt; <strong>Site</strong>.</li>
   <li>In the Akana Administration Console. Configure the following setting:
     <pre>com.soa.atmosphere.forwardproxy -&gt;
-      forward.proxy.allowedHosts=&lt;Network Director Host(s) and/or Load Balancer host&gt;</pre>
+forward.proxy.allowedHosts=&lt;Network Director Host(s) and/or Load Balancer host&gt;</pre>
     <p>Values are comma separated.</p>
   </li>
 </ul>
 
 <blockquote>
-<p>NOTE: this setting can be done at a container level as described above, or it can be delegated to the tenants by setting the container level to *. If you are setting this at a container level then you MUST change the FWD_PROXY_FOR_HOSTS column for each tenant in the TENANTS table to an empty value (NULL). This will then allow you to control the hosts from the Akana Administration Console.<br />
-After this change, you will have to restart or wait 5 minutes for the cache to clear. If either of the two config settings (container config or DB) is set to * then the forward proxy allows everything through.</p>
+<p>NOTE: this setting can be done at a container level as described above, or it can be delegated to the tenants by setting the container level to *. If you are setting this at a container level, you MUST change the FWD_PROXY_FOR_HOSTS column for each tenant in the TENANTS table to an empty value (NULL). This will then allow you to control the hosts from the Akana Administration Console.</p>
+<p>After this change, you will have to restart or wait five minutes for the cache to clear. If either of the two config settings (container config or DB) is set to *, the forward proxy allows everything through.</p>
 </blockquote>
 <p>In the Akana Administration Console, configure the following:</p>
 <pre>com.soa.atmosphere.forwardproxy -&gt;
@@ -204,7 +204,7 @@ forward.proxy.allowedHosts=&lt;Network Director Host(s) and/or Load Balancer hos
 
 
 <h4><a name="nd-header-propagation"></a>Header Propagation in Network Director</h4>
-<p>Prevent the automatic propagation of certain HTTP headers through the Network Director and also configure a translation of the X-Forwarded-Host header. </p>
+<p>Prevent the automatic propagation of certain HTTP headers through the Network Director, and also configure a translation of the X-Forwarded-Host header.</p>
 <p><strong>Scope</strong>: Network Director Containers</p>
 <p>In the Akana Administration Console, configure the following:</p>
 
@@ -216,9 +216,9 @@ header.formatter.interceptor.templates=replace=X-Forwarded-Host:{host}</pre>
 
 
 <h4><a name="cm-header-propagation"></a>Header Propagation in Community Manager Subsystem</h4>
-<p>Prevent the automatic propagation of certain HTTP headers through the Network Director and also configure a NULL (none) translation of the X-Forwarded-Host header. </p>
+<p>Prevent the automatic propagation of certain HTTP headers through the Network Director, and also configure a NULL (none) translation of the X-Forwarded-Host header.</p>
 <p><strong>Scope</strong>: Community Manager Containers</p>
-<p>In the admin console, configure the following:</p>
+<p>In the Akana Administration Console, configure the following:</p>
 
 <pre>com.soa.http.client.core -&gt;
 block.headers.interceptor.blocked=content-type,content-length,content-range,content-md5,host,expect,keep-alive,
@@ -230,16 +230,16 @@ header.formatter.interceptor.templates=</pre>
 <h4><a name="credential-cache"></a>Tune the API Security Credential Cache</h4>
 <p>You can configure the expiration period and refresh time for the security cache for API calls.</p>
 <p><strong>Scope</strong>: Network Director Containers</p>
-<p>In the admin console, optionally configure the following:</p>
+<p>In the Akana Administration Console, optionally configure the following:</p>
 <pre>com.soa.api.security -&gt;
 com.soa.api.security.cache.expirationPeriod=3600000
 com.soa.api.security.cache.refreshTime=300000</pre>
 
 
 <h4><a name="configure-the-anti-virus-policy-to-scan-for-uploaded-files"></a>Configure the Anti-virus Policy to scan for uploaded files</h4>
-<p>The Anti-virus policy scans for files that are uploaded from the Community Manager Portal.
-<strong>Scope</strong>: All Community Manager Containers
-In the Policy Manager Console, create an Anti-Virus Operational Policy and configure the policy.</p>
+<p>The Anti-virus policy scans for files that are uploaded from the Community Manager Portal.</p>
+<p><strong>Scope</strong>: All Community Manager Containers</p>
+<p>In the Policy Manager Console, create an Anti-Virus Operational Policy and configure the policy.</p>
 <p><img src="images/ph_84_modify-av-policy.png" alt="Create Anti Virus Policy" title="Create Anti Virus Policy" /></p>
 <p>Attach this policy to the ConsoleResourceAPIService and the ContentAPIService in the Policy Manager -&gt; Community Manager node in the Policy Manager Console Organization tree. 
 </p>
@@ -247,9 +247,9 @@ In the Policy Manager Console, create an Anti-Virus Operational Policy and confi
 
 
 <h4><a name="enabling-csrf-protection"></a>Enabling CSRF Protection</h4>
-<p>You can enable and disable CSRF protection in the Policy Manager and Community Manager User Interfaces.
-<strong><em>Scope</em></strong>: All Community Manager and Policy Manager Containers</p>
-<p>Due to the fact that Policy Manager is not Internet-facing, it is disabled by default. You can enable the CSRF protection in the Policy Manager in the admin console:</p>
+<p>You can enable and disable CSRF protection in the Policy Manager and Community Manager User Interfaces.</p>
+<p><strong><em>Scope</em></strong>: All Community Manager and Policy Manager Containers</p>
+<p>Due to the fact that Policy Manager is not Internet-facing, it is disabled by default. You can enable the CSRF protection in the Policy Manager in the Akana Administration Console:</p>
 <pre>com.soa.console.csrf -&gt;
 org.owasp.csrfguard.Enabled=true</pre>
 <p>In Community Manager, CSRF configuration can be found under <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong>:</p>
@@ -257,7 +257,7 @@ org.owasp.csrfguard.Enabled=true</pre>
 
 
 <h4><a name="adding-xss-exclusions"></a>Adding XSS exclusions</h4>
-<p>Cross-site-scripting (XSS) is an way to inject client-side script into Web pages viewed by other users.</p>
+<p>Cross-site-scripting (XSS) is a way to inject client-side script into Web pages viewed by other users.</p>
 <p><strong><em>Scope</em></strong>: All Community Manager and Policy Manager Containers</p>
 <p>To configure any exceptions to the exclusion policy:</p>
 <pre>com.soa.console.xss -&gt;
@@ -271,9 +271,9 @@ validate=[true|false]</pre>
 
 
 <h4><a name="turning-off-user-account-enumeration"></a>Turning off User Account Enumeration</h4>
-<p>User Account Enumeration occurs when the Community Manager user interface provides direct feedback to a user during the signup and registration processes to the effect that a user account already exists or is already registered. If this is turned off, no useful feedback is provided to the user, minimizing the security risk, but decreasing usability.
-<strong><em>Scope</em></strong>: All Community Manager Containers
-In Community Manager, User Account Enumeration configuration can be found under <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong>:</p>
+<p>User Account Enumeration occurs when the Community Manager user interface provides direct feedback to a user during the signup and registration processes to the effect that a user account already exists or is already registered. If this is turned off, no useful feedback is provided to the user, minimizing the security risk, but decreasing usability.</p>
+<p><strong><em>Scope</em></strong>: All Community Manager Containers</p>
+<p>In Community Manager, User Account Enumeration configuration can be found under <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong>:</p>
 <p><img src="images/ph_84_allow-user-enum.png" alt="Allow User Enumeration" title="Allow User Enumeration" /></p>
 
 
@@ -286,19 +286,19 @@ In Community Manager, the Challenge Questions/Answers configuration can be found
 </blockquote>
 <p>Additional settings can be found under <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong>:</p>
 <p><img src="images/ph_84_encrypt-challenge-answers.png" alt="Encrypt Challenge Answers" title="Encrypt Challenge Answers" /></p>
-<p>Configuration of the actual questions available can be done via an <a href="http://docs.akana.com/cm/api/businesses/businesses_saveChallenges.htm">API call</a> into the system.</p>
+<p>Configuration of the actual questions available can be done via an <a href="http://docs.akana.com/cm/api/businesses/m_businesses_saveChallenges.htm">API call</a> into the system.</p>
 
 
 <h4><a name="disallowing-user-profile-modification"></a>Disallowing User Profile Modification</h4>
-<p>User Profile Modification permits a user access to their own profile for modification. In some circumstances, you may wish to prevent this (e.g. when user accounts are pre-provisioned).
-<strong><em>Scope</em></strong>: All Community Manager Containers
-In Community Manager, User Profile Modification configuration can be found under <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong>:</p>
+<p>User Profile Modification permits a user access to their own profile for modification. In some circumstances, you may wish to prevent this (e.g. when user accounts are pre-provisioned).</p>
+<p><strong><em>Scope</em></strong>: All Community Manager Containers</p>
+<p>In Community Manager, User Profile Modification configuration can be found under <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong>:</p>
 <p><img src="images/ph_84_user-profile-modification.png" alt="User Profile Modification" title="User Profile Modification" /></p>
 
 
 <h4><a name="configuring-account-login-rules"></a>Configuring Account Login Rules</h4>
-<p>The account login rules may include many options regarding failure attempts allowed, including account suspension times, auto-login, and other settings.
-<strong><em>Scope</em></strong>: Community Manager</p>
+<p>The account login rules may include many options regarding failure attempts allowed, including account suspension times, auto-login, and other settings.</p>
+<p><strong><em>Scope</em></strong>: Community Manager</p>
 <p>Login policies can be set:</p>
 <ul>
   <li>Via the developer portal user interface: <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Login</strong>.</li>
@@ -308,8 +308,8 @@ In Community Manager, User Profile Modification configuration can be found under
 
 
 <h4><a name="configuring-password-complexity-rules"></a>Configuring Password Complexity Rules</h4>
-<p>Password requirements (rules) may include many options regarding length, special characters, etc.
-<strong><em>Scope</em></strong>: Community Manager</p>
+<p>Password requirements (rules) may include many options regarding length, special characters, etc.</p>
+<p><strong><em>Scope</em></strong>: Community Manager</p>
 <p>Password rules can be set:</p>
 <ul>
   <li>Via the developer portal user interface: <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Password</strong>.</li>
@@ -318,8 +318,8 @@ In Community Manager, User Profile Modification configuration can be found under
 
 
 <h4><a name="configuring-x-frame-options-header"></a>Configuring X-FRAME-OPTIONS Header</h4>
-<p>The X-FRAME-OPTIONS header plays a role in determining if and how the user interface can be embedded within an iFrame in a 3rd party site. 
-<strong><em>Scope</em></strong>: All Community Manager and Policy Manager Containers</p>
+<p>The X-FRAME-OPTIONS header plays a role in determining if and how the user interface can be embedded within an iFrame in a third-party site.</p>
+<p><strong><em>Scope</em></strong>: All Community Manager and Policy Manager Containers</p>
 <p>To configure Community Manager:</p>
 <pre>com.soa.atmosphere.console -&gt;
 atmosphere.console.config.xFrameOptions=[DESIRED HEADER]</pre>
@@ -331,7 +331,6 @@ xFrameOptions=[DESIRED HEADER]</pre>
 <h4><a name="configuring-server-header"></a>Configuring Server Header</h4>
 <p>You might want to prevent the Server header from being returned in responses.</p>
 <p><strong><em>Scope</em></strong>: All Community Manager and Policy Manager Containers</p>
-<p>In the admin console, configure the following:</p>
+<p>In the Akana Administration Console for each container, configure the following:</p>
 <pre>com.soa.platform.jetty -&gt; jetty.server.sendServerVersion = false</pre>
 <p>NOTE: this property does not exist by default, so you will most likely need to add it.</p>
-<p>Set the property and value separately for each container.</p>
