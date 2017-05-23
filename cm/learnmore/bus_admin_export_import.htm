@@ -196,22 +196,22 @@ nav-title: Export and Import
 
 
 
-<a name="import_properties_file"></a>
-<h3>What is the import properties file and when do I need it?</h3>
+<a name="import_properties_file"></a><h3>What is the import properties file and when do I need it?</h3>
 <p>When you import a file, you can also provide an optional configuration migration properties file.</p>
 <p>Migration properties allow for URL mapping of physical service endpoints between the source environment that the information was exported from and the target environment you're importing it to.</p>
 <p>If the URL mapping is not specified, physical service endpoint URLs are migrated without any change. It is possible that the source environment URLs might not apply to the target environment, and in this case the migration properties file is needed.</p>
-<p>URL mapping is done by URL prefix. The backslash character (\) is used to escape any special characters in the properties file, such as the colon that might appear in the URL.</p>
+<p>URL mapping is done by URL prefix. The backslash character (\) is used to escape any special characters in the properties file, such as a colon in the URL.</p>
 <p>If you import the package file without a properties file, APIs included in the package that are Managed Services in the source environment become Unmanaged Services in the target environment, unless the target environment contains <a href="basics_glossary.htm#gl_container">Akana container instances</a> with the same container key as in the source environment.</p>
 <p>The migration properties file is used to handle the differences between the source environment and the target environment by transforming the contents of the export package to be suitable for the target environment.</p>
 <p>Here are some examples of instances in which the migration properties file can be used:</p>
 <ul>
-  <li>The target API endpoint is not the same in the source and target environments.</li>
-  <li>Proxy API is hosted in an Akana container.</li>
+  <li>The target API endpoint is not the same in the source and target environments: see <a href="#import_properties_01">Different source and target endpoints</a>.</li>
+  <li>Proxy API is hosted in an Akana container: see <a href="#import_properties_02">Proxy API hosted in an Akana container: different container keys</a>.</li>
+  <li>Import package has both virtual service and physical service, changes have been made, and you want to make sure there are no conflicts: see <a href="#import_properties_03">Import package has both virtual service and physical service</a>.</li>
 </ul>
 
 
-<h5>Different source and target endpoints</h5>
+<a name="import_properties_01"></a><h5>Different source and target endpoints</h5>
 <p>Instances where the target API endpoint is not the same in the source environment and target environment include:</p>
 <ul>
   <li><strong>Different hostname</strong>&#8212;It is likely that the path portion of the URL might be the same, but with a different hostname.</li>
@@ -229,7 +229,7 @@ migration.url.source.http\://apihost-source-env\:8900=DiscussionAPI
 migration.url.target.http\://apihost-target-env\:8900=DiscussionAPI</pre>
 
 
-<h5>Proxy API hosted in an Akana container</h5>
+<a name="import_properties_02"></a><h5>Proxy API hosted in an Akana container: different container keys</h5>
 <p>Proxy APIs are hosted in Akana containers. It is possible that the container key in the source environment might be different from the container key in the target environment.</p>
 <p>It is also possible that the proxy API might be hosted in a different number of ND containers in the source environment versus the target environment. However, this is rare, because most users want to host the Proxy API in an ND cluster rather than hosting in multiple NDs.</p>
 <p>The migration properties file allows the user to map a set of ND container keys in the source environment to an alias to which multiple target environment ND containers are also mapped. This scenario allows the proxy APIs that are exported/imported to be imported into the appropriate ND containers in the target environment.</p>
@@ -241,6 +241,13 @@ migration.url.target.http\://apihost-target-env\:8900=DiscussionAPI</pre>
 
 migration.container.source.source-env-container-key=acmebroker
 migration.container.target.target-env-container-key=acmebroker</pre>
+
+
+<a name="import_properties_03"></a><h5>Import package has both virtual service and physical service</h5>
+<p>If an import package includes both virtual services and their corresponding physical services, and changes to the existing virtual service have been made in the target environment, there could be conflicts in some scenarios between data in the resulting physical service and virtual service. To make sure this doesn't happen, you can add the following property to the migration file:</p>
+<pre>
+migration.delete.virtualized.operations=true</pre>
+
 
 
 <h4>Additional Migration Properties: QName Matching</h4>
