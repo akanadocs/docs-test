@@ -185,22 +185,13 @@ https.socket.factory.cipherSuites=TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_
 <p><strong>Scope</strong>: Community Manager Containers</p>
 <p>You can prevent forward proxying:</p>
 <ul>
-  <li>Via the developer portal user interface: <strong>Administration</strong> &gt; <strong>Site</strong>.</li>
-  <li>In the Akana Administration Console. Configure the following setting:
+  <li>Via the developer portal user interface: <strong>Administration</strong> &gt; <strong>Site</strong>. Changing this setting in the user interface affects all containers for the installation.</li>
+  <li>In the Akana Administration Console for each container. Configure the following setting:
     <pre>com.soa.atmosphere.forwardproxy -&gt;
 forward.proxy.allowedHosts=&lt;Network Director Host(s) and/or Load Balancer host&gt;</pre>
     <p>Values are comma separated.</p>
   </li>
 </ul>
-
-<blockquote>
-<p>NOTE: this setting can be done at a container level as described above, or it can be delegated to the tenants by setting the container level to *. If you are setting this at a container level, you MUST change the FWD_PROXY_FOR_HOSTS column for each tenant in the TENANTS table to an empty value (NULL). This will then allow you to control the hosts from the Akana Administration Console.</p>
-<p>After this change, you will have to restart or wait five minutes for the cache to clear. If either of the two config settings (container config or DB) is set to *, the forward proxy allows everything through.</p>
-</blockquote>
-<p>In the Akana Administration Console, configure the following:</p>
-<pre>com.soa.atmosphere.forwardproxy -&gt;
-forward.proxy.allowedHosts=&lt;Network Director Host(s) and/or Load Balancer host&gt;</pre>
-<p>Values are comma separated.</p>
 
 
 <h4><a name="nd-header-propagation"></a>Header Propagation in Network Director</h4>
@@ -248,7 +239,7 @@ com.soa.api.security.cache.refreshTime=300000</pre>
 
 <h4><a name="enabling-csrf-protection"></a>Enabling CSRF Protection</h4>
 <p>You can enable and disable CSRF protection in the Policy Manager and Community Manager User Interfaces.</p>
-<p><strong><em>Scope</em></strong>: All Community Manager and Policy Manager Containers</p>
+<p><strong>Scope</strong>: All Community Manager and Policy Manager Containers</p>
 <p>Due to the fact that Policy Manager is not Internet-facing, it is disabled by default. You can enable the CSRF protection in the Policy Manager in the Akana Administration Console:</p>
 <pre>com.soa.console.csrf -&gt;
 org.owasp.csrfguard.Enabled=true</pre>
@@ -258,7 +249,7 @@ org.owasp.csrfguard.Enabled=true</pre>
 
 <h4><a name="adding-xss-exclusions"></a>Adding XSS exclusions</h4>
 <p>Cross-site-scripting (XSS) is a way to inject client-side script into Web pages viewed by other users.</p>
-<p><strong><em>Scope</em></strong>: All Community Manager and Policy Manager Containers</p>
+<p><strong>Scope</strong>: All Community Manager and Policy Manager Containers</p>
 <p>To configure any exceptions to the exclusion policy:</p>
 <pre>com.soa.console.xss -&gt;
 exceptionURLs=[COMMA DELIMITED LIST]</pre>
@@ -272,7 +263,7 @@ validate=[true|false]</pre>
 
 <h4><a name="turning-off-user-account-enumeration"></a>Turning off User Account Enumeration</h4>
 <p>User Account Enumeration occurs when the Community Manager user interface provides direct feedback to a user during the signup and registration processes to the effect that a user account already exists or is already registered. If this is turned off, no useful feedback is provided to the user, minimizing the security risk, but decreasing usability.</p>
-<p><strong><em>Scope</em></strong>: All Community Manager Containers</p>
+<p><strong>Scope</strong>: All Community Manager Containers</p>
 <p>In Community Manager, User Account Enumeration configuration can be found under <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong>:</p>
 <p><img src="images/ph_84_allow-user-enum.png" alt="Allow User Enumeration" title="Allow User Enumeration" /></p>
 
@@ -291,35 +282,38 @@ In Community Manager, the Challenge Questions/Answers configuration can be found
 
 <h4><a name="disallowing-user-profile-modification"></a>Disallowing User Profile Modification</h4>
 <p>User Profile Modification permits a user access to their own profile for modification. In some circumstances, you may wish to prevent this (e.g. when user accounts are pre-provisioned).</p>
-<p><strong><em>Scope</em></strong>: All Community Manager Containers</p>
+<p><strong>Scope</strong>: All Community Manager Containers</p>
 <p>In Community Manager, User Profile Modification configuration can be found under <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong>:</p>
 <p><img src="images/ph_84_user-profile-modification.png" alt="User Profile Modification" title="User Profile Modification" /></p>
 
 
 <h4><a name="configuring-account-login-rules"></a>Configuring Account Login Rules</h4>
-<p>The account login rules may include many options regarding failure attempts allowed, including account suspension times, auto-login, and other settings.</p>
-<p><strong><em>Scope</em></strong>: Community Manager</p>
+<p>The account login rules may include many options regarding failure attempts allowed, including account suspension times, and other settings.</p>
+<p><strong>Scope</strong>: Community Manager</p>
 <p>Login policies can be set:</p>
 <ul>
-  <li>Via the developer portal user interface: <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Login</strong>.</li>
+  <li>Via the developer portal user interface: <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Login</strong>, as shown below.
+  <p><img src="images/ph_84_login-policy.jpg" alt="Login Policy page" /></p>
+  </li>
   <li>Via an <a href="http://docs.akana.com/cm/api/businesses/m_businesses_updateLoginPolicy.htm">API call</a> into the system.</li>
 </ul>
 
 
 
 <h4><a name="configuring-password-complexity-rules"></a>Configuring Password Complexity Rules</h4>
-<p>Password requirements (rules) may include many options regarding length, special characters, etc.</p>
-<p><strong><em>Scope</em></strong>: Community Manager</p>
+<p>Password requirements (rules) may include many options such as length, characters allowed/required, and password change period.</p>
+<p><strong>Scope</strong>: Community Manager</p>
 <p>Password rules can be set:</p>
 <ul>
-  <li>Via the developer portal user interface: <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Password</strong>.</li>
+  <li>Via the developer portal user interface: <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Password</strong>, as shown below.
+  <p><img src="images/ph_84_password-policy.jpg" alt="Login Policy page" /></p></li>
   <li>Via an <a href="http://docs.akana.com/cm/api/businesses/m_businesses_updatePasswordPolicy.htm">API call</a> into the system.</li>
 </ul>
 
 
 <h4><a name="configuring-x-frame-options-header"></a>Configuring X-FRAME-OPTIONS Header</h4>
 <p>The X-FRAME-OPTIONS header plays a role in determining if and how the user interface can be embedded within an iFrame in a third-party site.</p>
-<p><strong><em>Scope</em></strong>: All Community Manager and Policy Manager Containers</p>
+<p><strong>Scope</strong>: All Community Manager and Policy Manager Containers</p>
 <p>To configure Community Manager:</p>
 <pre>com.soa.atmosphere.console -&gt;
 atmosphere.console.config.xFrameOptions=[DESIRED HEADER]</pre>
@@ -330,7 +324,7 @@ xFrameOptions=[DESIRED HEADER]</pre>
 
 <h4><a name="configuring-server-header"></a>Configuring Server Header</h4>
 <p>You might want to prevent the Server header from being returned in responses.</p>
-<p><strong><em>Scope</em></strong>: All Community Manager and Policy Manager Containers</p>
+<p><strong>Scope</strong>: All Community Manager and Policy Manager Containers</p>
 <p>In the Akana Administration Console for each container, configure the following:</p>
 <pre>com.soa.platform.jetty -&gt; jetty.server.sendServerVersion = false</pre>
 <p>NOTE: this property does not exist by default, so you will most likely need to add it.</p>
