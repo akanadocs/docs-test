@@ -9,7 +9,7 @@ weight: 10
 type: page
 nav-title: Platform Hardening 8.4.x
 ---
-<h2>Akana Platform Hardening Guide Version 8.4.x</h2>
+<h2>Akana Platform Hardening Guide Versions 8.4 and Later</h2>
 <p>This document applies to versions 8.4 and later only. For a summary of available versions, please refer to <a href="platform-hardening_all.htm">Akana Platform Hardening Documentation</a>.</p>
 <h3 style="color: grey;">Table of Contents</h3>
 <ol class="table_of_contents">
@@ -48,7 +48,7 @@ nav-title: Platform Hardening 8.4.x
 </ol>
 <h3><a name="introduction"></a>Introduction</h3>
 <p>Akana is a recognized leader in API Management and SOA Governance Automation solutions. Our platform-independent solution set includes the API Gateway, which is further broken down into Policy Manager, the centralized administration console, and Network Director, an intermediary that integrates with Policy Manager to provide high-performance, scalable API security and management capabilities. The solution also includes Community Manager, which provides a branded developer portal for the consumption of API by the developer.</p>
-<p>This document describes the best practices and configuration settings to harden Akana’s API Gateway and Community Manager products. This document is a supplement to Akana’s existing “Product Architecture” document showing recommendations for a typical large enterprise.</p>
+<p>This document describes the best practices and configuration settings to harden Akana's API Gateway and Community Manager products. This document is a supplement to Akana's existing <em>Product Architecture</em> document showing recommendations for a typical large enterprise.</p>
 <h3><a name="deployment-architecture"></a>Deployment Architecture</h3>
 <p>There are several best practices that cover the deployment of the product in a hardened environment.</p>
 <p>An external HSM keystore can be used in place of the out of the box Policy Manager keystore (database). The configuration of Policy Manager with HSM is described in a separate document.</p>
@@ -72,10 +72,10 @@ atmosphere.config.denyUserRoles=SiteAdmin,BusinessAdmin,ApiAdmin,System Administ
 
 
 <h4><a name="configure-all-listeners-internal-and-external-as-htts-only"></a>Configure all listeners, internal and external as HTTPS only</h4>
-<p>This is accomplished in two places in the product: Firstly, the listeners for the applications in the container are configured from within Policy Manager at Containers-&gt;[container_name]-&gt;Details-&gt;Inbound Listeners. Options for configuring port and PKI are available. Settings for two-way SSL mutual authentication are also available. It is recommended that either the “Accept client certificates” or “Require client certificates” be selected based on customer security requirements</p>
+<p>This is accomplished in two places in the product: Firstly, the listeners for the applications in the container are configured from within Policy Manager at Containers-&gt;[container_name]-&gt;Details-&gt;Inbound Listeners. Options for configuring port and PKI are available. Settings for two-way SSL mutual authentication are also available. It is best to choose either <strong>Accept client certificates</strong> or <strong>Require client certificates</strong>, based on customer security requirements.</p>
 <p><strong>Scope</strong>: All Containers</p>
-<pre>Config for pm
-Thu Jul 10 23:47:51 PDT 2014
+<pre>#Config for pm
+#Thu Jul 10 23:47:51 PDT 2014
 product.home=file\:/Users/example/soa/sm70/
 org.eclipse.jetty.server.Request.maxFormContentSize=500000
 felix.cm.dir=${felix.cache.rootdir}/cm
@@ -90,18 +90,17 @@ com.soa.provision.bundles.start=true
 com.soa.provision.poll=2000
 org.eclipse.jetty.servlet.SessionCookie=JSESSIONID_pm
 felix.shutdown.hook=false
-container.name=[container_name]
-</pre>
+container.name=[container_name]</pre>
 <p>Note above the *.secure syntax used for the settings.</p>
 <p>Secondly, the listeners for the applications in the container are configured from within Policy Manager at Containers-&gt;[container_name]-&gt;Details-&gt;Inbound Listeners. Options for configuring port and PKI are available.</p>
 
 
 <h4><a name="config-admin-sep-port"></a>Configure the Admin console (/admin) on a separate port</h4>
 <p>As shown above, this is configurable in the /instances/[container_name]/system.properties file for each container. The Admin console (/admin) and the other features installed in the container should ideally not be configured on the same port. This will allow you to isolate the Akana Administration Console from the Internet.</p>
-<p>The system.properties file is updated with the following highlighted properties and also requires a configuration file placed in the container’s directory (/sm70/instances/[container_name]) to ensure the Akana Administration Console is only accessed from the defined port and host.</p>
+<p>The system.properties file is updated with the following highlighted properties and also requires a configuration file placed in the container's directory (/sm70/instances/[container_name]) to ensure the Akana Administration Console is only accessed from the defined port and host.</p>
 <p><strong>Scope</strong>: All Containers</p>
-<pre>Config for pm
-Thu Jul 10 23:47:51 PDT 2014
+<pre>#Config for pm
+#Thu Jul 10 23:47:51 PDT 2014
 product.home=file\:/Users/example/soa/sm70/
 org.eclipse.jetty.server.Request.maxFormContentSize=500000
 felix.cm.dir=${felix.cache.rootdir}/cm
