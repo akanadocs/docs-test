@@ -1,0 +1,338 @@
+---
+layout: page
+title: Platform Hardening 8.4x
+description: A guide on how to harden the platform for secure deployments (version 8.4 and later).
+product: sp
+category: ref
+sub-nav-class: Platform Management
+weight: 10
+type: page
+nav-title: Platform Hardening 8.4
+---
+<h2>Akana Platform Hardening Guide Version 8.4.x</h2>
+<p>This document applies to versions 8.4 and later only. For a summary of available versions, please refer to <a href="platform-hardening_all.htm">Akana Platform Hardening Documentation</a>.</p>
+<h3 style="color: grey;">Table of Contents</h3>
+<ol class="table_of_contents">
+	<li><a href="#introduction">Introduction</a></li>
+	<li><a href="#deployment-architecture">Deployment Architecture</a>
+	<ol>
+		<li><a href="#install-network-director-on-a-separate-container">Install Network Director on a separate container</a></li>
+		<li><a href="#install-internet-facing-and-administration-applications-on-separate-containers">Install Internet-facing and administration applications on separate containers</a></li>
+		<li><a href="#configure-all-listeners-internal-and-external-as-htts-only">Configure all listeners, internal and external as HTTPS only</a></li>
+		<li><a href="#config-admin-sep-port">Configure the Admin console (/admin) on a separate port</a></li>
+	</ol></li>
+	<li><a href="#config-setting">Configuration Settings</a>
+	<ol>
+		<li><a href="#jre-unlimited-strength">Add the unlimited strength policy to the JDK</a></li>
+		<li><a href="#ignore-cookies">Configure the product to ignore downstream cookies</a></li>
+		<li><a href="#secure-cookies">Configure secure cookies</a></li>
+		<li><a href="#disabling-sslv3">Disabling SSLv3</a></li>
+		<li><a href="#restrict-cipher-suites">Restrict the cipher suites used</a></li>
+		<li><a href="#tls12-only">Enforcing TLS 1.2 Only</a></li>
+		<li><a href="#disabling-outbound">Limiting Outbound SSL/TLS/Cipher support</a></li>
+		<li><a href="#prevent-forward-proxying">Prevent Forward Proxying</a></li>
+		<li><a href="#nd-header-propagation">Header Propagation in Network Director</a></li>
+		<li><a href="#cm-header-propagation">Header Propagation in Community Manager Subsystem</a></li>
+		<li><a href="#credential-cache">Tune the API Security Credential Cache</a></li>
+		<li><a href="#configure-the-anti-virus-policy-to-scan-for-uploaded-files">Configure the Anti-virus Policy to scan for uploaded files</a></li>
+		<li><a href="#enabling-csrf-protection">Enabling CSRF protection</a></li>
+		<li><a href="#adding-xss-exclusions">Adding XSS exclusions</a></li>
+		<li><a href="#turning-off-user-account-enumeration">Turning off User Account Enumeration</a></li>
+		<li><a href="#configuring-challenge-questions-and-answers">Configuring Challenge Questions and Answers</a></li>
+		<li><a href="#disallowing-user-profile-modification">Disallowing User Profile Modification</a></li>
+		<li><a href="#configuring-account-login-rules">Configuring Account Login Rules</a></li>
+		<li><a href="#configuring-password-complexity-rules">Configuring Password Complexity Rules</a></li>
+		<li><a href="#configuring-x-frame-options-header">Configuring X-FRAME-OPTIONS Header</a></li>
+		<li><a href="#configuring-server-header">Configuring Server Header</a></li>
+	</ol></li>
+</ol>
+<h3><a name="introduction"></a>Introduction</h3>
+<p>Akana is a recognized leader in API Management and SOA Governance Automation solutions. Our platform-independent solution set includes the API Gateway, which is further broken down into Policy Manager, the centralized administration console, and Network Director, an intermediary that integrates with Policy Manager to provide high-performance, scalable API security and management capabilities. The solution also includes Community Manager, which provides a branded developer portal for the consumption of API by the developer.</p>
+<p>This document describes the best practices and configuration settings to harden Akana’s API Gateway and Community Manager products. This document is a supplement to Akana’s existing “Product Architecture” document showing recommendations for a typical large enterprise.</p>
+<h3><a name="deployment-architecture"></a>Deployment Architecture</h3>
+<p>There are several best practices that cover the deployment of the product in a hardened environment.</p>
+<p>An external HSM keystore can be used in place of the out of the box Policy Manager keystore (database). The configuration of Policy Manager with HSM is described in a separate document.</p>
+
+
+<h4><a name="install-network-director-on-a-separate-container"></a>Install Network Director on a Separate Container</h4>
+<p>API traffic processing should be handled separately from Web traffic and Admin traffic. To this end, the Network Director should not be installed on the same container as Community Manager, or Policy Manager features:</p>
+<p><img src="images/ph_80_hardening-admin-console.png" alt="Admin Console" title="Admin Console" /></p>
+
+
+<h4><a name="install-internet-facing-and-administration-applications-on-separate-containers"></a>Install Internet-facing and Administration Applications on Separate Containers</h4>
+<p>There are two components to this:</p>
+<ol>
+  <li>The Community Manager should not be installed on the same container as Policy Manager Console</li>
+  <li>The Community Manager User Interface and APIs provide both consumer-facing and administrative functions. If needed by your security constraints, the administrative functions can be disabled in Community Manager. This will allow you to install different instances of Community Manager on different containers – and disable the administration functionality in the Internet-facing instance. </li>
+</ol>
+<p>To disable the administrative functionality in the Community Manager:</p>
+<p>In the admin console, configure the following:</p>
+<p><code>com.soa.atmosphere -&gt;
+atmosphere.config.denyUserRoles=SiteAdmin,BusinessAdmin,ApiAdmin,System Administrator,Security Administrator,Site Administrator</code></p>
+
+
+<h4><a name="configure-all-listeners-internal-and-external-as-htts-only"></a>Configure all listeners, internal and external as HTTPS only</h4>
+<p>This is accomplished in two places in the product: Firstly, the listeners for the applications in the container are configured from within Policy Manager at Containers-&gt;[container_name]-&gt;Details-&gt;Inbound Listeners. Options for configuring port and PKI are available. Settings for two-way SSL mutual authentication are also available. It is recommended that either the “Accept client certificates” or “Require client certificates” be selected based on customer security requirements</p>
+<p><strong>Scope</strong>: All Containers</p>
+<pre>Config for pm
+Thu Jul 10 23:47:51 PDT 2014
+product.home=file\:/Users/example/soa/sm70/
+org.eclipse.jetty.server.Request.maxFormContentSize=500000
+felix.cm.dir=${felix.cache.rootdir}/cm
+org.osgi.service.http.port.secure=9900
+com.soa.provision.file.dir=${felix.cache.rootdir}/deploy
+product.home.dir=/Users/alistairfarquharson/soa/b962/sm70
+com.soa.snapshot.directory=${felix.cache.rootdir}/snapshot
+com.soa.provision.noInitialDelay=true
+com.soa.http.host=127.0.0.1
+com.soa.http.bind.all=false
+com.soa.provision.bundles.start=true
+com.soa.provision.poll=2000
+org.eclipse.jetty.servlet.SessionCookie=JSESSIONID_pm
+felix.shutdown.hook=false
+container.name=[container_name]
+</pre>
+<p>Note above the *.secure syntax used for the settings.</p>
+<p>Secondly, the listeners for the applications in the container are configured from within Policy Manager at Containers-&gt;[container_name]-&gt;Details-&gt;Inbound Listeners. Options for configuring port and PKI are available.</p>
+
+
+<h4><a name="config-admin-sep-port"></a>Configure the Admin console (/admin) on a separate port</h4>
+<p>As shown above, this is configurable in the /instances/[container_name]/system.properties file for each container. The Admin console (/admin) and the other features installed in the container should ideally not be configured on the same port. This will allow you to isolate the Akana Administration Console from the Internet.</p>
+<p>The system.properties file is updated with the following highlighted properties and also requires a configuration file placed in the container’s directory (/sm70/instances/[container_name]) to ensure the Akana Administration Console is only accessed from the defined port and host.</p>
+<p><strong>Scope</strong>: All Containers</p>
+<pre>Config for pm
+Thu Jul 10 23:47:51 PDT 2014
+product.home=file\:/Users/example/soa/sm70/
+org.eclipse.jetty.server.Request.maxFormContentSize=500000
+felix.cm.dir=${felix.cache.rootdir}/cm
+org.osgi.service.http.port.secure=14443
+com.soa.provision.file.dir=${felix.cache.rootdir}/deploy
+product.home.dir=/Users/alistairfarquharson/soa/b962/sm70
+com.soa.snapshot.directory=${felix.cache.rootdir}/snapshot
+com.soa.provision.noInitialDelay=true
+com.soa.http.host=10.1.1.2
+com.soa.http.bind.all.secure=false
+com.soa.provision.bundles.start=true
+com.soa.provision.poll=2000
+org.eclipse.jetty.servlet.SessionCookie=JSESSIONID_pm
+felix.shutdown.hook=false
+container.name=[container_name]</pre>
+
+<h3><a name="config-setting"></a>Configuration Settings</h3>
+<p>This section covers settings and tuning parameters in the product related to hardening.</p>
+
+
+<h4><a name="jre-unlimited-strength"></a>Add the unlimited strength policy to the JDK</h4>
+<p>To support long passwords when importing PKI from Java Keystores, you will need to install the Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files. This is dependent on the JRE version being used and is available from Oracle. To install, copy the <strong>US_export_policy.jar</strong> and <strong>local_policy.jar</strong> files to the /lib/security directory for the JRE.</p>
+<p><strong>Scope</strong>: All Containers</p>
+
+
+<h4><a name="ignore-cookies"></a>Configure the product to ignore downstream cookies</h4>
+<p>This prevents the product from automatically storing and forwarding any cookies retrieved from the downstream APIs and Services.</p>
+<p><strong>Scope</strong>: All Containers</p>
+<p>In the Akana Administration Console, configure the following:</p>
+<p><code>com.soa.http.client.core -&gt;
+http.client.params.cookiePolicy=ignoreCookies</code></p>
+
+
+<h4><a name="secure-cookies"></a>Configure secure cookies</h4>
+<p>This sets the product to only use secure cookies. </p>
+<p><strong>Scope</strong>: All Containers</p>
+<p>In the Akana Administration Console, configure the following:</p>
+<pre>com.soa.platform.jetty -&gt;
+session.manager.factory.secureCookies=true</pre>
+
+
+<h4><a name="disabling-sslv3"></a>Disabling SSLv3</h4>
+<p>This configures the product to disable SSLv3.
+<strong>Scope</strong>: All Containers</p>
+<p>In the Akana Administration Console, configure the following:</p>
+<p><code>com.soa.platform.jetty -&gt;
+http.incoming.transport.config.enabledProtocols=SSLv2HELLO,TLSv1,TLSv1.1, TLSv1.2</code></p>
+
+
+<h4><a name="restrict-cipher-suites"></a>Restrict the cipher suites used</h4>
+<p>Use only stronger cipher suites for SSL</p>
+<p><strong>Scope</strong>: All Containers</p>
+<p>In the Akana Administration Console, configure the following:</p>
+<pre>com.soa.platform.jetty -&gt;
+http.incoming.transport.config.cipherSuites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,TLS_RSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_256_GCM_SHA384,SSL_RSA_WITH_3DES_EDE_CBC_SHA</pre>
+<p><strong>Note</strong>: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See http://docs.oracle.com/javase/7/docs/technotes/guides/security/SunProviders.html. This has to be added to the JRE.</p>
+
+
+<h4><a name="tls12-only"></a>Enforcing TLS 1.2 Only</h4>
+<p>Depending on the level of security required, you may way to restrict the protocol to TLS 1.2 only. Note - This will limit the accesibility of the platform to certain clients.
+<strong>Scope</strong>: All Containers</p>
+<p>Enable TLSv1.2 only:</p>
+<p><code>com.soa.platform.jetty -&gt;
+http.incoming.transport.config.enabledProtocols=SSLv2Hello,TLSv1.2</code></p>
+<p>Note: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See http://docs.oracle.com/javase/7/docs/technotes/guides/security/SunProviders.html. This has to be added to the JRE.</p>
+
+
+<h4><a name="disabling-outbound"></a>Limiting Outbound SSL/TLS/Cipher support</h4>
+<p>You may also want to limit the protcols and ciphers the the prodct will use for outbound connections.
+<strong>Scope</strong>: All Containers</p>
+<p>Configure the available protocols for outbound connections:</p>
+<p><code>com.soa.http.client.core -&gt;
+https.socket.factory.enabledProtocols=TLSv1.2</code></p>
+<p>Configure the available cipher suites for outbound connections:</p>
+<pre>com.soa.http.client.core -&gt;
+https.socket.factory.cipherSuites=TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256</pre>
+<p><strong>Note</strong>: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See http://docs.oracle.com/javase/7/docs/technotes/guides/security/SunProviders.html. This has to be added to the JRE.</p>
+
+
+<h4><a name="prevent-forward-proxying"></a>Prevent Forward Proxying</h4>
+<p>Prevent unauthenticated users from initiating arbitrary internal connections from the Community Manager portal.
+<strong>Scope</strong>: Community Manager Containers</p>
+<p>You can prevent forward proxying:</p>
+<ul>
+  <li>Via the developer portal user interface: <strong>Administration</strong> &gt; <strong>Site</strong>.</li>
+  <li>In the Akana Administration Console. Configure the following setting:
+    <pre>com.soa.atmosphere.forwardproxy -&gt;
+      forward.proxy.allowedHosts=&lt;Network Director Host(s) and/or Load Balancer host&gt;</pre>
+    <p>Values are comma separated.</p>
+  </li>
+</ul>
+
+<blockquote>
+<p>NOTE: this setting can be done at a container level as described above, or it can be delegated to the tenants by setting the container level to *. If you are setting this at a container level then you MUST change the FWD_PROXY_FOR_HOSTS column for each tenant in the TENANTS table to an empty value (NULL). This will then allow you to control the hosts from the Akana Administration Console.<br />
+After this change, you will have to restart or wait 5 minutes for the cache to clear. If either of the two config settings (container config or DB) is set to * then the forward proxy allows everything through.</p>
+</blockquote>
+<p>In the Akana Administration Console, configure the following:</p>
+<p><code>com.soa.atmosphere.forwardproxy -&gt;
+forward.proxy.allowedHosts=&lt;Network Director Host(s) and/or Load Balancer host&gt;</code></p>
+<p>Values are comma separated.</p>
+
+
+<h4><a name="nd-header-propagation"></a>Header Propagation in Network Director</h4>
+<p>Prevent the automatic propagation of certain HTTP headers through the Network Director and also configure a translation of the X-Forwarded-Host header. </p>
+<p><strong>Scope</strong>: Network Director Containers</p>
+<p>In the Akana Administration Console, configure the following:</p>
+
+<pre>com.soa.http.client.core -&gt;
+block.headers.interceptor.blocked=content-type,content-length,content-range,content-md5,host,expect,keep-alive,
+connection,transfer-encoding,atmo-forward-to,atmo-forwarded-from
+
+header.formatter.interceptor.templates=replace=X-Forwarded-Host:{host}</pre>
+
+
+<h4><a name="cm-header-propagation"></a>Header Propagation in Community Manager Subsystem</h4>
+<p>Prevent the automatic propagation of certain HTTP headers through the Network Director and also configure a NULL (none) translation of the X-Forwarded-Host header. </p>
+<p><strong>Scope</strong>: Community Manager Containers</p>
+<p>In the admin console, configure the following:</p>
+
+<pre>com.soa.http.client.core -&gt;
+block.headers.interceptor.blocked=content-type,content-length,content-range,content-md5,host,expect,keep-alive,
+connection,transfer-encoding
+
+header.formatter.interceptor.templates=</pre>
+
+
+<h4><a name="credential-cache"></a>Tune the API Security Credential Cache</h4>
+<p>You can configure the expiration period and refresh time for the security cache for API calls.</p>
+<p><strong>Scope</strong>: Network Director Containers</p>
+<p>In the admin console, optionally configure the following:</p>
+<p><code>com.soa.api.security -&gt;
+com.soa.api.security.cache.expirationPeriod=3600000
+com.soa.api.security.cache.refreshTime=300000</code></p>
+
+
+<h4><a name="configure-the-anti-virus-policy-to-scan-for-uploaded-files"></a>Configure the Anti-virus Policy to scan for uploaded files</h4>
+<p>The Anti-virus policy scans for files that are uploaded from the Community Manager Portal.
+<strong>Scope</strong>: All Community Manager Containers
+In the Policy Manager Console, create an Anti-Virus Operational Policy and configure the policy.</p>
+<p><img src="images/ph_80_modify-av-policy.png" alt="Create Anti Virus Policy" title="Create Anti Virus Policy" /></p>
+<p>Attach this policy to the ConsoleResourceAPIService and the ContentAPIService in the Policy Manager -&gt; Community Manager node in the Policy Manager Console Organization tree. 
+</p>
+<p><img src="images/ph_80_attach-av-policy.png" alt="Attach Anti Virus Policy" title="Attach Anti Virus Policy" /></p>
+
+
+<h4><a name="enabling-csrf-protection"></a>Enabling CSRF Protection</h4>
+<p>You can enable and disable CSRF protection in the Policy Manager and Community Manager User Interfaces.
+<strong><em>Scope</em></strong>: All Community Manager and Policy Manager Containers</p>
+<p>Due to the fact that Policy Manager is not Internet-facing, it is disabled by default. You can enable the CSRF protection in the Policy Manager in the admin console:</p>
+<p><code>com.soa.console.csrf -&gt;
+org.owasp.csrfguard.Enabled=true</code>
+In Community Manager, CSRF configuration can be found under <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong>:</p>
+<p><img src="images/ph_80_enable-csrf-support.png" alt="Enable CSRF Support" title="Enable CSRF Support" /></p>
+
+
+<h4><a name="adding-xss-exclusions"></a>Adding XSS exclusions</h4>
+<p>Cross-site-scripting (XSS) is an way to inject client-side script into Web pages viewed by other users. 
+<strong><em>Scope</em></strong>: All Community Manager and Policy Manager Containers
+To configure any exceptions to the exclusion policy:</p>
+<p><code>com.soa.console.xss -&gt;
+exceptionURLs=[COMMA DELIMITED LIST]</code>
+To configure any new keywords that should be excluded:</p>
+<p><code>com.soa.console.xss -&gt;
+keywords=[COMMA DELIMITED LIST]</code>
+To turn XSS validation on/off:</p>
+<p><code>com.soa.console.xss -&gt;
+validate=[true|false]</code></p>
+
+
+<h4><a name="turning-off-user-account-enumeration"></a>Turning off User Account Enumeration</h4>
+<p>User Account Enumeration occurs when the Community Manager user interface provides direct feedback to a user during the signup and registration processes to the effect that a user account already exists or is already registered. If this is turned off, no useful feedback is provided to the user, minimizing the security risk, but decreasing usability.
+<strong><em>Scope</em></strong>: All Community Manager Containers
+In Community Manager, User Account Enumeration configuration can be found under <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong>:</p>
+<p><img src="images/ph_80_allow-user-enum.png" alt="Allow User Enumeration" title="Allow User Enumeration" /></p>
+
+
+<h4><a name="configuring-challenge-questions-and-answers"></a>Configuring Challenge Questions and Answers</h4>
+<p>Challenge Questions/Answers are often required to increase security around password reset. When signing up to the platform, the user must provide the answer to one or more security questions, if the platform is set up to require them. The user's answers are stored in the database, and the user must answer one or more security questions on demand to perform certain functions such as resetting a password or changing the user profile.</p>
+<p>
+In Community Manager, the Challenge Questions/Answers configuration can be found under <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Users</strong>:</p>
+<blockquote>
+<p><strong>Enforce Challenge Questions on Login</strong> &gt; <strong>Enabled</strong></p>
+</blockquote>
+<p>Additional settings can be found under <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong>:</p>
+<p><img src="images/ph_80_encrypt-challenge-answers.png" alt="Encrypt Challenge Answers" title="Encrypt Challenge Answers" /></p>
+<p>Configuration of the actual questions available can be done via an <a href="http://docs.akana.com/cm/api/businesses/businesses_saveChallenges.htm">API call</a> into the system.</p>
+
+
+<h4><a name="disallowing-user-profile-modification"></a>Disallowing User Profile Modification</h4>
+<p>User Profile Modification permits a user access to their own profile for modification. In some circumstances, you may wish to prevent this (e.g. when user accounts are pre-provisioned).
+<strong><em>Scope</em></strong>: All Community Manager Containers
+In Community Manager, User Profile Modification configuration can be found under <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong>:</p>
+<p><img src="images/ph_80_user-profile-modification.png" alt="User Profile Modification" title="User Profile Modification" /></p>
+
+
+<h4><a name="configuring-account-login-rules"></a>Configuring Account Login Rules</h4>
+<p>The account login rules may include many options regarding failure attempts allowed, including account suspension times, auto-login, and other settings.
+<strong><em>Scope</em></strong>: Community Manager</p>
+<p>Login policies can be set:</p>
+<ul>
+  <li>Via the developer portal user interface: <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Login</strong>.</li>
+  <li>Via an <a href="http://docs.akana.com/cm/api/businesses/m_businesses_updateLoginPolicy.htm">API call</a> into the system.</li>
+</ul>
+
+
+
+<h4><a name="configuring-password-complexity-rules"></a>Configuring Password Complexity Rules</h4>
+<p>Password requirements (rules) may include many options regarding length, special characters, etc.
+<strong><em>Scope</em></strong>: Community Manager</p>
+<p>Password rules can be set:</p>
+<ul>
+  <li>Via the developer portal user interface: <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Password</strong>.</li>
+  <li>Via an <a href="http://docs.akana.com/cm/api/businesses/m_businesses_updatePasswordPolicy.htm">API call</a> into the system.</li>
+</ul>
+
+
+<h4><a name="configuring-x-frame-options-header"></a>Configuring X-FRAME-OPTIONS Header</h4>
+<p>The X-FRAME-OPTIONS header plays a role in determining if and how the user interface can be embedded within an iFrame in a 3rd party site. 
+<strong><em>Scope</em></strong>: All Community Manager and Policy Manager Containers</p>
+<p>To configure Community Manager:</p>
+<p><code>com.soa.atmosphere.console -&gt;
+atmosphere.console.config.xFrameOptions=[DESIRED HEADER]</code></p>
+<p>To configure Policy Manager:</p>
+<p><code>com.soa.console.xss -&gt;
+xFrameOptions=[DESIRED HEADER]</code></p>
+
+
+<h4><a name="configuring-server-header"></a>Configuring Server Header</h4>
+<p>You might want to prevent the Server header from being returned in responses.</p>
+<p><strong><em>Scope</em></strong>: All Community Manager and Policy Manager Containers</p>
+<p>In the admin console, configure the following:</p>
+<p><code>com.soa.platform.jetty -&gt; jetty.server.sendServerVersion = false</code></p>
+<p>NOTE: this property does not exist by default, so you will most likely need to add it.</p>
+<p>Set the property and value separately for each container.</p>

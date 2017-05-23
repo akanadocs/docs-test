@@ -10,10 +10,10 @@ type: page
 nav-title: Platform Hardening 7.2
 ---
 
-Akana Platform Hardening Guide
+Akana Platform Hardening Guide Versions 7.2.x
 -------------------------------------
 
-> This document applies to versions 7.2 and earlier only, please see [here](platform-hardening_8.0.html) for 8.0 and above.
+> This document applies to versions 7.2 and earlier only. For a summary of available versions, please refer to <a href="platform-hardening_all.htm">Akana Platform Hardening Documentation</a>.
 
 <h3 style="color: grey;">Table of Contents</h3>
 <ol class="table_of_contents">

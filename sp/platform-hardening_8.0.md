@@ -10,10 +10,10 @@ type: page
 nav-title: Platform Hardening 8.0
 ---
 
-Akana Platform Hardening Guide
+Akana Platform Hardening Guide Version 8.0.x
 -------------------------------------
 
-> This document applies to versions 8.0 and later only, please see [here](platform-hardening_2.0.html) for 7.2 and earlier.
+> This document applies to versions 8.0 and later only. For a summary of available versions, please refer to <a href="platform-hardening_all.htm">Akana Platform Hardening Documentation</a>.
 
 <h3 style="color: grey;">Table of Contents</h3>
 <ol class="table_of_contents">
