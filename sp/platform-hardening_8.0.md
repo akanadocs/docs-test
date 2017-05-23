@@ -5,6 +5,7 @@ description: A guide on how to harden version 8.0 and greater of the platform fo
 product: sp
 category: ref
 sub-nav-class: Platform Management 
+no-nav: true
 weight: 15
 type: page
 nav-title: Platform Hardening 8.0

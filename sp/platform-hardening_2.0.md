@@ -5,6 +5,7 @@ description: A guide on how to harden version 7.2 of the platform for secure dep
 product: sp
 category: ref
 sub-nav-class: Platform Management
+no-nav: true
 weight: 16
 type: page
 nav-title: Platform Hardening 7.2
