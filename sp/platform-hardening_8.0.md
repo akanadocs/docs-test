@@ -1,14 +1,14 @@
 ---
 layout: page
-title: Platform Hardening 8.0
-description: A guide on how to harden version 8.0 and greater of the platform for secure deployments
+title: Platform Hardening 8.0.x
+description: A guide on how to harden the platform for secure deployments (version 8.0.x).
 product: sp
 category: ref
 sub-nav-class: Platform Management 
 no-nav: true
 weight: 15
 type: page
-nav-title: Platform Hardening 8.0
+nav-title: Platform Hardening 8.0.x
 ---
 
 Akana Platform Hardening Guide Version 8.0.x
