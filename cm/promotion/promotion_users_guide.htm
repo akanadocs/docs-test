@@ -48,6 +48,7 @@ nav-title: Promotion Guide
       <li><a href="#07_03">Promotion Requests</a></li>
     </ol>
   </li>
+<!--  <li><a href="#related_topics">Related Topics</a></li>-->
 </ol>
 <div class = "divider1"></div>
 
@@ -220,41 +221,42 @@ vsep.listenerName = "https"</td>
 
 <a name="topology_config"></a><h3>Topology Configuration</h3>
 <p>The Lifecycle Coordinator feature provides a REST API for maintaining topologies. This allows topologies to be defined in JSON structure. The following example shows the definition of a topology consisting of two environments supported by two local tenants.</p>
-<pre>{ 
+<pre>{
   "name":"Topology1",
-  "tenants":[ 
-    { 
-        "id":"DevelopmentTenant",
-        "name":"tenant1",      "credentials":{ 
+  "tenants":[
+    {
+      "name":"DevelopmentTenant",
+      "id":"tenant1",
+      "credentials":{
         "email":" administrator1@example.com ",
         "password":"password1"
       }
     },
-    { 
-      "id":"ProductionTenant",
-      "name":"tenant2",
+    {
+      "name":"ProductionTenant",
+      "id":"tenant2",
       "userAuthenticationSource":true,
-      "credentials":{ 
+      "credentials":{
         "email":"administrator2@example.com",
         "password":"password2"
       }
     }
   ],
-  "environments":[ 
-    { 
+  "environments":[
+    {
       "name":"development",
       "displayName":"Development",
       "description":"Development environment",
       "tenant":"DevelopmentTenant",
-      "promotionProfiles":[ 
-        { 
+      "promotionProfiles":[
+        {
           "name":"Default Production Promotion",
           "description":"Dev to production default profile",
           "targetEnvironment":"production"
         }
       ]
     },
-    { 
+    {
       "name":"production",
       "displayName":"Production",
       "description":"Production environment",
@@ -266,7 +268,12 @@ vsep.listenerName = "https"</td>
 
 
 <a name="05_01"></a><h4>Tenants</h4>
-<p>Tenant definitions in the topology provide the Lifecycle Coordinator the necessary information to communicate with the specified tenant. Tenants may be either local (on the same container as the Lifecycle Coordinator) or remote. When defining a local tenant, the name of that tenant should be specified in the <strong>name</strong> property as in the topology example above. When specifying a remote tenant, specify the address of the tenant in the <strong>address</strong> field in addition to the <strong>name</strong> field as in the following example:</p>
+<p>Tenant definitions in the topology provide the Lifecycle Coordinator the necessary information to communicate with the specified tenant. Tenants can be either local (on the same container as the Lifecycle Coordinator) or remote. When defining a tenant:</p>
+<ul>
+  <li><strong>Local</strong> tenant: Specify the tenantId in the <strong>id</strong> property, as in the topology example above.</li>
+  <li><strong>Remote</strong> tenant: In addition to the tenantId in the <strong>id</strong> property as above, specify the address of the tenant in the <strong>address</strong> field.</li>
+</ul>
+<p>The example below shows both values:</p>
 <pre>{
   "id":"ProductionTenant",
   "name":"tenant2",
@@ -278,8 +285,8 @@ vsep.listenerName = "https"</td>
 }</pre>
 <p class="apidoc_note"><strong>Note</strong>: The address value is unique to the tenant. It corresponds to the value specified for the <strong>address</strong> parameter when the tenant was created.</p>
 
-<h5>Tenant Ids</h5>
-<p>Tenants require an <strong>id</strong> property which is used to identify the tenant by environments within the topology. This id must be unique within the topology but need not correspond to the actual tenant name.</p>
+<h5>Tenant Names</h5>
+<p>Tenants require a <strong>name</strong> property which is used to identify the tenant by environments within the topology. This name must be unique within the topology, but need not correspond to the actual tenant name.</p>
 <h5>Delegated Authentication</h5>
 <p>The Boolean <strong>userAuthenticationSource</strong> property is used to indicate that authentication for the underlying Lifecycle Repository library console is to be delegated to the specified tenant. This means that users of the specified tenant may log-in to the topology library using their email and password for that tenant.</p>
 <p>Only one tenant may have the <strong>userAuthenticationSource</strong> property set to <strong>true</strong> and that tenant must be local to the Lifecycle Coordinator.</p>
