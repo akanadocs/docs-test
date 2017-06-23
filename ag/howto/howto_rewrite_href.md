@@ -1,7 +1,7 @@
 ---
 layout: page
 title: How to Rewrite HREFs in content
-description: A tutorial on how to rewrite hrefs in response content with Javascript Policies
+description: A tutorial on how to rewrite hrefs in response content with JavaScript Policies
 product: ag
 category: learn
 sub-nav-class: Mediation

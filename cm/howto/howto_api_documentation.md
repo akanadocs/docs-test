@@ -1,7 +1,7 @@
 ---
 layout: page
-title: Howto Setup Documentation Visibility
-description: A how to guide for using licenses and doc tagging to control the visibility of documentation files and content elements
+title: How To Set Up Documentation Visibility
+description: A how-to guide for using licenses and doc tagging to control the visibility of documentation files and content elements
 product: cm
 category: learn
 sub-nav-class: API Documentation

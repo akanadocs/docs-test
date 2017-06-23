@@ -1,7 +1,7 @@
 ---
 layout: page
 title: View WSDL (Binding)
-description: Learn how to display  WSDL metadata associated with the current binding.
+description: Learn how to display WSDL metadata associated with the current binding.
 product: ag
 category: learn
 sub-nav-class: Bindings
