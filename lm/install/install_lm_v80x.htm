@@ -8,481 +8,154 @@ weight: 10
 type: page
 nav-title: Lifecycle Manager Installation
 ---
-<h2><a name="top"></a>Installing Lifecycle Manager 8.0.x</h2>
-<p>This document provides reference information and examples relating to installation and configuration of Lifecycle Manager version 8.0.x with the Akana Platform.</p>
-<p><strong>Note</strong>: This document provides the steps you need for a fresh install. If you're upgrading from a previous version of Lifecycle Manager, you'll need to refer to the Readme file in the LM folder on the <a href="https://library.akana.com/display/MAIN/Downloads" title="Akana support site" target="_blank">Akana support site</a>. On the Downloads page, choose <strong>Lifecycle Manager</strong> &gt; <strong>LM 8.0</strong> &gt; <strong>Documentation</strong> &gt; <strong>v8.0_OSGi-README.html</strong> (<a href="https://library.akana.com/rest/hotovo/1.0/amazon-s3/file-explorer/download?bucketId=1&path=LifecycleManager/LifeMan_8.0.0/Documentation/v8.0_OSGi-README.html" title="Download link for LM 8.0 readme" target="_blank">download here</a>).</p>
-
-<h5 class="stamp">Required Akana Platform version: 8.2.3</h5>
-
-
-
+<h2><a name="top"></a>Upgrading Lifecycle Manager from Version 8.0 to Version 8.0.x</h2>
+<p>These upgrade instructions are for a scenario where you are upgrading <strong>from</strong> an earlier version of Lifecycle Manager 8.0.x (8.0.0 or newer) <strong>to</strong> a later version.</p>
+<p><strong>Note</strong>: If you're currently using a legacy version such as 7.1.x or below, you'll need to follow the 7.1.x to 8.0 instructions. In that case, you can upgrade directly to the desired 8.0.x version; you don't need to upgrade to 8.0.0 and then to 8.0.x. For upgrade instructions from earlier versions to version 8.0, refer to the Readme file in the LM folder on the <a href="https://library.akana.com/display/MAIN/Downloads" title="Akana support site" target="_blank">Akana support site</a>. On the Downloads page, choose <strong>Lifecycle Manager</strong>&nbsp;&gt; <strong>LM 8.0.x</strong>&nbsp;&gt; <strong>Documentation</strong>&nbsp;&gt;<strong> v8.xxx_OSGi-README.html</strong>.</p>
+<h5 class="stamp">Supported Platforms: 8.2.3</h5>
+<div class = "divider1"></div>
 <h3 style="color: gray;">Table of Contents</h3>
 
 
 
-<h5 style="color: gray;"><a href="#h_install_procedure_lm">LM Installation Procedure:</a></h5>
-
-
-
 <ol class="table_of_contents">
-  <li><a href="#lm_install_overview">Overview</a></li>
-  <li><a href="#01_gather_zip_files">Step 1: Gather ZIP files and download to the install folder</a></li>
-  <li><a href="#02_unzip_files">Step 2: Unzip installation files in the correct sequence</a></li>
-  <li><a href="#03_lm_container">Step 3: Run Configurator to configure Lifecycle Manager container</a></li>
-  <li><a href="#04_start_lm_instance">Step 4: Start the Lifecycle Manager instance</a></li>
-  <li><a href="#05_lm_install">Step 5: Install and configure the Akana Lifecycle Manager Application feature</a></li>
-  <li><a href="#06_extract_client_zips">Step 6: Extract javaclients.zip file and specify the URL in the configuration settings</a></li>
-  <li><a href="#07_lm_config">Step 7: Update the Lifecycle Manager configuration settings</a></li>
-  <li><a href="#08_lm_create_library">Step 8: Create a Lifecycle Manager Library</a></li>
+  <li><a href="#01_00">Overview</a></li>
+  <li><a href="#01_01">Method 1: Upgrade Existing Container</a></li>
+  <li><a href="#01_02">Method 2: Remove/Re-Create Target Container</a></li>
 </ol>
-
-
-
-<h5 style="color: gray;"><a href="#h_install_tasks_reference_lm">LM Installation Tasks/Reference:</a></h5>
-
-
-
-<ol class="table_of_contents">
-  <li><a href="#lm_databases_supported">Supported databases</a></li>
-  <li><a href="#database_drivers">Database drivers</a></li>
-  <li><a href="#properties_file_creating">Creating the LM properties file for silent install</a></li>
-  <li><a href="#creating_container_silent">Creating a container using silent install</a></li>
-  <li><a href="#create_asset_library">Creating an asset library</a></li>
-  <li><a href="#related_topics">Related Topics</a></li>
-</ol>
-
 
 
 
 <div class = "divider1"></div>
-<a name="h_install_procedure_lm"></a><h3>LM Installation Procedure:</h3>
 
 
 
-
-<a name="lm_install_overview"></a><h3>Overview</h3>
-<p>You can install Lifecycle Manager in a single OSGi container.</p>
-<p>You'll need to first install the Akana Platform, which provides the underlying infrastructure for Lifecycle Manager, and then install Lifecycle Manager itself.</p>
-<p>For database version information, see <a href="#lm_databases_supported">Supported databases</a>.</p>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<a name="01_gather_zip_files"></a><h3>Step 1: Gather ZIP files and download to the install folder</h3>
-<p>The first step is to download the required ZIP files for the Akana Platform and for Lifecycle Manager.</p>
+<a name="01_00"></a><h4>Overview</h4>
+<p>There are two approaches to upgrading an existing LM 8.0.x (Akana Platform) container:</p>
 <ol>
-  <li>First, create a folder for your installation; for example, <strong>LM80</strong>.</li>
-  <li>Then, gather the installation ZIP files from the Akana Support site:    
+  <li>Upgrade the existing container using the pre-existing Akana Platform <strong>configurator</strong> container to process a target container upgrade. See <a href="#01_01">Method 1: Upgrade Existing Container</a>.</li>
+  <li>Remove and re-create the target container (reconnecting to the existing DB schema). This requires your existing database schema connection information along with your database credentials (Oracle SYSTEM credentials or equivalent), for the <strong>Initialize Repository Database</strong> task. See <a href="#01_02">Method 2: Remove/Re-Create Target Container</a>.</li>
+</ol>
+<p>There might be certain scenarios where the first method might be problematic; specifically, when the new version includes feature bundles that have been renamed, removed, or consolidated, which could result in mismatched or orphaned bundles that might conflict with new bundles.</p>
+<p>These scenarios will be called out in the specific version release notes. In these specific versions, you will be directed to use the second method, container removal/re-creation.</p>
+<p>Before you begin either method, the first step is to download the required files.</p>
+<h5>Downloading the files</h5>
+<p>You'll need to:</p>
+<ol>
+  <li>Create a folder for your installation; for example, <strong>LM801</strong>.</li>
+  <li>Gather the installation ZIP files from the Akana Support site:
     <ol>
-      <li><a href="#proc_download_akana_platform">Download the Akana Platform installation files</a></li>
-      <li><a href="#proc_download_lm">Download the Lifecycle Manager ZIP file</a></li>
-      <li><a href="#proc_download_java_clients">Download the Java Clients file</a></li>
+      <li>Download the Akana Platform installation files</li>
+      <li>Download the Lifecycle Manager ZIP file</li>
+      <li>Download the Java Clients file</li>
     </ol>
   </li>
 </ol>
-
-<a name="proc_download_akana_platform"></a><h5>To download the Akana Platform installation files</h5>
-<ol>
-  <li>Log in to the Akana Library (<a href="https://library.akana.com/display/MAIN/Akana+Library" target="_blank">https://library.akana.com/display/MAIN/Akana+Library</a>.</li>
-  <li>On the left, click <strong>Downloads</strong> &gt; <strong>Akana Platform</strong>.</li>
-  <li>On the right, click <strong>AP 8.2</strong>.</li>
-  <li>Download the Akana Platform 8.2 file:
-    <ol>
-      <li>Click <strong>8.2GA</strong>.</li>
-      <li>Download the applicable version of the Akana Platform 8.2 file, choosing the correct ZIP file for your operating system; for example, if you want the Windows version with JRE, choose <strong>akana-platform-win-jre-8.2.4.zip</strong>. See <a href="#download_filenames">note re download filenames</a>.</li>
-    </ol>
-  </li>
-  <li>Download the update file for Akana Platform 8.2.3:
-    <ol>
-      <li>Go to <strong>Downloads</strong> &gt; <strong>Akana Platform</strong>.</li>
-      <li>On the right, click <strong>AP8.2</strong> and then click <strong>8.2.3</strong>.</li>
-      <li>Download the cumulative update file: <strong>akana-platform-update-cumulative-8.2.3.zip</strong>.</li>
-    </ol>
-  </li>
-</ol>
-
-<a name="download_filenames"></a><p><strong>Note re download filenames:</strong></p>
-<p>When choosing the ZIP file for a major version, there are generally three choices. The examples given below are for Akana Platform 8.2; all major versions and their updates follow the same pattern in terms of target operating system and whether or not the JRE is bundled:</p>
-<ul>
-  <li><strong>Windows</strong> (includes JRE): <strong>akana-platform-win-jre-8.2.4.zip</strong></li>
-  <li><strong>Linux</strong> (includes JRE): <strong>akana-platform-linux-jre-8.2.4.zip</strong></li>
-  <li><strong>Windows, Linux, or Solaris</strong> (does not include JRE; provide your own JRE, version 1.8): <strong>akana-platform-8.2.4.zip</strong></li>
-</ul>
-
-<a name="proc_download_lm"></a><h5>To download the Lifecycle Manager ZIP file</h5>
-<ol>
-  <li>Log in to the Akana Library (<a href="https://library.akana.com/display/MAIN/Akana+Library" target="_blank">https://library.akana.com/display/MAIN/Akana+Library</a>.</li>
-  <li>On the left, click <strong>Downloads</strong> &gt; <strong>Lifecycle Manager</strong>.</li>
-  <li>On the right, click <strong>LM 8.0</strong> or, if there's an updated version, click through to the latest 8.0.x version available.</li>
-  <li>Click <strong>Server</strong>.</li>
-  <li>Download the latest ZIP file. The file name will be in the pattern <strong>lifecyclemanager_8.0.x.x.zip</strong>; for example, <strong>lifecyclemanager_8.0.0.00339.zip</strong>.</li>
-</ol>
-
-<a name="proc_download_java_clients"></a><h5>To download the Java Clients file</h5>
-<p>This file is needed to  make the java clients available on the <strong>Download Center</strong> pages for all Lifecycle Manager libraries on the server.</p>
-<ol>
-  <li>Log in to the Akana Library (<a href="https://library.akana.com/display/MAIN/Akana+Library" target="_blank">https://library.akana.com/display/MAIN/Akana+Library</a>.</li>
-  <li>On the left, click <strong>Downloads</strong> &gt; <strong>Lifecycle Manager</strong>.</li>
-  <li>On the right, click <strong>LM 8.0</strong>.</li>
-  <li>Click <strong>clients</strong>.</li>
-  <li>Download the <strong>javaclients_8.0.0.00339.zip</strong> file.</li>
-</ol>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<a name="02_unzip_files"></a><h3>Step 2: Unzip installation files in the correct sequence</h3>
-<p>Once you have the Akana Platform and Lifecycle Manager ZIP files in place in your <strong>LM80</strong> installation folder, extract the files in the sequence listed below.</p>
-<ol>
-  <li><a href="#install_platform">Akana Platform</a> (including platform update)</li>
-  <li><a href="#install_lm">Lifecycle Manager</a></li>
-</ol>
-<p><strong>Note</strong>: The sequence is very important.</p>
-<p>The javaclients file is unzipped and installed later, in <a href="#06_extract_client_zips">Step 6</a>.</p>
-
-
-<a name="install_platform"></a><h5>To install the Akana Platform files</h5>
-<p>Extract the two Akana Platform ZIP files to your installation folder:</p>
-<ol>
-  <li>First, the Akana Platform ZIP file.</li>
-  <li>Then, the cumulative update ZIP file. If you're prompted, overwrite existing files.</li>
-</ol>
-<a name="install_lm"></a><h5>To install the Lifecycle Manager files</h5>
-<p>Extract the Lifecycle Manager ZIP file to your installation folder.</p>
-<p>After installation, the directory structure will look similar to the following:</p>
-<p><img src="images/lm_install_02_01_install_folders.png" alt="Installation folder structure" /></p>
-<p>For information about the folders and folder contents, see <a href="http://docs.akana.com/sp/platform_install/installing_akana_api_platform_v82.htm#installation_folder_structure">Installation folder structure</a>.</p>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<a name="03_lm_container"></a>
-<h3>Step 3: Run Configurator to configure Lifecycle Manager container</h3>
-<p>You can configure a Lifecycle Manager container using either GUI or silent install options.</p>
-<p><strong>GUI installation</strong>: follow this step in the Akana API Platform install instructions:</p>
-<ul>
-  <li><a href="http://docs.akana.com/sp/platform_install/installing_akana_api_platform_v82.htm#run_configurator_pm">Step 3: Run Configurator to create the first container</a> (separate file)</li>
-  </ul>
-<p><strong>Silent mode</strong>: follow these steps (later in this document):</p>
-<ul>
-  <li><a href="#properties_file_creating">Creating the LM properties file for silent install</a></li>
-  <li><a href="#creating_container_silent">Creating a container using silent install</a></li>
-</ul>
-<p>At the end of this process, you can see that the container was successfully created. In the folder structure, there is a new folder under the instances folder: <strong>instances/{containername}</strong>. The files for your Lifecycle Manager container are stored in this folder.</p>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<a name="04_start_lm_instance"></a><h3>Step 4: Start the Lifecycle Manager instance</h3>
-<p>The next step is to start the instance.</p>
-<h5>To start the instance</h5>
-<ol>
-  <li>Go to the /bin folder for your Lifecycle Manager container. For example:
-    <p><strong>opt/akana/lm80/bin</strong></p>
-</li>
-  <li>Run the startup command.
-  <p>For Windows:</p>
-  <p><strong>startup.bat {container name} -bg</strong></p>
-  <p>For Linux:</p>
-  <p><strong>./startup.sh {container name} -bg</strong></p>
-  </li>
-</ol>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<a name="05_lm_install"></a><h3>Step 5: Install and configure the Akana Lifecycle Manager Application Feature</h3>
-<p>The next step is to install the Lifecycle Manager feature into the new container you just created. Follow the steps below.</p>
-<p>There are two features available for installation: <strong>Akana Lifecycle Manager Application</strong> and <strong>Lifecycle Repository</strong>. However, when you install <strong>Akana Lifecycle Manager Application</strong>, the repository is included. You only need to explicitly install the Repository if you want this feature but do not want Lifecycle Manager itself.</p>
-<p><strong>Note</strong>: Before configuring the database, make sure you have the applicable database driver in place. See <a href="#database_drivers">Database drivers</a>.</p>
-
-<h5>To install the Lifecycle Manager feature on a container</h5>
-<p><strong>Note</strong>: This procedure is along the lines of the standard Akana API Platform instructions, <a href="http://docs.akana.com/sp/platform_install/installing_akana_api_platform_v82.htm#install_pm">Step 5: Install Policy Manager features on the container</a>, with differences for Lifecycle Manager.</p>
-<ol>
-  <li>Log in to the <strong>Akana Administration Console</strong>, using the Admin username and password you specified in <a href="#03_lm_container">Step 3: Run Configurator to configure Lifecycle Manager container</a>. The URL is composed like this: <strong>{protocol}://{hostname}:{port}:/admin</strong>.
-    <p>For example: <strong>http://lm.acmepaymentscorp.com:9900/admin</strong></p></li>
-  <li>Go to the <strong>Available Features</strong> list.</li>
-  <li>Choose <strong>Akana Lifecycle Manager Application</strong> and click <strong>Install Feature</strong>. The feature is installed, including the repository (you do not need to install the Lifecycle Repository option).</li>
-</ol>
-<p>The next step is to configure the features you've just installed. You'll have these configuration actions to complete:</p>
-<ul>
-  <li>Add Database</li>
-  <li>Manage Schemas</li>
-  <li>Initialize Repository Database</li>
-</ul>
-<p>There are two ways you can work through the sequence:</p>
-<ul>
-  <li>Click <strong>Configure</strong> at the end of the installation process in the previous step. The process steps you through the wizards for each configuration step.</li>
-  <li>If you're not continuing straight from the <strong>Installation Complete</strong> summary, you can resume these tasks later: in the Akana Administration Console for the container, click the <strong>Installed Features</strong> tab. Pending installation steps are listed at the bottom left. To continue/complete configuration activities, click <strong>Complete Configuration</strong>.</li>
-</ul>
-<p>Before configuring the database, make sure you have the applicable database driver in place. See <a href="#database_drivers">Database drivers</a>.</p>
-
-
-
-<a name="proc_lm_configure"></a><h5>To configure the Lifecycle Manager feature on a container</h5>
-
-<p><strong>Note</strong>: This procedure is along the lines of the standard Akana API Platform instructions, <a href="http://docs.akana.com/sp/platform_install/installing_akana_api_platform_v82.htm#configure_pm">Step 7: Configure container features</a>, with differences for Lifecycle Manager.</p>
-<ol>
-  <li>At the <strong>Configure Database Options Wizard</strong>, specify your database and other values. Since this is the first container, select <strong>Create new database</strong> (for subsequent containers, you'll use the same database, so you'd select <strong>Use existing database</strong>). An example is shown below.
-    <p><img src="images/lm_install_05_01_database_options.jpg" alt="Specify Database Options wizard" /></p>
-    <p>You'll need to have your database driver in place, in the <strong>{installation}\instances\{containername}\deploy</strong> folder, before running this wizard. See <a href="#database_drivers">Database drivers</a>.</p>
-    <p><a name="note_oracle_12c"></a><strong>Note, Oracle 12c only</strong>: When using Oracle 12c to configure a new database, the DBA must run this query: <strong>GRANT SELECT ON SYS.USER$ TO SYSTEM;</strong> (substitute the SYSTEM user for the user specified for the Administrator credentials). This is because Oracle 12c introduced restricted access to SYS.USER$, which the platform uses to query on.</p>
-  </li>
-  <li>At the <strong>Manage Schemas wizard</strong>, check the box under Available Schemas and click <strong>Finish</strong>. The schema is installed.
-    <p><img src="images/lm_install_05_02_install_schemas.jpg" alt="Install Schemas wizard" /></p>
-    <p><strong>Note</strong>: What you see in the <strong>Manage Schemas</strong> wizard might vary according to the database you're using. For example, for Oracle 12 you'll need to check the <strong>Database Validation</strong> checkbox.</p>
-    </li>
-  <li>At the <strong>Schema Management Successful</strong> summary page, close the wizard.</li>
-  <li>Select the next configuration action, <strong>Initialize Repository Database</strong>. The <strong>Initialize Repository Database</strong> wizard appears, as shown below.
-    <p><img src="images/lm_install_05_03_initialize_repository_database.jpg" alt="Initialize Repository Databse" /></p>
-    <p><strong>Note</strong>: If you're not using an Oracle database, the admin username and password fields are not on this page. Click <strong>Finish</strong> to complete the initialization task.</p>
-  </li>
-  <li><a name="oracle_admin_cred"></a><strong>Oracle database only</strong>: Follow the on-screen instructions. Entering the administrator credentials is optional, but if you do enter them, make sure you enter the correct credentials for the target database that you set up in the database configuration step earlier (see <a href="#proc_lm_configure">To configure the Lifecycle Manager feature on a container</a>, Step 1).
-    <p><strong>Note</strong>: This step is optional, but if you're using an Oracle database and don't set up administrator credentials, the DBA will need to perform additional grants (see <a href="#oracle_ctx_grants">Supported Database section, Oracle, CTX Grants</a>) before creating the library (see <a href="#08_lm_create_library">Step 8: Create a Lifecycle Manager Library</a>).</p></li>
-  <li>At the summary, as shown below, click <strong>Finish</strong>.
-    <p><img src="images/lm_install_05_04_initialize_repository_summary.jpg" alt="Initialize repository" /></p></li>
-</ol>
-<p>That completes the basic installation and configuration of Lifecycle Manager.</p>
-<p><a name="note_mssql_01"></a><strong>Note: MSSQL database only</strong>:</p>
-<p>When using any version of MSSQL, the DBA will need to manually alter the database to set read committed snapshot and enable snapshot isolation mode. This is not required for installation; however, it will affect how the application behaves once asset content is being populated. Run the following:</p>
-<pre>ALTER DATABASE {db.instance.name}
-  SET READ_COMMITTED_SNAPSHOT ON;
-ALTER DATABASE {db.instance.name}
-  SET ALLOW_SNAPSHOT_ISOLATION ON;</pre>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<a name="06_extract_client_zips"></a><h3>Step 6: Extract javaclients.zip file and specify the URL in the configuration settings</h3>
-<p>To make the Java clients available on the <strong>Download Center</strong> pages for all Lifecycle Manager libraries on the server, there are two steps:</p>
-<ol>
-  <li>Extract the<strong> javaclients.zip</strong> file to a common directory of your choice, on an HTTP server of your choice that will be accessible to the platform.</li>
-  <li>Specify the URL to this common directory in the Admin Console Configuration Settings as shown below.</li>
-</ol>
-<p><strong>Note</strong>: If you prefer, you can extract these ZIP files, and configure the setting, after completion of the installation. These steps are needed for the availability of the Java clients.</p>
-<a name="07_01_enable_super_user"></a>
-<h5>To specify the URL to the javaclients file in the configuration settings</h5>
-<ol>
-  <li>Log in to the Akana Administration Console, using Administrator credentials.</li>
-  <li>Click the <strong>Configuration</strong> tab.</li>
-  <li>On the left, under <strong>Configuration Categories</strong>, find the <strong>com.soa.repository</strong> category.</li>
-  <li>Locate the <strong>repository.config.downloads</strong> property and set it to the URL of the folder in which you extracted the <strong>javaclients.zip</strong> file. For example, if you download the file to a folder named <strong>akana/temp</strong>, and your domain name is http://example.com, the path would be: <strong>http://example.com/akana/temp</strong>.</li>
-  <li>Click <strong>Apply Changes</strong> (you might need to scroll down), and then click <strong>OK</strong> to confirm.</li>
-  <li>Restart so that the changes take effect.</li>
-</ol>
-<p><strong>Note</strong>: You'll need to restart the container (Step #6 above) when you're setting up the URL for the first time. In a scenario where you're modifying an existing URL, restart is not necessary.</p>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<a name="07_lm_config"></a><h3>Step 7: Update the Lifecycle Manager configuration settings</h3>
-<p>When the Lifecycle Manager feature is successfully installed, the Lifecycle Manager super-user can configure specific settings, such as hostname and admin users, for your implementation.</p>
-<p>There are two steps:</p>
-<ol>
-  <li>Enable super-user access: <a href="#07_01_enable_super_user">To enable super-user access using the Akana Administration Console</a>.
-  <p><a name="note_super_user"></a><strong>Note</strong>: It's best to use the super-user login only to bootstrap the initial install, to configure the LDAP settings. Once you've configured LDAP and specified one or more Admin users, all Lifecycle Manager Admin tasks should be done via the Lifecycle Manager Console or Akana Administration Console. For security reasons, it's best to disable super-user access at that point, by removing the <strong>repository.config.superUserPassword</strong> value.</p></li>
-  <li>Log in as the super user and update the configuration settings: <a href="#07_01_update_lm_config_settings">To update Lifecycle Manager configuration settings</a>.</li>
-  <li>Optional but recommended, see note in #1 above: verify Admin user access and then disable super-user access.</li>
-</ol>
-<a name="07_01_enable_super_user"></a><h5>To enable super-user access using the Akana Administration Console</h5>
-<ol>
-  <li>Log in to the Akana Administration Console, using Administrator credentials.</li>
-  <li>Click the <strong>Configuration</strong> tab.</li>
-  <li>Set the super-user information:
-    <ol>
-    <li>On the left, under <strong>Configuration Categories</strong>, find the <strong>com.soa.repository</strong> category.</li>
-    <li>Locate the <strong>repository.config.superUserPassword</strong> property and set the super-user password, as shown below.
-      <p><img src="images/lm_install_08_01_settings_superuser.jpg" alt="Setting the super user password" /></p></li></ol></li>
-    <li>Click <strong>Apply Changes</strong> (you might need to scroll down), and then click <strong>OK</strong> to confirm.</li>
-  <li>Log out of the Akana Administration Console.</li>
-</ol>
-
-
-<a name="07_01_update_lm_config_settings"></a><h5>To update Lifecycle Manager configuration settings</h5>
-<ol>
-  <li>Log in to the Lifecycle Manager super-user login page. For example: http://www.acmepaymentscorp.com:9900/lm/application/access/suLogin.do (see <a href="#note_super_user">note</a> about super-user login). An example of the login page is shown below.
-    <p><img src="images/lm_install_08_02_superuser_login.jpg" alt="Lifecycle Manager login page" /></p>
-    </li>
-  <li>The Administration page shows a list of installation tasks, as shown below.
-    <p><img src="images/lm_install_08_03_admin_tasks.jpg" alt="Lifecycle Manager: installation admin tasks" /></p>
-    </li>
-  <li>Click <strong>Settings</strong> to access the <strong>Administration Settings</strong> page. The General Settings are displayed, as shown below.
-    <p><img src="images/lm_install_08_04_admin_settings_general.jpg" alt="Lifecycle Manager: General Settings" /></p>
-    </li>
-  <li>In the <strong>General Settings</strong> page, add or change the following settings:
-    <ul>
-      <li>Make sure the <strong>Use SSL</strong> checkbox is cleared. You'll complete separate steps later to manually configure the instance with SSL properties. For information on SSL configuration, refer to the <a href="http://docs.akana.com/lm/SysAdmin-OSGi.html" title="Lifecycle Manager System Administrator Guide" target="_blank">Lifecycle Manager System Administrator Guide</a>.</li>
-      <li>Specify <strong>Host</strong> (for example: lxc1-pm8x-23.local.acmepaymentscorp.com).</li>
-      <li>Specify <strong>Port</strong> (for example, 9900).</li>
-      <li><strong>Administration Users</strong>: A list of LDAP User IDs, separated by semi-colons. These are the users that have permission to access the Lifecycle Manager Admin Console (not the Akana Platform Admin Console). Specify one or more admin users, such as Technical Support personnel.</li>
-      <li>Optional: Check the <strong>Show Library List</strong> checkbox. If you check this box, all libraries for the installation are displayed on the login page.</li>
-      <li>Set each of the following cache settings to 20: <strong>Asset Cache Size</strong>, <strong>Org Group Cache Size</strong>, <strong>User Cache Size</strong>.</li>
-      </ul>
-    </li>
-  <li>Click <strong>Save</strong>.</li>
-  <li>From the Administration page, click <strong>Settings</strong>, and then go to <strong>E-mail Settings</strong>, as shown below.
-    <p><img src="images/lm_install_08_05_admin_settings_email.jpg" alt="Lifecycle Manager: Email Settings" /></p>
-    </li>
-  <li>Enter values as needed:
-    <ul>
-      <li><strong>Host</strong> field: for example, <strong>smtpl.acmepaymentscorp.com</strong>.</li>
-      <li>Optional: If the SMTP server requires authentication, specify <strong>User</strong> and <strong>Password</strong>. Otherwise, leave these fields empty to allow anonymous  access.</li>
-    </ul>
-    </li>
-  
-  <li>Click <strong>Save</strong>.</li>
-  <li>From the Administration page, click <strong>Settings</strong>, and then go to<strong> Default LDAP Settings</strong>, as shown below.
-    <p><img src="images/lm_install_08_06_admin_settings_ldap.jpg" alt="Lifecycle Manager: Default LDAP Settings" /></p>
-  </li>
-  <li>In the <strong>Connection Settings</strong> section, enter correct values for your implementation, for the following fields:
-    <ul>
-      <li><strong>Host</strong> (example: ldap.acmepaymentscorp.com)</li>
-      <li><strong>Port</strong> (example: 389)</li>
-      <li><strong>BindDN</strong> (example: cn=Manager,dc=roch,dc=soa,dc=local)</li>
-      <li><strong>Bind Password</strong> (example: 0000)</li>
-      </ul>
-  </li>
-  <li>In the <strong>User Settings</strong> section, enter correct values for your implementation, for the following fields:
-    <ul>
-      <li><strong>Base DN</strong>; for example: <strong>OU=people,dc=roch,dc=soa,dc=local</strong>.</li>
-      <li><strong>Search Scope</strong>: set to <strong>One</strong>.</li>
-      <li><strong>Account Attribute</strong>: set to <strong>uid</strong>.</li>
-      </ul>
-  </li>
-  <li>In the <strong>Group Settings</strong> section, enter correct values for your implementation. Specific fields/values vary; see <a href="#ldap_group_membership">Establishing group membership in LDAP</a> below. For example:
-    <ul>
-      <li><strong>Base DN</strong>; for example: <strong>OU=people,dc=roch,dc=soa,dc=local</strong>.</li>
-      <li><strong>Search Scope</strong>: set to <strong>One</strong>.</li>
-      <li><strong>Account Attribute</strong>: set to <strong>uid</strong>. For more information, see <a href="#ldap_group_membership">Establishing group membership in LDAP</a>.</li>
-      </ul>
-  </li>
-  <li>Optional: Library LDAP settings. Not normally needed. The Library LDAP Settings allows specific libraries to use specific LDAP servers. A single library can only use a single LDAP server; if you want all your libraries to use the default LDAP server, library LDAP settings are not necessary.</li>
-  
-  <li>Click <strong>Save</strong>.</li>
-</ol>
-<p>As noted above (see <a href="#note_super_user">note</a>), once Admin users are set up and functional, for security reasons it's best to disable the super-user password setting.</p>
-
-<a name="ldap_group_membership"></a><h5>Establishing group membership in LDAP</h5>
-<p><strong>Note</strong>: for more information about Group and Role support, refer to <a href="http://docs.akana.com/lm/SysAdmin-OSGi.html#ldapgrouproles" title="Setting up Group and Role support in LDAP" target="_blank">Setting up Group and Role support in LDAP</a> (Lifecycle Manager System Administrator Guide).</p>
-<p>There are two ways of establishing group membership in LDAP:</p>
-<ol>
-  <li>As a <strong>Group</strong> object that lists all the members of that group. The example below shows an ldif of a Project Manager group. The name of the group is in the CN attribute, and the members are listed in the uniqueMember attributes (AD may use a different attribute for members; you'll need to verify with the customer LDAP admin):
-<pre>dn: cn=Project Manager,ou=Groups,dc=roch,dc=soa,dc=local
-objectClass: groupOfUniqueNames
-objectClass: top
-cn: Project Manager
-uniqueMember: uid=support,ou=people,dc=roch,dc=soa,dc=local
-uniqueMember: uid=ppirrip,ou=People,dc=roch,dc=soa,dc=local
-uniqueMember: uid=asmith,ou=People,dc=roch,dc=soa,dc=local
-uniqueMember: uid=jmead,ou=People,dc=roch,dc=soa,dc=local
-uniqueMember: uid=jswift,ou=People,dc=roch,dc=soa,dc=local</pre></li>
-  <li>As a <strong>Person</strong> object that lists the groups that user is a member of (typically using the memberOf attribute). In the example below, Philip Pirrip is a member of the OU=Managers group:
-<pre>dn: uid=ppirrip,ou=People,dc=roch,dc=soa,dc=local
-objectClass: inetOrgPerson
-objectClass: organizationalPerson
-objectClass: person
-objectClass: top
-cn: Philip Pirrip
-sn: Pirrip
-givenName: Philip
-homePhone: 123-456-7890
-mail: philip.pirrip@acmepaymentscorp.com
-memberOf: cn=Managers,ou=Groups,dc=roch,dc=soa,dc=local
-uid: ppirrip
-userPassword:: e1NTSEF9dEt5U3A0bWllRFViRTFIR05COUlBVHVRVGZRbk1Kd3V1VGY2SUE9P
-Q==</pre></li>
-</ol>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<a name="08_lm_create_library"></a><h3>Step 8: Create a Lifecycle Manager Library</h3>
-<p>Now it's time to test the LM install by creating a new Lifecycle Manager library.</p>
-<p><strong>Note</strong>: If you're using an Oracle database and didn't provide the Administrator credentials in <a href="#oracle_admin_cred">To configure the Lifecycle Manager feature on a container, Step 5</a>, the DBA must provide the required grants before you create the library. See <a href="#oracle_ctx_grants">Supported Database section, Oracle, CTX Grants</a>.</p>
-<h5>To create a new Lifecycle Manager library</h5>
-<ol>
-  <li>Log in to the Akana Administration Console for Lifecycle Manager, using the previously designated installation administrator account, such as Technical Support. For example: <strong>http://www.acmepaymentscorp.com:9900/lm/admin/mainMenu.do</strong>.</li>
-  <li>Select <strong>Create New Library</strong>. The <strong>Create Library</strong> page appears, as shown below.
-<p><img src="images/lm_install_09_01_create_library.jpg" alt="Create Library" /></p>
-  </li>
-  <li>Provide values for the following fields (for information about the fields, see <a href="#fields_create_library_page">Create Library page: field descriptions</a>):
-<ul>
-      <li>Library Name</li>
-      <li>Description</li>
-      <li>Sender Email: this value is displayed in the <strong>From</strong> field on system-generated emails. The system doesn't process responses to these emails, so it's a good idea to include an address indicating that, such as <strong>no_reply@example.com</strong>.</li>
-      <li>Library Administrator Account Name</li>
-  </ul>
-  </li>
-  <li>When all is done, you'll see a message that the library was successfully created, and the ID of the new library. You can now click the <strong>Libraries</strong> link at the top of the page to load the home page for the newly created library. An example is shown below.
-  <p><img src="images/lm_install_09_02_new_library.jpg" alt="Home page for new library" /></p>
-  </li>
-</ol>
-<p><a href="#top">Back to top</a></p>
-<div class = "divider1"></div>
-
-
-
-
-<a name="h_install_tasks_reference_lm"></a><h3>LM Installation Tasks/Reference:</h3>
-
-
-
-
-<a name="lm_databases_supported"></a><h3>Supported databases</h3>
-<p>Lifecycle Manager version 8.0.x supports the following databases:</p>
-<ul>
-  <li><strong>Microsoft SQL Server 2012 and 2014</strong></li>
-  <li><strong>Oracle 11g, 12c</strong>&#8212;If you're using Oracle, your installation must include the following required features and details:
-    <ul>
-      <li>XMLDB and TEXT</li>
-      <li>LEXER, STOPLIST and WORDLIST for the default language installed (for more information, refer to the <a href="http://docs.akana.com/lm/SysAdmin-OSGi.html" title="Lifecycle Manager System Administrator Guide" target="_blank">Lifecycle Manager System Administrator Guide</a>)</li>
-      <li><a name="oracle_ctx_grants"></a>CTX grants (for more information, refer to the <a href="http://docs.akana.com/lm/SysAdmin-OSGi.html" title="Lifecycle Manager System Administrator Guide" target="_blank">Lifecycle Manager System Administrator Guide</a>)</li>
-    </ul>
-  <p>In addition, depending on the Oracle version and Patch Set Update (PSU), there might be additional interim patch requirements:</p>
-    <ul>
-<li><strong>Oracle 11.2.0.3.x</strong> requires the following patches: <strong>16191663</strong> and <strong>18615607</strong>.</li>
-<li><strong>Oracle 11.2.0.4.x</strong> requires this patch: <strong>18615607</strong>.</li>
-<li><strong>Oracle 12c</strong> requires PSU <strong>12.1.0.2.0</strong> or greater.
-<p>If you're using Oracle, AL32UTF8 with BYTE length semantics is recommended.</p></li>
-      </ul>
-  </li>
-</ul>
-<p><strong>Note</strong>: Depending on the type and version of the database you're using, you might also need to place the database driver in the correct location as part of <a href="#05_lm_install">Step 5: Install and configure the Akana Lifecycle Manager Application Feature</a>. See <a href="#database_drivers">Database drivers</a>.</p>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<a name="database_drivers"></a><h3>Database drivers</h3>
-<p>Depending on which database server you're using, you might need to install a database driver before <span class="apidoc_p_subsequent">running the <strong>Configure Database Options</strong> Wizard</span>.</p>
-<p>If you need to install a database driver, place it in this location:</p>
-<ul>
-  <li> <strong>{installation}/instances/{containername}/deploy</strong> folder</li>
-</ul>
-<p>For example, for Oracle 12c, it might be:</p>
-<ul>
-  <li><strong>/akana/lm80/instances/lm/deploy/ojdbc7.jar</strong> (Downloadable from: <a href="http://www.oracle.com/technetwork/database/features/jdbc/jdbc-drivers-12c-download-1958347.html" title="download location for Oracle database driver" target="_blank">http://www.oracle.com/technetwork/database/features/jdbc/jdbc-drivers-12c-download-1958347.html</a>; requires accepting the agreement and logging in.)</li>
-</ul>
-<p>Database options, with driver information:</p>
-<ul>
-  <li><strong>Oracle 11g</strong>: install the appropriate driver; for example, <strong>Ojdbc6.jar</strong>, downloadable from <a href="http://www.java2s.com/Code/Jar/o/Downloadojdbc6jar.htm" title="download location for Oracle database driver" target="_blank">http://www.java2s.com/Code/Jar/o/Downloadojdbc6jar.htm</a>.
-<p><strong>Note</strong>: Oracle 11.2.0.x installations below the 11.2.0.4 PSU require the Oracle 11.1 JDBC (11.1.0.7) driver. If your Oracle installation is at or above the 11.2.0.4 PSU, you can use the JDBC driver from that specific version of Oracle.</p>
-  </li>
-  <li><strong>Oracle 12c</strong>: install the appropriate driver (typically ojdbc7.jar) that aligns with your Oracle 12c instance version.
-  <p>Also, for Oracle 12c, see <a href="#note_oracle_12c">note about database permissions needed</a>.</p></li>
-  <li><strong>Microsoft SQL Server</strong>: no database driver installation is required. The Akana Platform provides the required JTDS support for connecting to MS SQL.
-  <p><strong>Note</strong>: If you're using MSSQL, see additional information <a href="#note_mssql_01">to set read committed snapshot and enable snapshot isolation mode</a>.</p></li>
-</ul>
+<p>For detailed instructions, refer to the Lifecycle Manager installation doc: <a href="../install/install_lm_v80x.htm#01_gather_zip_files">Step 1: Gather ZIP files and download to the install folder</a>. </p>
 <p><a href="#top">back to top</a></p>
 
 
 
-<a name="properties_file_creating"></a><h3>Creating the LM properties file for silent install</h3>
-<p>If you're using silent install mode for your installation, you'll need to define the various properties needed by the installation process, in a properties file that is then used in the silent mode install.</p>
-<h5>Recommended filename and path:</h5>
-<p><strong>akana/lm.properties</strong></p>
-<p>The specific path and filename are not important as long as the silent install command references the correct path and filename.</p>
-<h5>Values to define in the properties file:</h5>
-<p>You'll have to provide valid values for the following properties:</p>
+<a name="01_01"></a><h4>Method 1: Upgrade Existing Container</h4>
+<p>The general steps of the first method, upgrading the existing container, are given below.</p>
+<p>The Akana Platform provides an existing <strong>configurator</strong> container that, when invoked with an appropriate set of properties, upgrades the designated target container with the most recent feature bundles found in the [platform_home]/lib directory.</p>
+<p>If you are running the Akana Platform on Windows or another desktop environment, you can simply start up the configurator container without any parameters/properties, and you will be presented with a GUI dialog to select the container that you want to upgrade.</p>
+<p>For example:</p>
+<pre>c:\Akana\platform_home\bin\startup.bat configurator</pre>
+<p>If you are running the Akana Platform on Linux (without a desktop environment), or choosing a silent install on Windows, you'll need to create an update properties file, and then invoke the configurator container in silent mode while pointing to that file. The file must contain two properties:</p>
+<ul>
+  <li><strong>container.instance.name</strong>, which corresponds to the container name being upgraded.</li>
+  <li><strong>wizard.mode</strong>, with a value of <strong>update</strong>.</li>
+</ul>
+<p>An example of an update properties file is shown below. This example is named <strong>update-lm.properties</strong> to reflect the name of the container being upgraded; choose whatever name you want.</p>
+<pre>[akana@lm-pm8x-16 ~]$ cat ~/update-lm.properties
+container.instance.name=lm
+wizard.mode=update</pre>
+
+<p>Extract the new feature bundle to your Akana Platform home directory. In the example below, the Akana Platform home directory is <strong>/opt/akana/plat8</strong>:</p>
+<pre>[akana@lm-pm8x-16 ~]$ unzip lifecyclemanager_8.0.2.00302.zip -d /opt/akana/plat8/
+Archive:  lifecyclemanager_8.0.2.00302.zip
+   creating: /opt/akana/plat8/lib/lifecyclemanager_8.0.2.00302/
+  inflating: /opt/akana/plat8/lib/lifecyclemanager_8.0.2.00302/OpenSourceLicenses.txt
+...</pre>
+<p>Before upgrading an existing container, make sure that it's stopped/not running. In the example below, the target container name is <strong>lm</strong>:</p>
+<pre>[akana@lm-pm8x-16 bin]$ ./shutdown.sh lm
+Instance [lm] PID [48181] stopped
+...
+[akana@lm-pm8x-16 bin]$</pre>
+
+<p>If you don't see the above <strong>Instance [instance_name] PID [pid#] stopped</strong> message, use the typical OS commands to verify that the Java process had been shut down; with Linux, you'd typically use the <strong>ps</strong> command. The example below positively shows that there are no active Java processes running:</p>
+<pre>[akana@lm-pm8x-16 bin]$ ps -ef | grep java
+akana    48404 47755  0 15:27 pts/1    00:00:00 grep --color=auto java
+[akana@lm-pm8x-16 bin]$</pre>
+
+<p>Purge the existing configurator container's <strong>cache</strong> directory, otherwise the configurator container may use some older cached feature bundles:</p>
+<pre>[akana@lm-pm8x-16 ~]$ cd /opt/akana/plat8/bin/
+[akana@lm-pm8x-16 bin]$ rm -rf /opt/akana/plat8/instances/configurator/cache/*
+[akana@lm-pm8x-16 bin]$</pre>
+
+<p>Invoke the configurator container in silent mode while specifying the full path to the upgrade properties file, as shown below. This is identical to the process used to create the LM container during initial product installation.</p>
+<pre>[akana@lm-pm8x-16 bin]$ ./startup.sh configurator -Dsilent=true -Dproperties=/home/akana/update-lm.properties
+Starting instance [configurator]
+STARTED [35] bundle(s)
+Beginning task: Completing wizard...
+Creating snapshot...
+...
+Updated 38 bundle(s).
+Updating "lm" instance directory...
+Configuration Completed
+Exiting...
+STARTED [35] bundle(s)
+[akana@lm-pm8x-16 bin]$</pre>
+
+<p>Start the newly upgraded container. In this example, the container is started in the background via the <strong>-bg</strong> parameter:</p>
+<pre>[akana@lm-pm8x-16 bin]$ ./startup.sh lm -bg
+Starting instance [lm]
+[akana@lm-pm8x-16 bin]$</pre>
+<p>That concludes the product upgrade using the first method, upgrading an existing container.</p>
+<p><a href="#top">back to top</a></p>
+
+
+
+<a name="01_02"></a><h4>Method 2: Remove/Re-Create Target Container</h4>
+<p>The general steps of the second method, removing and re-creating the target container, are given below.</p>
+<p>This method essentially involves:</p>
+<ol>
+  <li>Removing the existing target container.</li>
+  <li>Re-creating the container.</li>
+  <li>Reinstalling the feature bundles you want (the Lifecycle Manager application).</li>
+  <li>Connecting the container to the existing database schema.</li>
+</ol>
+<p>This process is very similar to the initial product installation; however, instead of creating a new database schema during the feature installation configuration tasks (the <strong>Database Wizard</strong> task), you'll choose to use an existing database schema. At that point, you'll need to provide the connection information to your existing DB schema; DB host, port, SID/service name, schema name, tablespace name, and password.</p>
+<p>You can find all of these values, except the password, in the Administration Console for the existing container, under the <strong>Configuration</strong> tab&nbsp;&gt; <strong>com.soa.database.config</strong>&nbsp;&gt; <strong>com.soa.database.config.{uuid}</strong>. Please make sure that you have these values in hand before proceeding:</p>
+<ul>
+  <li>database (schema name)</li>
+  <li>instanceName (service name)</li>
+  <li>port (for the database)</li>
+  <li>password (this will be encrypted in the Administration Console, so you'll need to obtain it from elsewhere)</li>
+  <li>server (server hostname or IP address)</li>
+  <li>type (for example, Oracle SID or Service Name)</li>
+  <li>user (schema user name)</li>
+</ul>
+<p>You'll also need to have your database credentials (Oracle SYSTEM credentials or equivalent), to complete the feature installation <strong>Initialize Repository Database</strong> configuration task, just as you did during the initial product installation.</p>
+<p>Prior to removing an existing container, make sure that it's stopped/not running. In the following example, the Akana Platform home directory is <strong>/opt/akana/plat8</strong> and the example target container name is <strong>lm</strong>:</p>
+<pre>[akana@lm-pm8x-16 ~]$ cd /opt/akana/plat8/bin/
+[akana@lm-pm8x-16 bin]$ ./shutdown.sh lm
+Instance [lm] PID [48181] stopped
+...
+[akana@lm-pm8x-16 bin]$</pre>
+<p>Remove the existing container's instance directory, being cautious to only remove the instance directory that you will be re-creating:</p>
+<pre>[akana@lm-pm8x-16 bin]$ rm -rf /opt/akana/plat8/instances/lm/</pre>
+<p>Purge the configurator container's cache, otherwise the configurator container may use some older feature bundles:</p>
+<pre>[akana@lm-pm8x-16 bin]$ rm -rf /opt/akana/plat8/instances/configurator/cache/*</pre>
+<p>Extract the new feature bundle to your Akana Platform home directory. In the example below, the Akana Platform home directory is /opt/akana/plat8:</p>
+<pre>[akana@lm-pm8x-16 ~]$ unzip lifecyclemanager_8.0.2.00302.zip -d /opt/akana/plat8/
+Archive: lifecyclemanager_8.0.2.00302.zip
+   creating: /opt/akana/plat8/lib/lifecyclemanager_8.0.2.00302/
+  inflating: /opt/akana/plat8/lib/lifecyclemanager_8.0.2.00302/OpenSourceLicenses.txt
+...</pre>
+
+<p>The container creation process is identical to container creation during the initial product installation. For details, please refer to the Install Guide. The example in this document shows container creation on Linux using silent mode.</p>
+<p>Create a container properties file, or re-use an existing one. The properties file must contain the following five properties and their values:</p>
 <ul>
   <li>container.instance.name</li>
   <li>credential.username</li>
@@ -490,92 +163,61 @@ Q==</pre></li>
   <li>default.host</li>
   <li>default.port</li>
 </ul>
-
-
-<h5>Example properties file:</h5>
-<p>The example below shows how the properties file is put together, with actual values for each property.</p>
-<pre>container.instance.name=lm
-credential.username=administrator
-credential.password=password
-default.host=lxc1-pm8x-23.local.acmepaymentscorp.com
+<p>For example:</p>
+<pre>[akana@lm-pm8x-16 ~]$ cat lm.properties
+container.instance.name=lm
+credential.username = administrator
+credential.password = password
+default.host=lm-pm8x-16.local.akana.com
 default.port=9900</pre>
-<p><a href="#top">Back to top</a></p>
+
+<p>Invoke the Akana Platform's configurator container in silent mode using the container properties file to create the new container:</p>
+<pre>[akana@lm-pm8x-16 ~]$ cd /opt/akana/plat8/bin/
+[akana@lm-pm8x-16 bin]$ ./startup.sh configurator -Dsilent=true -Dproperties=/home/akana/lm.properties
+Starting instance [configurator]
+STARTED [35] bundle(s)
+Beginning task: Completing wizard...
+Beginning task: Container configuration...
+Creating "lm" instance directory...
+...
+Container configured.
+Configuration Completed
+Exiting...
+STARTED [35] bundle(s)
+[akana@lm-pm8x-16 bin]$</pre>
+
+<p>Because you deleted the old container, you'll need to make sure you copy the applicable database driver to the new container's <strong>deploy</strong>/ directory. See <a href="../install/install_lm_v80x.htm#database_drivers">Database drivers</a> (install doc). The example below is for Oracle:</p>
+<pre>[akana@lm-pm8x-16 bin]$ cp /home/akana/ojdbc7.jar /opt/akana/plat8/instances/lm/deploy/
+[akana@lm-pm8x-16 bin]$</pre>
+
+<p>Start the new container. Below, the container is started in the background via the <strong>-bg</strong> parameter:</p>
+<pre>[akana@lm-pm8x-16 bin]$ ./startup.sh lm -bg
+Starting instance [lm]
+[akana@lm-pm8x-16 bin]$</pre>
+
+<p>Install the Lifecycle Manager feature and configuration by navigating to its Akana Administration console. Example URL:</p>
+<pre>http://lm-pm8x-16.local.akana.com:9900/admin/login.html</pre>
+
+<p><img src="images/LM_upgrade80_82_01_admin_console.jpg" alt="Akana Administration Console login page" /> </p>
+<p>From the <strong>Available Features</strong> tab, select the <strong>Akana Lifecycle Manager</strong> feature, and then click the <strong>Install Feature</strong> button at the bottom right.</p>
+<p>After the Feature Resolution process completes, click the <strong>Install Feature</strong> button at the bottom right of the popup dialog:</p>
+<p><img src="images/LM_upgrade80_82_02_resolution_complete.jpg" alt="Feature Resolution Report" /> </p>
+<p>Proceed through the configuration tasks until you reach the <strong>Configure Database Options</strong> wizard, and then select <strong>Use existing database</strong>, as shown below.</p>
+<p><img src="images/LM_upgrade80_82_03_select_database_option.jpg" alt="Configure Database Options wizard" /> </p>
+<p>Populate the <strong>Configure Database Options</strong> Wizard with your database schema connection information. An example is shown below.</p>
+<p><img src="images/LM_upgrade80_82_04_specify_database_options.jpg" alt="Configure Database Options wizard: Database Details" /> </p>
+<p>Proceed to the <strong>Initialize Repository Database</strong> task, and enter your database credentials (Oracle SYSTEM credentials or equivalent):</p>
+<p><img src="images/LM_upgrade80_82_05_initialize_repository_database.jpg" alt="Initialize Repository Database" /> </p>
+
+<p>At the <strong>Set Lifecycle Repository Superuser Password</strong> page, type in the password, confirm, and then click <strong>Finish</strong>.</p>
+<p><img src="images/lm_install_05_05_superuser_password.jpg" alt="Setting up the superuser password" /></p>
 
 
-
-<a name="creating_container_silent"></a><h3>Creating a container using silent install</h3>
-<p>You can create the container using silent install mode, in Step 5 of the installation process. See <a href="#03_lm_container">Step 3: Configure Lifecycle Manager Container</a> above.</p>
-<p>To create the container, use the command below. Adjust these values as needed:</p>
-<ul>
-  <li>Path to the startup.sh file for your installation</li>
-  <li>Path and filename for your properties file</li>
-</ul>
-<pre>/opt/akana/lm80/bin/startup.sh configurator -Dsilent=true -Dproperties=/home/akana/lm.properties</pre>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<a name="create_asset_library"></a><h3>Creating an asset library</h3>
-<p>To create an asset library, follow the steps below.</p>
-<h5>To create an asset library</h5>
-<ol>
-  <li>Open one of the following URLs in a browser, depending on your setup. If you're using native LDAP mode and have not bootstrapped the setup according to the above instructions, use the super-user login page and the configured password {superuser.password}. Otherwise, use the installation administration login page and specify a valid LDAP user configured in {admin.users} with a valid password. URLs:
-    <ul>
-      <li>http://{web.server.url.host}/lm/admin (installation administration login page)</li>
-      <li>http://{web.server.url.host}/lm/application/access/suLogin.do (super-user login page)</li>
-    </ul>
-  </li>
-
-    <li>Select <strong>Create Library</strong>.</li>
-  <li>Fill in the information for your library. For information about the various fields, see <a href="#fields_create_library_page">Create Library page: field descriptions</a> below.</li>
-  <li>Save changes.</li>
-</ol>
-
-<a name="fields_create_library_page"></a><h5>Create Library page: field descriptions</h5>
-<p>Use the information below to determine which values to use in the <strong>Create Library</strong> page.</p>
-<table cellspacing="0px" class="doctable" style="width: 98%;">
-  <thead>
-    <tr>
-      <th width="20%">Name</th>
-      <th width="80%">Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr class="t2row">
-      <td>Library Name</td>
-      <td><p>The name for the Asset Library. The name is used in the URL when accessing the library via the web with thick clients. Choose a name that is fairly short and will be easy for users to remember. <br />
-  <br />
-        <strong>Naming Rules</strong>: the library name must start with an alpha character and white space is not allowed. Valid characters are: <strong>A-Z, a-z, 0-9, _ (underscore)</strong>.</p>
-      </td>
-    </tr>
-    <tr class="t1row">
-      <td>Description</td>
-      <td>A brief description of the Asset Library.</td>
-    </tr>
-    <tr class="t2row">
-      <td>Sender Email</td>
-      <td>The email address to use as the &quot;from&quot; address on notifications that go out from this library to end users. The format is: <strong>username@domain</strong>. For example, <strong>internalsupport@example.com</strong>. The system doesn't process responses to these emails, so it's a good idea to include an address indicating that, such as <strong>no_reply@example.com</strong>.</td>
-    </tr>
-    <tr class="t1row">
-      <td>Controlled Access</td>
-      <td>If the library is set up for controlled access, all user account requests must be approved by a usage controller before access is allowed. With uncontrolled access, any user who already has an account or requests an account is allowed access. If bootstrapping (in native LDAP mode), it is best to choose <strong>No</strong>.</td>
-    </tr>
-    <tr class="t2row">
-      <td>Enable Project Manager Authority to Create Users</td>
-      <td><p>Choose an option:</p>
-        <ul>
-          <li><strong>Selected</strong>: The Project Manager can create users from LDAP.</li>
-          <li><strong>Cleared</strong>: Only a Usage Controller can create users from LDAP.</li>
-        </ul></td>
-    </tr>
-    <tr class="t1row">
-      <td>Library Administrator information:<br />
-        Account</td>
-      <td>The library login account name for the initial library administrator. It must already be an existing user (in LDAP if using guest LDAP mode, or an existing account if using native LDAP mode). If this is the first library created on a new installation in native LDAP mode, there are no accounts yet, and this property should be left blank. To assign a library administrator later, you must log in to the library using the super-user account.</td>
-    </tr>
-  </tbody>
-</table>
-<p><a href="#top">Back to top</a></p>
+<p>When you click <strong>Finish</strong> on the last task, you'll be prompted to restart the container, as shown below. Click OK<strong>.</strong></p>
+<p><img src="images/LM_upgrade80_82_06_system_restart_prompt.jpg" alt="System restart prompt" /> </p>
+<p><strong>Note</strong>: If you choose to restart later: when you're ready to restart, navigate to the <strong>System</strong> tab and click the red [<strong>Restart</strong>] button.</p>
+<p>This completes the upgrade process using the second method, <strong>Remove and re-create the container</strong>.</p>
+<p><a href="#top">back to top</a></p>
 
 
 
@@ -588,19 +230,14 @@ default.port=9900</pre>
   <tr style="vertical-align:top;">
     <td width="300">
       <ul>
-        <li><a href="http://docs.akana.com/sp/platform_install/installing_akana_api_platform_v82.htm">Installing the Akana API Platform 8.2x</a></li>
+        <li><a href="http://docs.akana.com/sp/platform_install/installing_akana_platform.htm">Installing Akana Platform 8.x</a></li>
+        <li><a href="../install/install_lm_v80x.htm">Installing Lifecycle Manager 8.0.x</a></li>
       </ul>
     </td>
     <td width="400">
       <ul>
-        <li><a href="http://docs.akana.com/sp/platform_install/installing_akana_platform.htm">Installing Akana Platform 8.x</a></li>
+        <li><a href="http://docs.akana.com/sp/platform_install/installing_akana_api_platform_v82.htm">Installing the Akana API Platform 8.2x</a></li>
       </ul>
     </td>
   </tr>
 </table>
-
-
-
-</div>
-</body>
-</html>
