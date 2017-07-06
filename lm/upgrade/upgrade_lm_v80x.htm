@@ -1,26 +1,32 @@
 ---
 layout: page
-title: Upgrading LM from 8.0 to 8.0.x
-description: Learn how to upgrade Lifecycle Manager to 8.0.x.
+title: Upgrading LM
+description: Learn how to upgrade Lifecycle Manager.
 product: lm
 category: ref
 weight: 10
 type: page
 nav-title: Upgrading LM
 ---
-<h2><a name="top"></a>Upgrading Lifecycle Manager from Version 8.0 to Version 8.0.x</h2>
-<p>These upgrade instructions are for a scenario where you are upgrading <strong>from</strong> an earlier version of Lifecycle Manager 8.0.x (8.0.0 or newer) <strong>to</strong> a later version.</p>
-<p><strong>Note</strong>: If you're currently using a legacy version such as 7.1.x or below, you'll need to follow the 7.1.x to 8.0 instructions. In that case, you can upgrade directly to the desired 8.0.x version; you don't need to upgrade to 8.0.0 and then to 8.0.x. For upgrade instructions from earlier versions to version 8.0, refer to the Readme file in the LM folder on the <a href="https://library.akana.com/display/MAIN/Downloads" title="Akana support site" target="_blank">Akana support site</a>. On the Downloads page, choose <strong>Lifecycle Manager</strong>&nbsp;&gt; <strong>LM 8.0.x</strong>&nbsp;&gt; <strong>Documentation</strong>&nbsp;&gt;<strong> v8.xxx_OSGi-README.html</strong>.</p>
-<h5 class="stamp">Supported Platforms: 8.2.3</h5>
-<div class = "divider1"></div>
-<h3 style="color: gray;">Table of Contents</h3>
-
-
+<h2><a name="top"></a>Upgrading Lifecycle Manager</h2>
+<p>This document includes instructions for upgrading Lifecycle Manager&nbsp;from version 7.1x to 8.0, and from version 8.0&nbsp;to 8.0.x.</p>
 
 <ol class="table_of_contents">
-  <li><a href="#01_00">Overview</a></li>
-  <li><a href="#01_01">Method 1: Upgrade Existing Container</a></li>
-  <li><a href="#01_02">Method 2: Remove/Re-Create Target Container</a></li>
+  <li><a href="#lm_upgrade_80_80x">Upgrading Lifecycle Manager from Version 8.0 to Version 8.0.x</a>
+    <ul>
+      <li><a href="#01_00">Overview</a></li>
+      <li><a href="#01_01">Method 1: Upgrade Existing Container</a></li>
+      <li><a href="#01_02">Method 2: Remove/Re-Create Target Container</a></li>
+    </ul>
+  </li>
+  <li><a href="#lm_upgrade_71_80">Upgrading Lifecycle Manager from Version 7.1 to Version 8.0.0</a>
+    <ol>
+      <li><a href="#upgrade_71_80_01">Pre-Install Instructions</a></li>
+      <li><a href="#upgrade_71_80_02">Install the upgrade</a></li>
+      <li><a href="#upgrade_71_80_03">Verify that the upgrade was successful</a></li>
+      <li><a href="#upgrade_71_80_04">Post-Install Instructions</a></li>
+    </ol>
+  </li>
 </ol>
 
 
@@ -29,11 +35,22 @@ nav-title: Upgrading LM
 
 
 
+<a name="lm_upgrade_80_80x"></a><h3>Upgrading Lifecycle Manager from Version 8.0 to Version 8.0.x</h3>
+<p>These upgrade instructions are for a scenario where you are upgrading <strong>from</strong> an earlier version of Lifecycle Manager 8.0.x (8.0.0 or newer) <strong>to</strong> a later version.</p>
+<p><strong>Note</strong>: If you're currently using a legacy version such as 7.1.x or below, you'll need to follow the 7.1.x to 8.0 instructions. In that case, you can upgrade directly to the desired 8.0.x version; you don't need to upgrade to 8.0.0 and then to 8.0.x. For upgrade instructions from earlier versions to version 8.0, refer to either of these locations:</p>
+<ul>
+  <li>The Readme file in the LM folder on the <a href="https://library.akana.com/display/MAIN/Downloads" title="Akana support site" target="_blank">Akana support site</a>. On the Downloads page, choose <strong>Lifecycle Manager</strong>&nbsp;&gt; <strong>LM 8.0.x</strong>&nbsp;&gt; <strong>Documentation</strong>&nbsp;&gt;<strong> v8.xxx_OSGi-README.html</strong>.</li>
+  <li> The applicable section in this document: <a href="#lm_upgrade_71_80">Upgrading Lifecycle Manager from Version 7.1 to Version 8.0.0</a>.</li>
+</ul>
+<h5 class="stamp">Supported Platforms: 8.2.3</h5>
+
+
+
 <a name="01_00"></a><h4>Overview</h4>
 <p>There are two approaches to upgrading an existing LM 8.0.x (Akana Platform) container:</p>
 <ol>
-  <li>Upgrade the existing container using the pre-existing Akana Platform <strong>configurator</strong> container to process a target container upgrade. See <a href="#01_01">Method 1: Upgrade Existing Container</a>.</li>
-  <li>Remove and re-create the target container (reconnecting to the existing DB schema). This requires your existing database schema connection information along with your database credentials (Oracle SYSTEM credentials or equivalent), for the <strong>Initialize Repository Database</strong> task. See <a href="#01_02">Method 2: Remove/Re-Create Target Container</a>.</li>
+  <li><a href="#01_01">Method 1: Upgrade Existing Container</a>: Upgrade the existing container using the pre-existing Akana Platform <strong>configurator</strong> container to process a target container upgrade.</li>
+  <li><a href="#01_02">Method 2: Remove/Re-Create Target Container</a>: Remove and re-create the target container (reconnecting to the existing DB schema). This requires your existing database schema connection information along with your database credentials (Oracle SYSTEM credentials or equivalent), for the <strong>Initialize Repository Database</strong> task.</li>
 </ol>
 <p>There might be certain scenarios where the first method might be problematic; specifically, when the new version includes feature bundles that have been renamed, removed, or consolidated, which could result in mismatched or orphaned bundles that might conflict with new bundles.</p>
 <p>These scenarios will be called out in the specific version release notes. In these specific versions, you will be directed to use the second method, container removal/re-creation.</p>
@@ -217,6 +234,95 @@ Starting instance [lm]
 <p><img src="images/LM_upgrade80_82_06_system_restart_prompt.jpg" alt="System restart prompt" /> </p>
 <p><strong>Note</strong>: If you choose to restart later: when you're ready to restart, navigate to the <strong>System</strong> tab and click the red [<strong>Restart</strong>] button.</p>
 <p>This completes the upgrade process using the second method, <strong>Remove and re-create the container</strong>.</p>
+<p><a href="#top">back to top</a></p>
+
+
+
+
+<div class = "divider1"></div>
+
+
+
+
+
+<h3>Upgrading Lifecycle Manager from Version 7.1 to Version 8.0.0</h3>
+<p>These upgrade instructions are for a scenario where you have Lifecycle Manager 7.1 installed and are upgrading <strong>from</strong> Lifecycle Manager 7.1 <strong>to</strong> Lifecycle Manager 8.0.0.</p>
+<p>If you're installing Lifecycle Manager for the first time, refer to the <a href="../install/install_lm_v80x.htm">Lifecycle Manager 8.0  Installation Guide</a>.</p>
+<p> If you're upgrading from a version earlier than 7.1, you'll first need to upgrade to 7.1.</p>
+<p> If you are upgrading from 7.1, you can use any of the 7.1.x micro releases (including 7.1.6). Unlike the rule to sequentially iterate through the major or minor version releases, there's no need to do the same for the micro releases (such as 7.1.x). Each micro&nbsp;release includes all the incremental changes you'll need.</p>
+<p>You can also refer to the Install and System Admin Docs for more general Lifecycle Manager information. Lifecycle Manager documentation is in either of two locations:</p>
+<ul>
+  <li>In the LM folder on the <a href="https://library.akana.com/display/MAIN/Downloads" title="Akana support site" target="_blank">Akana support site</a>. On the <strong>Downloads</strong> page, choose <strong>Lifecycle Manager</strong>. Choose the applicable version, and look in the <strong>Documentation</strong> subfolder.</li>
+  <li>On the Akana documentation site: <a href="http://docs.akana.com/docs-test/lm/index.html" title="Akana docs site, LM section" target="_self">http://docs.akana.com/docs-test/lm/index.html</a>.</li>
+</ul>
+<a name="lm_upgrade_71_80"></a><h3>Upgrading Lifecycle Manager from Version 7.1 to Version 8.0.0</h3>
+<p>Upgrading from 7.1 to 8.0.0 includes the following steps:</p>
+<ol class="table_of_contents">
+  <li><a href="#upgrade_71_80_01">Pre-Install Instructions</a></li>
+  <li><a href="#upgrade_71_80_02">Install the upgrade</a></li>
+  <li><a href="#upgrade_71_80_03">Verify that the upgrade was successful</a></li>
+  <li><a href="#upgrade_71_80_04">Post-Install Instructions</a></li>
+</ol>
+<a name="upgrade_71_80_01" id="upgrade_71_80_01"></a>
+<h5>Pre-Install Instructions</h5>
+<ol>
+  <li>Back up your database and the Lifecycle Manager 7.1 application home directory.
+    <p>The LM 7.1 to 8.0 upgrade process is a migration to the LM 8.0 as a feature in the Akana Platform. You will follow the <a href="http://docs.akana.com/lm/install/install_lm_v80x.htm">Lifecycle Manager 8.0 install guide</a> up to the point of &quot;Step 5: Install and configure the Lifecycle Manager Feature&quot;; in this step, in the Database Wizard, you will choose to use an existing database. At this point, you will provide the relevant connection information to allow the connection to your existing database. You then continue with the steps from the Lifecycle Manager 8.0 install guide. For details, see <a href="#upgrade_71_80_02">Install the upgrade</a> below.</p>
+  </li>
+  <li>Record your current 7.1 application settings. You can do this by noting down the LM /admin console's Settings page values, and/or use the following database query:
+    <pre>select * from installprops;</pre>
+  </li>
+  <li>Verify that there is enough free disk space on the application server:
+    <ul>
+      <li>volume for {platform_home} directories:  1GB</li>
+      <li>volume for /tmp directories:  500MB</li>
+      <li>volume for logs during upgrade: 125MB</li>
+    </ul>
+  </li>
+  <li>Verify that there is enough available space on the database tablespaces for a data upgrade:
+    <ul>
+      <li>There should be at least 15% free space in each Lifecycle Manager tablespace.</li>
+    </ul>
+  </li>
+  <li>Increase the number of application logs in your logging pool. Depending on the number of assets in your installation, the version 8.0 upgrade process doesn't contain any data upgrades, so there should be minimal log activity during the initial startup of the application. However, Akana typically recommends increasing the number of logs to at least 25. For details, refer to information about the Installation Admin command <strong>SetLoggingConfig</strong> in the Lifecycle Manager System Admin guide. After the upgrade, you can reset the number of logs in the pool to your steady-state operational level.</li>
+  <li>App_%.log file locations when upgrading: as the LM 7.1 logging configuration is in the database, the LM app logs still persist in the pre-defined location (typically in <strong>[lm_home]/logs/webapp</strong>). Because of this, when installing Lifecycle Manager 8.0, the old LM 7.1 logging location directory must still exist, to ensure that any DataUpgrade entries are captured. After a successful upgrade, you can alter the logging configuration to adjust the location to the OSGi standard of <strong>[platform_home]/instances/[instance_name]/log</strong>.</li>
+</ol>
+<a name="upgrade_71_80_02" id="upgrade_71_80_02"></a>
+<h5>Install the upgrade</h5>
+<p>The only difference for the upgrade scenario is that when you're configuring the Lifecycle Manager feature for the database, you'll choose to use an existing database vs creating a new database. In the upgrade scenario, you'll point to your existing Lifecycle Manager 7.1&nbsp;database.</p>
+<p>The steps are summarized below:</p>
+<ol>
+  <li><a href="../install/install_lm_v80x.htm#01_gather_zip_files">Step 1: Gather ZIP files and download to the install folder</a></li>
+  <li><a href="../install/install_lm_v80x.htm#02_unzip_files">Step 2: Unzip installation files in the correct sequence</a></li>
+  <li><a href="../install/install_lm_v80x.htm#03_lm_container">Step 3: Run Configurator to configure Lifecycle Manager container</a></li>
+  <li><a href="../install/install_lm_v80x.htm#04_start_lm_instance">Step 4: Start the Lifecycle Manager instance</a></li>
+  <li><a href="../install/install_lm_v80x.htm#05_lm_install">Step 5: Install and configure the Akana Lifecycle Manager Application feature</a>. In this step, rather than creating a new database, you'll point to the existing LM 7.1 database.</li>
+  <li><a href="../install/install_lm_v80x.htm#06_extract_client_zips">Step 6: Extract javaclients.zip file and specify the URL in the configuration settings</a></li>
+  <li><a href="../install/install_lm_v80x.htm#07_lm_config">Step 7: Update the Lifecycle Manager configuration settings</a></li>
+  <li><a href="../install/install_lm_v80x.htm#08_lm_create_library">Step 8: Create a Lifecycle Manager Library</a></li>
+</ol>
+<a name="upgrade_71_80_03" id="upgrade_71_80_03"></a>
+<h5>Verify that the upgrade was successful</h5>
+<ul>
+  <li>Review the log files for any error messages.</li>
+  <li>Verify the upgrade by logging on to the Lifecycle Manager admin console:
+    <ul>
+      <li>http://{web.server.url.host}/<i>contextroot</i>/admin/mainMenu.do</li>
+      <li>Verify that the Build number is <b>8.0.0.x</b>.</li>
+    </ul>
+  </li>
+</ul>
+<a name="upgrade_71_80_04" id="upgrade_71_80_04"></a>
+<h5>Post-Install Instructions</h5>
+<ul>
+  <li>Navigate to the LM /admin console, then verify and update any settings as appropriate.</li>
+  <li>Execute the following command (via the LM /admin console &gt; Execute Command):
+    <pre>Fully Qualified Command Class Name: ClearAllUserUIProperties
+Library:[choose each library]
+Click [Invoke]</pre>
+  </li>
+  <li>Have each user upgrade the Repository Client (if it's installed) with the 8.0 version.</li>
+</ul>
 <p><a href="#top">back to top</a></p>
 
 
