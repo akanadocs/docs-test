@@ -75,16 +75,16 @@ atmosphere.config.denyUserRoles=SiteAdmin,BusinessAdmin,ApiAdmin,System Administ
 
 
 <h4><a name="configure-all-listeners-internal-and-external-as-htts-only"></a>Configure all listeners, internal and external as HTTPS only</h4>
-<p>This is accomplished in two places in the product: Firstly, the listeners for the applications in the container are configured from within Policy Manager at Containers&nbsp;&gt;&nbsp;[container_name]&nbsp;&gt;&nbsp;Details&nbsp;&gt;&nbsp;Inbound Listeners. Options for configuring port and PKI are available. Settings for two-way SSL mutual authentication are also available. It is best to choose either <strong>Accept client certificates</strong> or <strong>Require client certificates</strong>, based on customer security requirements.</p>
+<p>This is accomplished in two places in the product: Firstly, the listeners for the applications in the container are configured from within Policy Manager at Containers&nbsp;&gt;&nbsp;{container_name}&nbsp;&gt;&nbsp;Details&nbsp;&gt;&nbsp;Inbound Listeners. Options for configuring port and PKI are available. Settings for two-way SSL mutual authentication are also available. It is best to choose either <strong>Accept client certificates</strong> or <strong>Require client certificates</strong>, based on customer security requirements.</p>
 <p><strong>Scope</strong>: All Containers</p>
 <pre>#Config for pm
 #Thu Jul 10 23:47:51 PDT 2014
-product.home=file\:/Users/example/soa/sm70/
+product.home=file\:/Users/example/soa/sm80/
 org.eclipse.jetty.server.Request.maxFormContentSize=500000
 felix.cm.dir=${felix.cache.rootdir}/cm
 org.osgi.service.http.port.secure=9900
 com.soa.provision.file.dir=${felix.cache.rootdir}/deploy
-product.home.dir=/Users/alistairfarquharson/soa/b962/sm70
+product.home.dir=/Users/janemead/soa/b962/sm80
 com.soa.snapshot.directory=${felix.cache.rootdir}/snapshot
 com.soa.provision.noInitialDelay=true
 com.soa.http.host=127.0.0.1
@@ -93,23 +93,24 @@ com.soa.provision.bundles.start=true
 com.soa.provision.poll=2000
 org.eclipse.jetty.servlet.SessionCookie=JSESSIONID_pm
 felix.shutdown.hook=false
-container.name=[container_name]</pre>
+container.name={container_name}</pre>
 <p>Note above the *.secure syntax used for the settings.</p>
-<p>Secondly, the listeners for the applications in the container are configured from within Policy Manager at <strong>Containers</strong>&nbsp;&gt;&nbsp;[container_name]&nbsp;&gt;&nbsp;<strong>Details</strong>&nbsp;&gt;&nbsp;<strong>Inbound Listeners</strong>. Options for configuring port and PKI are available.</p>
+<p>Secondly, the listeners for the applications in the container are configured from within Policy Manager at <strong>Containers</strong>&nbsp;&gt;&nbsp;{container_name}&nbsp;&gt;&nbsp;<strong>Details</strong>&nbsp;&gt;&nbsp;<strong>Inbound Listeners</strong>. Options for configuring port and PKI are available.</p>
 
 
 <h4><a name="config-admin-sep-port"></a>Configure the Akana Administration Console (/admin) on a separate port</h4>
-<p>As shown above, this is configurable in the /instances/[container_name]/system.properties file for each container. The Admin console (/admin) and the other features installed in the container should ideally not be configured on the same port. This will allow you to isolate the Akana Administration Console from the Internet.</p>
-<p>The <strong>system.properties</strong> file is updated with the following highlighted properties, and also requires a configuration file placed in the container's directory (/sm70/instances/[container_name]) to ensure the Akana Administration Console is only accessed from the defined port and host.</p>
-<p><strong>Scope</strong>: All Containers</p>
+<p>As shown above, this is configurable in the <strong>system.properties</strong> file for each container. The Akana Administration Console (/admin) and the other features installed in the container should ideally be configured on different ports. This will allow you to isolate the Akana Administration Console from the Internet.</p>
+<p>To do this, there are three steps.</p>
+<p>First, update the <strong>/instances/{container_name}/system.properties</strong> file by setting the <strong>com.soa.http.host</strong> value to the hostname for your Akana Administration Console.</p>
+<p><strong>Sample file:</strong></p>
 <pre>#Config for pm
-#Thu Jul 10 23:47:51 PDT 2014
-product.home=file\:/Users/example/soa/sm70/
+#Thu Jul 10 23:47:51 PDT 2016
+product.home=file\:/Users/example/soa/sm80/
 org.eclipse.jetty.server.Request.maxFormContentSize=500000
 felix.cm.dir=${felix.cache.rootdir}/cm
 org.osgi.service.http.port.secure=14443
 com.soa.provision.file.dir=${felix.cache.rootdir}/deploy
-product.home.dir=/Users/alistairfarquharson/soa/b962/sm70
+product.home.dir=/Users/janemead/soa/b962/sm80
 com.soa.snapshot.directory=${felix.cache.rootdir}/snapshot
 com.soa.provision.noInitialDelay=true
 com.soa.http.host=10.1.1.2
@@ -118,7 +119,12 @@ com.soa.provision.bundles.start=true
 com.soa.provision.poll=2000
 org.eclipse.jetty.servlet.SessionCookie=JSESSIONID_pm
 felix.shutdown.hook=false
-container.name=[container_name]</pre>
+container.name={container_name}</pre>
+<p><strong>Modified value for hostname:</strong></p>
+<pre>com.soa.http.host={localhost}</pre>
+<p>Next, go into the Akana Administration Console. Click <strong>Configuration</strong>, then find the <strong>com.soa.admin.console</strong> category. Find the <strong>admin.console.localhost.only</strong> value and set it to <strong>true</strong>.</p>
+<p>Then, restart the container.</p>
+<p><strong>Scope</strong>: All Containers</p>
 
 
 
