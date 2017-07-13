@@ -11,8 +11,9 @@ nav-title: Use Case - Upgrading with Zero Downtime
 ---
 <h2 id="top">Use Case: Upgrading with Zero Downtime</h2>
 <p>This use case outlines a scenario for achieving a zero-downtime upgrade in an implementation of the Akana API Platform spanning multiple data centers.</p>
-<p>This example includes two data centers, but the approach would work in exactly the same way for any number of data centers. The upgrade is from version 8.2 to 8.4.</p>
+<p>This example includes two data centers, but the approach would work in exactly the same way for any number of data centers. In this example, the upgrade is from version 8.2 to 8.4.</p>
 <p>Note that in this example, the term <strong>zero-downtime</strong> is used to mean that the API Gateway has zero downtime. It's possible that during the upgrade process either Policy Manager or Community Manager, or both, might experience some downtime. This might be necessary if the upgrade includes database schema changes.</p>
+<p>Essentially, you are removing a specific container from normal traffic, upgrading it, and then adding it back into the cluster.</p>
 <p><strong>Note</strong>: This use case provides an approach for manual upgrade across multiple data centers. However, the best, and recommended, approach for upgrade in a production environment is via automation, which is available as a service from the Akana Professional Services department. For details about automation options, contact your Akana representative.</p>
 
 <p><a href="upgrading_akana_api_platform_82_84.htm" class="button secondary">Upgrading Akana API Platform from Version 8.2 to Version 8.4x</a></p>
@@ -28,8 +29,7 @@ nav-title: Use Case - Upgrading with Zero Downtime
     <ul>
       <li><a href="#zerodowntime_01_00">Initial (Pre-Upgrade) State</a></li>
       <li><a href="#zerodowntime_01_01">Step 1: Upgrade Data Center B</a></li>
-      <li><a href="#zerodowntime_01_02">Step 2: Test</a></li>
-      <li><a href="#zerodowntime_01_03">Step 3: Upgrade Data Center A</a></li>
+      <li><a href="#zerodowntime_01_02">Step 2: Upgrade Data Center A</a></li>
       <li><a href="#zerodowntime_01_04">Final state after upgrade</a></li>
     </ul>
     </li>
@@ -41,10 +41,9 @@ nav-title: Use Case - Upgrading with Zero Downtime
 
 <a name="zerodowntime_01"></a><h3>Multiple data center scenario</h3>
 <p>This approach upgrades data centers one by one. While one data center is being upgraded, the remaining data centers (one or more) service all traffic.</p>
-<p>Key points relating to this use case:</p>
+<p>Key point relating to this use case:</p>
 <ul>
   <li>Only Policy Manager and Community Manager have direct access to the MongoDB database. This assumes that the Network Director is pushing all its writes to MongoDB via the Policy Manager server.</li>
-  <li>To maintain zero downtime, all containers must have access to the <strong>Master Policy Manager</strong>. During the upgrade process, the container that is designated as the <strong>Master Policy Manager</strong> changes between data centers. The Master Policy Manager is defined as the Policy Manager container, or set of Policy Manager containers, that are configured against the writable database.</li>
 </ul>
 
 
@@ -79,23 +78,17 @@ nav-title: Use Case - Upgrading with Zero Downtime
 
 
 
-<a name="zerodowntime_01_02"></a><a name="zerodowntime_01_00"></a><h4>Step 2: Test</h4>
-<p>Once you've upgraded a data center, you can test by conducting percentage testing of the environment. This allows you to upgrade one side of the model, and then bring the upgraded data center back into receiving traffic. You can configure the router to direct only a certain amount of traffic to the upgraded side.</p>
-<p>The illustration below shows a 60/40 mix. This means that 60% of the traffic continues to go down the 8.2 branch, and  40% is going to the upgraded data center. This allows you to validate that changes in the upgrade are not causing any issues.</p>
-<p>The diagram below shows the upgrade being done for data center B. Traffic is processed via data center A.</p>
-<p><img src="images_zero/uc_01_03.jpg" alt="Upgrading with zero downtime: percentage test" /></p>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<a name="zerodowntime_01_03"></a><h4>Step 3: Upgrade Data Center A</h4>
+<a name="zerodowntime_01_02"></a>
+<h4>Step 2: Upgrade Data Center A</h4>
 <p>Once you're sure everything is working perfectly with data center B, it's time to upgrade data center A.</p>
 <p>To do this, first direct all traffic from the global router to data center B. The <strong>Master</strong> Policy Manager is now the Policy Manager, or bank of Policy Managers, that are running in data center B.</p>
-<p><span class="apidoc_red">The automation container properties file</span> adds the property <strong>pm.master.address</strong>, which points to the <strong>Master</strong> Policy Manager address. Typically, this would be a load balancer sitting in front of those Policy Managers. This does require a firewall between the data centers for this communication. {<span class="apidoc_red">what do we need to say about putting together the properties file? Is a link to <a href="../admin_console/using_network_director_feature.htm#container_silent">Step 2b: Configure Container (Silent Option)</a> OK? Or, if they won't use a properties file, what instruction is needed here?</span>}</p>
-<p>Now, run through the upgrade process for data center A. In this example, we are upgrading from 8.2 to 8.4. During any steps that require database writes, the scripts reach out to the configured <strong>Master</strong> database. {<span class="apidoc_red">how do they do this manually?</span>}</p>
+<p>After upgrading each container, you'll need to register it in the Master Policy Manager. Depending on your scenario:</p>
+<ul>
+  <li><strong>If the Master Policy Manager has access to the new containers that are being created or upgraded</strong>: Add the container directly to the Policy Manager Workbench.</li>
+  <li><strong>If the Master Policy Manager doesn't have access to the new containers</strong>: Export the XML in the /metadata call. You can then add a container in the Policy Manager Workbench, and at the <strong>Add Container</strong> step, upload the <strong>metadata.xml</strong> file.</li>
+</ul>
 <p>The diagram below shows the upgrade being done for data center A. Traffic is processed via data center B.</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
+<p><img src="images_zero/uc_01_04.jpg" alt="Upgrading with zero downtime: upgrading data center A" /></p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -141,7 +134,7 @@ nav-title: Use Case - Upgrading with Zero Downtime
   <tr>
     <td width="40%" valign="top"><p><strong>All Versions/Latest Version</strong></p>
       <ul>
-<!--        <li><a href="../platform_install/installing_akana_api_platform_v84.htm">Installing the Akana API Platform 8.4x</a></li>-->
+        <li><a href="../platform_install/installing_akana_api_platform_v84.htm">Installing the Akana API Platform 8.4x</a></li>
         <li><a href="../platform_install/implementation_planning.htm">Planning Your Implementation</a></li>
         <li><a href="../platform_install/install_cm_jython_script.htm">Installation Jython Script</a></li>
         <li><a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a></li>
