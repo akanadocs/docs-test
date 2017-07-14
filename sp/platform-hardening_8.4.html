@@ -100,10 +100,12 @@ container.name={container_name}</pre>
 
 <h4><a name="config-admin-sep-port"></a>Configure the Akana Administration Console (/admin) on a separate port</h4>
 <p>As shown above, this is configurable in the <strong>system.properties</strong> file for each container. The Akana Administration Console (/admin) and the other features installed in the container should ideally be configured on different ports. This will allow you to isolate the Akana Administration Console from the Internet.</p>
-<p>To do this, there are three steps.</p>
-<p>First, update the <strong>/instances/{container_name}/system.properties</strong> file by setting the <strong>com.soa.http.host</strong> value to the hostname for your Akana Administration Console.</p>
-<p><strong>Sample file:</strong></p>
-<pre>#Config for pm
+<p>To do this, there are four steps.</p>
+<h5>To configure the Akana Administration Console on a separate port</h5>
+<ol>
+  <li>Update the <strong>/instances/{container_name}/system.properties</strong> file by setting the <strong>com.soa.http.host</strong> value to the hostname for your Akana Administration Console.
+    <p><strong>Sample file:</strong></p>
+  <pre>#Config for pm
 #Thu Jul 10 23:47:51 PDT 2016
 product.home=file\:/Users/example/soa/sm80/
 org.eclipse.jetty.server.Request.maxFormContentSize=500000
@@ -120,16 +122,23 @@ com.soa.provision.poll=2000
 org.eclipse.jetty.servlet.SessionCookie=JSESSIONID_pm
 felix.shutdown.hook=false
 container.name={container_name}</pre>
-<p><strong>Modified value for hostname:</strong></p>
-<pre>com.soa.http.host={localhost}</pre>
-<p>Next, go into the Akana Administration Console. Click <strong>Configuration</strong>, then find the <strong>com.soa.admin.console</strong> category. Find the <strong>admin.console.localhost.only</strong> value and set it to <strong>true</strong>.</p>
-<p>Then, restart the container.</p>
+  <p><strong>Modified value for hostname:</strong></p>
+  <pre>com.soa.http.host={localhost}</pre>
+  </li>
+  <li>In the same file, set the <strong>org.osgi.service.http.port.secure</strong> value to a different port, not the one that the application is running on.
+    <p><strong>Modified value for port:</strong></p>
+  <pre>org.osgi.service.http.port.secure=23312</pre>
+  </li>
+
+  <li>Go into the Akana Administration Console. Click <strong>Configuration</strong>, then find the <strong>com.soa.admin.console</strong> category. Find the <strong>admin.console.localhost.only</strong> value and set it to <strong>true</strong>.</li>
+  <li>Restart the container.</li>
+</ol>
 <p><strong>Scope</strong>: All Containers</p>
 
 
 
 <h4><a name="admin_console_domain_disable_login"></a>Disable the Akana Administration Console domain as a login domain</h4>
-<p>For additional security, you can disable the Admin Console domain as a login domain. This prevents users from logging in via the default domain. {{<span class="apidoc_red">or, it enables you to implement password rules on user that have access to the Admin Console?</span>}}</p>
+<p>For additional security, you can disable the Admin Console domain as a login domain. This prevents users from logging in via the default domain.</p>
 <p>Before disabling the Admin Console domain, make sure you've correctly set up and enabled a valid login domain that users can use, such as an LDAP domain.</p>
 <p>For instructions for configuring a security identity provider via the Policy Manager console, refer to: <a href="http://docs.akana.com/ag/security_config/identity_systems.html#configuration-options" target="_self">Identity Systems: Configuration Options</a>.</p>
 <p>The Administrator for the Akana Administration Console can then assign the System Administrator role for the registry organization to users from the security identity provider, in the console. For instructions, see <a href="upgrade/upgrading_akana_api_platform_82_84.htm#03_06_01" target="_self">To Grant Admin Permission</a> (Upgrade documentation).</p>
