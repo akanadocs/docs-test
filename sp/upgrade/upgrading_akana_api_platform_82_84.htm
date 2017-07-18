@@ -84,6 +84,7 @@ nav-title: Upgrade 8.2 to 8.4
   <li><a href="#03_05">Step 3-5: Repeat configuration actions for additional containers and restart all containers</a></li>
   <li><a href="#03_06">Step 3-6: Post-Upgrade task when upgrading to 8.4: delete and install object mappings</a></li>
   <li><a href="#03_07">Step 3-7: Post-Upgrade Task for upgrades to 8.4: MongoDB Updates</a></li>
+  <li><a href="#03_08">Step 3-8: Conditional, Migrating to MongoDB, with OAuth: Post-Upgrade Task for Data Migration</a></li>
 </ol>
 
 
@@ -109,7 +110,7 @@ nav-title: Upgrade 8.2 to 8.4
 <a name="01_00"></a><h4>Overview</h4>
 <p>There are some steps you might need to take before starting the upgrade process, and some information you'll need to consider to determine how to proceed, including:</p>
 <ul>
-  <li>Review the Akana API Platform release notes</li>
+  <li>Review the Akana API Platform release notes.</li>
   <li>Plan the upgrade for additional features.</li>
   <li>Gather ZIP files and create folder.</li>
 </ul>
@@ -788,6 +789,29 @@ PUT
 <a name="03_07"></a><h4>Step 3-7: Post-Upgrade Task for upgrades to 8.4: MongoDB Updates</h4>
 <p>Version 8.4 includes some changes to the MongoDB database schema. To implement these updates, the upgrade process includes a new configuration action, <strong>Install Configuration Data and Indexes in MongoDB</strong>. Make sure you complete this configuration action along with all others when upgrading.</p>
 <p>The upgrade wizard steps you through the configuration action; if you don't complete the installation in one session, be sure to go back and make sure all configuration actions are complete. In the Akana Administration Console, Configuration tab, at the bottom left, the <strong>Configuration Actions</strong> section should be empty when the upgrade process is complete.</p>
+<p><a href="#top">back to top</a></p>
+
+
+
+<a name="03_08"></a><h4>Step 3-8: Conditional, Migrating to MongoDB, with OAuth: Post-Upgrade Task for Data Migration</h4>
+<p><strong>Note</strong>: This task was introduced in version 8.4.4 and is applicable for upgrades to 8.4.4 and later versions.</p>
+<p>If you’re migrating from RDBMS to MongoDB and you use OAuth, you’ll need to run a data migration task, introduced in the upgrade to version 8.4.4, to ensure that OAuth tokens issued before the upgrade can still be used.</p>
+<p>You’ll need to:</p>
+<ol>
+  <li>Run the <strong>Migrate OAuth Data to MongoDB</strong> configuration task.</li>
+  <li>Update the <strong>com.soa.oauth.provider.server.config.datasource</strong> configuration property.</li>
+</ol>
+<h5>Running the Migrate OAuth Data to MongoDB configuration task and updating the configuration property</h5>
+<ol>
+  <li>In the Akana Administration Console for the Policy Manager/Community Manager instance, <strong>Configuration Actions</strong>, run the <strong>Migrate OAuth Data to MongoDB</strong> task, as shown below.
+  <p><img src="images/03_08_01.jpg" alt="Migrate OAuth Data to MongoDB configuration task" /></p></li>
+  <li>In the Akana Administration Console, click the <strong>Configuration</strong> tab.</li>
+  <li>Under <strong>Configuration Categories</strong>, find the <strong>com.soa.oauth.provider.server</strong> category.</li>
+  <li>Find the <strong>com.soa.oauth.provider.server.config.datasource</strong> property and change the value from <strong>JDBC</strong> to <strong>NOSQL</strong>.</li>
+  <li>Click <strong>Apply Changes</strong>.</li>
+  <li>Restart the Policy Manager/Community Manager container and then, when PM/CM is started, restart the Network Director container.</li>
+</ol>
+<p>After updating this property, the server for the OAuth Provider is now the NOSQL database(MongoDB).</p>
 <p><a href="#top">back to top</a></p>
 
 
