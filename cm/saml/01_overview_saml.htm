@@ -1,0 +1,147 @@
+---
+layout: page
+title: SAML Overview | Using SAML in the API Platform | Akana API Platform Help
+description: A brief overview of SAML as it relates to the Akana API Platform implementation.
+product: cm
+category: learn
+sub-nav-class: Using SAML
+weight: 06
+type: page
+nav-title: Promotion Guide
+---
+<h2 id="top">Overview of SAML</h2>
+<p>This document provides a brief overview of SAML as it relates to the Akana API Platform implementation.</p>
+
+<div class = "divider1"></div>
+
+
+<h3 style="color: gray;">Table of Contents</h3>
+<ol class="table_of_contents">
+  <li><a href="#01_01">What is SAML?</a></li>
+  <li><a href="#01_02">Why choose SAML web browser SSO?</a></li>
+  <li><a href="#01_03">How SAML web browser SSO profile works: high-level view</a></li>
+  <li><a href="#01_04">How SAML web browser SSO profile works: behind the scenes</a></li>
+  <li><a href="#01_05">SAML web browser SSO: process flow diagram</a></li>
+  <li><a href="#01_06">SAML specifications</a></li>
+</ol>
+<div class = "divider1"></div>
+
+
+
+
+<a name="01_01"></a><h3>What is SAML?</h3>
+<p>SAML, the Security Assertion Markup Language, is an XML-based identity federation standard. Among other capabilities, SAML can be used for single sign-on.</p>
+<p>SAML is used for exchanging authentication and authorization data between a Service Provider (providing a service to the user) and an Identity Provider (providing identity verification of the user to the Service Provider).</p>
+<p>The Akana API Platform supports SAML Web Browser SSO for two key purposes:</p>
+<ul>
+  <li><strong>Single sign-on</strong>: As the single sign-on token (along with other tokens such as OpenID Connect's id_token token) as part of the Community Manager Developer Portal login.</li>
+  <li><strong>OAuth Provider domain</strong>: For resource owner login when using OAuth Authorization Server.</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="01_02"></a><h3>Why choose SAML web browser SSO?</h3>
+<p>SAML and OpenID Connect are both very popular and mainstream standards that support single sign-on. OpenID Connect is essentially JSON-based, whereas SAML is an XML implementation.</p>
+<p>There are two main reasons why you might choose SAML over OpenID Connect for your Policy Manager/Community Manager implementation:</p>
+<ul>
+  <li>An existing SAML implementation</li>
+  <li>The need to support webservices, REST APIs, and user login with a common infrastructure</li>
+</ul>
+<p>OpenID is another single sign-on solution still in use. However, OpenID has been deprecated by Google in favor of OpenID Connect; in addition, OpenID Connect is more flexible and more REST API-friendly. The platform supports OpenID for backwards compatibility, but we do not recommend adopting this standard.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="01_03"></a><h3>How SAML web browser SSO profile works: high-level view</h3>
+<p>As with other SSO solutions, SAML provides authentication and verification of end-users via the SAML Web Browser SSO Profile, so that apps can easily outsource this critical, sensitive, and complex task. At a high level, the exchange of information is as follows:</p>
+<ol>
+  <li>The end-user requests a service from an app.
+  <p>App = Service Provider; provides service to the end-user. Corresponds to Relying Party role in OpenID Connect; relies on the Identity Provider for verification of the user's identity.</p></li>
+  <li>Before providing the service to the user, the app must authenticate the user. To do this, the app redirects the user to a supported SAML Identity Provider (IdP) of the end-user's choosing. The IdP:
+    <ol>
+      <li>Requests authentication information from the user.</li>
+      <li>Verifies the information.</li>
+      <li>Logs the user in.</li>
+      <li>Redirects the user back to the app.</li>
+    </ol>
+  <p>The Identity Provider provides user authentication services to the Service Provider. This role corresponds to the Asserting Party role in OpenID Connect. The Identity Provider sends the authentication information in the form of an XML-based SAML Assertion.</p></li>
+  <li>The app delivers the service to the end-user.</li>
+</ol>
+<p>Of course, before being able to authenticate their users via a SAML Identity Provider, the app must first set up an account with the SAML Identity Provider. In addition, for authentication to be successful, the end-user must have an account with the SAML Identity Provider.</p>
+<p>In the Akana API Platform, Policy Manager/Community Manager acts as a SAML Service Provider. Configuring this solution requires coordination between values set up in your account with the SAML Identity Provider and in the domain setup in Policy Manager so that messages can be sent and received between Policy Manager and the applicable Identity Provider.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="01_04"></a><h3>How SAML web browser SSO profile works: behind the scenes</h3>
+<p>Part of the SAML Web Browser SSO Profile standard includes a metadata file which includes information and settings that allow the Service Provider and the Identity Provider to validate each other's messages.</p>
+<p>Once you've chosen your SAML Identity Provider, you create a Service Provider account. Since the platform is acting as your Service Provider, some of the values you specify are determined by your own choices and some values are determined by the platform and what it supports. Once you provide values and make choices, the Identity Provider generates a metadata XML file that includes values relevant to messages from the Identity Provider to the platform (as your Service Provider).</p>
+<p>In the same way, you create a domain in Policy Manager for the Identity Provider. Here, you provide values relevant to the Identity Provider and values you specify with the Identity Provider, such as the attributes you will use to identify your users with the Identity Provider. For example, you might use firstname, lastname, and email address, or you might use username and password. Once you've set up this information, the platform generates a metadata XML file that includes values relevant to messages from the Identity Provider to the Service Provider.</p>
+<p>This exchange of information via metadata sets the groundwork for the establishment of mutual trust and secure exchange of information between the two parties. Validation, encryption, and decryption go on in the background and are transparent to the user, as shown in the diagram below.</p>
+<p>In some cases, such as with SSO Circle, the IdP publishes a generic metadata file. In other cases, such as PingFederate, the IdP metadata file is customized for each account. The Service Provider metadata file is always custom; when configuring your account with the IdP you must provide the metadata or configure the values manually.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="01_05"></a><h3>SAML web browser SSO: process flow diagram</h3>
+<p>The sequence diagram below shows the basic exchange of information between the consumer (via the User-Agent), the Service Provider, and the Identity Provider when the SAML Web Browser SSO profile is used for single sign-on.</p>
+<p><strong>Note</strong>: The diagram below is general to SAML. For specific options supported, refer to Supported SAML Bindings for Single Sign-On on page 10.</p>
+<p>{{uptohere image <img src="images/SAML_Diagram_06b.jpg" alt="SAML diagram" /> 1}}</p>
+<p></p>
+<p>In the above:</p>
+<ol>
+  <li><strong>Redirect to Identity Provider for SSO Service</strong>: Service Provider sends
+{<strong>AuthnRequest</strong>} request (authentication request) to Identity Provider. Three bindings offered by the SAML specification:
+<ul>
+      <li>HTTP POST. Sends the message content as a POST parameter. For more information, see HTTP POST on page 57.</li>
+      <li>HTTP Redirect. Redirects the user to the Identity Provider for login. Sends the message content in the URL. For more information, see HTTP Redirect on page 57.</li>
+      <li>HTTP Artifact (not currently supported by the Akana solution). Instead of sending the message content, sends a SAML Artifact to the content so the Identity Provider can retrieve it from an Artifact Resolution Service. For more information, see HTTP Artifact on page 57.</li>
+      </ul>
+    </li>
+  <li><strong>Redirect to Service Provider with SAML Assertion</strong>: Identity Provider sends {<strong>Response</strong>} message to Service Provider. Two bindings offered by the SAML specification:
+<ul>
+      <li>HTTP POST</li>
+      <li>HTTP Artifact</li>
+    </ul>
+    </li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="01_06"></a><h3>SAML specifications</h3>
+<p>Below are links to information relating to the SAML 2.0 specifications:</p>
+<ul>
+  <li>SAML specification: <a href="http://saml.xml.org/saml-specifications" title="http://saml.xml.org/saml-specifications" target="_blank">http://saml.xml.org/saml-specifications</a></li>
+  <li>SAML assertions: <a href="http://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf" title="http://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf" target="_blank">http://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf</a></li>
+  <li>SAML bindings, including HTTP Redirect, HTTP Artifact, and HTTP POST: <a href="http://docs.oasis-open.org/security/saml/v2.0/saml-bindings-2.0-os.pdf" title="http://docs.oasis-open.org/security/saml/v2.0/saml-bindings-2.0-os.pdf" target="_blank">http://docs.oasis-open.org/security/saml/v2.0/saml-bindings-2.0-os.pdf</a></li>
+  <li>SAML Glossary: <a href="http://docs.oasis-open.org/security/saml/v2.0/saml-glossary-2.0-os.pdf" title="http://docs.oasis-open.org/security/saml/v2.0/saml-glossary-2.0-os.pdf" target="_blank">http://docs.oasis-open.org/security/saml/v2.0/saml-glossary-2.0-os.pdf</a></li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<div class = "divider1"></div>
+
+
+
+<h3 id="related_topics">Related Topics</h3>
+<table width="700" border="0" cellspacing="0" cellpadding="2" class="doctable">
+  <tr>
+  <td width="300"><ul>
+<!--  <li><a href="01_overview_saml.htm">Overview of SAML</a></li>-->
+  <li><a href="02_platform_saml_support.htm">SAML Web Browser SSO Support</a></li>
+  <li><a href="03_saml_setup.htm">Setting Up the SAML Web Browser SSO Feature</a></li>
+  <li><a href="04_req_resp_metadata.htm">Sample Requests, Responses, and Metadata</a></li>
+  </ul>
+  </td>
+  <td width="400"><ul>
+  <li><a href="05_idp_examples.htm">Identity Provider Configuration Examples</a></li>
+  <li><a href="06_saml_updating.htm">Updating an Existing SAML Installation</a></li>
+  <li><a href="07_saml_troubleshooting.htm">Troubleshooting Your SAML Setup</a></li>
+  <li><a href="08_glossary.htm">Glossary of Terms for SAML</a></li>
+  </ul>
+</td>
+  </tr>
+</table>

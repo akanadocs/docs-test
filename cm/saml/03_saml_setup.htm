@@ -1,0 +1,345 @@
+---
+layout: page
+title: Setting up SAML | Using SAML in the API Platform | Akana API Platform Help
+description: Learn how to use the Lifecycle Coordinator feature to manage the promotion feature
+product: cm
+category: learn
+sub-nav-class: Using SAML
+weight: 08
+type: page
+nav-title: Setting up the feature
+---
+<h2 id="top">Setting Up the SAML Web Browser SSO Feature</h2>
+<p>This section provides information about setting up the SAML Web Browser SSO feature, including planning, installation, setup steps in Policy Manager and Community Manager, and testing.</p>
+<p><strong>Note</strong>: Once you have everything set up, any change made in the SOA Platform that affects the URLs used for sending and receiving messages related to SAML will require update in the Service Provider account configuration with the Identity Provider. For information on updating, see Modifying an Existing SAML Installation on page 50.</p>
+
+
+<div class = "divider1"></div>
+
+
+<h3 style="color: gray;">Table of Contents</h3>
+<ol class="table_of_contents">
+  <li><a href="#03_00">Requirements for the SAML domain to work in Community Manager</a></li>
+  <li><a href="#03_01">Step 1: Install the plug-ins to support SAML web browser SSO</a></li>
+  <li><a href="#03_02">Step 2: Gather information</a></li>
+  <li><a href="#03_03">Step 3: Determine setup sequence</a></li>
+  <li><a href="#03_04">Step 4: Configure the domain in Policy Manager</a></li>
+  <li><a href="#03_05">Step 5: Configure the service provider account with the identity provider</a></li>
+  <li><a href="#03_06">Step 6: Community Manager configuration</a></li>
+  <li><a href="#03_07">Step 7: Test</a></li>
+</ol>
+<div class = "divider1"></div>
+
+
+
+
+
+
+
+
+<a name="03_00"></a><h3>Requirements for the SAML domain to work in Community Manager</h3>
+<p>At a high level, to set up a domain that uses SAML Web Browser SSO to provide single sign-on services in Community Manager, you must complete the steps below.</p>
+<p class="apidoc_note"><strong>Note</strong>: This document assumes that you've already created an account with your selected Identity Provider.</p>
+<h5>To set up the SAML Web Browser SSO feature: high-level procedure</h5>
+<ol>
+  <li>Install the plug-ins in relating to the SAML Web Browser SSO feature in the correct containers. See Step 1: Install the Plug-Ins to Support SAML Web Browser SSO on page 13.</li>
+  <li>Gather the information you'll need to provide in the configuration steps. See Step 2: Gather Information on page 13.</li>
+  <li>Determine setup sequence. Whether it's best to do the Policy Manager setup first, or the Identity Provider setup first, depends on which Identity Provider you are using. See Step 3: Determine Setup Sequence on page 14.</li>
+  <li>In Policy Manager, set up the SAML domain, with the values relating to your SAML installation (gathered in Step 2). See Step 4: Configure the Domain in Policy Manager on page 14.</li>
+  <li>In your Identity Provider account, set up the Service Provider connection, using the values you gathered in Step 2. The specific steps will vary according to the Identity Provider you're using. Examples for specific IdPs are given later in this book:
+    <ul>
+      <li>Identity Provider Configuration Example: SSO Circle on page 35</li>
+      <li>Identity Provider Configuration Example: PingFederate on page 42</li>
+    </ul>
+  <p><strong>Note</strong>: Depending on your specific setup and the Identity Provider you are using, it might be more efficient to do the setup in the Identity Provider (Step 4) first. In either case, the important thing is to make sure that the applicable values are set up correctly in both places.</p></li>
+  <li>In Community Manager, complete the setup by following the applicable procedure, depending on how you will be using the SAML domain:
+    <ul>
+      <li>As a login domain: see To enable a SAML login domain in Community Manager on page 18.</li>
+      <li>As an OAuth provider domain: see To configure a SAML OAuth Provider domain in Community Manager on page 18.</li>
+      </ul>
+  </li>
+  <li>In Community Manager, test to make sure your domain that uses the SAML Web Browser SSO feature works correctly:
+    <ul>
+      <li>As a login domain: see Testing the SAML Domain as a Login Domain on page 19.</li>
+      <li>As an OAuth provider domain: see Testing the SAML Domain as an OAuth Provider Domain on page 19.</li>
+      </ul>
+  </li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="03_01"></a><h3>Step 1: Install the plug-ins to support SAML web browser SSO</h3>
+<p>To get support for the SAML Web Browser SSO feature, you'll need to install the following optional plug-ins in the Akana Administration Console to one or more containers in your implementation:</p>
+<ol>
+  <li><span class="apidoc_red">SOA Software</span> SAML 2.0 Web Browser SSO Service Provider</li>
+  <li><span class="apidoc_red">SOA Software</span> SAML 2.0 Web Browser SSO Service Provider UI</li>
+</ol>
+<p>Which plug-ins you would need to install depends on the container, as follows:</p>
+<ul>
+  <li>In the Policy Manager Console container: #2 above, SSO Service Provider UI.</li>
+  <li>In every other container (Community Manager or OAuth Provider): #1 above, SSO Service Provider.</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="03_02"></a><h3>Step 2: Gather information</h3>
+<p>When registering with the SAML Identity Provider, you might encounter different organization or terminology, but you can expect to be asked for the following pieces of information. Before setup, gather the information below and have it ready when completing the configuration steps in Policy Manager and your Identity Provider:</p>
+<ul>
+  <li>The request SAML binding you will be using (HTTP POST or HTTP Redirect).</li>
+  <li>The response SAML binding you will be using (HTTP POST or HTTP Artifact).</li>
+  <li>Security key information for your request messages.</li>
+  <li>If you are using HTTP Artifact binding for the response, security key information for encryption of the artifact.</li>
+  <li>Your SAML Service Provider Entity ID (see Entity ID on page 57). This value is determined by you, but must be set up with the Identity Provider and must be unique for that Identity Provider.
+  <p><strong>Note</strong>: The Service Provider's entity ID along with the certificate and private key are the two things that bind both sides together so that information can be exchanged securely.</p></li>
+  <li>Optional attributes, such as firstname, lastname, and email address, to be sent in the SAML Assertion. For more information, see Attributes on page 56.</li>
+  <li>The base URL for your implementation: 
+    {protocol_scheme}://{host}:{port}. For more information, see Base URL on page 56.</li>
+  <li>Metadata information for the Service Provider (the platform). This is created as a result of Identity System setup in Policy Manager.</li>
+  <li>Security keys and certificates.</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="03_03"></a><h3>Step 3: Determine setup sequence</h3>
+<p>For the SAML Browser Web SSO feature to work, you must set up certain values on the platform side, in Policy Manager, and the same values on the Identity Provider (IdP) side, in your Service Provider (SP) account setup. These values enable the exchange of information between the SP and the IdP.</p>
+<p>Whether it's better to do Policy Manager setup first, or do the setup at the IdP first, is determined by which IdP your installation is using. Each Identity Provider has a different user interface. In addition, there are different versions. This document includes generic instructions and also setup examples for two Identity Providers:</p>
+<ul>
+  <li>Identity Provider Configuration Example: SSO Circle on page 35
+  <p>With SSO Circle, it's easiest to do the Policy Manager setup first. SSO Circle publishes a generic metadata file, so you can easily provide a link to the file, or upload it to Policy Manager, and Policy Manager prefills many of the values needed for the setup wizard. Policy Manager then generates the Service Provider metadata file, and you can then paste the contents of this file into SSO Circle.</p></li>
+  <li>Identity Provider Configuration Example: PingFederate on page 42
+  <p>With PingFederate, you could do it either way. In the example, the Policy Manager setup is done first here also. However, because the metadata file is not yet available, manual configuration is required. You could choose to do the PingFederate setup first.</p></li>
+</ul>
+<p>The sequence is not as important as the fact that the values must match on both sides.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="03_04"></a><h3>Step 4: Configure the domain in Policy Manager</h3>
+<p>This section provides general information about the setup steps you'll need to complete in Policy Manager, including the basic procedure and an overview of the wizard.</p>
+<h5>To configure the SAML Web Browser SSO Domain in Policy Manager</h5>
+<ol>
+  <li>Log in to the Policy Manager Console.</li>
+  <li>Click the <strong>Configure</strong> tab, click <strong>Security</strong>, and then click <strong>Identity Systems</strong>.</li>
+  <li>Click <strong>Add Identity System</strong> to access the Add Identity System wizard.</li>
+  <li>Provide the values on each page of the wizard. The wizard takes you through the following steps:
+    <ol>
+      <li>Intro page: choose identity system type (choose SAML Web Browser SSO), provide name and description.</li>
+      <li>Select Identity Provider configuration method.</li>
+      <li>Configure Identity Provider.</li>
+      <li>Configure Service Provider.</li>
+      <li>Define PKI keys for Service Provider.</li>
+    </ol>
+  <p>For details of the wizard and information about significant fields and values, see below.</p></li>
+  <li>Click <strong>Finish</strong>. The Service Provider metadata file is generated and is available at the following URL: {http(s)}://{hostname}:{port}/saml/
+    {sp_domain_name}/metadata.</li>
+</ol>
+<h5>SSO Domain Configuration Wizard</h5>
+<p>The SSO Domain Configuration wizard takes you through setting up the values needed to create a SAML Web Browser SSO domain in Policy Manager. The information below is general to all Identity Providers.</p>
+<p>Wizard page</p>
+<p>Details
+ </p>
+ <p><strong>Add Identity System Wizard</strong></p>
+ <p>{{uptohere image xxx &lt;img src=&quot;images/xxx.jpg&quot; alt=&quot;xxx&quot; /&gt; 2}}</p>
+<p>Provide initial values:</p>
+<ul>
+  <li>From the drop-down list, choose SAML Web Browser SSO</li>
+  <li>Provide a domain name and description.</li>
+</ul>
+<p><strong>Note</strong>: the domain name is part of the path for the Service Provider metadata file Policy Manager generates when the wizard is finished. Also, the first letter of the domain name is used by Community Manager as the default for the login button. So, for example, if your IdP is PingFederate and your domain name is PingFederate domain, users will see a button labeled <strong>P</strong> at login.</p>
+<p><strong>Select SAML Identity Provider Configuration Method</strong></p>
+<p>{{uptohere image xxx <img src="images/xxx.jpg" alt="xxx" />  3}}</p>
+<ul>
+  <li>Choose a configuration method out of the three options:</li>
+  <li>Configure by using the metadata document / URL: Provide the IdP metadata URL so the wizard can import it.</li>
+  <li>Configure by using the metadata document / Upload: Upload the IdP metadata.xml file.</li>
+</ul>
+<p>Choose to configure the IdP manually. {{uptohere formatting to do in this section}}</p>
+<p><strong>SAML Identity Provider Configuration</strong></p>
+<p>{{uptohere image xxx <img src="images/xxx.jpg" alt="xxx" /> 4}}</p>
+<p>Specify values if configuring manually, or verify if uploading metadata.xml file:</p>
+<ul>
+  <li>SAML Entity ID for the Identity Provider.</li>
+  <li><strong>Authentication URLs</strong>: Choose the binding you will be using, either HTTP POST or HTTP Redirect, and put in the applicable URL from your Identity Provider account.</li>
+  <li>If using HTTP Artifact for the SAML response messages, details of the artifact resolution service.</li>
+</ul>
+<p><strong>Service Provider Configuration</strong></p>
+<p>{{uptohere image <img src="images/pm_wizard_qa_04_spconfig.jpg" alt="xxx" /> 5}} </p>
+<p>Enter Service Provider configuration values:</p>
+<ul>
+  <li><strong>Entity ID</strong>: A unique ID that you define yourself, to identify your Service Provider in the SAML authentication request messages. When setting up your account with the Identity Provider you must specify the Entity ID, which must be unique within the IdP so that the IdP can identify your Service Provider; then, you set up the same value in Policy Manager.</li>
+  <li><strong>Base URL</strong>: used to construct the default Assertion Consumer Service (ACS) endpoint, the endpoint where the Service Provider will receive SAML assertions from the Identity Provider. Must be the container address of the container where the SAML Web Browser SSO feature is initialized ({protocol_scheme}://{host}:{port}). For more information, see Base URL on page 56.</li>
+  <li><strong>Authentication Request</strong>: Generally, you would choose to sign authentication requests.</li>
+  <li><strong>Authentication Response</strong>: choose from the two supported bindings.</li>
+  <li><strong>Metadata Configuration</strong>: Choose whether or not to sign the metadata.</li>
+  <li><strong>Supported Name-ID formats</strong>: all are checked by default.</li>
+</ul>
+<p><strong>Manage PKI Keys</strong></p>
+<p>{{uptohere image xxx <img src="images/xxx.jpg" alt="xxx" /> 6}}</p>
+<p>Set up information about the keys you will use to sign SAML authentication request messages. Outgoing messages are signed with the private key; the public key is published in the metadata file generated at the end of the wizard. The Identity Provider needs this key to verify the signature on the SAML authentication request messages.</p>
+<p>Choose to generate or import keys. If you choose <strong>Generate</strong>, provide values in the <strong>Certificate Details</strong> section. If you choose <strong>Import</strong>, you'll need to choose a key management option and provide keystore details.</p>
+<p><strong>Identity Mapping</strong></p>
+<p>{{uptohere image xxx <img src="images/xxx.jpg" alt="xxx" /> 7}}</p>
+<p>Specify attribute information:</p>
+<ul>
+  <li><strong>User Identifier location</strong>: Choose whether to send the NameID as the subject of the SAML assertion, or to use an attribute: if needed, define the subject attribute name.</li>
+  <li><strong>Subject Attribute Name</strong>: In general, the subject would be part of the NameID. However, in some cases, such as Google, the IdP does not send the subject directly. Instead, they send a unique NameID, a lengthy string. In those cases, the IdP can be configured to send the actual subject, the username, in the attribute.</li>
+  <li><strong>Attribute Mapping</strong>: make sure the attribute names set up here exactly match the values you have in your account with the Identity Provider. These are the attributes the IdP will send in the response.</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="03_05"></a><h3>Step 5: Configure the service provider account with the identity provider</h3>
+<p>Identity Provider user interfaces vary, but all essentially gather the same information that is needed for your SAML Web Browser SSO feature to work.</p>
+<p>Provide the values you collected in Step 2: Gather Information on page 13.</p>
+<p>Be ready with the metadata file generated by Policy Manager in Step 4: Configure the Domain in Policy Manager on page 14. Make sure you get the metadata.xml file for the container that has Community Manager installed (if the domain will be used for Community Manager login) and/or has the OAuth Provider feature installed (if the domain will be used for Community Manager OAuth domain, for resource owner authentication for at  least one OAuth Provider).</p>
+<p>If needed, you could refer to the two examples provided later in this publication:</p>
+<ul>
+  <li>Identity Provider Configuration Example: SSO Circle on page 35</li>
+  <li>Identity Provider Configuration Example: PingFederate on page 42</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="03_06"></a><h3>Step 6: Community Manager configuration</h3>
+<p>This section includes procedures in Community Manager to complete the setup. It includes:</p>
+<ul>
+  <li>Login Domain: see To enable a SAML login domain in Community Manager on page 18.</li>
+  <li>Setting up the OAuth Provider Domain: see To configure a SAML OAuth Provider domain in Community Manager on page 18.</li>
+</ul>
+<h5>To enable a SAML login domain in Community Manager</h5>
+<ol>
+  <li>In Community Manager, log in as the Site Admin.</li>
+  <li>Go to <strong>Administration</strong> &gt; <strong>Config</strong> &gt; <strong>Logins</strong>.</li>
+  <li>Find the domain on the list, and click <strong>Enable</strong>.</li>
+  </ol>
+<h5>To configure a SAML OAuth Provider domain in Community Manager</h5>
+<ol>
+  <li>In Community Manager, log in as the Site Admin.</li>
+  <li>Go to <strong>Administration</strong> &gt; <strong>Config</strong> &gt; <strong>Domains</strong>.</li>
+  <li>Click <strong>Add Domain</strong> and choose <strong>OAuth Provider</strong>. The Add OAuth Provider wizard opens.</li>
+  <li>On the <strong>Details</strong> page, provide name and description, and click <strong>Next</strong>.</li>
+  <li>On the <strong>Grant Types</strong> page, select grant types and choose the SAML domain, as shown below, and then click <strong>Next</strong>.
+  <p>{{uptohere image xxx <img src="images/xxx.jpg" alt="xxx" /> 8}}</p></li>
+  <li>At the <strong>OpenID Connect page</strong>, enable OpenID Connect, specify values as needed, and then click <strong>Next</strong>.</li>
+  <li>On the <strong>Branding</strong> page, provide the Authorization Server URL, as shown below, and click <strong>Save</strong>. The domain is created.
+    <p>{{uptohere image <img src="images/cm_oauthdomainsetup_06.jpg" alt="xxx" /> 9}}</p>
+  </li>
+</ol>
+<p class="apidoc_note"><strong>Note</strong>: When you create a new OAuth Provider Domain, you must also add the authorization server URL to your account with your SAML Identity Provider if it isn't already there. See Adding a New OAuth Provider Domain: Manual IdP Configuration on page 50.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="03_07"></a><h3>Step 7: Test</h3>
+<p>Once you've completed the setup steps, it's important to test to make sure everything is working properly. Depending on how you're using the SAML Web Browser SSO functionality, complete either or both of the following:</p>
+<ul>
+  <li>Testing the SAML Domain as a Login Domain on page 19</li>
+  <li>Testing the SAML Domain as an OAuth Provider Domain on page 19</li>
+</ul>
+<h4>Testing the SAML Domain as a Login Domain</h4>
+<p>To test the login domain, follow the steps below.</p>
+<h5>To test the SAML login domain</h5>
+<ol>
+  <li>Log out</li>
+  <li>Log in via your new login domain and verify that it works.</li>
+</ol>
+<p>If you encounter any issues, check to make sure that the values in your IdP account and your SAML Web Browser SSO domain match.</p>
+<p>You can also refer to the Troubleshooting section: see Troubleshooting on page 52.</p>
+<h4>Testing the SAML Domain as an OAuth Provider Domain</h4>
+<p>This section provides the steps you'll need to complete in Community Manager, after setting up a SAML domain as the OAuth Provider domain, to verify that the domain is correctly set up as the OAuth Provider domain and is working.</p>
+<p>You'll need to complete a few steps to create a test scenario for the SAML domain. A high-level overview of the steps is given below. In some cases, a separate procedure is provided, in other cases it is not. If you need more information, refer to the Community Manager online help.</p>
+<h5>To test the SAML OAuth Provider domain: high-level procedure</h5>
+<ol>
+  <li>Create an API that uses the SAML domain as the OAuth Provider. See: Create API and specify OAuth Details on page 20</li>
+  <li>Create an app. See: Create App on page 21.</li>
+  <li>Create a contract for the app with the API. See: Request App/API Contract on page 21 and Approve App/API Contract on page 21.</li>
+  <li>Test the app in Dev Console to verify that the SSO Login screen is presented and the token is passed. See: In Community Manager, Test in Dev Console on page 21.</li>
+</ol>
+<p>If you encounter any issues, check to make sure that the values in your IdP account and your SAML Web Browser SSO domain match.</p>
+<p>You can also refer to the Troubleshooting section: see Troubleshooting on page 52.</p>
+<h5>Create API and specify OAuth Details</h5>
+<ol>
+  <li>In Community Manager, select <strong>Add a New API</strong>. The Add API Wizard displays at the first page.</li>
+  <li>Create the API, making sure you attach the following policies:
+    <ul>
+      <li>OAuth Security Policy</li>
+      <li>Detailed Auditing policy</li>
+    </ul>
+  <p>For more information, refer to the Community Manager online help.</p></li>
+  <li>Save the API and then, at the API Details page, click <strong>OAuth Details</strong> to access the API OAuth wizard, as shown below.
+    <p>{{uptohere image xxx <img src="images/xxx.jpg" alt="xxx" /> 10}}</p>
+  </li>
+  <li>Select the SAML domain as the OAuth provider, and click <strong>Next</strong>.</li>
+  <li>In the <strong>Resource Mapping</strong> page, choose either <strong>API-Wide Mapping</strong> or <strong>Operation-Specific Mapping</strong>, specify scopes, and then click <strong>Save</strong>.
+    <p>{{uptohere image xxx <img src="images/xxx.jpg" alt="xxx" /> 11}}</p>
+  </li>
+</ol>
+<p></p>
+<h5>Create App</h5>
+<ol>
+  <li>In Community Manager, select <strong>Add a New App</strong>.</li>
+  <li>Provide app details and then click <strong>Save</strong>.</li>
+</ol>
+<h5>Request App/API Contract</h5>
+<p>{{<span class="apidoc_red">uptohere update for Dev Console check throughout</span>}}</p>
+<ol>
+  <li>In Community Manager, search for the API you created, and click <strong>Access</strong>.</li>
+  <li>Choose the app you created, and complete the API Access wizard.</li>
+</ol>
+<h5>Approve App/API Contract</h5>
+<p>Unless you set up the API for auto-approval, you'll need to approve the API access request.</p>
+<ol>
+  <li>Go to your notifications and find the API access request you just made.</li>
+  <li>Approve the request.</li>
+</ol>
+<h5>In Community Manager, Test in Test Client</h5>
+<ol>
+  <li>Go to the <strong>App Details</strong> page and click Test Client.</li>
+  <li>Choose the API and click the <strong>Security</strong> button to view the security settings, as shown below.
+    <p>{{uptohere image xxx <img src="images/xxx.jpg" alt="xxx" /> 12 }}</p>
+  </li>
+  <li>Choose the OAuth version and then click <strong>Get Token</strong>. The SSO login screen opens. An example is shown below.
+    <p>{{uptohere image xxx <img src="images/xxx.jpg" alt="xxx" /> 13}}</p>
+  </li>
+  <li>Provide username and password, and click Sign On. The Authorization window opens, as shown below.
+    <p>{{uptohere image xxx <img src="images/xxx.jpg" alt="xxx" /> 14 }}</p>
+  </li>
+  <li>Click <strong>Authorize</strong>. The token is retrieved, as shown below.
+    <p>{{uptohere image <img src="images/cm_devconsole_authorize.jpg" alt="xxx" /> 15}}</p>
+  </li>
+  <li>In Test Client, click <strong>Run it</strong>. The API request is authorized, and runs successfully, as shown in the example below.
+    <p>{{uptohere image xxx <img src="images/xxx.jpg" alt="xxx" /> 16}}</p>
+  </li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<div class = "divider1"></div>
+
+
+
+<h3 id="related_topics">Related Topics</h3>
+<table width="700" border="0" cellspacing="0" cellpadding="2" class="doctable">
+  <tr>
+  <td width="300"><ul>
+  <li><a href="01_overview_saml.htm">Overview of SAML</a></li>
+  <li><a href="02_platform_saml_support.htm">SAML Web Browser SSO Support</a></li>
+<!--  <li><a href="03_saml_setup.htm">Setting Up the SAML Web Browser SSO Feature</a></li>-->
+  <li><a href="04_req_resp_metadata.htm">Sample Requests, Responses, and Metadata</a></li>
+  </ul>
+  </td>
+  <td width="400"><ul>
+  <li><a href="05_idp_examples.htm">Identity Provider Configuration Examples</a></li>
+  <li><a href="06_saml_updating.htm">Updating an Existing SAML Installation</a></li>
+  <li><a href="07_saml_troubleshooting.htm">Troubleshooting Your SAML Setup</a></li>
+  <li><a href="08_glossary.htm">Glossary of Terms for SAML</a></li>
+  </ul>
+</td>
+  </tr>
+</table>
