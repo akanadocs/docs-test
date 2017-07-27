@@ -1,0 +1,170 @@
+---
+layout: page
+title: Configure AMQP binding for REST, Messaging, and SOAP services.
+description: Learn how to configure an AMQP binding for REST, Messaging, and SOAP services and use it with a virtual service.
+product: ag
+category: learn
+sub-nav-class: Bindings
+weight:  05
+type: page
+nav-title: Configure AMQP binding for REST, Messaging, and SOAP services
+---
+<h2 id="top">Configure AMQP binding for REST, Messaging, and SOAP services</h2>
+<p>Learn how to create an AMQP binding for REST, Messaging, and SOAP services and use with a virtual service.</p>
+<p><a href="../bindings/using_messaging_binding.html" target="_blank" class="button secondary">Using the Messaging Binding</a></p>
+<h5 class="stamp">Supported Platforms: 7.2</h5>
+<div class = "divider1"></div>
+
+<h3 style="color: gray;">Table of Contents</h3>
+<ol class="table_of_contents">
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#step_1_add_messaging_binding_amqp_or_jms">Step 1 - Add Messaging Binding (AMQP or JMS)</a></li>
+<li><a href="#step_2_add_amqp_listener">Step 2 - Add AMQP Listener</a></li>
+<li><a href="#step_3_add_jms_listener">Step 3 - Add JMS Listener</a></li>
+<li><a href="#step_4_assign_messaging_binding_to_service">Step 4 - Assign Messaging Binding to Service</a></li>
+<li><a href="#step_5_send_requests_to_api_using_activemq">Step 5 - Send Requests to API Using ActiveMQ</a></li>
+<li><a href="#step_6_create_virtual_service">Step 6 - Create Virtual Service to Provide RESTful Interface for Placing Messages</a></li>
+<li><a href="#step_7_logging">Step 7 - Logging</a></li>
+</ol>
+<div class = "divider1"></div>
+
+
+
+<a name="introduction"></a><h3>Introduction</h3>
+<p>This topic describes how to perform the following tasks in Akana Policy Manager.</p>
+<ul>
+<li>Create AMQP binding for services of any type (REST, Messaging, SOAP).</li>
+<li>Create a virtual service that provides a messaging (AMQP or JMS) interface to one or more existing services of any type (REST, Messaging, SOAP).</li>
+<li>Create a virtual service that provides a RESTful interface for placing messages onto, and pulling messages from a JMS or AMQP queue.</li>
+</ul>
+<p><a href="#top">back to top</a></p>
+
+
+
+
+<a name="step_1_add_messaging_binding_amqp_or_jms"></a><h3>Step 1 - Add Messaging Binding (AMQP or JMS)</h3>
+<ol>
+<li>Launch the <em>Policy Manager Management Console</em>.</li>
+<li>Select <strong>Create Physical Service</strong>, create a physical service with http://www.ebi.ac.uk/ebisearch/ws/rest?_wadl</li>
+<li>Navigate to <strong>Configure</strong> &gt; <strong>Registry</strong> &gt; <strong>Bindings</strong> and select <strong>Add Binding</strong>.</li>
+<li>Select the service added in Step 2.
+<p><img src="images/message_binding_usecase1.jpg" alt="Messaging Binding" title="Add Messaging Binding" />**</p>
+</li>
+<li>On the next screen, select the **Messaging Binding type.
+<img src="images/message_binding_usecase1.jpg" alt="Messaging Binding" title="Add Messaging Binding" />
+</li>
+<li>On the next screen, select <strong>AMQP</strong> as the Transport protocol.</li>
+<li>Provide <strong>Destination</strong> and <strong>Reply To</strong> fields with desired I/O/Fault Serializations.</li>
+<li>Select <strong>Part Type</strong> in Parts section. This section is used to assign Path parameters, Query parameters, Body parameters (for example, http://agubba-e6420:9901/VS/{domainid}/entry/{entryids}?fields=<br />
+{fields}&amp;amp;fieldurl={fieldurl}&amp;amp;viewurl={viewurl}&amp;amp;format{format}) is the URL to hit. In this case, the Binding screen configuration should be something like:
+<p><img src="images/message_binding_usecase3.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+<p>In the above example, the request will go to the following URL:</p>
+<p>http://agubba-e6420:9901/VS/uniprot/entry/WAP_RAT,WAP_MOUSE?fields=descAltName,organism_scientific_name&amp;fieldurl=true&amp;viewurl=true&amp;format=json</p>
+</li>
+<li>Provide an XPath or SQL query for Use selector option (for example, Operation='get').</li>
+<li>After adding the required fields, finish the process.</li>
+<li>Similarly, select JMS in Transport field, if it is desired to have a Messaging Binding over JMS protocol.</li>
+</ol>
+<p><a href="#top">back to top</a></p>
+
+
+
+
+<a name="step_2_add_amqp_listener"></a><h3>Step 2 - Add AMQP Listener</h3>
+<ol>
+<li>Select the <em>Containers</em> folder where you will be adding the AMQP listener, and select <strong>Add Listener</strong>.</li>
+<li>Select the <strong>AMQP</strong> Listener type.</li>
+<li>Add an AMQP listener with details as shown below.
+<img src="images/message_binding_usecase4.jpg" alt="Messaging Binding" title="Add Messaging Binding" />
+</li>
+</ol>
+<p><a href="#top">back to top</a></p>
+
+
+
+
+<a name="step_3_add_jms_listener"></a><h3>Step 3 - Add JMS Listener</h3>
+<ol>
+<li>Select the <em>Containers</em> folder and Network Director (<strong>ND1</strong>) container where you will be adding the JMS listener, and select <strong>Add Listener</strong>.</li>
+<li>Select the JMS listener type.</li>
+<li>Add the JMS listener with details as shown below.
+<img src="images/message_binding_usecase5.jpg" alt="Messaging Binding" title="Add Messaging Binding" />
+</li>
+</ol>
+<p><a href="#top">back to top</a></p>
+
+
+
+
+<a name="step_4_assign_messaging_binding_to_service"></a><h3>Step 4 - Assign Messaging Binding to Service</h3>
+<ol>
+<li>Select the <em>Services</em> folder for the Physical Service. In the <em>Service Overview</em> section select <strong>Manage</strong> in the <em>Interfaces and Bindings</em> section.
+<p><img src="images/message_binding_usecase6.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+</li>
+<li>On the <em>Select Interfaces</em> screen, select the <strong>Messaging Binding</strong> and assign it to the service (copy to the <em>Interfaces Assigned</em> panel), and complete the wizard.
+<p><img src="images/message_binding_usecase7.jpg" alt="Messaging Binding" title="Add Messaging Binding" />
+<img src="images/message_binding_usecase8.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+</li>
+<li>Select <strong>Virtualize Service</strong> and virtualize the physical service on the AMQP/JMS listener on Network Director (<strong>ND1</strong>), and assign a service name (for example, <strong>VS1</strong>).
+<p><img src="images/message_binding_usecase9.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+</li>
+<li>The virtual service should be hosted on the <strong>ND1</strong> where we have previously added the AMQP/JMS listeners.
+<p><img src="images/message_binding_usecase10.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+</li>
+</ol>
+<p><a href="#top">back to top</a></p>
+
+
+
+
+<a name="step_5_send_requests_to_api_using_activemq"></a><h3>Step 5 - Send Requests to API Using ActiveMQ</h3>
+<ol>
+<li>Network Directory (<strong>ND1</strong>) must be connected to an AMQP broker such as apache-activemq-5.10.0.</li>
+<li>Run ActiveMQ.
+<p><img src="images/message_binding_usecase11.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+</li>
+<li>Access activeMQ client at 'http://agubba-e6420:8161/admin/'.</li>
+<li>Navigate to the <em>Queues</em> tab or <em>Topics</em> tab depending on the destination type used during Messaging Binding creation.</li>
+<li>Select the Queue; in this scenario, dynamicQueues/dest5.
+<p><img src="images/message_binding_usecase12.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+</li>
+<li>Click on <strong>SendTo</strong> against the destination name.</li>
+<li>Provide the appropriate Correlation ID, ReplyTo and Message Body and send the request.
+<p><img src="images/message_binding_usecase13.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+</li>
+</ol>
+<p><a href="#top">back to top</a></p>
+
+
+
+
+<a name="step_6_create_virtual_service"></a><h3>Step 6 - Create Virtual Service to Provide RESTful Interface for Placing Messages</h3>
+<ol>
+<li>Virtualize the above service on Network Director (<strong>ND2</strong>) with HTTP binding, and assign a name (for example, <strong>VS2</strong>).</li>
+<li>Send requests to <strong>VS2</strong>.</li>
+<li>The requests will hit the <strong>VS1</strong> &gt; physical service.
+<p><img src="images/message_binding_usecase14.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+</li>
+</ol>
+<p>And the response is seen.</p>
+<p><a href="#top">back to top</a></p>
+
+
+
+
+<a name="step_7_logging"></a><h3>Step 7 - Logging</h3>
+<ol>
+<li>If the Detailed Auditing policy is attached to <strong>VS1</strong> and <strong>VS2</strong>, usage logs will be generated.</li>
+<li><strong>VS2</strong> logs:
+<p><img src="images/message_binding_usecase15.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+<p><img src="images/message_binding_usecase16.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+<p><img src="images/message_binding_usecase17.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+<p><img src="images/message_binding_usecase18.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+</li>
+<li><strong>VS1</strong> logs:
+<p><img src="images/message_binding_usecase19.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+<p><img src="images/message_binding_usecase20.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+<p><img src="images/message_binding_usecase21.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+</li>
+</ol>
+<p><a href="#top">back to top</a>
