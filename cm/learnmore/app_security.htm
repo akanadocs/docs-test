@@ -130,18 +130,19 @@ nav-title: App Security
 
 
 <a name="authentication_realm"></a><h4>Authentication Realm</h4>
-<p>Every authentication mechanism offered by the platform includes a specific authentication parameter, <strong>realm</strong>, that identifies the fact that the message comes from the realm for your app.</p>
-<p>In the platform, you can specify the value to be used for the realm parameter, but there are restrictions. There are two choices:</p>
+<p>Every authentication mechanism offered by the platform includes a specific authentication parameter, <strong>realm</strong>, that identifies the fact that the message comes from the realm for your app. The realm parameter is optional.</p>
+<p>There are two potential scenarios:</p>
 <ul>
-  <li>The platform automatically defaults to the first part of the incoming request hostname.</li>
-  <li>You can change it, but the value you choose must be a valid part of the incoming request hostname.</li>
+  <li>If the incoming message is not signed, the platform expects the AppID and doesn't look for the realm value.</li>
+  <li>If the incoming message is signed, the platform looks for the realm parameter. If it exists, the platform uses the same realm value when sending an authentication challenge. If the realm value isn't specified, the platform uses this value:
+  <pre>realm = &quot;http://atmosphere&quot;</pre></li>
 </ul>
-<p>Let's say, for example, the hostname for your API requests is <strong>acmepaymentscorp.payments.com</strong>. The platform defaults to <strong>acmepaymentscorp</strong>. You can change it to payments, but you cannot choose <strong>acmepaymentscorporation</strong>. You must choose a valid part of the hostname.</p>
 <p>The value for the realm is configured for the platform in the <a href="basics_glossary.htm#gl_api_gateway">API Gateway</a> by the Administrator.</p>
 <p>When constructing the signature, do not include the realm in the signature base string (see later sections for specific instructions).</p>
 <p>For more information about use of the realm parameter in authentication, refer to the <a href="http://tools.ietf.org/html/rfc2617#section-1.2" target="_blank">Access Authentication Framework</a> section of the HTTP Authentication standard for Basic and Digest Access Authentication.</p>
 <p><a href="#top">Back to top</a></p>
 <hr />
+
 
 
 
