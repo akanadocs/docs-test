@@ -4,7 +4,7 @@ title: Upgrading Akana API Platform 8.2 to 8.4
 description: Provides instructions for upgrading from Akana API Platform 8.2 to Akana API Platform 8.4.
 product: sp
 category: ref
-sub-nav-class: Upgrade - Akana API Platform
+sub-nav-class: Upgrade - Akana API Platform 8.2 and Later
 weight: 5
 type: page
 nav-title: Upgrade 8.2 to 8.4
@@ -95,6 +95,7 @@ nav-title: Upgrade 8.2 to 8.4
 
 <ol class="table_of_contents">
   <li><a href="#how_do_i_contact_technical_support">Contacting Akana Technical Support</a></li>
+  <li><a href="#container_upgrade_sequence">Container upgrade sequence</a></li>
   <li><a href="#ts_01_error_some_model_objects">Troubleshooting: error: "Some of the model objects are not updated"</a></li>
 </ol>
 
@@ -135,7 +136,7 @@ nav-title: Upgrade 8.2 to 8.4
 
 
 <a name="01_03"></a><h4>Step 1-3: Gather ZIP files and create folder</h4>
-<p>Before starting the upgrade, gather all the ZIP files from the <a href="https://library.akana.com/display/MAIN/Downloads" title="Akana support site" target="_blank">Akana support site</a>, and collect any other information you'll need for the entire process.</p>
+<p>Before starting the upgrade, gather all the ZIP files from the <a href="https://library.akana.com/display/MAIN/Downloads" title="Akana support site" target="_blank">Akana support site</a>, and collect any other information needed for the entire process.</p>
 <p>You'll need all the ZIP files listed below. They are listed in the order in which they should be installed.</p>
 <p>All files listed below are available from the Akana Support site, <strong>Downloads</strong> page: https://library.akana.com/display/MAIN/Downloads.</p>
 <p>You'll need to install files for:</p>
@@ -220,7 +221,7 @@ nav-title: Upgrade 8.2 to 8.4
 
 <a name="02_02"></a><h4>Step 2-2: Back up and stop all containers for previous version</h4>
 <p>The next step is to back up and stop the current version, before you upgrade. Follow the steps below.</p>
-<h5>To Back up and stop version 8.2</h5>
+<h5>To back up and stop version 8.2</h5>
 <ol>
   <li>Stop any containers that are currently running. 
 <p>This is required to update the database schema to AP82. Stopping the containers ensures that the database is not locked while the update is in progress. For more information, refer to <a href="http://docs.akana.com/sp/container_management/start_stop_container_instance.htm" title="Starting and Stopping a Container Instance" target="_blank">Starting and Stopping a Container Instance</a>.</p></li>
@@ -280,7 +281,7 @@ AP82/instances/{instance}</li>
 
 
 <a name="02_05"></a><h4>Step 2-5: Clear Configurator cache (if needed)</h4>
-<p>Before performing the upgrade, make sure the configurator cache is clear. At this point, there won't be any cache unless you launched the Configurator at the end of Step 2-3. To be sure, follow the steps below.</p>
+<p>Before performing the upgrade, make sure the configurator cache is clear. At this point, there won't be any cache unless you launched the Configurator at the end of <a href="#02_03">Step 2-3</a>. To be sure, follow the steps below.</p>
 <h5>To clear configurator cache</h5>
 <ol>
   <li>Locate the configurator cache folder: \instances\configurator\cache, as shown below.
@@ -293,7 +294,7 @@ AP82/instances/{instance}</li>
 
 <a name="02_06"></a><h4>Step 2-6: Upgrade container</h4>
 <p>You'll need to perform the upgrade procedure on each container you're upgrading to AP84, using the <strong>Configure Container Instance</strong> wizard.</p>
-<p>First upgrade the Policy Manager container, then Network Director, and then any other containers.</p>
+<p><strong>Note</strong>: These instructions follow a sequence of upgrading the first Policy Manager container, then additional Policy Manager and Community Manager containers, and then Network Director and Agent containers. However, once you've done an initial Policy Manager upgrade to upgrade the database, the sequence of containers really doesn't matter. See <a href="#container_upgrade_sequence">Container upgrade sequence</a> below.</p>
 <p><strong>Note</strong>: Before you upgrade, make sure you've completed all previous steps, including copying the container instances (see <a href="#02_04">Step 2-4: Copy applicable version 8.2 files to version 8.4 folder</a>).</p>
 <p>There are three ways you can upgrade the container:</p>
 <ul>
@@ -383,11 +384,13 @@ wizard.mode=update</pre></li>
 
 
 <a name="02_07"></a><h4>Step 2-7: Upgrade additional containers</h4>
-<p>Repeat the upgrade process for all additional containers:</p>
+<p>Repeat the upgrade process for all additional containers. A suggested sequence is:</p>
 <ol>
   <li>First, any additional containers running Policy Manager and/or the API Platform.</li>
   <li>Then, any Network Director or Agent containers.</li>
 </ol>
+<p><strong>Note</strong>: These instructions follow a sequence of upgrading the first Policy Manager container, then additional Policy Manager and Community Manager containers, and then Network Director and Agent containers. However, once you've done an initial Policy Manager upgrade to upgrade the database, the sequence of containers really doesn't matter. See <a href="#container_upgrade_sequence">Container upgrade sequence</a> below.</p>
+
 <h5>To upgrade additional containers</h5>
 <ol>
   <li>Before upgrading each instance, clear configurator cache. See <a href="#02_05">Step 2-5: Clear Configurator cache (if needed)</a>.</li>
@@ -835,6 +838,19 @@ PUT
 
 
 
+<a name="container_upgrade_sequence"></a><h3>Container upgrade sequence</h3>
+<p>In terms of the sequence of containers, it's best to start by upgrading one of the Policy Manager containers. This accomplishes the database upgrade as well.</p>
+<p>After that point, the sequence of containers really doesn't matter. These upgrade instructions&nbsp;suggest this sequence once the first container has been updated:</p>
+<ol>
+  <li>First, any additional containers running Policy Manager and/or the API Platform.</li>
+  <li>Then, any Network Director or Agent containers.</li>
+</ol>
+<p>However, the sequence is not important after the first container. You could upgrade the Network Director container at any point. There is no dependency; containers that have been upgraded will work with containers that have not yet been upgraded. You can even upgrade additional containers in parallel.</p>
+<p>Just make sure you upgrade an initial Policy Manager container first, with the associated database upgrade, and then follow any logical approach, making sure that each step completes successfully before starting the next one.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
 <a name="ts_01_error_some_model_objects"></a><h3>Troubleshooting: error: &quot;Some of the model objects are not updated&quot;</h3>
 <p>If your Elasticsearch setup is not complete, you might encounter the message below after running the <strong>Upgrade CM Models</strong> task:</p>
 <p><strong>Some of the model objects are not updated. Refer to log files for the specific errors.</strong></p>
@@ -850,6 +866,7 @@ PUT
   <li>Run the <strong>Upgrade CM models</strong> task again.</li>
 </ol>
 <p><a href="#top">Back to top</a></p>
+
 
 
 
