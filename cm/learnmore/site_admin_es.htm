@@ -66,7 +66,8 @@ nav-title: Configuring Elasticsearch
 
 
 <ol class="table_of_contents">
-  <li><a href="#es_ts_pre_upgrade_results_showing">Pre-upgrade search results are showing even though the index folder is populated with the Elasticsearch index: what do I do?</a></li>
+  <li><a href="#ts_es_pre_upgrade_results_showing">Pre-upgrade search results are showing even though the index folder is populated with the Elasticsearch index: what do I do?</a></li>
+  <li><a href="#es_ts_port_config">Elasticsearch client can't connect to the nodes</a></li>
   <li><a href="#related_topics">Related Topics</a></li>
 </ol>
 
@@ -192,7 +193,7 @@ nav-title: Configuring Elasticsearch
 
 
 <a name="es_mode_e_deployment_options_available"></a><h3>What deployment options are available for Elasticsearch in embedded mode?</h3>
-<p>If you choose to run ElasticSearch in embedded mode, you can deploy multiple containers for this feature. This feature can run along with the Akana API Platform in the same container, or it can run in a completely different container by itself. In this scenario, you'll have to configure each container separately. See <a href="#proc_es_embedded">To configure an Elasticsearch embedded node in the Akana Administration Console</a>.</p>
+<p>If you choose to run Elasticsearch in embedded mode, you can deploy multiple containers for this feature. This feature can run along with the Akana API Platform in the same container, or it can run in a completely different container by itself. In this scenario, you'll have to configure each container separately. See <a href="#proc_es_embedded">To configure an Elasticsearch embedded node in the Akana Administration Console</a>.</p>
 <p><strong>Note</strong>: If you're using an external Elasticsearch server with Transport Client mode, you do not need to install embedded Elasticsearch on your containers.</p>
 <p><a href="#top">Back to top</a></p>
 
@@ -278,6 +279,7 @@ nav-title: Configuring Elasticsearch
 <h5><a name="proc_es_embed_node_settings"></a>Elasticsearch embedded node settings</h5>
 <p>If you're using Elasticsearch in embedded mode, the platform automatically configures. You don't need to do anything to configure the embedded node settings.</p>
 <p class="apidoc_note"><strong>Note</strong>: If you are using Embedded Node configuration, the developer portal must be available on the default port or whichever port you configure in the Admin Console.</p>
+
 
 
 <h5><a name="proc_es_database_queries_switch_index"></a>Database queries to switch the search index to Elasticsearch</h5>
@@ -429,6 +431,7 @@ update TENANTS set SEARCH_SOURCE='elastic', LASTMODIFIEDDTS=utc_timestamp();</pr
   <li><strong>TCP</strong>: Default is 9300, default range is TCP is 9300&#8211;9399</li>
 </ul>
 <p>Range implies that if the first port is busy, the platform tries the next one and so on.</p>
+<p class="apidoc_note"><strong>Note to Administrators</strong>: When setting up your implementation, make sure that all ports in the range 9300&#8211;9305 are open, on all containers that the Elasticsearch feature is installed on.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -615,13 +618,22 @@ update TENANTS set SEARCH_SOURCE='elastic', LASTMODIFIEDDTS=utc_timestamp();</pr
 
 
 
-<a name="es_ts_pre_upgrade_results_showing"></a><h3>Pre-upgrade search results are showing even though the index folder is populated with the Elasticsearch index: what do I do?</h3>
+<a name="ts_es_pre_upgrade_results_showing"></a><h3>Pre-upgrade search results are showing even though the index folder is populated with the Elasticsearch index: what do I do?</h3>
 <p>If you upgrade to Elasticsearch from a previous version of the product, and the index folder is populated with Elasticsearch results after upgrading, but Compass search results are still showing up, check these two fields in the TENANTS table in the database:</p>
 <ul>
   <li><strong>INDEX_TARGET</strong>: This determines what the platform uses for search indexing. To use Elasticsearch, make sure INDEX_TARGET is set to <strong>elastic</strong>.</li>
   <li><strong>SEARCH_SOURCE</strong>: This determines which search index the platform uses to deliver search results. It can have either of these values: <strong>elastic</strong> or <strong>compass</strong>. If the value is <strong>compass</strong>, the platform uses the Compass index even if there is an Elasticsearch index available also. To use Elasticsearch, make sure SEARCH_SOURCE is set to <strong>elastic</strong>.</li>
 </ul>
 <p><a href="#top">Back to top</a></p>
+
+
+
+<a name="es_ts_port_config"></a>
+<h3>Elasticsearch client can't connect to the nodes</h3>
+<p>If the Elasticsearch client can't connect to the nodes, and/or the nodes cannot connect to each other, check that you have the default Elasticsearch ports (all ports in the range 9300–9305) available on every container that the Elasticsearch feature is installed on.</p>
+<p>For more information, see <a href="#es_default_ports">What are the default ports for Elasticsearch configuration?</a></p>
+<p><a href="#top">Back to top</a></p>
+
 
 
 
@@ -650,12 +662,9 @@ update TENANTS set SEARCH_SOURCE='elastic', LASTMODIFIEDDTS=utc_timestamp();</pr
     <td width="33%"><ul>
 
       <li><a href="site_admin_tc.htm">Test Client</a></li>
-<!--      <li><a href="site_admin_es.htm">Elasticsearch Configuration</a></li>-->
       <li><a href="site_admin_content_guidelines_sd.htm">Content Development Guidelines for Simple Dev Theme</a></li>
       <li><a href="basics_glossary.htm">Glossary of Terms</a></li>
     </ul>
     </td>
   </tr>
 </table>
-
-
