@@ -4,7 +4,7 @@ title: Performing Policy Manager / Envision Integration Installation
 description: Learn how to perform the Policy Manager / Envision integration installation. 
 product: ev
 category: gs
-weight:	1
+weight:	07
 sub-nav-class: Installation
 type: page
 nav-title: Performing Policy Manager / Envision Integration Installation
