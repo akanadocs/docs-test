@@ -1,0 +1,88 @@
+---
+layout: page
+title: Updating the Database Configuration
+description: Learn how to update database configuration; for example, to change the password.
+product: sp
+category: learn
+weight: 07
+sub-nav-class: Administration
+type: page
+nav-title: Updating the Database Configuration
+---
+<h2 id="top">Updating the Database Configuration</h2>
+<p>Learn how to update database configuration; for example, to change the password.</p>
+<a href="using_admin_console.htm" class="button secondary">Using Admin Console</a>
+<a href="../container_management/container_management.htm" class="button secondary">Managing Containers</a>
+<p></p>
+
+<h5 class="stamp">Supported Platforms: 8.2x, 8.4x</h5>
+<p></p>
+<div class = "divider1"></div>
+<h3 style="color: gray;">Table of Contents</h3>
+<ol class="table_of_contents">
+  <li><a href="#introduction">Introduction</a></li>
+  <li><a href="#db_connection_update">To update the database connection when the database password has changed</a></li>
+  <li><a href="#update_db_nd_writer">Updating database connectivity when Network Director is using local database writer</a></li>
+</ol>
+<div class = "divider1"></div>
+
+
+
+<a name="introduction"></a><h3>Introduction</h3>
+<p>In version 8.x of the Akana Platform, the method of encrypting the database password changed. As a result, when you change the database password, you'll essentially need to delete the existing database connection and create a new one.</p>
+<p>If you want to use the old method of encrypting the database password, you can do that. In the Akana Administration Console, Configuration Properties, you'll need to delete the <strong>encryptionType</strong> property shown below:</p>
+<p><img src="images/cc_com_soa_database_config_encryptionType.jpg" alt="Configuration properties: encryptionType" /></p>
+<p>{<span class="apidoc_red">Is the above correct? Info is from comment in SUP-16464: <strong>JD added a comment - 17/Aug/17 7:15 A</strong>.</span>}</p>
+<p>To update the database password using the new encryption method, which is more secure {<span class="apidoc_red">is it? Guessing that's why we changed it?</span>}, follow the steps below.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="db_connection_update"></a><h3>To update the database connection when the database password has changed</h3>
+<p>To refresh the database connection when the database password or other database-related information has changed, you'll need to:</p>
+<ol>
+  <li><a href="#proc_db_connection_delete">Delete the existing database connection</a></li>
+  <li><a href="#proc_db_connection_createnew">Create a new database connection.</a></li>
+  </ol>
+<p>If you're using a local database writer for the Network Director, you'll need to update that separately, after updating the database connection: see <a href="#update_db_nd_writer">Updating database connectivity when Network Director is using local database writer</a>.</p>
+
+
+<a name="proc_db_connection_delete"></a><h5>To delete the existing database connection</h5>
+<ol>
+  
+  <li>Log in to the Akana Administration Console.</li>
+  <li>Click the <strong>Configuration</strong> tab.</li>
+  <li>On the left, under <strong>Configuration Categories</strong>, find the <strong>com.soa.database.config</strong> category as shown below.
+    <p><img src="images/cc_com_soa_database_config.jpg" alt="Database Configuration properties" /></p></li>
+  <li>On the right, click the <strong>Delete</strong> icon to delete the database configuration. At the prompt, click <strong>OK</strong> to confirm the deletion.</li>
+  <li> Delete any additional configuration instances.</li>
+  </ol>
+<p>The next step is to create a new connection to the database, using the new password.</p>
+
+<a name="proc_db_connection_createnew"></a><h5>To create a new database connection</h5>
+<ol>
+  <li>In the Akana Administration Console, on the <strong>Configuration</strong> tab, go to the <strong>Configuration Actions</strong> section at the bottom left.</li>
+  <li>Click the <strong>Add Database</strong> configuration task.</li>
+  <li>On the first page of the wizard, choose <strong>Use existing database</strong> and then click <strong>Next</strong>.</li>
+  <li>Provide additional values for the database, as needed, and then click <strong>Save</strong>. For additional information on using the <strong>Configure Database Options</strong> wizard, see <a href="config_actions.htm#aac_ca_adddatabase">Configuration Actions: Add Database</a>.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="update_db_nd_writer"></a><h3>Updating database connectivity when Network Director is using local database writer</h3>
+<p>If Network Director is using a local database writer, updating the database connection as in <a href="#xxx">To update the database connection when the database password has changed</a> above doesn’t refresh the Network Director information. To refresh the information at the ND, follow the steps below.</p>
+
+<h5>To refresh the database configuration when Network Director is using local database writer</h5>
+<ol>
+  <li>Shut down the Network Director instance.</li>
+  <li>In the Akana Administration Console, click the <strong>Configuration</strong> tab.</li>
+  <li>On the left, under <strong>Configuration Categories</strong>, find the <strong>com.soa.monitor.usage</strong> category.</li>
+  <li>Change the <strong>usage.remote.writer.enabled</strong> setting to <strong>true</strong>, as shown below.
+    <p><img src="images/cc_com_soa_monitor_usage_enableremotewriter.jpg" alt="Setting Remote Writer to False" /></p></li>
+  <li>Click <strong>Apply Changes</strong>.</li>
+  <li>Restart the Network Director instance.</li>
+</ol>
+<p>You can then repeat the above steps, switching the database writer back to local by changing the remote writer setting back to <strong>false</strong>.</p>
+
+<p><a href="#top">Back to top</a></p>
