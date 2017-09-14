@@ -1,0 +1,26 @@
+---
+layout: page
+title: Note on Indexing for Envision Data Sets
+description: Technical note for Envision data sets re MongoDB limitation on size of index entries and a workaround.
+product: ev
+category: ref
+weight: 9
+type: page
+nav-title: Note on Indexing for Envision Data Sets
+---
+<h2 id="top">Technical Note: Indexing for Envision Data Sets</h2>
+<p>Technical information about indexing for Envision data sets.</p>
+<p><a href="env_toc.html" class="button secondary">Envision Reference (Main Topic)</a>  <a href="../envision_install/installing_envision.htm" class="button secondary">Installing Envision 1.2</a></p>
+<h5 class="stamp">Supported Envision Versions: 1.0, 1.1, 1.2</h5>
+<div class = "divider1"></div>
+
+
+
+<h3>MongoDB limitation on size of index entries / workaround</h3>
+<p>When a data set is defined in Envision, accompanying collections are generated in the MongoDB <strong>METRIC_RAW_DATA</strong> and <strong>METRIC_ROLLUP_DATA</strong> databases.</p>
+<p>These collections will include generated indexes with names of the format <strong>&lt;data set name&gt; UIDX</strong>, and will consist of all dimensions defined for the data set.</p>
+<p>MongoDB restricts the size of entries in such indexes to less than 1024 bytes; it is possible that records collected for the data set will exceed this limit, and if that happens those records will not be written to the collection.</p>
+<p>Because of this limitation, it might be necessary to modify the MongoDB <strong>&lt;data set name&gt; UIDX</strong><strong></strong> indexes for a data set that has many (or lengthy) dimensions to include only those dimensions that will be used often in Envision charts defined on the data set.</p>
+<p>Envision support for the API Platform provides a pre-defined data set called <strong>API Operational Metrics Data Set</strong>. When an Operational Metrics policy is defined that selects many or all dimensions, there is a possibility that the metrics records that are collected might exceed the Mongo index limit for the <strong>API Operational Metrics Data SetUIDX</strong> indexes on the <strong>API Operational Metric Data Set</strong> collections in the <strong>METRIC_RAW_DATA</strong> and <strong>METRIC_ROLLUP_DATA</strong> databases.</p>
+<p>If this happens, the indexes should be manually updated to exclude dimensions that are not critical to chart performance.</p>
+<p><a href="#top">back to top</a></p>
