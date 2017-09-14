@@ -23,7 +23,8 @@ nav-title: Platform Hardening 8.4
 		<li><a href="#admin_console_domain_disable_login">Disable the Akana Administration Console domain as a login domain</a></li>
 	</ul>
 	</li>
-	<li><a href="#config-setting">Configuration Settings</a>
+
+	<li><a href="#h_config_settings_container">Configuration Settings in the Admin Console for the Container</a>
 	<ol>
 		<li><a href="#jre-unlimited-strength">Add the unlimited strength policy to the JDK</a></li>
 		<li><a href="#ignore-cookies">Configure the product to ignore downstream cookies</a></li>
@@ -40,15 +41,19 @@ nav-title: Platform Hardening 8.4
 		<li><a href="#configure-the-anti-virus-policy-to-scan-for-uploaded-files">Configure the Anti-Virus Policy to scan for uploaded files</a></li>
 		<li><a href="#enabling-csrf-protection">Enabling CSRF protection</a></li>
 		<li><a href="#adding-xss-exclusions">Adding XSS exclusions</a></li>
+		<li><a href="#configuring-x-frame-options-header">Configuring X-FRAME-OPTIONS Header</a></li>
+		<li><a href="#configuring-server-header">Configuring Server Header</a></li>
+		<li><a href="#metadata_service_secure">Securing the metadata service</a></li>
+	</ol></li>
+
+	<li><a href="#h_config_settings_cm_ui">Configuration Settings in the Developer Portal User Interface</a>
+	<ol>
 		<li><a href="#turning-off-user-account-enumeration">Turning off User Account Enumeration</a></li>
 		<li><a href="#configuring-challenge-questions-and-answers">Enforcing Challenge Questions and Answers</a></li>
 		<li><a href="#challenge_question_answer_constraints">Configuring Constraints on Security Challenge Questions and Answers</a></li>
 		<li><a href="#disallowing-user-profile-modification">Disallowing User Profile Modification</a></li>
 		<li><a href="#configuring-account-login-rules">Configuring Account Login Rules</a></li>
 		<li><a href="#configuring-password-complexity-rules">Configuring Password Complexity Rules</a></li>
-		<li><a href="#configuring-x-frame-options-header">Configuring X-FRAME-OPTIONS Header</a></li>
-		<li><a href="#configuring-server-header">Configuring Server Header</a></li>
-		<li><a href="#metadata_service_secure">Securing the metadata service</a></li>
 	</ol></li>
 </ol>
 <h3><a name="introduction"></a>Introduction</h3>
@@ -163,8 +168,11 @@ container.name={container_name}</pre>
 
 
 
-<h3><a name="config-setting"></a>Configuration Settings</h3>
+
+<h5 style="color: gray;"><a name="h_config_settings_container">Configuration Settings in the Admin Console for the Container</a></h5>
 <p>This section covers settings and tuning parameters in the product related to hardening.</p>
+
+
 
 
 <h4><a name="jre-unlimited-strength"></a>Add the unlimited strength policy to the JDK</h4>
@@ -347,6 +355,57 @@ validate=[true|false]</pre>
 
 
 
+<h4><a name="configuring-x-frame-options-header"></a>Configuring X-FRAME-OPTIONS Header</h4>
+<p>The X-FRAME-OPTIONS header plays a role in determining if and how the user interface can be embedded within an iFrame in a third-party site.</p>
+<p><strong>Scope</strong>: All Community Manager and Policy Manager Containers</p>
+<p>To configure Community Manager:</p>
+<pre>com.soa.atmosphere.console -&gt;
+atmosphere.console.config.xFrameOptions=[DESIRED HEADER]</pre>
+<p>To configure Policy Manager:</p>
+<pre>com.soa.console.xss -&gt;
+xFrameOptions=[DESIRED HEADER]</pre>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h4><a name="configuring-server-header"></a>Configuring Server Header</h4>
+<p>You might want to prevent the Server header from being returned in responses.</p>
+<p><strong>Scope</strong>: All Community Manager and Policy Manager Containers</p>
+<p>In the Akana Administration Console for each container, configure the following:</p>
+<pre>com.soa.platform.jetty -&gt; jetty.server.sendServerVersion = false</pre>
+<p>NOTE: this property does not exist by default, so you will most likely need to add it.</p>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h4><a name="metadata_service_secure"></a>Secure the metadata service</h4>
+<p>The Metadata API includes details about the container, such as public keys, internal IP addresses and file locations, which you probably don't want to share broadly. This information could potentially aid an attacker in fingerprinting and enumerating the Policy Manager application or discovering how some of the Java servlets are configured.</p>
+<p>For additional security, we recommend that you secure this API for all containers. Follow the steps below.</p>
+
+<h5>To secure the metadata service (must be done separately for each container):</h5>
+<ol>
+  <li>Log in to the Akana Administration Console.</li>
+  <li>Click the <strong>Configuration</strong> tab.</li>
+  <li>On the left, under Configuration Categories, scroll down to find the <strong>com.soa.metadata.service</strong> category.</li>
+  <li>Add a new property:
+    <ul>
+      <li>Property name: <strong>metadata.basic.auth.filter.enabled</strong></li>
+      <li>Property value: <strong>true</strong></li>
+    </ul>
+    </li>
+  
+  <li>Click <strong>Apply Changes</strong>.</li>
+</ol>
+<p><a href="#top">back to top</a></p>
+
+
+
+
+<h5 style="color: gray;"><a name="h_config_settings_cm_ui">Configuration Settings in the Developer Portal User Interface</a></h5>
+
+
+
+
 <h4><a name="turning-off-user-account-enumeration"></a>Turning off User Account Enumeration</h4>
 <p>User Account Enumeration occurs when the Community Manager user interface provides direct feedback to a user during the signup and registration processes to the effect that a user account already exists or is already registered. If this is turned off, no useful feedback is provided to the user, minimizing the security risk, but decreasing usability.</p>
 <p><strong>Scope</strong>: All Community Manager Containers</p>
@@ -412,49 +471,4 @@ In Community Manager, the Challenge Questions/Answers configuration can be found
   <p><img src="images/ph_84_password-policy.jpg" alt="Login Policy page" /></p></li>
   <li>Via an <a href="http://docs.akana.com/cm/api/businesses/m_businesses_updatePasswordPolicy.htm">API call</a> into the system.</li>
 </ul>
-<p><a href="#top">back to top</a></p>
-
-
-
-<h4><a name="configuring-x-frame-options-header"></a>Configuring X-FRAME-OPTIONS Header</h4>
-<p>The X-FRAME-OPTIONS header plays a role in determining if and how the user interface can be embedded within an iFrame in a third-party site.</p>
-<p><strong>Scope</strong>: All Community Manager and Policy Manager Containers</p>
-<p>To configure Community Manager:</p>
-<pre>com.soa.atmosphere.console -&gt;
-atmosphere.console.config.xFrameOptions=[DESIRED HEADER]</pre>
-<p>To configure Policy Manager:</p>
-<pre>com.soa.console.xss -&gt;
-xFrameOptions=[DESIRED HEADER]</pre>
-<p><a href="#top">back to top</a></p>
-
-
-
-<h4><a name="configuring-server-header"></a>Configuring Server Header</h4>
-<p>You might want to prevent the Server header from being returned in responses.</p>
-<p><strong>Scope</strong>: All Community Manager and Policy Manager Containers</p>
-<p>In the Akana Administration Console for each container, configure the following:</p>
-<pre>com.soa.platform.jetty -&gt; jetty.server.sendServerVersion = false</pre>
-<p>NOTE: this property does not exist by default, so you will most likely need to add it.</p>
-<p><a href="#top">back to top</a></p>
-
-
-
-<h4><a name="metadata_service_secure"></a>Secure the metadata service</h4>
-<p>The Metadata API includes details about the container, such as public keys, internal IP addresses and file locations, which you probably don't want to share broadly. This information could potentially aid an attacker in fingerprinting and enumerating the Policy Manager application or discovering how some of the Java servlets are configured.</p>
-<p>For additional security, we recommend that you secure this API for all containers. Follow the steps below.</p>
-
-<h5>To secure the metadata service (must be done separately for each container):</h5>
-<ol>
-  <li>Log in to the Akana Administration Console.</li>
-  <li>Click the <strong>Configuration</strong> tab.</li>
-  <li>On the left, under Configuration Categories, scroll down to find the <strong>com.soa.metadata.service</strong> category.</li>
-  <li>Add a new property:
-    <ul>
-      <li>Property name: <strong>metadata.basic.auth.filter.enabled</strong></li>
-      <li>Property value: <strong>true</strong></li>
-    </ul>
-    </li>
-  
-  <li>Click <strong>Apply Changes</strong>.</li>
-</ol>
 <p><a href="#top">back to top</a></p>
