@@ -3,7 +3,7 @@ layout: page
 title: Creating a Chart
 description: Learn how to create a chart with Envision and configure datasets, use chart options, and preview charts in Live Mode. 
 product: ev
-category: learn
+category: ref
 weight: 6
 type: page
 nav-title: Creating a Chart
