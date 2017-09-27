@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Akana API Platform Installation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="../style/document.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--<div class="contentBody apidocContent">-->
+<div class="documentation supportContent">
+<!-----
+layout: page
+title: Add API to Policy Manager 8.0
+description: Learn how to add a simple API to the Policy Manager Management Console, configure associated Policies and Contracts, and send a test request. 
+product: sp
+category: gs
+sub-nav-class: API Management
+weight: 4
+type: page
+nav-title: Add API to Policy Manager 8.0
+----->
+<h2 id="top">Add API to Policy Manager 8.0</h2>
+
+
+
+<a name="xxx"></a><h3>Table of Contents</h3>
+<div id="toc-marker"></div>
+<ul>
+  <li><a href="#introduction">Introduction</a></li>
+  <li><a href="#01_install_and_configure_pm">Step 1: Install and Configure Policy Manager</a></li>
+  <li><a href="#02_add_api_to_pm">Step 2: Add API to Policy Manager</a></li>
+  <li><a href="#03_configure_policies">Step 3: Configure Policies</a></li>
+  <li><a href="#04_create_contracts">Step 4: Create Contracts</a></li>
+  <li><a href="#05_send_test_requests">Step 5: Send Test Request</a></li>
+</ul>
+<div class = "divider1"></div>
+
+
+
+<a name="introduction"></a><h3>Introduction</h3>
+<p>Learn how to add a simple API to the Policy Manager Management Console, configure associated Policies and Contracts, and send a test request.</p>
+<p><a href="#top">back to top</a></p>
+
+
+
+<a name="01_install_and_configure_pm"></a><h3>Step 1: Install and Configure Policy Manager</h3>
+<p>Install and configure Policy Manager 8.0. Refer to the following topic for complete instructions:</p>
+<p><a href="../platform_install/installing_policy_manager_v80.htm" >Install Policy Manager 8.0</a></p>
+<p><a href="#top">back to top</a></p>
+
+
+
+<a name="02_add_api_to_pm"></a><h3>Step 2: Add API to Policy Manager</h3>
+<p>In this step, we will use the Akana Demo REST API, available at <a href="http://demo.akana-dev.net:3005">http://demo.akana-dev.net:3005</a>. To keep it simple, we will just register the GET operation at <a href="http://demo.akana-dev.net:3005/posts">http://demo.akana-dev.net:3005/posts.</a></p>
+<p><a href="#top">back to top</a></p>
+
+
+
+<a name="step_1_install_and_configure_pm"></a><h3>Add Organization</h3>
+<ol>
+  <li>Log into the <em>Policy Manager Management Console</em>.</li>
+  <li>From the Organization Tree, click <strong>Registry</strong>.</li>
+  <li>Click <strong>Add Organization</strong> from the <em>Actions Portlet</em>.</li>
+  <li>Indicate where you'd like to place the organization on the Organization Tree. Click <strong>Next</strong>.</li>
+  <li>Give your organization a name, Click <strong>Finish</strong>, then <strong>Close</strong>.</li>
+</ol>
+<p><a href="#top">back to top</a></p>
+
+
+<a name="xxx"></a><h3>Register API</h3>
+<ol>
+  <li>From the Organization Tree, click on the organization you created. </li>
+  <li>On the <em>Services Summary</em>, click <strong>Create Physical Service</strong>.</li>
+  <li>Select the <strong>Create Without Using Service Descriptor Document</strong> option and click <strong>Next</strong>.</li>
+  <li>
+On the <em>Service Details</em>, specify the following, then click <strong>Next</strong>. 
+<ul>
+  <li>Name - The name of the API.</li>
+  <li>QName - Provide a unique Namespace and Localpart. This is used internally by the system to uniquely route to a service or API. </li>
+</ul>
+</li>
+  <li>On <em>Schema Import Options</em>, select <strong>Use Existing Schemas</strong> and click <strong>Next</strong>.</li>
+  <li>Click <strong>Add Operation</strong>. Specify an optional name and description and click <strong>Next</strong>.</li>
+  <li>The <em>Operation Details</em> screen gives you the opportunity to specify Schema elements/types for your operation. For simplicity's sake, under <em>Schemas</em>, click &gt;&gt; to assign <strong>anyType</strong> to &quot;Input&quot; and the &quot;Output.&quot; You can leave &quot;Fault&quot; blank and click <strong>Next</strong> to continue.</li>
+  <li>
+On the <em>Binding Properties</em> screen, choose the following and click <strong>Next</strong>:
+<ul>
+  <li>Method - In our example, we used the GET operation.</li>
+  <li>URI Syntax - This is the path for your operation. Regular expressions can be used. Use the left-side panel to get more information. </li>
+</ul>
+</li>
+  <li>Next choose how you would like to manage the Service (API). Select <strong>Manage through a Virtual Service</strong> option. This will create a proxy service that is hosted in the container. Click <strong>Next</strong>. </li>
+  <li>In <em>Virtual Service Provider Organization</em>, ensure that the correct organization is selected and click <strong>Next</strong>. </li>
+  <li>Select the container that you created when registering the Network Director and click <strong>Next</strong>.</li>
+  <li>Select the first Access Point in the list. Provide a name and click <strong>Next</strong>. </li>
+  <li>In <em>HTTP Details</em>, enter a <strong>Location</strong> such as &quot;/posts&quot;.</li>
+  <li>Click <strong>Finish</strong>, and then click <strong>Close</strong>. </li>
+</ol>
+<p>When you've finished, you'll have two services: a physical and a virtual service.</p>
+<p><a href="#top">back to top</a></p>
+
+
+
+<a name="xxx"></a><h3>Add Access Point to Physical Service</h3>
+<ol>
+  <li>From the Organization Tree, select <em>Organization &gt; Services</em> of <strong><em>the physical API you're registering</em></strong>.</li>
+  <li>Select the <strong>Access Points</strong> tab and click <strong>Add Access Point</strong>.</li>
+  <li>Leave all defaults for the <em>Service Details</em> and <em>Binding Details</em>. </li>
+  <li>Add a <strong>WSDL Port Name</strong> and click <strong>Next</strong>.</li>
+  <li>Under the <em>HTTP Details</em> section, enter the API web address for our example: <a href="http://demo.akana-dev.net:3005/posts">http://demo.akana-dev.net:3005/posts</a> in the <strong>Location</strong> field and click <strong>Finish</strong>.</li>
+</ol>
+<p><a href="#top">back to top</a></p>
+
+
+
+<a name="03_configure_policies"></a><h3>Step 3: Configure Policies</h3>
+<p>Next you will configure your API’s with the policies you want Akana to enforce.</p>
+<ol>
+  <li>From the Organization Tree, select the organization you’d like to apply the policies to.</li>
+  <li>
+Click <strong>Policies</strong>. In the <em>Operational</em> section of the <em>Policy Attachments Portlet</em> click <strong>Manage</strong>. For our example, we will set up an operational policy. The choices are:
+<ul>
+  <li>Compliance checks that the service is compliant with your set of standards.</li>
+  <li>Operations does security and monitoring for the service. </li>
+  <li>QoS (Quality of Service) does things like ensure availability, speed, etc. </li>
+</ul>
+</li>
+  <li>From the <em>Manage Operation Attachments</em> window, click <strong>Policies &gt; Operational Policies</strong>.</li>
+  <li>Choose <strong>DetailedAuditing</strong> then click <strong>Apply</strong>.</li>
+</ol>
+<p>You can find all descriptions of the policies in the Organization Tree.</p>
+
+
+
+<a name="04_create_contracts"></a><h3>Step 4: Create Contracts</h3>
+<p>A contract gives someone (typically another application,) authorization to access an API.</p>
+<ol>
+  <li>From the Organization Tree, select your organization. </li>
+  <li>Click <strong>Offer Contract</strong> from the <em>Actions Portlet</em>. The <em>Add Contract Wizard</em> launches.</li>
+  <li>Enter the contract details.</li>
+  <li>In the <em>Access Controls</em>, select the anonymous contract option (i.e., second option) and click <strong>Next</strong>.</li>
+  <li>Select the Provider Organization and click <strong>Finish</strong>. </li>
+</ol>
+<p>Your contract is now in draft mode. Next you must activate it:</p>
+<ol>
+  <li>Navigate the Organization Tree to find your Organization. In the <em>Contracts</em> folder find your contract. </li>
+  <li>Scroll down to the <em>Consumers</em> section. You'll see your contract in &quot;Draft.&quot;</li>
+  <li>Click on the contract. In this example, it shows as &quot;Anonymous.&quot;</li>
+  <li>Review the contract, then in the <em>Contracts Actions Portlet</em> click <strong>Activate Contract</strong>, then <strong>OK</strong>.</li>
+</ol>
+
+
+
+<a name="05_send_test_requests"></a><h3>Step 5: Send Test Request</h3>
+<p>To send a test request, you will need the endpoint.</p>
+<ol>
+  <li>You can find this in the Policy Manager Organization Tree, under <em>Your Organization &gt; Services &gt; API</em>. </li>
+  <li>Select the <strong>Access Points</strong> tab. </li>
+  <li>Find the URL, then copy the URL and paste into a browser window. You should get a successful response. </li>
+  <li>Verify that the requests are coming through by checking the audit logs. You can see the logs by selecting the organization, then the API. From the API page, click <strong>Monitoring &gt; Logs</strong>. You'll see request details. </li>
+</ol>
+
+
+<h4>Auditing Use Cases</h4>
+<p>The following detailed use cases illustrate how to perform <em>basic</em> or <em>detailed</em> auditing of an entire message and view the message metrics in Policy Manager.</p>
+<p><a href="../../ag/assets/pm_basic_auditing_policy_use_cases.pdf" >Basic Auditing Usage Scenario for Policy Manager</a></p>
+<p><a href="../../ag/assets/pm_detailed_auditing_policy_use_cases.pdf" >Detailed Auditing Usage Scenarios for Policy Manager</a></p>
+<p><a href="#top">back to top</a></p>
+
+
+
+</div>
+</body>
+</html>
