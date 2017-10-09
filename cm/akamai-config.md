@@ -4,10 +4,10 @@ title: Configuring Akamai with Akana's API Platform
 description: detailed steps on how to configure an Akamai property
 product: cm
 category: ref	
-sub-nav-class: 
+sub-nav-class: Configuring Akamai
 weight: 4
 type: page
-nav-title: Configuring Akamai
+nav-title: Akamai
 ---
 
 
