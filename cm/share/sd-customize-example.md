@@ -6,8 +6,8 @@ product: cm
 category: ref
 weight: 11
 type: page
-nav-title: Customization
-sub-nav-class: SimpleDev Customization Example
+nav-title: SimpleDev Customization Example
+sub-nav-class: Customization
 ---
 
 ## Example SimpleDev Customization
