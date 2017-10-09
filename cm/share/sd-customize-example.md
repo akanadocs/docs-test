@@ -1,13 +1,13 @@
 ---
 layout: page
-title: Example Developer Theme Customization
+title: Simple Dev Theme Customization Example
 description: A step by step guide to customizing the Developer (SimpleDev) theme
 product: cm
 category: ref
-sub-nav-class:
 weight: 11
 type: page
-nav-title: Example Developer Theme Customization
+nav-title: Customization
+sub-nav-class: SimpleDev Customization Example
 ---
 
 ## Example SimpleDev Customization
@@ -65,7 +65,7 @@ The premise is easy.  We'll do this:
 
 2.	Edit the file appropriately, in this case I'm being a bit agressive and am taking out the whole thing conditionally, but you can see from the example here how this construct works for more subtle edits:
 
-	```javascript
+	```html+erb
 	{% raw %}
 	<% if(can.route.attr("page") === "welcome"){%>
 		Some Content
@@ -117,7 +117,7 @@ In most cases replacing the footer will likely be a bit more complex because you
 1.	Find the footer.ejs file and copy it to the right place in my local file structure so that it would be included in my next zip update.
 2.	This file provides the content of the footer, using the html footer element.  In our out of the box SimpleDev theme this will be placed in an unstyled div at the bottom of the page.  The default footer is styled by a css class of "soa-ui-cm-footer".  I chose to keep this class and its associated styles and drop my content into the middle of this.  Essentially I just replaced everything between the opening and closing divs with my content:
 	
-	```html
+	```html+erb
 	<div class="soa-ui-cm-footer">
 	...
 	My content in here
@@ -174,13 +174,13 @@ The basic process includes:
 	
 	Because these styles are in custom.less they will appear towards the very bottom of the generated styles and so will if applied to an element will override the default styles. 
 	
-	To apply these new styles selectively on the welcome page I can embed ```{% raw %}<%= can.route.attr("page") === "welcome" ? "soa-ui-cm-header-container-welcome": "" %>{% endraw %}``` in my class definintions for the appropriate elements.
+	To apply these new styles selectively on the welcome page I can embed `{% raw %}<%= can.route.attr("page") === "welcome" ? "soa-ui-cm-header-container-welcome": "" %>{% endraw %}` in my class definintions for the appropriate elements.
 	
-2.	The header.ejs file doesn't include an outer wrapping definition, so to change the style of the full width header we actually need to change a style definition in the master layout view (layout.ejs).
+2. The header.ejs file doesn't include it's own outer wrapping definition, so to change the style of the full width header we actually need to change a style definition in the master layout view (layout.ejs).
 
 	In my case I only want these styles to apply when I'm on the welcome page, so I'm going to use the above class override so that my final layout.ejs ends up looking like this:
-
-	```javascript
+	
+	```html+erb
 	{% raw %}
 	<header id="soa-control-cm-header-container" aria-live="polite" role="banner" class=" <%= can.route.attr("page") === "welcome" ? "soa-ui-cm-header-container-welcome": "" %>soa-ui-cm-header-container" <%= soa.framework.control("SOA.Dev.Header", this) %> >
 	</header>
@@ -212,7 +212,7 @@ The basic process includes:
 	
 	The result of all this is a new header.ejs file that looks like:
 	
-	```javascript
+	```html+erb
 	{% raw %}
 	<div class="soa-ui-cm-main container navbar <%= can.route.attr("page") === "welcome" ? "navbar-default-welcome": "" %> navbar-default" role="navigation">
 		<div class="soa-ui-cm-container-top row">
@@ -252,7 +252,7 @@ The basic process includes:
 	
 4.	The last step is to replace the text "Login" link with a nice shiny button.  I cheated a bit and browsed through the UI looking for some buttons I liked.  I liked the Style of the Login button from the login page, so I just used that.  Then I opened up the usertools.ejs file and had at it.  While I was at it I decided to remove the element where the product welcomed me, that was annoying.  See if you can spot the changes:
 
-	```javascript
+	```html+erb
 	{% raw %}
 	<% var user = SOA.Console.Models.User.me(); %>
 	<% if(user.isLoggedIn()){ %>
