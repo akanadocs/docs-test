@@ -32,6 +32,7 @@ Akana Platform Hardening Guide Version 8.0.x
 		<li><a href="#ignore-cookies">Configure the product to ignore downstream cookies</a></li>
 		<li><a href="#secure-cookies">Configure secure cookies</a></li>
 		<li><a href="#disabling-sslv3">Disabling SSLv3</a></li>
+		<li><a href="#disabling_ssl_renegotiation">Disabling SSL renegotiation</a></li>
 		<li><a href="#restrict-cipher-suites">Restrict the cipher suites used</a></li>
 		<li><a href="#tls12-only">Enforcing TLS 1.2 Only</a></li>
 		<li><a href="#disabling-outbound">Limiting Outbound SSL/TLS/Cipher support</a></li>
@@ -187,6 +188,16 @@ In the admin console, configure the following:
 com.soa.platform.jetty ->
 http.incoming.transport.config.enabledProtocols=SSLv2HELLO,TLSv1,TLSv1.1, TLSv1.2
 ```
+
+<h4><a name="disabling_ssl_renegotiation"></a>Disabling SSL renegotiation</h4>
+<p>There are no common reasons for supporting client-initiated SSL renegotiation, so wherever possible it's more secure to disable this setting so that it isn't supported.</p>
+<p><strong>Scope</strong>: All Containers</p>
+<p>In the Akana Administration Console, configure the following:</p>
+<pre>com.soa.platform.jetty -&gt;
+http.incoming.transport.config.allowRenegotiate</pre>
+<p><a href="#top">back to top</a></p>
+
+
 
 #### <a name="restrict-cipher-suites"></a>Restrict the cipher suites used
 
