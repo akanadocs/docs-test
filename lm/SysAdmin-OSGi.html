@@ -1,12 +1,12 @@
 ---
 layout: page
-title: System Admin Guide
+title: System Administrator Guide
 description: This Lifecycle Manager System Admin Guide is written and intended for the person filling the role of Installation Administrator, and is most useful after the initial installation is completed. 
 product: lm
 category: learn
 weight: 12
 type: page
-nav-title: System Admin Guide
+nav-title: System Administrator Guide
 ---
 
  
@@ -36,9 +36,11 @@ the base servers and product.
   <li><a href="#settings">Installation Settings</a> 
   <li><a href="#configdesigner">Configuration Designer</a>
   <li><a href="#ldappassword">Setting up native LDAP password policies</a> 
-  <li><a href="#ldapssl">Setting up LDAP over SSL</a> 
   <li><a href="#ldapgrouproles">Setting up group and role support in LDAP</a> 
-  <li><a href="#usessl">Setting up SSL</a> 
+  <li><a href="#usessl">Setting up SSL</a>
+  <li><a href="#loadbalance">LM behind a Load Balancer (cluster)</a>
+  <li><a href="#sslreverseproxy">LM behind a Reverse Proxy/Load Balacer that terminates SSL</a> 
+  <li><a href="#csrfsecurity">CSRF Security for Lifecycle Manager</a>
   <li><a href="#installationproperties">Update Installation-wide Properties</a>
   <li><a href="#sso">Single Sign-on (SSO) Install and Configuration</a> 
   <li><a href="#attributedefinitions">Customize user attributes and LDAP 
@@ -52,7 +54,7 @@ the base servers and product.
   <li><a href="#topnavlinks">Customize  Top Navigation Links (Web Browser Application)</a>
   <li><a href="#customhelp">Customize Context Sensitive Help Pages</a>
   <li><a href="#language">Using different languages</a> 
-  <li><a href="#customjar_deploy">Deploying custom class files</a> 
+  <li><a href="#customjar">Deploying custom class files</a> 
     <p><b>Start/Stop and Service Packs</b> 
   <li><a href="#startstop">Starting and Stopping Servers</a> 
   <li><a href="#servicepacks">Installing Service Packs</a> 
@@ -755,7 +757,50 @@ org.osgi.service.http.port.secure=9443
 -->
 </ul>
 </ul>
-
+<hr>
+<h2><a name="loadbalance">LM behind a Load Balancer (cluster)</a></h2>
+<ul>
+  <p>Placing LM nodes behind a front facing load balancer requires the following:<br>
+  <li>All LM nodes be pointed to the same backend database/schema.
+  <li>All LM nodes be running on identical Akana Platform and LM feature versions.
+  <li>Maintain Session Affinity (Sticky sessions); the load balancer must ensure that a given session be serviced by the same node for the duration of that session.  You can either use the Akana Platform container
+  session cookie (JSESSIONID_{container_name}) defined in the {plat_home}/instances/{container_name}/system.properties -> org.eclipse.jetty.servlet.SessionCookie property, or a LB specific
+  cookie injected by your LB for the purpose.
+  <li>All LM nodes must have an identical path to the LM app_*.log files.  By default, this path is {plat_home}/instances/{container_name}/log/, however it's configurable to via
+  the /lm/admin Settings -> Logging Settings; adjust the com.logiclibrary.common.logging.ThreadFileHandler.pattern, com.logiclibrary.common.logging.FileHandler.pattern, and com.logiclibrary.common.logging.IncidentHandler.pattern to the new path.  The nodes *CANNOT* use shared storage to a common path (NFS mount, etc), as each node would clobber the others app logs.
+  <li>LM 8.0.0 introduced a library configuration check timer (runs every 30 seconds) to ensure that all the nodes will automatically read in any new library configuration changes, regardless of the node
+  serving the upload session.
+</ul>
+<hr>
+<h2><a name="sslreverseproxy">LM behind a Reverse Proxy/Load Balacer that terminates SSL</a></h2>
+<ul>
+  <p>If you place LM behind a reverse proxy or load balancer that terminates SSL, to avoid circular redirect issues
+  with the login/challenge pages, you must configure that front facing device with X-Forwarded headers 
+  (<b>X-Forwarded-Proto https</b> and <b>X-Forwarded-Ssl on</b>) then configure the Akana Platform to honor
+  those headers via the <b>com.soa.platform.jetty</b> -> <b>http.incoming.transport.config.forwarded</b> setting with a value of TRUE.
+</ul>
+<hr>
+<h2><a name="csrfsecurity">CSRF Security for Lifecycle Manager</a></h2>
+<ul>
+  <p>From <a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)">"https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)"</a><br>
+"CSRF is an attack that tricks the victim into submitting a malicious request. It inherits the identity and privileges of the 
+victim to perform an undesired function on the victim's behalf. For most sites, browser requests automatically include any 
+credentials associated with the site, such as the user's session cookie, IP address, Windows domain credentials, and so forth. 
+Therefore, if the user is currently authenticated to the site, the site will have no way to distinguish between the forged request 
+sent by the victim and a legitimate request sent by the victim.
+<p>CSRF attacks target functionality that causes a state change on the server, such as changing the victim's email address or password, or purchasing something. Forcing the victim to retrieve data doesn't benefit an attacker because the attacker doesn't receive the response, the victim does. As such, CSRF attacks target state-changing requests."
+Note: this is a blind attack - no data is returned to the attacker.
+<p>Also note:  this is not the same as a XSS (Cross-site Scripting) attack.
+<p>To protect from CSRF attacks, a security token will be passed on requests to protected resources/actions. 
+  <p>A new configuration property section in the Platform admin console has been added named com.soa.repository.csrfguard.  It contains a single property: <b>org.owasp.csrfguard.Enabled</b> set to <b>false</b>.<br>
+	Setting this property to true enables CSRFGuard after a restart of the system.
+  <p><b>Known issues:</b>
+  <li>Clicking on a link before the page is completely loaded may cause a violation because the token may not have been added to the link yet.
+  <li>Redirect to CSRF Challenge Page on Violation; Some URLs like bookmarks or email notification links will not have the token.  
+	Rather than unprotecting all possible notification URLs or bringing up a static error page, we will give the user a chance to 
+	decide whether to proceed by forwarding to an error page with a button that sends the request back to the page with the token attached.  
+	Since this requires user intervention, it is not exploitable by CSRF.
+</ul>
 <hr>
 <h2><a name="resetsyspw">Reset System Passwords</a></h2>
 <ul>
@@ -1371,7 +1416,14 @@ com.logiclibrary.common.logging.FileHandler.pattern=/opt/lm/logs/webapp/lm_%g.lo
         </td>
       </tr>
       <tr> 
-        <td colspan="4"><a name="admincmdlibrary"/><b>Library Configuration</b> - see the <b>Library Configuration Guide</b> for more details. 
+        <td colspan="4"><a name="admincmdlibrary"/><b>Library Configuration</b> - see the
+		<!-- for docs.akana.com, replace the following line: -->
+		<a href="LibraryConfigurationGuide.doc">Library Configuration Guide</a>
+		
+		<!-- .. with this line instead: -->
+		<!-- <b>Library Configuration Guide</b> -->
+
+		for more details. 
       </tr>
       <tr> 
         <td valign=top>GetProcessConfigurationSchema</td>
@@ -2189,7 +2241,7 @@ updating: com/ (stored 0%)
 	    <ul>
 		  <pre>[akana@lxc3-pm8x-6 /tmp]$ cp /tmp/com.soa.repository.custom.jar_011317 /opt/akana/plat8/instances/lm/deploy/com.soa.repository.custom.jar</pre>
 		</ul>
-	  <li>From the Platform's /admin console, install the <b>Akana Custom Branding</b> plugin into the container running the Lifecycle Manager feature. 
+	  <!-- <li>From the Platform's /admin console, install the <b>Akana Custom Branding</b> plugin into the container running the Lifecycle Manager feature. -->
 	  <li>Restart that container
 	    <ul>
 		  <pre>[akana@lxc3-pm8x-6 ~]$ /opt/akana/plat8/bin/shutdown.sh lm
@@ -2221,7 +2273,7 @@ Starting instance [lm]</pre>
       not exist, you can create the file using the options and values and the 
       example .css file below.
 	<li>Copy the modified com.soa.repository.custom.jar to {platform_home}/instances/{container_name}/deploy/
-	<li>Install the <b>Akana Custom Branding</b> plugin into the container running the Lifecycle Manager feature
+	<!-- <li>Install the <b>Akana Custom Branding</b> plugin into the container running the Lifecycle Manager feature -->
       <p>There are many references to .css files in the internet. Here is one 
         web site that has information on general .css topics <a HREF="http://www.htmlhelp.com/reference/css/">http://www.htmlhelp.com/reference/css/</a> 
         and a page of color references <a href="http://www.htmlhelp.com/reference/css/color-background/background-color.html">http://www.htmlhelp.com/reference/css/color-background/background-color.html</a> 
@@ -2232,7 +2284,7 @@ Starting instance [lm]</pre>
   </ol>
   <ul>
     <li><b>height:</b> this value should be chosen to accommodate the actual size 
-      of the image (a height not greater than 50 px is recommended).</li>
+      of the image (a height not greater than 75px is recommended).</li>
     <li><b>background-image: URL("path-to/imagefile")</b> where the path/imagefile 
       is relative to the <i>ApplicationRoot</i>/customer/logidex.war/custom directory</li>
     <li><b>background-repeat:</b> determines how a specified background image 
@@ -2324,14 +2376,14 @@ Archive:  /opt/akana/plat8/lib/lifecyclerepository_8.0.0.00339/com.soa.repositor
 	  </ul>
 	<li>Navigate to the unpacked Help templates
 	  <ul>
-	    <pre>[akana@lxc3-pm8x-6 ~]$ cd /tmp/unpack_com.soa.repository.webapp_8.0.0.jar/WebContent/common/help/CustomContent/</pre>
+	    <pre>[akana@lxc3-pm8x-6 ~]$ cd /tmp/unpack_com.soa.repository.webapp_8.0.0.jar/WebContent/common/help/CustomContent</pre>
 	  </ul>
 	<li>Follow the steps in <a href="#customjar">Customize the com.soa.repository.custom.jar</a> in which you will unpack a copy of com.soa.repository.custom.jar.  This is where 
     you will copy in your customized Help templates.
     <li>Customize the content in the <body> </body> of the appropriate HTML templates.</li>
-    <li>Save the updated HTML templates to the temp directory that you unpacked the com.soa.repository.custom.jar in its <b>/WebContent/common/help/CustomContent</b> directory.  Create the directory, if necessary.</li>
-    <li>Pack up the new com.soa.repository.custom.jar and copy it to your container's deploy/ directory and verify that the container has the Akana Custom Branding plugin installed
-	per <a href="#customjar">Customize the com.soa.repository.custom.jar</a>
+    <li>Save the updated HTML templates to the temp directory (that you unpacked the com.soa.repository.custom.jar in) to its <b>/WebContent/custom/help</b> directory.  Create the directory, if necessary.  This is a different location from where you most likely copied the templates from (which was WebContent/common/help/CustomContent).</li>
+    <li>Pack up the new com.soa.repository.custom.jar and copy it to your container's deploy/ directory <!--and verify that the container has the Akana Custom Branding plugin installed
+	per <a href="#customjar">Customize the com.soa.repository.custom.jar</a> -->
   </ol>
 </ul>
 <hr>
@@ -2341,7 +2393,7 @@ Archive:  /opt/akana/plat8/lib/lifecyclerepository_8.0.0.00339/com.soa.repositor
   to display its contents. Contact <a href="mailto:support@akana.com">Support</a> 
   for information on which languages are available and how to configure them. 
 <hr>
-<h2><a name="customjar_deploy">Deploying custom class files</a></h2>
+<h2><a name="customjar">Deploying custom class files</a></h2>
 <p>In certain instances, such as creating custom listeners, deploying custom class files is required.
 This is accomplished by adding your class files to the com.soa.repository.custom.jar (/) 
 following the instructions above in the "Customize the com.soa.repository.custom.jar" topic.
