@@ -138,7 +138,7 @@ Generally, we do not advise changing the JVM memory settings. A better approach 
 
 If you decide to increase the memory settings, first find the existing settings.
 
-In the **RegisterContainerService.bat** file, the existing 32-bit settings:
+In the **RegisterContainerServiceYAJWS.bat** file, the existing 32-bit settings:
 
 ```
 set JAVA_MEM=--JvmMx 1024
@@ -162,14 +162,14 @@ set PERM_GEN_MEM=-XX:MaxPermSize=512M
 For the changes to take effect, you must register the service by running the following command:
 
 ```
-RegisterContainerService.bat {container name}
+RegisterContainerServiceYAJWS.bat {container name}
 ```
 
 If the service was already present, you must first unregister it, and then register it: run the following commands, in sequence:
 
 ```
-UnRegisterContainerService.bat {container name}
-RegisterContainerService.bat {container name}
+UnRegisterContainerServiceYAJWS.bat {container name}
+RegisterContainerServiceYAJWS.bat {container name}
 ```
 
 **Scope**: All Containers
