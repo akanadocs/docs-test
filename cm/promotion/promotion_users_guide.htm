@@ -40,8 +40,20 @@ nav-title: Promotion Guide
       <li><a href="#05_05">Filters</a></li>
     </ol>
   </li>
-  <li><a href="#dz_configurations">DeploymentZoneConfigurations</a></li>
-  <li><a href="#topology_api">Topology API</a></li>
+  <li><a href="#dz_configurations">DeploymentZoneConfigurations</a>
+    <ol>
+      <li><a href="#06_01">Using Filters with DeploymentZoneConfigurations</a></li>
+      <li><a href="#06_02">Default Endpoint Propagation</a></li>
+      <li><a href="#06_03">Using Rules with DeploymentZoneConfigurations</a></li>
+      <li><a href="#06_04">Duplicate Endpoints</a></li>
+    </ol>
+  </li>
+  <li><a href="#topology_api">Topology API</a>
+    <ol>
+      <li><a href="#topologyapi_01">Finding the Topology API Documentation</a></li>
+      <li><a href="#topologyapi_02">Using the Topology API</a></li>
+    </ol>
+  </li>
   <li><a href="#lm_console">Lifecycle Manager Console</a>
     <ol>
       <li><a href="#07_01">Logging In</a></li>
@@ -61,8 +73,7 @@ nav-title: Promotion Guide
 
 
 
-<a name="core_components"></a>
-<h3>Core Components and Component Interaction</h3>
+<a name="core_components"></a><h3>Core Components and Component Interaction</h3>
 <p>The core components in the promotion process are as follows:</p>
 <ul>
   <li>Promotion Package</li>
@@ -388,10 +399,10 @@ vsep.listenerName = "https"</td>
 
 
 
-<a name="xxx"></a><h3>uptohere xxx [NEW SECTION GOES IN HERE}</h3>
-<a name="dz_configurations"></a><h3>DeploymentZoneConfigurations</h3>
+<a name="dz_configurations"></a><h3>DeploymentZoneConfigurations {<span class="apidoc_red">start of new section</span>}</h3>
 <p>Within a PromotionProfile, DeploymentZoneConfigurations can be used to tailor the propagation of an API's endpoints to the target environment. During API promotion, applicable DeploymentZoneConfigurations are selected based on the name of an API endpoint's DeploymentZone in the source environment and optionally filters that apply to the metadata of the API.</p>
-<p>A DeploymentZoneConfiguration contains a list of DeploymentZone names in the target environment. When a DeploymentZoneConfiguration is determined to be applicable for an endpoint of the API being promoted, the endpoint is populated into the specified target environment DeploymentZones . </p>
+<p>A DeploymentZoneConfiguration contains a list of DeploymentZone names in the target environment. When a DeploymentZoneConfiguration is determined to be applicable for an endpoint of the API being promoted, the endpoint is populated into the specified target environment DeploymentZones.</p>
+<p><strong>Note</strong>: The target DeploymentZone must have a listener that matches the listener name of the endpoint.  If necessary, use rules in the DeploymentZoneConfiguration to adjust listener names.</p>
 <p>The structure of the DeploymentZoneConfigurations allow endpoints in a source environment to be fanned out to a target environment. For example, a staging environment may only support a single DeploymentZone while the production environment supports many DeploymentZones across different geographic regions.</p>
 <p>Consider the following example PromotionProfile:</p>
 <pre>{
@@ -410,7 +421,7 @@ vsep.listenerName = "https"</td>
 <p>In this example, a single DeploymentZoneConfiguration has been defined to propagate endpoints in in the <strong>StagingDZ1</strong> DeploymentZone in the source environment to both <strong>ProdWestDZ</strong> and <strong>ProdEastDZ</strong> in the target environment.</p>
 
 
-<h4>Using Filters with DeploymentZoneConfigurations</h4>
+<a name="06_01"></a><h4>Using Filters with DeploymentZoneConfigurations</h4>
 <p>The filtering capability of DeploymentZoneConfigurations allows for target DeploymentZones to be determined based on metadata of the API. For example, which DeploymentZones an API is deployed on may be determined by security metadata associated with the API.</p>
 <p>In the following example, the filters named <strong>PII</strong> and <strong>Not PII</strong> are used in selecting the DeploymentZones an API's endpoints are propagated to in the target environment based on whether the API is marked as processing personal identity information.</p>
 <pre>"deploymentZoneConfigurations": [
@@ -434,9 +445,6 @@ vsep.listenerName = "https"</td>
   }
 ]
 </pre>
-<p>{<span class="apidoc_red">Tim: the above failed parsing as a valid JSON object. Wondering if there might be an issue with it? Just checking.</span>}</p>
-
-
 
 
 <p>With the filters defined in the topology as:</p>
@@ -469,9 +477,9 @@ vsep.listenerName = "https"</td>
   }
 ]
 </pre>
-<p>{<span class="apidoc_red">Tim: the above failed parsing as a valid JSON object. Wondering if there might be an issue with it? Just checking.</span>}</p>
 
-<h4>Default Endpoint Propagation</h4>
+
+<a name="06_02"></a><h4>Default Endpoint Propagation</h4>
 <p>If an endpoint's source DeploymentZone doesn't match a defined DeploymentZoneConfiguration the promotion processing will propagate the endpoint to a DeploymentZone in the target environment with the same name if one exists. You can think of this as an implicit DeploymentZoneConfiguration for every DeploymentZone in the source environment of the form:</p>
 <pre>{
   "sourceDeploymentZoneName":"{source DeploymentZone name}",
@@ -493,18 +501,18 @@ vsep.listenerName = "https"</td>
 
 
 
-<h4>Using Rules with DeploymentZoneConfigurations</h4>
+<a name="06_03"></a><h4>Using Rules with DeploymentZoneConfigurations</h4>
 <p>A DeploymentZoneConfiguration may optionally contain RuleDefinitions to be applied to the properties of the endpoints being promoted with this DeploymentZoneConfiguration. </p>
 <p>Rules at this level can be used to alter a listener name, the endpoint's path, or its vanity host. The properties available for modification are:</p>
 <dl>
 <dt>listenerName</dt>
-<dd>This is the name of the endpoint's listener; for example, <strong>http</strong>. It must match a listener associated with the target DeploymentZone.</dd>
+<dd>The name of the endpoint's listener; for example, <strong>http</strong>. It must match a listener associated with the target DeploymentZone.</dd>
 <dt>path</dt>
-<dd>This is the endpoint-specific path. If the endpoint in the source environment did not have an endpoint-specific path, this will be set to <strong>NO_VALUE</strong>. A rule may set the path property to another value or to <strong>NO_VALUE</strong> indicating that the target endpoint will not have a specific path.</dd>
+<dd>The endpoint-specific path. If the endpoint in the source environment did not have an endpoint-specific path, this will be set to <strong>NO_VALUE</strong>. A rule may set the path property to another value or to <strong>NO_VALUE</strong> indicating that the target endpoint will not have a specific path.</dd>
 <dt>vanityHostName</dt>
-<dd>This is a host name (CNAME) specific to the endpoint. If the endpoint in the source environment did not have a vanity host name, this will be set to <strong>NO_VALUE</strong>. A rule may set the vanityHostName property to another value or to <strong>NO_VALUE</strong> indicating that the target endpoint will not have a vanity host name.</dd>
+<dd>A host name (CNAME) specific to the endpoint. If the endpoint in the source environment did not have a vanity host name, this will be set to <strong>NO_VALUE</strong>. A rule may set the vanityHostName property to another value or to <strong>NO_VALUE</strong> indicating that the target endpoint will not have a vanity host name.</dd>
 <dt>DISABLED</dt>
-<dd>This property provides a means of disabling an endpoint via a rule. Setting the value of DISABLED to true will cause the endpoint to not be propagated to the target environment.</dd>
+<dd>This property provides a means of disabling an endpoint via a rule. If you set the value of DISABLED to <strong>true</strong>, the endpoint is not propagated to the target environment.</dd>
 </dl>
 
 <p>In the following example, a rule is provided with a DeploymentZoneConfiguration that will disable the propagation of endpoints that do not have a vanity host name in the source environment:</p>
@@ -523,7 +531,7 @@ vsep.listenerName = "https"</td>
 }</pre>
 
 
-<h4>Duplicate Endpoints</h4>
+<a name="06_04"></a><h4>Duplicate Endpoints</h4>
 <p>Care should be taken to avoid duplicating endpoints across environments using the same underlying gateways. This situation can occur if the target DeployementZone has the same underlying Gatway as the source DeploymentZone (leading to the same host name and port) and has no options set for altering the gateway host name or path. This situation will result in the promotion of the API failing.</p>
 <p>There are several ways you can help make sure there are no duplicate endpoints:</p>
 <ul>
@@ -545,7 +553,8 @@ vsep.listenerName = "https"</td>
   <li>Using the Topology API</li>
 </ul>
 
-<h4>Finding the Topology API Documentation</h4>
+
+<a name="topologyapi_01"></a><h4>Finding the Topology API Documentation</h4>
 <p>You can find the Topology API documentation in the following locations:</p>
 <ul>
   <li>In your deployment:
@@ -558,7 +567,9 @@ vsep.listenerName = "https"</td>
   </li>
   <li>On the <a href="../../ag/assets/restApiDocs_api-platform_84/api-urn_com.akana.lifecyclecoordinator.rest-TopologyAPI.html" title="Topology API on Akana docs site">Akana docs site</a>.</li>
 </ul>
-<h4>Using the Topology API</h4>
+
+
+<a name="topologyapi_01"></a><h4>Using the Topology API</h4>
 <p>The first step is to create a Topology. This is done by POST-ing the complete Topology JSON document to <strong>...lc/api/topologies</strong>. This can be done programmatically or with a browser plugin such as Firefox RESTClient:</p>
 <p><img src="images/promotion_10.jpg" alt="Creating the topology" /></p>
 <p>Note the inclusion of the content-type and basicAuth headers.</p>
