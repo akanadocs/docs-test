@@ -40,6 +40,7 @@ nav-title: Promotion Guide
       <li><a href="#05_05">Filters</a></li>
     </ol>
   </li>
+  <li><a href="#dz_configurations">DeploymentZoneConfigurations</a></li>
   <li><a href="#topology_api">Topology API</a></li>
   <li><a href="#lm_console">Lifecycle Manager Console</a>
     <ol>
@@ -177,6 +178,8 @@ vsep.listenerName = "https"</td>
 <p>The topology asset model reflects the conceptual topology model defined earlier in this document with asset types for Environment, Tenant and Promotion Profile. The following diagram shows the asset structure for a Topology with three Environments (each box representing an asset):</p>
 <p><img src="images/promotion_05.jpg" alt="Topology asset model, three environments" /></p>
 <p>In addition to the relationships shown, Tenant assets contain connection information and credentials as classifiers while Promotion Profile assets hold Rules as a JSON artifact. Asset Filters are managed implicitly and optionally referenced by Promotion Profile assets.</p>
+
+
 <h5>Promotable Asset Model</h5>
 <p>Promotable assets such as APIs are represented by specific asset-types. These asset types reference an Environment asset and contain <strong>Iteration</strong> assets representing each promotion of that asset. Note that there is a difference between <strong>versions</strong> of assets such as APIs and <strong>iterations</strong>: a single version of an API may be promoted multiple times, resulting in multiple iterations of that version. In the following asset diagram, the asset AnAPI/v1 has been promoted from development to integration test and then to production environments once, followed by another promotion from development to integration test. This resulted in two iterations in the development and integration test environments with a single iteration at production. Notice that the iteration at production indicates that its source iteration is iteration 1 in integration test, even though there is a newer iteration (iteration 2) in that environment.</p>
 <p><img src="images/promotion_06.jpg" alt="Promotable asset model" /></p>
@@ -187,7 +190,7 @@ vsep.listenerName = "https"</td>
   <li>The status of the promotion. Values for the status are:
     <ul>
       <li><strong>Promotion Pending</strong>: Promotion has been requested but has not been completed. It may be pending one or more approvals.
-      <p><strong>Note</strong>: In the case where an approval process is in place and a promotion request is rejected, the Iteration will remain in a Promotion Pending state. However, the API platform UI will show it as <strong>Promotion Rejected</strong>, allowing promotion to be requested again</p>.</li>
+      <p><strong>Note</strong>: In the case where an approval process is in place and a promotion request is rejected, the Iteration will remain in a Promotion Pending state. However, the API platform UI will show it as <strong>Promotion Rejected</strong>, allowing promotion to be requested again.</p></li>
       <li><strong>Promoted</strong>: Promotion has completed.</li>
       <li><strong>Promotion Failed</strong>: There was a failure in the promotion process. Promotion can be requested again for assets in this state. The next promotion attempt will replace the failed iteration.</li>
     </ul>
@@ -314,12 +317,7 @@ vsep.listenerName = "https"</td>
 }</pre>
 <p>Note the use of '\' to escape the double quotes in the condition and action.
 </p>
-<p>Here is another example Rule that changes the container that hosts an API's virtual service endpoints (<strong>vsep</strong>):</p>
-<pre>{
-  "scope":"vsep",
-  "condition":"vsep.containerKey == '54f85de7-8d3c-41a2-96c7-84e8d1ac' ",
-  "action":"vsep.containerKey = '6db90a54-fd66-4ac2-b670-c236e771' "
-}</pre>
+
 
 
 <a name="05_05"></a><h4>Filters</h4>
@@ -387,6 +385,156 @@ vsep.listenerName = "https"</td>
   ]
 }</pre>
 <p><a href="#top">Back to top</a></p>
+
+
+
+<a name="xxx"></a><h3>uptohere xxx [NEW SECTION GOES IN HERE}</h3>
+<a name="dz_configurations"></a><h3>DeploymentZoneConfigurations</h3>
+<p>Within a PromotionProfile, DeploymentZoneConfigurations can be used to tailor the propagation of an API's endpoints to the target environment. During API promotion, applicable DeploymentZoneConfigurations are selected based on the name of an API endpoint's DeploymentZone in the source environment and optionally filters that apply to the metadata of the API.</p>
+<p>A DeploymentZoneConfiguration contains a list of DeploymentZone names in the target environment. When a DeploymentZoneConfiguration is determined to be applicable for an endpoint of the API being promoted, the endpoint is populated into the specified target environment DeploymentZones . </p>
+<p>The structure of the DeploymentZoneConfigurations allow endpoints in a source environment to be fanned out to a target environment. For example, a staging environment may only support a single DeploymentZone while the production environment supports many DeploymentZones across different geographic regions.</p>
+<p>Consider the following example PromotionProfile:</p>
+<pre>{
+  "name":"Default Production Promotion",
+  "targetEnvironment":"production",
+  "deploymentZoneConfigurations":[
+    {
+      "sourceDeploymentZoneName":"StagingDZ",
+      "targetDeploymentZoneNames":[
+        "ProdWestDZ",
+        "ProdEastDZ"
+      ]
+    }
+  ]
+}</pre>
+<p>In this example, a single DeploymentZoneConfiguration has been defined to propagate endpoints in in the <strong>StagingDZ1</strong> DeploymentZone in the source environment to both <strong>ProdWestDZ</strong> and <strong>ProdEastDZ</strong> in the target environment.</p>
+
+
+<h4>Using Filters with DeploymentZoneConfigurations</h4>
+<p>The filtering capability of DeploymentZoneConfigurations allows for target DeploymentZones to be determined based on metadata of the API. For example, which DeploymentZones an API is deployed on may be determined by security metadata associated with the API.</p>
+<p>In the following example, the filters named <strong>PII</strong> and <strong>Not PII</strong> are used in selecting the DeploymentZones an API's endpoints are propagated to in the target environment based on whether the API is marked as processing personal identity information.</p>
+<pre>"deploymentZoneConfigurations": [
+  {
+    "filterNames": [
+      "pii"
+    ],
+    "sourceDeploymentZoneName": "StagingDZ",
+    "targetDeploymentZoneNames": [
+      "PIIDZ"
+    ]
+  },
+  {
+    "filterNames": [
+      "not-pii"
+    ],
+    "sourceDeploymentZoneName": "StagingDZ",
+    "targetDeploymentZoneNames": [
+      "NotPIIDZ"
+    ]
+  }
+]
+</pre>
+<p>{<span class="apidoc_red">Tim: the above failed parsing as a valid JSON object. Wondering if there might be an issue with it? Just checking.</span>}</p>
+
+
+
+
+<p>With the filters defined in the topology as:</p>
+<pre>"filters": [
+  {
+    "name": "pii",
+    "classifier-criteria": [
+      {
+        "classifierName": "pii",
+        "values": [
+          {
+            "value": "true"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "not-pii",
+    "classifier-criteria": [
+      {
+        "classifierName": "pii",
+        "values": [
+          {
+            "value": "false"
+          }
+        ]
+      }
+    ]
+  }
+]
+</pre>
+<p>{<span class="apidoc_red">Tim: the above failed parsing as a valid JSON object. Wondering if there might be an issue with it? Just checking.</span>}</p>
+
+<h4>Default Endpoint Propagation</h4>
+<p>If an endpoint's source DeploymentZone doesn't match a defined DeploymentZoneConfiguration the promotion processing will propagate the endpoint to a DeploymentZone in the target environment with the same name if one exists. You can think of this as an implicit DeploymentZoneConfiguration for every DeploymentZone in the source environment of the form:</p>
+<pre>{
+  "sourceDeploymentZoneName":"{source DeploymentZone name}",
+  "targetDeploymentZoneNames":[
+    "{source DeploymentZone name}"
+  ]
+}</pre>
+
+
+
+
+<p>Endpoints from a source DeploymentZone can be disabled altogether by defining a DeploymentZoneConfiguration that specifies no target DeploymentZone names. For example:</p>
+<pre>{
+  "sourceDeploymentZoneName":"TestDZ",
+  "targetDeploymentZoneNames":[
+
+  ]
+}</pre>
+
+
+
+<h4>Using Rules with DeploymentZoneConfigurations</h4>
+<p>A DeploymentZoneConfiguration may optionally contain RuleDefinitions to be applied to the properties of the endpoints being promoted with this DeploymentZoneConfiguration. </p>
+<p>Rules at this level can be used to alter a listener name, the endpoint's path, or its vanity host. The properties available for modification are:</p>
+<dl>
+<dt>listenerName</dt>
+<dd>This is the name of the endpoint's listener; for example, <strong>http</strong>. It must match a listener associated with the target DeploymentZone.</dd>
+<dt>path</dt>
+<dd>This is the endpoint-specific path. If the endpoint in the source environment did not have an endpoint-specific path, this will be set to <strong>NO_VALUE</strong>. A rule may set the path property to another value or to <strong>NO_VALUE</strong> indicating that the target endpoint will not have a specific path.</dd>
+<dt>vanityHostName</dt>
+<dd>This is a host name (CNAME) specific to the endpoint. If the endpoint in the source environment did not have a vanity host name, this will be set to <strong>NO_VALUE</strong>. A rule may set the vanityHostName property to another value or to <strong>NO_VALUE</strong> indicating that the target endpoint will not have a vanity host name.</dd>
+<dt>DISABLED</dt>
+<dd>This property provides a means of disabling an endpoint via a rule. Setting the value of DISABLED to true will cause the endpoint to not be propagated to the target environment.</dd>
+</dl>
+
+<p>In the following example, a rule is provided with a DeploymentZoneConfiguration that will disable the propagation of endpoints that do not have a vanity host name in the source environment:</p>
+<pre>{
+  "sourceDeploymentZoneName":"StagingDZ",
+  "targetDeploymentZoneNames":[
+    "ProdDZ"
+  ],
+  "rules":[
+    {
+      "scope":"vsep",
+      "condition":"vsep.vanityHostName == 'NO_VALUE'",
+      "action":"vsep.DISABLED = 'true'"
+    }
+  ]
+}</pre>
+
+
+<h4>Duplicate Endpoints</h4>
+<p>Care should be taken to avoid duplicating endpoints across environments using the same underlying gateways. This situation can occur if the target DeployementZone has the same underlying Gatway as the source DeploymentZone (leading to the same host name and port) and has no options set for altering the gateway host name or path. This situation will result in the promotion of the API failing.</p>
+<p>There are several ways you can help make sure there are no duplicate endpoints:</p>
+<ul>
+  <li>Enable random prefixes in the target DeploymentZone.</li>
+  <li>Provide a custom hostname for gateway in the target DeploymentZone that differs from the source DepoymentZone.</li>
+  <li>Use a rule in the DeploymentZoneConfiguration to alter the vanity host name or path of the endpoints being promoted.</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+<p><span class="apidoc_red">END NEW SECTION</span></p>
 
 
 
