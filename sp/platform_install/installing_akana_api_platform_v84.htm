@@ -457,6 +457,10 @@ nav-title: Installing Akana API Platform 8.4x
 </ul>
 
 
+
+<a name="database_notes"></a><h3>Database Notes</h3>
+<p>This section includes notes and additional information relating to installation with supported databases.</p>
+
 <a name="notes_database_oracle"></a><h5>Database notes: Oracle</h5>
 <p>Please note the following if you're working with an Oracle database:</p>
 <ul>
@@ -466,8 +470,25 @@ nav-title: Installing Akana API Platform 8.4x
 </ul>
 
 
-<a name="notes_database_mysql_rm"></a>
-<h5>Database notes: MySQL with Lifecycle Repository</h5>
+<a name="notes_database_mysql_settings"></a><h5>MySQL: database settings for the API Platform</h5>
+<p>If you're using MySQL 5.6, the settings below are required for the API Platform. You'll need to configure these settings in the <strong>my.ini</strong> file <strong>before</strong> loading the database schema in MySQL.</p>
+<p>Specific properties are listed below, with references to the applicable MySQL documentation:</p>
+<ul>
+  <li>innodb_large_prefix=ON; (<a href="http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_large_prefix" title="http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_large_prefix" target="_blank">http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_large_prefix</a>)</li>
+  <li>innodb_file_format=barracuda; (<a href="http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_file_format" title="http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_file_format" target="_blank">http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_file_format</a>)</li>
+  <li>innodb_file_per_table=ON; (<a href="http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_file_per_table" title="http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_file_per_table" target="_blank">http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_file_per_table</a>)</li>
+  <li>Optional, for better performance: 
+  <p>innodb_flush_log_at_trx_commit=0; (<a href="http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_flush_log_at_trx_commit" title="http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_flush_log_at_trx_commit" target="_blank">http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_flush_log_at_trx_commit</a>) </p></li>
+  <li>max_allowed_packet=1073741824; (<a href="http://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html#sysvar_max_allowed_packet" title="http://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html#sysvar_max_allowed_packet" target="_blank">http://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html#sysvar_max_allowed_packet</a>)</li>
+</ul>
+<p>For more information, refer to <a href="install_mysql_dbsettings.htm">MySQL Database Properties</a>.</p>
+<p>If you're using MySQL 5.7, there is one additional flag required in the <strong>my.ini</strong> file:</p>
+<ul>
+  <li>optimizer_switch='derived_merge=off'</li>
+</ul>
+
+
+<a name="notes_database_mysql_rm"></a><h5>Database notes: MySQL with Lifecycle Repository</h5>
 <p>For Akana API Platform 8.4 installs using the Lifecycle Repository feature, the Lifecycle Manager database user requires specific additional grants when using MySQL. These grants are required for successful completion of the <strong>Initialize Repository Database</strong> configuration task; otherwise, the task fails.</p>
 <p>The Lifecycle Repository feature is part of the following installation features:</p>
 <ul>
@@ -737,7 +758,7 @@ credential.password = password
 default.host=localhost
 default.port=9900</pre>
 <p>To run the properties file in a Linux environment, go to the <strong>{release_directory}/bin</strong> folder and run the following command:</p>
-<pre>startup.sh configurator -Dsilent=true -Dproperties={properties file path}/{filename}.properties</pre>
+<pre>startup.sh configurator -Dsilent=true -Dproperties={full path to properties file}/{filename}.properties</pre>
 <p>For example:</p>
 <pre>startup.sh configurator -Dsilent=true -Dproperties=properties/pmcm_silentinstall.properties</pre>
 <p>Then:</p>
