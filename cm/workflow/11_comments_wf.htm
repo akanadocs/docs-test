@@ -24,7 +24,6 @@ nav-title: Comments Workflow
   <li><a href="#comment_vr_00">Comments Workflow: Variable Resolvers</a> (none)</li>
 </ol>
 <div class = "divider1"></div>
-<!--<p>{\atmosphere\com.soa.atmosphere.impl\META-INF\resources\templates\default-comments-workflow.xml}</p>-->
 
 
 
@@ -45,7 +44,6 @@ nav-title: Comments Workflow
 
 <a name="comment_ia_03"></a><h4>@Alert</h4>
 <p>An initial action that could be used to initiate a comment as the result of an alert&#8212;for example, SLA or quota alerts.</p>
-<!--<p>{\atmosphere\com.soa.atmosphere.impl\src\com\soa\comment\workflow\CommentWorkflowConstants.java}</p>-->
 <p><a href="#top">Back to top</a></p>
 
 
@@ -61,7 +59,6 @@ nav-title: Comments Workflow
 <a name="comment_ra_01"></a><h4>@read</h4>
 <p>Applies to unpublished comments only. This action controls who can read an unpublished  comment. When the @read action is available, read permission is available for someone to read the comment in an unpublished state. If @read is not available for a specific user for the current state of the comment, the user cannot see it.</p>
 <p>Once the comment is published, all users who have visibility of the resource can see it.</p>
-<!--<p>{\atmosphere\com.soa.atmosphere.impl\src\com\soa\comment\workflow\CommentWorkflowConstants.java}</p>-->
 <p><a href="#top">Back to top</a></p>
 
 
@@ -72,8 +69,8 @@ nav-title: Comments Workflow
   <li><a href="#comment_f_01">MarkPublished</a></li>
   <li><a href="#comment_f_02">markUnPublished</a></li>
   <li><a href="#comment_f_03">deleteComment</a></li>
+  <li><a href="#comment_f_04">sendNotification</a></li>
 </ul>
-<!--<p>{\atmosphere\com.soa.atmosphere.impl\src\com\soa\comment\workflow\CommentWorkflowFunctions.java}</p>-->
 
 
 <a name="comment_f_01"></a><h4>MarkPublished</h4>
@@ -164,13 +161,91 @@ nav-title: Comments Workflow
 
 
 
+<a name="comment_f_04"></a><h4>sendNotification</h4>
+<h5 class="stamp">API Platform Version: 8.2.23 and later</h5>
+<p>Triggers the specified notification based on an event relating to a comment. For example, this can be used to trigger a notification email to be sent to API admins when a comment is made on a pending API access request. By default, in the comments workflow, a notification email is sent only to the app developer.</p>
+<p><strong>Note</strong>: The email isn't sent instantly; it is queued to be sent. It goes to the notifications queue, and the job runs every 60 seconds. There might be a short delay before the user receives the email.</p>
+
+<h5>Parameters</h5>
+<table cellspacing="0px" class="doctable" style="width: 98%;">
+  <thead>
+    <tr>
+      <th width="20%">Name</th>
+      <th width="80%">Description/Values</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="t2row">
+      <td>subjectType</td>
+      <td>Indicates the type of resource the notification relates to. In the context of the comments workflow, the subjectType is <strong>board-item</strong>.</td>
+    </tr>
+    <tr class="t1row">
+      <td>subjectSubtype</td>
+      <td><p>Valid only when <strong>subjectType</strong> is set to <strong>board-item</strong>. Indicates the type of resource that was commented on. Valid values are the board item types that can have comments attached to them:</p>
+        <ul>
+          <li>For API access requests: <strong>ContractRequest</strong></li>
+          <li>For group membership requests: <strong>GroupMemberReq</strong></li>
+          <li>For general app or API discussions: <strong>Discussion</strong></li>
+        </ul></td>
+    </tr>
+    <tr class="t2row">
+      <td>Role</td>
+      <td><p>The role to which the notifications will be sent&#8212;only users who hold this role for the type of resource as specified in the subjectType parameter. Valid values:</p>
+        <ul>
+          <li>SubjectAdmin</li>
+          <li>SiteAdmin</li>
+          <li>ApiAdmins</li>
+          <li>BusinessAdmin</li>
+          <li>Author</li>
+        </ul></td>
+    </tr>
+    <tr class="t1row">
+      <td>notificationType</td>
+      <td><p>The type of notification being sent. Can be any valid notification existing in the platform. For example:</p>
+        <ul>
+          <li>com.soa.notification.type.api.post.created (for an API)</li>
+          <li>com.soa.notification.type.app.post.created (for an app)</li>
+          <li>com.soa.notification.type.group.post.created (for a group)</li>
+          <li>com.soa.notification.type.board.post.created (for a board)</li>
+        </ul>      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h5>Examples/Notes/Additional Information</h5>
+<p>In the example below, the workflow is set up so that if a comment is made on an API access request, a notification is sent to API Admins. Without this workflow modification, the notification only goes to the app owner.</p>
+<pre>&lt;action id="101" name="Auto Approve Admin Add" auto="TRUE"&gt;
+  &lt;restrict-to&gt;
+    &lt;conditions type="OR"&gt;
+      &lt;condition type="authorizeByCMRole"&gt;
+        &lt;arg name="role"&gt;SiteAdmin,BusinessAdmin&lt;/arg&gt;
+      &lt;/condition&gt;
+      &lt;condition type="isCommentAutoPublishEnabled"/&gt;
+    &lt;/conditions&gt;
+  &lt;/restrict-to&gt;
+  &lt;results&gt;
+    &lt;unconditional-result old-status="none"  status="Published" step="300" owner="${caller}" /&gt;
+  &lt;/results&gt;
+  &lt;post-functions&gt;
+    &lt;function type="markPublished"/&gt;
+    &lt;function type="sendNotification"&gt;
+      &lt;arg name="subjectType"&gt;board-item&lt;/arg&gt;
+      &lt;arg name="subjectSubtype"&gt;ContractRequest&lt;/arg&gt;
+      &lt;arg name="role"&gt;ApiAdmins&lt;/arg&gt;
+      &lt;arg name="notificationType"&gt;com.soa.notification.type.my.post.comment&lt;/arg&gt;
+    &lt;/function&gt;
+  &lt;/post-functions&gt;
+&lt;/action&gt;</pre>
+<p><a href="#top">Back to top</a></p>
+
+
+
 <a name="comment_c_00"></a><h3>Comments Workflow: Conditions</h3>
 <p>The following conditions apply to the comments workflow:</p>
 <ul>
   <li><a href="#comment_c_01">authorizeByCMRole</a></li>
   <li><a href="#comment_c_02">isCommentAutoPublishEnabled</a></li>
 </ul>
-<!--<p>{\atmosphere\com.soa.atmosphere.impl\src\com\soa\comment\workflow\CommentWorkflowConditions.java}</p>-->
 
 
 <a name="comment_c_01"></a><h4>authorizeByCMRole</h4>
@@ -222,7 +297,6 @@ nav-title: Comments Workflow
 
 <a name="comment_vr_00"></a><h3>Comments Workflow: Variable Resolvers</h3>
 <p>There are currently no variable resolvers for Akana API Platform workflows relating to comments.</p>
-<!--<p>{\atmosphere\com.soa.atmosphere.impl\src\com\soa\comment\workflow\CommentWorkflowVariableResolver.java}</p>-->
 <p><a href="#top">Back to top</a></p>
 
 
@@ -242,10 +316,10 @@ nav-title: Comments Workflow
   <li><a href="03_app_version_wf.htm">App Version Workflow</a></li>
   <li><a href="04_api_version_wf.htm">API Version Workflow</a></li>
   <li><a href="05_api_contract_wf.htm">API Contract Workflow</a></li>
-  <li><a href="06_ticket_wf.htm">Ticket Workflow</a></li>
   </ul>
   </td>
   <td width="400"><ul>
+  <li><a href="06_ticket_wf.htm">Ticket Workflow</a></li>
   <li><a href="07_group_membership_wf.htm">Group Membership Workflow</a></li>
   <li><a href="08_user_wf.htm">User Workflow</a></li>
   <li><a href="09_review_wf.htm">Review Workflow</a></li>
