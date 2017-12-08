@@ -10,6 +10,8 @@ type: page
 nav-title: Performance Tuning
 ---
 <h2>Akana Performance Tuning Guide</h2>
+<p>Performance tuning guidelines for platform versions 8.4.x.</p>
+<p><strong>Note</strong>: for a summary of performance tuning guidelines for different platform versions, see <a href="performance-tuning_all.htm">Akana Performance Tuning Documentation</a>.</p>
 <h3 style="color: grey;">Table of Contents</h3>
 <ol class="table_of_contents">
 	<li><a href="#introduction">Introduction</a></li>
@@ -60,18 +62,20 @@ nav-title: Performance Tuning
 <p>There are currently two features that can be split up this way:</p>
 <ul>
 <li>The Akana Policy Manager Services feature is comprised of three separate sub-ordinate features:</li>
-<li>Akana Managed Services - Installs the Policy Manager system services</li>
-<li>Akana Security Services - Installs Policy Manager security-related services</li>
-<li>Akana Scheduled Jobs - Installs a series of system background jobs that are executed by the Policy Manager job scheduler</li>
+<li>Akana Managed Services&#8212;Installs the Policy Manager system services</li>
+<li>Akana Security Services&#8212;Installs Policy Manager security-related services</li>
+<li>Akana Scheduled Jobs&#8212;Installs a series of system background jobs that are executed by the Policy Manager job scheduler</li>
 <li>The Akana Community Manager feature is comprised of two separate sub-ordinate features:</li>
-<li>Akana Community Manager Scheduled Jobs - This feature enables Community Manager scheduled jobs on the container</li>
-<li>Akana Community Manager APIs - This feature deploys Community Manager APIs in the container</li>
+<li>Akana Community Manager Scheduled Jobs&#8212;This feature enables Community Manager scheduled jobs on the container</li>
+<li>Akana Community Manager APIs&#8212;This feature deploys Community Manager APIs in the container</li>
 </ul>
 <p><strong>Notes:</strong></p>
 <ol>
 <li>All Schedule jobs features should be in the same container. This means that the Akana Scheduled Jobs and Akana Community Manager Scheduled Jobs featues must be installed together into containers. Installing any one scheduled job feature will start the Quartz scheduler and could cause it to run all schedule jobs resulting in failures.</li>
 <li>The Community Manager theme features (for example, Akana Community Manager Simple Developer Theme and Akana Community Manager Default Theme) must be installed together with the Akana Community Manager APIs feature into containers.</li>
 </ol>
+<p><a href="#top">back to top</a></p>
+
 
 <h4><a name="data-archiving"></a>Database maintenance</h4>
 <p>Over time, the data stored by the Policy Manager will need to be archived to prevent the database from growing to an unmanageable size. This is a critically important maintenance task that can be performed is three different ways:</p>
@@ -104,43 +108,115 @@ nav-title: Performance Tuning
 [SOAUSERACCOUNT]           hard    nofile          100000</pre>
 <p>After changing the limits.conf file, you will need to re-login for the setting to tale effect. Use ulimit -n to ensure that the value has changed.</p>
 <p><strong>Scope</strong>: All Containers</p>
+<p><a href="#top">back to top</a></p>
+
 
 <h4><a name="jre-memory"></a>Configuring the JVM memory settings</h4>
 <p>Generally, we do not advise changing the JVM memory settings. A better approach is to install more containers and load-balance across them. This is due to the overhead incurred in managing the increased memory. The container ships with the following defaults:</p>
 <ul>
-<li>For 32 bit machines: -Xmx1024M -XX:MaxPermSize=192M</li>
-<li>For 64 bit machines: -Xmx2048M -XX:MaxPermSize=256M</li>
+<li>For 32-bit machines:
+  <pre> -Xmx1024M -XX:MaxPermSize=192M</pre></li>
+<li>For 64-bit machines:
+  <pre>-Xmx2048M -XX:MaxPermSize=256M</pre></li>
 </ul>
-<p><strong>To increase the settings</strong></p>
+<p>{<span class="apidoc_red">beginning of draft revised section.</span>}</p>
+<p>The changes you make will depend on which product version you're using and also which Java version you're using. See <a href="#java_versions">Note re Java versions</a> below. Follow these instructions:</p>
+<ul>
+  <li>For Java 7: see <a href="#increase_mem_java7">To increase the JVM memory settings: Java 7</a></li>
+  <li>For Java 8: see <a href="#increase_mem_java8">To increase the JVM memory settings: Java 8</a></li>
+</ul>
+
+<h5><a name="increase_mem_java7"></a>To increase the JVM memory settings: Java 7</h5>
 <p>If you decide to increase the memory settings, first find the existing settings.</p>
-<p>In the <strong>RegisterContainerServiceYAJWS.bat</strong> file, the existing 32-bit settings:</p>
+<p>Modify the setting in this file:</p>
+<ul>
+  <li>Versions prior to 8.2: <strong>RegisterContainerService.bat</strong></li>
+  <li>Version 8.2 and later: <strong>RegisterContainerServiceYAJWS.bat</strong></li>
+</ul>
+<p>In the<strong> </strong>file, these are the existing 32-bit settings:</p>
 <pre>set JAVA_MEM=--JvmMx 1024
 set PERM_GEN_MEM=-XX:MaxPermSize=128M</pre>
-<p>The existing 64-bit settings:</p>
+<p>These are the existing 64-bit settings:</p>
 <pre>set JAVA_MEM=--JvmMx 2048
 set PERM_GEN_MEM=-XX:MaxPermSize=256M</pre>
-<p>Change the existing settings as needed. Always increase the MaxPermSize in proportion to the memory allocated, and do not exceed 4096M; for example:</p>
+<p>Change the existing settings as needed. Always increase the MaxPermSize value in proportion to the memory allocated, and do not exceed 4096M; for example:</p>
 <pre>set JAVA_MEM=--JvmMx 4096
 set PERM_GEN_MEM=-XX:MaxPermSize=512M</pre>
-<p>For the changes to take effect, you must register the service by running the following command:</p>
+
+<p>For the changes to take effect, you must register and unregister the service. See <a href="#reg_unreg_service">To register and unregister the service</a>.</p>
+
+
+<h5><a name="increase_mem_java8"></a>To increase the JVM memory settings: Java 8</h5>
+<p>For Java 8, find the following file: <strong>/yajsw/conf/wrapper.conf</strong>.</p>
+<p>Modify the following setting:</p>
+<pre>
+wrapper.java.additional.9 = -Xmx4096M</pre>
+<p>Change the setting as needed, then register and unregister the service so that the change takes effect. See xxx.</p>
+
+
+<h5><a name="reg_unreg_service"></a>To register and unregister the service</h5>
+<p>When you make changes to the JVM settings, you must register and unregister the service so that the changes take effect.</p>
+<p><strong>To register and unregister the service so that the the new settings take effect: versions prior to 8.2:</strong></p>
+<p>To register the service, run the following command:</p>
+<pre>RegisterContainerService.bat {container name}</pre>
+<p>If the service was already present, you must first unregister it, and then register it: run the following commands, in sequence:</p>
+<pre>UnRegisterContainerService.bat {container name}
+RegisterContainerService.bat {container name}</pre>
+
+<p><strong>To register and unregister the service so that the the new settings take effect: version 8.2 and later:</strong></p>
+<p>To register the service, run the following command:</p>
 <pre>RegisterContainerServiceYAJWS.bat {container name}</pre>
+
+
+
+
+
 <p>If the service was already present, you must first unregister it, and then register it: run the following commands, in sequence:</p>
 <pre>UnRegisterContainerServiceYAJWS.bat {container name}
 RegisterContainerServiceYAJWS.bat {container name}</pre>
 <p><strong>Scope</strong>: All Containers</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5><a name="java_versions"></a>Note re Java versions</h5>
+<p>The above instructions vary according to the Java version your installation is using. Supported versions:</p>
+<ul>
+  <li>Akana platform  version 7.2.x uses Java 7.0, unless the installation has upgraded to an external JVM.</li>
+  <li>Version 8.0 and later uses Java 8.0.</li>
+</ul>
+<p>{<span class="apidoc_red">end of draft revised section.</span>}</p>
+<p><a href="#top">back to top</a></p>
+
+
 
 <h4><a name="listener-connection-pool"></a>Configuring the container listeners</h4>
 <p>The listener thread pool size dictates the number of concurrent inbound connections that the container can handle.</p>
 <p><strong>Scope</strong>: All Containers</p>
 <p>In the Policy Manager Console, navigate to the appropriate container and select 'Modify Container Listener' from within the 'Inbound Listeners' section. You will be presented with configure the following:</p>
 <p><img src="images/tuning-modify-container-listener.png" alt="Modify Container Listener" title="Modify Container Listener" /></p>
-<p>The only parameter that is typically modified is 'Maximum' It should be set to a value high enough to support the number of concurrent connections. This is different depending on the features installed in each container:</p>
+<p>The only parameter that is typically modified is <strong>Maximum</strong>. It should be set to a value high enough to support the number of concurrent connections. This is different depending on the features installed in each container:</p>
 <ul>
-<li>Akana Network Director - this value is typically the same as the maxTotal value set in the client connection pool. This is because the Network Director is a proxy and the ratio of inbound to outbound connections is typically 1:1.</li>
-<li>Akana Community Manager (specifically the Akana Community Manager APIs feature) - this value should be set based on the number of hits per second. If the Akana Community Manager OAuth Provider feature is installed, the number of hits to the OAuth server should also be accounted for. <strong>A general rule of thumb is to assume a minimum of 1 thread for every 10 concurrent users.</strong></li>
-<li>Akana Policy Manager Console - this value should be set to the number of concurrent active users of the Policy Manager user interface.</li>
-<li>Akana Policy Manager Services (specifically the Akana Managed Services feature) - this value should only be changed on rare occasions where there are a very large number of Network Directors in the environment. <strong>A good rule of thumb is 10 threads per Network Director.</strong></li>
+<li>Akana Network Director&#8212;this value is typically the same as the maxTotal value set in the client connection pool. This is because the Network Director is a proxy and the ratio of inbound to outbound connections is typically 1:1.</li>
+<li>Akana Community Manager (specifically the Akana Community Manager APIs feature)&#8212;this value should be set based on the number of hits per second. If the Akana Community Manager OAuth Provider feature is installed, the number of hits to the OAuth server should also be accounted for. <strong>A general rule of thumb is to assume a minimum of 1 thread for every 10 concurrent users.</strong></li>
+<li>Akana Policy Manager Console&#8212;this value should be set to the number of concurrent active users of the Policy Manager user interface.</li>
+<li>Akana Policy Manager Services (specifically the Akana Managed Services feature)&#8212;this value should only be changed on rare occasions where there are a very large number of Network Directors in the environment. <strong>A good rule of thumb is 10 threads per Network Director.</strong></li>
 </ul>
+<p><a href="#top">back to top</a></p>
+
 
 <h4><a name="client-connection-pool"></a>Configuring the client connection pool</h4>
 <p>The client connection pool controls the number of simultaneous outbound connections from the container. It typically only requires tuning in the Network Director.</p>
@@ -171,6 +247,8 @@ http.connection.manager.defaultMaxPerRoute = 1500</pre>
 <p>In the admin console, configure the following:</p>
 <pre>com.soa.service.category -&gt; 
 service.category.manager.transactional.loadGifMetrics = false</pre>
+<p><a href="#top">back to top</a></p>
+
 
 <h4><a name="auto-search"></a>Disabling Auto-search</h4>
 <p>This property controls the behavior of the Policy Manager Console (Workbench Tab) when its loaded. By default this value is set to true and a search is executed to display all the APIs/Services in the system. If there are a large number of services this default search can take a while and should be disabled.</p>
@@ -185,6 +263,8 @@ workbench.search.PerformAutoSearch=true</pre>
 <p>In the admin console, configure the following:</p>
 <pre>com.soa.metrics -&gt; 
 metrics.rollup.reporter.requireMetricsPolicy=true</pre>
+<p><a href="#top">back to top</a></p>
+
 
 <h4><a name="usage-writer"></a>Configuring the Usage Writer</h4>
 <p>The Usage Writer is an in-memory queue and batch writing mechanism to store usage data, recorded messages and metrics in the database.</p>
@@ -208,6 +288,8 @@ usage.batch.writer.writeInterval</pre>
 <li>Increasing the usageBatchSize by small increments</li>
 <li>Decreasing the writeInterval by small decrements</li>
 </ol>
+<p><a href="#top">back to top</a></p>
+
 
 <h4><a name="preloading"></a>Preloading Invoked Services</h4>
 <p>During normal Network Director operation, the downstream API/service endpoints are loaded only upon first invocation. This is done to save memory and lower startup time, but incurs an overhead in the first invocation of an API.</p>
@@ -216,6 +298,8 @@ usage.batch.writer.writeInterval</pre>
 <pre>com.soa.vs.engine -&gt; 
 vs.capability.metadata.preloadInvokedServices=false</pre>
 <p>If the number of APIs/Services is less than 100, you can preload all the downstream endpoint on startup by setting this value to 'true'.</p>
+<p><a href="#top">back to top</a></p>
+
 
 <h4><a name="contract-policy-cache"></a>Contract Policy Cache</h4>
 <p>The Network Director caches the policies associated with the contract. This cache expires to save memory, but incurs an overhead in the first invocation of an API when the cache is reloaded.</p>
@@ -227,6 +311,8 @@ contract.handler.framework.idleExpiration=300</pre>
 <pre>com.soa.contract.enforcement -&gt; 
 contract.handler.framework.maxRefreshInterval=120</pre>
 <p>Amount of seconds a contract should remain in the cache before requiring a refesh. The default value is 120, but can be extended to something like 900 (15 minutes) as long as the time taken to propagate contract policies is not a security or operational concern.</p>
+<p><a href="#top">back to top</a></p>
+
 
 <h4><a name="endpoint-cache"></a>Endpoint Cache</h4>
 <p>The Network Director caches the endpoints associated with downstream APIs/Service. This cache expires to save memory, but incurs an overhead in the first invocation of an API when the cache is reloaded.</p>
@@ -241,6 +327,8 @@ lbha.endpoint.refresh.task.expirationInterval=300000</pre>
 <pre>com.soa.jbi -&gt; 
 lbha.endpoint.refresh.task.maxrefreshInterval=60000</pre>
 <p>The maximum amount of time in milliseconds before the refresh of endpoints. The default value is 60000, but can be extended to 900000 (15 minutes) as long as the time to propagate downstream endpoint changes is not a security or operational concern.</p>
+<p><a href="#top">back to top</a></p>
+
 
 <h4><a name="cert-cache"></a>Policy Manager Client (Certificate) Cache</h4>
 <p>The Network Director caches the certificates and keys used for the crytographic functions. The cache can be increased or decreased depending on availability and security requriements.</p>
@@ -252,6 +340,8 @@ pm.client.cache.refresh.trigger.repeatInterval=60000</pre>
 <pre>com.soa.client.subsystems -&gt; 
 pm.client.cache.cacheExpirationSecs=300</pre>
 <p>The time is seconds before a certificate is expired from the cache. This time can be lengthened to ensure that the Network Directors can continue to function without the Policy Manager. This may cause a security vulnerability if a certificate is revoked but the Policy Manager is unreachable.</p>
+<p><a href="#top">back to top</a></p>
+
 
 <h4><a name="az-cache"></a>Contract Authorization Cache</h4>
 <p>The Network Director caches the contract authorization descisions to improve performance. This cache improves the performance of the authorization activities and will also allow the Network Director to continue functioning for a while without connectivity to Policy Manager.</p>
@@ -263,6 +353,8 @@ cached.auz.engine.operation.cacheTimeout=60</pre>
 <pre>com.soa.auz.operation -&gt; 
 cached.auz.engine.operation.expirationTimeInSeconds=1800</pre>
 <p>The time in seconds before the authorization descision will be removed from the cache. This time can be lengthened to ensure that the Network Directors can continue to function without the Policy Manager. This may cause a security vulnerability if a contract is revoked but Policy Manager is unreachable.</p>
+<p><a href="#top">back to top</a></p>
+
 
 <h4><a name="cm-settings"></a>Akana API Platform Settings</h4>
 <p>The Akana API Platform also incorporates a number of cache settings. These include:</p>
