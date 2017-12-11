@@ -115,23 +115,43 @@ nav-title: Performance Tuning
 <p>Generally, we do not advise changing the JVM memory settings. A better approach is to install more containers and load-balance across them. This is due to the overhead incurred in managing the increased memory. The container ships with the following defaults:</p>
 <ul>
 <li>For 32-bit machines:
-  <pre> -Xmx1024M -XX:MaxPermSize=192M</pre></li>
+  <pre>-Xmx1024M -XX:MaxPermSize=192M</pre></li>
 <li>For 64-bit machines:
   <pre>-Xmx2048M -XX:MaxPermSize=256M</pre></li>
 </ul>
 <p>{<span class="apidoc_red">beginning of draft revised section.</span>}</p>
 <p>The changes you make will depend on which product version you're using and also which Java version you're using. See <a href="#java_versions">Note re Java versions</a> below. Follow these instructions:</p>
 <ul>
-  <li>For Java 7: see <a href="#increase_mem_java7">To increase the JVM memory settings: Java 7</a></li>
   <li>For Java 8: see <a href="#increase_mem_java8">To increase the JVM memory settings: Java 8</a></li>
+  <li>For Java 7: see <a href="#increase_mem_java7">To increase the JVM memory settings: Java 7</a></li>
 </ul>
+
+<h5><a name="increase_mem_java8"></a>To increase the JVM memory settings: Java 8</h5>
+<p>For Java 8, modify the setting in this file:</p>
+<ul>
+  <li><a href="#82_and_after">Version 8.2.2 and later</a>: The changes are not made directly to the <strong>RegisterContainerServiceYAJSW.bat</strong> file, but instead, by modifying the <strong>yajsw/conf/wrapper.conf</strong> file.</li>
+  <li><a href="#before_82">Versions prior to 8.2.2</a>: Change the settings in the <strong>RegisterContainerService.bat</strong> file</li>
+</ul>
+
+<a name="82_and_after"></a>
+<p><strong>Version 8.2.2 and later: modifying the /yajsw/conf/wrapper.conf config file</strong></p>
+<p>Find the following file: <strong>/yajsw/conf/wrapper.conf</strong>.</p>
+<p>Find  the following setting:</p>
+<pre>
+wrapper.java.additional.9 = -Xmx4096M</pre>
+<p>Save the change, and then register and unregister the service so that the update takes effect. See <a href="#reg_unreg_service">To register and unregister the service</a>.</p>
+
+<a name="before_82"></a>
+<p><strong>Versions prior to 8.2.2: modifying the RegisterContainerService.bat file</strong></p>
+<p>For updating the <strong>RegisterContainerService.bat</strong> file, the steps are the same as for Java 7: see <a href="#increase_mem_java7">To increase the JVM memory settings: Java 7</a>.</p>
+<p>When you've saved the changes, remember to register and unregister the service: see <a href="#reg_unreg_service">To register and unregister the service</a>.</p>
+
 
 <h5><a name="increase_mem_java7"></a>To increase the JVM memory settings: Java 7</h5>
 <p>If you decide to increase the memory settings, first find the existing settings.</p>
 <p>Modify the setting in this file:</p>
 <ul>
-  <li>Versions prior to 8.2: <strong>RegisterContainerService.bat</strong></li>
-  <li>Version 8.2 and later: <strong>RegisterContainerServiceYAJWS.bat</strong></li>
+  <li><strong>RegisterContainerService.bat</strong></li>
 </ul>
 <p>In the<strong> </strong>file, these are the existing 32-bit settings:</p>
 <pre>set JAVA_MEM=--JvmMx 1024
@@ -146,50 +166,27 @@ set PERM_GEN_MEM=-XX:MaxPermSize=512M</pre>
 <p>For the changes to take effect, you must register and unregister the service. See <a href="#reg_unreg_service">To register and unregister the service</a>.</p>
 
 
-<h5><a name="increase_mem_java8"></a>To increase the JVM memory settings: Java 8</h5>
-<p>For Java 8, find the following file: <strong>/yajsw/conf/wrapper.conf</strong>.</p>
-<p>Modify the following setting:</p>
-<pre>
-wrapper.java.additional.9 = -Xmx4096M</pre>
-<p>Change the setting as needed, then register and unregister the service so that the change takes effect. See xxx.</p>
-
-
 <h5><a name="reg_unreg_service"></a>To register and unregister the service</h5>
-<p>When you make changes to the JVM settings, you must register and unregister the service so that the changes take effect.</p>
-<p><strong>To register and unregister the service so that the the new settings take effect: versions prior to 8.2:</strong></p>
+<p>When you make changes to the JVM settings, you must register and unregister the service so that the changes take effect. Follow the applicable steps for your product version:</p>
+<ul>
+  <li><a href="#reg_unreg_service_b4_882">Versions prior to 8.2.2</a></li>
+  <li><a href="#reg_unreg_service_822">Versions 8.2.2 and later</a></li>
+</ul>
+
+<a name="reg_unreg_service_b4_882"></a><p><strong>To register and unregister the service so that the the new settings take effect: versions prior to 8.2.2:</strong></p>
 <p>To register the service, run the following command:</p>
 <pre>RegisterContainerService.bat {container name}</pre>
 <p>If the service was already present, you must first unregister it, and then register it: run the following commands, in sequence:</p>
 <pre>UnRegisterContainerService.bat {container name}
 RegisterContainerService.bat {container name}</pre>
 
-<p><strong>To register and unregister the service so that the the new settings take effect: version 8.2 and later:</strong></p>
+<a name="reg_unreg_service_822"></a><p><strong>To register and unregister the service so that the the new settings take effect: version 8.2.2 and later:</strong></p>
 <p>To register the service, run the following command:</p>
 <pre>RegisterContainerServiceYAJWS.bat {container name}</pre>
-
-
-
-
 
 <p>If the service was already present, you must first unregister it, and then register it: run the following commands, in sequence:</p>
 <pre>UnRegisterContainerServiceYAJWS.bat {container name}
 RegisterContainerServiceYAJWS.bat {container name}</pre>
-<p><strong>Scope</strong>: All Containers</p>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <h5><a name="java_versions"></a>Note re Java versions</h5>
@@ -199,6 +196,7 @@ RegisterContainerServiceYAJWS.bat {container name}</pre>
   <li>Version 8.0 and later uses Java 8.0.</li>
 </ul>
 <p>{<span class="apidoc_red">end of draft revised section.</span>}</p>
+<p><strong>Scope</strong>: All Containers</p>
 <p><a href="#top">back to top</a></p>
 
 
