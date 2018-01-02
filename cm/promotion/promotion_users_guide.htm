@@ -27,7 +27,7 @@ nav-title: Promotion Guide
       <li><a href="#03_04">Promotion Profiles</a></li>
       <li><a href="#03_05">Asset Filters</a></li>
       <li><a href="#03_06">Rules</a></li>
-      <li><a href="#03_07">Asset Model</a></li>
+      <li><a href="#03_07_01">Asset Model</a></li>
     </ol>
   </li>
   <li><a href="#lc_installation">Lifecycle Coordinator Installation</a></li>
@@ -38,6 +38,7 @@ nav-title: Promotion Guide
       <li><a href="#05_03">PromotionProfiles</a></li>
       <li><a href="#05_04">Rules</a></li>
       <li><a href="#05_05">Filters</a></li>
+      <li><a href="#05_06">Organization Mapping</a> (8.4.13 and later)</li>
     </ol>
   </li>
   <li><a href="#dz_configurations">Deployment Zone Configurations</a>
@@ -183,16 +184,22 @@ vsep.listenerName = "https"</td>
   </tbody>
 </table>
 
-<a name="03_07"></a><h4>Asset Model</h4>
+<a name="03_07_00"></a><h4>Asset Model</h4>
 <p>The Lifecycle Coordinator component is an extension of the Lifecycle Repository core functionality. As such, it uses an internal asset model to represent the topology and the assets promoted through the topology. Within the Lifecycle Coordinator, promotion requests result in the submission of an asset into the target environment, allowing for customized governance to be defined for this process.</p>
-<h5>Topology Asset Model</h5>
+<p>In this section:</p>
+<ul>
+  <li><a href="#03_07_01">Topology Asset Model</a></li>
+  <li><a href="#03_07_02">Promotable Asset Model</a></li>
+  <li><a href="#03_07_03">OrgGroup Assignment</a></li>
+</ul>
+<a name="03_07_01"></a><h5>Topology Asset Model</h5>
 <p>The topology asset model reflects the conceptual topology model defined earlier in this document with asset types for Environment, Tenant and Promotion Profile. The following diagram shows the asset structure for a Topology with three Environments (each box representing an asset):</p>
 <p><img src="images/promotion_05.jpg" alt="Topology asset model, three environments" /></p>
 <p>In addition to the relationships shown, Tenant assets contain connection information and credentials as classifiers while Promotion Profile assets hold Rules as a JSON artifact. Asset Filters are managed implicitly and optionally referenced by Promotion Profile assets.</p>
 
 
-<h5>Promotable Asset Model</h5>
-<p>Promotable assets such as APIs are represented by specific asset-types. These asset types reference an Environment asset and contain <strong>Iteration</strong> assets representing each promotion of that asset. Note that there is a difference between <strong>versions</strong> of assets such as APIs and <strong>iterations</strong>: a single version of an API may be promoted multiple times, resulting in multiple iterations of that version. In the following asset diagram, the asset AnAPI/v1 has been promoted from development to integration test and then to production environments once, followed by another promotion from development to integration test. This resulted in two iterations in the development and integration test environments with a single iteration at production. Notice that the iteration at production indicates that its source iteration is iteration 1 in integration test, even though there is a newer iteration (iteration 2) in that environment.</p>
+<a name="03_07_02"></a><h5>Promotable Asset Model</h5>
+<p>Promotable assets such as APIs are represented by specific asset-types. These asset types reference an Environment asset and contain <strong>Iteration</strong> assets representing each promotion of that asset. Note that there is a difference between <strong>versions</strong> of assets such as APIs and <strong>iterations</strong>: a single version of an API may be promoted multiple times, resulting in multiple iterations of that version. In the following asset diagram, the asset <strong>AnAPI (v1)</strong> has been promoted from development to integration test and then to production environments once, followed by another promotion from development to integration test. This resulted in two iterations in the development and integration test environments with a single iteration at production. Notice that the iteration at production indicates that its source iteration is iteration 1 in integration test, even though there is a newer iteration (iteration 2) in that environment.</p>
 <p><img src="images/promotion_06.jpg" alt="Promotable asset model" /></p>
 <p>Iterations contain several items:</p>
 <ul>
@@ -213,6 +220,11 @@ vsep.listenerName = "https"</td>
   <li>A relationship to the previous iteration (if one exists) in the target environment</li>
   <li>A relationship to the Promotion Profile selected for promotion of the asset.</li>
 </ul>
+
+<a name="03_07_03"></a><h5>OrgGroup Assignment</h5>
+<h5 class="stamp">API Platform Version: 8.4.13 and later</h5>
+<p>When promotion is requested for an asset such as an API, the asset is assigned an owning OrgGroup within Lifecycle Coordinator. These OrgGroups correspond to the asset's Organization in the corresponding API Platform environment. This approach allows promotion approvers to be assigned at an organizational level within the Lifecycle Coordinator topology.</p>
+<span class="apidoc_note"><strong>Note</strong>: OrgGroups are synchronized with the tenant Organization when a topology is created or updated. If an asset is promoted with an Organization for which there is no corresponding OrgGroup, Lifecycle Coordinator synchronizes the Organizations for the corresponding tenant in an attempt to resolve the missing OrgGroup.</span>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -399,8 +411,24 @@ vsep.listenerName = "https"</td>
 
 
 
+<a name="05_06"></a>
+<h4>Organization Mapping</h4>
+<h5 class="stamp">API Platform Version: 8.4.13 and later</h5>
+<p>Lifecycle Coordinator will attempt to assign APIs in the target environment tenant to an Organization matching the name of the Organization in the source environment tenant. If no matching named Organization is found, the API is assigned to the tenant Organization.</p>
+<p>You can define within a PromotionProfile to create a mapping of Organizations when promoting to the target environment. To do this, define a rule that modifies the <strong>api.orgName</strong> property.</p>
+<p>For example, you could add the following rule to the rules of a PromotionProfile to map APIs from the source Organization <strong>GroupA</strong> to the target Organization <strong>GroupB</strong>.</p>
+<pre>{
+  "scope":"api",
+  "condition":"api.orgName == 'GroupA'",
+  "action":"api.orgName = 'GroupB'"
+}</pre>
+<p><a href="#top">Back to top</a></p>
+
+
+
 <a name="dz_configurations"></a><h3>Deployment Zone Configurations
-</h3><h5 class="stamp">API Platform Version: 8.4.12 and later</h5>
+</h3>
+<h5 class="stamp">API Platform Version: 8.4.12 and later</h5>
 <p>Within a promotion profile, deployment zone configurations can be used to tailor the propagation of an API's endpoints to the target environment. During API promotion, applicable deployment zone configurations are selected based on:</p>
 <ul>
   <li>The name of an API endpoint's deployment zone in the source environment.</li>
