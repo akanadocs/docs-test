@@ -19,7 +19,7 @@ nav-title: JOSE Security Policy - Using
 </p>
 
 
-<h5 class="stamp">Supported Platforms: 8.2x</h5>
+<h5 class="stamp">Supported Platforms: 8.2x and later</h5>
 
 
 <div class = "divider1"></div>
@@ -77,7 +77,7 @@ nav-title: JOSE Security Policy - Using
   <li>At the <strong>Policies Summary</strong> page, in the <strong>JOSE Security Policy</strong> section, click <strong>Modify</strong>. The <strong>Specify JOSE Security Policy Options page</strong> appears, as shown below.
     <p><img src="images/jose_policyoptions.jpg" alt="JOSE policy options page" /></p>
   </li>
-  <li>Specify values. For information about the fields, refer to <a href="#jose_config_audit_options">Configuring JOSE Security Policy Options</a>below.</li>
+  <li>Specify values. For information about the fields, refer to <a href="#jose_config_audit_options">Configuring JOSE Security Policy Options</a> below.</li>
   <li>Click <strong>Next</strong>. The <strong>Specify JOSE Security Audit Options</strong> page appears, as shown below.
   <p><img src="images/jose_audit_options.jpg" alt="JOSE security policy, audit options" /></p></li>
   <li>Specify values. For information about the fields, refer to <a href="#jose_config_audit_options">Configuring JOSE Security Audit Options</a> below.</li>
@@ -149,11 +149,12 @@ nav-title: JOSE Security Policy - Using
   <li><a href="#02">Step 2: In the developer portal, create the Swagger Petstore API (without policies)</a></li>
   <li><a href="#03">Step 3: In the developer portal, create an app to consume the API</a></li>
   <li><a href="#04">Step 4: In the developer portal, create and activate a contract between the app and the API</a></li>
-  <li><a href="#05">Step 5: access the API in Test Client and/or in an external client such as Postman</a></li>
+  <li><a href="#05">Step 5: access the API in an external client such as Postman</a></li>
   <li><a href="#06">Step 6: In the developer portal, add policies to the API</a></li>
   <li><a href="#07">Step 7: Save out the app credentials</a></li>
-  <li><a href="#08">Step 8: In Test Client or Postman, access the API using autentication</a></li>
-  <li><a href="#09">Step 9: View the JOSE response</a></li>
+  <li><a href="#08">Step 8: Generate PKI keys and certificate for the app</a></li>
+  <li><a href="#09">Step 9: In external client, access the API using authentication</a></li>
+  <li><a href="#10">Step 10: View the JOSE response</a></li>
 </ul>
 
 <a name="prereq_pm"></a><h5>Prerequisites in Policy Manager</h5>
@@ -163,8 +164,8 @@ nav-title: JOSE Security Policy - Using
     <ul>
       <li><a name="policy_auth"></a><strong>Authentication Policy</strong>: Subject Category = Consumer. Domain=LocalDomain
 <p><img src="images/jose_01.jpg" alt="Authentication Policy" /></p></li>
-      <li><a name="policy_http_security"></a><strong>HTTP Security Policy</strong>: Subject Category = Consumer.
-<p><img src="images/jose_02.jpg" alt="HTTP Security Policy" /></p></li>
+      <li><a name="policy_http_security"></a><strong>HTTP Security Policy</strong>: HTTP Basic authentication, Subject Category = Consumer.
+        <p><img src="images/jose_02.jpg" alt="HTTP Security Policy" /></p></li>
     </ul>
   </li>
   <li>Defined a certificate authority at the root level (<strong>Configure</strong> &gt; <strong>Security</strong> &gt; <strong>Certificates</strong> &gt; <strong>Certificate Authority</strong> &gt; <strong>Configure Certificate Authority</strong>).</li>
@@ -189,8 +190,9 @@ nav-title: JOSE Security Policy - Using
 <a name="02"></a><h5>Step 2: In the developer portal, create the Swagger Petstore API (without policies)</h5>
 <p>In the developer portal, at the root level, create the API, using the following values:</p>
 <ul>
-  <li>reference the standard Swagger JSON file URL: <a href="http://petstore.swagger.io/v2/swagger.json" target="_blank">http://petstore.swagger.io/v2/swagger.json</a><strong>.</strong></li>
-  <li>Disable anonymous access.</li>
+  <li>Reference the standard Swagger JSON file URL: <a href="http://petstore.swagger.io/v2/swagger.json" target="_blank">http://petstore.swagger.io/v2/swagger.json</a><strong>.</strong></li>
+  <li>Disable anonymous access (<strong>Implementations</strong> &gt; <strong>Live</strong> &gt; <strong>Edit</strong> &gt; clear check box and save).</li>
+  <li>Update the URL context path: <strong>Implementations</strong> &gt; <strong>Live</strong> &gt; <strong>Deployments</strong> &gt; <strong>Context Path</strong>. For example, change it to: <strong>/josepolicytest</strong>.</li>
   <li>Do not add policies to the API at this point. You'll add the policies in a later step.</li>
 </ul>
 
@@ -209,11 +211,12 @@ nav-title: JOSE Security Policy - Using
   </ul>
 <p>At this point, the app can access the API.</p>
 <a name="05"></a><h5>Step 5: access the API in an external client such as Postman</h5>
-<p>In Test Client, access one of the operations for the API. The example below uses Get Pet By ID, and uses an ID that was previously added.</p>
+<p>In an external client, access one of the operations for the API. The example below uses Get Pet By ID, and uses an ID that was previously added.</p>
 <p>If you're not sure what URL to use, look in the developer portal: go to the API and to the specific implementation, and copy the URL listed in Endpoints. An example is shown below.</p>
 <p><img src="images/jose_04_endpoint.jpg" alt="Getting the endpoint" /></p>
 <p>The response should look something like the below:</p>
 <p><img src="images/jose_04_results_noauth.jpg" alt="Results in Postman: no auth" /></p>
+<p>Now it's time to add the JOSE policy to the API.</p>
 
 <a name="06"></a><h5>Step 6: In the developer portal, add policies to the API</h5>
 <p>Now, in the developer portal, add the following policies to the API's implementation. You defined these policies in earlier steps:</p>
@@ -234,14 +237,23 @@ nav-title: JOSE Security Policy - Using
 <p>An example is shown below.</p>
 <p><img src="images/jose_05_app_credentials.jpg" alt="Saving out the app credentials" /></p>
 
-<a name="08"></a><h5>Step 8: In Test Client or Postman, access the API using autentication</h5>
+<a name="08"></a><h5>Step 8: Generate PKI keys and certificate for the app</h5>
+<p>You'll need to generate PKI keys so that the platform has a private key for the app, to use in applying the JOSE Security policy.</p>
+<p>To do this in Policy Manager:</p>
+<ol>
+  <li><strong>Security</strong> &gt; <strong>Users</strong> &gt; find the app on the list &gt; click Manage PKI Keys.</li>
+  <li>Choose <strong>Generate PKI Keys and X.509 Certificate</strong> and click <strong>Next</strong>.</li>
+  <li>Fill in the certificate details and click <strong>Finish</strong>.</li>
+</ol>
+<p>The platform now has a certificate associated with the app, that it can use for signing and encrypting.</p>
+
+<a name="09"></a><h5>Step 9: In external client, access the API using authentication</h5>
 <p>Now, in your client, call the API again. You'll get a 401 Unauthorized response.</p>
 <p>You'll need to add Basic authorization onto the API in your client, as shown below, and send the app credentials in order to get a successful response.</p>
 <p>The example below shows the credentials added for the authorization, and also shows the JWT response.</p>
 <p><img src="images/jose_06_results_auth.jpg" alt="Results in Postman: with policies attached" /></p>
 
-<a name="09"></a>
-<h5>Step 9: View the decoded JWT response</h5>
+<a name="10"></a><h5>Step 10: View the decoded JWT response</h5>
 <p>Copy the response content into the JSON Web Token debugger at <a href="https://jwt.io/" target="_blank">https://jwt.io/</a>. In the right pane, you'll see the results, as in the example below.</p>
 <p><img src="images/jose_07_token.jpg" alt="Viewing the token" /></p>
 <p><a href="#top">Back to top</a></p>
