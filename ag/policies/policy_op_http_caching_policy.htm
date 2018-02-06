@@ -1,0 +1,101 @@
+---
+layout: page
+title: Using the HTTP Caching Policy in Policy Manager
+description: Learn how to enhance performance of message processing through caching responses to previously made service requests using the HTTP Caching Policy.
+product: ag
+category: learn
+sub-nav-class: Policies - Operational
+weight: 04
+type: page
+nav-title: HTTP Caching Policy - Using
+---
+<h2 id="top">Using the HTTP Caching Policy in Policy Manager</h2>
+<p>Learn how to enhance performance of message processing through caching responses to previously made service requests using the HTTP Caching Policy.</p>
+
+<p>
+<a href="about_policies_view.htm" class="button secondary">About Policies</a>  
+<a href="policy_management.htm" class="button secondary">Managing Policies</a>  
+<a href="policies_operational_about.htm" class="button secondary">About Operational Policies</a>
+</p>
+
+<h5 class="stamp">Supported Platforms: 7.2 and later</h5>
+
+<div class = "divider1"></div>
+
+
+
+<h3 style="color: gray;">Table of Contents</h3>
+<ol class="table_of_contents">
+  <li><a href="#introduction">Introduction</a></li>
+  <li><a href="#modes">HTTP Caching Policy Modes</a></li>
+  <li><a href="#manage_cache">How Stale Caches are Managed</a></li>
+  <li><a href="#options">HTTP Caching Policy Options</a></li>
+  <li><a href="#cache">Public/Private Caching</a></li>
+  <li><a href="#configuration">Configuration</a></li>
+</ol>
+<div class = "divider1"></div>
+
+
+
+<a name="introduction"></a><h3>Introduction</h3>
+<p>Caching is used to increase performance by storing responses to previous requests so that they can be served as a response to similar new requests that come in, often without requiring the overhead of a downstream server round-trip.</p>
+<p>To support caching, Akana provides an HTTP Caching Policy.</p>
+<p>The HTTP Caching Policy is an Operational policy that allows you to:</p>
+<ul>
+  <li>Define how long a response can be cached for HTTP requests.</li>
+  <li>Select a caching mode (HTTP Proxy Mode or HTTP Mediation/Server Mode).</li>
+  <li>Select a caching scope (shared or private)</li>
+</ul>
+
+
+
+<a name="modes"></a><h3>HTTP Caching Policy Modes</h3>
+<p>The HTTP Caching policy supports the following modes:</p>
+<ul>
+  <li><strong>HTTP Proxy Mode</strong>: Using this mode, the container expects the downstream call to be HTTP and to return cache control headers. If downstream cache control headers are provided in the response, caching is executed according to the directives contained in these headers. Note that directives might take precedence over policy configuration settings (for example, max-age directive will override policy time-to-live setting).</li>
+  <li><strong>HTTP Mediation / Server Mode</strong>: Using this mode, the presence or absence of downstream headers is not taken into consideration. In effect, caching headers included in the response are ignored. In this scenario, the way that caching decisions are executed by the HTTP Caching policy is based completely on the client cache-control headers, if present.</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="manage_cache"></a><h3>How Stale Caches are Managed</h3>
+<p>When a message is processed and the headers are read, a determination is made as to whether the cache is stale or not. If a cache is discovered to be stale, response validators are used to send a conditional response to the originating server. If it's determined that the cache is not stale, the cached response is used. Otherwise, a full response will be received that will be used instead of the cached response.</p>
+<p>For more information on the stale cache handling approach used for this policy, see <a href="https://tools.ietf.org/html/rfc7234">https://tools.ietf.org/html/rfc7234</a> (RFC 7234 for HTTP caching).</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="options"></a><h3>HTTP Caching Policy Options</h3>
+<p>The policy includes the following configuration options:</p>
+<ul>
+  <li><strong>Time To Live</strong>: Allows you to specify the maximum time in seconds a response will be cached. If not specified, the maximum time is determined by the container settings.</li>
+  <li><strong>Staleness Period Seconds</strong>: If a value is entered, any cached entry will live in the cache for the number of seconds in <strong>Time To Live</strong>, plus the number of seconds in the <strong>Staleness Period</strong>. The &quot;stale&quot; portion of the entry is only used if Cache-Control directives on the request allow for a stale entry to be used, by the use of a max-stale directive. The default is 0.</li>
+  <li><strong>Act as HTTP Proxy</strong>: Uncheck to enable either the HTTP Proxy Mode (checked) or HTTP Mediation / Server Mode.</li>
+  <li><strong>Shared Cache</strong>: Uncheck to enable the ability to use a private cache. In this case, you must also select a Subject Category (below).</li>
+  <li><strong>Subject Category</strong>: Allows you to select a subject category if Shared Cache is unchecked. The subject category is used to find the cache's principal name that is set when the cache is created, and use it as part of the cache key.</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="cache"></a><h3>Public/Private Caching</h3>
+<p>By default, the caching module considers itself to be a shared (public) cache (<strong>Shared Cache</strong> checked), and will not, for example, cache responses to requests with Authorization headers or responses marked with <strong>Cache-Control: private</strong>. If, however, the cache is only going to be used by one logical &quot;user&quot; (behaving similarly to a browser cache), then you will want to turn off the shared cache setting (<strong>Shared Cache </strong>unchecked).</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="configuration"></a><h3>Configuration</h3>
+<p>Let's take a quick walkthrough of the HTTP Caching Policy configuration process to get you started.</p>
+<h5>Step 1: Add Policy / Use System Policy</h5>
+<p>In Policy Manager, to create an HTTPS Caching Quota Policy instance, go to <strong>Policies</strong> &gt; <strong>Operational Policies</strong> and choose <strong>Add Policy</strong>.</p>
+<h5>Step 2: Modify Policy</h5>
+<p>When you click <strong>Modify</strong> to make changes to the HTTP Caching policy on the <strong>Policy Details</strong> page, the initial policy looks like this:</p>
+<p><img src="images/modify_http_caching_policy.jpg" width="456" height="478" alt="" /></p>
+<p>Configure the policy options based on your requirements and click <strong>Apply</strong>.</p>
+<p><img src="images/http_cache_policy_summary.jpg" width="498" height="145" alt="" /></p>
+<h5>Step 3: Attach Policy</h5>
+<p>After you've saved your policy, you can attach it to a web service, binding, or binding operation that you would like to enhance the message processing of.</p>
+<h5>Step 4: Test Policy and View Monitoring Data</h5>
+<p>After you've attached the HTTPS Caching Policy to a web service, operation, or binding, send a request to your service and go to the <em>Services &gt; Monitoring</em> section to view the results for Logs, Real Time Charts, and Historical Charts. For more information on using the monitoring functions, refer to the Policy Manager Online Help, available via the Help button.</p>
+<p><a href="#top">Back to top</a></p>
