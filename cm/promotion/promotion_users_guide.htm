@@ -332,15 +332,28 @@ vsep.listenerName = "https"</td>
 
 <a name="05_04"></a><h4>Rules</h4>
 <p>Rules are defined inline within the <strong>rules</strong> array property of a PromotionProfile. Each Rule consists of a <strong>scope</strong> property indicating the property in the archive manifest it applies to, an optional <strong>condition</strong> property indicating the conditions for which the Rule applies and a required <strong>action</strong> property indicating the action to perform on the manifest property.</p>
-<p>Here is an example Rule that changes the host name of the physical service endpoint (<strong>psep</strong>) for an API:</p>
+<p>Examples in this section:</p>
+<ul>
+  <li><a href="#05_04_01">Rule example #1</a>: changes the hostname for the physical service endpoint.</li>
+  <li><a href="#05_04_02">Rule example #2</a>: changes the name of the OAuth provider for a promoted API in the target environment.</li>
+</ul>
+<a name="05_04_01"></a><h5>Rule example #1</h5>
+<p>In this example, the rule changes the host name of the physical service endpoint (<strong>psep</strong>) for an API:</p>
 <pre>{
   "scope":"psep",
   "condition":"psep.url.indexOf(\"foo.com\") > 0",
   "action":"psep.url = psep.url.replace(\"foo.com\",\"bar.com\")"
 }</pre>
-<p>Note the use of '\' to escape the double quotes in the condition and action.
-</p>
+<p>Note the use of '\' to escape the double quotes in the condition and action.</p>
 
+<a name="05_04_02"></a><h5>Rule example #2</h5>
+<p>The example below changes the name of the OAuth provider for a promoted API in the target environment.</p>
+<p><strong>Note</strong>: Only use this rule if the configuration of the source and target OAuth Providers is identical, including scope definition. If the configuration is not identical, using this rule might cause promotion errors.</p>
+<pre>{
+  "scope" : "vs",
+  "condition" : "vs.oauthProvider == 'SourceProvider'",
+  "action" : "vs.oauthProvider = 'TargetProvider'"
+}</pre>
 
 
 <a name="05_05"></a><h4>Filters</h4>
