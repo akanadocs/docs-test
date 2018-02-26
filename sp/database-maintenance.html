@@ -277,8 +277,15 @@ PARTITION BY RANGE (TO_DAYS(REQUESTDTS)) (
 
 
 <h4>Oracle</h4>
-<p>Oracle does not permit the ALTER-ing of tables to add partitions. This means that new tables need to be created and the data migrated over.</p>
-<h5>Step 1: Create new tables</h5>
+<p>Oracle does not permit the ALTER-ing of tables to add partitions. This means that new tables need to be created and the data migrated over. The steps are:</p>
+<ul>
+  <li><a href="#oracle_01">Step 1: Create new tables</a></li>
+  <li><a href="#oracle_02">Step 2: Switch the new tables with the old tables</a></li>
+  <li><a href="#oracle_03">Step 3: Merge data</a></li>
+</ul>
+
+
+<h5><a name="oracle_01"></a>Step 1: Create new tables</h5>
 <p>Create new, paritioned tables with a _NEW suffix. Note that the 'PARTITION BY RANGE (REQUESTDTS) INTERVAL' clause will result in new partitions being created automatically.</p>
 <p><span class="apidoc_red"><strong>Note</strong>: The values below are updated for version 8.0x and later.</span></p>
 <pre>CREATE TABLE MO_USAGE_NEXTHOP_NEW (
@@ -354,7 +361,8 @@ CREATE  INDEX MO_USAGEDATA_PK3 ON MO_USAGEDATA_NEW(CONTRACTID);
 CREATE  INDEX MO_USAGEDARA_IX1 ON MO_USAGEDATA_NEW(SERVICEID);</pre>
 <p><strong>Note:</strong> Table definitions might change based on product version. You should check to make sure that the definition above matches your table structure and alter it as necessary.</p>
 
-<h5>Step 2: Switch the new tables with the old tables</h5>
+
+<h5><a name="oracle_02"></a>Step 2: Switch the new tables with the old tables</h5>
 <p>Rename the existing live tables to *_BCK and replace them with the new, empty tables:</p>
 <pre>
 RENAME TABLE MO_USAGEMSGS TO MO_USAGEMSGS_BAK;
@@ -364,7 +372,8 @@ RENAME TABLE MO_USAGEDATA_NEW TO MO_USAGEDATA;
 RENAME TABLE MO_USAGE_NEXTHOP TO MO_USAGE_NEXTHOP_BAK;
 RENAME TABLE MO_USAGE_NEXTHOP_NEW TO MO_USAGE_NEXTHOP;</pre>
 
-<h5>Step 3: Merge data</h5>
+
+<h5><a name="oracle_03"></a>Step 3: Merge data</h5>
 <p>Due to the fact that you created a set of new tables, you need to merge the data from the old tables into the new partitioned tables so that it is not lost.</p>
 <pre>INSERT INTO MO_USAGE_NEXTHOP SELECT * FROM MO_USAGE_NEXTHOP_BAK;
 INSERT INTO MO_USAGEDATA SELECT * FROM MO_USAGEDATA_BAK;
@@ -387,6 +396,8 @@ INSERT INTO MO_USAGEMSGS SELECT * FROM MO_USAGEMSGS_BAK;</pre>
   <li><a href="#mysql_05">Step 5: Switch the partitioned tables back (MySQL only)</a></li>
   <li><a href="#mysql_06">Step 6: Merge data (MySQL only)</a></li>
 </ul>
+
+
 <h4><a name="mysql_01"></a>Step 1: Create new tables (MySQL only)</h4>
 <p>First, create new tables that will temporarily support the live system. These do not have to be partitioned as they will only support a small amount of data:</p>
 <pre>CREATE TABLE MO_USAGEMSGS_NEW (
@@ -544,6 +555,7 @@ RENAME TABLE MO_USAGE_NEXTHOP TO MO_USAGE_NEXTHOP2, MO_USAGE_NEXTHOP_BCK TO MO_U
 
 <h4><a name="mysql_06"></a>Step 6: Merge data (MySQL only)</h4>
 <p>Due to the fact that you created a set of new tables to temporarily store live data while the partitioning was done, you need to merge the data from those tables back into the live tables so that it is not lost.</p>
+<p><span class="apidoc_red">{Mujeeb: is any change needed to the below? Do we need the new column name in here (CLIENTID)?</span></p>
 <pre>INSERT INTO MO_USAGE_NEXTHOP 
 	(EVENTID, URL, REQUESTDTS, CREATEDTS, RESPTIME) 
 SELECT EVENTID, URL, REQUESTDTS, CREATEDTS, RESPTIME 
