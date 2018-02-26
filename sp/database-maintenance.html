@@ -191,10 +191,14 @@ delete s from AM_ALERTS a inner join AM_ALERTS_SLAS s on s.ALERTSID = a.ALERTSID
 
 delete from AM_ALERTS where SOURCEDTS &lt; TIMESTAMPADD(MONTH, -1, now());</pre>
 
-<p>For Community Manager, there are additional tables such as the Boards (Forums) that you may want to clean up:</p>
+<p>For Community Manager, there are additional tables such as the Boards (Forums) that you might want to clean up:</p>
 <pre>delete from BOARD_ITEM_ASSIGNMENTS where ITEMID in (select ITEMID from BOARD_ITEMS where ARCHIVABLE='Y' and CREATEDDTS &lt; TIMESTAMPADD(YEAR, -1, now());
 
-delete from BOARD_ITEMS where ARCHIVABLE='Y' and CREATEDDTS &lt; TIMESTAMPADD(YEAR, -1, now());</pre>
+delete from BOARD_ITEMS where ARCHIVABLE='Y' and CREATEDDTS &lt; TIMESTAMPADD(YEAR, -1, now());
+
+<span class="apidoc_red">delete from API_CONTRACT_SLA_DATA where LASTMODIFIEDDTS &lt; TIMESTAMPADD(YEAR, -1, now());</span>
+
+<span class="apidoc_red">delete from API_SLA_DATA where LASTMODIFIEDDTS &lt; TIMESTAMPADD(YEAR, -1, now());</span></pre>
 
 <p>For sample scripts on MySql and Oracle (other databases coming soon) download the following zip archive: <a href="sample_scripts.zip">sample_scripts.zip</a></p>
 <p>Once you're satisfied with the script, you can set up a cron job to execute it each night. For example, you could configure cron to execute at 1am each morning as follows:</p>
