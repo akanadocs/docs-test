@@ -17,7 +17,7 @@ nav-title: User Workflow
 
 <h3 style="color: gray;">Table of Contents</h3>
 <ol class="table_of_contents">
-  <li><a href="#user_ia_00">User Workflow: Initial Actions</a> (none)</li>
+  <li><a href="#user_ia_00">User Workflow: Initial Actions</a></li>
   <li><a href="#user_ra_00">User Workflow: Reserved Actions</a></li>
   <li><a href="#user_f_00">User Workflow: Functions</a></li>
   <li><a href="#user_c_00">User Workflow: Conditions</a></li>
@@ -25,11 +25,35 @@ nav-title: User Workflow
   <li><a href="#user_wf_2fa_ex">User Workflow: Implementing Two-Factor Authentication</a></li>
 </ol>
 <div class = "divider1"></div>
+<!--<p>{com.soa.atmosphere.impl\META-INF\resources\templates}</p>-->
 
 
 
 <a name="user_ia_00"></a><h3>User Workflow: Initial Actions</h3>
-<p>There are currently no initial actions for Akana API Platform workflows relating to users.</p>
+<p>The following initial actions are valid for Akana API Platform workflows relating to users:</p>
+<ul>
+  <li><a href="#user_ia_01"><span class="apidoc_red">@UserPhoneNotRequired</span></a></li>
+</ul>
+
+
+<a name="user_ia_01"></a><h4><span class="apidoc_red">@UserPhoneNotRequired</span></h4>
+<h5 class="stamp">API Platform Version: 8.4.15 and later</h5>
+<p>Used to define custom workflow for a scenario where phone number is not required for users who meet one or more specified conditions. For example, using <strong>@UserPhoneNotRequired</strong> in combination with the workflow condition, <a href="#user_c_23">doesUserBelongToDomain</a>, customizes the user workflow so that users belonging to a specific login domain are not required to provide a telephone number. If this functionality is in place, and the condition is met, the phone number field is not required, and is not shown to the user.</p>
+<h5>Examples/Notes/Additional Information</h5>
+<p>In the example below, <strong>@UserPhoneNotRequired</strong> is used in combination with <strong>doesUserBelongToDomain</strong>. If the user belongs to the specified domain, the condition is met, and the new user is allowed to log in without providing a phone number on the user profile.</p>
+<pre>&lt;action id=&quot;25&quot; name=&quot;@UserPhoneNotRequired&quot;&gt;
+  &lt;restrict-to&gt;
+      &lt;conditions type=&quot;AND&quot;&gt;
+        &lt;condition type=&quot;doesUserBelongToDomain&quot;&gt;
+          &lt;arg name=&quot;DomainName&quot;&gt;acmepaymentscorp&lt;/arg&gt;
+        &lt;/condition&gt;
+      &lt;/conditions&gt;
+  &lt;/restrict-to&gt;
+  &lt;results&gt;
+    &lt;unconditional-result old-status=&quot;none&quot; status=&quot;registered&quot; step=&quot;30&quot;/&gt;
+  &lt;/results&gt;
+&lt;/action&gt;</pre>
+<p><strong>Note</strong>: To see where these fit into the workflow document, you can download the user workflow from the developer portal. The new initial action and condition are in the default workflow, but commented out.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -55,6 +79,7 @@ nav-title: User Workflow
   <li><a href="#user_ra_16">@UserUnlocked</a></li>
   <li><a href="#user_ra_17">@ResolveLoginPendingTask</a></li>
 </ul>
+<!--<p>{com.soa.atmosphere.impl\META-INF\resources\templates\default-user-workflow-v2.xml}</p>-->
 
 
 <a name="user_ra_01"></a><h4>@Add</h4>
@@ -237,7 +262,7 @@ nav-title: User Workflow
 <a name="user_f_00"></a><h3>User Workflow: Functions</h3>
 <p>The following functions are available for the user workflow:</p>
 <ul>
-  <li><a href="#user_f_01">MarkUserPermanent</a></li>
+  <li><a href="#user_f_01">markUserPermanent</a></li>
   <li><a href="#user_f_02">markUserPermanentIfFirstLogin</a></li>
   <li><a href="#user_f_03">addBoardItem</a></li>
   <li><a href="#user_f_04">sendNotification</a></li>
@@ -251,18 +276,21 @@ nav-title: User Workflow
   <li><a href="#user_f_12">handle2FATask</a></li>
   <li><a href="#user_f_13">validate2FACode</a></li>
   <li><a href="#user_f_14">terminateSession</a></li>
+  <li><a href="#user_f_15"><span class="apidoc_red">acceptAgreementForDomainUsers</span></a></li>
+  <li><a href="#user_f_16"><span class="apidoc_red">acceptAgreementForUsersBelongToRoles</span></a></li>
 </ul>
+<!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\UserWorkflowFunctions.java}</p>-->
 
 
-<a name="user_f_01"></a><h4>MarkUserPermanent</h4>
+<a name="user_f_01"></a><h4>markUserPermanent</h4>
 <p>This function marks the user as permanent in the database. Until a user logs in for the first time, the user is not marked as permanent; the user's invitation expires after a pre-set time period, and invited users who did not complete the process are periodically purged from the database. This function marks the record as permanent so that it does not get purged.</p>
-<p class="apidoc_note"><strong>Note</strong>: Two separate functions exist, <strong>MarkUserPermanent</strong> and <strong>markUserPermanentIfFirstLogin</strong>, to offer flexibility in implementation. In the out-of-the box user workflow there is no difference in implementation between these two, but a custom workflow could be designed to differentiate between a user's first login and subsequent logins. For example, a custom workflow could require users to renew the account every year, and could enforce the account renewal process.</p>
+<p class="apidoc_note"><strong>Note</strong>: Two separate functions exist, <strong>markUserPermanent</strong> and <strong>markUserPermanentIfFirstLogin</strong>, to offer flexibility in implementation. In the out-of-the box user workflow there is no difference in implementation between these two, but a custom workflow could be designed to differentiate between a user's first login and subsequent logins. For example, a custom workflow could require users to renew the account every year, and could enforce the account renewal process.</p>
 
 
 <a name="user_f_02"></a><h4>markUserPermanentIfFirstLogin</h4>
 <p>If this is the first login by the user, this function marks the user as permanent in the database. Until a user logs in for the first time, the user is not marked as permanent; the user's invitation expires after a pre-set time period, and invited users who did not complete the process are periodically purged from the database. This function marks the record as permanent so that it does not get purged.</p>
 <p>The default user workflow uses this function to mark the user as permanent when the user logs in for the first time.</p>
-<p class="apidoc_note"><strong>Note</strong>: Two separate functions exist, <strong>MarkUserPermanent</strong> and <strong>markUserPermanentIfFirstLogin</strong>, to offer flexibility in implementation. In the out-of-the box user workflow there is no difference in implementation between these two, but a custom workflow could be designed to differentiate between a user's first login and subsequent logins. For example, a custom workflow could require users to renew the account every year, and could enforce the account renewal process.</p>
+<p class="apidoc_note"><strong>Note</strong>: Two separate functions exist, <strong>markUserPermanent</strong> and <strong>markUserPermanentIfFirstLogin</strong>, to offer flexibility in implementation. In the out-of-the box user workflow there is no difference in implementation between these two, but a custom workflow could be designed to differentiate between a user's first login and subsequent logins. For example, a custom workflow could require users to renew the account every year, and could enforce the account renewal process.</p>
 <h5>Examples/Notes/Additional Information</h5>
 <p>In the example below, the user has completed the registration process. LoginState is set to LoginComplete and the user is therefore marked as permanent. The notification is currently commented out.</p>
 <pre>&lt;unconditional-result old-status="registered" status="registered" step="400"&gt;
@@ -505,7 +533,7 @@ nav-title: User Workflow
           <li>Email</li>
           <li>Voice</li>
           <li>Text</li>
-        </ul>      </td>
+        </ul></td>
     </tr>
   </tbody>
 </table>
@@ -582,15 +610,18 @@ nav-title: User Workflow
   <li>Sets the generated 2FA code details into the argument properties.</li>
   <li>Sets an argument property with an opaque token that must be saved so that it can be used later for validating the 2FA code.</li>
 </ul>
+<!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\twofa\UserTwoFAWorkflowFunctions.java}</p>-->
 
 
 <a name="user_f_10"></a><h4>setPendingTask</h4>
 <p>Specifies a pending task, and allows some associated data relating to the pending tasks to be included. For example, this can be used to specify that two-factor authentication is required and is a pending task that must be completed before user login is complete; in this scenario, this could then give the 2FA data.</p>
+<!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\twofa\UserTwoFAWorkflowFunctions.java}</p>-->
 
 
 <a name="user_f_11"></a><h4>unmarshall2FACode</h4>
 <p>Extracts the 2FA object from the auth token data, and converts the opaque 2FA token into a structure that other 2FA functions can use.</p>
 <p>This function allows the 2FA data to be read if needed; for example, by the GET /api/login/status operation that returns information about the user's current login status.</p>
+<!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\twofa\UserTwoFAWorkflowFunctions.java}</p>-->
 
 
 <a name="user_f_12"></a><h4>handle2FATask</h4>
@@ -608,10 +639,12 @@ nav-title: User Workflow
     &lt;arg name="2FACode"&gt;${arg.2fa.code}&lt;/arg&gt;
   &lt;/function&gt;
 &lt;/pre-functions&gt;</pre>
+<!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\twofa\UserTwoFAWorkflowFunctions.java}</p>-->
 
 
 <a name="user_f_13"></a><h4>validate2FACode</h4>
 <p>Validates the two-factor verification code. The session must be in login process for this function to be valid.</p>
+<!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\twofa\UserTwoFAWorkflowFunctions.java}</p>-->
 
 
 <a name="user_f_14"></a><h4>terminateSession</h4>
@@ -633,6 +666,36 @@ nav-title: User Workflow
   &lt;/function&gt;
   &lt;function type="terminateSession"/&gt;
 &lt;/pre-functions&gt;</pre>
+
+
+<a name="user_f_15"></a><h4><span class="apidoc_red">acceptAgreementForDomainUsers</span></h4>
+<h5 class="stamp">API Platform Version: 8.4.15 and later</h5>
+<p>By default, the platform required acceptance of the platform legal agreement, if one is uploaded to the developer portal.</p>
+<p>The <strong>acceptAgreementForDomainUsers</strong>  function allows customization of the workflow so that the mandatory acceptance of the platform legal agreement is skipped for users belonging to a specific login domain.</p>
+<p>If this custom workflow function is in place, new users who match the specified condition do not see the developer agreement. For these users, the login process just skips that step.</p>
+
+<h5>Examples/Notes/Additional Information</h5>
+<p>In the example below, this function is added in the workflow document, in the &quot;@Login&quot; section, to skip requiring acceptance of the developer portal agreement for users of the acmepaymentscorp domain. This argument also supports multiple domains with comma separator.</p>
+<pre>&lt;function type=&quot;acceptAgreementForDomainUsers&quot;&gt;
+  &lt;arg name=&quot;DomainName&quot;&gt;acmepaymentscorp&lt;/arg&gt;
+&lt;/function&gt;</pre>
+<p><strong>Note</strong>: To see where this fits into the workflow document, you can download the user workflow from the developer portal. The new function is in the default workflow, but is commented out.</p>
+
+
+<a name="user_f_16"></a><h4><span class="apidoc_red">acceptAgreementForUsersBelongToRoles</span></h4>
+<h5 class="stamp">API Platform Version: 8.4.15 and later</h5>
+<p>By default, the platform required acceptance of the platform legal agreement, if one is uploaded to the developer portal. </p>
+<p>The <strong>acceptAgreementForUsersBelongToRoles</strong> function allows customization of the workflow so that the mandatory acceptance of the platform legal agreement is skipped for users with a specific role.</p>
+<p>If this custom workflow function is in place, new users who match the specified condition do not see the developer agreement. For these users, the login process just skips that step.</p>
+
+<h5>Examples/Notes/Additional Information</h5>
+<p>In the example below, this function is added in the workflow document, in the &quot;@Login&quot; section, to skip requiring acceptance of the developer portal agreement for users who have either the Business Administrator or API Developer roles. This argument supports multiple roles with comma separator, as shown below.</p>
+<pre>&lt;function type=&quot;acceptAgreementForUsersBelongToRoles&quot;&gt;
+  &lt;arg name=&quot;role&quot;&gt;Business Administrator,API Developer&lt;/arg&gt;
+&lt;/function&gt;</pre>
+<p><strong>Note</strong>: To see where this fits into the workflow document, you can download the user workflow from the developer portal. The new function is in the default workflow, but is commented out.</p>
+
+<!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\UserWorkflowFunctions.java}</p>-->
 <p><a href="#top">Back to top</a></p>
 
 
@@ -662,7 +725,9 @@ nav-title: User Workflow
   <li><a href="#user_c_20">isDeliveryTypeText</a></li>
   <li><a href="#user_c_21">is2FACodeValid</a></li>
   <li><a href="#user_c_22">is2FATerminated</a></li>
+  <li><a href="#user_c_23"><span class="apidoc_red">doesUserBelongToDomain</span></a></li>
 </ul>
+<!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\UserWorkflowConditions.java}</p>-->
 
 
 
@@ -741,11 +806,13 @@ nav-title: User Workflow
 <a name="user_c_13"></a><h4>Is2FAEnabled</h4>
 <p>Checks the platform settings to see whether two-factor authentication is enabled for user login; returns Boolean true or false.</p>
 <pre>&lt;condition type="is2FAEnabled"/&gt;</pre>
+<!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\twofa\UserTwoFAWorkflowConditions.java}</p>-->
 
 
 <a name="user_c_14"></a><h4>is2FARequired</h4>
 <p>Checks to see whether two-factor authentication is required for login of the current user, based on the recurrence mode specified in the platform's 2FA settings and the user's history of completing the 2FA process. Returns Boolean true or false.</p>
 <pre>&lt;condition type="is2FARequired"/&gt;</pre>
+<!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\twofa\UserTwoFAWorkflowConditions.java}</p>-->
 
 
 <a name="user_c_15"></a><h4>isNoDeliveryOption</h4>
@@ -771,6 +838,7 @@ nav-title: User Workflow
 <pre>&lt;condition negate="true" type="isNoDeliveryOption"&gt;
   &lt;arg name="PropertyName"&gt;${arg.2fa.task.data}&lt;/arg&gt;
 &lt;/condition&gt;</pre>
+<!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\twofa\UserTwoFAWorkflowConditions.java}</p>-->
 
 
 <a name="user_c_16"></a><h4>isDeliveryOptionsOnlyOne</h4>
@@ -799,6 +867,7 @@ nav-title: User Workflow
 &lt;condition type="isDeliveryOptionsOnlyOne"&gt;
   &lt;arg name="PropertyName"&gt;${arg.2fa.task.data}&lt;/arg&gt;
 &lt;/condition&gt;</pre>
+<!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\twofa\UserTwoFAWorkflowConditions.java}</p>-->
 
 
 <a name="user_c_17"></a><h4>isDeliveryOptionsOnlyEmail</h4>
@@ -825,6 +894,7 @@ nav-title: User Workflow
 <pre>&lt;condition type="isDeliveryOptionsOnlyEmail"&gt;&lt;!-- out of the box support --&gt;
   &lt;arg name="PropertyName"&gt;${arg.2fa.task.data}&lt;/arg&gt;
 &lt;/condition&gt;</pre>
+<!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\twofa\UserTwoFAWorkflowConditions.java}</p>-->
 
 
 <a name="user_c_18"></a><h4>isDeliveryTypeEmail</h4>
@@ -850,6 +920,7 @@ nav-title: User Workflow
 <pre>&lt;condition type="isDeliveryOptionsOnlyEmail"&gt;&lt;!-- out of the box support --&gt;
   &lt;arg name="PropertyName"&gt;${arg.2fa.task.data}&lt;/arg&gt;
 &lt;/condition&gt;</pre>
+<!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\twofa\UserTwoFAWorkflowConditions.java}</p>-->
 
 
 <a name="user_c_19"></a><h4>isDeliveryTypeVoice</h4>
@@ -875,6 +946,7 @@ nav-title: User Workflow
 <pre>&lt;condition type="isDeliveryOptionsOnlyEmail"&gt;&lt;!-- out of the box support --&gt;
   &lt;arg name="PropertyName"&gt;${arg.2fa.task.data}&lt;/arg&gt;
 &lt;/condition&gt;</pre>
+<!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\twofa\UserTwoFAWorkflowConditions.java}</p>-->
 
 
 <a name="user_c_20"></a><h4>isDeliveryTypeText</h4>
@@ -900,6 +972,7 @@ nav-title: User Workflow
 <pre>&lt;condition type="isDeliveryOptionsOnlyEmail"&gt;&lt;!-- out of the box support --&gt;
   &lt;arg name="PropertyName"&gt;${arg.2fa.task.data}&lt;/arg&gt;
 &lt;/condition&gt;</pre>
+<!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\twofa\UserTwoFAWorkflowConditions.java}</p>-->
 
 
 <a name="user_c_21"></a><h4>is2FACodeValid</h4>
@@ -913,6 +986,7 @@ nav-title: User Workflow
     &lt;/condition&gt;
     &lt;condition type="is2FACodeValid"/&gt;
   &lt;/conditions&gt;</pre>
+<!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\twofa\UserTwoFAWorkflowConditions.java}</p>-->
 
 
 <a name="user_c_22"></a><h4>is2FATerminated</h4>
@@ -935,6 +1009,32 @@ nav-title: User Workflow
     &lt;function type="terminateSession"/&gt;
   &lt;/pre-functions&gt;
 &lt;/result&gt;</pre>
+<!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\twofa\UserTwoFAWorkflowConditions.java}</p>-->
+<p><a href="#top">Back to top</a></p>
+
+
+
+<a name="user_c_23"></a><h4><span class="apidoc_red">doesUserBelongToDomain</span></h4>
+<h5 class="stamp">API Platform Version: 8.4.15 and later</h5>
+<p>Checks whether the user belongs to one or more specified domains so that further actions can be taken depending on the result of the condition.</p>
+<p>This argument also supports multiple domains with a comma separator.</p>
+<p>Using <strong>doesUserBelongToDomain</strong> in combination with the user workflow initial action, <a href="#user_ia_01">@UserPhoneNotRequired</a>, customizes the user workflow so that users belonging to a specific login domain are not required to provide a telephone number. If this functionality is in place, and the condition is met, the phone number field is not required, and is not shown to the user.</p>
+<h5>Examples/Notes/Additional Information</h5>
+<p>In the example below, <strong>doesUserBelongToDomain</strong> is used in combination with @<strong>UserPhoneNotRequired</strong>. If the user belongs to the specified domain, the condition is met, and the new user is allowed to log in without providing a phone number on the user profile.</p>
+<pre>&lt;action id=&quot;25&quot; name=&quot;@UserPhoneNotRequired&quot;&gt;
+  &lt;restrict-to&gt;
+      &lt;conditions type=&quot;AND&quot;&gt;
+        &lt;condition type=&quot;doesUserBelongToDomain&quot;&gt;
+          &lt;arg name=&quot;DomainName&quot;&gt;acmepaymentscorp&lt;/arg&gt;
+        &lt;/condition&gt;
+      &lt;/conditions&gt;
+  &lt;/restrict-to&gt;
+  &lt;results&gt;
+    &lt;unconditional-result old-status=&quot;none&quot; status=&quot;registered&quot; step=&quot;30&quot;/&gt;
+  &lt;/results&gt;
+&lt;/action&gt;</pre>
+<p><strong>Note</strong>: To see where these fit into the workflow document, you can download the user workflow from the developer portal. The new initial action and condition are in the default workflow, but commented out.</p>
+<!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\twofa\UserTwoFAWorkflowConditions.java}</p>-->
 <p><a href="#top">Back to top</a></p>
 
 
@@ -952,6 +1052,7 @@ nav-title: User Workflow
   <li><a href="#user_vr_08">${business.twofa.device.cookie.name}</a></li>
   <li><a href="#user_vr_09">${business.twofa.code.validity}</a></li>
 </ul>
+<!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\UserWorkflowVariableResolver.java}</p>-->
 
 
 
