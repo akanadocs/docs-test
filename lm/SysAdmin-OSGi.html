@@ -2176,7 +2176,7 @@ password.rule.max_repeat_count
   <a href="#topnavlinks">Top Navigation Links</a>, and <a href="#customhelp">Context Sensitive Help Pages</a>, you will
   need to modify a copy of the <b>{platform_home}/lib/lifecyclerepository_8.0.0.{version}/com.soa.repository.custom.jar</b> then update the contents with the
   relevant customizations detailed below.  If you are modifying multiple items such as the Top Banner and Footer, you'll added your customizations to a single
-  com.soa.repository.custom.jar.
+  com.soa.repository.custom.jar.  <b>NOTE: if you are adding or updating any .jsp's, you will need to pre-compile them before adding them back to your new com.soa.repository.custom.jar.</b> 
   <p>The customizations are accomplished by:
     <ol>
 	  <li>Unpack the <b>{platform_home}/lib/lifecyclemanager_8.0.0.{version}/com.soa.repository.custom.jar</b> to a
@@ -2201,14 +2201,38 @@ Archive:  /opt/akana/plat8/lib/lifecyclerepository_8.0.0.00339/com.soa.repositor
   inflating: /tmp/unpack_com.soa.repository.custom.jar/WebContent/WEB-INF/web.xml
    creating: /tmp/unpack_com.soa.repository.custom.jar/WebContent/custom/
   inflating: /tmp/unpack_com.soa.repository.custom.jar/WebContent/custom/custom.css
-  inflating: /tmp/unpack_com.soa.repository.custom.jar/WebContent/custom/i_footer.html
+  inflating: /tmp/unpack_com.soa.repository.custom.jar/WebContent/custom/i_footer.jsp
   inflating: /tmp/unpack_com.soa.repository.custom.jar/WebContent/custom/i_home.jsp
-  inflating: /tmp/unpack_com.soa.repository.custom.jar/WebContent/custom/i_support_info.html
+  inflating: /tmp/unpack_com.soa.repository.custom.jar/WebContent/custom/i_support_info.jsp
   inflating: /tmp/unpack_com.soa.repository.custom.jar/WebContent/custom/logo.png
    creating: /tmp/unpack_com.soa.repository.custom.jar/WEB-INF/
   inflating: /tmp/unpack_com.soa.repository.custom.jar/WEB-INF/web.xml</pre>
 		</ul>
       <li>Modify/add the custom content in /tmp/unpack_com.soa.repository.custom.jar per the specific Customize topics below
+	  <li>Update the MANIFEST to export any new packages being included (in the Export-Package: portion of the MANIFEST using a comma-separated list of packages such as):
+		<ul>
+			<pre>Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.9.2
+Created-By: 1.7.0_75-b13 (Oracle Corporation)
+Bundle-Vendor: Akana
+Bundle-ClassPath: .,WebContent/
+Bundle-Version: 8.0.1.00384
+Bundle-Name: Akana Custom Branding
+Bundle-ManifestVersion: 2
+Bundle-Description: Custom branding plug-in 
+Import-Package: com.soa.jsp;version="8.0.1",com.soa.transport.http.dep
+loy;version="7.0.0",com.soa.transport.http.deploy.impl;version="7.0.0
+",javax.servlet;version="2.4.0",javax.servlet.http;version="2.4.0",ja
+vax.servlet.jsp;version="2.1.0",javax.servlet.jsp.tagext;version="2.1
+.0",org.apache.jasper.runtime,org.eclipse.gemini.blueprint.context;ve
+rsion="2.0.0",org.osgi.framework;version="1.5.0",org.osgi.service.htt
+p;version="1.2.0"
+<b>Export-Package: org.apache.http.impl.client,x.y.z </b>
+Web-ContextPath: ${com.soa.repository:repository.config.contextRoot}
+Bundle-SymbolicName: com.soa.repository.custom
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7</pre>
+		</ul>
+			
 	  <li>Pack up the contents back into a <b>new</b> copy of com.soa.repository.custom.jar, being mindful to preserve the original directory structure!
 	    <ul>
 		  <pre>[akana@lxc3-pm8x-6 unpack_com.soa.repository.custom.jar]$ zip -r /tmp/com.soa.repository.custom.jar_011317 *
@@ -2221,9 +2245,9 @@ updating: com/ (stored 0%)
   adding: META-INF/spring/resource-registration.xml (deflated 69%)
   adding: WEB-INF/web.xml (deflated 70%)
   adding: WebContent/custom/ (stored 0%)
-  adding: WebContent/custom/i_support_info.html (stored 0%)
+  adding: WebContent/custom/i_support_info.jsp (stored 0%)
   adding: WebContent/custom/custom.css (deflated 41%)
-  adding: WebContent/custom/i_footer.html (stored 0%)
+  adding: WebContent/custom/i_footer.jsp (stored 0%)
   adding: WebContent/custom/logo.png (deflated 1%)
   adding: WebContent/custom/i_home.jsp (stored 0%)
   adding: WebContent/WEB-INF/ (stored 0%)
@@ -2312,7 +2336,7 @@ Starting instance [lm]</pre>
   <p>To customize the footer pages, create the following html files in com.soa.repository.custom.jar (/WebContent/custom/) following the instructions above for 
   "Customize the com.soa.repository.custom.jar" topic.
   <ul>
-    <li>i_footer.html 
+    <li>i_footer.jsp 
   </ul>
   <p>This file can be customized using standard html syntax. 
   <p><b>Note</b>: The styles in this document may override the global 
@@ -2341,7 +2365,7 @@ Starting instance [lm]</pre>
    which means it will be in effect for all libraries on your installation. Library Administrators and Usage Controllers
    continue to see the default information.
   <ol>
-    <li>Create an html file named i_support_info.html with your custom content.</li>
+    <li>Create an html file named i_support_info.jsp with your custom content.</li>
     <li>Save this file to the com.soa.repository.custom.jar (/WebContent/custom/) per the instructions above for 
     "Customize the com.soa.repository.custom.jar" topic.</li>
   </ol>
