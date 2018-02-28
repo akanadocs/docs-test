@@ -17,7 +17,7 @@ This article describes how to create a really simple environment that uses licen
 
 This article provides a simple set of instructions to get you started, for a comprehensive guide to the documentation visibility controls [click here](../learnmore/api_admin_documentation_tagging.htm).
 
-The licenses feature is extremely powerful, and as suck can be a little hard to understand at time.  In this example we are going to create a "public" API, and then use license restrictions to make some operations within the API "private", granting access to these operations to members of an admin group.  
+The licenses feature is extremely powerful, and as such can be a little hard to understand at time.  In this example we are going to create a "public" API, and then use license restrictions to make some operations within the API "private", granting access to these operations to members of an admin group.  
 
 NOTE 1: Making an operation private will hide it within automatically generated product features such as the Test Clients, and swagger documentation.  
 
