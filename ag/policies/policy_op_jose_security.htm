@@ -30,7 +30,7 @@ nav-title: JOSE Security Policy - Using
   <li><a href="#jose_config_policy_options">Configuring JOSE Security Policy Options</a></li>
   <li><a href="#jose_config_audit_options">Configuring JOSE Security Audit Options</a></li>
   <li><a href="#jose_policy_attach">Attaching the policy</a></li>
-  <li><a href="#jose_policy_uc">JOSE Security Policy: use case</a></li>
+  <li><a href="#uc_policy_op_jose">JOSE Security Policy: use case</a></li>
 </ol>
 <div class = "divider1"></div>
 
@@ -50,31 +50,31 @@ nav-title: JOSE Security Policy - Using
 <a name="jose_create_config"></a><h3>Creating and Configuring the JOSE Security Policy</h3>
 <p>There are two main tasks in configuring the JOSE Security Policy:</p>
 <ul>
-  <li>Creating the policy. See <a href="#proc_jose_policy_create">To create the JOSE security policy</a>.</li>
-  <li>Configuring the policy details. See <a href="#proc_jose_policy_configure">To configure the JOSE security policy</a>.</li>
+  <li>Creating the policy. See <a href="#proc_jose_policy_create">To create the JOSE security policy</a>. This defines a draft policy with no settings.</li>
+  <li>Configuring the policy details. See <a href="#proc_jose_policy_configure">To configure the JOSE security policy</a>. This defines the policy settings.</li>
   </ul>
 
 <a name="proc_jose_policy_create"></a><h5>To create the JOSE security policy:</h5>
 <ol>
   <li>Log in to Policy Manager: {protocol}://{hostname}:{port}/ms/index.do.</li>
-  <li>Go to <strong>Workbench</strong> and click <strong>Browse</strong>.</li>
-  <li>Navigate to the <strong>Policies</strong><em> &gt; </em><strong>Operational </strong>folder of the  Organization that includes services you want to add this policy to.</li>
-  <li>At the <strong>Policies Summary</strong> page, click <strong>Add Policy</strong>.</li>
+  <li>Go to <strong>Workbench</strong> &gt; <strong>Browse</strong> and choose the organization that includes services you want to add this policy to.</li>
+  <li>Go to the <strong>Policies</strong> &gt; <strong>Operational </strong>folder.</li>
+  <li>In the right pane, at the <strong>Policies Summary</strong> page, click <strong>Add Policy</strong>.</li>
   <li>On the <strong>Select Policy Creation Option</strong> page, in the <strong>Add Policy</strong> field, choose <strong>JOSE Security Policy</strong>, and then click <strong>Next</strong>.</li>
   <li>On the <strong>Specify Policy Details</strong> page, provide:
     <ul>
-      <li>Name (required)</li>
-      <li>Policy Key (optional)</li>
-      <li>Description (optional)</li>
+      <li><strong>Name</strong>: Required</li>
+      <li><strong>Policy Key</strong>: Optional. If you don't provide a policy key, the platform automatically assigns one. If you do provide one, it must be an absolute URI; for example, 	<strong>urn:uuid:fb984a5e-2156-17e8-bx02-a97cb5827beb</strong>.</li>
+      <li><strong>Description</strong>: Optional</li>
     </ul>
   </li>
-  <li>Click <strong>Finish</strong>.</li>
+  <li>Click <strong>Finish</strong> and then click <strong>Close</strong>.</li>
 </ol>
 
 <a name="proc_jose_policy_configure"></a><h5>To configure the JOSE security policy:</h5>
 <ol>
   <li>Create the policy as covered above.</li>
-  <li>At the <strong>Policies Summary</strong> page, in the <strong>JOSE Security Policy</strong> section, click <strong>Modify</strong>. The <strong>Specify JOSE Security Policy Options page</strong> appears, as shown below.
+  <li>At the <strong>Policies Summary</strong> page, in the <strong>JOSE Security Policy</strong> section, click <strong>Modify</strong>. The <strong>Specify JOSE Security Policy Options</strong> page appears, as shown below.
     <p><img src="images/jose_policyoptions.jpg" alt="JOSE policy options page" /></p>
   </li>
   <li>Specify values. For information about the fields, refer to <a href="#jose_config_audit_options">Configuring JOSE Security Policy Options</a> below.</li>
@@ -102,12 +102,69 @@ nav-title: JOSE Security Policy - Using
 </ul>
  </li>
   <li><strong>Serialization</strong>: You can specify Compact or JSON serialization. For information about these values, refer to the applicable sections in the JWS RFC: <a href="https://tools.ietf.org/html/rfc7515#section-7.1" title="Link to JWS RFC for JSON compact serialization" target="_blank">JWS Compact Serialization</a> and <a href="https://tools.ietf.org/html/rfc7515#section-7.2" title="Link to JWS RRC for JWS JSON serialization" target="_blank">JWS JSON Serialization</a>.</li>
-  <li><strong>Sign Content</strong>: If this box is checked, the content is signed using the selected Signature/MAC algorithm. If needed, you can check the optional <strong>Embed Key</strong> box to require that the public key (corresponding to the private key used to sign the content) is embedded in the JSON structure in the <strong>jwk</strong> header, so that it can be verified later.
-  <p>By default, this checkbox is cleared, so this section is disabled. To enable it, just check the box, specify the algorithm from the drop-down list, and choose <strong>Embed Key</strong> if needed.</p></li>
-  <li><strong>Encrypt Conten</strong>t: if this box is checked, the content is encrypted using the selected Encryption Algorithm. You can also protect the encryption key by selecting an optional Key Management Algorithm. If needed, you can check the optional Embed Key box to require that the public key (corresponding to the private key used to sign the content) is embedded in the JSON structure in the <strong>jwk</strong> header, so that it can be verified later.
-    <p>By default, this checkbox is cleared, so this section is disabled. To enable it, just check the box. The default Signature/MAC algorithm value is HS256, and the default Key Management Algorithm value is <strong>None</strong>.</p>
- </li>
-  <li><strong>Initiator Subject Category</strong>: Here, you can specify the identity of the initiator of the message.This is the identity whose private key is used to sign the IN message and whose public key is used to encrypt OUT and FAULT messages. Predefined categories include <strong>Consumer</strong> and <strong>End-User</strong>. The default is <strong>Consumer</strong>. You can also choose <strong>User-Defined</strong> and specify a custom name. If you choose <strong>None</strong>, this indicates that the selection of the identity whose keys should be used for signing and encrypting content is left to the manageability container, not specified by this policy.</li>
+  <li><strong>Sign Content</strong>: If this box is checked, the content is signed using the selected Signature/MAC algorithm.
+<p>By default, the checkbox is cleared, so this section is disabled. To enable it, just check the box, and then specify the algorithm from the drop-down list. For available values, see <a href="#sig_mac_alg_jose">Sign Content: supported Signature/MAC Algorithms</a> below.</p>
+  <p>If needed, you can also check the optional <strong>Embed Key</strong> box. The public key (corresponding to the private key used to sign the content) is embedded in the JSON structure in the <strong>jwk</strong> header, so that it can be verified later. <span class="apidoc_red">If you add this option when the JOSE Security policy is applied to OUT messages, it ensures that the client has the key to verify the signature.</span></p>
+  </li>
+  <li><strong>Encrypt Content</strong>: if this box is checked, the content is encrypted using the selected Encryption Algorithm. 
+    <p>By default, this checkbox is cleared, so this section is disabled. To enable it, just check the box. The default Signature/MAC algorithm value is HS256, and the default Key Management Algorithm value is <strong>None</strong>. For available values, see <a href="#encryption_alg_jose">Encrypt Content: supported Encryption Algorithms</a> below.</p>
+    <p>You can also protect the encryption key by selecting an optional Key Management Algorithm. For available values, see <a href="#key_mgmt_alg_jose">Encrypt Content: supported Key Management Algorithms</a> below.<!-- {<span class="apidoc_red">CR comment 1/24/18: The text where it says "You can also protect the encryption key by selecting an optional Key Manager Algorithm" I don't think is true.  An algorithm must always be selected that will be used to generate the signature and the algorithm used to verify the signature. (TBD, need input on this one)</span>}--></p>
+    <p>If needed, you can also check the optional <strong>Embed Key</strong> box. The public key (corresponding to the private key used to sign the content) is embedded in the JSON structure in the <strong>jwk</strong> header, so that it can be verified later. <span class="apidoc_red">If you add this option when the JOSE Security policy is applied to OUT messages, it ensures that the client has the key to verify the encryption.</span></p>
+  </li>
+  <li><strong>Initiator Subject Category</strong>: <span class="apidoc_red">Here, you  can specify the subject category of the inbound identity that will be used for the outbound identity.</span> This is the identity whose private key is used to sign the IN message and whose public key is used to encrypt OUT and FAULT messages. Options: <strong>Consumer</strong>, <strong>End-User</strong>, <strong>User-Defined</strong>, and <strong>None</strong>. For more information, see <a href="#initiator_subject_category_jose">Initiator Subject Category options</a> below.</li>
+</ul>
+
+
+<a name="sig_mac_alg_jose"></a><h4>Sign Content: supported Signature/MAC Algorithms</h4>
+<p>The Signature/MAC algorithms supported by the JOSE Security policy for signing content are:</p>
+<ul>
+  <li>HS256</li>
+  <li>HS384</li>
+  <li>HS512</li>
+  <li>RS256</li>
+  <li>RS384</li>
+  <li>RS512</li>
+  <li>ES256</li>
+  <li>ES384</li>
+  <li>ES512</li>
+</ul>
+
+
+<a name="encryption_alg_jose"></a><h4>Encrypt Content: supported Encryption Algorithms</h4>
+<p>The encryption algorithms supported by the JOSE Security policy for encrypting content are:</p>
+<ul>
+  <li>A128CBC-HS256</li>
+  <li>A192CBC-HS384</li>
+  <li>A256CBC-HS512</li>
+  <li>A128GMC</li>
+  <li>A192GMC</li>
+  <li>A256GMC</li>
+</ul>
+
+
+<a name="key_mgmt_alg_jose"></a><h4>Encrypt Content: supported Key Management Algorithms</h4>
+<p>The Key Management algorithms supported by the JOSE Security policy for encrypting content are:</p>
+<ul>
+  <li>None</li>
+  <li>RSA1_5</li>
+  <li>RSA-OAEP</li>
+  <li>A128KW</li>
+  <li>A192KW</li>
+  <li>A256KW</li>
+  <li>A128GCMKW</li>
+  <li>A192GCMKW</li>
+  <li>A256GCMKW</li>
+</ul>
+
+
+<a name="initiator_subject_category_jose"></a><h4>Initiator Subject Category options</h4>
+<p>In the <strong>Initiator Subject Category</strong> field, you  can specify the subject category of the inbound identity that will be used for the outbound identity. This is the identity whose private key is used to sign the IN message and whose public key is used to encrypt OUT and FAULT messages.</p>
+<p>The Initiator Subject Category options supported by the JOSE Security policy are:</p>
+<ul>
+  <li><strong>Consumer</strong>: The consumer of the service; the client application. This is the default and most common value.</li>
+  <li><strong>End-User</strong>: The end-user of the client application.</li>
+  <li><strong>User-Defined</strong>: You can define a specific subject category that will be used for identification purposes. If you choose this option, specify the value that will be used.&nbsp;Make sure you spell it exactly correctly, including capitalization.</li>
+  <li><strong>None</strong>: If you choose <strong>None</strong>, the selection of the identity whose keys should be used for signing and encrypting content is not specified by the policy.</li>
 </ul>
 <p><a href="#top">Back to top</a></p>
 
@@ -129,8 +186,8 @@ nav-title: JOSE Security Policy - Using
 
 
 
-<a name="jose_policy_uc"></a><h3>JOSE Security Policy: use case</h3>
-<p>The follow use case illustrates a scenario where the JOSE Security policy is used to secure the Swagger Petstore API.</p>
+<a name="uc_policy_op_jose"></a><h3>JOSE Security Policy: use case</h3>
+<p>The follow use case illustrates a scenario where the JOSE Security policy is used to secure the Swagger Petstore API. In this example, we're creating an API secured with HTTP Basic authentication that signs the response based on the client's certificate. The Authentication policy and HTTP Security policies secure the API with Basic Auth. The JOSE Security policy takes the consumer information and signs the output based on the JOSE policy configuration.</p>
 <p>In this example:</p>
 <ul>
   <li>The information is signed but not encrypted.</li>
@@ -241,7 +298,7 @@ nav-title: JOSE Security Policy - Using
 <p>You'll need to generate PKI keys so that the platform has a private key for the app, to use in applying the JOSE Security policy.</p>
 <p>To do this in Policy Manager:</p>
 <ol>
-  <li><strong>Security</strong> &gt; <strong>Users</strong> &gt; find the app on the list &gt; click Manage PKI Keys.</li>
+  <li><strong>Security</strong> &gt; <strong>Users</strong> &gt; find the app on the list &gt; click <strong>Manage PKI Keys</strong>.</li>
   <li>Choose <strong>Generate PKI Keys and X.509 Certificate</strong> and click <strong>Next</strong>.</li>
   <li>Fill in the certificate details and click <strong>Finish</strong>.</li>
 </ol>
@@ -254,6 +311,6 @@ nav-title: JOSE Security Policy - Using
 <p><img src="images/jose_06_results_auth.jpg" alt="Results in Postman: with policies attached" /></p>
 
 <a name="10"></a><h5>Step 10: View the decoded JWT response</h5>
-<p>Copy the response content into the JSON Web Token debugger at <a href="https://jwt.io/" target="_blank">https://jwt.io/</a>. In the right pane, you'll see the results, as in the example below.</p>
+<p>Copy the response content into the JSON Web Token debugger at <a href="https://jwt.io/" target="_blank">https://jwt.io/</a>. In the right pane, you'll see the response message, as in the example below.</p>
 <p><img src="images/jose_07_token.jpg" alt="Viewing the token" /></p>
 <p><a href="#top">Back to top</a></p>
