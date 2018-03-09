@@ -46,6 +46,7 @@ nav-title: Promotion Guide
   <ol>
       <li><a href="#s06_01">Using Filters with Deployment Zone Configurations</a></li>
       <li><a href="#s06_02">Default Endpoint Propagation</a></li>
+      <li><a href="#s06_02b">Policy Mapping</a></li>
       <li><a href="#s06_03">Using Rules with Deployment Zone Configurations</a></li>
       <li><a href="#s06_04">Duplicate Endpoints</a></li>
     </ol>
@@ -64,7 +65,7 @@ nav-title: Promotion Guide
     </ol>
   </li>
   <li><a href="#runtime_config">Default API Settings using Runtime Configurations</a>
-(8.4.16 and later)    
+(8.4.16 and later
   <ol>
       <li><a href="#s08_01_create_asset">Creating a Runtime Configuration Asset</a></li>
       <li><a href="#s08_02_publishing">Publishing a Runtime Configuration Asset</a></li>
@@ -249,8 +250,27 @@ vsep.listenerName = "https"</td>
 <h5>Remote Configuration</h5>
 <p>In the case where the Lifecycle Coordinator is installed remotely, a URL to the remote container hosting the Lifecycle Coordinator instance must be configured for each container hosting tenants from which promotion can be requested. To set this, in the Akana Administration Console, open the <strong>Configuration</strong> tab, select the <strong>com.soa.promotion</strong> category, and set the <strong>remote.promoter.address</strong> property to the host address of the container hosting the Lifecycle Coordinator instance:</p>
 <p><img src="images/promotion_09.jpg" alt="Setting remote.provider.address" /></p>
-<p><a href="#top">Back to top</a></p>
 
+<h5 id="config_tenant_synch_interval">Configuration property: Tenant Synchronization Interval {<span class="apidoc_red">new for ATMO-23264 not sure re location</span>}</h5>
+<h5 class="stamp">API Platform Version: 8.4.16 and later</h5>
+<p>Lifecycle Coordinator periodically updates cached policy and organization information for tenants referenced in a topology. The specific interval for this update is controlled by the following property:</p>
+<dl>
+<dt>Configuration category</dt>
+<dd>com.soa.repository</dd>
+
+
+<dt>Configuration property</dt>
+<dd>repository.config.tenantSyncInterval</dd>
+
+
+<dt>Explanation:</dt>
+<dd>Sets the interval between updates to cached policy and organizational information. The value is set in milliseconds</dd>
+
+
+<dt>Default value:</dt>
+<dd>300000 (5 minutes)</dd>
+</dl>
+<p><a href="#top">Back to top</a></p>
 
 
 
@@ -552,6 +572,85 @@ vsep.listenerName = "https"</td>
 
 
 
+<h4 id="s06_02b">Policy Mappings {<span class="apidoc_red">new for ATMO-23264 not sure re location</span>}</h4>
+<h5 class="stamp">API Platform Version: 8.4.16 and later</h5>
+<p>A Promotion Profile can optionally contain a set of PolicyMappings that you can use to tailor the propagation and validation of policy references when an API is promoted to the target environment. You can use PolicyMappings to:</p>
+<ul>
+  <li>Map a policy reference in the source environment to a policy in the target environment.</li>
+  <li>Remove a policy reference altogether when an API is promoted.</li>
+</ul>
+<p>A PolicyMapping has one of these two properties:</p>
+<ul>
+  <li><strong>sourcePolicy</strong>&#8212;Used to identify a specific policy in the source environment by either name or unique id.</li>
+  <li><strong>sourcePolicyFilter</strong>&#8212;Used to specify a group of policies by type or subtype.</li>
+</ul>
+<p>Additionally, a PolicyMapping can specify a <strong>targetPolicy</strong> in the target environment either by name or unique id.  If a PolicyMapping does not specify a <strong>targetPolicy</strong> property, references to policies matching the <strong>sourcePolicy</strong> or <strong>sourcePolicyFilter</strong> property are ignored when an API is propagated to the next environment.</p>
+<p>The following PromotionProfile shows an example of a PolicyMapping that maps references to the DetailedAuditPolicy in the source environment to the BasicAuditPolicy in the target environment:</p>
+<pre>{
+  "name": "Default Production Promotion",
+  "description": "Dev to production default profile",
+  "targetEnvironment": "production",
+  "rules": [],
+  "policyMappings": [
+    {
+      "sourcePolicy": {
+        "policyName": "DetailedAuditing"
+      },
+      "targetPolicy": {
+        "policyName": "BasicAuditing"
+      }
+    }
+  ]
+}</pre>
+
+<p>In this example, the PolicyMapping uses the unique ids of the source and target policies:</p>
+<pre>{
+  "sourcePolicy": {
+    "policyId": "urn:uuid:852afbc5-101e-11e8-887b-abe2ebb3db33"
+  },
+  "targetPolicy": {
+    "policyId": "urn:uuid:763b7ca5-304f-16e8-457b-c542e456db33"
+  }
+}</pre>
+<p>You can accomplish a  one-to-many mapping of policies using a policy filter:</p>
+<pre>{
+  "sourcePolicyFilter": {
+    "policyType": "Operational Policy",
+    "policySubtype" : "policy.auditservice"
+  },
+  "targetPolicy": {
+    "policyName": "BasicAuditing"
+    }
+}</pre>
+<p>A specific policy is disabled on promotion by omitting the targetPolicy property in the PolicyMapping:</p>
+<pre>{
+  "sourcePolicy": {
+    "policyName": " DetailedAuditing "
+  }
+}</pre>
+
+<h5>Default Mappings</h5>
+<p>Policies that are available by default within a tenant, such as DetailedAuditing, BasicAuditing, and CORSAllowAll, are implicitly mapped to the corresponding default policies in the target tenant and do not need an explicit PolicyMapping. You can think of this default mapping as being of the form:</p>
+<pre>{
+  "sourcePolicy": {
+    "policyId": "&lt;source tenant id&gt;-&lt;policy name&gt;"
+  },
+  "targetPolicy": {
+    "policyId": "&lt;target tenant id&gt;-&lt;policy name&gt;"
+  }
+}
+</pre>
+<h5>Policy Validation</h5>
+<p>When an API is promoted, policy references must do one of the following::</p>
+<ul>
+  <li>Reference a default policy, such as DetailedAuditing</li>
+  <li>Match the unique ID of an existing policy in the target environment</li>
+  <li>Match a PolicyMapping defined for the selected PromotionProfile </li>
+</ul>
+<p>If none of the above criteria are met, a validation error is returned to the promoting user and the promotion is aborted.</p>
+
+
+
 <h4 id="s06_03">Using Rules with deployment zone configurations
 </h4><p>A deployment zone configuration can optionally contain RuleDefinitions to be applied to the properties of the endpoints being promoted with this deployment zone configuration.</p>
 <p>At this level, you can use rules to alter a listener name, the endpoint's path, or its vanity host. The properties available for modification are:</p>
@@ -683,7 +782,7 @@ vsep.listenerName = "https"</td>
 
 
 
-<h3 id="runtime_config">Default API Settings using Runtime Configurations</h3>
+<h3 id="runtime_config">Default API Settings using Runtime Configurations {<span class="apidoc_red">new for ATMO-22920</span>}</h3>
 <h5 class="stamp">API Platform Version: 8.4.16 and later</h5>
 <p>The behavior described in this section is not part of Lifecycle Coordinator, but can be used to augment the capabilities of Lifecycle Coordinator to further tailor the configuration of APIs within each environment of a topology.</p>
 <p>The intent of the Runtime Configurations feature is to allow <strong>templates</strong> for API implementation properties to be established and selectively applied based on custom property filters. This is accomplished through customization of the Lifecycle Manager library in which custom properties for a tenant are configured. This configuration requires a working knowledge of the Lifecycle Manager application and the Configuration Designer Tool.</p>
