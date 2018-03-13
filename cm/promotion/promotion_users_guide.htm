@@ -35,7 +35,7 @@ nav-title: Promotion Guide
       <li><a href="#lc_install_feature">Installing the Lifecycle Coordinator feature</a></li>
       <li><a href="#lc_install_secure_api">Securing the Topology REST API</a></li>
       <li><a href="#com_soa_promotion">Remote container address (com.soa.promotion)</a></li>
-      <li><a href="#com_akana_lifecycle_coordinator">Lifecycle Coordinator Admin Console Properties: com.akana.lifecycle.coordinator</a></li>
+      <li><a href="#com_akana_lifecycle_coordinator">Properties to secure the Topology REST API (com.akana.lifecycle.coordinator)</a> (8.4.15 and later)</li>
       <li><a href="#config_preserveKeys">Unique ID Mapping behavior</a></li>
       <li><a href="#config_defaultFromEmail">Default "From Email" setting</a></li>
       <li><a href="#config_tenant_synch_interval">Tenant Synchronization Interval</a></li>
@@ -46,7 +46,7 @@ nav-title: Promotion Guide
     <ol>
       <li><a href="#s05_01">Tenants</a></li>
       <li><a href="#s05_02">Environments</a></li>
-      <li><a href="#s05_03">PromotionProfiles</a></li>
+      <li><a href="#s05_03">Promotion Profiles</a></li>
       <li><a href="#s05_04">Rules</a></li>
       <li><a href="#s05_05">Filters</a></li>
       <li><a href="#s05_06">Organization Mapping</a> (8.4.13 and later)</li>
@@ -73,13 +73,6 @@ nav-title: Promotion Guide
       <li><a href="#s07_01">Logging In</a></li>
       <li><a href="#s07_02">Viewing Assets and Iterations</a></li>
       <li><a href="#s07_03">Promotion Requests</a></li>
-    </ol>
-  </li>
-  <li><a href="#runtime_config">Default API Settings using Runtime Configurations</a>
-(8.4.16 and later)
-  <ol>
-      <li><a href="#s08_01_create_asset">Creating a Runtime Configuration Asset</a></li>
-      <li><a href="#s08_02_publishing">Publishing a Runtime Configuration Asset</a></li>
     </ol>
   </li>
 </ol>
@@ -147,11 +140,11 @@ nav-title: Promotion Guide
 <p>A Tenant that is local may also indicate that it should be used to as an authentication source for users approving promotion requests with the Lifecycle Coordinator.</p>
 
 <h4 id="s03_03">Environments</h4>
-<p>An Environment represents a logical container to which an asset is deployed at a particular stage of its lifecycle. An Environment must specify the Tenant that supports it.</p>
+<p>An Environment represents a logical container to which an asset is deployed at a specific stage of its lifecycle. An Environment must specify the Tenant that supports it.</p>
 <p>Environments also define the possible transitions to the next Environment in the form of Promotion Profiles. At this time, only a single target Environment can be specified in the promotion chain (Environment fan-out is not currently supported).</p>
 
 <h4 id="s03_04">Promotion Profiles</h4>
-<p>Promotion Profiles represent a transition to the next (<strong>target</strong>) Environment. A Promotion Profile specifies a target Environment and optionally a set of Rules to be applied to the manifest of the promotion package of the asset prior to promotion into the target Environment. A Promotion Profile might also, optionally, specify an Asset Filter. This allows multiple Promotion Profiles to be defined within an Environment with mutually exclusive filters, each with a different rule set. When promotion of an asset is requested from a source Environment, and more than one Promotion Profile exists, the Promotion Profile with an Asset Filter that the asset complies with is used. In the case where only one Promotion Profile exists (with no Asset Filter specified), that Promotion Profile is automatically selected for the promotion.</p>
+<p>Promotion Profiles represent a transition to the next (<strong>target</strong>) Environment. A promotionProfile specifies a target Environment and optionally a set of Rules to be applied to the manifest of the promotion package of the asset prior to promotion into the target Environment. A promotionProfile might also, optionally, specify an Asset Filter. This allows multiple promotionProfiles to be defined within an Environment with mutually exclusive filters, each with a different rule set. When promotion of an asset is requested from a source Environment, and more than one promotionProfile exists, the promotionProfile with an Asset Filter that the asset complies with is used. In the case where only one promotionProfile exists (with no Asset Filter specified), that promotionProfile is automatically selected for the promotion.</p>
 
 <h4 id="s03_05">Asset Filters</h4>
 <p>Asset Filters contain a set of criteria for the custom properties of the assets being promoted. For example, an API asset may use a custom property indicating that it is PCI compliant. An Asset Filter can define criteria for that property such that only API assets that are PCI compliant will match the filter. This Asset Filter can then be assigned to a Promotion Profile such that a different set of Rules are applied to PCI-compliant and non-compliant API assets.</p>
@@ -256,7 +249,7 @@ vsep.listenerName = "https"</td>
   <li><a href="#lc_install_feature">Installing the Lifecycle Coordinator feature</a></li>
   <li><a href="#lc_install_secure_api">Securing the Topology REST API</a></li>
   <li><a href="#com_soa_promotion">Remote container address (com.soa.promotion)</a></li>
-  <li><a href="#com_akana_lifecycle_coordinator">Lifecycle Coordinator Admin Console Properties: com.akana.lifecycle.coordinator</a></li>
+  <li><a href="#com_akana_lifecycle_coordinator">Properties to secure the Topology REST API (com.akana.lifecycle.coordinator)</a></li>
   <li><a href="#config_preserveKeys">Unique ID Mapping behavior</a></li>
   <li><a href="#config_defaultFromEmail">Default "From Email" setting</a></li>
   <li><a href="#config_tenant_synch_interval">Tenant Synchronization Interval</a></li>
@@ -284,8 +277,10 @@ vsep.listenerName = "https"</td>
   <li>Save the changes.</li>
 </ol>
 
-<h4 id="com_akana_lifecycle_coordinator">Lifecycle Coordinator Admin Console Properties: com.akana.lifecycle.coordinator</h4>
+<h4 id="com_akana_lifecycle_coordinator">Properties to secure the Topology REST API (com.akana.lifecycle.coordinator)</h4>
+<p class="stamp">API Platform Version: 8.4.15 and later</p>
 <p>You can set up the global configuration properties for Lifecycle Coordinator in the Akana Admin Console.</p>
+<p>With the three properties listed below, you can configure the Topology REST API to require basic authentication for all requests.</p>
 <ol>
   <li>In the Akana Administration Console, open the <strong>Configuration</strong> tab.</li>
   <li>Select the <strong>com.akana.lifecycle.coordinator</strong> category.</li>
@@ -296,7 +291,7 @@ vsep.listenerName = "https"</td>
 <h5 id="lc_property_details"><strong>com.akana.lifecycle.coordinator</strong> properties</h5>
 <dl>
 <dt>lifecycle.coordinator.config.apiUser</dt>
-<dd>This field and the next are used to set the <strong>global</strong> basic authentication credentials for the Topology REST API. If  this propertyis left empty, the Topology API will not require authentication of requests.</dd>
+<dd>This field and the next are used to set the <strong>global</strong> basic authentication credentials for the Topology REST API. If  this property is left empty, the Topology API will not require authentication of requests.</dd>
 <dt>lifecycle.coordinator.config.apiPassword properties</dt>
 <dd>If a value was set for lifecycle.coordinator.config.apiUser, specify the password.</dd>
 <dt>lifecycle.coordinator.config.enableTenantScopedAuthentication</dt>
@@ -336,18 +331,20 @@ vsep.listenerName = "https"</td>
 </table>
 
 
-<p><strong>Note</strong>: Requests for the <strong>getTopologies</strong> method (<span class="apidoc_code">GET …/lc/api/topologies</span>) must specify the global credentials since there is no particular topology being acted on.</p>
+<p><strong>Note</strong>: Requests for the <strong>getTopologies</strong> method (<span class="apidoc_code">GET …/lc/api/topologies</span>) must specify the global credentials since there is no specific topology being acted on.</p>
 
 
 <h4 id="config_preserveKeys">Unique ID Mapping behavior</h4>
-<p>The property <strong>lifecycle.coordinator.config.preserveKeys</strong> in the <strong>com.akana.lifecycle.coordinator</strong> configuration category is used to configure the default behavior for preserving the unique IDs of an API’s constituent elements as the API is promoted across environments. If set to true, the unique IDs of the underlying Services and Organization are preserved. If set to false, these elements will be assigned new unique ids as they are promoted and a mapping between the keys used in each environment will be stored with the topology within Lifecycle Coordinator.</p>
-<p>Note that the <strong>lifecycle.coordinator.config.preserveKeys</strong> property should only be set to <strong>true</strong> if no two tenants referenced by the topology exist in the same API Platform instance. Failure to set this property to false in this case will result in promotion errors.</p>
+<p><span class="stamp">API Platform Version: 8.4.14 and later</span></p>
+<p>The property <strong>lifecycle.coordinator.config.preserveKeys</strong> in the <strong>com.akana.lifecycle.coordinator</strong> configuration category is used to configure the default behavior for preserving the unique IDs of an API's constituent elements as the API is promoted across environments.</p>
+<p>If this property is set to <strong>true</strong>, the unique IDs of the underlying Services and Organization are preserved. If it's set to <strong>false</strong>, these elements will be assigned new unique IDs when they are promoted, and a mapping between the keys used in each environment will be stored with the topology in Lifecycle Coordinator.</p>
+<p><strong>Note</strong>:  If multiple tenants referenced in the same topology exist in the same API Platform instance (that is, share the same database), the value should be changed to <strong>false</strong>, since there might be some overlap in key values. If <strong>preserveKeys</strong> is set to true, any overlap in key values would cause promotion errors.</p>
 
 
 <h4 id="config_defaultFromEmail">Default "From Email" setting</h4>
-<p>The default <strong>from</strong> email address used in emails sent from Lifecycle Coordinator can be set in the <strong>repository.config.defaultFromEmail property</strong> of the <strong>com.soa.repository</strong> configuration category.</p>
-<p>You can override the <strong>from</strong> email address for a particular topology. To do this, go into the topology library as an admin user or superuser, click <strong>Support Center</strong>, click <strong>Configure Library</strong> and set the <strong>Sender Email</strong> field, as shown below.</p>
-<p><img src="images/promotion_lm_from_email.jpg" alt="Setting From Email in LM" /></p>
+<p>You can set the default <strong>from</strong> email address used in emails sent from Lifecycle Coordinator, in the <strong>repository.config.defaultFromEmail property</strong> of the <strong>com.soa.repository</strong> configuration category.</p>
+<p>You can also override the <strong>from</strong> email address for a specific topology. To do this, go into the topology library as an admin user or superuser, click <strong>Support Center</strong>, click <strong>Configure Library</strong> and set the <strong>Sender Email</strong> field, as shown below.</p>
+<p><img src="images/promotion_lm_from_email.jpg" alt="Setting From Email in LM" />W</p>
 
 
 <h4 id="config_tenant_synch_interval">Tenant Synchronization Interval</h4>
@@ -452,8 +449,8 @@ vsep.listenerName = "https"</td>
 <h5>Environment Names</h5>
 <p>The <strong>name</strong> property for an environment must be unique within the topology and should not be changed once defined. This is because this name is used as a key for mapping information between environments stored by the Lifecycle Coordinator. Given the invariability of the environment name, a <strong>displayName</strong> property is also supported. The display name is what appears to users in the API Platform UI and may be changed without affecting mapping information.</p>
 
-<h4 id="s05_03">PromotionProfiles</h4>
-<p>PromotionProfiles are defined within the <strong>promotionProfiles</strong> property of an Environment. The <strong>targetEnvironment</strong> property of a PromotionProfile must correspond to the <strong>name</strong> of another Environment in the Topology.</p>
+<h4 id="s05_03">Promotion Profiles</h4>
+<p>Promotion Profiles are defined within the <strong>promotionProfiles</strong> property of an Environment. The <strong>targetEnvironment</strong> property of a PromotionProfile must correspond to the <strong>name</strong> of another Environment in the Topology.</p>
 <p>A PromotionProfile can optionally specify one or more filters by specifying filter names within the <strong>filterNames</strong> array property.</p>
 <p>Rule definitions might optionally be provided using the <strong>rules</strong> array property.</p>
 <p class="apidoc_note"><strong>Note</strong>: A PromotionProfile cannot create a cycle between Environments.</p>
@@ -635,7 +632,7 @@ vsep.listenerName = "https"</td>
 }
 </pre>
 <h5>Policy Validation</h5>
-<p>When an API is promoted, policy references must do one of the following::</p>
+<p>When an API is promoted, policy references must do one of the following:</p>
 <ul>
   <li>Reference a default policy, such as DetailedAuditing</li>
   <li>Match the unique ID of an existing policy in the target environment</li>
@@ -877,103 +874,4 @@ vsep.listenerName = "https"</td>
 <p>Clicking <strong>approve</strong> allows the promotion to succeed or proceed to the next role approval.</p>
 <h5>Rejecting Requests</h5>
 <p>A user may choose to reject the request by clicking on <strong>rejection properties</strong> and then clicking <strong>reject</strong>. In this case, the Iteration asset remains in a <strong>Promotion Pending</strong> state, however, the API Platform UI shows the state of the promotion as <strong>Promotion Rejected</strong> and allows the promotion to be requested again.</p>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<h3 id="runtime_config">Default API Settings using Runtime Configurations {<span class="apidoc_red">new for ATMO-22920</span>}</h3>
-<h5 class="stamp">API Platform Version: 8.4.16 and later</h5>
-<p>The behavior described in this section is not part of Lifecycle Coordinator, but can be used to augment the capabilities of Lifecycle Coordinator to further tailor the configuration of APIs within each environment of a topology.</p>
-<p>The intent of the Runtime Configurations feature is to allow <strong>templates</strong> for API implementation properties to be established and selectively applied based on custom property filters. This is accomplished through customization of the Lifecycle Manager library in which custom properties for a tenant are configured. This configuration requires a working knowledge of the Lifecycle Manager application and the Configuration Designer Tool.</p>
-<p>As with the topology definition, it's best if Runtime Configuration assets are set up during the initial configuration of the environment. Changes to a Runtime Configuration do not retroactively affect pre-existing APIs unless those APIs are updated through the API Platform UI or subsequent promotions.</p>
-
-
-<h4 id="s08_01_create_asset">Creating a Runtime Configuration Asset</h4>
-<p>You can use the Lifecycle Manager user interface to create assets of type <strong>Runtime Configuration</strong>. The following image shows the Lifecycle Manager edit page for a Runtime Configuration asset:</p>
-<p><img src="images/promotion_17_runtime_config_asset.jpg" alt="Creating a Runtime Configuration asset" /></p>
-<p>The following aspects of a Runtime Configuration asset determine its behavior when applied to an API implementation:</p>
-<ul>
-  <li><a href="#s08_01_01_owning_group">Owning Group</a></li>
-  <li><a href="#s08_01_02_asset_filter">Asset Filter</a></li>
-  <li><a href="#s08_01_03_implementation_type">Implementation Type</a></li>
-  <li><a href="#s08_01_04_policies">Policies</a></li>
-  <li><a href="#s08_01_05_virtual_host">Virtual Host</a></li>
-  <li><a href="#s08_01_06_path">Path</a></li>
-  <li><a href="#s08_01_07_anon_access">Allow Anonymous Access</a></li>
-  <li><a href="#s08_01_08_approval_req">Approval Required</a></li>
-  <li><a href="#s08_01_09_debug_mode">Debug Mode Enabled</a></li>
-</ul>
-
-
-<h5 id="s08_01_01_owning_group">Owning Group</h5>
-<p>Groups within the Lifecycle Manager library reflect the Organizations of the associated tenant. The <strong>Owning Group</strong> chosen when creating a Runtime Configuration asset determines the organizational scope that the Runtime Configuration applies to.</p>
-<p>For example, if the tenant organization has two child organizations <strong>A</strong> and <strong>B</strong>, a Runtime Configuration asset assigned to Group <strong>A</strong> is applicable to APIs in organization <strong>A</strong> but not to APIs in organization <strong>B</strong>. If you choose the tenant organization as the owning group, the Runtime Configuration is applicable to all APIs within the tenant.</p>
-
-<h5 id="s08_01_02_asset_filter">Asset Filter</h5>
-<p>You can further scope the applicability of Runtime Configuration assets by using <strong>asset filters</strong>. Asset filters are defined in the Library Process Configuration document (LPC) for the library, and specify criteria for the custom properties of the API (known as <strong>classifiers</strong> within Lifecycle Manager). For example, the filter below selects APIs with the <strong>PII</strong> custom property set to <strong>true</strong>:</p>
-<pre>&lt;asset-filter name="PII APIs"&gt;
-  &lt;classifier-criteria classifier-category="asset-type"&gt;
-    &lt;value-set&gt;
-      &lt;value&gt;API&lt;/value&gt;
-    &lt;/value-set&gt;
-  &lt;/classifier-criteria&gt;
-  &lt;classifier-criteria classifier-category="pii"&gt;
-    &lt;value-set&gt;
-      &lt;value&gt;<strong>true</strong>&lt;/value&gt;
-    &lt;/value-set&gt;
-  &lt;/classifier-criteria&gt;
-&lt;/asset-filter&gt;
-</pre>
-<p>When selecting a value for the Asset Filter classifier, a list of asset filters defined in the LPC as well as implicit filters for the defined asset types in the library will be shown. The filter in the example above would appear as <strong>LPC:PII APIs</strong>. Selecting the implicit filter <strong>asset-type:API</strong> indicates that the Runtime Configuration is applicable to all APIs within its owning group.</p>
-<p>Note that any filter chosen for a Runtime Configuration should include criteria specifying <strong>API</strong> as the asset-type.</p>
-
-<h5 id="s08_01_03_implementation_type">Implementation Type</h5>
-<p>This classifier specifies the type of API implementation the Runtime Configuration applies to. The choices are <strong>Live</strong> and <strong>Sandbox</strong>.</p>
-
-<h5 id="s08_01_04_policies">Policies</h5>
-<p>A Runtime Configuration asset provides three classifiers that you can use to select policies to be applied to applicable API implementations. These classifiers are:</p>
-<ul>
-  <li>Operational Policy</li>
-  <li>Compliance Policy</li>
-  <li>Service Level Policy</li>
-</ul>
-<p>When choosing values for these classifiers, the application will present a list of policies available for the associated tenant with the specified policy type. You can choose one or more policies for each classifier.</p>
-<p>Additionally, there are three classifiers that allow you to select policies for the physical service supporting an API implementation using the <strong>proxy</strong> pattern. These classifiers are: </p>
-<ul>
-  <li>Operational Policy (Physical Service)</li>
-  <li>Compliance Policy (Physical Service)</li>
-  <li>Service Level Policy (Physical Service)</li>
-</ul>
-
-<p><strong>Policy Replacement Behavior</strong></p>
-<p>The default behavior for setting policies on an API implementation or physical service is additive, meaning that policies specified by the Runtime Configuration will be added to any existing policies on the implementation or physical service.</p>
-<p>Using Configuration Designer, it is possible to customize the <strong>Apply Runtime Configuration</strong> API post-processing task by setting the <strong>Preserve Existing Policies</strong> property to <strong>false</strong>. This indicates that any existing policies on the implementation or physical service that are not specified in the Runtime Configuration will be removed, and replaced by those in the Runtime Configuration.</p>
-<p>When the <strong>Preserve Existing Policies</strong> property is set to <strong>false</strong>, you can specify the value of <strong>NONE</strong> for any of the policy classifiers. This indicates that all policies should be removed from the implementation or physical service.</p>
-<p>In any case, if a policy classifier has no value in the Runtime Configuration, no action will be taken with the policies associated with the implementation or physical service.</p>
-
-<h5 id="s08_01_05_virtual_host">Virtual Host</h5>
-<p>This classifier is used to set the vanity host name for every endpoint in the implementation. Leaving this classifier unset indicates that the host name of the endpoints should not be modified.</p>
-
-<h5 id="s08_01_06_path">Path</h5>
-<p>This classifier is used to set the context path for every endpoint in the implementation. Leaving this classifier unset indicates that the context path of the endpoints should not be modified.</p>
-
-
-<p><strong>Parameter Replacement</strong></p>
-<p>The <strong>path</strong> classifier supports the Lifecycle Manager concept of <strong>context parameters</strong>. This allows aspects of the API such as the API name or values of custom properties to be used within the path.</p>
-<p>For example, setting the path value to <strong>/{catalog_asset.name_normalized}</strong> indicates that the path should consist of the API's name. If an API had a custom classifier called <strong>visibility</strong> set to a value <strong>external</strong>, using a value of <strong>/rest/{catalog_asset.classifier.visibility}</strong> for the path would result in endpoint paths set to <strong>/rest/external</strong>.</p>
-<p>The available parameters are specified in the Lifecycle Manager Configuration guide (available on the Akana Library site, in the Documentation folder for your <a href="https://library.roguewave.com/display/MAIN/Lifecycle+Manager" title="Link to Lifecycle Manager download" target="_blank">Lifecycle Manager installation</a>). Note that the context asset for parameter resolution is the API asset.</p>
-
-<h5 id="s08_01_07_anon_access">Allow Anonymous Access</h5>
-<p>This classifier is used to set the <strong>allow anonymous access</strong> value of the implementation. Leaving this classifier unset indicates that the <strong>allow anonymous access</strong> value of the implementation should not be modified.</p>
-
-<h5 id="s08_01_08_approval_req">Approval Required</h5>
-<p>This classifier is used to set the <strong>approval required</strong> value of the implementation. It is only applicable when <strong>allow anonymous access</strong> is set to <strong>false</strong>. Leaving this classifier unset indicates that the <strong>approval required</strong> value of the implementation should not be modified.</p>
-
-<h5 id="s08_01_09_debug_mode">Debug Mode Enabled</h5>
-<p>This classifier is used to set the <strong>debug mode enabled</strong> value of the implementation. Leaving this classifier unset indicates that the <strong>debug mode enabled</strong> value of the implementation should not be modified.</p>
-
-
-<h4 id="s08_02_publishing">Publishing a Runtime Configuration Asset</h4>
-<p>When edit is complete on a Runtime Configuration asset, it must be submitted. Once any necessary approvals are complete, the Runtime Configuration is published, and is immediately active.</p>
-<p> will be active.</p>
 <p><a href="#top">Back to top</a></p>
