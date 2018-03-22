@@ -193,7 +193,7 @@ result=`$sqlcmd "$query"`
 [ ! -z "$result" -a "$result" != "NULL" ] && ERROR_MSG=${ERROR_MSG}"There are acquired jobs in $db database:${NL}${result}${NL}";
 ```
 
-**Resolution**: Reset the relevant TIGGER_STATE to 'WAITING' in the SOA\_QRTZ\_TRIGGERS table
+**Resolution**: Reset the relevant TRIGGER_STATE to 'WAITING' in the SOA\_QRTZ\_TRIGGERS table
 
 It is often useful to know if a particular scheduled job has been executing for too long - this is often a sign of database contention or poor database maintenance. This script will send an alert if any scheduled job takes longer than 10 minutes:
 
