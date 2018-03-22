@@ -204,7 +204,7 @@ result=`$sqlcmd "$query"`
 [ ! -z "$result" -a "$result" != "NULL" ] && ERROR_MSG=${ERROR_MSG}"Below jobs are running for longer than 10 minutes in $db database:${NL}TRIGGER_NAME\tSTATE\tINSTANCE_NAME\tFIRED_TIME\tGMT${NL}${result}${NL}"
 ```
 
-**Resolution**: Inspect the thread dump to see if the the Quartz job is running. If it is not, delete the row from the SOA\_QRTZ\_FIRED\_TRIGGERS table and reset the relevant TIGGER_STATE to 'WAITING' in the SOA\_QRTZ\_TRIGGERS table.
+**Resolution**: Inspect the thread dump to see if the the Quartz job is running. If it is not, delete the row from the SOA\_QRTZ\_FIRED\_TRIGGERS table and reset the relevant TRIGGER_STATE to 'WAITING' in the SOA\_QRTZ\_TRIGGERS table.
 
 #### <a name="db-fed"></a>Federation Synchronization
 
