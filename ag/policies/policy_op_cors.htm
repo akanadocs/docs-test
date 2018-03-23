@@ -28,7 +28,6 @@ nav-title: CORS Policy
   <li><a href="#cors_scope">Scope</a></li>
   <li><a href="#cors_assertion">CORS Policy Assertion</a></li>
   <li><a href="#cors_configuration">Configuration</a></li>
-  <li><a href="#cors_config_tag_white_list">Using the CORS Policy to configure a tag white list</a></li>
   <li><a href="#uc_policy_op_cors">CORS Policy: use cases for Policy Manager</a></li>
 </ol>
 <div class = "divider1"></div>
@@ -183,71 +182,6 @@ nav-title: CORS Policy
   <li>If the request does not contain the required CORS headers, the request is not preflighted and continues to run normally, and the browser behaves accordingly.</li>
   <li>If the Origin header is present, this indicates that the request is a CORS request. The service will then check the matching CORS policy assertion configuration for a match. If found, the Access-Control headers are added to the response and sent back to the client. If not found, the CORS Access-Control headers are not returned.</li></ul>
 <p>For more information on the configuration and test cycle, see <a href="#uc_policy_op_cors">Policy: use cases for Policy Manager</a> below.</p>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<h3 id="cors_config_tag_white_list">Using the CORS Policy to configure a tag white list</h3>
-<p>Learn how to configure a tag white list to protect your web service from being exploited by cross-site scripting.</p>
-<p>This section includes:</p>
-<ol>
-  <li><a href="#cors_white_list_introduction">Introduction</a></li>
- <li><a href="#cors_white_list_default_policy">White List Default Policy</a></li>
- <li><a href="#cors_white_list_configuration">Configuration</a></li>
-</ol>
-<div class = "divider1"></div>
-
-
-<h4 id="cors_white_list_introduction">Introduction</h4>
-<p>The Cross-Site Scripting Detection Policy is an Operational policy that allows you to block potentially malicous HTML tags in the request message body using what is called a <em>white</em> list of tags. Notes:</p>
-<ul>
-  <li>The white list includes a list of HTML tags that will be accepted if they are found in the request message body.</li>
-  <li>You can use the default white list (Add Default HTML tags), customize the default list, or define your own set of tags and attributes that are allowed in the request message body.</li>
-  <li>If a white list tag is found, Network Director passes the request message to the downstream service.</li>
-  <li>Make sure you do <strong>not</strong> add malicious tags to the white list.</li>
-  <li>All tags specified in the white list are allowed. All other tags are disallowed. This is referred to as a &quot;black list.&quot; </li>
-</ul>
-<p>Say for example your web service includes an anchor &lt;a&gt; tag. When you attach a default Cross-Site Scripting Detection Policy to a REST service and send a request message to the Network Director container that is hosting the service, you will get an &quot;HTTP 403 Forbidden&quot; error response. This is because the &lt;a&gt; tag is not defined in the policy's &quot;white list.&quot;</p>
-<p><a href="#top">Back to top</a></p>
-
-
-<h4 id="cors_white_list_default_policy">White List (Default Policy)</h4>
-<p>The default policy state includes a white list with the tags shown below.</p>
-<p><img src="images/cross_site_white_list1.jpg" width="414" height="393" alt="" /></p>
-<p><img src="images/cross_site_white_list2.jpg" width="414" height="395" alt="" /></p>
-<p><a href="#top">Back to top</a></p>
-
-
-<h4 id="cors_white_list_configuration">Configuration</h4>
-<p>Let's take a quick walkthrough of the Cross-Site Scripting Detection Policy configuration process to get you started.</p>
-
-<h5>Step 1: Add Policy / Use System Policy</h5>
-<ul>
-  <li>In Policy Manager, to create a Cross-Site Scripting Detection Policy instance, go to <strong>Policies</strong> &gt; <strong>Operational Policies</strong> and choose <strong>Add Policy</strong>.</li>
-  <li>You can also take advantage of the pre-defined Cross-Site Scripting Detection Policy called <strong>WhiteListedCrossSiteScripting</strong>. This is an out-of-the-box System Policy that is preconfigured with the default white list. You can customize the white list configuration to suit your needs and then attach it directly to a web service or operation.
-    <p>If you use the default configuration, all tags in the white list are accepted when Network Director passes the request message to the downstream service.</p>
-  </li>
-</ul>
-
-<h5>Step 2: Modify Policy</h5>
-<p>When you click <strong>Modify</strong> to make changes to the Cross-Site Scripting Detection policy on the <strong>Policy Details</strong> page, the initial policy looks like this:</p>
-<p><img src="images/modify_cross_site_scripting_policy.jpg" width="428" height="450" alt="" /></p>
-<p>If you use the default policy without defining a white list, all tags will be disallowed. If you define a white list, all tags in the white list will be accepted, and all other tags (the black list) will be forbidden when Network Director passes the request message to the downstream service. Instead, an HTTP 404 Forbidden error will be returned.</p>
-
-<h5>Step 3: Configure White List / Custom Tags</h5>
-<p>The next step is to define your tag white list. These represent tags that comprise the HTML in your request message body and that you have designated as ones that could be potentially attacked. White list tags are allowed when Network Director passes the request message to the downstream service. The following options are available:</p>
-<ul>
-  <li>Use <strong>Add Default HTML Tags</strong> to add a default set of tags to your policy (the white list) and customize using the <strong>Remove Selected Row</strong> option.</li>
-  <li>Use <strong>Add Tag</strong> to add a custom tag and attributes (if applicable).</li>
-</ul>
-
-<h5>Step 4: Attach Policy</h5>
-<p>After you've saved your policy, you can attach it:</p>
-<ul>
-  <li>To an individual web service to apply it to that service</li>
-  <li>At the Organization level and the policy will be active for all services defined within the organization.</li>
-</ul>
-<p><img src="images/attach policy.jpg" alt="" /></p>
 <p><a href="#top">Back to top</a></p>
 
 
