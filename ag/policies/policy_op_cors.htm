@@ -1,0 +1,539 @@
+---
+layout: page
+title: Using the CORS Policy
+description: Learn how to manage cross-origin requests for REST APIs using the CORS (Cross Origin Resource Sharing) Policy.
+product: ag
+category: learn
+sub-nav-class: Policies - Operational
+weight: 04
+type: page
+nav-title: CORS Policy - Using
+---
+<h2 id="top">Using the CORS Policy</h2>
+<p>Learn how to manage cross-origin requests for REST APIs using the CORS (Cross-Origin Resource Sharing) Policy. Includes information about configuring a tag white list, and use cases.</p>
+
+<p>
+<a href="about_policies_view.htm" class="button secondary">About Policies</a>  
+<a href="policy_management.htm" class="button secondary">Managing Policies</a></p>
+
+<h5 class="stamp">Supported Platforms: 7.1 and later</h5>
+
+<div class = "divider1"></div>
+
+
+
+<h3 style="color: gray;">Table of Contents</h3>
+<ol class="table_of_contents">
+  <li><a href="#cors_introduction">Introduction</a></li>
+  <li><a href="#cors_scope">Scope</a></li>
+  <li><a href="#cors_assertion">CORS Policy Assertion</a></li>
+  <li><a href="#cors_configuration">Configuration</a></li>
+  <li><a href="#cors_config_tag_white_list">Using the CORS Policy to configure a tag white list</a></li>
+  <li><a href="#uc_policy_op_cors">CORS Policy: use cases for Policy Manager</a></li>
+</ol>
+<div class = "divider1"></div>
+
+
+
+<h3 id="cors_introduction">Introduction</h3>
+<p>CORS (Cross-Origin Resource Sharing) enables users to access resources from within the browser serving a web page, and defines a way in which the browser and the server can interact to determine whether or not to allow the cross-origin request. This technique is commonly used on the web to load (that is, share) resources such as CSS style sheets, images, scripts, and other resources across sites. Abuse of this functionality can be a security risk; A CORS policy can be configured to limit or refuse cross-origin resource sharing.</p>
+<p>Many HTTP (REST) APIs require support for CORS. Policy Manager provides a CORS Policy that dictates how cross-origin requests or CORS headers should be processed.</p>
+
+
+
+<h3 id="cors_scope">Scope</h3>
+<p>A CORS policy applies only to REST APIs, or service endpoints implementing the HTTP binding. Accordingly, the CORS assertion is allowed to have the following Policy Subjects as defined in the WS-PolicyAttachment specification:</p>
+<ul>
+  <li>Endpoint Policy Subject</li>
+  <li>Binding Policy Subject</li>
+</ul>
+<p>The WS-PolicyAttachment specification defines a set of WSDL/1.1 policy attachment points for each of the above Policy Subjects. A CORS policy assertion can be attached to the following physical WSDL policy attachment points:</p>
+<ul>
+  <li>wsdl:port</li>
+  <li>wsdl:binding</li>
+</ul>
+<p>A CORS policy does not dictate behavior that is required by a consumer in order to exchange messages between a consumer and a Provider. Instead it dictates behavior that only the provider must follow. Therefore it is recommended that CORS policies be classified as &ldquo;public&rdquo; by including the gmp:Visibility attribute in the enclosing wsp:Policy element with a value of &ldquo;public.&rdquo;</p>
+<p>The following is an example of a CORS policy attached to WSDL components:</p>
+<p><img src="images/cors_policy_attachedwsdl.jpg" width="580" height="408" alt="" /></p>
+<p>Lines 02 through 06 contain a policy named "CORS" that holds a CORS assertion.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="cors_assertion">CORS Policy Assertion</h3>
+<p>The CORS assertion specifies how responses to CORS requests, simple or preflight, will be made. Each CORS response header, with the exception of Access-Control-Request-Method, is represented with a sub-assertion to identify how it should be returned. The Access-Control-Request-Method response is determined by the API definition.</p>
+<p>The syntax of the CORS policy assertion is illustrated and explained below.</p>
+
+<h5>Syntax</h5>
+<p><img src="images/cors_assertion_syntax.jpg" width="600" height="240" alt="" /></p>
+<dl class="apidoc_dl">
+<dt>cors:CORS</dt>
+<dd>CORS assertion element.</dd>
+
+
+<dt>cors:CORS/wsp:Policy</dt>
+<dd>This element defines additional requirements for the CORS policy. </dd>
+
+
+<dt>cors:CORS/wsp:Policy/cors:AllowOrgins</dt>
+<dd>This mandatory element is an assertion that specifies the set of origins that are allowed. If no child elements (allowed origins) are defined, the Access-Control-Allow-Origin response header is not displayed.</dd>
+
+
+
+<dt>cors:CORS/wsp:Policy/cors:AllowOrigins/cors:Origin</dt>
+<dd>This optional string element identifies an allowed origin. The string can either be a host name by itself or a protocol schema and host such as http://acme.com. If no scheme is specified, all schemes for that host are allowed.</dd>
+
+
+<dt>cors:CORS/wsp:Policy/cors:AllowCredentials</dt>
+<dd>This optional element is an assertion that when present indicates that the Access-Control-Allow-Credentials response header will be &ldquo;true.&rdquo; When absent it will be &ldquo;false.&rdquo;</dd>
+
+
+<dt>cors:CORS/wsp:Policy/cors:ExposeHeaders</dt>
+<dd>This optional element is an assertion that specifies what headers should be returned in the Access-Control-Expose-Headers response header. If it is not present, no headers will be returned. </dd>
+
+
+<dt>cors:CORS/wsp:Policy/cors:ExposeHeader/cors: Header</dt>
+<dd>This optional string element identifies an exposed header. </dd>
+
+
+<dt>cors:CORS/wsp:Policy/cors:AllowHeaders</dt>
+<dd>This optional element is an assertion that specifies what headers should be returned in the Access-Control-Allow-Headers response header. If it is not present, no headers will be returned. </dd>
+
+
+<dt>cors:CORS/wsp:Policy/cors:AllowHeaders/cors:Header</dt>
+<dd>This optional string element identifies an allowed header.</dd>
+
+
+<dt>cors:CORS/wsp:Policy/cors:MaxAge</dt>
+<dd>This optional element defines the time period in seconds. When the max age is set, a CORS request will not need to be preflighted, if it has already been preflighted, and falls within the max age duration. </dd>
+
+
+<dt>cors:CORS/wsp:Policy/cors:MaxAge /@duration</dt>
+<dd>This mandatory integer attribute holds the value that will be returned in the Access-Control-Max-Age response header. </dd>
+</dl>
+
+<p>An example of a CORS policy is given below.</p>
+<p><img src="images/cors_policy_example.jpg" width="603" height="210" alt="" /></p>
+<p>The acme.com origin is permitted only on line 05. Credentials are allowed on line 07. The X-PINGOTHER header is allowed on line 09. A max duration of 3600000, or one hour, is stated on line 11. The CORS response headers that will be returned to a preflight request with an Origin of http://acme.com are shown below.</p>
+<p><em><strong>Note</strong>: Allowed Methods are outside the scope of the CORS Policy. Policy Manager returns methods based on how the service is defined. For example, if you defined a REST service in Policy Manager and defined operating using HTTP methods, Policy Manager would return the HTTP methods you defined for the service.</em></p>
+<p><img src="images/cors_policy_example_accesscontrol.jpg" width="602" height="59" alt="" /></p>
+<p>Note there is no Access-Control-Expose-Headers response header as there was no assertion present. Since the policy did not specify a protocol scheme for the allowed origin, a request with an Origin header of https://acme.com would also have been permitted.</p>
+
+<h5>Configuration Options</h5>
+<p>The policy includes the following configuration options:</p>
+<table width="515" cellspacing="0px" class="doctable">
+  <thead>
+  <tr>
+    <th>Option</th>
+    <th>Description</th>
+  </tr>
+  </thead>
+   <tbody>
+    <tr>
+      <td>Max Age</td>
+      <td>This optional element defines the time period in seconds. When the max age is set, a CORS request will not need to be preflighted, if it has already been preflighted, and falls within the max age duration.</td>
+    </tr>
+  <tr>
+    <td>Allow Credentials</td>
+    <td>Enable sending credentials (that is, cookies and HTTP Authentication data) with requests. </td>
+  </tr>
+  <tr>
+    <td>Allow Origins</td>
+    <td><p>List of origin domains that are permitted to make a request against the service via CORS. The origin domain is the domain from which the request originates.</p>
+      <p>If no child elements (allowed origins) are defined, the Access-Control-Allow-Origin response header is not displayed.</p>
+      <p>Each header can include one domain.</p></td>
+  </tr>
+  <tr>
+    <td>Allow Headers</td>
+    <td>Request headers that the origin domain might specify on the CORS request. </td>
+  </tr>
+  <tr>
+    <td>Expose Headers</td>
+    <td>Response headers that might be sent in the response to the CORS request and exposed by the browser to the request issuer. </td>
+  </tr>
+   </tbody>
+</table>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="cors_configuration">Configuration</h3>
+<p>Let's take a quick walkthrough of the CORS Policy configuration process to get you started.</p>
+
+<h5>Step 1: Add Policy</h5>
+<p>In Policy Manager, to create a CORS Policy instance, go to <strong>Policies</strong> &gt; <strong>Operational Policies</strong> and choose <strong>Add Policy</strong>.</p>
+
+
+<h5>Step 2: Modify Policy</h5>
+<p>When you click <strong>Modify</strong> to make changes to the CORS Policy on the <strong>Policy Details</strong> page, the initial policy looks like this:</p>
+<p><img src="images/cors_modify_policy.jpg" width="482" height="519" alt="" /></p>
+
+<p>Configure the CORS Options based on your requirements.</p>
+
+
+<h5>Step 3: Attach Policy</h5>
+<p>After you've saved your policy, you can attach it to a web service at the Service level.</p>
+<p><img src="images/cors_attach_policy.jpg" width="648" height="252" alt="" /></p>
+
+<h5>Step 4: Test Policy and View Monitoring Data</h5>
+<p>After you've attached the CORS Policy to a service, send a request to your service and view the results in your client. You can also go to the <em>Services &gt; Monitoring</em> section to view the results for Logs (View Usage Record Details), Real Time Charts, and Historical Charts. For more information on using the monitoring functions, refer to the Policy Manager Online Help, available via the Help button. Notes:</p>
+<ul>
+  <li>If CORS is enabled for the service and there is a CORS policy assertion that matches the preflight request, the service responds with a status code 200 (OK), and includes the required Access-Control headers in the response.</li>
+  <li>If CORS is not enabled for the service, the request is not preflighted.</li>
+  <li>If the request does not contain the required CORS headers, the request is not preflighted and continues to run normally, and the browser behaves accordingly.</li>
+  <li>If the Origin header is present, this indicates that the request is a CORS request. The service will then check the matching CORS policy assertion configuration for a match. If found, the Access-Control headers are added to the response and sent back to the client. If not found, the CORS Access-Control headers are not returned.</li></ul>
+<p>For more information on the configuration and test cycle, see <a href="#uc_policy_op_cors">Policy: use cases for Policy Manager</a> below.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="cors_config_tag_white_list">Using the CORS Policy to configure a tag white list</h3>
+<p>Learn how to configure a tag white list to protect your web service from being exploited by cross-site scripting.</p>
+<p>This section includes:</p>
+<ol>
+  <li><a href="#cors_white_list_introduction">Introduction</a></li>
+ <li><a href="#cors_white_list_default_policy">White List Default Policy</a></li>
+ <li><a href="#cors_white_list_configuration">Configuration</a></li>
+</ol>
+<div class = "divider1"></div>
+
+
+<h4 id="cors_white_list_introduction">Introduction</h4>
+<p>The Cross-Site Scripting Detection Policy is an Operational policy that allows you to block potentially malicous HTML tags in the request message body using what is called a <em>white</em> list of tags. Notes:</p>
+<ul>
+  <li>The white list includes a list of HTML tags that will be accepted if they are found in the request message body.</li>
+  <li>You can use the default white list (Add Default HTML tags), customize the default list, or define your own set of tags and attributes that are allowed in the request message body.</li>
+  <li>If a white list tag is found, Network Director passes the request message to the downstream service.</li>
+  <li>Make sure you do <strong>not</strong> add malicious tags to the white list.</li>
+  <li>All tags specified in the white list are allowed. All other tags are disallowed. This is referred to as a &quot;black list.&quot; </li>
+</ul>
+<p>Say for example your web service includes an anchor &lt;a&gt; tag. When you attach a default Cross-Site Scripting Detection Policy to a REST service and send a request message to the Network Director container that is hosting the service, you will get an &quot;HTTP 403 Forbidden&quot; error response. This is because the &lt;a&gt; tag is not defined in the policy's &quot;white list.&quot;</p>
+<p><a href="#top">Back to top</a></p>
+
+
+<h4 id="cors_white_list_default_policy">White List (Default Policy)</h4>
+<p>The default policy state includes a white list with the tags shown below.</p>
+<p><img src="images/cross_site_white_list1.jpg" width="414" height="393" alt="" /></p>
+<p><img src="images/cross_site_white_list2.jpg" width="414" height="395" alt="" /></p>
+<p><a href="#top">Back to top</a></p>
+
+
+<h4 id="cors_white_list_configuration">Configuration</h4>
+<p>Let's take a quick walkthrough of the Cross-Site Scripting Detection Policy configuration process to get you started.</p>
+
+<h5>Step 1: Add Policy / Use System Policy</h5>
+<ul>
+  <li>In Policy Manager, to create a Cross-Site Scripting Detection Policy instance, go to <strong>Policies</strong> &gt; <strong>Operational Policies</strong> and choose <strong>Add Policy</strong>.</li>
+  <li>You can also take advantage of the pre-defined Cross-Site Scripting Detection Policy called <strong>WhiteListedCrossSiteScripting</strong>. This is an out-of-the-box System Policy that is preconfigured with the default white list. You can customize the white list configuration to suit your needs and then attach it directly to a web service or operation.
+    <p>If you use the default configuration, all tags in the white list are accepted when Network Director passes the request message to the downstream service.</p>
+  </li>
+</ul>
+
+<h5>Step 2: Modify Policy</h5>
+<p>When you click <strong>Modify</strong> to make changes to the Cross-Site Scripting Detection policy on the <strong>Policy Details</strong> page, the initial policy looks like this:</p>
+<p><img src="images/modify_cross_site_scripting_policy.jpg" width="428" height="450" alt="" /></p>
+<p>If you use the default policy without defining a white list, all tags will be disallowed. If you define a white list, all tags in the white list will be accepted, and all other tags (the black list) will be forbidden when Network Director passes the request message to the downstream service. Instead, an HTTP 404 Forbidden error will be returned.</p>
+
+<h5>Step 3: Configure White List / Custom Tags</h5>
+<p>The next step is to define your tag white list. These represent tags that comprise the HTML in your request message body and that you have designated as ones that could be potentially attacked. White list tags are allowed when Network Director passes the request message to the downstream service. The following options are available:</p>
+<ul>
+  <li>Use <strong>Add Default HTML Tags</strong> to add a default set of tags to your policy (the white list) and customize using the <strong>Remove Selected Row</strong> option.</li>
+  <li>Use <strong>Add Tag</strong> to add a custom tag and attributes (if applicable).</li>
+</ul>
+
+<h5>Step 4: Attach Policy</h5>
+<p>After you've saved your policy, you can attach it:</p>
+<ul>
+  <li>To an individual web service to apply it to that service</li>
+  <li>At the Organization level and the policy will be active for all services defined within the organization.</li>
+</ul>
+<p><img src="images/attach policy.jpg" alt="" /></p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="uc_policy_op_cors">CORS Policy: use cases for Policy Manager</h3>
+<p>This section provides a list of Policy Manager-specific usage scenarios for the CORS Policy.</p>
+<p>It includes:</p>
+<ol>
+  <li><a href="#uc_policy_cors_pm_01">Scenario 1: Send Preflight and CORS Response Headers</a></li>
+  <li><a href="#uc_policy_cors_pm_02">Scenario 2: CORS with Credentials (Basic Authentication Policy)</a></li>
+  <li><a href="#uc_policy_cors_pm_03">Scenario 3: Allow All Origins</a></li>
+  <li><a href="#uc_policy_cors_pm_04">Scenario 4: Allow Custom Headers (Cookie Authentication)</a></li>
+  <li><a href="#uc_policy_cors_pm_05">Scenario 5: CORS Preflight Limitation within MaxAge Defined (in seconds)</a></li>
+  <li><a href="#uc_policy_cors_pm_06">Scenario 6: Origins Mismatch during Preflight</a></li>
+</ol>
+
+
+<h4 id="uc_policy_cors_pm_01">Scenario 1: Send Preflight and CORS Response Headers</h4>
+<ol>
+  <li>Create Policy Manager instance.</li>
+  <li>Create a physical REST service (Example service name: PS - REST Borrower).</li>
+  <li>Virtualize PS on Network Director (Example service name: <strong>VS1</strong>).</li>
+  <li>Create CORS Policy with the following configuration:
+    <ul>
+      <li>Max Age: 0</li>
+      <li>Allow Credentials: true</li>
+      <li>Allow Origins: http://client.cors-api.appspot.com</li>
+      <li>Expose Headers: x-response-for-cors-pass2</li>
+    </ul>
+  <p><img src="images/cors_uc_pm_01.jpg" alt="" /></p></li>
+  <li>Attach the policy to the <strong>VS1</strong> service.</li>
+  <li>Navigate to the client: http://client.cors-api.appspot.com/client .</li>
+  <li>Provide the URL of the <strong>VS1</strong> resource for the DELETE method.
+  <p>Example: http://10.7.20.47:9902/prd/111111111.</p></li>
+  <li>Select Delete Method.</li>
+  <li>Enable Developer tool for Browser (F12 for Chrome or Firebug in case of Firefox).</li>
+  <li>Navigate to Network tab.</li>
+  <li>The client over Chrome:
+  <p><img src="images/cors_uc_pm_02.jpg" alt="" /></p></li>
+  <li>The client over Firefox:
+  <p><img src="images/cors_uc_pm_03.jpg" alt="" /></p></li>
+  <li>Send request to DELETE method.</li>
+  <li>Initially a preflight message is sent (OPTION method is used to send preflight request).</li>
+  <li>After the success of preflight request, depending on the headers sent in response of preflight, the browser sends the actual DELETE request to the API.
+  <p><img src="images/cors_uc_pm_04.jpg" alt="" /></p></li>
+  <li>Click the OPTIONS request to view the headers sent by the client: Access-Control-Request-Method and Origin.
+    <p><img src="images/cors_uc_pm_05.jpg" alt="" /></p></li>
+  <li>Review the response headers, which should look like this:
+<ul>
+  <li>Access-Control-Allow-Credentials: true</li>
+  <li>Access-Control-Allow-Methods: DELETE, PUT, GET</li>
+  <li>Access-Control-Allow-Origin: http://client.cors-api.appspot.com</li>
+  <li> Access-Control-Max-Age: 0</li>
+</ul>
+  <p><img src="images/cors_uc_pm_06.jpg" alt="" /></p></li>
+  <li>Optional: To see the same thing in the usage data, enable auditing on the API.</li>
+  <li>Since the preflight was successful, the actual DELETE request is sent following that by the browser.</li>
+  <li>View the request and response headers:
+<ul>
+  <li>Access-Control-Allow-Credentials: true</li>
+  <li>Access-Control-Allow-Origin: http://client.cors-api.appspot.com</li>
+  <li>Access-Control-Expose-Headers: x-response-for-cors-pass2</li>
+</ul>
+  <p><img src="images/cors_uc_pm_07.jpg" alt="" /></p></li>
+  <li>All the headers provided in Expose headers in the policy should be displayed.</li>
+  <li>Optional: To see the same thing in the usage data, enable auditing on the API.</li>
+  <li>Preflight request message:
+  <p><img src="images/cors_uc_pm_08.jpg" alt="" /></p></li>
+  <li>Preflight policy enforcement:
+  <p><img src="images/cors_uc_pm_09.jpg" alt="" /></p></li>
+  <li>Preflight response message:
+  <p><img src="images/cors_uc_pm_10.jpg" alt="" /></p></li>
+  <li>DELETE request:
+  <p><img src="images/cors_uc_pm_11.jpg" alt="" /></p></li>
+  <li>CORS policy enforcement during actual request:
+  <p><img src="images/cors_uc_pm_12.jpg" alt="" /></p></li>
+  <li>Delete response message:
+  <p><img src="images/cors_uc_pm_13.jpg" alt="" /></p></li>
+</ol>
+
+
+<h4 id="uc_policy_cors_pm_02">Scenario 2: CORS with Credentials (Basic Authentication Policy)</h4>
+<ol>
+  <li>Create Policy Manager instance.</li>
+  <li>Create a physical REST service (Example service name: PS – REST Borrower)</li>
+  <li>Virtualize the PS on Network Director (Example service name: <strong>VS1</strong>)</li>
+  <li>Create CORS policy with the following configuration:</li>
+  <li>Allow Credentials component must be set to true:
+    <ul>
+      <li>Max Age: 0</li>
+      <li>Allow Credentials: true</li>
+      <li>Allow Origins: http://client.cors-api.appspot.com</li>
+      <li>Allow Headers:</li>
+      <li>Expose Headers: x-response-for-cors-pass2</li>
+      </ul>
+    </li>
+  <li>Attach the policy to the <strong>VS1</strong> service.</li>
+  <li>Attach Basic authentication policy to the <strong>VS1</strong> service.</li>
+  <li>Navigate to the client: http://client.cors-api.appspot.com/client.</li>
+  <li>Provide the URL of the <strong>VS1</strong> resource for the DELETE method.
+    <p>Example: http://10.7.20.47:9902/prd/111111111.</p></li>
+  <li>Select Delete Method.</li>
+  <li>Select with Credentials check box in the client.</li>
+  <li>Enable Developer tool for Browser (F12 for Chrome or Firebug in case of Firefox).</li>
+  <li>View network monitoring for the browser.</li>
+  <li>Send request to DELETE method.</li>
+  <li>The client prompts for credentials.</li>
+  <li>Provide valid credentials for basic authentication.</li>
+  <li>Initially a preflight message is sent (OPTION method is used to send preflight request).</li>
+  <li>After the success of preflight request, depending on the headers sent in response of preflight, the browser sends the actual DELETE request to the API.</li>
+  <li>If the Allow Credentials flag is true in the policy, the DELETE request is sent to the service.</li>
+  <li> Click the OPTIONS request to view the headers sent by the client: Access-Control-Request-Method and Origin.</li>
+  <li> Review the response headers, which should look like this:
+    <ul>
+      <li>Access-Control-Allow-Credentials: true</li>
+      <li>Access-Control-Allow-Methods: DELETE, PUT, GET</li>
+      <li>Access-Control-Allow-Origin: http://client.cors-api.appspot.com</li>
+      <li>Access-Control-Max-Age: 0</li>
+      </ul>
+    </li>
+  
+  <li>Optional: To see the same thing in the usage data, enable auditing on the API.</li>
+  <li>Since the preflight was successful, the actual DELETE request is sent following that by the browser.</li>
+  <li>View the request and response headers:
+    <ul>
+      <li>Access-Control-Allow-Credentials: true</li>
+      <li>Access-Control-Allow-Origin: http://client.cors-api.appspot.com</li>
+      <li>Access-Control-Expose-Headers: x-response-for-cors-pass2</li>
+    </ul>
+    </li>
+  <li>Optional: To see the same thing in the usage data, enable auditing on the API.</li>
+</ol>
+
+
+<h4 id="uc_policy_cors_pm_03">Scenario 3: Allow All Origins</h4>
+<ol>
+  <li>Create Policy Manager instance.</li>
+  <li>Create a physical REST service (Example service name: PS - REST Borrower)</li>
+  <li>Virtualize the PS on Network Director (Example service name: <strong>VS1</strong>).</li>
+  <li>Create CORS policy the following configuration:
+    <ul>
+      <li>Max Age: 0</li>
+      <li>Allow Credentials: true</li>
+      <li>Allow Origins: *</li>
+      <li>Allow Headers:</li>
+      <li>Expose Headers: x-response-for-cors-pass2</li>
+      </ul>
+    </li>
+  <li>Attach the policy to the <strong>VS1</strong> service.</li>
+  <li>Navigate to the client: http://client.cors-api.appspot.com/client.</li>
+  <li>Provide the URL of the <strong>VS1</strong> resource for the DELETE method.
+    <p>Example: http://10.7.20.47:9902/prd/111111111.</p></li>
+  <li>Select Delete Method.</li>
+  <li>Enable Developer tool for Browser (F12 for Chrome or Firebug in case of Firefox).</li>
+  <li>Navigate to Network tab.</li>
+  <li>Send request to DELETE method.</li>
+  <li>Initially a preflight message is sent (OPTION method is used to send preflight request).</li>
+  <li>After the success of preflight request, depending on the headers sent in response of preflight, the browser sends the actual DELETE request to the API.</li>
+  <li>Click the OPTIONS request to view the headers sent by the client: Access-Control-Request-Method and Origin.</li>
+  <li> Review the response headers, which should look like this:
+    <ul>
+      <li>Access-Control-Allow-Credentials: true</li>
+      <li>Access-Control-Allow-Methods: DELETE, PUT, GET</li>
+      <li>Access-Control-Allow-Origin: *</li>
+      <li>Access-Control-Max-Age: 0</li>
+    </ul>
+    </li>
+  <li>All the Origins should be allowed. This can be verified by sending the request from a different client.</li>
+</ol>
+
+
+<h4 id="uc_policy_cors_pm_04">Scenario 4: Allow Custom Headers (Cookie Authentication)</h4>
+<ol>
+  <li>Create Policy Manager instance.</li>
+  <li>Create a physical REST service (Example service name: PS –REST Borrower)</li>
+  <li>Virtualize the PS on Network Director (Example service name: <strong>VS1</strong>).</li>
+  <li>Create CORS policy with the following configuration. Allow Headers component must be set to <strong>Cookie</strong> so as to allow cookie to be passed to the policy:
+<ul>
+      <li>Max Age: 0</li>
+      <li>Allow Credentials: true</li>
+      <li>Allow Origins: http://client.cors-api.appspot.com</li>
+      <li>Allow Headers: Cookie</li>
+      <li>Expose Headers: x-response-for-cors-pass2</li>
+      </ul>
+    </li>
+  <li>Attach the policy to the <strong>VS1</strong> service.</li>
+  <li>Add Cookie Identity system.</li>
+  <li>Attach Cookie authentication policy to the <strong>VS1</strong> service.</li>
+  <li>Navigate to the client: http://client.cors-api.appspot.com/client .</li>
+  <li>Provide the URL of the <strong>VS1</strong> resource for the DELETE method.
+    <p>Example: http://10.7.20.47:9902/prd/111111111.</p></li>
+  <li>Select Delete Method.</li>
+  <li>Select with Credentials check box in the client.</li>
+  <li>Enable Developer tool for Browser (F12 for Chrome or Firebug in case of Firefox).</li>
+  <li>View network monitoring for the browser.</li>
+  <li>Send request to DELETE method.</li>
+  <li>The client prompts for credentials.</li>
+  <li>Provide valid credentials for basic authentication.</li>
+  <li>Initially a preflight message is sent (OPTION method is used to send preflight request).</li>
+  <li>After the success of preflight request, depending on the headers sent in response of preflight, the browser sends the actual DELETE request to the API.</li>
+  <li>If the Allow Credentials flag is true in the policy, the DELETE request is sent to the service.</li>
+  <li>Click the OPTIONS request to view the headers sent by the client: Access-Control-Request-Method and Origin.</li>
+  <li> Review the response headers, which should look like this:
+    <ul>
+      <li>Access-Control-Allow-Credentials: true</li>
+      <li>Access-Control-Allow-Methods: DELETE, PUT, GET</li>
+      <li>Access-Control-Allow-Origin: http://client.cors-api.appspot.com</li>
+      <li>Access-Control-Max-Age: 0</li>
+    </ul>
+    </li>
+  <li>Optional: To see the same thing in the usage data, enable auditing on the API.</li>
+  <li>Since the preflight was successful, the actual DELETE request is sent following that by the browser.</li>
+  <li>In the response for DELETE request, Authentication Cookie is generated.</li>
+  <li>Send Cookie in Custom Headers in the Client and Disable credentials option.</li>
+  <li>Send request, and the request should pass the Cookie. Cookie authentication should be successful when sending a valid cookie.</li>
+</ol>
+
+
+<h4 id="uc_policy_cors_pm_05">Scenario 5: CORS Preflight Limitation within MaxAge Defined (in seconds)</h4>
+<ol>
+  <li>Create Policy Manager instance.</li>
+  <li>Create a physical REST service (Example service name: PS – REST Borrower)</li>
+  <li>Virtualize the PS on Network Director (Example service name: <strong>VS1</strong>)</li>
+  <li>Create CORS policy with the following configuration:
+    <ul>
+      <li>Max Age: 10</li>
+      <li>Allow Credentials: true</li>
+      <li>Allow Origins: http://client.cors-api.appspot.com</li>
+      <li>Allow Headers:</li>
+      <li>Expose Headers: x-response-for-cors-pass2</li>
+      </ul>
+    </li>
+  <li>Attach the policy to the <strong>VS1</strong> service.</li>
+  <li>Navigate to the client: http://client.cors-api.appspot.com/client.</li>
+  <li>Provide the URL of the <strong>VS1</strong> resource for the DELETE method.
+    <p>Example: http://10.7.20.47:9902/prd/111111111.</p></li>
+  <li>Select the Delete method.</li>
+  <li>Enable Developer tool for Browser (F12 for Chrome or Firebug in case of Firefox).</li>
+  <li>View network monitoring for the browser.</li>
+  <li>Send request to DELETE method.</li>
+  <li>Initially a preflight message is sent (OPTION method is used to send preflight request).</li>
+  <li>After the success of preflight request, depending on the headers sent in response of preflight, the browser sends the actual DELETE request to the API.</li>
+  <li>Click the OPTIONS request to view the headers sent by the client: Access-Control-Request-Method and Origin.</li>
+  <li> Review the response headers, which should look like this:
+    <ul>
+      <li>Access-Control-Allow-Credentials: true</li>
+      <li>Access-Control-Allow-Methods: DELETE, PUT, GET</li>
+      <li>Access-Control-Allow-Origin: http://client.cors-api.appspot.com</li>
+      <li>Access-Control-Max-Age: 0</li>
+    </ul>
+    </li>
+  <li>Optional: To see the same thing in the usage data, enable auditing on the API.
+  <p>Since the preflight was successful, the actual DELETE request is sent following that by the browser.</p></li>
+  <li>Send a request again from client with in the MaxAge limit (for example, 10 seconds).
+  <p>The preflight request is not sent because the previous preflight request is cached already.</p></li>
+  <li>After the MaxAge limit is exceeded, send a request again.
+  <p>Now, the request is again preflighted.</p></li>
+</ol>
+
+
+<h4 id="uc_policy_cors_pm_06">Scenario 6: Origins Mismatch during Preflight</h4>
+<ol>
+  <li>Create Policy Manager instance.</li>
+  <li>Create a physical REST service (Example service name: PS – REST Borrower).</li>
+  <li>Virtualize the PS on Network Directory (Example service name: <strong>VS1</strong>).</li>
+  <li>Create CORS policy with the following configuration:
+    <ul>
+      <li>Max Age: 10</li>
+      <li>Allow Credentials: true</li>
+      <li>Allow Origins: http://abc.com</li>
+      <li>Allow Headers:</li>
+      <li>Expose Headers: x-response-for-cors-pass2</li>
+    </ul>
+    </li>
+  <li>Attach the policy to the <strong>VS1</strong> service.</li>
+  <li>Navigate to the client: http://client.cors-api.appspot.com/client .</li>
+  <li>Provide the URL of the <strong>VS1</strong> resource for the DELETE method.
+    <p>Example: http://10.7.20.47:9902/prd/111111111.</p></li>
+  <li>Select Delete Method.</li>
+  <li>Enable Developer tool for Browser (F12 for Chrome or Firebug in case of Firefox).</li>
+  <li>View network monitoring for the browser.</li>
+  <li>Send request to DELETE method.</li>
+  <li>Initially a preflight message is sent (OPTION method is used to send preflight request).</li>
+  <li>After the success of preflight request, depending on the headers sent in response of preflight, the browser sends the actual DELETE request to the API.</li>
+  <li>Click the OPTIONS request to view the headers sent by the client: Access-Control-Request-Method and Origin.</li>
+  <li>Since the Origin is not a match, preflight is not sent and the request is processed as usual.</li>
+  <li>The response headers related to CORS are also not seen.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>

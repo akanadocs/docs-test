@@ -1,0 +1,243 @@
+---
+layout: page
+title: Using the Throughput Quota Policy 
+description: Learn how to monitor web service throughput performance by specifying a throughput limit (quota) and queue size, and by configuring fault and alert notifications.
+product: ag
+category: learn
+sub-nav-class: Policies - QoS
+weight: 04
+type: page
+nav-title: Throughput Quota Policy
+---
+<h2 id="top">Using the Throughput Quota Policy</h2>
+<p>Learn how to monitor web service throughput performance by specifying a throughput limit (quota) and queue size, and by configuring fault and alert notifications.</p>
+
+<p>
+<a href="about_policies_view.htm" class="button secondary">About Policies</a>  
+<a href="policy_management.htm" class="button secondary">Managing Policies</a>  
+<a href="qos_policies.htm" class="button secondary">QoS Policies</a>
+</p>
+
+<h5 class="stamp">Supported Platforms: 7.x, 8.0</h5>
+
+<div class = "divider1"></div>
+
+
+
+<h3 style="color: gray;">Table of Contents</h3>
+<ol class="table_of_contents">
+  <li><a href="#introduction">Introduction</a></li>
+  <li><a href="#options">Throughput Quota Policy Options</a></li>
+  <li><a href="#configuration">Configuration</a></li>
+  <li><a href="#uc_policy_qos_throughput_quota_pm">Throughput Quota Policy: use cases for Policy Manager</a></li>
+  <li><a href="#uc_policy_qos_throughput_quota_cm_all">Throughput Quota Policy: use cases for the Akana API Platform (Community Manager)</a></li>
+</ol>
+<div class = "divider1"></div>
+
+
+
+<h3 id="introduction">Introduction</h3>
+<p>A Throughput Quota Policy is a Quality of Service (QoS) policy that allows you to monitor web service throughput performance by specifying a throughput limit (quota) and queue size, and by configuring fault and alert notifications.</p>
+<p>If the quota is exceeded, a <strong>Consumer Fault Message</strong> is returned to the service consumer and an alert is logged.</p>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h3 id="options">Throughput Quota Policy Options</h3>
+<p>The policy includes the configuration options listed below.</p>
+
+<h5>Concurrency Quota Policy Details</h5>
+<ul>
+  <li><strong>Name</strong>: A read-only field that displays the name of the Throughput Quota Policy.</li>
+  <li><strong>Description</strong>: A read-only field that displays the description of the Throughput Quota Policy.</li>
+</ul>
+<h5>Throughput Quota</h5>
+<ul>
+  <li><strong>Throughput Limit</strong>: Allows you to specify the throughput limit; number, and unit of measure (secs or mins).</li>
+  <li><strong>Fault Message</strong>: Allows you to enter the SOAP fault message (&lt;faultString&gt;).</li>
+  <li><strong>Fault Element Name</strong>: Allows you to enter the SOAP fault element that holds errors and status information for a SOAP message.</li>
+  <li><strong>Fault Namespace URI</strong>: Allows you to enter the URL that points to the fault code schema.</li>
+  <li><strong>Fault Namespace Prefix</strong>: Allows you to enter the fault namespace prefix.</li>
+  <li><strong>Time to Clear Alert(s)</strong>: Allows you to enter the time that the throughput needs to be within the limit before a second alert is sent to signify that the consumer is once again within the quota.</li>
+  <li><strong>Set Reminder Alert</strong>: A checkbox that enables the Reminder Alert function. This function is an alert that is sent at the specified <strong>Reminder Alert Interval</strong> until the consumer is within the quota.</li>
+  <li><strong>Reminder Alert Interval(s)</strong>: Allows you to enter an interval (in seconds) that Reminder Alerts will be sent until the consumer is within the quota.</li>
+</ul>
+
+
+
+<h3 id="configuration">Configuration</h3>
+<p>Let's take a quick walkthrough of the Throughput Quota Policy configuration process to get you started.</p>
+
+<h5>Step 1: Add Policy</h5>
+<p>In Policy Manager, to create a Throughput Quota Policy instance, go to <strong>Policies</strong> &gt; <strong>QoS Policies</strong> and choose <strong>Add Policy</strong>.</p>
+
+<h5>Step 2: Modify Policy</h5>
+<p>When you click <strong>Modify</strong> to make changes to the Throughput Quota Policy on the <strong>Policy Details</strong> page, the initial policy looks like this:</p>
+<p><img src="images/throughputquota1.jpg" alt="" /></p>
+<p>Configure the policy options based on your requirements and click <strong>Apply</strong>.</p>
+
+<h5>Step 3: Attach Policy</h5>
+<p>After you've saved your policy, you can attach it  to a web service, operation, or binding.</p>
+
+<h5>Step 4: Test Policy and View Monitoring Data</h5>
+<p>After you've attached the Throughput Quota Policy to a web service, operation, or binding, send a request to your service and go to the <em>Services &gt; Monitoring</em> section to view the results for Logs, Real Time Charts, and Historical Charts. For more information on using the monitoring functions, refer to the Policy Manager Online Help, available via the Help button.</p>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h3 id="uc_policy_qos_throughput_quota_pm">Throughput Quota Policy: use cases for Policy Manager</h3>
+<p>This section provides a list of Policy Manager-specific usage scenarios for the Throughput Quota Policy.</p>
+<p>It includes:</p>
+<ol>
+  <li><a href="#uc_policy_qos_throughput_quota_pm_00">Generate Alert When Throughput Exceeds Limit</a></li>
+  <li><a href="#uc_policy_qos_throughput_quota_pm_01">Generate Reminder Alert When Throughput Exceeded</a></li>
+  <li><a href="#uc_policy_qos_throughput_quota_pm_02">Generate Clear Alert When Throughput Stops Crossing Limit</a></li>
+  <li><a href="#uc_policy_qos_throughput_quota_pm_03">Timeline view</a></li>
+</ol>
+
+
+<h4 id="uc_policy_qos_throughput_quota_pm_00">Generate Alert When Throughput Exceeds Limit</h4>
+<p>Generate an alert and trigger an email to the administrator when throughput has crossed the 10 per minute limit</p>
+<ol>
+  <li>Create a physical service in the <strong>Policy Manager Management Console</strong> using <strong>Create Physical Service</strong>.</li>
+  <li>Provide service details and finish the wizard.</li>
+  <li>Using <strong>Virtualize Service</strong>, virtualize and host the physical service on Network Director (<strong>ND1</strong>), and assign a name (for example, <strong>Vs1</strong>).</li>
+  <li>Navigate to <strong>Organization</strong> &gt; <strong>Policies</strong> &gt; <strong>QOS Policies</strong> and use <strong>Add Policy</strong> to create a Throughput Quota Policy.</li>
+  <li>Configure the Throughput Quota Policy as per the use case with 10 Throughput Limit per minute and a custom Fault message.
+  <p><img src="images/throughput_quota_uc_pm_01.jpg" alt="" /></p></li>
+  <li>Activate the policy in the Policy Workflow portlet and attach it to the Vs1 service in the <strong>Service Details</strong> &gt; <strong>Policy Attachments</strong> &gt; <strong>QoS</strong> section.</li>
+  <li>Send 20 requests from THE application/client to the Vs1 service in a minute.
+    <ol>
+      <li>When the Throughput limit has been exceeded, the Fault Message will be returned to the service consumer and an alert will be logged at the service level.</li>
+      <li>The subsequent requests will fail after the throughput has exceeded.</li>
+      <li>The details in the usage logs show the error being displayed as configured in the policy.
+      <p><img src="images/throughput_quota_uc_pm_02.jpg" alt="" /></p></li>
+    </ol>
+  </li>
+  <li>In the alert code, an email must be configured that will be sent to the administrator, as shown below.
+    <p><img src="images/throughput_quota_uc_pm_03.jpg" alt="" /></p>
+  <p><img src="images/throughput_quota_uc_pm_04.jpg" alt="" /></p></li>
+</ol>
+
+
+<h4 id="uc_policy_qos_throughput_quota_pm_01">Generate Reminder Alert When Throughput Exceeded</h4>
+<p>Generate a reminder alert and run a management script when throughput has crossed the 5 per second limit.</p>
+<ol>
+  <li>Create a physical service in the <strong>Policy Manager Management Console</strong> using <strong>Create Physical Service</strong>.</li>
+  <li>Provide service details and finish the wizard.</li>
+  <li>Using <strong>Virtualize Service</strong>, virtualize and host the physical service on Network Director (<strong>ND1</strong>), and assign a name (for example, <strong>Vs1</strong>).</li>
+  <li>Navigate to <strong>Organization</strong> &gt; <strong>Policies</strong> &gt; <strong>QOS Policies</strong> and use <strong>Add Policy</strong> to create a Throughput Quota Policy.</li>
+  <li>Configure the Throughput Quota Policy as per the use case with 5 Throughput Limit per second and a custom Fault message and reminder time interval.
+  <p><img src="images/throughput_quota_uc_pm_05.jpg" alt="" /></p></li>
+  <li>Activate the policy in the Policy Workflow portlet and attach it to the Vs1 service in the <strong>Service Details</strong> &gt; <strong>Policy Attachments</strong> &gt; <strong>QoS</strong> section.</li>
+  <li>Send 10 requests from application/client to the Vs1 service in a second.
+    <ol>
+      <li>When the Throughput limit has been exceeded, the Fault Message will be returned to the service consumer and an alert will be logged at the service level.</li>
+      <li>The subsequent requests will fail after the throughput has exceeded.</li>
+      <li>The details in the usage logs show the error being displayed as configured in the policy.</li>
+      <li>If the limit still exceeds during Reminder Alert Interval (s), a remainder alert is generated.
+      <p><img src="images/throughput_quota_uc_pm_06.jpg" alt="" /></p></li>
+    </ol>
+  </li>
+  <li>In the reminder alert code, management script has to be configured to run (for example, to store information related to the alert as shown below).
+  <p><img src="images/throughput_quota_uc_pm_07.jpg" alt="" /></p>
+  <p><img src="images/throughput_quota_uc_pm_08.jpg" alt="" /></p></li>
+</ol>
+
+
+<h4 id="uc_policy_qos_throughput_quota_pm_02">Generate Clear Alert When Throughput Stops Crossing Limit</h4>
+<p>Generate a clear alert and trigger an email to the administrator when throughput has stopped crossing the 15 requests per second limit.</p>
+<ol>
+  <li>Create a physical service in the <strong>Policy Manager Management Console</strong> using <strong>Create Physical Service</strong>.</li>
+  <li>Provide service details and finish the wizard.</li>
+  <li>Using <strong>Virtualize Service</strong>, virtualize and host the physical service on Network Director (<strong>ND1</strong>), and assign a name (for example, <strong>Vs1</strong>).</li>
+  <li>Navigate to <strong>Organization</strong> &gt; <strong>Policies</strong> &gt; <strong>QOS Policies</strong> and use <strong>Add Policy</strong> to create a Throughput Quota Policy.</li>
+  <li>Configure the Throughput Quota Policy as per the use case with 15 Throughput Limit per second and a custom Fault message.</li>
+  <li>Activate the policy in the Policy Workflow portlet and attach it to the <strong>Vs1</strong> service in the <strong>Service Details</strong> &gt; <strong>Policy Attachments</strong> &gt; <strong>QoS</strong> section.</li>
+  <li>Send 20 requests from application/client to the Vs1 service in a second.
+    <ol>
+      <li>When the Throughput limit has been exceeded, the Fault Message will be returned to the service consumer and an alert will be logged at the service level.</li>
+      <li>The subsequent requests will fail after the throughput has exceeded.</li>
+      <li>The details in the usage logs show the error being displayed as configured in the policy.</li>
+      <li>After the time to clear, a clear alert is generated and the subsequent requests will be successful until the Throughput quota is violated.
+        <p><img src="images/throughput_quota_uc_pm_09.jpg" alt="" /></p>
+      <p><img src="images/throughput_quota_uc_pm_10.jpg" alt="" /></p></li>
+    </ol>
+  </li>
+  <li>In the clear alert code, an email must be configured that will be sent to the administrator.</li>
+  </ol>
+
+
+<h4 id="uc_policy_qos_throughput_quota_pm_03">Timeline view</h4>
+<p><img src="images/throughput_quota_uc_pm_11.jpg" alt="" /></p>
+<p>After 60 seconds, in the new UNIX time minute, requests count from 1 (not 11).</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="uc_policy_qos_throughput_quota_cm_all">Throughput Quota Policy: use cases for the Akana API Platform (Community Manager)</h3>
+<p>This section provides a list of Community Manager-specific usage scenarios for the Throughput Quota Policy.</p>
+<p>It includes:</p>
+<ol>
+  <li><a href="#uc_policy_qos_throughput_quota_cm_00">Add / Configure Throughput Quota Policy</a></li>
+  <li><a href="#uc_policy_qos_throughput_quota_cm_01">Scenario 1: How Do I Verify Throughput Quota Policy at the Service Level?</a></li>
+  <li><a href="#uc_policy_qos_throughput_quota_cm_02">Scenario 2: How Do I Verify Throughput Quota Policy at the Contract Level?</a></li>
+  <li><a href="#uc_policy_qos_throughput_quota_cm_03">Scenario 3: How Do I Verify Throughput Quota Policy at License &gt; Term Level?</a></li>
+</ol>
+
+
+<h4 id="uc_policy_qos_throughput_quota_cm_00">Add / Configure Throughput Quota Policy</h4>
+<p>If you are using a Throughput Quota Policy with Community Manager, you must first add the policy to the Community Manager Tenant Organization in Policy Manager. Once that's done, it will be available for selection in the developer portal.</p>
+<ol>
+  <li>In the <strong>Policy Manager Management Console</strong>, go to the Tenant Organization, choose <strong>Policies</strong> &gt; <strong>QoS Policies</strong>, and then click <strong>Add Policy</strong>.
+    <p><img src="images/throughput_quota_uc_cm_01.jpg" alt="" /></p></li>
+  <li>Specify Policy Name, Policy Type (Throughput Quota Policy), click <strong>Finish</strong>, and then click <strong>Close</strong>.
+    <p><img src="images/throughput_quota_uc_cm_02.jpg" alt="" /></p></li>
+  <li>On the Throughput Quota Policy Details screen, click <strong>Modify</strong>.
+    <p><img src="images/throughput_quota_uc_cm_03.jpg" alt="" /></p></li>
+  <li>Provide the policy details and click <strong>Finish</strong>.
+    <p><img src="images/throughput_quota_uc_cm_04.jpg" alt="" /></p></li>
+  <li>Activate the policy.
+    <p><img src="images/throughput_quota_uc_cm_05.jpg" alt="" /></p></li>
+</ol>
+
+
+<h4 id="uc_policy_qos_throughput_quota_cm_01">Scenario 1: How Do I Verify Throughput Quota Policy at the Service Level?</h4>
+<ol>
+  <li>Launch Community Manager.</li>
+  <li>Attach the Throughput Quota Policy at the Service Level.
+    <p><img src="images/throughput_quota_uc_cm_06.jpg" alt="" /></p></li>
+  <li>Send requests from App &gt; <strong>Test Client</strong>. If the throughput limit exceeded, a fault message will display in the response window. Alerts will display (as shown below).
+<p><img src="images/throughput_quota_uc_cm_07.jpg" alt="" /></p></li>
+  <li>Go to API <strong>Monitoring</strong> &gt; <strong>Logs</strong> and you'll see that error logs are displayed with the correct error message.
+    <p><img src="images/throughput_quota_uc_cm_08.jpg" alt="" /></p></li>
+  <li>In the Policy Manager Management Console, observe the following logs for the service in <strong>Monitoring</strong> &gt; <strong>Logs</strong>.
+<p><img src="images/throughput_quota_uc_cm_09.jpg" alt="" /></p></li>
+</ol>
+
+
+<h4 id="uc_policy_qos_throughput_quota_cm_02">Scenario 2: How Do I Verify Throughput Quota Policy at the Contract Level?</h4>
+<ol>
+  <li>Launch Community Manager.</li>
+  <li>Attach the Throughput Quota Policy at the Contract Level and activate the contract.
+  <p><img src="images/throughput_quota_uc_cm_10.jpg" alt="" /></p></li>
+  <li>Send requests from App &gt; Test Client. If the throughput limit exceeded, you will see a fault message in the response window. Alerts will be displayed as shown below.
+    <p><img src="images/throughput_quota_uc_cm_11.jpg" alt="" /></p>
+  <p><img src="images/throughput_quota_uc_cm_12.jpg" alt="" /></p></li>
+</ol>
+
+
+<h4 id="uc_policy_qos_throughput_quota_cm_03">Scenario 3: How Do I Verify Throughput Quota Policy at License &gt; Term Level?</h4>
+<ol>
+  <li>Launch Community Manager.</li>
+  <li>Attach Throughput Quota Policy at License &gt; Term level.
+  <p><img src="images/throughput_quota_uc_cm_13.jpg" alt="" /></p></li>
+  <li>Test the Throughput Quota Policy at the License &gt; Term level. This assumes that the same scope (as above) is used for Scope mapping, and the same license is selected while requesting API access.</li>
+  <li>Go to Test Client and send requests. If the throughput limit exceeded, a fault message will display in the response window:
+  <p><img src="images/throughput_quota_uc_cm_14.jpg" alt="" /></p></li>
+  <li>Logs will display in API &gt; Monitoring Logs:
+  <p><img src="images/throughput_quota_uc_cm_15.jpg" alt="" /></p></li>
+  <li>Alerts will display on the API Board:
+  <p><img src="images/throughput_quota_uc_cm_16.jpg" alt="" /></p></li>
+</ol>
+<p><a href="#top">Back to top</a></p>
