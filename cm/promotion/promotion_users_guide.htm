@@ -75,6 +75,12 @@ nav-title: Promotion Guide
       <li><a href="#s07_03">Promotion Requests</a></li>
     </ol>
   </li>
+  <li><a href="#runtime_config">Default API Settings using Runtime Configurations</a>(8.4.17 and later)
+  <ol>
+      <li><a href="#s08_01_create_asset">Creating a Runtime Configuration Asset</a></li>
+      <li><a href="#s08_02_publishing">Publishing a Runtime Configuration Asset</a></li>
+    </ol>
+  </li>
 </ol>
 <div class = "divider1"></div>
 
@@ -891,4 +897,102 @@ vsep.listenerName = "https"</td>
 <p>Clicking <strong>approve</strong> allows the promotion to succeed or proceed to the next role approval.</p>
 <h5>Rejecting Requests</h5>
 <p>A user may choose to reject the request by clicking on <strong>rejection properties</strong> and then clicking <strong>reject</strong>. In this case, the Iteration asset remains in a <strong>Promotion Pending</strong> state, however, the API Platform UI shows the state of the promotion as <strong>Promotion Rejected</strong> and allows the promotion to be requested again.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="runtime_config">Default API Settings using Runtime Configurations</h3>
+<h5 class="stamp">API Platform Version: 8.4.17 and later</h5>
+<p>The behavior described in this section is not part of Lifecycle Coordinator, but can be used to augment the capabilities of Lifecycle Coordinator to further tailor the configuration of APIs within each environment of a topology.</p>
+<p>The intent of the Runtime Configurations feature is to allow <strong>templates</strong> for API implementation properties to be established and selectively applied based on custom property filters. This is accomplished through customization of the Lifecycle Manager library in which custom properties for a tenant are configured. This configuration requires a working knowledge of the Lifecycle Manager application and the Configuration Designer Tool.</p>
+<p>As with the topology definition, it's best if Runtime Configuration assets are set up during the initial configuration of the environment. Changes to a Runtime Configuration do not retroactively affect pre-existing APIs unless those APIs are updated through the API Platform UI or subsequent promotions.</p>
+
+
+<h4 id="s08_01_create_asset">Creating a Runtime Configuration Asset</h4>
+<p>You can use the Lifecycle Manager user interface to create assets of type <strong>Runtime Configuration</strong>. The following image shows the Lifecycle Manager edit page for a Runtime Configuration asset:</p>
+<p><img src="images/promotion_17_runtime_config_asset.jpg" alt="Creating a Runtime Configuration asset" /></p>
+<p>The following aspects of a Runtime Configuration asset determine its behavior when applied to an API implementation:</p>
+<ul>
+  <li><a href="#s08_01_01_owning_group">Owning Group</a></li>
+  <li><a href="#s08_01_02_asset_filter">Asset Filter</a></li>
+  <li><a href="#s08_01_03_implementation_type">Implementation Type</a></li>
+  <li><a href="#s08_01_04_policies">Policies</a></li>
+  <li><a href="#s08_01_05_virtual_host">Virtual Host</a></li>
+  <li><a href="#s08_01_06_path">Path</a></li>
+  <li><a href="#s08_01_07_anon_access">Allow Anonymous Access</a></li>
+  <li><a href="#s08_01_08_approval_req">Approval Required</a></li>
+  <li><a href="#s08_01_09_debug_mode">Debug Mode Enabled</a></li>
+</ul>
+
+
+<h5 id="s08_01_01_owning_group">Owning Group</h5>
+<p>Groups within the Lifecycle Manager library reflect the Organizations of the associated tenant. The <strong>Owning Group</strong> chosen when creating a Runtime Configuration asset determines the organizational scope that the Runtime Configuration applies to.</p>
+<p>For example, if the tenant organization has two child organizations <strong>A</strong> and <strong>B</strong>, a Runtime Configuration asset assigned to Group <strong>A</strong> is applicable to APIs in organization <strong>A</strong> but not to APIs in organization <strong>B</strong>. If you choose the tenant organization as the owning group, the Runtime Configuration is applicable to all APIs within the tenant.</p>
+
+<h5 id="s08_01_02_asset_filter">Asset Filter</h5>
+<p>You can further scope the applicability of Runtime Configuration assets by using <strong>asset filters</strong>. Asset filters are defined in the Library Process Configuration document (LPC) for the library, and specify criteria for the custom properties of the API (known as <strong>classifiers</strong> within Lifecycle Manager). For example, the filter below selects APIs with the <strong>PII</strong> custom property set to <strong>true</strong>:</p>
+<pre>&lt;asset-filter name="PII APIs"&gt;
+  &lt;classifier-criteria classifier-category="asset-type"&gt;
+    &lt;value-set&gt;
+      &lt;value&gt;API&lt;/value&gt;
+    &lt;/value-set&gt;
+  &lt;/classifier-criteria&gt;
+  &lt;classifier-criteria classifier-category="pii"&gt;
+    &lt;value-set&gt;
+      &lt;value&gt;<strong>true</strong>&lt;/value&gt;
+    &lt;/value-set&gt;
+  &lt;/classifier-criteria&gt;
+&lt;/asset-filter&gt;
+</pre>
+<p>When selecting a value for the Asset Filter classifier, a list of asset filters defined in the LPC as well as implicit filters for the defined asset types in the library will be shown. The filter in the example above would appear as <strong>LPC:PII APIs</strong>. Selecting the implicit filter <strong>asset-type:API</strong> indicates that the Runtime Configuration is applicable to all APIs within its owning group.</p>
+<p>Note that any filter chosen for a Runtime Configuration should include criteria specifying <strong>API</strong> as the asset-type.</p>
+
+<h5 id="s08_01_03_implementation_type">Implementation Type</h5>
+<p>This classifier specifies the type of API implementation the Runtime Configuration applies to. The choices are <strong>Live</strong> and <strong>Sandbox</strong>.</p>
+
+<h5 id="s08_01_04_policies">Policies</h5>
+<p>A Runtime Configuration asset provides three classifiers that you can use to select policies to be applied to applicable API implementations. These classifiers are:</p>
+<ul>
+  <li>Operational Policy</li>
+  <li>Compliance Policy</li>
+  <li>Service Level Policy</li>
+</ul>
+<p>When choosing values for these classifiers, the application will present a list of policies available for the associated tenant with the specified policy type. You can choose one or more policies for each classifier.</p>
+<p>Additionally, there are three classifiers that allow you to select policies for the physical service supporting an API implementation using the <strong>proxy</strong> pattern. These classifiers are: </p>
+<ul>
+  <li>Operational Policy (Physical Service)</li>
+  <li>Compliance Policy (Physical Service)</li>
+  <li>Service Level Policy (Physical Service)</li>
+</ul>
+
+<p><strong>Policy Replacement Behavior</strong></p>
+<p>The default behavior for setting policies on an API implementation or physical service is additive, meaning that policies specified by the Runtime Configuration will be added to any existing policies on the implementation or physical service.</p>
+<p>Using Configuration Designer, it is possible to customize the <strong>Apply Runtime Configuration</strong> API post-processing task by setting the <strong>Preserve Existing Policies</strong> property to <strong>false</strong>. This indicates that any existing policies on the implementation or physical service that are not specified in the Runtime Configuration will be removed, and replaced by those in the Runtime Configuration.</p>
+<p>When the <strong>Preserve Existing Policies</strong> property is set to <strong>false</strong>, you can specify the value of <strong>NONE</strong> for any of the policy classifiers. This indicates that all policies should be removed from the implementation or physical service.</p>
+<p>In any case, if a policy classifier has no value in the Runtime Configuration, no action will be taken with the policies associated with the implementation or physical service.</p>
+
+<h5 id="s08_01_05_virtual_host">Virtual Host</h5>
+<p>This classifier is used to set the vanity host name for every endpoint in the implementation. Leaving this classifier unset indicates that the host name of the endpoints should not be modified.</p>
+
+<h5 id="s08_01_06_path">Path</h5>
+<p>This classifier is used to set the context path for every endpoint in the implementation. Leaving this classifier unset indicates that the context path of the endpoints should not be modified.</p>
+
+
+<p><strong>Parameter Replacement</strong></p>
+<p>The <strong>path</strong> classifier supports the Lifecycle Manager concept of <strong>context parameters</strong>. This allows aspects of the API such as the API name or values of custom properties to be used within the path.</p>
+<p>For example, setting the path value to <strong>/{catalog_asset.name_normalized}</strong> indicates that the path should consist of the API's name. If an API had a custom classifier called <strong>visibility</strong> set to a value <strong>external</strong>, using a value of <strong>/rest/{catalog_asset.classifier.visibility}</strong> for the path would result in endpoint paths set to <strong>/rest/external</strong>.</p>
+<p>The available parameters are specified in the Lifecycle Manager Configuration guide (available on the Akana Library site, in the Documentation folder for your <a href="https://library.roguewave.com/display/MAIN/Lifecycle+Manager" title="Link to Lifecycle Manager download" target="_blank">Lifecycle Manager installation</a>). Note that the context asset for parameter resolution is the API asset.</p>
+
+<h5 id="s08_01_07_anon_access">Allow Anonymous Access</h5>
+<p>This classifier is used to set the <strong>allow anonymous access</strong> value of the implementation. Leaving this classifier unset indicates that the <strong>allow anonymous access</strong> value of the implementation should not be modified.</p>
+
+<h5 id="s08_01_08_approval_req">Approval Required</h5>
+<p>This classifier is used to set the <strong>approval required</strong> value of the implementation. It is only applicable when <strong>allow anonymous access</strong> is set to <strong>false</strong>. Leaving this classifier unset indicates that the <strong>approval required</strong> value of the implementation should not be modified.</p>
+
+<h5 id="s08_01_09_debug_mode">Debug Mode Enabled</h5>
+<p>This classifier is used to set the <strong>debug mode enabled</strong> value of the implementation. Leaving this classifier unset indicates that the <strong>debug mode enabled</strong> value of the implementation should not be modified.</p>
+
+
+<h4 id="s08_02_publishing">Publishing a Runtime Configuration Asset</h4>
+<p>When edit is complete on a Runtime Configuration asset, it must be submitted. Once any necessary approvals are complete, the Runtime Configuration is published, and is immediately active.</p>
 <p><a href="#top">Back to top</a></p>
