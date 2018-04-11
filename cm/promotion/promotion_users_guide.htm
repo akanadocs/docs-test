@@ -26,6 +26,7 @@ nav-title: Promotion Guide
       <li><a href="#s03_03">Environments</a></li>
       <li><a href="#s03_04">Promotion Profiles</a></li>
       <li><a href="#s03_05">Asset Filters</a></li>
+      <li><a href="#s03_05b">Asset Notifications</a></li>
       <li><a href="#s03_06">Rules</a></li>
       <li><a href="#s03_07_00">Asset Model</a></li>
     </ol>
@@ -152,9 +153,39 @@ nav-title: Promotion Guide
 <h4 id="s03_04">Promotion Profiles</h4>
 <p>Promotion Profiles represent a transition to the next (<strong>target</strong>) Environment. A promotionProfile specifies a target Environment and optionally a set of Rules to be applied to the manifest of the promotion package of the asset prior to promotion into the target Environment. A promotionProfile might also, optionally, specify an Asset Filter. This allows multiple promotionProfiles to be defined within an Environment with mutually exclusive filters, each with a different rule set. When promotion of an asset is requested from a source Environment, and more than one promotionProfile exists, the promotionProfile with an Asset Filter that the asset complies with is used. In the case where only one promotionProfile exists (with no Asset Filter specified), that promotionProfile is automatically selected for the promotion.</p>
 
+
 <h4 id="s03_05">Asset Filters</h4>
 <p>Asset Filters contain a set of criteria for the custom properties of the assets being promoted. For example, an API asset may use a custom property indicating that it is PCI compliant. An Asset Filter can define criteria for that property such that only API assets that are PCI compliant will match the filter. This Asset Filter can then be assigned to a Promotion Profile such that a different set of Rules are applied to PCI-compliant and non-compliant API assets.</p>
 <p class="apidoc_note"><strong>Note</strong>: the use of Asset Filters requires custom properties to be enabled for the tenants involved in the promotion.</p>
+
+
+<h4 id="s03_05b">Asset Notifications</h4>
+<p>A PromotionProfile can optionally specify updates to be made to instances of an API, within environments of a topology, on completion of a successful promotion. These updates are implemented as changes to the values of custom properties on the API within a specified environment.</p>
+<p>For example, let's assume a topology consisting of three environments: <strong>Development</strong>, <strong>Test</strong>, and <strong>Production</strong>. The goal is to mark the instances of an API in the Development and Test environments as <strong>in production</strong> once the API is successfully promoted to the Production environment.</p>
+<p>To accomplish this:</p>
+<ol>
+<li>The Development and Test tenants could be configured to support an in-production Boolean custom property.</li>
+<li>Then, the PromotionProfile representing the promotion from Test to Production would specify the property to update, the value to set the property to, and the environments in which the property is to be set.</li>
+</ol>
+<p>This is shown in the following PromotionProfile declaration:</p>
+<pre>{
+  "name": "Default Production Promotion",
+  "targetEnvironment": "production",
+  "assetNotifications": [
+    {
+      "propertyName" : "in-production",
+      "propertyValue" : "true",
+      "environments" : ["development",”test”]
+    }
+}</pre>
+<p>This feature relies on custom properties having been enable for the notified tenants, and on the specified property existing on the target API.</p>
+
+
+
+
+
+
+
 
 <h4 id="s03_06">Rules</h4>
 <p>A Promotion Profile may optionally contain a set of rules to guide the need for changes in relationships and properties when assets are promoted. A rule consists of a condition and a behavior. The rule is provided a context when evaluated made up of an asset's properties. The condition of the rule is a Boolean expression evaluated against that context. The behavior of the rule is an expression that alters that context. The expression language used by the rule engine is JEXL. A set of syntax examples can be found at <a href="#" title="https://commons.apache.org/proper/commons-jexl/reference/syntax.html" target="_blank">https://commons.apache.org/proper/commons-jexl/reference/syntax.html</a>. Each asset in a promotion package is run through the rule engine. If any asset meets the condition of the rule, the behavior is performed against it. Some examples of rules are below.</p
@@ -324,7 +355,6 @@ vsep.listenerName = "https"</td>
       <td>false</td>
       <td>Requests must specify global credentials</td>
     </tr>
-
     <tr>
       <td>Yes</td>
       <td>true</td>
@@ -352,6 +382,7 @@ vsep.listenerName = "https"</td>
 <p>You can set the default <strong>from</strong> email address used in emails sent from Lifecycle Coordinator, in the <strong>repository.config.defaultFromEmail property</strong> of the <strong>com.soa.repository</strong> configuration category.</p>
 <p>You can also override the <strong>from</strong> email address for a specific topology. To do this, go into the topology library as an admin user or superuser, click <strong>Support Center</strong>, click <strong>Configure Library</strong> and set the <strong>Sender Email</strong> field, as shown below.</p>
 <p><img src="images/promotion_lm_from_email.jpg" alt="Setting From Email in LM" /></p>
+
 
 
 <h4 id="config_tenant_synch_interval">Tenant Synchronization Interval</h4>
