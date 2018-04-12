@@ -26,8 +26,6 @@ nav-title: Promotion Guide
       <li><a href="#s03_03">Environments</a></li>
       <li><a href="#s03_04">Promotion Profiles</a></li>
       <li><a href="#s03_05">Asset Filters</a></li>
-      <li><a href="#s03_05b">Asset Notifications</a> (8.4.17 and later)</li>
-      <li><a href="#s03_05c">Properties</a> (8.4.17 and later)</li>
       <li><a href="#s03_06">Rules</a></li>
       <li><a href="#s03_07_00">Asset Model</a></li>
     </ol>
@@ -53,6 +51,8 @@ nav-title: Promotion Guide
       <li><a href="#s05_05">Filters</a></li>
       <li><a href="#s05_06">Organization Mapping</a> (8.4.13 and later)</li>
       <li><a href="#s05_07">Policy Mapping</a> (8.4.16 and later)</li>
+      <li><a href="#s03_05b">Asset Notifications</a> (8.4.17 and later)</li>
+      <li><a href="#s03_05c">Properties</a> (8.4.17 and later)</li>
     </ol>
   </li>
   <li><a href="#dz_configurations">Deployment Zone Configurations</a>
@@ -158,48 +158,6 @@ nav-title: Promotion Guide
 <h4 id="s03_05">Asset Filters</h4>
 <p>Asset Filters contain a set of criteria for the custom properties of the assets being promoted. For example, an API asset may use a custom property indicating that it is PCI compliant. An Asset Filter can define criteria for that property such that only API assets that are PCI compliant will match the filter. This Asset Filter can then be assigned to a Promotion Profile such that a different set of Rules are applied to PCI-compliant and non-compliant API assets.</p>
 <p class="apidoc_note"><strong>Note</strong>: the use of Asset Filters requires custom properties to be enabled for the tenants involved in the promotion.</p>
-
-
-<h4 id="s03_05b">Asset Notifications</h4>
-<h5 class="stamp">API Platform Version: 8.4.17 and later</h5>
-<p>A PromotionProfile can optionally specify updates to be made to instances of an API, within environments of a topology, on completion of a successful promotion. These updates are implemented as changes to the values of custom properties on the API within a specified environment.</p>
-<p>For example, let's assume a topology consisting of three environments: <strong>Development</strong>, <strong>Test</strong>, and <strong>Production</strong>. The goal is to mark the instances of an API in the Development and Test environments as <strong>in production</strong> once the API is successfully promoted to the Production environment.</p>
-<p>To accomplish this:</p>
-<ol>
-<li>The Development and Test tenants could be configured to support an <strong>in-production</strong> Boolean custom property.</li>
-<li>Then, the PromotionProfile representing the promotion from Test to Production would specify the property to update, the value to set the property to, and the environments in which the property is to be set.</li>
-</ol>
-<p>This is shown in the following PromotionProfile declaration:</p>
-<pre>{
-  "name": "Default Production Promotion",
-  "targetEnvironment": "production",
-  "assetNotifications": [
-    {
-      "propertyName" : "in-production",
-      "propertyValue" : "true",
-      "environments" : ["development","test"]
-    }
-}</pre>
-<p>This feature relies on custom properties having been enable for the notified tenants, and on the specified property existing on the target API.</p>
-
-
-<h4 id="s03_05c">Properties</h4>
-<h5 class="stamp">API Platform Version: 8.4.17 and later</h5>
-<p>A PromotionProfile can optionally specify properties to further refine export/import behavior. These are defined in an optional <strong>properties</strong> element, as in the following example:</p>
-<pre>{
-  "name": "Default Production Promotion",
-  "description": "Dev to production default profile",
-  "targetEnvironment": "production",
-  "properties": [
-    {"name":"export-pki", "value":"true"}
-    ]
-}</pre>
-<p>You can set the following properties on a PromotionProfile:</p>
-<ul>
-<li><strong>export-pki</strong>
-<p>This option indicates that the PKI keys and certificate for an API will be included in the promotion if they exist. Note that if the target environment for a promotion is on a different container from the source environment, the API's certificate or an ancestor in the chain must be trusted by the target container's certificate authority, or it will be ignored when importing the API.</p>
-<p>A value of <strong>true</strong> indicates that PKI keys and certificate should be promoted. The default value for this property is <strong>false</strong>.</p></li>
-</ul>
 
 
 <h4 id="s03_06">Rules</h4>
@@ -710,6 +668,53 @@ vsep.listenerName = "https"</td>
 <p>If none of the above criteria are met, a validation error is returned to the promoting user and the promotion is aborted.</p>
 <p><a href="#top">Back to top</a></p>
 
+
+<h4 id="s03_05b">Asset Notifications</h4>
+<h5 class="stamp">API Platform Version: 8.4.17 and later</h5>
+<p>A PromotionProfile can optionally specify updates to be made to instances of an API, within environments of a topology, on completion of a successful promotion. These updates are implemented as changes to the values of custom properties on the API within a specified environment.</p>
+<p>For example, let's assume a topology consisting of three environments: <strong>Development</strong>, <strong>Test</strong>, and <strong>Production</strong>. The goal is to mark the instances of an API in the Development and Test environments as <strong>in production</strong> once the API is successfully promoted to the Production environment.</p>
+<p>Steps:</p>
+<ol>
+<li>The Development and Test tenants could be configured to support an <strong>in-production</strong> Boolean custom property.</li>
+<li>Then, the PromotionProfile representing the promotion from Test to Production would specify the property to update, the value to set the property to, and the environments in which the property is to be set.</li>
+</ol>
+<p>This is shown in the following PromotionProfile declaration:</p>
+<pre>{
+  "name": "Default Production Promotion",
+  "targetEnvironment": "production",
+  "assetNotifications": [
+    {
+      "propertyName" : "in-production",
+      "propertyValue" : "true",
+      "environments" : ["development","test"]
+    }
+}</pre>
+<p>This feature relies on custom properties having been enable for the notified tenants, and on the specified property existing on the target API.</p>
+
+
+<h4 id="s03_05c">Properties</h4>
+<h5 class="stamp">API Platform Version: 8.4.17 and later</h5>
+<p>A PromotionProfile can optionally specify properties to further refine export/import behavior. These are defined in an optional <strong>properties</strong> element, as in the following example:</p>
+<pre>{
+  "name":"Default Production Promotion",
+  "targetEnvironment":"production",
+  "assetNotifications":[
+    {
+      "propertyName":"in-production",
+      "propertyValue":"true",
+      "environments":[
+        "development",
+        "test"
+      ]
+    }
+  ]
+}</pre>
+<p>You can set the following properties on a PromotionProfile:</p>
+<ul>
+<li><strong>export-pki</strong>
+<p>This option indicates that the PKI keys and certificate for an API will be included in the promotion if they exist. Note that if the target environment for a promotion is on a different container from the source environment, the API's certificate or an ancestor in the chain must be trusted by the target container's certificate authority, or it will be ignored when importing the API.</p>
+<p>A value of <strong>true</strong> indicates that PKI keys and certificate should be promoted. The default value for this property is <strong>false</strong>.</p></li>
+</ul>
 
 
 <h3 id="dz_configurations">Deployment Zone Configurations</h3>
