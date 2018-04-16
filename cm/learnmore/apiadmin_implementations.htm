@@ -32,6 +32,8 @@ nav-title: Managing API Implementations
 	<li><a href="#api_impl_how_delete">How do I delete an API implementation?</a></li>
 	<li><a href="#api_impl_add_modify_target_endpoint">How do I add or modify a target endpoint for an implementation?</a></li>
 	<li><a href="#api_impl_delete_target_endpoint">How do I delete a target endpoint for an implementation?</a></li>
+	<li><a href="#context_path_define">What is the context path and how do I make sure I have the right context path for my API implementation?</a></li>
+	<li><a href="#api_dz_context_path_validation_rules">What are the validation rules for the context path?</a></li>
 	<li><a href="#api_impl_process_editor">How do I manage orchestration for my implementation?</a></li>
 	<li><a href="#api_impl_process_editor_use">How do I use the Process Editor?</a></li>
 	<li><a href="#api_impl_debug_mode">What is debug mode?</a></li>
@@ -52,8 +54,6 @@ nav-title: Managing API Implementations
 	<li><a href="#api_dz_how_add">How do I add an API deployment zone?</a></li>
 	<li><a href="#api_dz_how_many">How many API deployment zones can I have?</a></li>
 	<li><a href="#api_dz_how_edit">How do I edit an API deployment zone?</a></li>
-	<li><a href="#context_path_define">What is the context path and how do I make sure I have the right context path for my API implementation?</a></li>
-	<li><a href="#api_dz_context_path_validation_rules">What are the validation rules for the context path?</a></li>
 	<li><a href="#api_dz_how_add_new_protocol">How do I add a new protocol for an API deployment zone?</a></li>
 	<li><a href="#api_dz_how_delete">How do I delete an API deployment zone?</a></li>
 </ol>
@@ -208,7 +208,7 @@ nav-title: Managing API Implementations
     <li><strong>Enable Zone</strong>: To add or remove deployment zones for the implementation, click the zone on the left and then check or clear the <strong>Enable Zone</strong> box on the right.</li>
     <li>Add protocol: click the <strong>+</strong> tab. At the <strong>Add Endpoints</strong> overlay, choose the protocol and click <strong>Add</strong>.
     <p><strong>Note</strong>: If you want to use SNI to serve up the implementation's key/certificate, in the HTTPS tab, check the <strong>Use Implementation's Key/Certificate for SSL</strong> box (requires that API Clients are SNI-compliant).</p></li>
-    <li><a href="basics_glossary.htm#gl_contextpath">Context Path</a>: defaults to a single forward slash (<strong>/</strong>) but you can change it.</li>
+    <li><a href="basics_glossary.htm#gl_contextpath">Context Path</a>: defaults to a single forward slash (<strong>/</strong>) but you can change it. For information about the context path, see <a href="#context_path_define">What is the context path and how do I make sure I have the right context path for my API implementation?</a></li>
   </ul>
   </li>
 	<li>Optional: edit policies:
@@ -300,6 +300,51 @@ nav-title: Managing API Implementations
 	<li>At the confirmation message, click <strong>OK</strong>.</li>
 	<li>On the Endpoints page, click <strong>Finish</strong> (if you don't confirm on this page, the endpoint is not deleted).</li>
 </ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="context_path_define">What is the context path and how do I make sure I have the right context path for my API implementation?</h3>
+<p>The endpoint for an API must be a fully unique address to the resource that the API is giving access to.</p>
+<p>The endpoint is made up of the HTTP verb and the full URL, including protocol, hostname, optional port, context path, and object path.</p>
+<ul>
+  <li><strong>HTTP verb</strong>: most commonly GET, POST, PUT, or DELETE.</li>
+  <li><strong>Protocol</strong>: generally HTTP or HTTPS.</li>
+  <li><strong>Target hostname</strong>: the part after the protocol and before the context path (see below). Example:  http://www.<strong>acmepaymentscorp.com</strong>.</li>
+  <li><strong>Port</strong>: four-digit port, sometimes part of the URL. Example: http://example.com:<strong>7900</strong>/atmosphere/#/home/landing.</li>
+  <li><strong>Context path</strong>: The context path is the next part of the API endpoint, after the hostname (and optional port). It provides the context for the specific API; this is the part of the URL that's consistent for each operation within the API. Occasionally, there might be nothing specified in the context path, in which case it's just a forward slash (/) and is called <strong>root</strong>. Example of a context path: <strong>/api/payments</strong>.</li>
+  <li><strong>Resource path</strong>: the part after the context path, that might be different for different operations within an API. Examples: POST http://www.acmepaymentscorp.com/api/payments<strong>/payment</strong> adds a payment, GET http://www.acmepaymentscorp.com/api/payments<strong>/payment/{PaymentID}</strong> returns details about a specific payment.</li>
+</ul>
+<p>The API endpoint is a concatenation of the above elements, as shown below:</p>
+<pre>{HTTP_VERB} {protocol}://{hostname}{sometimes,port}{context path beginning with slash}/resource path</pre>
+<p>For example:</p>
+<pre>GET http://www.acmepaymentscorp.com/api/payments/payment/pmtid9346582364</pre>
+<p>In the above example:</p>
+<ul>
+  <li><strong>HTTP verb</strong>: GET</li>
+  <li><strong>Protocol</strong>: HTTP</li>
+  <li><strong>Port</strong>: none</li>
+  <li><strong>Target hostname</strong>: www.acmepaymentscorp.com</li>
+  <li><strong>Context path</strong>: /api/payments</li>
+  <li><strong>Resource path</strong>: /payment/pmtid9346582364</li>
+</ul>
+
+<h5>Developer portal behavior with regard to uniqueness of API endpoint</h5>
+<p>By default, when you define an API in the developer portal, the platform performs a validation check for unique combination of virtual host and context path, to make sure that the API endpoint, up to and including the context path, is unique. If the combination of virtual host and context path is not unique, the platform automatically modifies the API endpoint to make sure it's unique.</p>
+<p><strong>Note</strong>: The platform includes a configuration setting that the Site Admin can use to turn off this validation check. If the validation check is disabled, you must make sure that the API path (protocol, hostname, optional port, and context path) will be unique. For information about this setting, see <a href="site_admin_settings.htm#settings_api_general">General API Settings</a> (Site Admin help).</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="api_dz_context_path_validation_rules">What are the validation rules for the context path?</h3>
+<p>The rules applied to the context path are:</p>
+<ul>
+	<li>It cannot have spaces.</li>
+	<li>Question mark (?) is not allowed.</li>
+	<li>The following special characters are allowed: forward slash (/), comma (,), dash (-).</li>
+	<li>No other special characters are allowed.
+  </li>
+</ul>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -584,51 +629,6 @@ nav-title: Managing API Implementations
   <dt>Publish in API Documentation</dt>
   <dd>You might want to restrict use of a specific endpoint with a generated hostname, for private or internal use. To do this, clear the check box. Only URLs that have this box checked (the default) are included in the API documentation and displayed to users who are not API Admins.</dd>
 </dl>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<h3 id="context_path_define">What is the context path and how do I make sure I have the right context path for my API implementation?</h3>
-<p>The endpoint for an API must be a fully unique address to the resource that the API is giving access to.</p>
-<p>The endpoint is comprised of the HTTP verb and the full URL, including protocol, hostname, optional port, context path, and object path.</p>
-<ul>
-  <li><strong>HTTP verb</strong>: most commonly GET, POST, PUT, or DELETE.</li>
-  <li><strong>Protocol</strong>: generally HTTP or HTTPS.</li>
-  <li><strong>Target hostname</strong>: the part after the protocol and before the context path (see below). Example:  http://www.<strong>acmepaymentscorp.com</strong>.</li>
-  <li><strong>Port</strong>: four-character port, sometimes part of the URL. Example: http://example.com:<strong>7900</strong>/atmosphere/#/home/landing.</li>
-  <li><strong>Context path</strong>: The context path is the next part of the API endpoint, after the hostname (and optional port). It provides the context for the specific API; this is the part of the URL that's consistent for each operation within the API. Occasionally, there might be nothing specified in the context path, in which case it's just a forward slash (/) and is called <strong>root</strong>. Example of a context path: <strong>/api/payments</strong>.</li>
-  <li><strong>Resource path</strong>: the part after the context path, that might&nbsp;be different for different operations within an API. Examples: POST http://www.acmepaymentscorp.com/api/payments<strong>/payment</strong> adds a payment, GET http://www.acmepaymentscorp.com/api/payments<strong>/payment/{PaymentID}</strong> returns details about a specific payment.</li>
-</ul>
-<p>The API endpoint is a concatenation of the above elements, as shown below:</p>
-<pre>{HTTP_VERB} {protocol}://{hostname}{sometimes,port}{context path beginning with slash}/resource path</pre>
-<p>For example:</p>
-<pre>GET http://www.acmepaymentscorp.com/api/payments/payment/pmtid9346582364</pre>
-<p>In the above example:</p>
-<ul>
-  <li><strong>HTTP verb</strong>: GET</li>
-  <li><strong>Protocol</strong>: HTTP</li>
-  <li><strong>Port</strong>: none</li>
-  <li><strong>Target hostname</strong>:&nbsp; www.acmepaymentscorp.com</li>
-  <li><strong>Context path</strong>: /api/payments</li>
-  <li><strong>Resource path</strong>: /payment/pmtid9346582364</li>
-</ul>
-
-<h5>Developer portal behavior with regard to uniqueness of API endpoint</h5>
-<p>By default, when you define an API in the developer portal, the platform performs a validation check for unique combination of virtual host and context path, to make sure that the API endpoint, up to the context path, is unique. If the combination of virtual host and context path is not unique, the platform automatically modifies the API endpoint to make sure it's unique.</p>
-<p><strong>Note</strong>: The platform includes a&nbsp;configuration setting that the Site Admin can use to turn off this validation check. If this validation check is disabled, you must make sure that the API path (protocol, hostname, optional port, and context path) will be unique. For information about this setting, see <a href="site_admin_settings.htm#settings_api_general">General API Settings</a> (Site Admin help).</p>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<h3 id="api_dz_context_path_validation_rules">What are the validation rules for the context path?</h3>
-<p>The rules applied to the context path are:</p>
-<ul>
-	<li>It cannot have spaces.</li>
-	<li>Question mark (?) is not allowed.</li>
-	<li>The following special characters are allowed: forward slash (/), comma (,), dash (-).</li>
-	<li>No other special characters are allowed.
-  </li>
-</ul>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -1031,35 +1031,31 @@ nav-title: Managing API Implementations
 
 
 <h3 id="related_topics">Related Topics</h3>
-<table width="98%" border="0" cellspacing="0" cellpadding="2" class="doctable">
-  <tr>
-    <td width="33%"><ul>
-  <li><a href="apiadmin_getting_started.htm">Getting Started for API Developers</a></li>
-  <li><a href="apiadmin_overview.htm">API Administration: Overview</a></li>
-  <li><a href="api_admin_tutorial.htm">Tutorial (API Provider)</a></li>
-  <li><a href="api_admin_management.htm">API Admin Management</a></li>
-  <li><a href="bus_api_admin_forum.htm">Forum Moderation</a></li>
-  <li><a href="apiadmin_promotion.htm">Promoting an API</a></li>
-    </ul>
-</td>
-    <td width="33%"><ul>
-  <li><a href="apiadmin_api_add.htm">Adding an API</a></li>
-  <li><a href="apiadmin_api_design.htm">Add or Modify an API Using API Designer</a></li>
-  <li><a href="api_admin_testing_tc.htm">API Testing with Test Client</a></li>
-  <li><a href="api_admin_managing_contracts.htm">Managing Contracts for your API</a></li>
-  <li><a href="api_admin_monitoring.htm">Monitoring API Analytics</a></li>
-    </ul></td>
-    <td width="33%"><ul>
-  <li><a href="api_admin_api_publishing.htm">API Visibility, Licenses, and Settings</a></li>
-  <li><a href="api_admin_oauth_support.htm">OAuth Support</a></li>
-  <li><a href="api_admin_content_guidelines.htm">Content Development Guidelines</a></li>
-  <li><a href="api_admin_documentation_maintenance.htm">API Documentation Maintenance</a></li>
-  <li><a href="api_admin_documentation_tagging.htm">API Documentation Tagging</a></li>
-  <li><a href="api_admin_legal_agreement_maintenance.htm">Legal Agreement Maintenance</a></li>
-  <li><a href="basics_glossary.htm">Glossary of Terms</a></li>
-    </ul>
-</td>
-  </tr>
-</table>
-
-
+<div class="relatedlinks">
+<ul>
+	<li><a href="apiadmin_getting_started.htm">Getting Started for API Developers</a></li>
+	<li><a href="apiadmin_overview.htm">API Administration: Overview</a></li>
+	<li><a href="api_admin_tutorial.htm">Tutorial (API Provider)</a></li>
+	<li><a href="api_admin_management.htm">API Admin Management</a></li>
+	<li><a href="bus_api_admin_forum.htm">Forum Moderation</a></li>
+	<li><a href="apiadmin_promotion.htm">Promoting an API</a></li>
+</ul>
+<ul>
+	<li><a href="apiadmin_api_add.htm">Adding an API</a></li>
+	<li><a href="apiadmin_api_design.htm">Add or Modify an API Using API Designer</a></li>
+<!--  <li><a href="apiadmin_implementations.htm">Manage API Implementations</a></li>-->
+	<li><a href="api_admin_testing_tc.htm">API Testing with Test Client</a></li>
+	<li><a href="api_admin_managing_contracts.htm">Managing Contracts for your API</a></li>
+	<li><a href="api_admin_monitoring.htm">Monitoring API Analytics</a></li>
+</ul>
+<ul>
+	<li><a href="api_admin_api_publishing.htm">API Visibility, Licenses, and Settings</a></li>
+	<li><a href="apiadmin_api_phys_svc.htm">Working with Physical Services</a></li>
+	<li><a href="api_admin_oauth_support.htm">OAuth Support</a></li>
+	<li><a href="api_admin_content_guidelines.htm">Content Development Guidelines</a></li>
+	<li><a href="api_admin_documentation_maintenance.htm">API Documentation Maintenance</a></li>
+	<li><a href="api_admin_documentation_tagging.htm">API Documentation Tagging</a></li>
+	<li><a href="api_admin_legal_agreement_maintenance.htm">Legal Agreement Maintenance</a></li>
+	<li><a href="basics_glossary.htm">Glossary of Terms</a></li>
+</ul>
+</div>
