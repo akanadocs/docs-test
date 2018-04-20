@@ -40,7 +40,9 @@ nav-title: JOSE Unencoded Payload Security
 
 
 <h3 id="introduction">Introduction</h3>
-<p>The JOSE Unencoded Payload Security Policy is an out-of-the-box operational policy that is part of the Policy Manager default installation. You can attach this policy to RESTful and Messaging services to secure any message content; it signs and/or encrypts the message content. Configuration options are flexible so that you can add more or less security as needed. You can also configure the Initiator Subject category that the authenticated identity will be used as.</p>
+<p>The JOSE Unencoded Payload Security Policy is an out-of-the-box operational policy that is part of the Policy Manager default installation. </p>
+<p>This policy supports scenarios where the entire message, including header, payload, and signature, is signed and/or encrypted, and also supports a detached, unencoded payload scenario where the payload is sent as the body of the message and only the header and signature are signed and/or encrypted.</p>
+<p>You can attach this policy to RESTful and Messaging services to secure any message content. Configuration options are flexible so that you can add more or less security as needed.</p>
 <p>This policy conforms to the following standards:</p>
 <ul>
 	<li>JSON Web Signature (JWS) Unencoded Payload Option (<a href="https://tools.ietf.org/html/rfc7797">https://tools.ietf.org/html/rfc7797</a>)</li>
@@ -51,16 +53,14 @@ nav-title: JOSE Unencoded Payload Security
 
 
 <h3 id="jose_differences">Determining which JOSE policy to use</h3>
-<p>{<span class="apidoc_red">BH/MM: Any other reasons to use this policy -- or, to still use the old one?</span>}</p>
-<p>The platform supports two JOSE policies:</p>
+<p>The platform includes two JOSE policies:</p>
 <ul>
   <li><a href="policy_op_jose_security.htm"><strong>JOSE Security Policy</strong></a>: A policy that supports the earlier JSON Web Signature standard, <a href="https://tools.ietf.org/html/rfc7515" title="JWS standard" target="_blank">https://tools.ietf.org/html/rfc7515</a>.</li>
-  <li><strong>JOSE Unencoded Payload Security Policy</strong>: This policy. Conforms to the later JWS specification as listed above.</li>
+  <li><strong>JOSE Unencoded Payload Security Policy</strong>: This policy. Supports the earlier standard and also conforms to the later specification, <a href="https://tools.ietf.org/html/rfc7797">RFC 7797</a>.</li>
 </ul>
-<p>The earlier JSON Web Signature standard, RFC 7515, which the platform's <a href="policy_op_jose_security.htm">JOSE Security Policy</a> supports, represents the payload of a JWS as a base64url-encoded value, and uses that value in the JWS signature computation. It was found that in some cases, particularly where the payload was large and/or detached, base64url encoding on the payload resulted in a very large message, and made it impractical or inefficient to adopt the standard.</p>
-<p>The newer JSON Web Signature (JWS) Unencoded Payload Option standard, RFC 7797, states that JSON Web Tokens (JWTs) must <strong>not</strong> use the unencoded payload option; the newer standard supports the unencoded payload option.</p>
+<p>The earlier JSON Web Signature standard, RFC 7515, which the platform's <a href="policy_op_jose_security.htm">JOSE Security Policy</a> supports, represents the payload of a JWS as a base64url-encoded value, and uses that value in the JWS signature computation. It was found that in some cases, particularly where the payload was large, base64url encoding on the payload resulted in a very large message, and made it impractical or inefficient to adopt the standard.</p>
 <p>In general, if you're creating a new policy, it's best to choose this policy rather than the legacy JOSE Security policy. If you're still using the legacy policy, we recommend that you migrate to the new policy as soon as possible.</p>
-<p>{<span class="apidoc_red">In a context where it might be important to apply base64url encoding to the payload, use the JOSE Security Policy?</span>}</p>
+<p>At this time, the JOSE Unencoded Payload Security Policy supports the Role of Provider. Support of the Consumer role will be in the future.</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -88,7 +88,7 @@ nav-title: JOSE Unencoded Payload Security
   <li>Go to <strong>Workbench</strong> &gt; <strong>Browse</strong> &gt; <strong>Organization</strong> and select the <strong>Policies</strong> &gt; <strong>Operational Policies</strong> folder. The <strong>Policies Summary</strong> is displayed.</li>
   <li>Find the policy on the list and double-click to go to the <strong>Details</strong> page for the policy.</li>
   <li>In the second panel, click <strong>Modify</strong> to access the <strong>Specify JOSE Unencoded Payload Security Policy Options</strong> page.</li>
-  <li>Specify values for <strong>Protection Scope</strong>, <strong>Serialization</strong>, and <strong>Role</strong>, and optionally choose <strong>Unencoded/Detached Payload</strong>. For details on field values, see <a href="#jose_unenc_options_p1">Configuring JOSE Unencoded Payload Security Policy options</a> below. When you're done, click <strong>Next</strong>.</li>
+  <li>Specify values for <strong>Protection Scope</strong>, <strong>Serialization</strong>, and <strong>Role</strong>, and optionally choose <strong>Unencoded Detached Payload</strong>. For details on field values, see <a href="#jose_unenc_options_p1">Configuring JOSE Unencoded Payload Security Policy options</a> below. When you're done, click <strong>Next</strong>.</li>
   <li>If applicable: In the <strong>Specify JOSE Unencoded Payload Security Policy IN Message Options</strong> page, specify values as needed. For details on field values, see <a href="#jose_unenc_options_in">Configuring JOSE Unencoded Payload Security Policy IN Message options</a> below. When you're done, click <strong>Next</strong>.</li>
   <li>If applicable: In the <strong>Specify JOSE Unencoded Payload Security Policy OUT Message Options</strong> page, specify values as needed. For details on field values, see <a href="#jose_unenc_options_out">Configuring JOSE Unencoded Payload Security Policy OUT Message options</a> below. When you're done, click <strong>Next</strong>.</li>
   <li>In the <strong>Specify JOSE Unencoded Payload Security Audit Options</strong> page, specify values as needed. For details on field values, see <a href="#jose_unenc_options_audit">Configuring JOSE Unencoded Payload Security Audit Options</a> below.</li>
@@ -120,11 +120,12 @@ nav-title: JOSE Unencoded Payload Security
 
 
 <dt>Role</dt>
-<dd>The role of the client in the Transport Layer Security (TLS) authentication negotiation. Only the Provider role is applicable to this policy.</dd>
+<dd>Only the Provider role is supported at this time.</dd>
 
 
-<dt>Unencoded/Detached Payload</dt>
-<dd>Check this box if the payload is unencoded <span class="apidoc_red">and/or</span> detached {<span class="apidoc_red">BH is it correct to say and/or? Or, if it's detached, is it always unencoded?</span>}. You'll also need to specify the Header Parameter Name.</dd>
+<dt>Unencoded Detached Payload</dt>
+<dd>Check this box if you want to exclude the payload from the signed and/or encrypted portion of the message. Instead, the payload is sent in the message body, unencoded. You'll also need to specify the <strong>Header Parameter Name</strong>&#8212;the name of the header where the signed and/or encrypted JOSE header and signature content is stored.</dd>
+<dd> If you want the signing/encryption to apply to all parts of the message, including the payload, leave this box cleared (the default).</dd>
 </dl>
 <p>Click <strong>Next</strong> to go to the next page, which is determined by your choice in the <strong>Protection Scope</strong> field:</p>
 <ul>
@@ -141,9 +142,9 @@ nav-title: JOSE Unencoded Payload Security
 <p>There are two main categories of settings: Sign Content and Encrypt Content. for each, if you choose to sign and/or encrypt, additional configuration options are available so that you can specify the identity of the signed content for IN messages, as shown below.</p>
 <dl>
 <dt>Signed content, Subject Category</dt>
-<dd>If you specify signed content for IN messages, define the Subject Category. For In messages, the options are:
+<dd>If you specify signed content for IN messages, define the Subject Category, which is the identity of the signed content of the IN message exchange. For In messages, the options are:
   <ul>
-    <li><strong>Consumer</strong>: If you choose Consumer, you can choose to use the JWKS URL to read the configuration settings.</li>
+    <li><strong>Consumer</strong>: If you choose Consumer, you can provide the JWKS URL to read the configuration settings.</li>
     <li><strong>End User</strong></li>
     <li><strong>User Defined</strong>: If you choose User Defined, specify a custom category name.</li>
   </ul>
@@ -151,7 +152,7 @@ nav-title: JOSE Unencoded Payload Security
   
   
   <dt>Encrypted content, Subject Category</dt>
-  <dd>If you specify encrypted content for IN messages, define the Subject Category, which is the identity of the encrypted content of the IN message exchange. Choices:
+  <dd>If you specify encrypted content for IN messages, define the Subject Category. Choices:
     <ul>
       <li><strong>Service</strong></li>
       <li><strong>User Defined</strong>: If you choose User Defined, specify a custom category name.</li>
@@ -182,7 +183,7 @@ nav-title: JOSE Unencoded Payload Security
 
 
 <dt>Embed Key</dt>
-<dd>Check the box if you want to embed the key. {<span class="apidoc_red">BH: embed public key? In what exactly?</span>}</dd>
+<dd>Check the box if you want to embed the public key in the signed content, so that the client can use the key to verify the signature.</dd>
 
 
 <dt>Subject Category</dt>
@@ -210,11 +211,12 @@ nav-title: JOSE Unencoded Payload Security
     </ul>
   </dd>
   <dt>Custom Headers</dt>
-  <dd>If you want to encrypt one or more custom headers, check the box and specify the header name and value. You can use XPath expressions in the Value column. You can also add or delete existing custom headers as needed.</dd>
+  <dd>If you want to encrypt one or more custom headers, check the box and specify the header name and value. You can also add or delete existing custom headers as needed.</dd>
   </dl>
 
 <h5 id="jose_unenc_options_out_private_headers">Private Headers</h5>
-<p>You can specify one or more private headers; check the box and specify the header name and value. You can use XPath expressions in the Value column. You can also add or delete existing custom headers as needed. {<span class="apidoc_red">BH: are these signed or encrypted or both/neither, then? This is a separate section.</span>}</p>
+<p>A private header is any header other than the registered headers defined by the specification; see <a href="https://tools.ietf.org/html/rfc7515#section-4.3">Private Header Parameter Names</a> section of RFC 7515.</p>
+<p>You can specify one or more private headers; check the box and specify the header name and value. You can also add or delete existing custom headers as needed.</p>
 
 
 <h4 id="sig_mac_alg_jose_unenc">Sign Content: supported Signature/MAC Algorithms</h4>
@@ -273,11 +275,11 @@ nav-title: JOSE Unencoded Payload Security
 <p>Choose from the available options controlling the audit data that's captured:</p>
 <dl>
 <dt>Generate Audit Data</dt>
-<dd>Enables the audit feature. By default, this captures all message data, whether success or failure, for all message exchanges.</dd>
+<dd>Enables the audit feature. By default, this captures all message data, whether success or failure, for all message exchanges. </dd>
 <dt>On Error Only</dt>
 <dd>If you choose to generate audit data, you can specify that audit data is captured only when an error occurs on a message exchange.</dd>
 </dl>
-<p>{<span class="apidoc_red">BH one other question. The spec talks about the b64 header parameter. Where is that represented/covered?</span>}</p>
+
 
 
 <h3 id="policy_attach">Attaching the Policy</h3>
