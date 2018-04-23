@@ -145,21 +145,24 @@ nav-title: JOSE Unencoded Payload Security
 <dt>Signed content, Subject Category</dt>
 <dd>If you specify signed content for IN messages, define the Subject Category, the identity whose private key is used to sign the message. For IN messages, the options are:
   <ul>
-    <li><strong>Consumer</strong>: If you choose Consumer, you can provide the JWKS URL to read the configuration settings.</li>
+    <li><strong>Consumer</strong>: If you choose Consumer, you can specify that the configuration settings should be read from the JWKS URL for the identity specified in the KID in the incoming header. The platform reads the KID and gets the JWKS URL from the app's OAuth Client Profile settings. See <a href="#jwks_url_app_oauth_profile">Referencing the JWKS URL from the App OAuth Profile</a> below.</li>
     <li><strong>End User</strong></li>
-    <li><strong>User Defined</strong>: If you choose User Defined, specify a custom category name.</li>
+    <li><strong>User Defined</strong>: If you choose User Defined, specify a custom category name; for example, a platform identity.</li>
   </ul>
 </dd>
   
   
   <dt>Encrypted content, Subject Category</dt>
-  <dd>If you specify encrypted content for IN messages, define the Subject Category. Choices:
+  <dd>If you specify encrypted content for IN messages, define the Subject Category&#8212;the owner of the private key used to encrypt the content, and the corresponding public key will be used to decrypt the incoming message. Choices:
     <ul>
-      <li><strong>Service</strong></li>
-      <li><strong>User Defined</strong>: If you choose User Defined, specify a custom category name.</li>
+      <li><strong>Service</strong>: A service on the platform.</li>
+      <li><strong>User Defined</strong>: If you choose User Defined, specify a custom category name; for example, a platform identity.</li>
     </ul>
   </dd>
 </dl>
+
+<h5 "id=jwks_url_app_oauth_profile">Referencing the JWKS URL from the App OAuth Profile</h5>
+<p>You can set up the JOSE policy to read the applicable JWKS URL for the consumer, from the app's OAuth profile, if it's been set up. Currently, the developer portal user interface doesn't support adding this value to the app profile. Instead, you can add it using the platform API; see <span class="apidoc_code"><a href="http://docs.akana.com/cm/api/apps/m_apps_saveAppOAuthClientProperties.htm">PUT /api/apps/versions/{AppVersionID}/oauthclient</a></span> (CM API doc).</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -190,13 +193,14 @@ nav-title: JOSE Unencoded Payload Security
 <dd>If you specify signed content for IN messages, define the Subject Category, the identity whose private key is used to sign the message. For Out or Fault messages, the options are:
   <ul>
     <li><strong>Service</strong></li>
-    <li><strong>User Defined</strong>: If you choose User Defined, specify a custom category name.</li>
+    <li><strong>User Defined</strong>: If you choose User Defined, specify a custom category name; for example, a platform identity.</li>
   </ul>
 </dd>
 
 
 </dl>
 <h5 id="jose_unenc_options_out_enc_content">Encrypt Content options for OUT or FAULT messages</h5>
+<p>For OUT messages, the option to reference the JWKS URL is not included, since there might be multiple KID (Key ID) header parameters specified at the JWKS URL. Instead, you can specify the KID to use, in the Custom Headers section.</p>
 <dl>
   <dt>Encryption Algorithm</dt>
   <dd>Choose the algorithm to be used for encrypting the OUT messages. For a list of valid options, see <a href="#encryption_alg_jose_unenc">Encrypt Content: supported Encryption Algorithms</a> below.</dd>
@@ -207,12 +211,12 @@ nav-title: JOSE Unencoded Payload Security
     <ul>
       <li><strong>Consumer</strong>: If you choose Consumer, you can choose to use the JWKS URL to read the configuration settings.</li>
       <li><strong>End User</strong></li>
-      <li><strong>User Defined</strong>: If you choose User Defined, specify a custom category name.</li>
+      <li><strong>User Defined</strong>: If you choose User Defined, specify a custom category name; for example, a platform identity.</li>
     </ul>
   </dd>
   <dt>Custom Headers</dt>
   <dd>If a custom header is used for the encrypted content, check the box and specify the header name and value. You can also add or delete existing custom headers as needed.</dd>
-  </dl>
+</dl>
 
 <h5 id="jose_unenc_options_out_private_headers">Private Headers</h5>
 <p>A private header is any header other than the registered headers defined by the specification; see <a href="https://tools.ietf.org/html/rfc7515#section-4.3">Private Header Parameter Names</a> section of RFC 7515.</p>
