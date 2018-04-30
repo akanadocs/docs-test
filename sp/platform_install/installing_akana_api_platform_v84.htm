@@ -251,6 +251,7 @@ nav-title: Installing Akana API Platform 8.4x
     <ul>
       <li>You'll need to have your database driver in place, in the <strong>{installation}\instances\{containername}\deploy</strong> folder, before running this wizard. See <a href="#database_drivers">Database drivers</a>.</li>
       <li><strong>Oracle</strong>: If you're using a new Oracle database, see <a href="#notes_database_oracle">Database notes: Oracle</a> for additional Oracle-specific information about DBA permissions and password configuration.</li>
+      <li><strong>Microsoft SQL Server</strong>: For additional notes, refer to <a href="#notes_database_ms_sql_server">Database notes: Microsoft SQL Server</a> below.</li>
       <li><strong>MySQL</strong>: If your installation will include Lifecycle Manager, you'll need to add the required grants to the DB user before continuing to Step 4. For details, see <a href="#notes_database_mysql_rm">Database notes: MySQL with Lifecycle Repository</a>.</li>
     </ul>
   <p>For more information on this wizard, see <a href="#install_tasks_add_database">Installation wizard: Add Database</a> below.</p>
@@ -528,7 +529,7 @@ nav-title: Installing Akana API Platform 8.4x
   <li>Log in to the Akana Administration Console for the CM container.</li>
   <li>Click the <strong>Configuration</strong> tab.</li>
   <li>On the left, under <strong>Configuration Categories</strong>, find the <strong>com.soa.scheduler.quartz</strong> category.</li>
-  <li>On the right, find the<strong>org.quartz.jobStore.acquireTriggersWithinLock</strong> property, and set it to <strong>True</strong>.</li>
+  <li>On the right, find the <strong>org.quartz.jobStore.acquireTriggersWithinLock</strong> property, and set it to <strong>True</strong>.</li>
   <li>Save your changes.</li>
 </ol>
 
@@ -541,6 +542,7 @@ ALTER DATABASE {db.instance.name}
 
 
 <h4 id="notes_database_mysql_settings">MySQL: database settings for the API Platform</h4>
+<!--<p><strong>MySQL 5.6:</strong></p>-->
 <p>If you're using MySQL 5.6, the settings below are required for the API Platform. You'll need to configure these settings in the <strong>my.ini</strong> file <strong>before</strong> loading the database schema in MySQL.</p>
 <p>Specific properties are listed below, with references to the applicable MySQL documentation:</p>
 <ul>
@@ -552,6 +554,14 @@ ALTER DATABASE {db.instance.name}
   <li>max_allowed_packet=1073741824; (<a href="http://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html#sysvar_max_allowed_packet" title="http://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html#sysvar_max_allowed_packet" target="_blank">http://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html#sysvar_max_allowed_packet</a>)</li>
 </ul>
 <p>For more information, refer to <a href="install_mysql_dbsettings.htm">MySQL Database Property Settings</a>.</p>
+<!--<p><strong>MySQL 5.7:</strong></p>
+<p>If you're using MySQL 5.7, there is one additional flag required in the <strong>my.ini</strong> file:</p>
+<ul>
+  <li>optimizer_switch='derived_merge=off'</li>
+</ul>
+<p>Also, the <strong>sql-mode</strong> value should not contain NO_ZERO_DATE attribute. Below is an example for <strong>sql-mode</strong>:</p>
+<pre>sql-mode="STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION</pre> {commented out 3/5 per ATMO-23415-->
+<!--<p>Above info is from EB 9/7/16</p>-->
 
 
 <h5 id="notes_database_mysql_rm">Database notes: MySQL with Lifecycle Repository</h5>
@@ -1100,25 +1110,19 @@ default.port=9945
 
 
 <h3 id="related_topics">Related Topics</h3>
-<table width="1012" border="0" cellspacing="0" cellpadding="2" class="doctable">
-  <tr>
-    <td width="300" valign="top"><p><strong>All Versions:</strong></p>
-      <ul>
-        <li><a href="install_cm_jython_script.htm">Installation Jython Script</a></li>
-        <li><a href="implementation_planning.htm">Planning Your Implementation</a></li>
-        <li><a href="install_mysql_dbsettings.htm">MySQL Database Property Settings</a></li>
-      </ul>
-    </td>
-    <td width="300" valign="top"><p><strong>Version 8.2:</strong></p>
-      <ul>
-        <li><a href="installing_akana_api_platform_v82.htm">Installing the Akana API Platform 8.2x</a></li>
-      </ul>
-    </td>
-    <td width="300" valign="top"><p><strong>Version 8.0:</strong></p>
-      <ul>
-        <li><a href="installing_akana_platform.htm">Installing Akana Platform 8.x</a></li>
-        <li><a href="installing_policy_manager_v80.htm">Installing Policy Manager 8.x</a></li>
-      </ul>
-    </td>
-  </tr>
-</table>
+<div class="relatedlinks">
+<ul>
+	<li><a href="install_cm_jython_script.htm">Installation Jython Script</a></li>
+	<li><a href="implementation_planning.htm">Planning Your Implementation</a></li>
+	<li><a href="install_mysql_dbsettings.htm">MySQL Database Property Settings</a></li>
+</ul>
+
+<ul>
+	<li><a href="installing_akana_api_platform_v82.htm">Installing the Akana API Platform 8.2x</a></li>
+</ul>
+
+<ul>
+	<li><a href="installing_akana_platform.htm">Installing Akana Platform 8.x</a></li>
+	<li><a href="installing_policy_manager_v80.htm">Installing Policy Manager 8.x</a></li>
+</ul>
+</div>
