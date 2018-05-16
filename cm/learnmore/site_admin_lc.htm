@@ -1,0 +1,273 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Akana API Platform Help</title>
+<link href="../../style/reset.css" rel="stylesheet" type="text/css" />
+<link href="../../style/base.css" rel="stylesheet" type="text/css" />
+<link href="../../style/document.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="documentation">
+<!-----
+layout: page
+title: Llifecycle Coordinator | Site Admin | Akana API Platform Help
+description: Learn how to set up, configure, and manage activities relating to the Lifecycle Coordinator feature.
+product: cm
+category: learn
+sub-nav-class: Site Administration
+weight: 3214
+type: page
+nav-title: Lifecycle Coordinator
+----->
+<h2 id="top">Managing Lifecycle Coordinator</h2>
+<p>Learn how to set up, configure, and manage activities relating to the Lifecycle Coordinator feature.</p>
+<h5 class="stamp">API Platform Version: 2018.0.0 and later</h5>
+
+<div class = "divider1"></div>
+
+<h3 style="color: gray;">Table of Contents</h3>
+<ol class="table_of_contents">
+	<li><a href="#lc_overview">What is Lifecycle Coordinator?</a></li>
+	<li><a href="#lc_deployment_architecture">What options are available for the deployment architecture of my Lifecycle Coordinator topology</a>?</li>
+	<li><a href="#lc_feature_req">What features do I install and configure to use Lifecycle Coordinator?</a></li>
+	<li><a href="#lc_setup_role">Who can set up the Lifecycle Coordinator user interface (UI)?</a></li>
+	<li><a href="#lc_user_role">Who can use the Lifecycle Coordinator UI?</a></li>
+	<li><a href="#lc_setup_how">How do I set up Lifecycle Coordinator in the developer portal?</a></li>
+	<li><a href="#lc_ui_promotion_requests_page">What activities can I perform on the Promotion Requests page?</a></li>
+	<li><a href="#lc_ui_promotion_requests_page_filter">How do I filter the list of promotion requests?</a></li>
+	<li><a href="#lc_ui_promotion_request_details">How do I view promotion request details?</a></li>
+	<li><a href="#promotion_request_approve">What happens when I approve a promotion request?</a></li>
+	<li><a href="#promotion_request_reject">What happens when I reject a promotion request?</a></li>
+	<li><a href="#lc_ui_admin_page">What activities can I perform on the Lifecycle Coordination Admin page?</a></li>
+	<li><a href="#xxx">xxx</a></li>
+	<li><a href="#xxx">xxx</a></li>
+</ol>
+<div class = "divider1"></div>
+
+
+
+<h3 id="lc_overview">What is Lifecycle Coordinator?</h3>
+<p>Lifecycle Coordinator is a set of functions, with an associated user interface, that allows you to manage assets on the developer portal, such as apps and APIs, in a hierarchy of separate tenants, to manage the development lifecycle.</p>
+<p>For example, let's say your team designs an API. The API is in the development environment. When it's ready, you want to move it to the staging environment where it will be tested. Perhaps it fails testing and some changes are made, and an updated version needs to be tested. Then, when testing is complete, you want to move it to a production environment.</p>
+<p>In the context of Lifecycle Coordinator, this hierarchy of different development environments is represented in a separate platform tenant. The hierarchy of environments is defined in Lifecycle Manager and ported to Community Manager. The separate environments are defined as separate Community Manager tenants. Then, as part of Lifecycle Coordinator setup, the hierarchy is defined within the context of the first tenant of the hierarchy.</p>
+<p>Once setup is complete, authorized users can promote assets between environments.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="lc_deployment_architecture">What options are available for the deployment architecture of my Lifecycle Coordinator topology?</h3>
+<p>The deployment architecture is flexible. Tenants can be on the same machine or on different machines. For example, in a scenario where you have a topology of three tenants:</p>
+<ul>
+	<li>On one container you could create Tenant 1, Tenant 2, and Tenant 3.</li>
+	<li>You can have three different containers on three different machines, each with one tenant.</li>
+	<li>You can have a hybrid structure where two or more tenants are on one machine, and another&#8212;for example, Production&#8212;can be on a different machine.</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="lc_feature_req">What features do I install and configure to use Lifecycle Coordinator?</h3>
+<p>To use Lifecycle Coordinator, you'll need to have:</p>
+<ul>
+	<li>A working instance of Lifecycle Manager (LM). The promotion hierarchy is defined in Lifecycle Manager.</li>
+	<li>An implementation of Community Manager, with at least two <span class="apidoc_red">environments</span>; each is a separate platform tenant. You'll promote assets (apps and APIs) between the tenants. A common scenario is to have a promotion hierarchy of three tenants&#8212;Development, Staging, and Production.</li>
+</ul>
+<p>Then, you can set up Lifecycle Coordinator in the first tenant of your hierarchy. From that point, authorized users in each tenant can promote assets (apps and APIs) to the next environment. The authorized Lifecycle Coordinator user can manage promotion requests within the Lifecycle Coordinator user interface.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="lc_setup_role">Who can set up the Lifecycle Coordinator user interface (UI)?</h3>
+<p>The Site Admin sets up the Lifecycle Coordinator user interface.</p>
+<p>LC must be set up within the developer portal of the first tenant in the hierarchy.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="lc_user_role">Who can use the Lifecycle Coordinator UI?</h3>
+<p>There are two categories of user defined for the Lifecycle Coordinator UI:</p>
+<ul>
+	<li><strong>LC User</strong>: Sees all requests for the promotion hierarchy, and can approve or reject promotion requests.</li>
+	<li><strong>LC Admin User</strong>: Cannot approve or reject promotion requests, but can cancel requests. The LC Admin user sees a separate page, Admin, which isn't available to the LC User. See <a href="#lc_ui_admin_page">What activities can I perform on the Lifecycle Coordination Admin page?</a></li>
+</ul>
+<p>The same user can have both roles.</p>
+<p>These roles are assigned in Policy Manager: Workbench &gt; Security. Define the two roles, LC Administrator role and LC User role, and then assign users to the roles. For instructions, see <a href="http://docs.akana.com/sp/upgrade/upgrading_akana_api_platform_82_84.htm#s03_06_01">To grant Admin permission</a> (upgrade documentation).</p>
+<p>{<span class="apidoc_red">Per JJ, TG might be changing something so that the roles are created automatically in PM for the LC piece. But as of 5/1 when the demo was done, the roles needed to be created manually</span>}</p>
+<p>{<span class="apidoc_red">CM UI Security page was displaying the new LM roles but was saying there were no users assigned to the roles, when there were. So, the CM UI wasn't reading the roles appropriately. As of 5/1. JJ said maybe because they were added at the registry level not at the organization level. But if so, they shouldn't show up at all so it's still not quite right. JJ said probably could get more clarification from Tim.</span>}</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="lc_setup_how">How do I set up Lifecycle Coordinator in the developer portal?</h3>
+<p>The Site Admin sets up the Lifecycle Coordinator user interface, within the developer portal user interface for the first tenant in the topology hierarchy.</p>
+<p>{<span class="apidoc_red">LCC isn't on the drop-down 5/15 in trunk. Under what circumstances, exactly, does it appear?</span>}</p>
+
+<h5>To set up Lifecycle Coordinator</h5>
+<ol>
+	<li>Log in as the Site Admin, in the first tenant of the topology, and <a href="site_admin_overview.htm#admin_menu_siteadmin">go to the Admin section</a>.</li>
+	<li>Go to <strong>Site</strong>.</li>
+	<li>At the bottom, in the Themes section, click <strong>Add Theme</strong>.</li>
+	<li>In the <strong>Theme</strong> field, choose <strong>lcc</strong>, as shown below.
+  <p><img src="assets/settings_site_theme_edit.jpg"  alt="Adding the LC theme" /></p></li>
+	<li>Specify additional values for the Lifecycle Coordinator user interface (for help with field values, see <a href="site_admin_site.htm#settings_theme_configure">How do I configure values for a theme?</a>):
+<ul>
+    	<li>One or more virtual hosts or vanity hostnames for the LC UI.</li>
+    	<li>The full console address for the theme, including trailing backslash.</li>
+    	<li>The site title.</li>
+    	<li>The site meta description.</li>
+    </ul>
+  </li>
+	<li>Click <strong>Finish</strong>.</li>
+	<li>On the Site Settings page, click <strong>Save</strong> to confirm.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="lc_ui_promotion_requests_page">What activities can I perform on the Promotion Requests page?</h3>
+<p>On the Promotion Requests page, the xxx user can xxx. {<span class="apidoc_red">An Admin has additional privileges.</span>} You can:</p>
+<ul>
+	<li>Filter the view of promotion requests: see <a href="#xxx">xxx</a> below.</li>
+	<li>Approve a promotion request: click the <strong>Approve</strong> button.</li>
+	<li>Reject a promotion request: click the <strong>Reject</strong> button.</li>
+	<li>View request details: click the request name (a link). See <a href="#lc_ui_promotion_request_details">How do I view promotion request details?</a> below.</li>
+</ul>
+<p>To get to the Promotion Requests page, log in to the LC UI {<span class="apidoc_red">and then? Is there navigation?</span>}</p>
+<p><img src="assets/lc_ui_requests_page.jpg" alt="The LC UI Promotion Requests page" /></p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+
+
+
+
+
+<h3 id="lc_ui_promotion_requests_page_filter">How do I filter the list of promotion requests?</h3>
+<p>You might have a large number of promotion requests to approve or reject, and might want to prioritize. Or, you might need to find a specific promotion request.</p>
+<p>The <strong>Promotion Requests</strong> page includes a filtering option to help you tailor your view as needed.</p>
+<p><img src="assets/lc_ui_requests_page_dropdown.jpg" alt="Promotion Requests page: filter drop-down list" /></p>
+<p>You can filter by: {<span class="apidoc_red">what is the All Environments? Can you filter by environment also?</span>}</p>
+<ul>
+	<li>All</li>
+	<li>Approved</li>
+	<li>Promotion Pending</li>
+	<li>Promotion Failed</li>
+	<li>Rejected</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h3 id="lc_ui_promotion_request_details">How do I view promotion request details?</h3>
+<p>From the Promotion Requests page, you have a summary view of each request, and can approve or deny a request with one click. However, you might want to view additional information about a promotion request.</p>
+<p>To do this, click the title, which is a link. The details page appears, as shown below.</p>
+<p><img src="assets/lc_ui_requests_detail.jpg" alt="The LC UI Promotion Request details page" /></p>
+<p>From here, you can review additional information about the request, including history. You can also approve or reject the request from this page.</p>
+<p>To return to the main Promotion Requests page, just click the <strong>Go back to Promotion Requests</strong> link.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="promotion_request_approve">What happens when I approve a promotion request?</h3>
+<p>When you approve a promotion request, the change takes effect immediately. The asset remains in the original environment, but is also promoted to the next environment in the hierarchy. You might need to refresh the browser to see the change.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="promotion_request_reject">What happens when I reject a promotion request?</h3>
+<p>When you reject a promotion request, the promotion status of the asset is displayed as <strong>Rejected</strong>. There are no further workflow actions with regard to that promotion request. such as Resubmit; that's the end of it.</p>
+<p>The user who made the request, or another user, can initiate a new promotion request for the same asset at any time. At that point, the promotion status of the asset changes to <strong>Promotion Pending</strong>.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="lc_ui_admin_page">What activities can I perform on the Lifecycle Coordination Admin page?</h3>
+<p>If you're a Lifecycle Coordinator Admin, you have an additional page available to you. On the <strong>Admin</strong> page you have the following additional capabilities:</p>
+<ul>
+  <li>Cancel requests.</li>
+  <li>To get to the Lifecycle Coordinator <strong>Admin</strong> page, log in to the LC UI {<span class="apidoc_red">and then? Is there navigation?</span>}</li>
+</ul>
+<p><img src="assets/lc_ui_admin_page.jpg" alt="The LC UI Admin page" /></p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="xxx">xxx</h3>
+<p>xxx</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="xxxxxx">xxx</h3>
+<p>xxx</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="xxxxx">Questions/info</h3>
+<p>{<span class="apidoc_red">from meeting there is something about the LC Admin screen, making something as False. Jasper used Postman to run an API call (14:43 on recording 5/1/18). Arjun said maybe UI will be added to control those settings</span>}.</p>
+<ul>
+	<li>Do I need to have separate doc for the Site Admin, setting up the LC UI, and the two LC users? If so -- do the two LC user types fit in with any of the defined platform activity groupings of Site Admin, Business Admin, API Admin, App Developer, general user?</li>
+	<li>How is it going to work in terms of installation? AB doesn't know if it's a separate purchase, that's up to licensing. But, they need to install a feature. The way you install a new theme, it's a feature. Now, there is a new LCC feature. Plug-in probably. Same as the other themes.</li>
+	<li>In the future there will be more functionality, but now it's just approve, reject, and cancel.</li>
+	<li>Somewhere I can run it, or get screen caps... AB said MM said he'd check in something by EOD. Create a feature bundle and check it in. The way they do it now -- extract the jar.</li>
+	<li>Key person to determine what they feel is needed in terms of doc... most direction has come from BC.</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<div class = "divider1"></div>
+
+
+
+<h3 id="related_topics">Related Topics</h3>
+<div class="relatedlinks">
+<ul>
+	<li><a href="site_admin_.htm">Site Admin Summary Page</a></li>
+	<li><a href="site_admin_overview.htm">Site Admin Responsibilities</a></li>
+	<li><a href="site_admin_agreements.htm">Platform Legal Agreement</a></li>
+	<li><a href="site_admin_config.htm">Configuration</a></li>
+	<li><a href="site_admin_settings.htm">Settings</a></li>
+</ul>
+<ul>
+	<li><a href="site_admin_site.htm">Site Settings</a></li>
+<!--	<li><a href="site_admin_site_admins.htm">Managing Site Admins</a></li>-->
+	<li><a href="site_admin_users.htm">Managing User Accounts</a></li>
+	<li><a href="site_admin_workflows.htm">Workflows</a></li>
+</ul>
+<ul>
+
+	<li><a href="site_admin_tc.htm">Test Client</a></li>
+	<li><a href="site_admin_es.htm">Elasticsearch Configuration</a></li>
+	<li><a href="site_admin_content_guidelines_sd.htm">Content Development Guidelines for Simple Dev Theme</a></li>
+	<li><a href="basics_glossary.htm">Glossary of Terms</a></li>
+</ul>
+</div>
+
+
+
+
+</div>
+</body>
+</html>
