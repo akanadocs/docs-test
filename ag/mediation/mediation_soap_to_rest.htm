@@ -42,13 +42,14 @@ nav-title: SOAP to REST Mediation Use Case
 
 <h3 id="introduction">Introduction</h3>
 <p>In the developer portal, you can set up SOAP to REST mediation by using the Process Editor.</p>
-<p>The example below uses a simple SOAP service, the US Government Weather Service WSDL. It walks you through the steps for setting up the API, designing the mediation, and running the test case.</p>
+<p>When you're mediating SOAP to REST, the bindings do most of the work. The main thing you have to do is use the Process Editor to get the content of the  message body put together correctly.</p>
+<p>The example below uses a simple SOAP service. It walks you through the steps for setting up the API, designing the mediation, and running the test case.</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
-<h3 id="uc_soap_to_rest">SOAP to REST mediation: use case</h3>
-<p>This section provides detailed instructions for setting up and running a SOAP to REST mediation use case. This example includes the steps to expose a SOAP physical service as a REST service in the developer portal.</p>
+<h3 id="uc_soap_to_rest">SOAP to REST mediation: Number Conversion Service use case</h3>
+<p>This section provides detailed instructions for setting up and running a SOAP to REST mediation use case using a simple number conversion SOAP service. This example includes the steps to expose a SOAP physical service as a REST service in the developer portal.</p>
 <p>It includes:</p>
 <ol>
 	<li><a href="#uc_soap_to_rest_prereq">Prerequisites</a></li>
@@ -61,7 +62,8 @@ nav-title: SOAP to REST Mediation Use Case
 <h4 id="uc_soap_to_rest_prereq">Prerequisites</h4>
 <p>Before starting the main steps, set up the physical service in Policy Manager:</p>
 <ol>
-	<li>Log in to Policy Manager and register the SOAP physical service. This example uses the Number Conversion SOAP Service: <a href="http://www.dataaccess.com/webservicesserver/numberconversion.wso?WSDL" title="URL for Number Conversion SOAP service" target="_blank">http://www.dataaccess.com/webservicesserver/numberconversion.wso?WSDL</a>.</li>
+	<li>Log in to Policy Manager and register the SOAP physical service (<strong>Organization</strong> &gt; <strong>Services</strong> &gt; <strong>Create Physical Service</strong> &gt; put in the Service Description Document URL. For <strong>Service Management Options</strong>, choose <strong>Do not manage at this time</strong>).
+	  <p> This example uses the Number Conversion SOAP Service: <a href="http://www.dataaccess.com/webservicesserver/numberconversion.wso?WSDL" title="URL for Number Conversion SOAP service" target="_blank">http://www.dataaccess.com/webservicesserver/numberconversion.wso?WSDL</a>.</p></li>
 </ol>
 
 
@@ -70,9 +72,8 @@ nav-title: SOAP to REST Mediation Use Case
 <h5>To set up the SOAP physical service in the developer portal</h5>
 <ol>
 	<li>Log in to the API Management Portal.</li>
-	<li>Click the <strong>Plus</strong> icon (Default Theme) to add a new API, as shown below.
-<p><img src="images/uc_soap_to_rest_01.jpg" alt="Adding a new API" /></p></li>
-	<li>Choose <strong>Add a new API</strong> and click <strong>Add</strong>, as shown below.
+	<li>Click the <strong>Plus</strong> icon to add a new API.</li>
+	<li>If you see the Add API page shown below, choose <strong>Add a new API</strong> and click <strong>Add</strong>.
 		<p><img src="images/uc_soap_to_rest_02.jpg" alt="Adding a new API" /></p></li>
 	<li>Choose <strong>I want to design my API from scratch (REST only)</strong>. Provide an appropriate name to the API option, enable Advanced Options and choose <strong>Orchestration</strong>, and then click <strong>Save</strong>.
 		<p><img src="images/uc_soap_to_rest_03.jpg" alt="Choose Orchestration" /></p></li>
@@ -134,22 +135,24 @@ auditLog.debug(numberRequest.getContentAsString());</pre></li>
 	</li>
 	<li>Add an Invoke Activity:
 		<ul>
-			<li>Search for the NumberConversion Service in Service QName.</li>
-			<li>Select the NumberConversion SOAP Physical Service that is registered from Policy Manager as a Prerequisite.</li>
+			<li>In the <strong>Service QName</strong> field, search for the NumberConversion service that you created.</li>
+			<li>In the Service field, select the NumberConversion SOAP Physical Service that is registered from Policy Manager.</li>
 			<li>Select the Interface.</li>
-			<li>Select the right operation and click <strong>Next</strong>.
-	<p><img src="images/uc_soap_to_rest_13.jpg" alt="Invocation Details Editor" /></p></li>
+			<li>In the Operation field, select <strong>NumbertoWords</strong> and click <strong>Next</strong>.
+	      <p><img src="images/uc_soap_to_rest_13.jpg" alt="Invocation Details Editor" /></p></li>
 </ul>
  </li>
-	<li>Select numberRequest from the Single Input Message Variable, and then click <strong>Finish</strong>.
+	<li>In the <strong>Single Input Message Variable</strong> field, select numberRequest, and then click <strong>Finish</strong>.
 		<p><img src="images/uc_soap_to_rest_14.jpg" alt="Input/Output Parameters page" /></p></li>
-	<li>Click <strong>Save</strong> and then, once the page is reloaded, click <strong>Finish</strong> from the Process Editor.
+	<li>In the Process Editor, click the <strong>Save</strong> icon on the left and then click <strong>Finish</strong>.
 		<p><img src="images/uc_soap_to_rest_15.jpg" alt="Saving in the Process Editor" /></p>
+    <p>This sets up the SOAP to REST mediation for the first operation in the service, the Number to Dollar operation.</p>
 	</li>
 </ol>
 
 
 <h4 id="uc_soap_to_rest_03_run">Run the test case</h4>
+<p>Now, you can test the number to dollar operation in Test Client to see the SOAP to REST mediation.</p>
 <ol>
 	<li>Go to Test Client.</li>
 	<li>Choose the correct operation and endpoint, provide a value for the dNum parameter, and click <strong>Invoke</strong>. You should get a successful response, with an HTTP 200 OK and a response message in application/json format, as shown below.
