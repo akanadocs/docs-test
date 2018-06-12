@@ -246,11 +246,11 @@ nav-title: Installing Akana API Platform 8.4x
   <li>Start the configuration step, either by clicking <strong>Configure</strong> at the end of the installation process or by choosing <strong>Installed Features</strong> &gt; <strong>Complete Configuration</strong> as shown above. Configuration steps vary depending on the features you're installing. The tasks below apply to the PM/CM container scenario.</li>
   <li>At the <strong>Manage PKI Keys wizard</strong>, choose key management options and other values and then click <strong>Finish</strong>. Review the summary and then click <strong>Go to Next Task</strong>.
     <p>For more information on this wizard, see <a href="#install_tasks_manage_pki_keys">Installation wizard: Manage PKI Keys</a> below.</p></li>
-  <li>At the <strong>Configure Database Options Wizard</strong>, specify your database and other values. Since this is the first container, select <strong>Create new database</strong>/ For subsequent containers, you'll use the same database, so for a subsequent container you'd select <strong>Use existing database</strong>.
+  <li>At the <strong>Configure Database Options Wizard</strong>, specify your database and other values. Since this is the first container, select <strong>Create new database</strong>/ For subsequent containers, you'll use the same database, so for a subsequent container you'd select <strong>Use existing database</strong>. Be sure to follow any applicable database-specific notes from the list below.
     <p><strong>Notes</strong>: </p>
     <ul>
       <li>You'll need to have your database driver in place, in the <strong>{installation}\instances\{containername}\deploy</strong> folder, before running this wizard. See <a href="#database_drivers">Database drivers</a>.</li>
-      <li><strong>Oracle</strong>: If you're using a new Oracle database, see <a href="#notes_database_oracle">Database notes: Oracle</a> for additional Oracle-specific information about DBA permissions and password configuration.</li>
+      <li><strong>Oracle</strong>: If you're using a new Oracle database, see <a href="#notes_database_oracle">Database notes: Oracle</a> for additional Oracle-specific information about DBA permissions, password configuration, and database table updates.</li>
       <li><strong>Microsoft SQL Server</strong>: For additional notes, refer to <a href="#notes_database_ms_sql_server">Database notes: Microsoft SQL Server</a> below.</li>
       <li><strong>MySQL</strong>: If your installation will include Lifecycle Manager, you'll need to add the required grants to the DB user before continuing to Step 4. For details, see <a href="#notes_database_mysql_rm">Database notes: MySQL with Lifecycle Repository</a>.</li>
     </ul>
@@ -501,19 +501,29 @@ nav-title: Installing Akana API Platform 8.4x
 <h4 id="notes_database_oracle">Database notes: Oracle</h4>
 <p>Please note the following if you're working with an Oracle database:</p>
 <ul>
-  <li><a href="#note_oracle_password">Oracle password</a></li>
-  <li><a href="#note_oracle_12c">Database permissions, Oracle 12c only</a></li>
   <li><a href="#note_oracle_drivers">Database drivers</a></li>
+  <li><a href="#note_oracle_password">Oracle password</a></li>
+  <li><a href="#note_oracle_12c">Database permissions, Oracle 12c <span class="apidoc_red">or later</span></a></li>
+  <li><a href="#note_oracle_12cr2_update_table">Fresh install with Oracle 12c Release 2 only: update APP_OAUTH_PROFILE table</a></li>
 </ul>
+
+<h5 id="note_oracle_drivers">Database drivers</h5>
+<p>For Oracle database drivers, see <a href="#database_drivers">Database drivers</a> below.</p>
 
 <h5 id="note_oracle_password">Oracle password</h5>
 <p>If you're creating a new Oracle database using the <strong>Create New Database</strong> wizard (standard installation procedure), make sure the Oracle database password does not start with a number or special character.</p>
 
-<h5 id="note_oracle_12c">Database permissions, Oracle 12c only</h5>
-<p>When using Oracle 12c to configure a new database, the DBA must GRANT SELECT ON SYS.USER$ TO SYSTEM; (substitute the SYSTEM user for the user specified for the Administrator credentials). This is because Oracle 12c introduced restricted access to SYS.USER$, which the platform uses to query on.</p>
+<h5 id="note_oracle_12c">Database permissions, Oracle 12c or later</h5>
+<p>When using Oracle 12c or later to configure a new database, the DBA must GRANT SELECT ON SYS.USER$ TO SYSTEM; (substitute the SYSTEM user for the user specified for the Administrator credentials). This is because Oracle 12c introduced restricted access to SYS.USER$, which the platform uses to query on.</p>
 
-<h5 id="note_oracle_drivers">Database drivers</h5>
-<p>For Oracle database drivers, see <a href="#database_drivers">Database drivers</a> below.</p>
+<h5 id="note_oracle_12cr2_update_table"><span class="apidoc_red">Fresh install with Oracle 12c Release 2 only: update APP_OAUTH_PROFILE table</span></h5>
+<p>When doing a new install on an Oracle database, after the install you'll need to execute the following SQL statements to update the column <strong>OAUTHCLIENTMETADATA</strong> in the <strong>APP_OAUTH_PROFILE</strong> table:</p>
+<pre>alter table APP_OAUTH_PROFILE add temp clob ;
+update APP_OAUTH_PROFILE set temp=OAUTHCLIENTMETADATA, OAUTHCLIENTMETADATA=null;
+alter table APP_OAUTH_PROFILE drop column OAUTHCLIENTMETADATA;
+alter table APP_OAUTH_PROFILE rename column temp to OAUTHCLIENTMETADATA;</pre>
+<p>Once executed, the column's type should be <strong>clob</strong>. Use this query to verify the change:</p>
+<pre>desc APP_OAUTH_PROFILE;</pre>
 
 
 <h4 id="notes_database_ms_sql_server">Database notes: Microsoft SQL Server</h4>
@@ -610,10 +620,15 @@ ALTER DATABASE {db.instance.name}
   <p><strong>mysql-connector-java-5.1.40-bin.jar</strong></p>
   <p>Downloadable from: <a href="https://mvnrepository.com/artifact/mysql/mysql-connector-java/5.1.40" title="download location for MySQL database driver" target="_blank">https://mvnrepository.com/artifact/mysql/mysql-connector-java/5.1.40</a></p>
   </li>
+  <li><strong><span class="apidoc_red">Oracle 12c Release 2</span></strong>: install this file:
+<p><strong>Ojdbc8.jar</strong></p>
+  <p>Downloadable from: <a href="http://www.oracle.com/technetwork/database/features/jdbc/jdbc-ucp-122-3110062.html" title="download location for Oracle 12c R2 database driver" target="_blank">http://www.oracle.com/technetwork/database/features/jdbc/jdbc-ucp-122-3110062.html</a> (download requires accepting the agreement and logging in).</p>
+  <p>Also, for Oracle 12c and later, see <a href="#note_oracle_12c">note about database permissions needed</a>.</p>
+  </li>
   <li><strong>Oracle 12c</strong>: install this file:
     <p><strong>Ojdbc7.jar</strong></p>
-  <p>Downloadable from: <a href="http://www.oracle.com/technetwork/database/features/jdbc/jdbc-drivers-12c-download-1958347.html" title="download location for Oracle 12c database driver" target="_blank">http://www.oracle.com/technetwork/database/features/jdbc/jdbc-drivers-12c-download-1958347.html</a> (requires accepting the agreement and logging in).</p>
-    <p>Also, for Oracle 12c, see <a href="#note_oracle_12c">note about database permissions needed</a>.</p>
+  <p>Downloadable from: <a href="http://www.oracle.com/technetwork/database/features/jdbc/jdbc-drivers-12c-download-1958347.html" title="download location for Oracle 12c database driver" target="_blank">http://www.oracle.com/technetwork/database/features/jdbc/jdbc-drivers-12c-download-1958347.html</a> (download requires accepting the agreement and logging in).</p>
+    <p>Also, for Oracle 12c and later, see <a href="#note_oracle_12c">note about database permissions needed</a>.</p>
   </li>
   <li><strong>Oracle 11g</strong>: install this file:
     <p><strong>Ojdbc5.jar</strong></p>
