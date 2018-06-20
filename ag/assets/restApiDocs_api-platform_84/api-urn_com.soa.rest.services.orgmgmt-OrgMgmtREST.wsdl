@@ -123,11 +123,11 @@
     <wsdl:part name="policyName" type="xs:string">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="assignIdentityRESTResponseMessage">
-  </wsdl:message>
   <wsdl:message name="addOrganizationRESTRequestMessage">
     <wsdl:part name="parameter0" element="nms1:Organization">
     </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="assignIdentityRESTResponseMessage">
   </wsdl:message>
   <wsdl:message name="deleteOrganizationContactEmailRESTRequestMessage">
     <wsdl:part name="orgKey" type="xs:string">
@@ -294,22 +294,28 @@
       <wsdl:output message="tns:modifyOrganizationContactRESTResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="modifyOrganizationREST">
-      <wsdl:input message="tns:modifyOrganizationRESTRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:modifyOrganizationRESTResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="deleteOrganizationREST">
       <wsdl:input message="tns:deleteOrganizationRESTRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:deleteOrganizationRESTResponseMessage">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="addOrganizationContactEmailREST">
+      <wsdl:input message="tns:addOrganizationContactEmailRESTRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:addOrganizationContactEmailRESTResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getOrganizationREST">
       <wsdl:input message="tns:getOrganizationRESTRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:getOrganizationRESTResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addOrganizationContactREST">
+      <wsdl:input message="tns:addOrganizationContactRESTRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:addOrganizationContactRESTResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="deleteOrganizationContactREST">
@@ -324,22 +330,22 @@
       <wsdl:output message="tns:getOrganizationContactRESTResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="addOrganizationContactREST">
-      <wsdl:input message="tns:addOrganizationContactRESTRequestMessage">
+    <wsdl:operation name="modifyOrganizationREST">
+      <wsdl:input message="tns:modifyOrganizationRESTRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:addOrganizationContactRESTResponseMessage">
+      <wsdl:output message="tns:modifyOrganizationRESTResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addOrganizationREST">
+      <wsdl:input message="tns:addOrganizationRESTRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:addOrganizationRESTResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getOrganizationContactsREST">
       <wsdl:input message="tns:getOrganizationContactsRESTRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:getOrganizationContactsRESTResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="addOrganizationContactEmailREST">
-      <wsdl:input message="tns:addOrganizationContactEmailRESTRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:addOrganizationContactEmailRESTResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="modifyOrganizationContactEmailREST">
@@ -462,12 +468,6 @@
       <wsdl:output message="tns:loadIdentityPKIDataRESTResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="addOrganizationREST">
-      <wsdl:input message="tns:addOrganizationRESTRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:addOrganizationRESTResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="OrgMgmtRESTBinding" type="tns:OrgMgmtRESTPortType">
     <shttp:binding/>
@@ -480,19 +480,20 @@
     <shttp:input name="useType" part="useType" type="path"><wsdl:documentation><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
       </wsdl:input>
     </wsdl:operation>
-    <wsdl:operation name="modifyOrganizationREST">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /organizations/{orgKey}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Modify Organization with given key<p>Request : For brevity not included Org Contact, Policies etc.<BR> PUT /rest/organizations/{orgKey} HTTP/1.1<BR>    {<BR>            "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>            "ParentKey": "uddi:soa.com:registryorganization",<BR>            "Name": "New Organization Modified",<BR>            "Description": "This is a new org Modified",<BR>            "Url": "http://local:80",<BR>            "OrganizationType": "Application"<BR>    }</p><p>Response:<BR>    HTTP/1.1 204 No Content]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Modify Organization with Given Key]]></sdoc:summary></wsdl:documentation>
-    <shttp:operation inputSerialization="application/json,application/xml,text/xml" location="/organizations/{orgKey}" method="PUT"/>
-      <wsdl:input>
-    <shttp:input name="orgKey" part="orgKey" type="path"><wsdl:documentation><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-      </wsdl:input>
-    </wsdl:operation>
     <wsdl:operation name="deleteOrganizationREST">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">DELETE /organizations/{orgKey}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Delete Organization for a given key<p>Request : <BR> DELETE /rest/organizations/{orgKey} HTTP/1.1</p><p>Response:<BR>    HTTP/1.1 204 No Content</p>]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Delete Organization]]></sdoc:summary></wsdl:documentation>
     <shttp:operation location="/organizations/{orgKey}" method="DELETE"/>
       <wsdl:input>
     <shttp:input name="orgKey" part="orgKey" type="path"><wsdl:documentation><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="addOrganizationContactEmailREST">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /organizations/{orgKey}/contacts/{useType}/email</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Add email addresses for a given organizational contact based on org key and use type<p>Request : <BR> POST /rest/organizations/{orgKey}/contacts/{useType}/email HTTP/1.1<BR>    {<BR>          "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>          "ContactUseType": "Official",<BR>          "Email": "a@b.com",<BR>          "UseType": "Personal"<BR>    }</p><p>Response:<BR>    HTTP/1.1 204 No Content</p>]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Add email address to a given organizational contact]]></sdoc:summary></wsdl:documentation>
+    <shttp:operation inputSerialization="application/json,application/xml,text/xml" location="/organizations/{orgKey}/contacts/{useType}/email" method="POST"/>
+      <wsdl:input>
+    <shttp:input name="orgKey" part="orgKey" type="path"><wsdl:documentation><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+    <shttp:input name="useType" part="useType" type="path"><wsdl:documentation><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
       </wsdl:input>
     </wsdl:operation>
     <wsdl:operation name="getOrganizationREST">
@@ -504,6 +505,14 @@
       <wsdl:output>
     <shttp:output name="getOrganizationRESTResponse" part="getOrganizationRESTResponse" type="entity"/>
       </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addOrganizationContactREST">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /organizations/{orgKey}/contacts</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Add a new organizational contact along with given details like phone, email and address etc.<p>Request : <BR> POST /rest/organizations/{orgKey}/contacts/ HTTP/1.1<BR>    {<BR>                            "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>                            "Name": "New Org Adding Contact",<BR>                            "Description": "",<BR>                            "UseType": "Official",<BR>                            "OrganizationContactEmail": [{<BR>                                "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>                                "ContactUseType": "Official",<BR>                                "Email": "x@y.com",<BR>                                "UseType": "Personal"<BR>                            }],<BR>                            "OrganizationContactPhone": [{<BR>                                "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>                                "ContactUseType": "Official",<BR>                                "Phone": "9999999999",<BR>                                "UseType": "Personal"<BR>                            }],<BR>                            "OrganizationContactAddress": [{<BR>                                "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>                                "ContactUseType": "Official",<BR>                                "UseType": "Personal",<BR>                                "Address1": "Address Line 1",<BR>                                "Address2": "Address Line 2",<BR>                                "Address3": "Address Line 3",<BR>                                "Address4": "Address Line 4",<BR>                                "Address5": "Address Line 5"<BR>                            }]<BR>    }</p><p>Response:HTTP/1.1 204 No Content</p>]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Add a new organization contact]]></sdoc:summary></wsdl:documentation>
+    <shttp:operation inputSerialization="application/json,application/xml,text/xml" location="/organizations/{orgKey}/contacts" method="POST"/>
+      <wsdl:input>
+    <shttp:input name="orgKey" part="orgKey" type="path"><wsdl:documentation><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+      </wsdl:input>
     </wsdl:operation>
     <wsdl:operation name="deleteOrganizationContactREST">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">DELETE /organizations/{orgKey}/contacts/{useType}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Delete a given organizational contact based on given org key and contact use type<p>Request :<BR> DELETE /rest/organizations/{orgKey}/contacts/{useType} HTTP/1.1</p><p>Response:<BR>    HTTP/1.1 204 No Content</p>]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Delete organizational contact]]></sdoc:summary></wsdl:documentation>
@@ -524,13 +533,23 @@
     <shttp:output name="getOrganizationContactRESTResponse" part="getOrganizationContactRESTResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="addOrganizationContactREST">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /organizations/{orgKey}/contacts</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Add a new organizational contact along with given details like phone, email and address etc.<p>Request : <BR> POST /rest/organizations/{orgKey}/contacts/ HTTP/1.1<BR>    {<BR>                            "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>                            "Name": "New Org Adding Contact",<BR>                            "Description": "",<BR>                            "UseType": "Official",<BR>                            "OrganizationContactEmail": [{<BR>                                "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>                                "ContactUseType": "Official",<BR>                                "Email": "x@y.com",<BR>                                "UseType": "Personal"<BR>                            }],<BR>                            "OrganizationContactPhone": [{<BR>                                "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>                                "ContactUseType": "Official",<BR>                                "Phone": "9999999999",<BR>                                "UseType": "Personal"<BR>                            }],<BR>                            "OrganizationContactAddress": [{<BR>                                "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>                                "ContactUseType": "Official",<BR>                                "UseType": "Personal",<BR>                                "Address1": "Address Line 1",<BR>                                "Address2": "Address Line 2",<BR>                                "Address3": "Address Line 3",<BR>                                "Address4": "Address Line 4",<BR>                                "Address5": "Address Line 5"<BR>                            }]<BR>    }</p><p>Response:HTTP/1.1 204 No Content</p>]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Add a new organization contact]]></sdoc:summary></wsdl:documentation>
-    <shttp:operation inputSerialization="application/json,application/xml,text/xml" location="/organizations/{orgKey}/contacts" method="POST"/>
+    <wsdl:operation name="modifyOrganizationREST">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /organizations/{orgKey}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Modify Organization with given key<p>Request : For brevity not included Org Contact, Policies etc.<BR> PUT /rest/organizations/{orgKey} HTTP/1.1<BR>    {<BR>            "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>            "ParentKey": "uddi:soa.com:registryorganization",<BR>            "Name": "New Organization Modified",<BR>            "Description": "This is a new org Modified",<BR>            "Url": "http://local:80",<BR>            "OrganizationType": "Application"<BR>    }</p><p>Response:<BR>    HTTP/1.1 204 No Content]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Modify Organization with Given Key]]></sdoc:summary></wsdl:documentation>
+    <shttp:operation inputSerialization="application/json,application/xml,text/xml" location="/organizations/{orgKey}" method="PUT"/>
       <wsdl:input>
     <shttp:input name="orgKey" part="orgKey" type="path"><wsdl:documentation><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
     <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
       </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="addOrganizationREST">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /organizations</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p> Add a new Organization under a given parent.<BR>For brevity, the following Request creates an Organization with minimal parameters.  <BR> Can add Organization Contact, corresponding email, phone and address and also any <BR> Operational/QoS/Compliance policies using this request.</p><p>Request :<BR> POST /rest/organizations HTTP/1.1</p><BR>    {<BR>            "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>            "ParentKey": "uddi:soa.com:registryorganization",<BR>            "Name": "New Organization ",<BR>            "Description": "This is a new org ",<BR>            "Url": "http://local:80",<BR>            "OrganizationType": "Application",<BR>            "OrganizationContact": [{<BR>                            "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>                            "Name": "New Org Adding Contact",<BR>                            "Description": "",<BR>                            "UseType": "Official",<BR>                            "OrganizationContactEmail": [{<BR>                                "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>                                "ContactUseType": "Official",<BR>                                "Email": "x@y.com",<BR>                                "UseType": "Personal"<BR>                            }],<BR>                            "OrganizationContactPhone": [{<BR>                                "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>                                "ContactUseType": "Official",<BR>                                "Phone": "9999999999",<BR>                                "UseType": "Personal"<BR>                            }],<BR>                            "OrganizationContactAddress": [{<BR>                                "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>                                "ContactUseType": "Official",<BR>                                "UseType": "Personal",<BR>                                "Address1": "Address Line 1",<BR>                                "Address2": "Address Line 2",<BR>                                "Address3": "Address Line 3",<BR>                                "Address4": "Address Line 4",<BR>                                "Address5": "Address Line 5"<BR>                            }]<BR>        }]<BR>    }</p><p>Response:<BR>    {<BR>           "OrganizationKey" : "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>           "ParentKey" : "uddi:soa.com:registryorganization",<BR>           "Name" : "New Organization",<BR>           "Description" : "This is a new org",<BR>           "OrganizationType" : "Application",<BR>           "OperationalPolicyAttachment" : [ ],<BR>           "QoSPolicyAttachment" : [ ],<BR>           "CompliancePolicyAttachment" : [ ]<BR>   }</p>]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Add a new Organization]]></sdoc:summary></wsdl:documentation>
+    <shttp:operation inputSerialization="application/json,application/xml,text/xml" location="/organizations" method="POST"/>
+      <wsdl:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="" part="" type="entity"/>
+      </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getOrganizationContactsREST">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /organizations/{orgKey}/contacts</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get all organizational contacts for a given organization based on org key<p>Request : <BR> GET /rest/organizations/{orgKey}/contacts/{useType} HTTP/1.1</p><p>Response:<BR>    {"OrganizationContact": [{<BR>       "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>       "Name": "New Org Adding Contact",<BR>       "Description": "",<BR>       "UseType": "Official",<BR>       "OrganizationContactEmail": [   {<BR>          "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>          "ContactUseType": "Official",<BR>          "Email": "x@y.com",<BR>          "UseType": "Personal"<BR>       }],<BR>       "OrganizationContactPhone": [   {<BR>          "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>          "ContactUseType": "Official",<BR>          "Phone": "9999999999",<BR>          "UseType": "Personal"<BR>       }],<BR>       "OrganizationContactAddress": [   {<BR>          "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>          "ContactUseType": "Official",<BR>          "UseType": "Personal",<BR>          "Address1": "Address Line 1",<BR>          "Address2": "Address Line 2",<BR>          "Address3": "Address Line 3",<BR>          "Address4": "Address Line 4",<BR>          "Address5": "Address Line 5"<BR>       }]<BR>    }]}</p>]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get organizational contacts]]></sdoc:summary></wsdl:documentation>
@@ -541,15 +560,6 @@
       <wsdl:output>
     <shttp:output name="getOrganizationContactsRESTResponse" part="getOrganizationContactsRESTResponse" type="entity"/>
       </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="addOrganizationContactEmailREST">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /organizations/{orgKey}/contacts/{useType}/email</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Add email addresses for a given organizational contact based on org key and use type<p>Request : <BR> POST /rest/organizations/{orgKey}/contacts/{useType}/email HTTP/1.1<BR>    {<BR>          "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>          "ContactUseType": "Official",<BR>          "Email": "a@b.com",<BR>          "UseType": "Personal"<BR>    }</p><p>Response:<BR>    HTTP/1.1 204 No Content</p>]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Add email address to a given organizational contact]]></sdoc:summary></wsdl:documentation>
-    <shttp:operation inputSerialization="application/json,application/xml,text/xml" location="/organizations/{orgKey}/contacts/{useType}/email" method="POST"/>
-      <wsdl:input>
-    <shttp:input name="orgKey" part="orgKey" type="path"><wsdl:documentation><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-    <shttp:input name="useType" part="useType" type="path"><wsdl:documentation><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-      </wsdl:input>
     </wsdl:operation>
     <wsdl:operation name="modifyOrganizationContactEmailREST">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /organizations/{orgKey}/contacts/{contactUseType}/email/{useType}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Modify email address of a given contact based on org key, contact use type and email use type<p>Request : <BR> PUT /rest/organizations/{orgKey}/contacts/{contactUseType}/email/{useType} HTTP/1.1<BR>    {   <BR>          "Email": "mmm@nnn.com"<BR>    }</p><p>Response:<BR>    HTTP/1.1 204 No Content</p>]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Modify email address of a given contact]]></sdoc:summary></wsdl:documentation>
@@ -728,16 +738,6 @@
     <shttp:input name="qualifiedUserName" part="qualifiedUserName" type="path"><wsdl:documentation><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
     <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
       </wsdl:input>
-    </wsdl:operation>
-    <wsdl:operation name="addOrganizationREST">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /organizations</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p> Add a new Organization under a given parent.<BR>For brevity, the following Request creates an Organization with minimal parameters.  <BR> Can add Organization Contact, corresponding email, phone and address and also any <BR> Operational/QoS/Compliance policies using this request.</p><p>Request :<BR> POST /rest/organizations HTTP/1.1</p><BR>    {<BR>            "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>            "ParentKey": "uddi:soa.com:registryorganization",<BR>            "Name": "New Organization ",<BR>            "Description": "This is a new org ",<BR>            "Url": "http://local:80",<BR>            "OrganizationType": "Application",<BR>            "OrganizationContact": [{<BR>                            "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>                            "Name": "New Org Adding Contact",<BR>                            "Description": "",<BR>                            "UseType": "Official",<BR>                            "OrganizationContactEmail": [{<BR>                                "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>                                "ContactUseType": "Official",<BR>                                "Email": "x@y.com",<BR>                                "UseType": "Personal"<BR>                            }],<BR>                            "OrganizationContactPhone": [{<BR>                                "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>                                "ContactUseType": "Official",<BR>                                "Phone": "9999999999",<BR>                                "UseType": "Personal"<BR>                            }],<BR>                            "OrganizationContactAddress": [{<BR>                                "OrganizationKey": "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>                                "ContactUseType": "Official",<BR>                                "UseType": "Personal",<BR>                                "Address1": "Address Line 1",<BR>                                "Address2": "Address Line 2",<BR>                                "Address3": "Address Line 3",<BR>                                "Address4": "Address Line 4",<BR>                                "Address5": "Address Line 5"<BR>                            }]<BR>        }]<BR>    }</p><p>Response:<BR>    {<BR>           "OrganizationKey" : "uddi:e99c14e8-37b0-11e5-a5e2-eef5b5b2411e",<BR>           "ParentKey" : "uddi:soa.com:registryorganization",<BR>           "Name" : "New Organization",<BR>           "Description" : "This is a new org",<BR>           "OrganizationType" : "Application",<BR>           "OperationalPolicyAttachment" : [ ],<BR>           "QoSPolicyAttachment" : [ ],<BR>           "CompliancePolicyAttachment" : [ ]<BR>   }</p>]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Add a new Organization]]></sdoc:summary></wsdl:documentation>
-    <shttp:operation inputSerialization="application/json,application/xml,text/xml" location="/organizations" method="POST"/>
-      <wsdl:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="" part="" type="entity"/>
-      </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="OrgMgmtREST">
