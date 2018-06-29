@@ -44,8 +44,8 @@ nav-title: Hybrid Installation Scenario
 
 
 <h3 id="hybrid_define">What is a hybrid installation?</h3>
-<p>In the context of the Akana API platform, a hybrid installation is a scenario where an on-prem back-end installation, generally including Policy Manager and Network director, connects to a developer portal instance implemented on the Cloud (<a href="../../cm/learnmore/basics_glossary.htm#gl_saas">SaaS</a>) platform.</p>
-<p>In a completely on-prem solution, all implementation components are installed and configured directly on hardware resources provided by the customer. In a SaaS-only implementation, the customer uses the SaaS cloud platform for all services, including the back end. The hybrid installation is a mix of these two.</p>
+<p>In the context of the Akana API platform, a hybrid installation is an implementation that uses the Akana Cloud (<a href="../../cm/learnmore/basics_glossary.htm#gl_saas">SaaS</a>) platform, and also has additional infrastructure elements (Network Director instances) deployed in the customer's own data center or cloud of choice. A hybrid installation might partially use the API Gateway provided for the Akana Cloud platform, or might exclusively use its own components.</p>
+<p>In a completely on-prem solution, all implementation components are installed and configured directly on hardware resources provided by the customer. In a SaaS-only implementation, the customer uses the SaaS cloud platform for all underlying infrastructure (Policy Manager/Network Director). The hybrid installation is a mix of these two.</p>
 <p>In functional terms, in a hybrid scenario you can delegate Akana Platform administration to the Akana Cloud, but have your runtime API traffic flowing exclusively through your data centers only.</p>
 <p>Some reasons to choose a hybrid installation:</p>
 <ul>
@@ -138,7 +138,7 @@ default.port=9904</pre>
 	<p>Different Platform components (for example, Policy Manager or API Gateway/Network Director) require different features.</p></li>
 	<li>Unzip your Akana API Platform ZIP file, for example <strong>akana-api-platform-8.4.682.zip</strong>, into the same <strong>Akana Home</strong> folder.</li>
 	<li>Unzip your Akana API Platform cumulative update ZIP file, for example <strong>akana-api-platform-update-cumulative-8.4.15.zip</strong>, into the same <strong>Akana Home</strong> folder.</li>
-	<li>Go to the {AkanaHome}/bin directory. Here, run the configurator using the following command. It's best to manually type the command, rather than copying, to ensure you don't have any extra non-visible characters).
+	<li id="install_step5">Go to the {AkanaHome}/bin directory. Here, run the configurator using the following command. It's best to manually type the command, rather than copying, to ensure you don't have any extra non-visible characters).
 		<pre>./startup.sh configurator –Dsilent=true –Dproperties={your ND properties file}</pre>
 		<p>Example:</p>
 		<pre>./startup.sh configurator -Dsilent=true -Dproperties=/home/akana/properties/ND84-1.properties</pre>
@@ -159,23 +159,20 @@ default.port=9904</pre>
 
 
 <h3 id="hybrid_03_nd">Configuring the Network Director (ND)</h3>
-<p>To add one or multiple Network Director instances, you'll need to repeat part of the steps as described in the previous section.</p>
+<p>To configure the first ND instance, follow the steps below.</p>
 <ol>
-	<li>Make sure you have created the required properties file or files. Verify that the properties files use a distinct port number each (for instance, 9904 and 9905, respectively).</li>
-	<li>Go to the {AkanaHome}/bin directory. <span class="apidoc_red">Run the configurator using the following command</span>: {<span class="apidoc_red">OvG comment: covered Step 5 above. Re-run or remove?</span>}
-		<pre>./startup.sh configurator –Dsilent=true –Dproperties={your ND84-1 prop file}</pre></li>
-	<li>Once the configurator has finished, your <strong>Akana Home</strong> folder will show the created instance in the /{AkanaHome}/instances folder.</li>
+	<li>Once the configurator has finished (<a href="#install_step5">Step 5 in the previous procedure</a>), your <strong>Akana Home</strong> folder will show the created instance in the /{AkanaHome}/instances folder.</li>
 	<li>Start the container by running the following command:
 		<pre>./startup.sh {MyInstanceName} -bg</pre>
 		<p>Once started, you should be able to access the Akana Administration Console for the container:</p>
 		<pre>http://{my hostname}:9904/admin</pre>
 		<p>The Akana Administration Console will be accessible using the credentials specified in the properties file that was used to configure the container (for example, admin / SecurePassword_67890).</p></li>
 	
-	<li id="metadata_ex_url">Install the necessary features. For a Network Director container, the essential feature is <strong>Network Director</strong>. Select this feature and run the installer. Once done, you will be prompted for feature configuration.
+	<li id="metadata_ex_url">Install the necessary features. For a Network Director container, the essential feature is <strong>Network Director</strong>. Select only this feature, and then run the installer. Once done, you will be prompted for feature configuration.
 		<p>When prompted for the <strong>Meta Data Exchange Service</strong>, provide the URL for the instance of the Akana Cloud SaaS platform that the hybrid installation will connect to. For example, for the EU cloud:</p>
 		<pre>https://platform-eu.apiportal.akana.com/wsmex</pre>
 		<p>For the global cloud:</p>
-		<pre>https://platform.apiportal.akana.com/wsm {<span class="apidoc_red">OvG: wsm not wsmex</span>?}</pre>
+		<pre>https://platform.apiportal.akana.com/wsmex</pre>
 </li>
 	<li>Configuration will be completed by installing an additional plug-in. Through the Akana Administration Console for the ND container, from the drop-down list on the <strong>Available Features</strong> tab, select <strong>Plug-ins</strong> rather than <strong>Features</strong> and install the following:
 		<ul>
@@ -210,7 +207,8 @@ default.port=9904</pre>
 		<p>Hostname and port refer to the host where ND container has been configured and port the process is listening on.</p>
 		<p>You can verify the contents of the metadata file by accessing this URL through a browser. It should return an XML file with container metadata. Alternatively, you can save the XML file to a secure and convenient location so that it will be accessible; depending on network configuration, the developer portal might not have access to the default file location.</p></li>
 	<li>Save the API Gateway configuration.
-		<p><strong>Note</strong>: the API Gateway can be configured with a lat-long value in order to have the Deployment Zone associated with this Gateway appear on its proper location in the ap widget {<span class="apidoc_red">OvG: what is the ap widget?</span>} (without this step, the Deployment Zone will appear as <strong>Unknown Location</strong>).</p></li>
+		<p><strong>Note</strong>: To have the Deployment Zone associated with this Gateway appear in the correct geographical location in the developer portal's Deployment Zones widget (visual map element), configure the lat-long value when defining the API Gateway. If you don't configure the lat-long, the Deployment Zone will appear as <strong>Unknown Location</strong>.</p>
+	</li>
 	<li>Next, go to <strong>Deployment Zones</strong> in the left nav and click <strong>Add</strong>. Provide a meaningful Deployment Zone name and optional description. In the <strong>API Gateway</strong> drop-down list, select the API Gateway that was added in the above steps. Keep the other default settings and save the Deployment Zone.</li>
 	<li>By default, the HTTP listener generated for the API Gateway configuration will show an internal IP representation. Usually, it is preferable to replace this with the DNS hostname of the server that the Gateway is deployed on.
 		<p>To modify the listener hostname, navigate through Admin &gt; API Gateways > {the API Gateway you added}. On the <strong>API Gateway Details</strong> page, navigate to the <strong>Inbound Listeners</strong> section and click <strong>Edit</strong>. Click the listener you'd like to update and click <strong>Edit</strong> again. In the <strong>Edit Listener</strong> page, make the following changes and then click <strong>Save</strong>:</p>
@@ -235,7 +233,7 @@ default.port=9904</pre>
 proxy=https://proxy.customer.local:8880</pre>
 	<p>Example 2, <strong>com.soa.http.proxy-portyes.cfg</strong>:</p>
 	<pre>url=https://platform-eu.apiportal.akana.com:443
-	proxy=https://proxy.customer.local:8880</pre>
+proxy=https://proxy.customer.local:8880</pre>
 	<p>This example includes two files because some platform services have the port number, <strong>:443</strong>, explicitly in the URL, whereas others <!--(or perhaps only wsmex) -->do not.</p></li>
 	<li>Place these files in the <strong>{ND instance directory}/deploy</strong> folder.
 <p>This will give you the <strong>com.soa.http.proxy property</strong> in the Akana Administration Console for the ND container (instructing ND to use the proxy for given hosts). ND should now be able to access the required Platform services through the proxy.</p></li>
