@@ -19,14 +19,15 @@ no-catalog: true
 <p>It includes:</p>
 <ul>
   <li><a href="#determining_authentication_requirements">Determining authentication requirements</a></li>
-  <li><a href="#operations_no_login">Operations you can run without login</a></li>
-  <li><a href="#operations_login">Operations that require login</a></li>
-  <li><a href="#public_and_private">Public and private resources</a></li>
-  <li><a href="#operations_additional_roles">Operations that require additional authorization roles / permissions</a></li>
-  <li><a href="#authenticating_as_logged_in_user">Authenticating as a logged-in user</a></li>
-  <li><a href="#session_cookie">The session cookie</a></li>
-  <li><a href="#renewing_cookie">Renewing the cookie</a></li>
-  <li><a href="#ending_the_session">Ending the session</a></li>
+	<li><a href="#operations_no_login">Operations you can run without login</a></li>
+	<li><a href="#operations_login">Operations that require login</a></li>
+	<li><a href="#public_and_private">Public and private resources</a></li>
+	<li><a href="#operations_additional_roles">Operations that require additional authorization roles / permissions</a></li>
+	<li><a href="#authenticating_as_logged_in_user">Authenticating as a logged-in user</a></li>
+	<li><a href="#session_cookie">Session cookie</a></li>
+	<li><a href="#csrf_prevention_header">CSRF prevention header</a></li>
+	<li><a href="#renewing_cookie">Renewing the session cookie</a></li>
+	<li><a href="#ending_the_session">Ending the session</a></li>
 </ul>
 
 
@@ -94,11 +95,37 @@ no-catalog: true
 
 
 
-<a id="session_cookie"></a><h3>The session cookie</h3>
-<p>When you run the <span class="apidoc_code"><a href="login/m_login_login.htm">POST&nbsp;/api/login</a></span> operation, the response includes a session cookie which you'll need to make sure is included in the request headers for subsequent operations. If you're using a browser-based client, the cookie is probably sent automatically, but if not, you must explicitly include it.</p>
+<h3 id="session_cookie">Session cookie</h3>
+<p>When you run the <span class="apidoc_code"><a href="login/m_login_login.htm">POST&nbsp;/api/login</a></span> operation, the response includes a session cookie which you'll need to make sure is  included in the request headers for subsequent operations. If you're  using a browser-based client, the cookie is probably sent automatically,  but if not, you must explicitly include it.</p>
+<p>There are a few operations that don't require a session cookie, such as password reset (<span class="apidoc_code"><a href="passwordmanagement/m_passwordmanagement_sendPasswordResetCode.htm">POST&nbsp;passwordmanagement/sendPasswordResetCode</a></span>), but most do. Required permissions are specified in the documentation for each operation; if an operation requires login, it requires the session cookie in the request. An example of the set-cookie header is shown below (line breaks added for display purposes).</p>
+<pre>Set-Cookie: AtmoAuthToken_acmepaymentscorp=TokenID%3D9d37c51c-7f02-11e8-ba7b-b1224c287743%2Cclaimed_id%3Durn%3Aatmosphere%3Auser
+%3Aautomation%3Adec20fc3-866f-44c5-a440-f2f08421a2ae%2CissueTime%3D1530650983939%2CexpirationTime%3D1530652843913%2CUserName%3Dad
+minautomation%2CUserFDN%3Ddec20fc3-866f-44c5-a440-f2f08421a2ae%252Eautomation%2CAttributesIncluded%3Dfalse%2Csig%3Dd-BlqJhni3I1zv
+-wEZ6cym_pjctqnfSIEdkrKZHMu2Nvd-dEIDfBFxOhbafyQ1li_ejmRPVYMwHqzyWXJ7agl4vEwqb-1_fc7kjwss6IsFxJ_iJV89cnUBp31u88CF-GAFA1zpLwJZX19RL
+q_nxtx2loBlJEYjG5Lmtq9q6OOtf058E6sZ4LnVOxXrbL0sXG2PtYGgaSBQVGsWjykU1Lj1BHxNM29C-MYLdVLSWhdcQm04fJhcMHys3nO0Np0zv3KIjvMM2buG7rHl3q
+_oYn83Umnmb_qP3bHSjwbvLJefreQkHkEQe8b0pVCRNwJ3eDq_Nk-UIEVIuqu5G8dMXWEA</pre>
 <p>For more information and examples, refer to <a href="aaref/Ref_CookiesOnThePlatform.htm">Cookies in the&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Akana API Platform<!-- #EndLibraryItem --></a>.</p>
-<p>You'll also need to renew the cookie, after 30 minutes or after certain events. See <a href="#renewing_cookie">Renewing the cookie</a> below.</p>
+<p>You'll also need to renew the cookie, after 30 minutes or after certain events. See <a href="#renewing_cookie">Renewing the session cookie</a> below.</p>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="csrf_prevention_header">CSRF prevention header</h3>
+<p>Many operations require the <a href="Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_{fedmemberID}</a> request header, which is constructed using the CSRF cookie. Depending on platform settings, the CSRF cookie is returned at login, and this custom header is required for a successful API call. For details on how to retrieve the CSRF cookie and use it to construct the X-Csrf-Token_{fedmemberID} header, see <a href="aaref/Ref_CSRFPreventionOnThePlatform.htm">CSRF Prevention on the Platform</a>.</p>
+<p>An example of the Csrf-Token_{FedmemberID} cookie is shown below (line breaks added for display purposes).
+	</p>
+<pre>Csrf-Token_acmepaymentscorp=TokenID%3D13544611-3486-11e5-9f5c-cb8d33c7f3c7%2CexpirationTime%3D1438020415969
+%2CUserFDN%3D5a48b51d-b726-460f-bec5-8fb4e392137c%252Eacmepaymentscorp%2Csig%3DMKd7acZkLzsMIalD2LFhmuLPy58
+xa-NlxoWucWi3WVfO8UTsz_t88fCjQIQHKH-pRol_1wsGVHRnz3riAl7eKrRYEo68XOMn1UnoMYXQUX9mTGtGoTX
+gu61Dk7vIIiVhBJV1AIRZiHKoDim04hq-tjw8NIeHdH6DV7M2COAaTZA</pre>
+<p>The corresponding X-Csrf-Token_{fedmemberID} response header is shown below (line breaks added for display purposes).
+	</p>
+<pre>X-Csrf-Token_acmepaymentscorp=TokenID%3D13544611-3486-11e5-9f5c-cb8d33c7f3c7%2CexpirationTime%3D1438020415969
+%2CUserFDN%3D5a48b51d-b726-460f-bec5-8fb4e392137c%252Eacmepaymentscorp%2Csig%3DMKd7acZkLzsMIalD2LFhmuLPy58
+xa-NlxoWucWi3WVfO8UTsz_t88fCjQIQHKH-pRol_1wsGVHRnz3riAl7eKrRYEo68XOMn1UnoMYXQUX9mTGtGoTX
+gu61Dk7vIIiVhBJV1AIRZiHKoDim04hq-tjw8NIeHdH6DV7M2COAaTZA</pre>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
 
 
 
