@@ -10,7 +10,7 @@ type: page
 nav-title: Policy Handler Programming Guide (HTML)
 ---
 <h2 id="top">Policy Handler Programming Guide</h2>
-<p>This document provides information about the Akana OSGi Container Policy Handler Framework. It describes the architecture of the framework, the API of the framework, and how to deploy extensions to the framework.</p>
+<p>This document provides information about the Akana OSGi Container Policy Handler Framework. It describes the architecture of the framework, the framework API, and how to deploy extensions to the framework.</p>
 <p>To effectively use this guide, you should have access to and a working knowledge of the concepts outlined in the following Policy Manager product documentation:</p>
 <ul>
   <li><a href="../../sp/platform_install/installing_akana_api_platform_v84.htm">Installing the Akana API Platform 8.4x</a></li>
@@ -23,7 +23,7 @@ nav-title: Policy Handler Programming Guide (HTML)
 
 
 <ol class="table_of_contents">
-	<li><a href="#s01_architecture">Policy Handler Framework Architecture</a>
+	<li><a href="#s01_architecture">1: Policy Handler Framework Architecture</a>
 		<ul>
 			<li><a href="#s01_01_overview">Overview</a></li>
 			<li><a href="#s01_02_policies">Policies</a></li>
@@ -34,15 +34,15 @@ nav-title: Policy Handler Programming Guide (HTML)
 			<li><a href="#s01_07_framework_nd">The Framework in the Network Director Feature</a></li>
 			</ul>
 		</li>
-	<li><a href="#s02_framework">Policy Handler Framework</a>
+	<li><a href="#s02_framework">2: Policy Handler Framework</a>
 		<ul>
 			<li><a href="#s02_01_policy_api">Policy API</a></li>
 			<li><a href="#s02_02_policy_handler_factory_api">Policy Handler Factory API</a></li>
 		</ul>
 		</li>
 	
-	<li><a href="#s03_deployment">Policy Handler Deployment</a></li>
-	<li><a href="#s04_development">Developing a Policy Handler</a>
+	<li><a href="#s03_deployment">3: Policy Handler Deployment</a></li>
+	<li><a href="#s04_development">4: Developing a Policy Handler</a>
 		<ul>
 			<li><a href="#s04_01_schema">Policy Assertion Schema</a></li>
 			<li><a href="#s04_02_source_code">Source Code</a></li>
@@ -55,7 +55,7 @@ nav-title: Policy Handler Programming Guide (HTML)
 
 
 
-<h3 id="s01_architecture">Policy Handler Framework Architecture</h3>
+<h3 id="s01_architecture">1: Policy Handler Framework Architecture</h3>
 
 
 <h4 id="s01_01_overview">Overview</h4>
@@ -66,7 +66,7 @@ nav-title: Policy Handler Programming Guide (HTML)
 <p>Note: this document covers only Network Director use of the Policy Handler Framework.</p>
 <p>The processing performed by the policy handler framework is dictated by policies attached to services in Policy Manager. Enforcement is the act of ensuring a policy is met by a message. Implementation is the act of altering a message so that it conforms to a policy. When the policy framework governs a service that is receiving messages, the framework enforces the policies attached to the service. It must also implement those same policies on messages that are returned to the client.</p>
 <p>Example</p>
-<p>For example, service A has a security policy attached to it that dictates the request and response messages must be signed. The framework enforces that policy on the request message by:</p>
+<p>For example, let's say service A has a security policy attached to it that dictates the request and response messages must be signed. The framework enforces that policy on the request message by:</p>
 <ul>
 	<li>Verifying that a signature is present on the request message.</li>
 	<li>Verifying that the signature is valid.</li>
@@ -84,10 +84,10 @@ nav-title: Policy Handler Programming Guide (HTML)
 </ol>
 <p>In all the features, the Policy Handler Framework is made up of the same fundamental components:</p>
 <ul>
-	<li>Policies</li>
+	<li><a href="#s01_02_policies">Policies</a></li>
 	<li>Message Handlers</li>
-	<li><a href="#s01_05_policy_handler_factories">Policy Handler Factories</a></li>
-	<li>Handler Chains</li>
+	<li><a href="#s01_04_policy_handlers">Policy Handlers</a></li>
+	<li><a href="#s01_06_handler_chains">Handler Chains</a></li>
 </ul>
 <p><a href="#top">back to top</a></p>
 
@@ -116,9 +116,13 @@ nav-title: Policy Handler Programming Guide (HTML)
 16)      &lt;/wsp:All&gt;
 17)    &lt;/wsp:ExactlyOne&gt;
 18)  &lt;/wsp:Policy&gt;</pre>
-<p>Lines 01&#8211;18 represent a single policy named <strong>My Policy</strong>. On lines 04&#8211;15, the policy author has supplied an assertion named MyAssertion. MyAssertion provides two choices, MyChoice1 on line 8 and MyChoice2 on line 11. The use of the ExactlyOne element on line 6 delineates the choices.</p>
+<p>In the above:</p>
+<ul>
+	<li>Lines 01&#8211;18 represent a single policy named <strong>My Policy</strong>.</li>
+	<li>On lines 04&#8211;15, the policy author has supplied an assertion named MyAssertion.</li>
+	<li>MyAssertion provides two choices, MyChoice1 on line 8 and MyChoice2 on line 11. The use of the ExactlyOne element on line 6 delineates the choices.</li>
+</ul>
 <p>You can attach multiple policies to services and organizations in Policy Manager. You can also attach policies at different levels of the organization tree and different levels of the service definition. All the policies that apply to a given request or response message must be collected and combined so that they can be properly enforced or implemented. All these policies are combined into what is called an <strong>effective</strong> policy, or the complete set of assertions that apply to a given message. There will be an effective policy for each message (IN, OUT, FAULT) of each operation of each service being governed as described in a WSDL document.</p>
-<p>Example</p>
 <p>To illustrate, a policy with MyAssertion1 is attached to a service in Policy Manager. Another policy with MyAssertion2 is attached to an operation of that service in Policy Manager. The effective policy for the operation would look like the below:</p>
 <pre>01)  &lt;wsp:Policy Name="My Effective Policy"&gt;
 02)    &lt;wsp:ExactlyOne&gt;
@@ -136,8 +140,8 @@ nav-title: Policy Handler Programming Guide (HTML)
 <p>The Policy Handler Framework receives policies from Policy Manager in the XML form described in the previous section. It parses the XML into a Java representation that can then be used by policy handlers to implement and enforce. The framework has a Java API that it parses the policy constructs (Policy, ExactlyOne, All) into, but it doesn't have an understanding of the assertions that policy authors write. Instead, it delegates the assertion interpretation to domain-specific implementations provided by the policy authors.</p>
 <p>The policy author provides an Assertion Marshaller that parses the assertion XML into a Java representation. If a policy author does not have a domain-specific Java model for the assertion, the following alternatives are available:</p>
 <ul>
-	<li>Rely on built-in facilities to marshal the assertion into an org.w3c.dom (DOM) representation.</li>
-	<li>Use other XML marshaling frameworks such as the javax.xml.bind (JAXB) API within a marshaller as well.</li>
+	<li>Rely on built-in facilities to marshal the assertion into an <span class="apidoc_code">org.w3c.dom</span> (DOM) representation.</li>
+	<li>Use other XML marshaling frameworks such as the <span class="apidoc_code">javax.xml.bind</span> (JAXB) API within a marshaller as well.</li>
 	<li>Write proprietary parsing code.</li>
 </ul>
 <p><a href="#top">back to top</a></p>
@@ -195,7 +199,7 @@ nav-title: Policy Handler Programming Guide (HTML)
 
 
 
-<h3 id="s02_framework">Policy Handler Framework API</h3>
+<h3 id="s02_framework">2: Policy Handler Framework API</h3>
 <p>The Policy Handler Framework API is composed of three major groups of classes:</p>
 <ul>
 	<li><a href="#s02_01_policy_api">Policy API</a>: Provides interfaces and classes for defining policies, assertions, and assertion marshalling.</li>
@@ -207,13 +211,13 @@ nav-title: Policy Handler Programming Guide (HTML)
 
 
 <h4 id="s02_01_policy_api">Policy API</h4>
-<p>The Policy API is composed of a small number of interfaces and classes that can be used to represent policies and assertions. These are all in the <strong>com.soa.policy.wspolicy</strong> package.</p>
+<p>The Policy API is composed of a small number of interfaces and classes that can be used to represent policies and assertions. These are all in the <span class="apidoc_code">com.soa.policy.wspolicy</span> package.</p>
 <p><img src="images/pmphpgm_02_01.jpg" alt="Policy API" /></p>
 <p>In the above:</p>
 <ul>
-	<li>The Policy, ExactlyOne, and All classes are WS-Policy constructs.</li>
-	<li>The Assertion interface defines what all assertions must implement</li>
-	<li>The SubPolicyAssertion interface is an Assertion extension for assertions that have nested policies of their own.</li>
+	<li>The <span class="apidoc_code">Policy</span>, <span class="apidoc_code">ExactlyOne</span>, and <span class="apidoc_code">All</span> classes are WS-Policy constructs.</li>
+	<li>The <span class="apidoc_code">Assertion</span> interface defines what all assertions must implement</li>
+	<li>The <span class="apidoc_code">SubPolicyAssertion</span> interface is an <span class="apidoc_code">Assertion</span> extension for assertions that have nested policies of their own.</li>
 </ul>
 <p>The Policy API also provides:</p>
 <ul>
@@ -221,29 +225,29 @@ nav-title: Policy Handler Programming Guide (HTML)
 	<li>Some pre-existing marshalling implementations.</li>
 </ul>
 <p><img src="images/pmphpgm_02_02.jpg" alt="Policy API" /></p>
-<p>An assertion is represented in the framework with the Assertion interface. Assertion is the interface that all domain-specific representations must implement. A policy author can implement this interface directly with their own class, or they can use some of the existing implementations.</p>
-<p>For example, XmlAssertion provides a default DOM representation of an assertion. JavaAssertion provides an implementation that simply wraps an existing Java object. This is useful when the author wants an assertion class that does not have to implement the Assertion interface, such as when they are using JAXB to model an assertion.</p>
-<p>Policy authors instruct the framework how an assertion must be parsed by registering an AssertionMarshaller. AssertionMarshaller is an interface that an author can implement that will be called by the framework with a DOM element representing an assertion. The author returns an Assertion implementation back to the framework. This Assertion implementation will be passed to policy handlers later. Policy authors can also use the following:</p>
+<p>An assertion is represented in the framework with the <span class="apidoc_code">Assertion</span> interface. Assertion is the interface that all domain-specific representations must implement. A policy author can implement this interface directly with their own class, or they can use some of the existing implementations.</p>
+<p>For example, <span class="apidoc_code">XmlAssertion</span> provides a default DOM representation of an assertion. <span class="apidoc_code">JavaAssertion</span> provides an implementation that simply wraps an existing Java object. This is useful when the author wants an assertion class that does not have to implement the Assertion interface, such as when they are using JAXB to model an assertion.</p>
+<p>Policy authors instruct the framework how an assertion must be parsed by registering an <span class="apidoc_code">AssertionMarshaller</span>. <span class="apidoc_code">AssertionMarshaller</span> is an interface that an author can implement that will be called by the framework with a DOM element representing an assertion. The author returns an <span class="apidoc_code">Assertion</span> implementation back to the framework. This Assertion implementation will be passed to policy handlers later. Policy authors can also use the following:</p>
 <ul>
-	<li>To use theXmlAssertion, authors can use the existing XmlAssertionMarshaller.</li>
-	<li>To use JAXB, authors can use the JaxbAssertionMarshaller.</li>
+	<li>To use the <span class="apidoc_code">XmlAssertion</span>, authors can use the existing <span class="apidoc_code">XmlAssertionMarshaller</span>.</li>
+	<li>To use JAXB, authors can use the <span class="apidoc_code">JaxbAssertionMarshaller</span>.</li>
 </ul>
 <p><a href="#top">back to top</a></p>
 
 
 <h4 id="s02_02_policy_handler_factory_api">Policy Handler Factory API</h4>
-<p>The Policy Handler Factory API is composed of a small number of interfaces and classes that can be used to provide construction logic for Policy Handlers based on policy assertions modeled in the Policy API. These can be found in the com.soa.policy.wspolicy.handler and com.soa.policy.wspolicy.handler.ext packages.</p>
+<p>The Policy Handler Factory API is composed of a small number of interfaces and classes that can be used to provide construction logic for Policy Handlers based on policy assertions modeled in the Policy API. These can be found in the <span class="apidoc_code">com.soa.policy.wspolicy.handler</span> and <span class="apidoc_code">com.soa.policy.wspolicy.handler.ext</span> packages.</p>
 <p><img src="images/pmphpgm_02_03.jpg" alt="Policy Handler Factory API" /></p>
-<p>The WSPHandlerFactory is the interface all policy handler factories must implement. The difference between this and a HandlerFactory in the Message Handler Framework in that it is given the effective policy as a set of normalized policy choices represented with the PolicyChoices class. Currently, Policy Manager does not allow policy choices at the root of its effective policy, only within assertions themselves.</p>
-<p>With this limitation in mind, the SimplePolicyHandlerFactory abstract class is provided for policy authors to extend for their policy handler factories. This class provides subclasses with a single choice as the effective policy, which simplifies processing.</p>
+<p>The <span class="apidoc_code">WSPHandlerFactory</span> is the interface all policy handler factories must implement. The difference between this and a <span class="apidoc_code">HandlerFactory</span> in the Message Handler Framework in that it is given the effective policy as a set of normalized policy choices represented with the <span class="apidoc_code">PolicyChoices</span> class. Currently, Policy Manager does not allow policy choices at the root of its effective policy, only within assertions themselves.</p>
+<p>With this limitation in mind, the <span class="apidoc_code">SimplePolicyHandlerFactory</span> abstract class is provided for policy authors to extend for their policy handler factories. This class provides subclasses with a single choice as the effective policy, which simplifies processing.</p>
 <p><a href="#top">back to top</a></p>
 
 
 
-<h3 id="s03_deployment">Policy Handler Deployment</h3>
+<h3 id="s03_deployment">3: Policy Handler Deployment</h3>
 <p>The Network Director, Agent, and Delegate use the OSGi (Open Services Gateway initiative) framework for deploying features and extensions.</p>
 <p>In each of these environments, the Policy Handler Framework, will dynamically construct the chain of handlers by discovering policy handler factories published as OSGi services by OSGi bundles.</p>
-<p>The Policy Handler Framework registers with the OSGi framework for services that implement the WSPHandlerFactory interface. It organizes the WSPHandlerFactory services into groups as described in the framework/feature sections, through the use of attributes that the WSPHandlerFactory services can use to describe themselves. The following are the attributes the Policy Handler Framework will use to group WSPHandlerFactory services.</p>
+<p>The Policy Handler Framework registers with the OSGi framework for services that implement the <span class="apidoc_code">WSPHandlerFactory</span> interface. It organizes the <span class="apidoc_code">WSPHandlerFactory</span> services into groups as described in the framework/feature sections, through the use of attributes that the <span class="apidoc_code">WSPHandlerFactory</span> services can use to describe themselves. The following are the attributes the Policy Handler Framework will use to group <span class="apidoc_code">WSPHandlerFactory</span> services.</p>
 <dl>
 <dt id="attrib_name">name</dt>
 <dd>Names the handler factory. Can be used by another handler factory if it needs to state a direct dependency on this handler factory (see <a href="#attrib_before"><strong>before</strong></a> and <a href="#attrib_after"><strong>after</strong></a> attributes).</dd>
@@ -321,7 +325,7 @@ nav-title: Policy Handler Programming Guide (HTML)
 </ul>
 <h5 id="s03_01_results">Resulting deployment:</h5>
 <p><img src="images/pmphpgm_02_04.jpg" alt="Resulting deployment" /></p>
-<p><strong>Notes:</strong></p>
+<p><strong>In this example:</strong></p>
 <ul>
 	<li>Handler1, Handler2, and Handler3 are in the same global/binding group and are deployed first.</li>
 	<li>Handler2 is given the first position in the invocation order because it specified a <strong>before</strong> attribute of <strong>*</strong>.</li>
@@ -333,7 +337,7 @@ nav-title: Policy Handler Programming Guide (HTML)
 
 
 
-<h3 id="s04_development">Developing a Policy Handler</h3>
+<h3 id="s04_development">4: Developing a Policy Handler</h3>
 <p>This section describes the steps necessary to develop and deploy a Policy Handler to an OSGi container. The sample artifacts described are available in the /samples directory installed with the product. {<span class="apidoc_red">GWQ are they? I see the folder and various subfolders... can't tell.</span>}</p>
 <p>In the example, a policy will be written that will dictate that a transport header be present with the same value as the operation name as defined by the service's WSDL document {<span class="apidoc_red">GWQ: what if it isn't a SOAP service, no WSDL?</span>}. The policy handler will be written to both enforce and implement the policy.</p>
 <p><a href="#top">back to top</a></p>
@@ -342,7 +346,8 @@ nav-title: Policy Handler Programming Guide (HTML)
 <h4 id="s04_01_schema">Policy Assertion Schema</h4>
 <p>The assertion used in the example is defined by the XML schema shown below.</p>
 <pre>01)   &lt;?xml version="1.0" encoding="UTF-8"?&gt;
-02)   &lt;xs:schema targetNamespace="http://soa.com/products/policymanager/examples/policy/complex" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema"&gt;
+02)   &lt;xs:schema targetNamespace="http://soa.com/products/policymanager/examples/policy/complex" 
+elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema"&gt;
 03)    &lt;xs:element name="Complex"&gt;
 04)      &lt;xs:complexType&gt;
 05)        &lt;xs:sequence&gt;
@@ -404,7 +409,7 @@ nav-title: Policy Handler Programming Guide (HTML)
 30) }</pre>
 
 <h5 id="jaxb_02">Complex class with optional additional step</h5>
-<p>When using JAXB, a JavaAssertion is generated when unmarshalling the policy. The Complex class is contained within the JavaAssertion. In this example, an optional step is taken: The JavaAssertion class is extended to provide methods that mimic the Complex class, so that clients are unaware of the use of JAXB or the necessity to extract the JAXB object from the JavaAssertion. This is completely optional.</p>
+<p>When using JAXB, a <span class="apidoc_code">JavaAssertion</span> is generated when unmarshalling the policy. The <span class="apidoc_code">Complex</span> class is contained within the <span class="apidoc_code">JavaAssertion</span>. In this example, an optional step is taken: The <span class="apidoc_code">JavaAssertion</span> class is extended to provide methods that mimic the <span class="apidoc_code">Complex</span> class, so that clients are unaware of the use of JAXB or the necessity to extract the JAXB object from the <span class="apidoc_code">JavaAssertion</span>. This is completely optional.</p>
 <pre>01) public class ComplexAssertion extends JavaAssertion {
 02)
 03)  private static Log log = Log.getLog(ComplexAssertion.class);
@@ -477,7 +482,7 @@ nav-title: Policy Handler Programming Guide (HTML)
 70) }</pre>
 
 <h5 id="source_code_custom_marshaller">Source code for the custom marshaller</h5>
-<p>If the JavaAssertion was used directly by the handler code, we could also just use the JavaAssertionMarshaller directly, to marshal the assertion between Java and XML. Since this example is using its own custom assertion class that wraps the JavaAssertion, it also requires a custom marshaller, as shown below.</p>
+<p>If the <span class="apidoc_code">JavaAssertion</span> was used directly by the handler code, we could also just use the <span class="apidoc_code">JavaAssertionMarshaller</span> directly, to marshal the assertion between Java and XML. Since this example is using its own custom assertion class that wraps the <span class="apidoc_code">JavaAssertion</span>, it also requires a custom marshaller, as shown below.</p>
 <pre>01) public class ComplexAssertionMarshaller implements AssertionMarshaller {
 02)
 03)  private static QName[] supportedAssertions =
@@ -496,45 +501,45 @@ nav-title: Policy Handler Programming Guide (HTML)
 16)
 17)  @Override
 18)  public void marshal(Assertion assertion, Element element) throws GException {
-19)  if(assertion instanceof ComplexAssertion) {
-20)  ComplexAssertion complexAssertion = (ComplexAssertion)assertion;
-21)  Complex complexPolicy = (Complex)complexAssertion.getObject();
-22)  if (complexPolicy == null) { // in case it wasn't constructed completely
-23)  complexPolicy = new Complex();
-24)  complexAssertion.setObject(complexPolicy);
-25)  complexAssertion.setName(ComplexPolicyConstants.COMPLEX_POLICY_NAME);
-26)  }
-27)  this.jaxbMarshaller.marshal(assertion, element);
-28)  } else {
-29)  throw new GException(PolicyErrorCode.UNSUPPORTED_ASSERTION);
-30)  }
-31)  }
+19)    if(assertion instanceof ComplexAssertion) {
+20)    ComplexAssertion complexAssertion = (ComplexAssertion)assertion;
+21)    Complex complexPolicy = (Complex)complexAssertion.getObject();
+22)    if (complexPolicy == null) { // in case it wasn't constructed completely
+23)      complexPolicy = new Complex();
+24)      complexAssertion.setObject(complexPolicy);
+25)      complexAssertion.setName(ComplexPolicyConstants.COMPLEX_POLICY_NAME);
+26)    }
+27)    this.jaxbMarshaller.marshal(assertion, element);
+28)      } else {
+29)        throw new GException(PolicyErrorCode.UNSUPPORTED_ASSERTION);
+30)      }
+31)    }
 32)
-33)  @Override
-34)  public Assertion unmarshal(Element element) throws GException {
-35)  ComplexAssertion  complexAssertion = new ComplexAssertion();
-36)  JavaAssertion javaAssertion =
-37)  (JavaAssertion)this.jaxbMarshaller.unmarshal(element);
-38)  if(javaAssertion.getObject() instanceof Complex) {
-39)  Complex  complexPolicy = (Complex)javaAssertion.getObject();
-40)  complexAssertion.setObject(complexPolicy);
-41)  }
-42)  else {
-43)  throw new GException(PolicyErrorCode.UNSUPPORTED_ASSERTION);
-44)  }
+33)    @Override
+34)    public Assertion unmarshal(Element element) throws GException {
+35)      ComplexAssertion  complexAssertion = new ComplexAssertion();
+36)      JavaAssertion javaAssertion =
+37)         (JavaAssertion)this.jaxbMarshaller.unmarshal(element);
+38)     if(javaAssertion.getObject() instanceof Complex) {
+39)          Complex  complexPolicy = (Complex)javaAssertion.getObject();
+40)        complexAssertion.setObject(complexPolicy);
+41)      }
+42)      else {
+43)        throw new GException(PolicyErrorCode.UNSUPPORTED_ASSERTION);
+44)    }
 45)
-46)  return  complexAssertion;
-47)  }
+46)    return  complexAssertion;
+47)    }
 48)
-49)  @Override
-50)  public Assertion unmarshal(Element element, Policy subPolicy)
-51)  throws GException {
-52)  throw new GException(PolicyErrorCode.SUB_POLICY_NOT_SUPPORTED);
-53)  }
-54) }</pre>
+49)    @Override
+50)    public Assertion unmarshal(Element element, Policy subPolicy)
+51)        throws GException {
+52)      throw new GException(PolicyErrorCode.SUB_POLICY_NOT_SUPPORTED);
+53)    }
+54)  }</pre>
 <p>In this example:</p>
 <ul>
-	<li>A JaxbAssertionMarshaller is embedded in this custom marshaller, on line 6.</li>
+	<li>A <span class="apidoc_code">JaxbAssertionMarshaller</span> is embedded in this custom marshaller, on line 6.</li>
 	<li>The marshaller returns to the framework the assertions it supports on line 14. This tells the framework what XML elements to ask the marshaller to process.</li>
 	<li>On lines 18&#8211;31 the marshaller extracts the assertion information and creates the Complex JAXB object that it can then marshal to an XML element using the JaxbAssertionMarshaller.</li>
 	<li>On lines 34&#8211;47 the marshaller uses the JaxbAssertionMarshaller to marshal the XML element to a Complex JAXB object. It then wraps the output in a ComplexAssertion object.</li>
@@ -618,12 +623,12 @@ nav-title: Policy Handler Programming Guide (HTML)
 <p>In this example:</p>
 <ul>
 	<li>The header name and optional flag from the policy assertion are private data members on lines 15 and 16. The handler does not read the assertion itself. That is the job of the factory (see <a href="#s04_02_source_code">Source Code</a> section).</li>
-	<li>Starting on line 35 , the handleMessage()method is called by the framework to enforce the policy when receiving a request (IN) message. It is not called when processing a response (OUT) message because a handler is not created for the response message by the factory (see below).</li>
+	<li>Starting on line 35 , the <span class="apidoc_code">handleMessage()</span> method is called by the framework to enforce the policy when receiving a request (IN) message. It is not called when processing a response (OUT) message because a handler is not created for the response message by the factory (see below).</li>
 	<li>On line 44, the handler retrieves the header with the name in the policy.</li>
-	<li>On line 46, the handler compares the header value to the operation name. If they do not match, a MessageFaultException is generated and thrown on lines 47&#8211;52. The exception tells the framework that policy enforcement has failed and instructs it to return a fault to the client with the code and message added to the exception.</li>
-	<li>On line 56, the handler checks in case the header is not present and its presence is not optional. If this is the case, it generates a different MessageFaultException with a different code and message on lines 57&#8211;62.</li>
+	<li>On line 46, the handler compares the header value to the operation name. If they do not match, a <span class="apidoc_code">MessageFaultException</span> is generated and thrown on lines 47&#8211;52. The exception tells the framework that policy enforcement has failed and instructs it to return a fault to the client with the code and message added to the exception.</li>
+	<li>On line 56, the handler checks in case the header is not present and its presence is not optional. If this is the case, it generates a different <span class="apidoc_code">MessageFaultException</span> with a different code and message on lines 57&#8211;62.</li>
 	<li>If none of the checks fail, the handler indicates that the message has passed policy enforcement by returning <strong>true</strong> on line 64.</li>
-	<li>In this example, the close() method on lines 28&#8211;30 perform no function. If the handler were to have allocated resources that should be cleaned up only after the entire handler chain had finished its processing, those steps would be included at this point.</li>
+	<li>In this example, the <span class="apidoc_code">close()</span> method on lines 28&#8211;30 perform no function. Hsowever, if the handler were to have allocated resources that should be cleaned up only after the entire handler chain had finished its processing, those steps would be included at this point.</li>
 </ul>
 
 <h5 id="source_code_consumer">Source code for the Consumer Handler</h5>
@@ -738,11 +743,13 @@ nav-title: Policy Handler Programming Guide (HTML)
 64)  return complexAssert;
 65)  }
 66) }</pre>
-<p>The handler factory extends SimplePolicyHandlerFactory since there is no chance of getting top-level policy choices.</p>
-<p><strong>Notes:</strong></p>
-<p>On line 14, the assertion is extracted from the policy using the getAssertion() method on lines 46&#8211;65. That method recursively searches for an assertion with the Complex assertion's name.</p>
-<p>On line 20, the check is made to see if a provider handler should be constructed and returned. If the role of the handler to be returned is HandlerRole.PROVIDER and the message that the handler will process is the IN message, a provider handler should be returned.</p>
-<p>One line 29, the check is made to see if a consumer handler should be constructed and returned. If the role of the handler to be returned is HandlerRole.CONSUMER and the message the handler will process is the IN message then a consumer handler should be returned.</p>
+<p>The handler factory extends <span class="apidoc_code">SimplePolicyHandlerFactory</span> since there is no chance of getting top-level policy choices.</p>
+<p><strong>In this example:</strong></p>
+<ul>
+	<li>On line 14, the assertion is extracted from the policy using the <span class="apidoc_code">getAssertion()</span> method on lines 46&#8211;65. That method recursively searches for an assertion with the Complex assertion's name.</li>
+	<li>On line 20, the check is made to see if a provider handler should be constructed and returned. If the role of the handler to be returned is <span class="apidoc_code">HandlerRole.PROVIDER</span> and the message that the handler will process is the IN message, a provider handler should be returned.</li>
+	<li>One line 29, the check is made to see if a consumer handler should be constructed and returned. If the role of the handler to be returned is <span class="apidoc_code">HandlerRole.CONSUMER</span> and the message the handler will process is the IN message then a consumer handler should be returned.</li>
+</ul>
 <p>A common point of confusion is that, although the message being processed is sent out of the container, it is still the input message of the downstream service's operation, so it is the IN message, not the OUT message.</p>
 <p><a href="#top">back to top</a></p>
 
@@ -784,14 +791,14 @@ interface="com.soa.policy.wspolicy.AssertionMarshaller"&gt;
 26)  &lt;/osgi:service-properties&gt;
 27) &lt;/osgi:service&gt;
 </pre>
-<p>In the above:</p>
+<p>In this example:</p>
 <ul>
-	<li>Lines 01&#8211;21 construct the ComplexAssertionMarshaller and all its dependencies. The JaxbAssertionMarshaller that is used within the ComplexAssertionMarshaller is constructed on lines 05&#8211;16.</li>
-	<li>The ComplexAssertionMarshaller is published as an OSGi service on lines 23&#8211;27. It must be published using the AssertionMarshaller interface. It is given a <strong>name</strong> property on line 25 as a good practice when publishing OSGi services. The name should be unique among all services published.</li>
+	<li>Lines 01&#8211;21 construct the <span class="apidoc_code">ComplexAssertionMarshaller</span> and all its dependencies. The <span class="apidoc_code">JaxbAssertionMarshaller</span> that is used within the <span class="apidoc_code">ComplexAssertionMarshaller</span> is constructed on lines 05&#8211;16.</li>
+	<li>The <span class="apidoc_code">ComplexAssertionMarshaller</span> is published as an OSGi service on lines 23&#8211;27. It must be published using the <span class="apidoc_code">AssertionMarshaller</span> interface. It is given a <strong>name</strong> property on line 25 as a good practice when publishing OSGi services. The name should be unique among all services published.</li>
 </ul>
 
 <h5 id="bundle_complexpolicyhandlerfactory">ComplexPolicyHandlerFactory</h5>
-<p>The ComplexPolicyHandlerFactory is published using the following Spring snippet. Because the policy handlers are validating and creating transport level headers the factory will be published with a <strong>concrete</strong> scope instead of <strong>abstract</strong>. Although <strong>abstract</strong> is easier for defining policies that are independent of binding, not all bindings will have transport headers and there will definitely not be transport headers when a virtual service invokes another virtual service in the same container.</p>
+<p>The <span class="apidoc_code">ComplexPolicyHandlerFactory</span> is published using the following Spring snippet. Because the policy handlers are validating and creating transport level headers the factory will be published with a <strong>concrete</strong> scope instead of <strong>abstract</strong>. Although <strong>abstract</strong> is easier for defining policies that are independent of binding, not all bindings will have transport headers and there will definitely not be transport headers when a virtual service invokes another virtual service in the same container.</p>
 <pre>01) &lt;bean id="complex.wsphandler.factory" class="com.soa.examples.policy.complex.handler.ComplexPolicyHandlerFactory"/&gt;
 02)
 03) &lt;  osgi:service  ref="complex.wsphandler.factory"
@@ -802,7 +809,7 @@ interface="com.soa.policy.wspolicy.handler.WSPHandlerFactory"&gt;
 07)  &lt;entry key="binding" value="http"/&gt;
 08)  &lt;entry key="role" value="provider"/&gt;
 09)  &lt;/osgi:service-properties&gt;
-10) &lt;/  osgi:service&gt;
+10) &lt;/osgi:service&gt;
 11)
 12) &lt;osgi:service  ref="complex.wsphandler.factory" interface="com.soa.policy.wspolicy.handler.WSPHandlerFactory"&gt;
 13)  &lt;osgi:service-properties&gt;
@@ -830,7 +837,7 @@ interface="com.soa.policy.wspolicy.handler.WSPHandlerFactory"&gt;
 35)  &lt;entry key="role" value="consumer"/&gt;
 36)  &lt;/osgi:service-properties&gt;
 37) &lt;/osgi:service&gt;</pre>
-<p>The creation of the ComplexPolicyHandler factory is simple and is done on line 01. Then, that same factory instance is published to both the HTTP (REST) and SOAP bindings. Because the factory constructs handlers acting in both the  <strong>consumer</strong>  and  <strong>provider</strong>  roles, it must be published multiple times with those roles. In all, the single factory instance is published as four OSGi services:</p>
+<p>The creation of the <span class="apidoc_code">ComplexPolicyHandler</span> factory {<span class="apidoc_red">GBQ: Earlier we had ComplexPolicyHandlerFactory and now ComplexPolicyHandler factory (with space). Is this correct?</span>} is simple and is done on line 01. Then, that same factory instance is published to both the HTTP (REST) and SOAP bindings. Because the factory constructs handlers acting in both the <strong>consumer</strong>  and  <strong>provider</strong>  roles, it must be published multiple times with those roles. In all, the single factory instance is published as four OSGi services:</p>
 <ul>
 	<li>On lines 03&#8211;10, the factory is published as a provider-side HTTP factory.</li>
 	<li>On lines 12&#8211;19 the factory is published as a provider-side SOAP factory.</li>
