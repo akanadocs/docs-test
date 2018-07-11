@@ -10,7 +10,7 @@ type: page
 nav-title: Message Handler Programming Guide (HTML)
 ---
 <h2 id="top">Message Handler Programming Guide</h2>
-<p>This document provides information about the Akana OSGi Container Message Handler Framework. It describes the architecture of the framework, the framework API, and how to deploy extensions to the framework.</p>
+<p>This document provides information about the Akana Message Handler Framework. It describes the architecture of the framework, the framework API, and how to deploy extensions to the framework.</p>
 <p>To effectively use this guide, you should have access to and a working knowledge of the concepts outlined in the following Policy Manager product documentation:</p>
 <ul>
   <li><a href="../../sp/platform_install/installing_akana_api_platform_v84.htm">Installing the Akana API Platform 8.4x</a></li>
@@ -48,14 +48,13 @@ nav-title: Message Handler Programming Guide (HTML)
 
 
 <h4 id="s01_01_overview">Overview</h4>
-<p>The Akana OSGi Container uses an extensible Message Handler Framework for implementing and enforcing policies on messages. The Message Handler Framework is an extension of the Message Handler Framework (see the <a href="http://docs.akana.com/ag/assets/PM7x_Policy_Handler_Programming_Guide_v1.pdf" title="Policy Manager Message Handler Programming Guide" target="_blank">Policy Manager Message Handler Programming Guide</a>, specialized for runtime policies, both Operational and Quality of Service.</p>
+<p>The Akana API Platform includes an extensible Message Handler Framework for implementing and enforcing policies on messages. The Message Handler Framework is an extension of the Message Handler Framework (see the <a href="http://docs.akana.com/ag/assets/PM7x_Policy_Handler_Programming_Guide_v1.pdf" title="Policy Manager Message Handler Programming Guide" target="_blank">Policy Manager Message Handler Programming Guide</a>, specialized for runtime policies, both Operational and Quality of Service.</p>
 <p>The Message Handler framework provides a set of interfaces that can be implemented by developers that would like to extend the base capabilities of a SOA Container. Many of the base capabilities in the container are also implemented using the same framework.</p>
 <p>The handler framework is used to process incoming and outgoing messages of web services. The processing is typically constrained to binding specific logic, header processing, and minor transformations. It is not intended to provide orchestration, content based routing, or major transformations. Those capabilities should be pursued through the Virtual Service Orchestration Framework.</p>
-<p>The Message Handler Framework is used by individual features such as the Network Director. Due to the different purposes of the features, they each make use of the framework in different ways. For example, the Agent only takes on the role of a provider and processes incoming message exchanges, and therefore the framework is only used to handle incoming requests and their responses. Conversely, the Delegate feature acts as a consumer and only processes outgoing message exchanges. The Network Director acts as a provider and consumer of services and therefore the framework is used for processing both incoming and outgoing message exchanges.</p>
+<p>The Message Handler Framework is used by individual features such as the Network Director. The Network Director acts as a provider and consumer of services; in this scenario, the framework is used for processing both incoming and outgoing message exchanges.</p>
 <p><strong>Note</strong>: this document covers only Network Director use of the Message Handler Framework.</p>
 <p>In all the features, the Message Handler Framework is made up of the same fundamental components:</p>
 <ul>
-	
 	<li><a href="#s01_04_message_handlers">Message Handlers</a></li>
 	<li><a href="#s01_04b_handler_factories">Handler Factories</a></li>
 	<li><a href="#s01_04c_handler_chains">Handler Chains</a></li>
@@ -96,12 +95,12 @@ nav-title: Message Handler Programming Guide (HTML)
 
 
 <h4 id="s01_07_framework_nd">The Framework in the Network Director Feature</h4>
-<p>The Network Director acts as an intermediary, and therefore both a provider and consumer. It incorporates the use of the framework in a similar way to both the Agent and the Delegate, but is more complex because of its multiple binding and mediation support.</p>
+<p>The Network Director acts as an intermediary, and therefore both a provider and consumer, so it includes several variations of binding and mediation support.</p>
 <p><img src="images/pmphpgm_01_03.jpg" alt="Framework in the Network Director feature" /></p>
 <p>The Network Director supports any number of bindings for both incoming and outgoing message exchanges.</p>
 <p>Based on routing dictated by the Virtual Service engine, messages received on one binding may or may not be forwarded on to the downstream service using the same type of binding.</p>
 <p>Every binding implementation is different. Third parties and customers themselves can implement their own bindings. Bindings developed by Akana all incorporate the Message Handler Framework in a consistent fashion. The handlers created and invoked within the bindings may be different based on binding type, but the frameworks share a similar organization.</p>
-<p>For IN bindings, the framework is organized in the same fashion as the Agent. Each binding only deploys binding handlers that are specific to the matching type of binding in addition to all global handlers. However, there is one organizational difference in the Network Director; in Network Director the WS-Policy handlers are divided between the IN bindings and the Virtual Service Engine.</p>
+<p>For IN bindings, each binding only deploys binding handlers that are specific to the matching type of binding in addition to all global handlers. In Network Director, the WS-Policy handlers are divided between the IN bindings and the Virtual Service Engine.</p>
 <p>The Virtual Service Engine deploys all WS-Policy handlers for policies that are attached to the abstract WSDL components of a Service:</p>
 <ul>
 	<li>PortType</li>
@@ -115,7 +114,7 @@ nav-title: Message Handler Programming Guide (HTML)
 	<li>Port</li>
 </ul>
 <p>This enables virtual services to invoke other locally-deployed virtual services while still having policies enforced.</p>
-<p>For OUT bindings, the framework is organized in the same fashion as the Delegate, with the additional binding-specific group described for IN bindings.</p>
+<!--<p>For OUT bindings, the framework is organized in the same fashion as the Delegate, with the additional binding-specific group described for IN bindings. {<span class="apidoc_red">GWQ not sure what to do with this line, commenting it out. GW 6/10/18</span>}</p>-->
 <p><a href="#top">back to top</a></p>
 
 
@@ -152,8 +151,8 @@ nav-title: Message Handler Programming Guide (HTML)
 
 
 <h3 id="s03_deployment">3: Message Handler Deployment</h3>
-<p>The Network Director, Agent, and Delegate use the OSGi (Open Services Gateway initiative) framework for deploying features and extensions.</p>
-<p>In each of these environments, the Message Handler Framework, will dynamically construct the chain of handlers by discovering message handler factories published as OSGi services by OSGi bundles.</p>
+<p>The Network Director uses the OSGi (Open Services Gateway initiative) framework for deploying features and extensions.</p>
+<p>The Message Handler Framework dynamically constructs the chain of handlers by discovering message handler factories published as OSGi services by OSGi bundles.</p>
 <p>
 The Message Handler Framework registers with the OSGi framework for services that implement the HandlerFactory interface. It organizes the HandlerFactory services into groups, as described earlier, through the use of attributes that the HandlerFactory services can use to describe themselves. The following are the attributes the Message Handler Framework will use to group services.
 </p>
@@ -177,11 +176,11 @@ This is a <strong>global</strong> handler.</li>
 
 
 <dt id="attrib_binding">binding</dt>
-<dd>Indicates which binding the handlers from the factory should be deployed for (if the <a href="#attrib_scope"><strong>scope</strong></a> attribute value is <strong>binding</strong>). {<span class="apidoc_red">GWQ: policy handler guide says binding comes into play if scope is concrete. Here, it's if scope is binding. Is that correct?</span>}</dd>
+<dd>Indicates which binding the handlers from the factory should be deployed for (if the <a href="#attrib_scope"><strong>scope</strong></a> attribute value is <strong>binding</strong>).<!-- {<span class="apidoc_red">GWQ: policy handler guide says binding comes into play if scope is concrete. Here, it's if scope is binding. Is that correct?</span>}--></dd>
 
 
 <dt id="attrib_role">role</dt>
-<dd>Indicates whether the handlers from the factory should be used for IN messages (Agent and IN bindings) or OUT messages (Delegate and OUT bindings). The values are:
+<dd>Indicates whether the handlers from the factory should be used for IN messages (IN bindings) or OUT messages (OUT bindings). The values are:
 <ul>
 	<li><strong>consumer</strong>&#8212;Used for OUT messages</li>
 	<li><strong>provider</strong>&#8212;Used for IN messages</li>
@@ -198,11 +197,11 @@ This is a <strong>global</strong> handler.</li>
 </dl>
 <p>The following is an example of how handlers can be defined as OSGi services, and the resulting invocation order:</p>
 <ul>
-	<li><a href="#s03_01_definition">Definition of services in an agent</a></li>
+	<li><a href="#s03_01_definition">Definition of services</a></li>
 	<li><a href="#s03_01_results">Resulting deployment</a></li>
 </ul>
 
-<h5 id="s03_01_definition">Definition of services in an Agent: </h5>
+<h5 id="s03_01_definition">Definition of services: </h5>
 <p><strong>Handler1</strong></p>
 <ul>
 	<li>Name: Handler1</li>
@@ -247,13 +246,13 @@ This is a <strong>global</strong> handler.</li>
 	<li>Handler1 or Handler3 could have been second since there were no ordering constraints on either one, but in this example Handler1 will be second. Handler4 and Handler5 are in the second message-specific group.</li>
 	<li>Handler5 will be deployed before Handler4 though because of Handler4's <strong>after</strong> attribute which referred directly to Handler5.</li>
 </ul>
-<p>In the Delegate, these same example services would be defined with the same attributes except that the <strong>role</strong> attribute would have the value of <strong>consumer</strong>. The deployment order would be the same.</p>
+<p>For OUT bindings<!--{<span class="apidoc_red">GWQ not sure about this rewording to remove delegate 7/10/18</span>}-->, these same example services would be defined with the same attributes except that the <strong>role</strong> attribute would have the value of <strong>consumer</strong>. The deployment order would be the same.</p>
 <p><a href="#top">back to top</a></p>
 
 
 
 <h3 id="s04_development">4: Developing a Message Handler</h3>
-<p>This section describes the steps necessary to develop and deploy a Message Handler to an OSGi container. The sample artifacts described are available in the /samples directory installed with the product. {<span class="apidoc_red">GWQ are they? I see the folder and various subfolders... can't tell.</span>}</p>
+<p>This section describes the steps necessary to develop and deploy a Message Handler. The sample artifacts described are available in the /samples directory installed with the product.<!-- {<span class="apidoc_red">GWQ are they? I see the folder and various subfolders... can't tell.</span>}--></p>
 <p>In the example, a MessageHandler will be developed that will simply log the contents of the IN and OUT messages of a message exchange. The MessageHandler will be a <strong>global</strong> handler and can therefore be deployed to any binding.</p>
 <p>This section includes:</p>
 <ul>
@@ -374,7 +373,7 @@ elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http
 
 
 <h4 id="s04_03_bundle">Bundle</h4>
-<p>The LoggingHandler and LoggingHandlerFactory classes need to be packaged in an OSGi Bundle so that they can be deployed to the SOA Container. The LoggingHandlerFactory needs to be published as an OSGi service so that the Message Handler Framework can load it. In this example, Spring DM (Distributed Modules for OSGi) is used to construct and publish the LoggingHandlerFactory OSGi service. Spring DM is not a requirement but is used here for simplicity.</p>
+<p>The LoggingHandler and LoggingHandlerFactory classes need to be packaged in an OSGi Bundle so that they can be deployed. The LoggingHandlerFactory needs to be published as an OSGi service so that the Message Handler Framework can load it. In this example, Spring DM (Distributed Modules for OSGi) is used to construct and publish the LoggingHandlerFactory OSGi service. Spring DM is not a requirement but is used here for simplicity.</p>
 <pre>01) &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 02)
 03) &lt;!--
@@ -401,7 +400,7 @@ elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http
 <p>In this example:</p>
 <ul>
 	<li>The OSGi service is defined on lines 14&#8211;21. The service is published as an implementation of the HandlerFactory interface using the <strong>interface</strong> attribute.</li>
-	<li>The service has three attributes defined on lines 15&#8211;19. The scope is <strong>all</strong> which indicates to the framework to deploy this handler as a <strong>global</strong> handler to all bindings of the container. The role is <strong>provider</strong> which indicates to the framework that the handler will process incoming messages to the container. This would not work in the Delegate as the Delegate acts only as a <strong>consumer</strong>.</li>
+	<li>The service has three attributes defined on lines 15&#8211;19. The scope is <strong>all</strong> which indicates to the framework to deploy this handler as a <strong>global</strong> handler to all bindings of the container. The role is <strong>provider</strong> which indicates to the framework that the handler will process incoming messages to the container.</li>
 	<li>The construction of the LoggingHandlerFactory is specified on line 20. Since only the default constructor is needed to create the factory, there is nothing more than the identification of the class to instantiate required here.</li>
 </ul>
 <p>An OSGi Bundle must have a Manifest to define its dependencies. The following is the Manifest for this example.</p>
@@ -426,7 +425,7 @@ elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http
 
 
 <h4 id="s04_4_deployment">Deployment</h4>
-<p>An Akana OSGi container will have a folder on the file system with a name that matches the key of the container seen in the Policy Manager Management Console. Under that folder is a sub-folder named  <strong>deploy</strong>. </p>
+<p>An Akana container will have a folder on the file system with a name that matches the key of the container seen in the Policy Manager Management Console. Under that folder is a sub-folder named  <strong>deploy</strong>. </p>
 <p>Bundles that provide extensions to the container, such as additional message handlers, are placed in the  <strong>deploy</strong>  folder.</p>
 <p>When the container is restarted, the services published within any Bundles in the  <strong>deploy</strong>  folder are imported into the container, and all published handler factories are deployed by the Message Handler Framework.</p>
 <p><a href="#top">back to top</a></p>
@@ -445,6 +444,7 @@ elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http
 	<li><a href="../policies/policies_operational_about.htm">About Operational Policies</a></li>
 </ul>
 <ul>
+	<li><a href="pm_policy_handler_programming_guide.htm">Policy Handler Programming Guide</a></li>
 	<li><a href="http://docs.akana.com/cm/learnmore/basics_glossary.htm">Glossary of Terms for the Developer Portal</a></li>
 </ul>
 </div>

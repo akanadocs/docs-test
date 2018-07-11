@@ -10,11 +10,11 @@ type: page
 nav-title: Policy Handler Programming Guide (HTML)
 ---
 <h2 id="top">Policy Handler Programming Guide</h2>
-<p>This document provides information about the Akana OSGi Container Policy Handler Framework. It describes the architecture of the framework, the framework API, and how to deploy extensions to the framework.</p>
+<p>This document provides information about the Akana Policy Handler Framework. It describes the architecture of the framework, the framework API, and how to deploy extensions to the framework.</p>
 <p>To effectively use this guide, you should have access to and a working knowledge of the concepts outlined in the following Policy Manager product documentation:</p>
 <ul>
   <li><a href="../../sp/platform_install/installing_akana_api_platform_v84.htm">Installing the Akana API Platform 8.4x</a></li>
-  <li><a href="pm_policy_handler_programming_guide.htm">Policy Manager Message Handler Programming Guide</a></li>
+  <li><a href="pm_message_handler_programming_guide.htm">Policy Manager Message Handler Programming Guide</a></li>
 </ul>
 
 
@@ -59,10 +59,10 @@ nav-title: Policy Handler Programming Guide (HTML)
 
 
 <h4 id="s01_01_overview">Overview</h4>
-<p>The Akana OSGi Container uses an extensible Policy Handler Framework for implementing and enforcing policies on messages. The Policy Handler Framework is an extension of the Message Handler Framework (see the <a href="pm_message_handler_programming_guide.htm">Policy Manager Message Handler Programming Guide</a>, specialized for runtime policies, both Operational and Quality of Service.</p>
-<p>The Policy Handler framework provides a set of interfaces in addition to those provided by the Message Handler Framework that can be implemented by developers who would like to extend the base policy capabilities of an OSGi container. The base policy capabilities in the product are also implemented using the same framework.</p>
-<p>The policy handler framework is used to process incoming and outgoing messages of web services. This processing is typically constrained to binding specific logic, header processing, security decisions, and minor transformations. It is not intended to provide orchestration, content-based routing, or major transformations. For those capabilities, use the Virtual Service Orchestration Framework. {<span class="apidoc_red">GWQ: will people know what this is?</span>}</p>
-<p>The Policy Handler Framework is used by individual features such as the Network Director. Due to the different purposes of the features, they each make use of the framework in different ways. For example, the Agent only takes on the role of a provider and processes incoming message exchanges, and therefore the framework is only used to handle incoming requests and their responses. Conversely, the Delegate feature acts as a consumer and only processes outgoing message exchanges. The Network Director acts as a provider and consumer of services and therefore the framework is used for processing both incoming and outgoing message exchanges.</p>
+<p>The Akana API Platform includes an extensible Policy Handler Framework for implementing and enforcing policies on messages. The Policy Handler Framework is an extension of the Message Handler Framework (see the <a href="pm_message_handler_programming_guide.htm">Policy Manager Message Handler Programming Guide</a>, specialized for runtime policies, both Operational and Quality of Service.</p>
+<p>The Policy Handler framework provides a set of interfaces in addition to those provided by the Message Handler Framework that can be implemented by developers who would like to extend the base policy capabilities of the product, which are also implemented using the same framework.</p>
+<p>The policy handler framework is used to process incoming and outgoing messages of web services. This processing is typically constrained to binding specific logic, header processing, security decisions, and minor transformations. It is not intended to provide orchestration, content-based routing, or major transformations. For those capabilities, use the Virtual Service Orchestration Framework.<!-- {<span class="apidoc_red">GWQ: will people know what this is?</span>}--></p>
+<p>The Policy Handler Framework is used by individual features such as the Network Director. The Network Director acts as a provider and consumer of services; in this scenario, the framework is used for processing both incoming and outgoing message exchanges.</p>
 <p><strong>Note</strong>: this document covers only Network Director use of the Policy Handler Framework.</p>
 <p>The processing performed by the policy handler framework is dictated by policies attached to services in Policy Manager. Enforcement is the act of ensuring a policy is met by a message. Implementation is the act of altering a message so that it conforms to a policy. When the policy framework governs a service that is receiving messages, the framework enforces the policies attached to the service. It must also implement those same policies on messages that are returned to the client.</p>
 <p>Example</p>
@@ -175,12 +175,12 @@ nav-title: Policy Handler Programming Guide (HTML)
 
 
 <h4 id="s01_07_framework_nd">The Framework in the Network Director Feature</h4>
-<p>The Network Director acts as an intermediary, and therefore both a provider and consumer. It incorporates the use of the framework in a similar way to both the Agent and the Delegate, but is more complex because of its multiple binding and mediation support.</p>
+<p>The Network Director acts as an intermediary, and therefore both a provider and consumer, so it includes several variations of binding and mediation support.</p>
 <p><img src="images/pmphpgm_01_03.jpg" alt="Framework in the Network Director feature" /></p>
 <p>The Network Director supports any number of bindings for both incoming and outgoing message exchanges.</p>
 <p>Based on routing dictated by the Virtual Service engine, messages received on one binding may or may not be forwarded on to the downstream service using the same type of binding.</p>
 <p>Every binding implementation is different. Third parties and customers themselves can implement their own bindings. Bindings developed by Akana all incorporate the Policy Handler Framework in a consistent fashion. The handlers created and invoked within the bindings may be different based on binding type, but the frameworks share a similar organization.</p>
-<p>For IN bindings, the framework is organized in the same fashion as the Agent. Each binding only deploys binding handlers that are specific to the matching type of binding in addition to all global handlers. However, there is one organizational difference in the Network Director; in Network Director the WS-Policy handlers are divided between the IN bindings and the Virtual Service Engine.</p>
+<p>For IN bindings, each binding only deploys binding handlers that are specific to the matching type of binding in addition to all global handlers. In Network Director, the WS-Policy handlers are divided between the IN bindings and the Virtual Service Engine.</p>
 <p>The Virtual Service Engine deploys all WS-Policy handlers for policies that are attached to the abstract WSDL components of a Service:</p>
 <ul>
 	<li>PortType</li>
@@ -194,7 +194,7 @@ nav-title: Policy Handler Programming Guide (HTML)
 	<li>Port</li>
 </ul>
 <p>This enables virtual services to invoke other locally-deployed virtual services while still having policies enforced.</p>
-<p>For OUT bindings, the framework is organized in the same fashion as the Delegate, with the additional binding-specific group described for IN bindings.</p>
+<!--<p>For OUT bindings, the framework is organized in the same fashion as the Delegate, with the additional binding-specific group described for IN bindings. {<span class="apidoc_red">GWQ not sure what to do with this line, commenting it out. GW 6/10/18</span>}</p>-->
 <p><a href="#top">back to top</a></p>
 
 
@@ -245,8 +245,8 @@ nav-title: Policy Handler Programming Guide (HTML)
 
 
 <h3 id="s03_deployment">3: Policy Handler Deployment</h3>
-<p>The Network Director, Agent, and Delegate use the OSGi (Open Services Gateway initiative) framework for deploying features and extensions.</p>
-<p>In each of these environments, the Policy Handler Framework, will dynamically construct the chain of handlers by discovering policy handler factories published as OSGi services by OSGi bundles.</p>
+<p>The Network Director uses the OSGi (Open Services Gateway initiative) framework for deploying features and extensions.</p>
+<p>The Policy Handler Framework dynamically constructs the chain of handlers by discovering policy handler factories published as OSGi services by OSGi bundles.</p>
 <p>The Policy Handler Framework registers with the OSGi framework for services that implement the <span class="apidoc_code">WSPHandlerFactory</span> interface. It organizes the <span class="apidoc_code">WSPHandlerFactory</span> services into groups as described in the framework/feature sections, through the use of attributes that the <span class="apidoc_code">WSPHandlerFactory</span> services can use to describe themselves. The following are the attributes the Policy Handler Framework will use to group <span class="apidoc_code">WSPHandlerFactory</span> services.</p>
 <dl>
 <dt id="attrib_name">name</dt>
@@ -266,7 +266,7 @@ nav-title: Policy Handler Programming Guide (HTML)
 
 
 <dt id="attrib_role">role</dt>
-<dd>Indicates whether the handlers from the factory should be used for receiving message exchanges (Agent and virtual services) or initiating message exchanges (Delegate and downstream services). The values are:
+<dd>Indicates whether the handlers from the factory should be used for receiving message exchanges (virtual services) or initiating message exchanges (downstream services). The values are:
 <ul>
 	<li><strong>consumer</strong>&#8212;Used for initiating exchanges</li>
 	<li><strong>provider</strong>&#8212;Used for receiving exchanges</li>
@@ -283,11 +283,11 @@ nav-title: Policy Handler Programming Guide (HTML)
 </dl>
 <p>The following is an example of how policy handler factories can be defined as OSGi services, and the resulting invocation order:</p>
 <ul>
-	<li><a href="#s03_01_definition">Definition of services in an agent</a></li>
+	<li><a href="#s03_01_definition">Definition of services</a></li>
 	<li><a href="#s03_01_results">Resulting deployment</a></li>
 </ul>
 
-<h5 id="s03_01_definition">Definition of services in an Agent: </h5>
+<h5 id="s03_01_definition">Definition of services:</h5>
 <p><strong>Factory1</strong></p>
 <ul>
 	<li>Name: Factory1</li>
@@ -332,14 +332,14 @@ nav-title: Policy Handler Programming Guide (HTML)
 	<li>Handler1 or Handler3 could have been second since there were no ordering constraints on either one, but in this example Handler1 will be second. Handler4 and Handler5 are in the second message-specific group.</li>
 	<li>Handler5 will be deployed before Handler4 though because of Handler4's <strong>after</strong> attribute which referred directly to Handler5.</li>
 </ul>
-<p>In the Delegate, these same example services would be defined with the same attributes except that the <strong>role</strong> attribute would have the value of <strong>consumer</strong>. The deployment order would be the same.</p>
+<p>For OUT bindings<!--{<span class="apidoc_red">GWQ not sure about this rewording to remove delegate 7/10/18</span>}-->, these same example services would be defined with the same attributes except that the <strong>role</strong> attribute would have the value of <strong>consumer</strong>. The deployment order would be the same.</p>
 <p><a href="#top">back to top</a></p>
 
 
 
 <h3 id="s04_development">4: Developing a Policy Handler</h3>
-<p>This section describes the steps necessary to develop and deploy a Policy Handler to an OSGi container. The sample artifacts described are available in the /samples directory installed with the product. {<span class="apidoc_red">GWQ are they? I see the folder and various subfolders... can't tell.</span>}</p>
-<p>In the example, a policy will be written that will dictate that a transport header be present with the same value as the operation name as defined by the service's WSDL document {<span class="apidoc_red">GWQ: what if it isn't a SOAP service, no WSDL?</span>}. The policy handler will be written to both enforce and implement the policy.</p>
+<p>This section describes the steps necessary to develop and deploy a Policy Handler. The sample artifacts described are available in the /samples directory installed with the product.<!-- {<span class="apidoc_red">GWQ are they? I see the folder and various subfolders... can't tell.</span>}--></p>
+<p>In the example, a policy will be written that will dictate that a transport header be present with the same value as the operation name as defined by the service's WSDL document<!-- {<span class="apidoc_red">GWQ: what if it isn't a SOAP service, no WSDL?</span>}-->. The policy handler will be written to both enforce and implement the policy.</p>
 <p>This section includes:</p>
 <ul>
 	<li><a href="#s04_01_schema">Policy Assertion Schema</a></li>
@@ -762,7 +762,7 @@ elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http
 
 
 <h4 id="s04_03_bundle">Bundle</h4>
-<p>The classes described in the previous section must be packaged in an OSGi bundle so that they can be deployed to the Akana OSGi container. The ComplexAssertionMarshaller and ComplexPolicyHandlerFactory must be published as an OSGi service so that the Policy Handler Framework can load them. In this example, Blueprint is used to construct and publish the OSGi services using Spring. Spring and Blueprint are not requirements, but are used here for simplicity.</p>
+<p>The classes described in the previous section must be packaged in an OSGi bundle so that they can be deployed to the Akana container. The ComplexAssertionMarshaller and ComplexPolicyHandlerFactory must be published as an OSGi service so that the Policy Handler Framework can load them. In this example, Blueprint is used to construct and publish the OSGi services using Spring. Spring and Blueprint are not requirements, but are used here for simplicity.</p>
 
 <h5 id="bundle_assertionmarshaller">Assertion Marshaller</h5>
 <p>The assertion marshaller is published using the following Spring snippet.</p>
@@ -844,7 +844,7 @@ interface="com.soa.policy.wspolicy.handler.WSPHandlerFactory"&gt;
 35)  &lt;entry key="role" value="consumer"/&gt;
 36)  &lt;/osgi:service-properties&gt;
 37) &lt;/osgi:service&gt;</pre>
-<p>The creation of the <span class="apidoc_code">ComplexPolicyHandler</span> factory {<span class="apidoc_red">GBQ: Earlier we had ComplexPolicyHandlerFactory and now ComplexPolicyHandler factory (with space). Is this correct?</span>} is simple and is done on line 01. Then, that same factory instance is published to both the HTTP (REST) and SOAP bindings. Because the factory constructs handlers acting in both the <strong>consumer</strong>  and  <strong>provider</strong>  roles, it must be published multiple times with those roles. In all, the single factory instance is published as four OSGi services:</p>
+<p>The creation of the <span class="apidoc_code">ComplexPolicyHandler</span> factory<!-- {<span class="apidoc_red">GBQ: Earlier we had ComplexPolicyHandlerFactory and now ComplexPolicyHandler factory (with space). Is this correct?</span>}--> is simple and is done on line 01. Then, that same factory instance is published to both the HTTP (REST) and SOAP bindings. Because the factory constructs handlers acting in both the <strong>consumer</strong>  and  <strong>provider</strong>  roles, it must be published multiple times with those roles. In all, the single factory instance is published as four OSGi services:</p>
 <ul>
 	<li>On lines 03&#8211;10, the factory is published as a provider-side HTTP factory.</li>
 	<li>On lines 12&#8211;19 the factory is published as a provider-side SOAP factory.</li>
@@ -883,14 +883,14 @@ interface="com.soa.policy.wspolicy.handler.WSPHandlerFactory"&gt;
 <p>In the above:</p>
 <ul>
 	<li>Lines 01&#8211;06 hold general information about the Bundle.</li>
-	<li>Lines 07&#8211;22 hold the package dependencies for the Bundle. All packages not defined within the bundle that are imported by code in the Bundle must be listed here. The only exceptions to this are packages that are in the global classpath of the Akana OSGi Container, such as the Java JRE and Spring packages.</li>
+	<li>Lines 07&#8211;22 hold the package dependencies for the Bundle. All packages not defined within the bundle that are imported by code in the Bundle must be listed here. The only exceptions to this are packages that are in the global classpath of the Akana Container, such as the Java JRE and Spring packages.</li>
 	<li>Lines 23&#8211;26 list the packages that are exported, or published, to other bundles loaded in the system. This is required so that the Policy Handler Framework can load the assertion classes as they are constructed using a JAXB context from another bundle and could possibly be used by a user interface bundle for displaying the policy in the Policy Manager Management Console.</li>
 </ul>
 <p><a href="#top">back to top</a></p>
 
 
 <h4 id="s04_4_deployment">Deployment</h4>
-<p>An Akana OSGi container will have a folder on the file system with a name that matches the key of the container seen in the Policy Manager Management Console. Under that folder is a sub-folder named  <strong>deploy</strong>. </p>
+<p>An Akana container will have a folder on the file system with a name that matches the key of the container seen in the Policy Manager Management Console. Under that folder is a sub-folder named  <strong>deploy</strong>. </p>
 <p>Bundles that provide extensions to the container, such as additional message handlers, are placed in the  <strong>deploy</strong>  folder.</p>
 <p>When the container is restarted, the services published within any Bundles in the  <strong>deploy</strong>  folder are imported into the container, and all published handler factories and assertion marshallers are picked up by the Policy Handler Framework.</p>
 <p><a href="#top">back to top</a></p>
@@ -921,6 +921,7 @@ interface="com.soa.policy.wspolicy.handler.WSPHandlerFactory"&gt;
 	<li><a href="../policies/policies_operational_about.htm">About Operational Policies</a></li>
 </ul>
 <ul>
+	<li><a href="pm_message_handler_programming_guide.htm">Message Handler Programming Guide</a></li>	
 	<li><a href="http://docs.akana.com/cm/learnmore/basics_glossary.htm">Glossary of Terms for the Developer Portal</a></li>
 </ul>
 </div>
