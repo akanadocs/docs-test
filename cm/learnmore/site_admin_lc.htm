@@ -22,7 +22,7 @@ nav-title: LC UI
 	<li><a href="#lc_feature_req">What features do I install and configure to use Lifecycle Coordinator?</a></li>
 	<li><a href="#lc_setup_role">Who can set up the Lifecycle Coordinator user interface (UI)?</a></li>
 	<li><a href="#lc_user_role">Who can use the Lifecycle Coordinator UI?</a></li>
-	<li><a href="#lc_setup_how">How do I set up Lifecycle Coordinator in the developer portal?</a></li>
+	<li><a href="#lc_setup_how">How do I set up Lifecycle Coordinator?</a></li>
 	<li><a href="#lc_ui_promotion_requests_page">What activities can I perform on the Promotion Requests page?</a></li>
 	<li><a href="#lc_ui_promotion_requests_page_filter">How do I filter the list of promotion requests?</a></li>
 	<li><a href="#lc_ui_promotion_request_details">How do I view promotion request details?</a></li>
@@ -30,16 +30,15 @@ nav-title: LC UI
 	<li><a href="#promotion_request_reject">What happens when I reject a promotion request?</a></li>
 	<li><a href="#lc_ui_admin_page">What activities can I perform on the Lifecycle Coordination Admin (Requests) page?</a></li>
 	<li><a href="#lc_promotion_request_status">What are the valid statuses and lifecycle for a promotion request?</a></li>
-<!--	<li><a href="#xxx">xxx</a></li>-->
 </ol>
 <div class = "divider1"></div>
 
 
 
 <h3 id="lc_overview">What is Lifecycle Coordinator?</h3>
-<p>Lifecycle Coordinator is a set of functions, with an associated user interface, that allows you to manage assets on the developer portal, such as apps and APIs, in a hierarchy of separate tenants, to manage the development lifecycle.</p>
+<p>Lifecycle Coordinator is a set of functions, with an associated user interface, that allows you to manage development and operational lifecycle of assets on the developer portal, such as apps and APIs, in a defined sequence of separate tenants.</p>
 <p>For example, let's say your team designs an API. The API is in the development environment. When it's ready, you want to move it to the staging environment where it will be tested. Perhaps it fails testing and some changes are made, and an updated version needs to be tested. Then, when testing is complete, you want to move it to a production environment.</p>
-<p>In the context of Lifecycle Coordinator, this hierarchy of different development environments is represented in a separate platform tenant. The hierarchy of environments is defined in Lifecycle Manager and ported to Community Manager. The separate environments are defined as separate Community Manager tenants. Then, as part of Lifecycle Coordinator setup, the hierarchy is defined within the context of the first tenant of the hierarchy.</p>
+<p>In the context of Lifecycle Coordinator, each of these different development environments is represented in a separate platform tenant. The promotion sequence across these environments is defined as a promotion topology in Lifecycle Coordinator, with the separate environments defined as separate Community Manager tenants within this topology. In other words, Lifecycle Coordinator acts as a hub in a hub-and-spoke configuration, with each tenant representing a spoke in the configuration.</p>
 <p>Once setup is complete, authorized users can promote assets between environments.</p>
 <p><a href="#top">Back to top</a></p>
 
@@ -52,6 +51,11 @@ nav-title: LC UI
 	<li>You can have three different containers on three different machines, each with one tenant.</li>
 	<li>You can have a hybrid structure where two or more tenants are on one machine, and another&#8212;for example, Production&#8212;can be on a different machine.</li>
 </ul>
+<p>The Lifecycle Coordinator instance connecting these tenants can be:</p>
+<ul>
+	<li>Deployed on a separate machine.</li>
+	<li>Co-located on the same machine as one or more of the tenants. </li>
+</ul>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -59,17 +63,24 @@ nav-title: LC UI
 <h3 id="lc_feature_req">What features do I install and configure to use Lifecycle Coordinator?</h3>
 <p>To use Lifecycle Coordinator, you'll need to have:</p>
 <ul>
-	<li>A working instance of Lifecycle Manager (LM). The promotion hierarchy is defined in Lifecycle Manager.</li>
-	<li>An implementation of Community Manager, with at least two environments; each is a separate platform tenant. You'll promote assets (apps and APIs) between the tenants. A common scenario is to have a promotion hierarchy of three tenants&#8212;Development, Staging, and Production.</li>
+	<li>A working instance of Lifecycle Coordinator. The promotion sequence is defined in this instance.
+		<div>
+			<div> </div>
+		</div>
+	</li>
+	<li>An implementation of Community Manager, with at least two environments; each is a separate platform tenant. You'll promote assets (apps and APIs) between the tenants. A common scenario is to have a promotion sequence of three tenants&#8212;Development, Staging, and Production. {<span class="apidoc_red">BCQ: so, does this not actually require LM install? I thought it did. I definitely need to clarify the installation side of things.</span>}</li>
 </ul>
-<p>Then, you can set up Lifecycle Coordinator in the first tenant of your hierarchy. From that point, authorized users in each tenant can promote assets (apps and APIs) to the next environment. The authorized Lifecycle Coordinator user can manage promotion requests within the Lifecycle Coordinator user interface.</p>
+<p>Once the promotion topology is configured in the Lifecycle Coordinator instance, authorized users in each tenant can promote assets (apps and APIs) to the next environment. The authorized Lifecycle Coordinator user can manage promotion requests within the Lifecycle Coordinator user interface. </p>
+<div>
+	<div> </div>
+</div>
 <p><a href="#top">Back to top</a></p>
 
 
 
 <h3 id="lc_setup_role">Who can set up the Lifecycle Coordinator user interface (UI)?</h3>
 <p>The Site Admin sets up the Lifecycle Coordinator user interface.</p>
-<p>LC must be set up within the developer portal of the first tenant in the hierarchy.</p>
+<p>{<span class="apidoc_red">BCQ: removing comment that LC must be set up within the developer portal of the first tenant in the sequence. But I had that info from Arjun. What's the correct data?</span>}</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -77,7 +88,7 @@ nav-title: LC UI
 <h3 id="lc_user_role">Who can use the Lifecycle Coordinator UI?</h3>
 <p>There are two categories of user defined for the Lifecycle Coordinator UI:</p>
 <ul>
-	<li><strong>LC User</strong>: Sees all requests for the promotion hierarchy, and can approve or reject promotion requests.</li>
+	<li><strong>LC User</strong>: Sees all requests for the promotion sequence, and can approve or reject promotion requests.</li>
 	<li><strong>LC Administrator</strong>: Cannot approve or reject promotion requests, but can cancel requests. Users with the LC Administrator role see a separate page, <strong>Admin</strong>, which isn't available to the LC User. See <a href="#lc_ui_admin_page">What activities can I perform on the Lifecycle Coordination Admin (Requests) page?</a></li>
 </ul>
 <p>The same user can have both roles.</p>
@@ -87,24 +98,24 @@ nav-title: LC UI
 
 
 
-<h3 id="lc_setup_how">How do I set up Lifecycle Coordinator in the developer portal?</h3>
-<p>The Site Admin sets up the Lifecycle Coordinator user interface, within the developer portal user interface for the first tenant in the topology hierarchy.</p>
+<h3 id="lc_setup_how">How do I set up Lifecycle Coordinator?</h3>
+<p>The Site Admin sets up the Lifecycle Coordinator user interface.</p>
 
 <h5 id="proc_lc_setup">To set up Lifecycle Coordinator</h5>
 <ol>
-	<li>Log in as the Site Admin, in the first tenant of the topology, and go to the Admin section.</li>
+	<li>Log in as the Site Admin, in the first tenant of the topology (or in the <span class="apidoc_red">dummy</span> tenant created as part of a standalone Lifecycle Coordinator instance), and <a href="site_admin_overview.htm#admin_menu_siteadmin">go to the Admin section</a>.</li>
 	<li>Go to <strong>Site</strong>.</li>
 	<li>At the bottom, in the Themes section, click <strong>Add Theme</strong>.</li>
 	<li>In the <strong>Theme</strong> field, choose <strong>devops</strong>, as shown below.
-  <p><img src="assets/lc_install_theme.jpg"  alt="Adding the LC theme" /></p></li>
+	<p><img src="assets/lc_install_theme.jpg" alt="Adding the LC theme" /></p></li>
 	<li>Specify additional values for the Lifecycle Coordinator user interface (for help with field values, see <a href="site_admin_site.htm#settings_theme_configure">How do I configure values for a theme?</a>):
-<ul>
-    	<li>One or more virtual hosts or vanity hostnames for the LC UI.</li>
-    	<li>The full console address for the theme, including trailing backslash.</li>
-    	<li>The site title.</li>
-    	<li>The site meta description.</li>
-    </ul>
-  </li>
+	<ul>
+		<li>One or more virtual hosts or vanity hostnames for the LC UI.</li>
+		<li>The full console address for the theme, including trailing backslash.</li>
+		<li>The site title.</li>
+		<li>The site meta description.</li>
+	</ul>
+	</li>
 	<li>Click <strong>Finish</strong>.</li>
 	<li>On the Site Settings page, click <strong>Save</strong> to confirm.</li>
 </ol>
@@ -121,7 +132,7 @@ nav-title: LC UI
 	<li>View request details: click the request name (a link). See <a href="#lc_ui_promotion_request_details">How do I view promotion request details?</a> below.</li>
 </ul>
 <h5 id="proc_lc_promreq_page">To get to the Promotion Requests page:</h5>
-<p>Log in to the Lifecycle Coordinator user interface. The URL is the Console Address value set up in devops theme definition for the first tenant in the hierarchy (see <a href="#proc_lc_setup">To set up Lifecycle Coordinator</a> above).</p>
+<p>Log in to the Lifecycle Coordinator user interface. The URL is the Console Address value set up in devops theme definition for the tenant associated with the Lifecycle Coordinator instance (see <a href="#proc_lc_setup">To set up Lifecycle Coordinator</a> above).</p>
 <p> Lifecycle Coordinator opens at the <strong>Promotion Requests</strong> page, as shown below.</p>
 <p><img src="assets/lc_ui_requests_page.jpg" alt="The LC UI Promotion Requests page" /></p>
 <p><a href="#top">Back to top</a></p>
@@ -137,9 +148,9 @@ nav-title: LC UI
 <p>You might have a large number of promotion requests to approve or reject, and might want to prioritize. Or, you might need to find a specific promotion request.</p>
 <p>The <strong>Promotion Requests</strong> page includes filtering options to help you tailor your view as needed, including:</p>
 <ul>
-  <li><a href="#lc_ui_filter_search">Search string</a></li>
-  <li><a href="#lc_ui_filter_env">Environment drop-down list</a></li>
-  <li><a href="#lc_ui_filter_filter">Filter drop-down list</a></li>
+	<li><a href="#lc_ui_filter_search">Search string</a></li>
+	<li><a href="#lc_ui_filter_env">Environment drop-down list</a></li>
+	<li><a href="#lc_ui_filter_filter">Filter drop-down list</a></li>
 </ul>
 
 
@@ -147,7 +158,7 @@ nav-title: LC UI
 <p>Use the <strong>Search Requests</strong> field to search for promotion requests matching any string you enter, with or without additional filters.</p>
 
 <h5 id="lc_ui_filter_env">Environment drop-down list</h5>
-<p>Search by environment. The drop-down list includes all environments in your hierarchy. An example is shown below.</p>
+<p>Search by environment. The drop-down list includes all environments in your topology sequence. An example is shown below.</p>
 <p><img src="assets/lc_ui_requests_page_environments.jpg" alt="Promotion Requests page: Environments drop-down list" /></p>
 
 <h5 id="lc_ui_filter_filter">Filter drop-down list</h5>
@@ -168,7 +179,7 @@ nav-title: LC UI
 
 
 <h3 id="promotion_request_approve">What happens when I approve a promotion request?</h3>
-<p>When you approve a promotion request, the change takes effect immediately. The asset remains in the original environment, but is also promoted to the next environment in the hierarchy. You might need to refresh the browser to see the change.</p>
+<p>When you approve a promotion request, the change takes effect immediately. The asset remains in the original environment, but is also promoted to the next environment in the sequence. You might need to refresh the browser to see the change.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -182,14 +193,14 @@ nav-title: LC UI
 <h3 id="lc_ui_admin_page">What activities can I perform on the Lifecycle Coordination Admin (Requests) page?</h3>
 <p>If you're a Lifecycle Coordinator Admin, you have an additional page available to you. On the <strong>Admin</strong> page you have the following additional capabilities:</p>
 <ul>
-  <li>Cancel requests. If you also have the LC&nbsp;User role, you can approve or reject promotion requests, but you must use the&nbsp;Promotion Requests page. The <strong>Requests</strong> page is only for cancelling requests.</li>
+	<li>Cancel requests. If you also have the LC User role, you can approve or reject promotion requests, but you must use the Promotion Requests page. The <strong>Requests</strong> page is only for cancelling requests.</li>
 </ul>
 
-<h5 id="proc_lc_promreq_page">To get to the Admin (Requests) page:</h5>
+<h5 id="proc_lc_adminreq_page">To get to the Admin (Requests) page:</h5>
 <ol>
-  <li>Log in to the LC user interface.  Lifecycle Coordinator opens at the <strong>Promotion Requests</strong> page. Click the drop-down in the top menu bar, as shown below.
-  <p><img src="assets/lc_ui_nav_admin.jpg" width="270" height="111" alt="LC UI: Opening the Admin page" /></p></li>
-  	<li>The <strong>Requests</strong> page is displayed.
+	<li>Log in to the LC user interface. Lifecycle Coordinator opens at the <strong>Promotion Requests</strong> page. Click the drop-down in the top menu bar, as shown below.
+	<p><img src="assets/lc_ui_nav_admin.jpg" width="270" height="111" alt="LC UI: Opening the Admin page" /></p></li>
+		<li>The <strong>Requests</strong> page is displayed.
 <p><img src="assets/lc_ui_admin_page.jpg" alt="The LC UI Admin (Requests)page" /></p></li>
 </ol>
 <p><a href="#top">Back to top</a></p>
@@ -204,13 +215,14 @@ nav-title: LC UI
 <p>If the request is cancelled, the status changes to <strong>Promotion Failed</strong>.</p>
 <p>Within the Lifecycle Coordinator user interface, you can filter requests by the following statuses:</p>
 <ul>
-  <li>All</li>
+	<li>All</li>
 	<li>Approved</li>
 	<li>Promotion Pending</li>
 	<li>Promotion Failed</li>
 	<li>Rejected</li>
 </ul>
 <p><a href="#top">Back to top</a></p>
+
 
 
 
@@ -229,7 +241,6 @@ nav-title: LC UI
 </ul>
 <ul>
 	<li><a href="site_admin_site.htm">Site Settings</a></li>
-<!--	<li><a href="site_admin_site_admins.htm">Managing Site Admins</a></li>-->
 	<li><a href="site_admin_users.htm">Managing User Accounts</a></li>
 	<li><a href="site_admin_workflows.htm">Workflows</a></li>
 </ul>
