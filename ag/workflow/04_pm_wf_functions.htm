@@ -12,9 +12,8 @@ nav-title: Workflow Functions
 <h2 id="top">Workflow Functions</h2>
 <p>Description of built-in Workflow Functions that can be used to perform specific actions relative to a service, contract, or policy.</p>
 
-<p><a href="workflow_management.htm" class="button secondary">Workflow Management</a>  
-<a href="workflow_library.htm" class="button secondary">Workflow Library</a>  
-<a href="../../ag/assets/PM_workflow_developers_reference_61_7x.pdf" class="button secondary"> Workflow Developers Guide</a>
+<p><a href="01_pm_wf_management.htm" class="button secondary">Workflow Management</a>  
+<a href="00_pm_wf_library.htm" class="button secondary">Workflow Library</a>
 </p>
 
 
@@ -43,7 +42,7 @@ nav-title: Workflow Functions
 <table class="doctable">
 	<thead>
 	<tr>
-	<th>Variable</th>
+	<th>Function</th>
 		<th>Content</th>
 		</tr>
 		</thead>
@@ -61,12 +60,32 @@ nav-title: Workflow Functions
 <p><strong>severity (optional)</strong>&#8212;The logging severity for the message: fatal, error, warning, info (default), debug, or trace.</p></td>
 	</tr>
 	<tr>
-		<td>runScript</td>
-		<td>Run a script to check for a special condition. For more information, refer to <a href="workflow_scripts.htm">Using Scripts in Workflows</a>.</td>
+		<td id="pm_wf_f_runscript">runScript</td>
+		<td><p>Runs a script to check for a special condition. For an example, refer to <a href="07_pm_wf_scripts.htm">Using Scripts in Workflows</a>.</p>
+			<p><strong>Note</strong>: from version 2018.0.0 onwards, the workflow <strong>runScript</strong> function has been enhanced to have the following additional features available in process/policy scripting:</p>
+			<ul>
+				<li>Support of invoking services via the <strong>messengerService</strong>.</li>
+				<li>Abillity to define the following variables with function equivalent to process/policy scripting: <strong>systemLog</strong>, <strong>alerter</strong>, <strong>msgFactory</strong>, msgrService.</li>
+				<li>Ability to import script objects.</li>
+			</ul>
+			<p>These changes apply to all types of workflow in both Policy Manager and Community Manager.</p>
+			<p><strong>Arguments (2018.0.0 and later)</strong></p>
+			<p><strong>script-id</strong>&#8212;An optional, unique identifier assigned to the script. This identifier is used as the key to the compiled script when stored in memory for reuse. This is useful for scripts that occur within workflow &lt;step&gt; definitions as opposed to those that appear in &lt;common-functions&gt;.</p>
+			<p>Example:</p>
+			<pre>&lt;arg name=&quot;id&quot;&gt;script-id&lt;/arg&gt;</pre>
+			<p><strong>import</strong>&#8212;An optional list of script objects that are to be imported into this script definition. These script objects must use the same scripting language as the workflow script.</p>
+			<p>Example:</p>
+			<pre>&lt;arg name=&quot;import&quot;&gt;
+	script-object-key ...
+&lt;/arg&gt;</pre>
+			<p><strong>useLegacy</strong>&#8212;An optional flag that enables the older style script variables to be set in addition to the new ones. This allows compatibility with existing scripts.</p>
+			<p>Example: </p>
+			<pre>&lt;arg name=&quot;useLegacy&quot;&gt; true | false &lt;/arg&gt;</pre>
+			<p>For additional information on the enhanced <strong>runScript</strong> functionality, see <a href="07_pm_wf_scripts.htm">Using Scripts in Workflows.</a></p></td>
 	</tr>
 	<tr>
 		<td>getOrganizationemailContact</td>
-		<td><p>Produces a comma delimited list of organization contact email addresses.</p>
+		<td><p>Produces a comma-delimited list of organization contact email addresses.</p>
 	<p><strong>Arguments</strong></p>
 	<p><strong>organization (optional) </strong>&#8212;The UDDI key of the organization whose email contacts are to be retrieved. Defaults to the parent organization of the service or contract.</p>
 	<p><strong>contactType</strong>&#8212;A comma-delimited list of organization contact <strong>use types</strong> that are to be selected.</p>
@@ -97,7 +116,7 @@ nav-title: Workflow Functions
 <table class="doctable">
 	<thead>
 	<tr>
-		<th>Variable</th>
+		<th>Function</th>
 		<th>Content</th>
 		</tr>
 </thead>
@@ -149,9 +168,10 @@ nav-title: Workflow Functions
 		<td>getCategoryValueFromProxiedService</td>
 		<td><p>Placed the key value of a keyed reference selected from the proxy parent service's category bag into a workflow variable.</p>
 				<p><strong>Arguments</strong></p>
-				<p>tmodel&#8212;The UDDI tModel key of the keyed reference.</p>
+				<p><strong>tmodel</strong>&#8212;The UDDI tModel key of the keyed reference.</p>
 				<p><strong>keyName (optional) </strong>&#8212;The name of the keyed reference.</p>
-				<p><strong>var</strong>&#8212;The name of the workflow variable to receive the key value of the selected keyed reference. Do not include any periods in this name. </p>
+				<p><strong>var</strong>&#8212;The name of the workflow variable to receive the key value of the selected keyed reference.</p>
+				<p><strong>Note</strong>: Do <strong>not</strong> include any periods in this name. </p>
 				<p><strong>handle.errors [lax | strict] </strong>&#8212;Generate warnings or errors when used on a non-proxy service.</p></td>
 	</tr>
 	<tr>
@@ -165,7 +185,7 @@ nav-title: Workflow Functions
 				<p><strong>exclude.groups</strong>&#8212;A list of tModel keys of the category groups to be excluded</p>
 				<p>replace A list of tModel keys of the categories to be completely replaced in the proxy service</p>
 				<p><strong>replace.groups</strong>&#8212;A list of tModel keys of the category groups to be replaced in the proxy service.</p>
-				<p><strong>recursive (copyToProxyServices only) </strong>&#8212;Should the selected categories be copied to the entire chain of services (true) or to just the direct proxies (false=default)
+				<p><strong>recursive (copyToProxyServices only) </strong>&#8212;Should the selected categories be copied to the entire chain of services (<strong>true</strong>) or to just the direct proxies (<strong>false</strong>=default)
 These arguments are whitespace-delimited lists of UDDI keys. The entries can contain a wildcard (*) at the beginning, the end, or both.</p></td>
 	</tr>
 	<tr>
@@ -197,23 +217,38 @@ If the export file already exists, it will be kept but renamed to include a date
 	</tr>
 	<tr>
 		<td><p>performActionOnProxyServices</p>
-<p>performActionOnProxiedService</p></td>
+	<p>performActionOnProxiedService</p></td>
+		<td><p>Perform a workflow action on the related proxy or proxied parent service.</p>
+			<p><strong>Arguments</strong></p>
+			<p>One of the following:</p>
+			<p><strong> action.id&#8212;</strong>The <strong>id</strong> of the workflow <strong>&lt;action&gt;</strong> to be performed.</p>
+			<p><strong>action.name&#8212;</strong>The <strong>name</strong> of the workflow <strong>&lt;action&gt;</strong> to be performed.</p>
+			<p><strong>action.message</strong>&#8212;An optional comment that will be logged with the workflow history of the action event.</p>
+			<p><strong>handle.errors&#8212;</strong>[<u>lax</u> | strict] Generate warnings or errors when the specified action is not part of the target service's current workflow &lt;step&gt;.</p>
+			<p><strong>recursive</strong>&#8212;(performActionOnProxyServices only) Should the action be performed on the entire chain of services (<strong>true</strong>) or to just the direct proxies (<strong>false</strong>=default).</p>
+			<p>Additional arguments can be passed and will be available as workflow variables for use in the target action. The names of these additional arguments <strong>must not</strong> contain any periods (.)</p></td>
+	</tr>
+	<tr>
+		<td><p>performAction</p></td>
 		<td><p>Perform a workflow action on the service with the same key but in a remote Policy Manager instance.</p>
-				<p><strong>Arguments</strong></p>
-				<p>One of the following:</p>
-				<p><strong> action.id&#8212;</strong>The <strong>id</strong> of the workflow <strong>&lt;action&gt;</strong> to be performed.</p>
-				<p><strong>action.name&#8212;</strong>The <strong>name</strong> of the workflow <strong>&lt;action&gt;</strong> to be performed.</p>
-				<p><strong>action.message</strong>&#8212;An optional comment that will be logged with the workflow history of the action event.</p>
-				<p><strong>handle.errors&#8212;</strong>[<u>lax</u> | strict] Generate warnings or errors when the specified action is not part of the target service's current workflow &lt;step&gt;.</p>
-				<p>One of the following:</p>
-				<p><strong>workflow.service.key&#8212;</strong>Specify the instance of the</p>
-				<p><strong>workflow.service.qname&#8212;</strong>Workflow Service for the remote</p>
-				<p><strong>workflow.service.binding.identifier&#8212;</strong>Policy Manager</p>
-				<p><strong>workflow.service.username&#8212;</strong>The user on the remote Policy Manager to use to perform the action. This is either a qualified user name (<strong>domain\user</strong>) or a user in the <strong>Local Domain</strong>.</p>
-				<p><strong>workflow.service.password&#8212;</strong>The password for that user.</p>
-				<p><strong>remote.transport.method&#8212;</strong>The strategy to be used to transmit the perform-action request to the remote Policy Manager:</p>
-				<p><strong>sync</strong>&#8212;<strong>(default)</strong> Function does not complete until the action has been completed on the remote Policy Manager.</p>
-				<p><strong>async&#8212;</strong>Function completes immediately and the perform-action request is placed on a persistent queue to be processed by a background thread. Additional arguments can be passed and will be available as workflow variables for use in the target action. The names of these additional arguments <strong>must not</strong> contain any periods (.)</p></td>
+			<p><strong>Arguments</strong></p>
+			<p>One of the following:</p>
+			<p><strong> action.id&#8212;</strong>The <strong>id</strong> of the workflow <strong>&lt;action&gt;</strong> to be performed.</p>
+			<p><strong>action.name&#8212;</strong>The <strong>name</strong> of the workflow <strong>&lt;action&gt;</strong> to be performed.</p>
+			<p><strong>action.message</strong>&#8212;An optional comment that will be logged with the workflow history of the action event.</p>
+			<p><strong>handle.errors&#8212;</strong>[<u>lax</u> | strict] Generate warnings or errors when the specified action is not part of the target service's current workflow &lt;step&gt;.</p>
+			<p>One of the following:</p>
+			<p><strong>workflow.service.key&#8212;</strong>Specify the instance of the</p>
+			<p><strong>workflow.service.qname&#8212;</strong>Workflow Service for the remote</p>
+			<p><strong>workflow.service.binding.identifier&#8212;</strong>Policy Manager</p>
+			<p><strong>workflow.service.username&#8212;</strong>The user on the remote Policy Manager to use to perform the action. This is either a qualified user name (<strong>domain\user</strong>) or a user in the <strong>Local Domain</strong>.</p>
+			<p><strong>workflow.service.password&#8212;</strong>The password for that user.</p>
+			<p><strong>remote.transport.method&#8212;</strong>The strategy to be used to transmit the perform-action request to the remote Policy Manager:</p>
+			<ul>
+				<li><strong>sync</strong>&#8212;<strong>(default)</strong> Function does not complete until the action has been completed on the remote Policy Manager.</li>
+				<li><strong>async&#8212;</strong>Function completes immediately and the perform-action request is placed on a persistent queue to be processed by a background thread.</li>
+				</ul>
+			<p>Additional arguments can be passed and will be available as workflow variables for use in the target action. The names of these additional arguments <strong>must not</strong> contain any periods (.)</p></td>
 	</tr>
 </tbody>
 </table>
@@ -227,7 +262,7 @@ If the export file already exists, it will be kept but renamed to include a date
 <table class="doctable">
 	<thead>
 	<tr>
-		<th>Variable</th>
+		<th>Function</th>
 		<th>Content</th>
 	</tr>
 	</thead>
@@ -250,8 +285,8 @@ If the export file already exists, it will be kept but renamed to include a date
 				<p><strong>Argument</strong></p>
 				<p>One of the following:</p>
 				<p><strong>export.file</strong>&#8212;The fully qualified name of the export ZIP.</p>
-				<p><strong>export.folder</strong>&#8212;The directory where the export ZIP will be placed. The default is [Akana-HOME]/sm60/export. The file will be named:</p>
-<p><strong>contract&#8212;[contract-key]-export.zip</strong></p>
+				<p><strong>export.folder</strong>&#8212;The directory where the export ZIP will be placed. The default is [Akana-HOME]/sm60/export.</p>
+				<p>The file will be named: <strong>contract&#8212;[contract-key]-export.zip</strong></p>
 		<p><strong>include.artifacts</strong>&#8212;Export attached metadata (default=true).</p>
 		<p><strong>include.qos.policies</strong>&#8212;Export any attached QoS policies (default=true).</p>
 		<p>If the export file already exists, it will be kept but renamed to include a date/time stamp.</p></td>
@@ -272,9 +307,10 @@ If the export file already exists, it will be kept but renamed to include a date
 			<p><strong>workflow.service.username</strong>&#8212;The user on the remote Policy Manager to use to perform the action. This is either a qualified user name (domain\user) or a user in the Local Domain.</p>
 				<p><strong>workflow.service.password</strong>&#8212;The password for that user.</p>
 				<p><strong>remote.transport.method</strong>&#8212;The strategy to be used to transmit the perform-action request to the remote Policy Manager:</p>
-				<p><strong>sync</strong>&#8212;(default) Function does not complete until the action has been completed on the remote Policy Manager.</p>
-				<p><strong>async</strong>&#8212;Function completes immediately and the perform action request is placed on a persistent queue to be processed by a background thread.</p>
-Additional arguments can be passed and will be available as workflow variables for use in the target action. The names of these additional arguments <strong>must not</strong> contain any periods (.)</td>
+				<ul>
+					<li><strong>sync</strong>&#8212;(default) Function does not complete until the action has been completed on the remote Policy Manager.</li>
+					<li><strong>async</strong>&#8212;Function completes immediately and the perform action request is placed on a persistent queue to be processed by a background thread.</li>
+				</ul> Additional arguments can be passed and will be available as workflow variables for use in the target action. The names of these additional arguments <strong>must not</strong> contain any periods (.)</td>
 	</tr>
 </tbody>
 </table>
