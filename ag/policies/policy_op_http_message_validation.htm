@@ -36,6 +36,7 @@ nav-title: HTTP Message Validation
 		</li>
 	<li><a href="#policy_attach">Attaching the policy</a></li>
 	<li><a href="#policy_regex">Using regular expressions</a></li>
+	<li><a href="#http_message_validation_examples">HTTP Message Validation Policy: examples</a></li>
 </ol>
 <div class = "divider1"></div>
 
@@ -46,7 +47,7 @@ nav-title: HTTP Message Validation
 <p>It includes:</p>
 <ul>
 	<li>Validation of form, query, and header parts.</li>
-	<li>Complete validation of JSON message payloads based on JSON Schemas contained in the Swagger or RAML documents&nbsp;used to define the API.</li>
+	<li>Complete validation of JSON message payloads based on JSON Schemas contained in the Swagger or RAML documents used to define the API.</li>
 </ul>
 <p>For information about the JSON Schema rules for HTTP message validation, see:</p>
 <ul>
@@ -60,7 +61,7 @@ nav-title: HTTP Message Validation
 
 <h5>To add an operational policy</h5>
 <ol>
-	<li>Go to <strong>Workbench</strong> &gt; <strong>Browse</strong> &gt; <strong>Organization</strong>, and select <strong>Policies</strong> &gt; <strong>Operational Policies</strong>. The <strong>Policies Summary</strong> is displayed.</li>
+	<li>Go to <strong>Workbench</strong> &gt; <strong>Browse</strong> &gt; <strong>Organization</strong> and select <strong>Policies</strong> &gt; <strong>Operational Policies</strong>. The <strong>Policies Summary</strong> is displayed.</li>
 	<li>Click <strong>Add Policy</strong>.</li>
 	<li>Choose the policy type and click <strong>Next</strong>.</li>
 	<li>Specify a name (required) and description (optional) and click <strong>Finish</strong>. At the <strong>Completion Summary</strong>, Click <strong>Close</strong>. The <strong>Add Policy</strong> Wizard creates a draft policy instance that you can then configure on the <strong>Policy Details</strong> page.</li>
@@ -130,7 +131,7 @@ nav-title: HTTP Message Validation
 
 
 <dt>Coerce strings</dt>
-<dd>With this option enabled, the policy treats strings as numeric, boolean, or null values as appropriate for validation purposes. For example, if a string looks like a number and the validation rules expect a number, the rule will pass. By default, all validation is applied to values exactly as they are presented.</dd>
+<dd>With this option enabled, the policy treats strings as numeric, Boolean, or null values as appropriate for validation purposes. For example, if a string looks like a number and the validation rules expect a number, the rule will pass. By default, all validation is applied to values exactly as they are presented.</dd>
 <dd><strong>Key benefit</strong>: Enabled: efficiency. Disabled: stricter validation.</dd>
 
 
@@ -285,6 +286,73 @@ nav-title: HTTP Message Validation
 	<li>There are certain specific limitations, as laid out in the standard.</li>
 </ul>
 <p>For details, refer to the applicable section of the specification: <a href="https://tools.ietf.org/html/draft-wright-json-schema-validation-01#section-3.3" title="JSON Schema Validation spec, Section 3.3, Regular Expressions" target="_blank">section 3.3, regular expressions</a>.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="http_message_validation_examples">HTTP Message Validation Policy: examples</h3>
+<p>This section includes a couple of request and response examples, with explanations how the HTTP Message Validation Policy would work in these scenarios. It includes:</p>
+<ul>
+	<li><a href="#sample_request">Sample request JSON</a></li>
+	<li><a href="#sample_response_success">Sample success response</a></li>
+	<li><a href="#sample_response_error">Sample error response</a></li>
+</ul>
+
+<h5 id="sample_request">Sample request JSON</h5>
+<p>In the example below, from a Swagger definition, properties are defined for the  request. The policy matches the incoming API request against this definition, and returns an error if any of the fields don't match the definition. In this example, the properties are named to indicate the type of acceptable input.</p>
+<p>For example, the policy would reject a request to this API if a mandatory field is missing, if the specified data type doesn't match, or if a field value doesn't match specified constraints.</p>
+<pre>{
+  "mandatoryString": "String",
+  "mandatoryDate": "2018-07-04T11:53:00.123Z",
+  "mandatoryBoolean": true,
+  "mandatoryNumber": 12345,
+  "mandatoryInteger": 123,
+  "mandatoryNull": null,
+  "mandatoryEnum": "one",
+  "optionalString": "String",
+  "optionalDate": "2018-07-04T11:53:00.456Z",
+  "optionalBoolean": true,
+  "optionalNumber": 12345,
+  "optionalInteger": 123,
+  "optionalNull": null,
+  "optionalRestrictedLengthString": "abcdefgh",
+  "optionalMultipleOf": 20,
+  "optionalInclusiveNumberRange": 10,
+  "optionalExclusiveNumberRange": 99,
+  "optionalAllOf": 30,
+  "optionalArray": ["string1","string2","string3"],
+  "optionalObject":{
+  "objectProperty1": "one",
+  "objectProperty2": 2,
+  "objectProperty3": 3
+  },
+  "optionalContainsArray": ["string1","string2","2018-07-04T11:53:00.123Z"],
+  "optionalIP": "256.123.123.123",
+  "optionalUKPostcode": "W3 1WW",
+  "optionalZipcode": "90210",
+  "optionalEmail": "me@me.com",
+  "anotherProperty":"value"
+}</pre>
+
+<h5 id="sample_response_success">Sample success response</h5>
+<p>In the above example, a request that matches the API definition would pass validation, and the response below is returned from the back-end API.</p>
+<pre>{
+  "message": "Request validated successfully. Timestamp Thu Jul 05 2018 05:34:24 GMT-0700 (PDT)"
+}</pre>
+
+<h5 id="sample_response_error">Sample error response</h5>
+<p>In the example below, the API definition for a PUT operation included validation that the body exists. When an API call is sent with no message body, this error response is returned.</p>
+<pre>{
+  "errorCount": 1,
+  "errors": [
+    {
+      "seq": 1,
+      "errorCode": "base.missing.instance",
+      "errorMsg": "Required message part is missing",
+      "path": "body:body#"
+    }
+  ]
+}</pre>
 <p><a href="#top">Back to top</a></p>
 
 
