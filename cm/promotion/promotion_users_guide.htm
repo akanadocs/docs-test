@@ -1125,23 +1125,67 @@ vsep.listenerName = "https"</td>
 <h3 id="s09_orchestrated">Appendix A: Promoting Orchestrated APIs</h3>
 <h5 class="stamp">API Platform Version: 2018.0.0 and later</h5>
 <p>Unlike a standard proxy-pattern API, APIs implemented as orchestrations could have dependencies on scripts, processes, or services not contained within the API itself. When promotion is requested for an orchestrated API, all such external dependencies are checked to make sure they exist in the target environment. If there are unmet dependencies, the promotion is aborted and a notification specifying the unmet dependencies is provided to the user.</p>
-<p>In the case of external scripts and processes, the promotion process attempts to match the referenced script or process in the target environment based on the key of the object. Optionally, the following properties can be set on the Promotion Profile:</p>
+<p>In the case of external scripts and processes, the promotion process attempts to match the referenced script or process in the target environment based on the key of the object.</p>
+<p>Mapping of processes and scripts between environments can be specified within a Promotion Profile using the <strong>processMappings</strong> and <strong>scriptMappings</strong> properties respectively. The <strong>processMappings</strong> and <strong>scriptMappings</strong> properties allow you to correlate source and target scripts/processes either by ID or by name.</p>
+<p>This section includes the following examples of defining process and script mappings:</p>
 <ul>
-	<li>match-processes-by-name</li>
-	<li>match-scripts-by-name</li>
+	<li><a href="#s09_01">By using IDs</a></li>
+	<li><a href="#s09_02">By using names</a></li>
+	<li><a href="#s09_02">By using</a><a href="#s09_03"> the <strong>match-processes-by-name</strong> and <strong>match-scripts-by-name</strong> properties on the Promotion Profile</a></li>
 </ul>
-<p>These properties allow the promotion logic to map the referenced scripts or processes based on the name of the object rather than its key.</p>
-<p>The example below shows a Promotion Profile that allows matching of both processes and scripts by name:</p>
+
+<h5 id="s09_01">
+Defining process and script mappings by using IDs</h5>
+<p>In the example Promotion Profile below, processes and script mappings are defined using IDs.</p>
 <pre>{
-	"name": "Default Production Promotion",
-	"description": "Dev to production default profile",
-	"targetEnvironment": "production",
-	"properties" : [
-		{"name":"match-scripts-by-name","value":"true"},
-		{"name":"match-processes-by-name","value":"true"}
-	]
+  "name": "Default Production Promotion",
+  "targetEnvironment": "production",
+  "scriptMappings":[
+    {
+      "sourceScript" : {"scriptId" : "script:7f4fbb16-8389-11e8-af80-80b01a868d88"},
+      "targetScript" : {"scriptId" : "script:fb51d840-8399-11e8-af80-80b01a868d88"}
+    }
+  ],
+  "processMappings":[
+    {
+      "sourceProcess" : {"processId" : "bpel:8c862595-8389-11e8-af80-80b01a868d88"},
+      "targetProcess" : {"processId" : "bpel:b2ad95b6-839b-11e8-af80-80b01a868d88"}
+    }
+  ]
 }</pre>
 
+<h5 id="s09_02">Defining process and script mappings by using names</h5>
+<p>In the example below, processes and script mappings are defined by name.</p>
+<pre>{
+  "name": "Default Production Promotion",
+  "targetEnvironment": "production",
+  "scriptMappings":[
+    {
+      "sourceScript" : {"scriptName" : "Dev Script A"},
+      "targetScript" : {"scriptName" : "Prod Script A"}
+    }
+  ],
+  "processMappings":[
+    {
+      "sourceProcess" : {"processName" : "Dev Process A"},
+      "targetProcess" : {"processName" : "Prod Process A"}
+    }
+  ]
+}
+</pre>
+
+<h5 id="s09_03">Defining process and script mappings by using the match-processes-by-name and match-scripts-by-name properties on the Promotion Profile</h5>
+<p>Optionally, the properties <strong>match-processes-by-name</strong> and <strong>match-scripts-by-name</strong> can be set on the Promotion Profile, to allow the promotion logic to map referenced scripts or processes based on the name rather than the key of the object. For example, the example below shows a Promotion Profile allowing matching of both processes and scripts by name.</p>
+<pre>{
+  "name": "Default Production Promotion",
+  "description": "Dev to production default profile",
+  "targetEnvironment": "production",
+  "properties" : [
+    {"name":"match-scripts-by-name","value":"true"},
+    {"name":"match-processes-by-name","value":"true"}
+  ]
+}
+</pre>
 
 <h4 id="s09_01_referenced_svcs">Referenced Services</h4>
 <p>An orchestration of an API operation might use invocation actions to call out to other services. Such invocations specify the target service, operation, and endpoint to use in the invocation. The target service of an invocation must exist in the target environment prior to promoting the orchestrated API. There are two scenarios:</p>
@@ -1151,16 +1195,17 @@ vsep.listenerName = "https"</td>
 </ul>
 <p>The most common case of service invocation is a call to a physical service. Often, the URL of a physical service is modified for use in the target environment using rules in the Promotion Profile. In this case, the URL of the endpoint of the invocation should be similarly modified. The following example shows the rules that would be defined in a Promotion Profile for changing the host name of physical service URLs along with the invocation references (using the <strong>serviceRef</strong> scope).</p>
 <pre>"rules": [
-	{
-		"scope":"psep",
-		"condition":"psep.url.indexOf(\"foo.com\") > 0",
-		"action":"psep.url = psep.url.replace(\"foo.com\",\"bar.com\")"
-	},
-	{
-		"scope":"serviceRef",
-		"condition":"serviceRef.url.indexOf(\"foo.com\") > 0",
-		"action":"serviceRef.url = serviceRef.url.replace(\"foo.com\",\"bar.com\")"
-	}
-]</pre>
+  {
+    "scope":"psep",
+    "condition":"psep.url.indexOf(\"foo.com\") > 0",
+    "action":"psep.url = psep.url.replace(\"foo.com\",\"bar.com\")"
+  },
+  {
+    "scope":"serviceRef",
+    "condition":"serviceRef.url.indexOf(\"foo.com\") > 0",
+    "action":"serviceRef.url = serviceRef.url.replace(\"foo.com\",\"bar.com\")"
+  }
+]
+</pre>
 
 <p><a href="#top">Back to top</a></p>
