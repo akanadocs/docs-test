@@ -79,10 +79,12 @@ nav-title: LC Promotion Guide
 			<li><a href="#s07_03">Promotion Requests</a></li>
 		</ol>
 	</li>
-	<li><a href="#runtime_config">Default API Settings using Runtime Configurations</a> (8.4.17 and later)
+	<li><a href="#runtime_config">Defaulting API Settings using Runtime Configurations</a> (8.4.17 and later)
 	<ol>
 			<li><a href="#s08_01_create_asset">Creating a Runtime Configuration Asset</a></li>
 			<li><a href="#s08_02_publishing">Publishing a Runtime Configuration Asset</a></li>
+			<li><a href="#s08_03_environment_config">Environment Configuration</a> {<span class="apidoc_red">Query TG re location</span>}</li>
+			<li><a href="#s08_04_api_impl_profiles">API Implementation Profiles</a> {<span class="apidoc_red">Query TG re location</span>}</li>
 		</ol>
 	</li>
 	<li><a href="#s09_orchestrated">Appendix A: Promoting Orchestrated APIs</a>
@@ -369,7 +371,7 @@ vsep.listenerName = "https"</td>
 <p><span class="stamp">API Platform Version: 8.4.14 and later</span></p>
 <p>The property <strong>lifecycle.coordinator.config.preserveKeys</strong> in the <strong>com.akana.lifecycle.coordinator</strong> configuration category is used to configure the default behavior for preserving the unique IDs of an API's constituent elements as the API is promoted across environments.</p>
 <p>If this property is set to <strong>true</strong>, the unique IDs of the underlying Services and Organization are preserved. If it's set to <strong>false</strong>, these elements will be assigned new unique IDs when they are promoted, and a mapping between the keys used in each environment will be stored with the topology in Lifecycle Coordinator.</p>
-<p><strong>Note</strong>:  If multiple tenants referenced in the same topology exist in the same API Platform instance (that is, share the same database), the value should be changed to <strong>false</strong>, since there might be some overlap in key values. If <strong>preserveKeys</strong> is set to true, any overlap in key values would cause promotion errors.</p>
+<p><strong>Note</strong>: If multiple tenants referenced in the same topology exist in the same API Platform instance (that is, share the same database), the value should be changed to <strong>false</strong>, since there might be some overlap in key values. If <strong>preserveKeys</strong> is set to true, any overlap in key values would cause promotion errors.</p>
 
 
 <h4 id="config_defaultFromEmail">Default "From Email" setting</h4>
@@ -1012,7 +1014,7 @@ vsep.listenerName = "https"</td>
 
 
 
-<h3 id="runtime_config">Default API Settings using Runtime Configurations</h3>
+<h3 id="runtime_config">Defaulting API Settings using Runtime Configurations</h3>
 <h5 class="stamp">API Platform Version: 8.4.17 and later</h5>
 <p>The behavior described in this section is not part of Lifecycle Coordinator, but can be used to augment the capabilities of Lifecycle Coordinator to further tailor the configuration of APIs within each environment of a topology.</p>
 <p>The intent of the Runtime Configurations feature is to allow <strong>templates</strong> for API implementation properties to be established and selectively applied based on custom property filters. This is accomplished through customization of the Lifecycle Manager library in which custom properties for a tenant are configured. This configuration requires a working knowledge of the Lifecycle Manager application and the Configuration Designer Tool.</p>
@@ -1121,6 +1123,79 @@ vsep.listenerName = "https"</td>
 <p><a href="#top">Back to top</a></p>
 
 
+<h4 id="s08_03_environment_config">Environment Configuration</h4>
+<p>{<span class="apidoc_red">Verify with TG re location in doc of this new piece</span>}</p>
+<p>The <strong>configuration</strong> property of an Environment is used to customize behavior of assets, such as APIs, that are created or updated in the tenant that the environment is associated with. Currently, an environment's configuration can be used to define <strong>templating</strong> aspects of API implementations. This is similar to the behavior described in the section <a href="#runtime_config">Defaulting API Settings using Runtime Configurations</a>. This is because the environment configuration automates the creation of Runtime Configuration assets in the tenant library. Further information on the defaulting behavior described here can be found in that section.</p>
+<p>The following is a complete example of an <strong>Environment Configuration</strong> definition.</p>
+<pre>{
+  "name": "development",
+  "displayName": "Development",
+  "description": "Development environment",
+  "tenant": "DevelopmentTenant",
+  "configuration": {
+    "apiImplementationProfiles": [
+      {
+        "name": "Internal API Profile",
+        "type": "Live",
+        "filterNames": [
+          "internal"
+        ],
+        "deploymentZones": [
+          "DZ9941"
+        ],
+        "virtualServicePolicies": [
+          {
+            "policyName": "DetailedAuditing"
+          }
+        ],
+        "virtualHost": "InternalHost.com",
+        "path": "/{catalog_asset.name_normalized}",
+        "allowAnonymousAccess": "true"
+      },
+      {
+        "name": "External API Profile",
+        "type": "Live",
+        "filterNames": [
+          "external"
+        ],
+        "deploymentZones": [
+          "DZ9942"
+        ],
+        "virtualHost": "ExternalHost.com",
+        "path": "/{catalog_asset.name_normalized}/external",
+        "allowAnonymousAccess": "false",
+        "approvalRequired": "true"
+      }
+    ]
+  }
+}</pre>
+
+
+<h4 id="s08_04_api_impl_profiles">API Implementation Profiles </h4>
+<p>{<span class="apidoc_red">Verify with TG re location in doc of this second part of the new piece. And, should it be a child of Environment Configuration? Or a peer?</span>}</p>
+<p>A Configuration contains an <strong>apiImplementationProfiles</strong> collection. An <strong>apiImplementationProfile</strong> is used to define the defaults for all API Implementations in the tenant that match the type and filter of the apiImplementationProfile. In the example above, the apiImplementationProfile <strong>Internal API Profile</strong> will apply to the <strong>Live</strong> implementations of APIs whose custom properties match the <strong>internal</strong> filter (defined in the <strong>filters</strong> property of the topology), while the <strong>External API Profile</strong> will apply to <strong>Live</strong> implementations of APIs that match the <strong>external</strong> filter. Note that the two options for the <strong>type</strong> property are <strong>Live</strong> and <strong>Sandbox</strong>.</p>
+<p>An <strong>apiImplementationProfile</strong> collection can specify:</p>
+<ul>
+	<li>The Deployment Zones that an API Implementation is to be deployed to:
+		<p>Specify the deployment zone names in the <strong>deploymentZones</strong> property.</p></li>
+	<li>The policies that are to be applied to the Implementation:
+		<p>Specify either the <strong>policyName</strong> or <strong>policyId</strong> for each policy to be applied.</p></li>
+	<li>The policies that are to be applied to the physical service of a proxy Implementation (not shown in example above):
+		<p>Specify either the <strong>policyName</strong> or <strong>policyId</strong> for each policy to be applied within a <strong>physicalServicePolicies</strong> property.</p></li>
+	<li>The virtual host for the implementation's endpoints:
+		<p>Specify using the <strong>virtualHost</strong> property.</p></li>
+	<li>The path for the implementation's endpoints:
+		<p>Specify using the <strong>path</strong> property.</p></li>
+	<li>Whether the API implementation allows anonymous access:
+		<p>Specify in the Boolean <strong>allowAnonymousAccess</strong> property.</p></li>
+	<li>Whether access to the API implementation requires approval:
+		<p>Specify in the Boolean <strong>requiresApproval</strong> property.</p></li>
+	<li>Whether debug mode should be enabled for the API implementation (not shown in example above):
+		<p>Specify in the Boolean <strong>debugModeEnabled</strong> property.</p></li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
 
 <h3 id="s09_orchestrated">Appendix A: Promoting Orchestrated APIs</h3>
 <h5 class="stamp">API Platform Version: 2018.0.0 and later</h5>
@@ -1207,5 +1282,4 @@ Defining process and script mappings by using IDs</h5>
   }
 ]
 </pre>
-
 <p><a href="#top">Back to top</a></p>
