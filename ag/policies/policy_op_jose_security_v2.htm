@@ -30,14 +30,16 @@ nav-title: JOSE Security v2
 	<li><a href="#jose_unenc_support_open_banking">JOSE Security Policy v2 support of the Open Banking specification</a></li>
 	<li><a href="#jose_unenc_create">Creating a JOSE Security Policy v2</a></li>
 	<li><a href="#jose_unenc_config">Configuring the JOSE Security Policy v2</a></li>
-	<li><a href="#jose_unenc_options_p1">Configuring JOSE Security Policy v2 options</a>
-		<ol>
-			<li><a href="#jose_unenc_options_in">Configuring JOSE Security Policy v2 IN Message options</a></li>
-			<li><a href="#jose_unenc_options_out">Configuring JOSE Security Policy v2 OUT Message options</a></li>
-		</ol>
-	</li>
+	<li><a href="#jose_unenc_options_p1">Configuring JOSE Security Policy v2 options</a></li>
+	<li><a href="#jose_unenc_options_in_provider">Configuring JOSE Security Policy v2 IN Message options for Provider</a></li>
+	<li><a href="#jose_unenc_options_out_provider">Configuring JOSE Security Policy v2 OUT Message options for Provider</a></li>
+	<li><a href="#jose_unenc_options_in_consumer">Configuring JOSE Security Policy v2 IN Message options for Consumer</a></li>
+	<li><a href="#jose_unenc_options_out_consumer">Configuring JOSE Security Policy v2 OUT Message options for Consumer</a></li>
+	<li><a href="#jose_unenc_config_values">Configuration values</a></li>
 	<li><a href="#jose_unenc_options_audit">Configuring JOSE Security Policy v2 Audit Options</a></li>
 	<li><a href="#policy_attach">Attaching the policy</a></li>
+	<li><a href="#policy_uc_diagrams">Use case illustrations</a></li>
+<!--	<li><a href="#uc_policy_jose_unenc_pm_open_banking">JOSE Security Policy v2: use case for Policy Manager/Open Banking</a></li>-->
 </ol>
 <div class = "divider1"></div>
 
@@ -49,7 +51,7 @@ nav-title: JOSE Security v2
 <ul>
 	<li>Sign and/or encrypt content</li>
 	<li>Validate signed and/or encrypted content</li>
-	<li>Send either signed or raw data downstream</li>
+	<li>Send either signed or raw data to the client or the downstream service</li>
 	<li>Check for Open Banking specification requirements</li>
 </ul>
 
@@ -66,7 +68,6 @@ nav-title: JOSE Security v2
 	<li>Support of the <strong>crit</strong> headers required by the Open Banking specification</li>
 	<li>JWKS support (when configured for consumer Apps in the App OAuth Profile)</li>
 </ul>
-<p>At this time, the JOSE Security Policy v2 supports the Role of Provider. Support of the Consumer role will be in the future.</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -83,9 +84,9 @@ nav-title: JOSE Security v2
 
 
 <h3 id="jose_unenc_support_open_banking">JOSE Security Policy v2 support of the Open Banking specification</h3>
-<p>JOSE Security Policy v2 includes the option to enable Open Banking support&nbsp;(Version 8.4.18 and later).</p>
+<p>JOSE Security Policy v2 includes the option to enable Open Banking support (Version 8.4.18 and later).</p>
 <p>When you enable this feature, the policy enforces additional rules determined by the Open Banking specification (<a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/4011436/Payment+Initiation+API+Specification+-+v1.0.0" title="Link to Open Banking specification" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/4011436/Payment+Initiation+API+Specification+-+v1.0.0</a>).</p>
-<p>For example, it supports specifications regarding the <strong>Content-Type</strong>&nbsp;and <strong>Accept</strong> header values as well as the required <strong>crit</strong> header with specific values.</p>
+<p>For example, it supports specifications regarding the <strong>Content-Type</strong> and <strong>Accept</strong> header values as well as the required <strong>crit</strong> header with specific values.</p>
 <p>For full details, see <a href="#jose_unenc_options_in">Configuring JOSE Security Policy v2 IN Message options</a> below (<a href="#enforce_open_banking">Enforce Open Banking</a> section).</p>
 <p><a href="#top">back to top</a></p>
 
@@ -114,9 +115,18 @@ nav-title: JOSE Security v2
 	<li>Go to <strong>Workbench</strong> &gt; <strong>Browse</strong> &gt; <strong>Organization</strong> and select the <strong>Policies</strong> &gt; <strong>Operational Policies</strong> folder. The <strong>Policies Summary</strong> is displayed.</li>
 	<li>Find the policy on the list and double-click to go to the <strong>Details</strong> page for the policy.</li>
 	<li>In the second panel, click <strong>Modify</strong> to access the <strong>Specify JOSE Security Policy v2 Options</strong> page.</li>
-	<li>Specify values for <strong>Protection Scope</strong>, <strong>Serialization</strong>, and <strong>Role</strong>, and optionally choose <strong>Unencoded Detached Payload</strong>. For details on field values, see <a href="#jose_unenc_options_p1">Configuring JOSE Security Policy v2 options</a> below. When you're done, click <strong>Next</strong>.</li>
-	<li>If applicable: In the <strong>Specify JOSE Security Policy v2 IN Message Options</strong> page, specify values as needed. For details on field values, see <a href="#jose_unenc_options_in">Configuring JOSE Security Policy v2 IN Message options</a> below. When you're done, click <strong>Next</strong>.</li>
-	<li>If applicable: In the <strong>Specify JOSE Security Policy v2 OUT Message Options</strong> page, specify values as needed. For details on field values, see <a href="#jose_unenc_options_out">Configuring JOSE Security Policy v2 OUT Message options</a> below. When you're done, click <strong>Next</strong>.</li>
+	<li>Specify values for <strong>Protection Scope</strong>, <strong>Serialization</strong>, and <strong>Role</strong>, and optionally choose <strong>Unencoded Detached Payload</strong>. For details on field values, see <a href="#jose_unenc_options_p1">Configuring JOSE Security Policy v2 options</a> below. When you're done, click <strong>Next</strong>.
+		<p>The next pages are determined by your choices in the <strong>Options</strong> page:</p>
+		<ul>
+			<li>The message options are different depending on the Role you specify, Provider or Consumer.</li>
+			<li>There are separate message option configuration pages for IN and for OUT/FAULT.</li>
+		</ul>
+		</li>
+
+		<li>If applicable: In the <strong>Specify JOSE Security Policy v2 IN Message Options for Provider</strong> page, specify values as needed. For details on field values, see <a href="#jose_unenc_options_in_provider">Configuring JOSE Security Policy v2 IN Message options for Provider</a> below. When you're done, click <strong>Next</strong>.</li>
+	<li>If applicable: In the <strong>Specify JOSE Security Policy v2 OUT Message Options for Provider</strong> page, specify values as needed. For details on field values, see <a href="#jose_unenc_options_out_provider">Configuring JOSE Security Policy v2 OUT Message options for Provider</a> below. When you're done, click <strong>Next</strong>.</li>
+	<li>If applicable: In the <strong>Specify JOSE Security Policy v2 IN Message Options for Consumer</strong> page, specify values as needed. For details on field values, see <a href="#jose_unenc_options_in_consumer">Configuring JOSE Security Policy v2 IN Message options for Consumer</a> below. When you're done, click <strong>Next</strong>.</li>
+	<li>If applicable: In the <strong>Specify JOSE Security Policy v2 OUT Message Options for Consumer</strong> page, specify values as needed. For details on field values, see <a href="#jose_unenc_options_out_consumer">Configuring JOSE Security Policy v2 OUT Message options for Consumer</a> below. When you're done, click <strong>Next</strong>.</li>
 	<li>In the <strong>Specify JOSE Security Policy v2 Audit Options</strong> page, specify values as needed. For details on field values, see <a href="#jose_unenc_options_audit">Configuring JOSE Security Policy v2 Audit Options</a> below.</li>
 	<li>Click <strong>Finish</strong>.</li>
 	<li>At the <strong>Completion Summary</strong> page, click <strong>Close</strong>.</li>
@@ -126,7 +136,7 @@ nav-title: JOSE Security v2
 
 
 
-<h5 id="jose_unenc_options_p1">Configuring JOSE Security Policy v2 options</h5>
+<h3 id="jose_unenc_options_p1">Configuring JOSE Security Policy v2 options</h3>
 <p><img src="images/jose_v2_01_options.jpg" alt="JOSE Security Policy v2 (Unencoded Payload Support): policy options" /></p>
 <p>On this page, you specify general configuration settings. Refer to the details below.</p>
 
@@ -146,7 +156,22 @@ nav-title: JOSE Security v2
 
 
 <dt>Role</dt>
-<dd>Only the Provider role is supported at this time.</dd>
+<dd>Identifies the role that the platform takes in securing the messages:
+	<ul>
+	<li><strong>Provider</strong> means that the platform acts as a provider to the client. The policy is applied to message exchanges between the client and the platform:
+		<ul>
+			<li>For IN messages (request messages), the client signs and/or encrypts the request, coming in to the platform, and the platform validates the message and then sends it on to the downstream service.</li>
+			<li>For OUT or FAULT messages (response messages), the platform signs and/or encrypts the response coming in from the downstream service, sends it on to the client, and the client validates it.</li>
+		</ul>
+	</li>
+	<li><strong>Consumer</strong> means that the platform acts as a consumer to the downstream service. The policy is applied to message exchanges between the platform and the downstream service:
+		<ul>
+	<li>For IN messages (request messages), the platform acts as the client to the downstream service. The platform receives the request from the client, signs and/or encrypts it, and sends it to the downstream service, and the downstream service validates it.</li>
+	<li>For OUT or FAULT messages (response messages),  the downstream service signs and/or encrypts the response/fault message and sends it to the platform. The platform validates it and sends it on to the client.</li>
+</ul>
+	</li>
+	</ul>
+</dd>
 
 
 <dt>Unencoded Detached Payload</dt>
@@ -156,7 +181,7 @@ nav-title: JOSE Security v2
 
 <dt id="enforce_open_banking">Enforce Open Banking (8.4.18 and later)</dt>
 <dd>Check this box if you want this policy to enforce the additional requirements of the Open Banking specification (<a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/4011436/Payment+Initiation+API+Specification+-+v1.0.0" title="Link to Open Banking specification" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/4011436/Payment+Initiation+API+Specification+-+v1.0.0</a>). If you choose this option, the policy enforces the following additional rules as per the Open Banking specification:
-  <ul>
+	<ul>
 	<li>The Content-Type header must be set to <strong>application/json</strong>.</li>
 	<li>If there is an Accept header, it is set to <strong>application/json</strong>.</li>
 	<li>The <strong>crit</strong> header is a string array of the <strong>b64</strong>, <strong>iat</strong>, and <strong>iss</strong> headers: &quot;b64&quot;, &quot;http://openbanking.org.uk/iat&quot;, &quot;http://openbanking.org.uk/iss&quot;.</li>
@@ -166,23 +191,25 @@ nav-title: JOSE Security v2
 </dl>
 <p>Click <strong>Next</strong> to go to the next page, which is determined by your choice in the <strong>Protection Scope</strong> field:</p>
 <ul>
-	<li>Protection Scope of <strong>IN</strong>: <a href="#jose_unenc_options_in">Configuring JOSE Security Policy v2 IN Message options</a> page.</li>
-	<li>Protection Scope of <strong>OUT</strong> or <strong>FAULT</strong>: <a href="#jose_unenc_options_out">Configuring JOSE Security Policy v2 OUT Message options</a> page.</li>
+	<li>Protection Scope of <strong>IN</strong>, role of Provider: <a href="#jose_unenc_options_in_provider">Configuring JOSE Security Policy v2 IN Message options for Provider</a> page.</li>
+	<li>Protection Scope of <strong>IN</strong>, role of Consumer: <a href="#jose_unenc_options_in_consumer">Configuring JOSE Security Policy v2 IN Message options for Consumer</a> page.</li>
+	<li>Protection Scope of <strong>OUT</strong> or <strong>FAULT</strong>, role of Provider: <a href="#jose_unenc_options_out_provider">Configuring JOSE Security Policy v2 OUT Message options for Provider</a> page.</li>
+	<li>Protection Scope of <strong>OUT</strong> or <strong>FAULT</strong>, role of Consumer: <a href="#jose_unenc_options_out_consumer">Configuring JOSE Security Policy v2 OUT Message options for Consumer</a> page.</li>
 </ul>
 <p><a href="#top">Back to top</a></p>
 
 
 
-<h5 id="jose_unenc_options_in">Configuring JOSE Security Policy v2 IN Message options</h5>
-<p><img src="images/jose_v2_02_options_in.jpg" alt="JOSE Security Policy v2 (Unencoded Payload Support): IN options" /></p>
-<p>If you choose a Protection Scope of IN, you'll need to determine signing and encryption settings for incoming messages.</p>
-<p>There are two main categories of settings: Sign Content and Encrypt Content. for each, if you choose to sign and/or encrypt, additional configuration options are available so that you can specify the identity of the signed content for IN messages, as shown below.</p>
+<h3 id="jose_unenc_options_in_provider">Configuring JOSE Security Policy v2 IN Message options for Provider</h3>
+<p><img src="images/jose_v2_02_options_in_provider.jpg" alt="JOSE Security Policy v2 (Unencoded Payload Support): IN options (Provider role)" /></p>
+<p>If you choose a Protection Scope of <strong>IN</strong> and a role of <strong>Provider</strong>, you'll need to determine signing and encryption settings for incoming messages.</p>
+<p>There are two main categories of settings: <strong>Signed Content</strong> and <strong>Encrypted Content</strong>. For each, if you choose to sign and/or encrypt, additional configuration options are available so that you can specify the identity of the signed content for IN messages, as shown below.</p>
 <dl>
 <dt>Signed content, Subject Category</dt>
 <dd>If you specify signed content for IN messages, define the Subject Category, the identity whose private key is used to sign the message. For IN messages, the options are:
 	<ul>
-		<li><strong>Consumer</strong>: If you choose Consumer, you can specify that the configuration settings should be read from the JWKS URL for the identity specified in the <strong>kid</strong> in the incoming header. See <a href="#jwks_url_app_oauth_profile">Referencing the JWKS URL from the App OAuth Profile</a> below.</li>
-		<li><strong>End User</strong>:  The end-user identity associated with the message.</li>
+		<li><strong>Consumer</strong>: If you choose Consumer, you can specify that the configuration settings should be read from the JWKS URL for the identity specified in the <strong>kid</strong> in the incoming header. See <a href="#jwks_url_app_oauth_profile_in_provider">Referencing the JWKS URL from the App OAuth Profile</a> below.</li>
+		<li><strong>End User</strong>: The end-user identity associated with the message.</li>
 		<li><strong>User Defined</strong>: If you choose User Defined, specify a custom category name; for example, a platform identity.</li>
 	</ul>
 </dd>
@@ -204,14 +231,15 @@ nav-title: JOSE Security v2
 
 </dl>
 
-<h5 id="jwks_url_app_oauth_profile">Referencing the JWKS URL from the App OAuth Profile</h5>
+<h5 id="jwks_url_app_oauth_profile_in_provider">Referencing the JWKS URL from the App OAuth Profile</h5>
 <p>You can set up this policy to read the applicable JWKS URL for the consumer, from the app's OAuth profile in the developer portal, if it's been set up. For instructions on setting up the JWKS URL and other values in the <strong>App OAuth Profile</strong> page, see <a href="../../cm/learnmore/app_create_app_oauth_profile.htm#settings_authentication">What are the settings available on the App OAuth Profile page?</a> (Authentication Settings section). You can also add it using the platform API; see <span class="apidoc_code"><a href="http://docs.akana.com/cm/api/apps/m_apps_saveAppOAuthClientProperties.htm">PUT /api/apps/versions/{AppVersionID}/oauthclient</a></span> (CM API doc).</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
-<h5 id="jose_unenc_options_out">Configuring JOSE Security Policy v2 OUT Message options</h5>
-<p><img src="images/jose_v2_03_options_out.jpg" alt="JOSE Security Policy v2 (Unencoded Payload Support): OUT options" /></p>
+<h3 id="jose_unenc_options_out_provider">Configuring JOSE Security Policy v2 OUT Message options for Provider</h3>
+<p><img src="images/jose_v2_03_options_out_provider.jpg" alt="JOSE Security Policy v2 (Unencoded Payload Support): OUT options (Provider role)" /></p>
+<p>If you choose a Protection Scope of <strong>OUT</strong> and/or <strong>FAULT </strong> and a role of <strong>Provider</strong>, you'll need to determine signing and encryption settings for outbound messages.</p>
 <p>If you choose to sign and/or encrypt content for OUT and/or FAULT messages, configure the signing and encryption options. The settings will apply to OUT messages, FAULT messages, or both.</p>
 <p>You can also specify one or more private headers. This page has three sections:</p>
 <ul>
@@ -223,7 +251,7 @@ nav-title: JOSE Security v2
 <h5 id="jose_unenc_options_out_sign_content">Sign Content options for OUT or FAULT messages</h5>
 <dl>
 <dt>Signature/MAC Algorithm</dt>
-<dd>Choose the algorithm to be used for signing the OUT messages. For a list of valid options, see <a href="#sig_mac_alg_jose_unenc">Sign Content: supported Signature/MAC Algorithms</a> below.</dd>
+<dd>Choose the algorithm to be used for signing the OUT or FAULT messages. For a list of valid options, see <a href="#sig_mac_alg_jose_unenc">Sign Content: supported Signature/MAC Algorithms</a> below.</dd>
 
 
 <dt>Embed Key</dt>
@@ -231,7 +259,7 @@ nav-title: JOSE Security v2
 
 
 <dt>Subject Category</dt>
-<dd>If you specify signed content for IN messages, define the Subject Category, the identity whose private key is used to sign the message. For Out or Fault messages, the options are:
+<dd>If you specify signed content for OUT or FAULT messages, define the Subject Category, the identity whose private key is used to sign the message. For Out or Fault messages, the options are:
 	<ul>
 		<li><strong>Service</strong>: A service on the platform.</li>
 		<li><strong>User Defined</strong>: If you choose User Defined, specify a custom category name; for example, a platform identity.</li>
@@ -251,15 +279,15 @@ nav-title: JOSE Security v2
 <dl>
 
 <dt>Encryption Algorithm</dt>
-<dd>Choose the algorithm to be used for encrypting the OUT messages. For a list of valid options, see <a href="#encryption_alg_jose_unenc">Encrypt Content: supported Encryption Algorithms</a> below.</dd>
+<dd>Choose the algorithm to be used for encrypting the OUT or FAULT messages. For a list of valid options, see <a href="#encryption_alg_jose_unenc">Encrypt Content: supported Encryption Algorithms</a> below.</dd>
 
 
 <dt>Key Management Algorithm</dt>
-<dd>Choose the algorithm to be used for the OUT messages. For a list of valid options, see <a href="#key_mgmt_alg_jose_unenc">Encrypt Content: supported Key Management Algorithms</a> below.</dd>
+<dd>Choose the algorithm to be used for the OUT or FAULT messages. For a list of valid options, see <a href="#key_mgmt_alg_jose_unenc">Encrypt Content: supported Key Management Algorithms</a> below.</dd>
 
 
 <dt>Subject Category</dt>
-<dd>If you specify signed content for IN messages, define the Subject Category. Choices:
+<dd>If you specify signed content for OUT or FAULT messages, define the Subject Category. Choices:
 <ul>
 	<li><strong>Consumer</strong>: If you choose Consumer, you can choose to use the JWKS URL to read the configuration settings.</li>
 	<li><strong>End User</strong>: The end-user identity associated with the message.</li>
@@ -271,7 +299,117 @@ nav-title: JOSE Security v2
 <h5 id="jose_unenc_options_out_private_headers">Private Headers</h5>
 <p>A private header is any header other than the registered headers defined by the specification; see the <a href="https://tools.ietf.org/html/rfc7515#section-4.3">Private Header Parameter Names</a> section of RFC 7515.</p>
 <p>You can specify one or more private headers; check the box and specify the header name and value. You can also add or delete existing private headers as needed.</p>
+<p><a href="#top">Back to top</a></p>
 
+
+
+<h3 id="jose_unenc_options_in_consumer">Configuring JOSE Security Policy v2 IN Message options for Consumer</h3>
+<p><strong>Valid in version: 2018.0.0 and later</strong></p>
+<p><img src="images/jose_v2_04_options_in_consumer.jpg" alt="JOSE Security Policy v2 (Unencoded Payload Support): IN options (Consumer role)" /></p>
+<p>If you choose a Protection Scope of <strong>IN</strong> and a role of <strong>Consumer</strong>, you'll need to configure the signing and encryption options that will apply to response messages coming in from the downstream service.</p>
+<p>You can also specify one or more private headers. This page has three sections:</p>
+<ul>
+	<li><a href="#jose_unenc_options_in_sign_content">Sign Content options for IN messages</a></li>
+	<li><a href="#jose_unenc_options_in_enc_content">Encrypt Content options for IN messages</a></li>
+	<li><a href="#jose_unenc_options_out_private_headers">Private Headers</a></li>
+</ul>
+
+<h5 id="jose_unenc_options_in_sign_content">Sign Content options for IN messages</h5>
+<dl>
+<dt>Signature/MAC Algorithm</dt>
+<dd>Choose the message signing algorithm. For a list of valid options, see <a href="#sig_mac_alg_jose_unenc">Sign Content: supported Signature/MAC Algorithms</a> below.</dd>
+
+
+<dt>Embed Key</dt>
+<dd>Check the box if the public key will be embedded in the signed content, so that the platform can use the key to verify the signature.</dd>
+
+
+<dt>Subject Category</dt>
+<dd>If you specify signed content for IN messages, define the Subject Category, the identity whose private key is used to sign the message. Options:
+	<ul>
+		<li><strong>Service</strong>: A service on the platform.</li>
+		<li><strong>User Defined</strong>: If you choose User Defined, specify a custom category name; for example, a platform identity.</li>
+	</ul>
+</dd>
+
+
+
+
+<dt>Custom Headers</dt>
+<dd>If a custom header is used for the encrypted content, check the box and specify the header name and value. You can also add or delete existing custom headers as needed.</dd>
+
+
+</dl>
+<h5 id="jose_unenc_options_in_enc_content">Encrypt Content options for IN messages</h5>
+<p>For IN messages, the option to reference the JWKS URL is not included, since there might be multiple <strong>kid</strong> (Key ID) header parameters specified at the JWKS URL. Instead, you can specify the <strong>kid</strong> to use, in the <strong>Custom Headers</strong> section.</p>
+<dl>
+
+<dt>Encryption Algorithm</dt>
+<dd>Choose the algorithm to be used for encrypting the IN messages. For a list of valid options, see <a href="#encryption_alg_jose_unenc">Encrypt Content: supported Encryption Algorithms</a>.</dd>
+
+
+<dt>Key Management Algorithm</dt>
+<dd>Choose the algorithm to be used for the OUT messages. For a list of valid options, see <a href="#key_mgmt_alg_jose_unenc">Encrypt Content: supported Key Management Algorithms</a>.</dd>
+
+
+<dt>Subject Category</dt>
+<dd>If you specify signed content for IN messages, define the Subject Category. Choices:
+<ul>
+	<li><strong>Consumer</strong>: If you choose Consumer, you can choose to use the JWKS URL to read the configuration settings.</li>
+	<li><strong>End User</strong>: The end-user identity associated with the message.</li>
+	<li><strong>User Defined</strong>: If you choose User Defined, specify a custom category name; for example, a platform identity.</li>
+</ul>
+</dd>
+</dl>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="jose_unenc_options_out_consumer">Configuring JOSE Security Policy v2 OUT Message options for Consumer</h3>
+<p><strong>Valid in version: 2018.0.0 and later</strong></p>
+<p><img src="images/jose_v2_05_options_out_consumer.jpg" alt="JOSE Security Policy v2 (Unencoded Payload Support): OUT options (Consumer role)" /></p>
+<p>If you choose a Protection Scope of <strong>OUT</strong> and/or <strong>FAULT </strong> and a role of <strong>Consumer</strong>, you'll need to configure the signing and encryption options for outbound messages to the client. When the messages come in from the downstream service, the platform will apply these settings to the content and send it to the client.</p>
+<p>There are two main categories of settings: <strong>Signed Content</strong> and <strong>Encrypted Content</strong>. For each, if you choose to sign and/or encrypt, additional configuration options are available so that you can specify the identity of the signed content for IN messages, as shown below.</p>
+<dl>
+<dt>Signed content, Subject Category</dt>
+<dd>If you specify signed content for OUT or FAULT messages, define the Subject Category, the identity whose private key is used to sign the message. For IN messages, the options are:
+	<ul>
+		<li><strong>Consumer</strong>: If you choose Consumer, you can specify that the configuration settings should be read from the JWKS URL for the identity specified in the <strong>kid</strong> in the incoming header. See <a href="#jwks_url_app_oauth_profile_out_consumer">Referencing the JWKS URL from the App OAuth Profile</a> below.</li>
+		<li><strong>End User</strong>: The end-user identity associated with the message.</li>
+		<li><strong>User Defined</strong>: If you choose User Defined, specify a custom category name; for example, a platform identity.</li>
+	</ul>
+</dd>
+
+
+<dt>Encrypted content, Subject Category</dt>
+<dd>If you specify encrypted content for IN messages, define the Subject Category&#8212;the owner of the private key used to encrypt the content, and the corresponding public key will be used to decrypt the incoming message. Choices:
+<ul>
+	<li><strong>Service</strong>: A service on the platform.</li>
+	<li><strong>User Defined</strong>: If you choose User Defined, specify a custom category name; for example, a platform identity.</li>
+</ul>
+</dd>
+
+
+<dt>Private Headers (8.4.18 and later)</dt>
+<dd>A private header is any header other than the registered headers defined by the specification; see <a href="https://tools.ietf.org/html/rfc7515#section-4.3">Private Header Parameter Names</a> section of RFC 7515.</dd>
+<dd>You can specify one or more private headers; check the box and specify the header name and value. You can also add or delete existing private headers as needed.</dd>
+
+
+</dl>
+
+<h5 id="jwks_url_app_oauth_profile_out_consumer">Referencing the JWKS URL from the App OAuth Profile</h5>
+<p>You can set up this policy to read the applicable JWKS URL for the consumer, from the app's OAuth profile in the developer portal, if it's been set up. For instructions on setting up the JWKS URL and other values in the <strong>App OAuth Profile</strong> page, see <a href="../../cm/learnmore/app_create_app_oauth_profile.htm#settings_authentication">What are the settings available on the App OAuth Profile page?</a> (Authentication Settings section). You can also add it using the platform API; see <span class="apidoc_code"><a href="http://docs.akana.com/cm/api/apps/m_apps_saveAppOAuthClientProperties.htm">PUT /api/apps/versions/{AppVersionID}/oauthclient</a></span> (CM API doc).</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="jose_unenc_config_values">Configuration values</h3>
+<p>This section includes information about configuration values available for the JOSE Policy v2, including:</p>
+<ul>
+	<li><a href="#sig_mac_alg_jose_unenc">Sign Content: supported Signature/MAC Algorithms</a></li>
+	<li><a href="#encryption_alg_jose_unenc">Encrypt Content: supported Encryption Algorithms</a></li>
+	<li><a href="#key_mgmt_alg_jose_unenc">Encrypt Content: supported Key Management Algorithms</a></li>
+</ul>
 
 <h4 id="sig_mac_alg_jose_unenc">Sign Content: supported Signature/MAC Algorithms</h4>
 <p>The Signature/MAC algorithms supported by the JOSE Security Policy v2 for signing content are:</p>
@@ -338,6 +476,41 @@ nav-title: JOSE Security v2
 
 <h3 id="policy_attach">Attaching the Policy</h3>
 <p>To use the JOSE Security Policy v2, go to the <strong>Policies</strong> folder in the Root Organization and attach the policy to a web service, binding, or binding operation.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<!--<h3 id="uc_policy_jose_unenc_pm_open_banking">JOSE Security Policy v2: use case for Policy Manager/Open Banking</h3>
+<p><span class="apidoc_red">xXx</span></p>
+<p>{<strong>work started 7/17/18 for ATMO-24888. Need AR</strong>}</p>
+<p><a href="#top">Back to top</a></p>-->
+
+
+
+<h3 id="policy_uc_diagrams">Use case illustrations</h3>
+<p>The illustrations below show how the JOSE Policy v2 works in each role, when attached to a virtual service in the platform.</p>
+<ul>
+	<li><a href="#uc_provider">Example #1: Provider Role</a></li>
+	<li><a href="#uc_consumer">Example #2: Consumer Role</a></li>
+</ul>
+
+<h4 id="uc_provider">Example #1: Provider Role</h4>
+<p>In the example below, the platform has the JOSE Policy v2 attached to the virtual service, with the Provider role specified.</p>
+<p>In this example:</p>
+<ol>
+	<li>The client app signs/encrypts the request content. The platform verifies&nbsp;and/or decrypts the content and sends it to the downstream service.</li>
+	<li>The downstream service sends the unsigned/unencrypted response to the platform. The platform signs/encrypts the content and sends it to the client.</li>
+</ol>
+<p><img src="images/jose_v2_usecase_provider.png" alt="Provider Role" /></p>
+
+<h4 id="uc_consumer">Example #2: Consumer Role</h4>
+<p>In the example below, the platform has the JOSE Policy v2 attached to the virtual service, with the Consumer role specified.</p>
+<p>In this example:</p>
+<ol>
+	<li>The client app sends the request content unsigned/unencrypted. The platform signs and/or encrypts the content and sends it to the downstream service.</li>
+	<li>The downstream service sends the signed and/or encrypted response to the platform. The platform verifies/decrypts the content and sends it to the client.</li>
+</ol>
+<p><img src="images/jose_v2_usecase_consumer.png" alt="Consumer Role" /></p>
 <p><a href="#top">Back to top</a></p>
 
 
