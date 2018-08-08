@@ -160,15 +160,17 @@ nav-title: JOSE Security v2
 	<ul>
 	<li><strong>Provider</strong> means that the platform acts as a provider to the client. The policy is applied to message exchanges between the client and the platform:
 		<ul>
-			<li>For IN messages (request messages), the client signs and/or encrypts the request, coming in to the platform, and the platform validates the message and then sends it on to the downstream service.</li>
-			<li>For OUT or FAULT messages (response messages), the platform signs and/or encrypts the response coming in from the downstream service, sends it on to the client, and the client validates it.</li>
+			<li>For IN messages (request messages), the client signs and/or encrypts the request per the policy configuration and sends it to the platform. The platform enforces the policy (verifies the signature and/or decrypts, and any other aspects of the policy configuration). The platform then sends the decrypted message to the downstream service.</li>
+			<li>For OUT or FAULT messages (response messages), the downstream service sends the response to the platform. The platform implements the policy configuration (signs and/or encrypts), and sends it on to the client. The client enforces the policy (verifies the signature and/or decrypts, and any other aspects of the policy configuration).</li>
 		</ul>
+			<p>For an illustration, see <a href="#uc_provider">Example #1: Provider Role</a>.</p>
 	</li>
 	<li><strong>Consumer</strong> means that the platform acts as a consumer to the downstream service. The policy is applied to message exchanges between the platform and the downstream service:
 		<ul>
-	<li>For IN messages (request messages), the platform acts as the client to the downstream service. The platform receives the request from the client, signs and/or encrypts it, and sends it to the downstream service, and the downstream service validates it.</li>
-	<li>For OUT or FAULT messages (response messages),  the downstream service signs and/or encrypts the response/fault message and sends it to the platform. The platform validates it and sends it on to the client.</li>
-</ul>
+	<li>For IN messages (request messages), the platform acts as the client to the downstream service. The client sends the request to the platform. The platform implements the policy configuration (signs and/or encrypts), and sends it on to the downstream service. The downstream service enforces the policy agreement  (verifies the signature and/or decrypts, and any other aspects of the policy configuration).</li>
+	<li>For OUT or FAULT messages (response messages),  the downstream service implements the policy configuration to the response/fault message (signs and/or encrypts), and sends it to the platform. The platform enforces the policy (verifies the signature and/or decrypts, and any other aspects of the policy configuration). The platform then sends the response message to the client.</li>
+		</ul>
+			<p>For an illustration, see <a href="#uc_consumer">Example #2: Consumer Role</a>.</p>
 	</li>
 	</ul>
 </dd>
@@ -498,7 +500,7 @@ nav-title: JOSE Security v2
 <p>In the example below, the platform has the JOSE Policy v2 attached to the virtual service, with the Provider role specified.</p>
 <p>In this example:</p>
 <ol>
-	<li>The client app signs/encrypts the request content. The platform verifies&nbsp;and/or decrypts the content and sends it to the downstream service.</li>
+	<li>The client app signs/encrypts the request content. The platform verifies and/or decrypts the content and sends it to the downstream service.</li>
 	<li>The downstream service sends the unsigned/unencrypted response to the platform. The platform signs/encrypts the content and sends it to the client.</li>
 </ol>
 <p><img src="images/jose_v2_usecase_provider.png" alt="Provider Role" /></p>
