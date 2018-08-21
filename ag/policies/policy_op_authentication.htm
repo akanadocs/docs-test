@@ -1,28 +1,39 @@
----
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Policies</title>
+<link href="../../style/reset.css" rel="stylesheet" type="text/css" />
+<link href="../../style/base.css" rel="stylesheet" type="text/css" />
+<link href="../../style/document.css" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+<div class="documentation supportContent">
+<!-----
 layout: page
 title: Using the Authentication Policy
-description: Learn how to create and configure an Authentication policy, which dictates the identity and domain to use when authenticating the message sender.
+description: Learn how to create and configure an Authentication policy, which dictates the identity and domain/realm to use when authenticating the message sender.
 product: ag
 category: learn
 sub-nav-class: Policies - Operational
 weight: 04
 type: page
 nav-title: Authentication
----
+----->
 <h2 id="top">Using the Authentication Policy</h2>
 <p>Learn how to create and configure an Authentication policy, which dictates the identity and domain/realm to use when authenticating the message sender.</p>
 
 <p>
 <a href="about_policies_view.htm" class="button secondary">About Policies</a>  
 <a href="policy_management.htm" class="button secondary">Managing Policies</a>  
-<a href="policies_operational_about.htm" class="button secondary">About Operational Policies</a>
-</p>
+<a href="policies_operational_about.htm" class="button secondary">About Operational Policies</a></p>
+<p>For information about using policies in the context of the developer portal, see <a href="../../cm/learnmore/bus_admin_organizations.htm#h_business_policies">Business Policies</a>.</p>
+
 
 
 <div class = "divider1"></div>
-
-
-
 <h3 style="color: gray;">Table of Contents</h3>
 <ol class="table_of_contents">
 	<li><a href="#introduction">Introduction</a></li>
@@ -38,7 +49,8 @@ nav-title: Authentication
 
 
 <h3 id="introduction">Introduction</h3>
-<p>The Authentication policy allows you to protect your services by applying authentication to messages and by making sure that the messages come from trusted domains.</p>
+<p>The Authentication policy allows you to protect your services by applying authentication to messages and by making sure that the messages come from trusted domains.
+</p>
 <p>In order to protect services from unauthorized parties, the initiators of a web service message exchange must be identified. WS-Security specifies mechanisms for representing identities in a message exchange; however, it only addresses how the messages themselves can be tied to an identity.</p>
 <p>It's important to also make sure that the sending identity is:</p>
 <ul>
@@ -46,15 +58,21 @@ nav-title: Authentication
 	<li>Known to the service</li>
 	<li>Authorized to invoke the service</li>
 </ul>
-<p>For services that require the caller to be known, authentication of the identity associated with request messages must be performed. Identities are tied to trust domains, or security realms. A service might support identities in multiple security realms.</p>
+<p>For services that require the caller to be known, authentication of the identity associated with request messages must be performed. Identities are tied to trust domains or security realms. A service might support identities in multiple security realms.</p>
 <p>Identification of the requirement for authentication and which security realm, or domain, must be used for authentication is configured through an authentication policy.</p>
+<p>Specification:</p>
+<ul>
+	<li><a href="https://www.w3.org/Submission/WS-PolicyAttachment/" title="Link to WS-PolicyAttachment specification" target="_blank">WS-PolicyAttachment specification</a></li>
+</ul>
 <p><a href="#top">back to top</a></p>
+<p><a href="#top"></a></p>
 
 
 
 <h3 id="authentication_policy_create">Creating an Authentication Policy</h3>
 <p>The first step in creating a policy is to define the basic policy information. Then, you can configure the policy details.</p>
-<h5>To add an operational policy</h5>
+
+<h5 id="proc_policy_os_add">To add an operational policy</h5>
 <ol>
 <li>Go to <strong>Workbench</strong> &gt; <strong>Browse</strong> &gt; <strong>Organization</strong>, and select <strong>Policies</strong> &gt; <strong>Operational Policies</strong>. The <strong>Policies Summary</strong> is displayed.</li>
 <li>Click <strong>Add Policy</strong>.</li>
@@ -69,7 +87,8 @@ nav-title: Authentication
 
 <h3 id="authentication_policy_config">Configuring an Authentication Policy</h3>
 <p>Once you've created the policy, you can configure the policy details that determine how the policy works. Then you can activate the policy so that it can be used.</p>
-<h5>To configure an Authentication policy in Policy Manager</h5>
+
+<h5 id="proc_policy_authentication_config">To configure an Authentication policy in Policy Manager</h5>
 <ol>
 	<li>In the Organization Tree, find the level where the policy was defined. Click to select.</li>
 	<li>In the center pane, in the <strong>Authentication Policy</strong> section, click <strong>Modify</strong>. The <strong>Modify Authentication Policy</strong> overlay is displayed, as shown below.
@@ -118,7 +137,8 @@ nav-title: Authentication
 
 
 <h3 id="authentication_policy_assertion">Policy Assertion</h3>
-<h5>Syntax:</h5>
+
+<h5 id="syntax">Syntax:</h5>
 <p>The syntax of the authentication policy assertion is as follows:</p>
 <pre>01) &lt;ganp:Authentication SubjectCategory="xs:anyURI" ...&gt;
 02)   &lt;ganp:Realm&gt;xs:anyURI&lt;/ganp:Realm&gt; +
@@ -146,7 +166,7 @@ nav-title: Authentication
 <dt>ganp:Authentication /{any}</dt>
 <dd>This is an extensibility mechanism to allow additional elements to be specified.</dd>
 </dl>
-<h5>Syntax example:</h5>
+<h5 id="syntax_eg">Syntax example:</h5>
 <p>An example of an authentication policy is illustrated below:</p>
 <pre>01) &lt;wsp:Policy Visibility="private" xmlns:wsp="..."&gt;
 02)   &lt;ganp:Authentication SubjectCategory="urn:ganp:security:subject-category:consumer"&gt;
@@ -161,26 +181,28 @@ nav-title: Authentication
 
 
 <h3 id="authentication_policy_scope">Policy Scope</h3>
-<p>The authentication policy assertion can have the following Policy Subjects, as defined in the WS-PolicyAttachment specification:</p>
+<p>The authentication policy assertion can have the following Policy Subjects, as defined in the <a href="https://www.w3.org/Submission/WS-PolicyAttachment/" title="Link to WS-PolicyAttachment specification" target="_blank">WS-PolicyAttachment specification</a>:</p>
 <ul>
-  <li>Service Policy Subject</li>
-  <li>Endpoint Policy Subject</li>
-  <li>Operation Policy Subject</li>
+	<li>Service Policy Subject</li>
+	<li>Endpoint Policy Subject</li>
+	<li>Operation Policy Subject</li>
 </ul>
-<p>WS-PolicyAttachment defines a set of WSDL/1.1 policy attachment points for each of the above Policy Subjects. Since an authentication policy assertion has no dependency on any WSDL binding, it SHOULD be attached to the following abstract WSDL policy attachment points:</p>
+<p>The <a href="https://www.w3.org/Submission/WS-PolicyAttachment/" title="Link to WS-PolicyAttachment specification" target="_blank">WS-PolicyAttachment specification</a> defines a set of WSDL/1.1 policy attachment points for each of the above Policy Subjects. Since an authentication policy assertion has no dependency on any WSDL binding, it SHOULD be attached to the following abstract WSDL policy attachment points:</p>
 <ul>
-  <li>wsdl:service</li>
-  <li>wsdl:port</li>
-  <li>wsdl:portType</li>
-  <li>wsdl:portType/wsdl:operation</li>
+	<li>wsdl:service</li>
+	<li>wsdl:port</li>
+	<li>wsdl:portType</li>
+	<li>wsdl:portType/wsdl:operation</li>
 </ul>
 <p>An authentication policy assertion MAY be attached to the following physical WSDL policy attachment points:</p>
 <ul>
-  <li>wsdl:binding</li>
-  <li>wsdl:binding/wsd:operation</li>
+	<li>wsdl:binding</li>
+	<li>wsdl:binding/wsd:operation</li>
 </ul>
-<p>An authentication policy does not dictate any behavior required by a consumer in order to complete message exchanges. Therefore, it is recommended that authentication policies be classified as <strong>private</strong> by including the <strong>ganp:Visibility</strong> attribute in the enclosing the <strong>wsp:Policy</strong> element with a value of "<strong>private</strong>".</p><p>The following is an example of an authentication policy attached to WSDL components.</p>
-<pre>01) &lt;wsdl:definitions name="StockQuote" targetNamespace="..." xmlns:wsdl="..." xmlns:wsoap12="..." xmlns:wsp="..." xmlns:wsu="..." xmlns:ganp="..." &gt;&lt;p&gt;02)   &lt;wsp:Policy wsu:Id="Auth1" visibility="private"&gt;
+<p>An authentication policy does not dictate any behavior required by a consumer in order to complete message exchanges. Therefore, it is recommended that authentication policies be classified as <strong>private</strong> by including the <strong>ganp:Visibility</strong> attribute in the enclosing the <strong>wsp:Policy</strong> element with a value of "<strong>private</strong>".</p>
+<p>The following is an example of an authentication policy attached to WSDL components.</p>
+<pre>01) &lt;wsdl:definitions name="StockQuote" targetNamespace="..." xmlns:wsdl="..." xmlns:wsoap12="..." xmlns:wsp="..." xmlns:wsu="..." xmlns:ganp="..." &gt;
+02)   &lt;wsp:Policy wsu:Id="Auth1" visibility="private"&gt;
 03)     &lt;ganp:Authentication&gt;
 04)       &lt;!-- Details omitted for readability --&gt;
 05)     &lt;/ganp:Authentication&gt;
@@ -234,3 +256,10 @@ nav-title: Authentication
 	<li><a href="../../cm/learnmore/basics_glossary.htm">Glossary of Terms for the Developer Portal</a></li>
 </ul>
 </div>
+
+
+
+
+</div>
+</body>
+</html>
