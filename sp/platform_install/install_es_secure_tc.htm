@@ -9,8 +9,8 @@ sub-nav-class: Installation - Akana API Platform
 type: page
 nav-title: Configuring Elasticsearch with security
 ---
-<h2 id="top">Configuring Elasticsearch with Client security</h2>
-<p>If you're using Elasticsearch and want security<span class="apidoc_red"></span> over SSL/TLS to add encryption for node to node communication and cluster communication, you'll need to complete some additional setup and configuration steps.</p>
+<h2 id="top">Configuring Elasticsearch with Security</h2>
+<p>If you're using Elasticsearch and want security over SSL/TLS to add encryption for node to node communication and cluster communication, you'll need to complete some additional setup and configuration steps.</p>
 <p>This document provides information about implementing security for Elasticsearch. Depending on your API Platform version, you'll use one of these:</p>
 <ul>
 	<li><strong>X-Pack</strong>: Version 2018.0.0 uses Elasticsearch 6.3.1, which uses X-Pack for security.
@@ -31,12 +31,12 @@ nav-title: Configuring Elasticsearch with security
 	<li><a href="#es_xpack">Setting up X-Pack</a>
 (2018.0.0	and	later)
 	<ol>
-		<li><a href="#xpack_01_change_bootstrap_value">Step 1: Change the bootstrap.password value for built-in users</a> 0</li>
-		<li><a href="#xpack_02_set_up_roles">Step 2: Set up user and user roles</a> 1</li>
-		<li><a href="#xpack_03_add_user_with_roles">Step 3: Add user with specific roles</a> 2</li>
-		<li><a href="#xpack_04_enable_xpack_in_yaml">Step 4: Enable X-Pack security in the Elasticsearch YAML file</a> 3 YAML</li>
-		<li><a href="#xpack_05_encryption_node">Step 5: Set up encryption for communications between nodes in a cluster/encrypting HTTP client communications</a> 4</li>
-		<li><a href="#xpack_06_encryption_client">Step 6: Set up encryption for communications from the client to the Elasticsearch cluster</a> 5</li>
+		<li><a href="#xpack_01_change_bootstrap_value">Step 1: Change the bootstrap.password value for built-in users</a></li>
+		<li><a href="#xpack_02_set_up_roles">Step 2: Set up user and user roles</a></li>
+		<li><a href="#xpack_03_add_user_with_roles">Step 3: Add user with specific roles</a></li>
+		<li><a href="#xpack_04_enable_xpack_in_yaml">Step 4: Modify the Elasticsearch YAML file</a></li>
+		<li><a href="#xpack_05_encryption_node">Step 5: Set up encryption for communications between nodes in a cluster/encrypting HTTP client communications</a></li>
+		<li><a href="#xpack_06_encryption_client">Step 6: Set up encryption for communications from the client to the Elasticsearch cluster</a></li>
 	</ol>
 </li>
 	<li><a href="#es_shield">Installing and configuring the Elasticsearch Shield plug-in</a>
@@ -69,7 +69,7 @@ nav-title: Configuring Elasticsearch with security
 	<li><a href="#xpack_01_change_bootstrap_value">Step 1: Change the bootstrap.password value for built-in users</a></li>
 	<li><a href="#xpack_02_set_up_roles">Step 2: Set up user and user roles</a></li>
 	<li><a href="#xpack_03_add_user_with_roles">Step 3: Add user with specific roles</a></li>
-	<li><a href="#xpack_04_enable_xpack_in_yaml">Step 4: Enable X-Pack security in the Elasticsearch YAML file</a></li>
+	<li><a href="#xpack_04_enable_xpack_in_yaml">Step 4: Modify the Elasticsearch YAML file</a></li>
 	<li><a href="#xpack_05_encryption_node">Step 5: Set up encryption for communications between nodes in a cluster/encrypting HTTP client communications</a></li>
 	<li><a href="#xpack_06_encryption_client">Step 6: Set up encryption for communications from the client to the Elasticsearch cluster</a></li>
 </ol>
@@ -171,14 +171,21 @@ nav-title: Configuring Elasticsearch with security
 <p><a href="#top">back to top</a></p>
 
 
-<h4 id="xpack_04_enable_xpack_in_yaml">Step 4: Enable X-Pack security in the Elasticsearch YAML file</h4>
+<h4 id="xpack_04_enable_xpack_in_yaml">Step 4: Modify the Elasticsearch YAML file</h4>
 <p>The next step is to manually change some of the settings in one of the Elasticsearch configuration files, <strong>elasticsearch.yml</strong>,  to enable X-Pack security.</p>
-<p>The <strong>elasticsearch.yml</strong> file is generally stored in the<strong> {elasticsearch_home}/config</strong> folder.</p>
-<p>To make this change, you'll at least need to provide username/password.</p>
+<p>The <strong>elasticsearch.yml</strong> file is generally stored in the<strong> {elasticsearch_home}/config</strong> folder. It might have some default placeholder content, but not all the placeholder values. Use <a href="#yaml_xpack">Sample Elasticsearch YAML file</a> below as a starting point to model your changes.</p>
+<p>To enable X-Pack security, you'll at least need to provide username/password.</p>
 <p>In the YAML file, change the value for the <strong>xpack.security.enabled</strong> setting to <strong>true</strong>, as shown below.</p>
 <pre>xpack.security.enabled: true</pre>
-<p>You'll also need to set up other values, such as host and port values.</p>
-<p>Some placeholder copy might be in the file, so you can modify the file for your implementation. {{<span class="apidoc_red">More info from MM on the recording</span>}}</p>
+<p>You'll also need to set up other values, such as:</p>
+<ul>
+	<li>Cluster name: needed for Transport Client. For example:
+	<pre>cluster.name: akana</pre></li>
+	<li>Node name: needed if you want to name your own node. For example:
+	<pre>node.name: node-1</pre></li>
+	<li>Transport TCP port: needed for Transport Client. For example:
+		<pre>transport.tcp.port: 9300</pre></li>
+</ul>
 <p>For general information about the <strong>elasticsearch.yml</strong> file, see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html" title="Information about the elasticsearch.yml file" target="_blank">https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html</a>.</p>
 <h5>To configure the Elasticsearch YAML file</h5>
 <ol>
@@ -537,6 +544,7 @@ elastic.client.keystorePath</pre>
 	<li><a href="install_cm_jython_script.htm">Installation Jython Script</a></li>
 	<li><a href="implementation_planning.htm">Planning Your Implementation</a></li>
 	<li><a href="install_es_config.htm">Installing and Configuring Elasticsearch</a></li>
+<!--	<li><a href="install_es_secure_tc.htm">Configuring Elasticsearch with Transport Client security</a></li>-->
 	<li><a href="install_mysql_dbsettings.htm">MySQL Database Property Settings</a></li>
 </ul>
 <ul>
