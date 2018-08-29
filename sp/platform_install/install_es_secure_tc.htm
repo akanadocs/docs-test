@@ -1,7 +1,7 @@
 ---
 layout: page
-title: Configuring Elasticsearch with Transport Client security
-description: Learn how to configure Elasticsearch with Transport Client security using the Shield plug-in.
+title: Configuring Elasticsearch with Security
+description: Learn how to configure Elasticsearch with security using the X-Pack or Shield plug-in.
 product: sp
 category: ref
 weight: 09
@@ -9,12 +9,18 @@ sub-nav-class: Installation - Akana API Platform
 type: page
 nav-title: Configuring Elasticsearch with security
 ---
-<h2 id="top">Configuring Elasticsearch with Transport Client security</h2>
-<p>If you're using Elasticsearch and want to use the Transport Client over SSL/TLS, you'll need to complete some additional installation and configuration steps.</p>
-<p>This document provides information about implementing Transport Client security using Shield, an Elasticsearch plug-in that provides SSL/TLS encryption for network traffic to and from the Elasticsearch node.</p>
-<p>For full details about installing Shield, see <a href="https://www.elastic.co/guide/en/shield/shield-1.3/installing-shield.html" title="Elasticsearch Shield website" target="_blank">https://www.elastic.co/guide/en/shield/shield-1.3/installing-shield.html</a>.</p>
+<h2 id="top">Configuring Elasticsearch with Client security</h2>
+<p>If you're using Elasticsearch and want security<span class="apidoc_red"></span> over SSL/TLS to add encryption for node to node communication and cluster communication, you'll need to complete some additional setup and configuration steps.</p>
+<p>This document provides information about implementing security for Elasticsearch. Depending on your API Platform version, you'll use one of these:</p>
+<ul>
+	<li><strong>X-Pack</strong>: Version 2018.0.0 uses Elasticsearch 6.3.1, which uses X-Pack for security.
+		<p>X-Pack is bundled with the Elasticsearch install, but requires a license for activation.</p></li>
+	<li><strong>Shield</strong>: Versions prior to 2018.0.0 use Elasticsearch 1.5, which uses Shield for security.
+		<p>For full details about installing Shield, see <a href="https://www.elastic.co/guide/en/shield/shield-1.3/installing-shield.html" title="Elasticsearch Shield website" target="_blank">https://www.elastic.co/guide/en/shield/shield-1.3/installing-shield.html</a>.</p></li>
+</ul>
 
-<h5 class="stamp">Supported Platforms: 8.4x</h5>
+
+<h5 class="stamp">Supported Platforms: 8.4x and later</h5>
 
 <div class = "divider1"></div>
 <h3 style="color: gray;">Table of Contents</h3>
@@ -22,12 +28,28 @@ nav-title: Configuring Elasticsearch with security
 
 
 <ol class="table_of_contents">
-  <li><a href="#01_install_plugin">Step 1: Download the Elasticsearch Shield plug-in</a></li>
-  <li><a href="#02_unzip_files">Step 2: Unzip installation files</a></li>
-  <li><a href="#03_set_up_roles">Step 3: Set up user and user roles</a></li>
-  <li><a href="#04_configure_yaml">Step 4: Configure the Elasticsearch YAML file</a></li>
-  <li><a href="#05_transport_client_settings">Step 5: Configure transport client security settings</a></li>
-</ol>
+	<li><a href="#es_xpack">Setting up X-Pack</a>
+(2018.0.0	and	later)
+	<ol>
+		<li><a href="#xpack_01_change_bootstrap_value">Step 1: Change the bootstrap.password value for built-in users</a> 0</li>
+		<li><a href="#xpack_02_set_up_roles">Step 2: Set up user and user roles</a> 1</li>
+		<li><a href="#xpack_03_add_user_with_roles">Step 3: Add user with specific roles</a> 2</li>
+		<li><a href="#xpack_04_enable_xpack_in_yaml">Step 4: Enable X-Pack security in the Elasticsearch YAML file</a> 3 YAML</li>
+		<li><a href="#xpack_05_encryption_node">Step 5: Set up encryption for communications between nodes in a cluster/encrypting HTTP client communications</a> 4</li>
+		<li><a href="#xpack_06_encryption_client">Step 6: Set up encryption for communications from the client to the Elasticsearch cluster</a> 5</li>
+	</ol>
+</li>
+	<li><a href="#es_shield">Installing and configuring the Elasticsearch Shield plug-in</a>
+(8.4x, prior to 2018.0.0)
+	<ol>
+		<li><a href="#s01_install_plugin">Step 1: Download the Elasticsearch Shield plug-in</a></li>
+		<li><a href="#s02_unzip_files">Step 2: Unzip installation files</a></li>
+		<li><a href="#s03_set_up_roles">Step 3: Set up user and user roles</a></li>
+		<li><a href="#s04_configure_yaml">Step 4: Configure the Elasticsearch YAML file</a></li>
+		<li><a href="#s05_transport_client_settings">Step 5: Configure transport client security settings</a></li>
+		</ol>
+	</li>
+	</ol>
 <p><strong>Note</strong>: For general information about installation and configuration of Elasticsearch, see <a href="install_es_config.htm">Installing and Configuring Elasticsearch</a>.</p>
 
 
@@ -36,86 +58,403 @@ nav-title: Configuring Elasticsearch with security
 
 
 
-
-<a name="01_install_plugin"></a><h3>Step 1: Download the Elasticsearch Shield plug-in</h3>
-<p>The first step is to download the Shield plug-in.</p>
-<h5>To download the Shield plug-in</h5>
+<h3 id="es_xpack">Setting up X-Pack</h3>
+<p>X-Pack is bundled with the Elasticsearch 6.3.1 install, but requires a license for activation.</p>
+<p>As a starting point, here is the API call you can use to start a trial license for 30 days:</p>
+<pre>POST {http://localhost:9200}/_xpack/license/start_trial?acknowledge=true</pre>
+<p>However, X-Pack is a paid product and you'll need to renew the license.</p>
+<p>For the hostname in the above, use the address for the Elasticsearch nodes. If you have&nbsp;a cluster with multiple Elasticsearch nodes, use the address for any one of the nodes.</p>
+<p>To set up the X-Pack plug-in, complete the following steps:</p>
 <ol>
-  <li>Go to the Elasticsearch site (<a href="https://www.elastic.co/" title="Elasticsearch website" target="_blank">https://www.elastic.co/</a>) and download the Shield feature:
-    <ul>
-      <li><a href="https://download.elastic.co/elasticsearch/shield/shield-1.3.3.zip" title="Elasticsearch Shield install file" target="_blank">https://download.elastic.co/elasticsearch/shield/shield-1.3.3.zip</a></li>
-      </ul>
-    </li>
-  <li>Download the license ZIP file:
-    <ul>
-      <li><a href="https://download.elastic.co/elasticsearch/license/license-1.0.0.zip" title="Elasticsearch Shield license file" target="_blank">https://download.elastic.co/elasticsearch/license/license-1.0.0.zip</a></li>
-    </ul>
-  <p><strong>Note</strong>: This is the trial license, and can be used for development only. For the Production environment, you'll need to get a license from Elasticsearch support.</p></li>
-  <li>Copy the ZIP files to the machine where Elasticsearch is installed.</li>
-  </ol>
+	<li><a href="#xpack_01_change_bootstrap_value">Step 1: Change the bootstrap.password value for built-in users</a></li>
+	<li><a href="#xpack_02_set_up_roles">Step 2: Set up user and user roles</a></li>
+	<li><a href="#xpack_03_add_user_with_roles">Step 3: Add user with specific roles</a></li>
+	<li><a href="#xpack_04_enable_xpack_in_yaml">Step 4: Enable X-Pack security in the Elasticsearch YAML file</a></li>
+	<li><a href="#xpack_05_encryption_node">Step 5: Set up encryption for communications between nodes in a cluster/encrypting HTTP client communications</a></li>
+	<li><a href="#xpack_06_encryption_client">Step 6: Set up encryption for communications from the client to the Elasticsearch cluster</a></li>
+</ol>
+
+
+<h4 id="xpack_01_change_bootstrap_value">Step 1: Change the bootstrap.password value for built-in users</h4>
+<p>Elasticsearch comes with a built-in default user. As a first step, change the <strong>bootstrap.password</strong> value.</p>
+<p>For information about changing the bootstrap.password value for built-in users, refer to the Elasticsearch help: <a href="https://www.elastic.co/guide/en/elastic-stack-overview/current/get-started-built-in-users.html" title="link to Elasticsearch doc re changing bootstrap password value for built-in users" target="_blank">https://www.elastic.co/guide/en/elastic-stack-overview/current/get-started-built-in-users.html</a>.</p>
+<p><a href="#top">back to top</a></p>
+
+
+<h4 id="xpack_02_set_up_roles">Step 2: Set up user and user roles</h4>
+<p>You can:</p>
+<ul>
+	<li><a href="#proc_xpack_addrole_api">Add new roles using the X-Pack role management API</a></li>
+	<li><a href="#proc_xpack_addrole_rolemapping">Add users and roles using role mapping files</a></li>
+</ul>
+
+<h5 id="proc_xpack_addrole_api">To add new roles using the X-Pack role management API</h5>
+<p>Use the built-in user, which you updated in the previous step, to call this API. To use this API, you must have at least the <strong>manage_security</strong> cluster privilege. </p>
+<p><strong>Adding a new role: example
+</strong></p>
+<p>The following API adds a new role, <strong>read-only-user</strong>, with a privilege of <strong>read</strong> for the search indexes. This can be used on the containers where search is performed but indexing is not (<strong>Community Manager Scheduled Jobs</strong> feature is not installed).</p>
+<p><strong>URL:</strong></p>
+<pre>POST /_xpack/security/role/read_only_user</pre>
+<p><strong>Message body:</strong></p>
+<pre>{
+  "cluster":[
+    "all or the cluster name in elastcsearch.yaml"
+  ],
+  "indices":[
+    {
+      "names":[
+        "default*"
+      ],
+      "privileges":[
+        "read"
+      ]
+    }
+  ]
+}</pre>
+<p><strong>Example: adding a role es-admin with indices privilege all</strong></p>
+<p><strong>URL:</strong></p>
+<pre>POST /_xpack/security/role/es-admin</pre>
+<p><strong>Message body:</strong></p>
+<pre>{
+  "cluster":[
+    "all or the cluster name in elastcsearch.yaml"
+  ],
+  "indices":[
+    {
+      "names":[
+        "default*"
+      ],
+      "privileges":[
+        "all"
+      ]
+    }
+  ]
+}</pre>
+<p>The container with Community Manager Scheduled jobs feature installed needs a user with indices privileges <strong>all</strong>. Use the above<strong> es-admin</strong> role on these containers.</p>
+<p>You might also need a user with a built-in role of <strong>superuser</strong> to perform different tasks on the cluster. For information on setting this up, refer to <a href="https://www.elastic.co/guide/en/elastic-stack-overview/6.3/built-in-roles.html" title="Link to Elasticsearch help re built-in roles" target="_blank">https://www.elastic.co/guide/en/elastic-stack-overview/6.3/built-in-roles.html</a>.</p>
+<h5 id="proc_xpack_addrole_rolemapping">To add users and roles using role mapping files</h5>
+<p>For information about using this approach, see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.3/users-command.html" title="Link to Elasticsearch help re using role mapping files." target="_blank">https://www.elastic.co/guide/en/elasticsearch/reference/6.3/users-command.html</a> (Elasticsearch help).</p>
+<p><a href="#top">back to top</a></p>
+
+
+<h4 id="xpack_03_add_user_with_roles">Step 3: Add user with specific roles</h4>
+<p>Use the built-in user above to call this api. To use this API, you must have at least the <strong>manage_security</strong> cluster privilege.</p>
+<p>For information about using this approach, see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.3/security-api-put-user.html" title="Link to Elasticsearch help re using API to add user with specific roles." target="_blank">https://www.elastic.co/guide/en/elasticsearch/reference/6.3/security-api-put-user.html</a> (Elasticsearch help).</p>
+<p><strong>Example #1: adding adminuser</strong></p>
+<p>The following example creates a user <strong>adminuser</strong>.</p>
+<p><strong>URL:</strong></p>
+<pre>POST /_xpack/security/user/adminuser</pre>
+<p><strong>Message body:</strong></p>
+<pre>{
+  "password":"Specify Password",
+  "roles":[
+    "admin",
+    "other_role1"
+  ],
+  "full_name":"Admin User",
+  "email":"adminuser@example.com"
+}</pre>
+
+<p><strong>Example #2: adding superuser</strong></p>
+<p>The following example creates a user <strong>superuser</strong>.</p>
+<p><strong>URL:</strong></p>
+<pre>POST /_xpack/security/user/mysuperuser</pre>
+<p><strong>Message body:</strong></p>
+<pre>{
+  "password":"Specify Password",
+  "roles":[
+    "superuser"
+  ],
+  "full_name":"Some Super User",
+  "email":"superuser@example.com"
+}</pre>
+<p><a href="#top">back to top</a></p>
+
+
+<h4 id="xpack_04_enable_xpack_in_yaml">Step 4: Enable X-Pack security in the Elasticsearch YAML file</h4>
+<p>The next step is to manually change some of the settings in one of the Elasticsearch configuration files, <strong>elasticsearch.yml</strong>,  to enable X-Pack security.</p>
+<p>The <strong>elasticsearch.yml</strong> file is generally stored in the<strong> {elasticsearch_home}/config</strong> folder.</p>
+<p>To make this change, you'll at least need to provide username/password.</p>
+<p>In the YAML file, change the value for the <strong>xpack.security.enabled</strong> setting to <strong>true</strong>, as shown below.</p>
+<pre>xpack.security.enabled: true</pre>
+<p>You'll also need to set up other values, such as host and port values.</p>
+<p>Some placeholder copy might be in the file, so you can modify the file for your implementation. {{<span class="apidoc_red">More info from MM on the recording</span>}}</p>
+<p>For general information about the <strong>elasticsearch.yml</strong> file, see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html" title="Information about the elasticsearch.yml file" target="_blank">https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html</a>.</p>
+<h5>To configure the Elasticsearch YAML file</h5>
+<ol>
+	<li>Modify the properties in the <strong>elasticsearch.yml</strong> file, using the example in <a href="#yaml_xpack">Sample Elasticsearch YAML file</a> below (you can copy and paste).</li>
+	<li>Restart the Elasticsearch cluster.</li>
+</ol>
+
+<h5 id="yaml_xpack">Sample Elasticsearch YAML file</h5>
+<pre># ======================== Elasticsearch Configuration =========================
+#
+# NOTE: Elasticsearch comes with reasonable defaults for most settings.
+#       Before you set out to tweak and tune the configuration, make sure you
+#       understand what are you trying to accomplish and the consequences.
+#
+# The primary way of configuring a node is via this file. This template lists
+# the most important settings you may want to configure for a production cluster.
+#
+# Please consult the documentation for further information on configuration options:
+# https://www.elastic.co/guide/en/elasticsearch/reference/index.html
+#
+# ---------------------------------- Cluster -----------------------------------
+#
+# Use a descriptive name for your cluster:
+#
+cluster.name: akana
+#
+# ------------------------------------ Node ------------------------------------
+#
+# Use a descriptive name for the node:
+#
+node.name: node-1
+#
+# Add custom attributes to the node:
+#
+#node.attr.rack: r1
+#
+# ----------------------------------- Paths ------------------------------------
+#
+# Path to directory where to store the data (separate multiple locations by comma):
+#
+path.data: c:/_elastic631/data
+#
+# Path to log files:
+#
+path.logs: c:/_elastic631/logs
+#
+# ----------------------------------- Memory -----------------------------------
+#
+# Lock the memory on startup:
+#
+#bootstrap.memory_lock: true
+#
+# Make sure that the heap size is set to about half the memory available
+# on the system and that the owner of the process is allowed to use this
+# limit.
+#
+# Elasticsearch performs poorly when the system is swapping the memory.
+#
+# ---------------------------------- Network -----------------------------------
+#
+# Set the bind address to a specific IP (IPv4 or IPv6):
+#
+#network.host: 192.168.0.1
+network.host: 0.0.0.0
+
+transport.tcp.port: 9300
+#
+# Set a custom port for HTTP:
+#
+http.port: 9200
+#
+# For more information, consult the network module documentation.
+#
+# --------------------------------- Discovery ----------------------------------
+#
+# Pass an initial list of hosts to perform discovery when new node is started:
+# The default list of hosts is ["127.0.0.1", "[::1]"]
+#
+discovery.zen.ping.unicast.hosts: ["instance", "[::1]"]
+#
+# Prevent the "split brain" by configuring the majority of nodes (total number of master-eligible nodes / 2 + 1):
+#
+discovery.zen.minimum_master_nodes: 1
+#
+# For more information, consult the zen discovery module documentation.
+#
+# ---------------------------------- Gateway -----------------------------------
+#
+# Block initial recovery after a full cluster restart until N nodes are started:
+#
+#gateway.recover_after_nodes: 3
+#
+# For more information, consult the gateway module documentation.
+#
+# ---------------------------------- Various -----------------------------------
+#
+# Require explicit names when deleting indices:
+#
+#action.destructive_requires_name: true
+xpack.security.enabled: true
+
+#xpack.ssl.client_authentication
+#xpack.ssl.verification_mode: certificate
+
+#xpack.security.transport.ssl.enabled: true
+#xpack.security.transport.ssl.verification_mode: certificate 
+#xpack.security.transport.ssl.keystore.path: certs/elastic-certificates.p12 
+#xpack.security.transport.ssl.truststore.path: certs/elastic-certificates.p12
+#xpack.security.transport.ssl.certificate_authorities: [ "certs/ca.cer" ]
+#xpack.security.transport.ssl.key: certs/instance.key 
+#xpack.security.transport.ssl.certificate: certs/instance.crt 
+#xpack.security.transport.ssl.certificate_authorities: [ "certs/ca.crt" ]
+
+#xpack.security.transport.ssl.verification_mode: certificate 
+#xpack.security.transport.ssl.key: certs\instance.key 
+#xpack.security.transport.ssl.certificate: certs\instance.crt 
+#xpack.security.transport.ssl.certificate_authorities: [ "certs/ca.crt" ]
+
+xpack.security.http.ssl.enabled: true
+xpack.ssl.verification_mode: certificate
+xpack.security.http.ssl.keystore.path: certs/elastic-certificates.p12 
+xpack.security.http.ssl.truststore.path: certs/elastic-certificates.p12
+
+#xpack.security.http.ssl.enabled: true
+#xpack.security.http.ssl.key:  /home/es/config/node01.key 
+#xpack.security.http.ssl.certificate: /home/es/config/node01.crt 
+#xpack.security.http.ssl.certificate_authorities: [ "/home/es/config/ca.crt" ]</pre>
 <p><a href="#top">back to top</a></p>
 
 
 
-<a name="02_unzip_files"></a><h3>Step 2: Unzip installation files</h3>
-<p>To install the plugins using the ZIP files, run bin/plugin with the -u option.</p>
-<p>For example:</p>
-<ol>
-  <li>Change directory (cd) to the Elasticsearch installation folder.</li>
-  <li>Run the following two commands:
-    <ol>
-    <li>bin/plugin -i license -u file:///{path_to_file}/license-1.0.0.zip </li>
-    <li>bin/plugin -i shield -u file:///{path_to_file}/shield-1.3.3.zip</li>
-  </ol>
-  </li>
-  </ol>
-<p class="apidoc_note"><strong>Note</strong>: You must specify an absolute path to the ZIP file after the <strong>file://</strong> protocol.</p>
+
+
+
+
+<h4 id="xpack_05_encryption_node">Step 5: Set up encryption for communications between nodes in a cluster/encrypting HTTP client communications</h4>
+<p>For information about encryption, please follow the Elasticsearch instructions at this URL: <a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.3/configuring-tls.html#node-certificates" title="Information about encrypting Elasticsearch nodes" target="_blank">https://www.elastic.co/guide/en/elasticsearch/reference/6.3/configuring-tls.html#node-certificates</a>.</p>
 <p><a href="#top">back to top</a></p>
 
 
-
-<a name="03_set_up_roles"></a><h3>Step 3: Set up user and user roles</h3>
-<p>The next step is to add user and user roles for the client user.</p>
-<p>For detailed documentation about managing Elasticsearch users and user roles, see <a href="https://www.elastic.co/guide/en/shield/shield-1.3/_managing_users_in_an_esusers_realm.html" title="Elasticsearch Managing Users page" target="_blank">https://www.elastic.co/guide/en/shield/shield-1.3/_managing_users_in_an_esusers_realm.html</a>.</p>
-<p class="apidoc_note"><strong>Note</strong>: The Transport client user must have at least the user role of <strong>power_user</strong> for the container where the <strong>Community Manager Scheduled Jobs</strong> feature is installed. For the containers that are read-only (only search), the user role <strong>user</strong> is enough.</p>
+<h4 id="xpack_06_encryption_client">Step 6: Set up encryption for communications from the client to the Elasticsearch cluster</h4>
 <ol>
-  <li>CD to the <strong>{elasticsearch}/bin/shield</strong> folder.</li>
-  <li>Run the following command to add a user:
-      <pre>esusers useradd {username} -p {secret}</pre>
-  <p>For example:</p>
-    <pre>esusers useradd es_power_user -p Password1</pre></li>
-  <li>Assign roles to the user. The example below assigns the <strong>power_user</strong> role to the user <strong>es_power_user</strong>:
-    <pre>esusers roles es_power_user -a power_user</pre></li>
-  <li>If needed, change user password:
-    <pre>esusers passwd {username} -p {secret}</pre></li>
-  <li>If needed, remove roles assigned to a user. In the example below, -r removes role <strong>admin</strong> for user <strong>es_admin</strong>:
-    <pre>esusers roles es_admin -r admin</pre></li>
-  <li>If needed, delete users, using the  esusers userdel command:
-    <pre>userdel {username}</pre>
-  </li>
+	<li>Log in to the Akana Administration Console for the container.</li>
+	<li>Go to <strong>Configuration</strong> &gt; <strong>com.akana.es.client.security</strong>. You'll see the settings, as shown below:
+	<p><img src="images_2018/ac_config_com_akana_es_client_security.jpg" alt="Elasticsearch configuration settings" /></p>
+	</li>
+	<li>For <strong>elastic.client.keystoreType</strong>, specify one of the following values:
+		<ul>
+			<li>PKCS12 (the default)</li>
+			<li>JKS</li>
+			<li>PEM</li>
+	</ul>
+		</li>
+	
+	<li>For <strong>elastic.client.transportSSLVerificationMode</strong>, specify one of the following values:
+		<ul>
+			<li>none (the default)</li>
+			<li>certificate</li>
+			<li>full</li>
+		</ul>
+	<p>For details about these values, please refer to the Elasticsearch documentation.</p></li>
+	<li>If the Mode is Transport Client, and you are using PKCS12 or JKS, provide values for the following:
+		<ul>
+			<li>elastic.client.keystorePath</li>
+			<li>elastic.client.keystorePassword</li>
+			<li>elastic.client.truststorePath</li>
+			<li>elastic.client.truststorePassword</li>
+			</ul>
+	</li>
+	
+	<li>If the Mode is Transport Client, and you are using PEM format, provide values for the following:
+		<ul>
+			<li>elastic.client.sslKey</li>
+			<li>elastic.client.sslCertificate</li>
+			<li>elastic.client.certificateAuthorities</li>
+			<li>elastic.client.keyPassphrase - if applicable</li>
+			</ul>
+	</li>
+	
+	<li>If the mode is Rest Client, only PKCS12 and JKS formats are accepted. Provide the following:
+		<ul>
+			<li>elastic.client.keystorePath</li>
+			<li>elastic.client.keystorePassword</li>
+			<li>elastic.client.sslHostNameVerifierMode&#8212;The default is <strong>allow_all</strong>. The other possible value is <strong>default</strong>, which enforces host name verification.</li>
+			</ul>
+		<p><strong>Note</strong>: For Rest Client, only PKCS12 and JKS formats are accepted at this time. The PEM formats are not supported.</p></li>
 </ol>
 <p><a href="#top">back to top</a></p>
 
 
 
-<a name="04_configure_yaml"></a><h3>Step 4: Configure the Elasticsearch YAML file</h3>
+<h3 id="es_shield">Installing and configuring the Elasticsearch Shield plug-in</h3>
+<p>To install and configure the Shield plug-in, complete the following steps:</p>
+<ol>
+	<li><a href="#s01_install_plugin">Step 1: Download the Elasticsearch Shield plug-in</a></li>
+	<li><a href="#s02_unzip_files">Step 2: Unzip installation files</a></li>
+	<li><a href="#s03_set_up_roles">Step 3: Set up user and user roles</a></li>
+	<li><a href="#s04_configure_yaml">Step 4: Configure the Elasticsearch YAML file</a></li>
+	<li><a href="#s05_transport_client_settings">Step 5: Configure transport client security settings</a></li>
+</ol>
+
+
+<h4 id="s01_install_plugin">Step 1: Download the Elasticsearch Shield plug-in</h4>
+<p>The first step is to download the Shield plug-in.</p>
+<h5>To download the Shield plug-in</h5>
+<ol>
+	<li>Go to the Elasticsearch site (<a href="https://www.elastic.co/" title="Elasticsearch website" target="_blank">https://www.elastic.co/</a>) and download the Shield feature:
+		<ul>
+			<li><a href="https://download.elastic.co/elasticsearch/shield/shield-1.3.3.zip" title="Elasticsearch Shield install file" target="_blank">https://download.elastic.co/elasticsearch/shield/shield-1.3.3.zip</a></li>
+			</ul>
+		</li>
+	<li>Download the license ZIP file:
+		<ul>
+			<li><a href="https://download.elastic.co/elasticsearch/license/license-1.0.0.zip" title="Elasticsearch Shield license file" target="_blank">https://download.elastic.co/elasticsearch/license/license-1.0.0.zip</a></li>
+		</ul>
+	<p><strong>Note</strong>: This is the trial license, and can be used for development only. For the Production environment, you'll need to get a license from Elasticsearch support.</p></li>
+	<li>Copy the ZIP files to the machine where Elasticsearch is installed.</li>
+	</ol>
+<p><a href="#top">back to top</a></p>
+
+
+<h4 id="s02_unzip_files">Step 2: Unzip installation files</h4>
+<p>To install the plugins using the ZIP files, run bin/plugin with the -u option.</p>
+<p>For example:</p>
+<ol>
+	<li>Change directory (cd) to the Elasticsearch installation folder.</li>
+	<li>Run the following two commands:
+		<ol>
+		<li>bin/plugin -i license -u file:///{path_to_file}/license-1.0.0.zip </li>
+		<li>bin/plugin -i shield -u file:///{path_to_file}/shield-1.3.3.zip</li>
+	</ol>
+	</li>
+</ol>
+<p class="apidoc_note"><strong>Note</strong>: You must specify an absolute path to the ZIP file after the <strong>file://</strong> protocol.</p>
+<p><a href="#top">back to top</a></p>
+
+
+<h4 id="s03_set_up_roles">Step 3: Set up user and user roles</h4>
+<p>The next step is to add user and user roles for the client user.</p>
+<p>For detailed documentation about managing Elasticsearch users and user roles, see <a href="https://www.elastic.co/guide/en/shield/shield-1.3/_managing_users_in_an_esusers_realm.html" title="Elasticsearch Managing Users page" target="_blank">https://www.elastic.co/guide/en/shield/shield-1.3/_managing_users_in_an_esusers_realm.html</a>.</p>
+<p class="apidoc_note"><strong>Note</strong>: The Transport client user must have at least the user role of <strong>power_user</strong> for the container where the <strong>Community Manager Scheduled Jobs</strong> feature is installed. For the containers that are read-only (only search), the user role <strong>user</strong> is enough.</p>
+<ol>
+	<li>CD to the <strong>{elasticsearch}/bin/shield</strong> folder.</li>
+	<li>Run the following command to add a user:
+			<pre>esusers useradd {username} -p {secret}</pre>
+	<p>For example:</p>
+		<pre>esusers useradd es_power_user -p Password1</pre></li>
+	<li>Assign roles to the user. The example below assigns the <strong>power_user</strong> role to the user <strong>es_power_user</strong>:
+		<pre>esusers roles es_power_user -a power_user</pre></li>
+	<li>If needed, change user password:
+		<pre>esusers passwd {username} -p {secret}</pre></li>
+	<li>If needed, remove roles assigned to a user. In the example below, -r removes role <strong>admin</strong> for user <strong>es_admin</strong>:
+		<pre>esusers roles es_admin -r admin</pre></li>
+	<li>If needed, delete users, using the esusers userdel command:
+		<pre>userdel {username}</pre>
+	</li>
+</ol>
+<p><a href="#top">back to top</a></p>
+
+
+<h4 id="s04_configure_yaml">Step 4: Configure the Elasticsearch YAML file</h4>
 <p>You'll need to manually change some of the settings in one of the Elasticsearch configuration files, <strong>elasticsearch.yml</strong>, generally stored in the<strong> {elasticsearch_home}/config</strong> folder.</p>
 <p>You can have Shield installed and enabled but might choose not to enable SSL; for example, if the cluster is within the firewall. If Shield is installed and SSL is disabled, Shield still expects the transport client user authentication header. In the Akana Administration Console, see the Transport Client user settings.</p>
 <p>For general information about the <strong>elasticsearch.yml</strong> file, see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html" title="Information about the elasticsearch.yml file" target="_blank">https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html</a>.</p>
 <h5>To configure the Elasticsearch YAML file</h5>
 <ol>
-  <li>Modify the properties in the <strong>elasticsearch.yml</strong> file, using the examples below (you can copy and paste):
+	<li>Modify the properties in the <strong>elasticsearch.yml</strong> file, using the examples below (you can copy and paste):
 <ul>
-      <li>Sample YAML with SSL enabled</li>
-      <li>Sample YAML with SSL disabled</li>
-    </ul>
-    </li>
-  
-  <li>Restart the Elasticsearch cluster.</li>
+		<li><a href="#yaml_ssl_enabled">Sample YAML with SSL enabled</a></li>
+		<li><a href="#yaml_ssl_disabled">Sample YAML with SSL disabled</a></li>
+	</ul>
+	</li>
+	<li>Restart the Elasticsearch cluster.</li>
 </ol>
 
-
-<h4>Sample YAML with SSL enabled</h4>
+<h5 id="yaml_ssl_enabled">Sample YAML with SSL enabled</h5>
 <pre>shield.enabled: true
 shield.ssl.keystore.path: {path}\node01.jks
 shield.ssl.keystore.password: changeit
@@ -132,9 +471,7 @@ transport.profiles.client.ssl: false
 #transport.profiles.client.shield.ssl.client.auth: no
 shield.http.ssl.client.auth: optional</pre>
 
-
-
-<h4>Sample YAML with SSL disabled</h4>
+<h5 id="yaml_ssl_disabled">Sample YAML with SSL disabled</h5>
 <pre>shield.enabled: true
 shield.ssl.keystore.path: C:\SOA\ES\NodeCert\node01.jks
 shield.ssl.keystore.password: changeit
@@ -153,36 +490,35 @@ shield.http.ssl.client.auth: no</pre>
 <p><a href="#top">back to top</a></p>
 
 
-
-<a name="05_transport_client_settings"></a><h3>Step 5: Configure transport client security settings</h3>
+<h4 id="s05_transport_client_settings">Step 5: Configure transport client security settings</h4>
 <p>Follow the steps below.</p>
 <p class="apidoc_note"><strong>Note</strong>: If Shield is not installed on the Elasticsearch cluster, you don't need to do anything. The default for enabling SSL is <strong>false</strong>.</p>
 <h5>To configure the transport client security settings</h5>
 <ol>
-  <li>Log in to the Akana Administration Console.</li>
-  <li>Click the <strong>Configuration</strong> tab.</li>
-  <li>On the left, under Configuration Categories, scroll down to find the <strong>com.akana.es.client.security</strong> category. You'll see the settings, as shown below:
-    <pre>elastic.client.alias
+	<li>Log in to the Akana Administration Console.</li>
+	<li>Click the <strong>Configuration</strong> tab.</li>
+	<li>On the left, under Configuration Categories, scroll down to find the <strong>com.akana.es.client.security</strong> category. You'll see the settings, as shown below:
+<pre>elastic.client.alias
 elastic.client.aliasPassword
 elastic.client.clientUser:
 elastic.client.clientUserPassword:
 elastic.client.enableSSL: false
 elastic.client.keystorePassword
 elastic.client.keystorePath</pre>
-  </li>
-  <li> Change the values as needed. Sample settings when SSL is disabled are shown below:
-    <p><img src="images/settings_es_client_security_disabled.jpg" alt="Elasticsearch configuration settings (SSL disabled)" /></p>
-    <p>Sample settings when SSL is enabled are shown below:</p>
-    <p><img src="images/settings_es_client_security_enabled.jpg" alt="Elasticsearch configuration settings with SSL enabled" /></p>
-  </li>
-  <li>Click <strong>Apply Changes</strong>.</li>
+	</li>
+	<li> Change the values as needed. Sample settings when SSL is disabled are shown below:
+		<p><img src="images/settings_es_client_security_disabled.jpg" alt="Elasticsearch configuration settings (SSL disabled)" /></p>
+		<p>Sample settings when SSL is enabled are shown below:</p>
+		<p><img src="images/settings_es_client_security_enabled.jpg" alt="Elasticsearch configuration settings with SSL enabled" /></p>
+	</li>
+	<li>Click <strong>Apply Changes</strong>.</li>
 </ol>
 <p><strong>Notes:</strong></p>
 <ul>
-  <li>By default, SSL is disabled.</li>
-  <li>If SSL is disabled on the Elasticsearch cluster and Shield is installed, you must at minimum provide values for <strong>clientUser</strong> and <strong>clientUserPassword</strong>.</li>
-  <li>The transport client user is added in the above steps, with appropriate roles.</li>
-  </ul>
+	<li>By default, SSL is disabled.</li>
+	<li>If SSL is disabled on the Elasticsearch cluster and Shield is installed, you must at minimum provide values for <strong>clientUser</strong> and <strong>clientUserPassword</strong>.</li>
+	<li>The transport client user is added in the above steps, with appropriate roles.</li>
+</ul>
 <p><a href="#top">back to top</a></p>
 
 
@@ -201,7 +537,6 @@ elastic.client.keystorePath</pre>
 	<li><a href="install_cm_jython_script.htm">Installation Jython Script</a></li>
 	<li><a href="implementation_planning.htm">Planning Your Implementation</a></li>
 	<li><a href="install_es_config.htm">Installing and Configuring Elasticsearch</a></li>
-<!--	<li><a href="install_es_secure_tc.htm">Configuring Elasticsearch with Transport Client security</a></li>-->
 	<li><a href="install_mysql_dbsettings.htm">MySQL Database Property Settings</a></li>
 </ul>
 <ul>
