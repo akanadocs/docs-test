@@ -1,4 +1,15 @@
----
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Akana API Platform Installation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="../../style/reset.css" rel="stylesheet" type="text/css" />
+<link href="../../style/base.css" rel="stylesheet" type="text/css" />
+<link href="../../style/document.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="contentBody apidocContent">
+<!-----
 layout: page
 title: Configuring Elasticsearch with Security
 description: Learn how to configure Elasticsearch with security using the X-Pack or Shield plug-in.
@@ -8,7 +19,7 @@ weight: 09
 sub-nav-class: Installation - Akana API Platform
 type: page
 nav-title: Configuring Elasticsearch with security
----
+----->
 <h2 id="top">Configuring Elasticsearch with Security</h2>
 <p>If you're using Elasticsearch and want security over SSL/TLS to add encryption for node to node communication and cluster communication, you'll need to complete some additional setup and configuration steps.</p>
 <p>This document provides information about implementing security for Elasticsearch. Depending on your API Platform version, you'll use one of these:</p>
@@ -28,8 +39,7 @@ nav-title: Configuring Elasticsearch with security
 
 
 <ol class="table_of_contents">
-	<li><a href="#es_xpack">Setting up X-Pack</a>
-(2018.0.0	and	later)
+	<li><a href="#es_xpack">Setting up X-Pack</a> (2018.0.0 and later)
 	<ol>
 		<li><a href="#xpack_01_change_bootstrap_value">Step 1: Change the bootstrap.password value for built-in users</a></li>
 		<li><a href="#xpack_02_set_up_roles">Step 2: Set up user and user roles</a></li>
@@ -39,8 +49,7 @@ nav-title: Configuring Elasticsearch with security
 		<li><a href="#xpack_06_encryption_client">Step 6: Set up encryption for communications from the client to the Elasticsearch cluster</a></li>
 	</ol>
 </li>
-	<li><a href="#es_shield">Installing and configuring the Elasticsearch Shield plug-in</a>
-(8.4x, prior to 2018.0.0)
+	<li><a href="#es_shield">Installing and configuring the Elasticsearch Shield plug-in</a> (8.4x, prior to 2018.0.0)
 	<ol>
 		<li><a href="#s01_install_plugin">Step 1: Download the Elasticsearch Shield plug-in</a></li>
 		<li><a href="#s02_unzip_files">Step 2: Unzip installation files</a></li>
@@ -63,7 +72,7 @@ nav-title: Configuring Elasticsearch with security
 <p>As a starting point, here is the API call you can use to start a trial license for 30 days:</p>
 <pre>POST {http://localhost:9200}/_xpack/license/start_trial?acknowledge=true</pre>
 <p>However, X-Pack is a paid product and you'll need to renew the license.</p>
-<p>For the hostname in the above, use the address for the Elasticsearch nodes. If you have&nbsp;a cluster with multiple Elasticsearch nodes, use the address for any one of the nodes.</p>
+<p>For the hostname in the above, use the address for the Elasticsearch nodes. If you have a cluster with multiple Elasticsearch nodes, use the address for any one of the nodes.</p>
 <p>To set up the X-Pack plug-in, complete the following steps:</p>
 <ol>
 	<li><a href="#xpack_01_change_bootstrap_value">Step 1: Change the bootstrap.password value for built-in users</a></li>
@@ -98,7 +107,7 @@ nav-title: Configuring Elasticsearch with security
 <p><strong>Message body:</strong></p>
 <pre>{
   "cluster":[
-    "all or the cluster name in elastcsearch.yaml"
+    "all or the cluster name in elasticsearch.yaml"
   ],
   "indices":[
     {
@@ -117,7 +126,7 @@ nav-title: Configuring Elasticsearch with security
 <p><strong>Message body:</strong></p>
 <pre>{
   "cluster":[
-    "all or the cluster name in elastcsearch.yaml"
+    "all or the cluster name in elasticsearch.yaml"
   ],
   "indices":[
     {
@@ -173,27 +182,21 @@ nav-title: Configuring Elasticsearch with security
 
 <h4 id="xpack_04_enable_xpack_in_yaml">Step 4: Modify the Elasticsearch YAML file</h4>
 <p>The next step is to manually change some of the settings in one of the Elasticsearch configuration files, <strong>elasticsearch.yml</strong>,  to enable X-Pack security.</p>
-<p>The <strong>elasticsearch.yml</strong> file is generally stored in the<strong> {elasticsearch_home}/config</strong> folder. It might have some default placeholder content, but not all the placeholder values. Use <a href="#yaml_xpack">Sample Elasticsearch YAML file</a> below as a starting point to model your changes.</p>
+<p>The <strong>elasticsearch.yml</strong> file is generally stored in the<strong> {elasticsearch_home}/config</strong> folder. It might have some default placeholder content, but not all the placeholder values.</p>
+<p>As a starting point to model your changes, you can use the example in <a href="#yaml_xpack">Sample Elasticsearch YAML file with security settings</a> below.</p>
+<p><strong>Note</strong>: The first part of the file, up to the section titled <strong>Various</strong>, is needed for all Elasticsearch installation, even if security is not added. The last section, <strong>Various</strong>, is where you set up the values for your secure installation.</p>
 <p>To enable X-Pack security, you'll at least need to provide username/password.</p>
 <p>In the YAML file, change the value for the <strong>xpack.security.enabled</strong> setting to <strong>true</strong>, as shown below.</p>
 <pre>xpack.security.enabled: true</pre>
-<p>You'll also need to set up other values, such as:</p>
-<ul>
-	<li>Cluster name: needed for Transport Client. For example:
-	<pre>cluster.name: akana</pre></li>
-	<li>Node name: needed if you want to name your own node. For example:
-	<pre>node.name: node-1</pre></li>
-	<li>Transport TCP port: needed for Transport Client. For example:
-		<pre>transport.tcp.port: 9300</pre></li>
-</ul>
+<p>You'll also need to set up other values. For details on how to modify the <strong>elasticsearch.yml</strong> file with the general settings for an Akana API Platform implementation, see <a href="install_es_config.htm#es_yaml">What changes do I need to make to the Elasticsearch YAML file?</a></p>
 <p>For general information about the <strong>elasticsearch.yml</strong> file, see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html" title="Information about the elasticsearch.yml file" target="_blank">https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html</a>.</p>
 <h5>To configure the Elasticsearch YAML file</h5>
 <ol>
-	<li>Modify the properties in the <strong>elasticsearch.yml</strong> file, using the example in <a href="#yaml_xpack">Sample Elasticsearch YAML file</a> below (you can copy and paste).</li>
+	<li>Modify the properties in the <strong>elasticsearch.yml</strong> file, using the example in <a href="#yaml_xpack">Sample Elasticsearch YAML file with security settings</a> below (you can copy and paste). The secure values are set in the last section, <strong>Various</strong>, below.</li>
 	<li>Restart the Elasticsearch cluster.</li>
 </ol>
 
-<h5 id="yaml_xpack">Sample Elasticsearch YAML file</h5>
+<h5 id="yaml_xpack">Sample Elasticsearch YAML file with security settings</h5>
 <pre># ======================== Elasticsearch Configuration =========================
 #
 # NOTE: Elasticsearch comes with reasonable defaults for most settings.
@@ -264,7 +267,7 @@ http.port: 9200
 # Pass an initial list of hosts to perform discovery when new node is started:
 # The default list of hosts is ["127.0.0.1", "[::1]"]
 #
-discovery.zen.ping.unicast.hosts: ["instance", "[::1]"]
+discovery.zen.ping.unicast.hosts: ["localhost", "[::1]"]
 #
 # Prevent the "split brain" by configuring the majority of nodes (total number of master-eligible nodes / 2 + 1):
 #
@@ -552,3 +555,9 @@ elastic.client.keystorePath</pre>
 	<li><a href="installing_policy_manager_v80.htm">Installing Policy Manager 8.x</a></li>
 </ul>
 </div>
+
+
+
+</div>
+</body>
+</html>

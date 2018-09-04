@@ -1,4 +1,15 @@
----
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Akana API Platform Installation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="../../style/reset.css" rel="stylesheet" type="text/css" />
+<link href="../../style/base.css" rel="stylesheet" type="text/css" />
+<link href="../../style/document.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="documentation supportContent">
+<!-----
 layout: page
 title: Installing and Configuring Elasticsearch
 description: Learn how to install and configure the Elasticsearch search feature for the developer portal.
@@ -8,195 +19,352 @@ weight: 08
 sub-nav-class: Installation - Akana API Platform
 type: page
 nav-title: Installing and Configuring Elasticsearch
----
+----->
 <h2><a name="top"></a>Installing and Configuring Elasticsearch</h2>
 <p>This document provides reference information and examples relating to installation and configuration of the Elasticsearch search feature for the Akana API Platform developer portal.</p>
-<p>It includes:</p>
-<ul>
-  <li><a href="#es_about">About the Elasticsearch feature</a></li>
-  <li><a href="#es_planning">Planning your Elasticsearch feature</a></li>
-  <li><a href="#es_config_highlevel">High-level steps for Elasticsearch configuration</a></li>
-  <li><a href="#es_install_embedded">Installation instructions: Embedded Mode</a></li>
-  <li><a href="#es_install_standalone">Installation instructions: Standalone Mode</a></li>
-  <li><a href="#es_ref_info">Links to additional information about Elasticsearch</a></li>
-</ul>
+<h5 class="stamp">API Platform Version: 8.1 and later. Updated for 2018.0.0.</h5>
 <p><strong>Note</strong>: For information about secure configuration of Elasticsearch, see <a href="install_es_secure_tc.htm">Configuring Elasticsearch with Transport Client security</a>.</p>
+<div class = "divider1"></div>
 
 
 
-<a name="es_about"></a><h3>About the Elasticsearch feature</h3>
-<p>In version 8.0, the Akana API Platform moved from Compass to Elasticsearch for managing the search feature.</p>
-<p>Elasticsearch is a Lucene-based search engine. It is an extremely popular tool in very broad use—a scalable search solution that uses JSON messaging over an HTTP interface with a native Java API.</p>
-<p>The platform provides several options for implementation flexibility. Elasticsearch can start in an embedded mode, or remotely to the Java process in either a distributed mode or a single-node mode.</p>
-<p>With the Embedded Elasticsearch Container feature, Elasticsearch runs within the container process, and supports all the features that a standalone Elasticsearch process would support without the need for a separate server or Elasticsearch product installation.</p>
-<p>You can install this feature in more than one container and have the containers act as a cluster. In this scenario, the administration activities to start and stop the process are as per the container management processes.</p>
-<p>Administration of Elasticsearch is done with the configuration wizard in the Akana Administration Console.</p>
-<p><a href="#top">Back to top</a></p>
+<h3 style="color: gray;">Table of Contents</h3>
 
 
-
-<a name="es_planning"></a><h3>Planning your Elasticsearch feature</h3>
-<p>As part of planning your installation, you'll need to make some decisions about how you want to set up the Elasticsearch feature.</p>
-<p>For example, unless you have your own Elasticsearch server, you’ll need to decide whether you want to install the feature on a single container or on multiple containers that can act as a cluster.</p>
-<p><strong>Note</strong>: If you don’t have your own external Elasticsearch servers and are just using Elasticsearch as part of the platform upgrade, you don’t need to do any custom configuration, just install the <strong>Akana Embedded Elasticsearch Node</strong> feature and accept the default settings. See <a href="../../cm/learnmore/site_admin_es.htm#how_do_i_configure_elastic_search_in_pm">How do I configure Elasticsearch?</a> (Akana API Platform Site Admin help).</p>
-<p>If you have your own Elasticsearch server, there's no need to install the <strong>Akana Embedded Elasticsearch Node</strong> feature.</p>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<a name="es_config_highlevel"></a>
-<h3>High-level steps for Elasticsearch configuration</h3>
-<p><strong>Elasticsearch, embedded mode:</strong></p>
-<p>To run Elasticsearch in embedded mode (you don’t have a standalone Elasticsearch server) you’ll need to:</p>
-<ul>
-  <li>Install the <strong>Akana Embedded Elasticsearch Node</strong> feature on all CM containers.</li>
-  <li>Configure the global settings: <strong>Configure Elasticsearch Global Configuration</strong> configuration action (once per installation).</li>
-  <li>Configure the embedded mode settings: <strong>Configure Elasticsearch Embedded Node</strong> configuration action (once per CM container).</li>
-</ul>
-<p><strong>Elasticsearch, standalone mode</strong>:</p>
-<p>To run Elasticsearch in standalone mode (when you have a standalone Elasticsearch server), you don’t need to install the feature. You’ll need to:</p>
-<ul>
-  <li>Configure the global settings.</li>
-</ul>
-<p>Refer to the table below.</p>
-<table cellspacing="0px" class="doctable" style="width: 98%;">
-  <thead>
-    <tr>
-      <th width="60%">Activity</th>
-      <th width="20%">Standalone</th>
-      <th width="20%">Embedded</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Install the feature</td>
-      <td>&#8212;</td>
-      <td>Yes</td>
-    </tr>
-    <tr>
-      <td>Configure global settings</td
-      >
-      <td>Yes</td>
-      <td>Yes</td>
-    </tr>
-    <tr>
-      <td>Configure embedded mode settings</td>
-      <td>&#8212;</td>
-      <td>Yes</td>
-    </tr>
-  </tbody>
-</table>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<a name="es_install_embedded"></a><h3>Installation instructions: Embedded Mode</h3>
-<p>If you don't have your own standalone Elasticsearch server, you'll install the <strong>Akana Embedded Elasticsearch Node</strong> feature.</p>
-<p>In this scenario, you don't have to do anything with regard to the <strong>Configure Elasticsearch Global Configuration</strong> step. When you install the <strong>Akana Embedded Elasticsearch Node</strong> feature, the platform populates details about the Elasticsearch node, such as default node name and port number.</p>
-<p>All you have to do is complete the configuration (<strong>Configure Elasticsearch Embedded Node</strong> step).</p>
-<p>This section includes installation and configuration information for two scenarios:</p>
-<ul>
-  <li><a href="#es_install_embedded_one_pmcm">Policy Manager and Community Manager in the same container</a></li>
-  <li><a href="#es_install_embedded_two_pm_cm">Policy Manager and Community Manager in separate containers</a></li>
-</ul>
-<a name="es_install_embedded_one_pmcm"></a><h4>Elasticsearch Embedded Mode Installation: Policy Manager and Community Manager in the same container</h4>
-<p><strong>Note</strong>: for information on the field values, refer to the Site Admin help: <a href="../../cm/learnmore/site_admin_es.htm#fv_es_embedded">Configuring an Elasticsearch Embedded Node: Field Values</a>.</p>
-<h5>Installation and configuration:</h5>
-<ol>
-  <li>As part of installation, install the <strong>Akana Embedded Elasticsearch Node</strong> feature on the container.</li>
-  <li>Optional: In the Akana Administration Console, go to <strong>Configuration</strong> &gt; <strong>Configuration Actions</strong> &gt; <strong>Configure Elasticsearch Global Configuration</strong>. Here, you can review the settings, but it's not necessary. Nothing is needed. See below.
-  <p><img src="images/es_config_global_01.jpg" alt="Elasticsearch global configuration" /></p></li>
-  <li>In the <strong>Akana Administration Console, go to <strong>Configuration</strong> &gt; <strong>Configuration Actions</strong> &gt; Configure Elasticsearch Embedded Node</strong>. See below.
-    <p><img src="images/es_config_embedded_01.jpg" alt="Elasticsearch embedded node" /></p>
-  </li>
-  <li>In versions 8.2 and later, as part of installation, the platform retrieves appropriate values and pre-fills the settings. All you need to do is review the default configuration values and click <strong>Finish</strong>. You can change the Network Bind Address and other values as needed. In earlier versions, you must provide all values. For information on the settings, refer to the Site Admin help (see link above). Note:
-    <ul>
-      <li><strong>Name</strong>: the installation creates the node name.</li>
-      <li><strong>Transport Port</strong>: the platform pre-fills a value. Make sure that the default port is available, or change the value to an available port. You can also delete the existing entry and save; the platform retrieves the next available port. For information about default port numbers, see <a href="../../cm/learnmore/site_admin_es.htm#es_default_ports">What are the default ports for Elasticsearch configuration?</a> (Site Admin help).</li>
-      <li><strong>HTTP Port</strong>: same as for Transport Port above.</li>
-    </ul>
-<p><strong>Note</strong>: Each cluster must have at least one data node and at least one master eligible node. </p>
-  </li>
-  <li>Click <strong>Finish</strong>.</li>
+<h5 style="color: gray;"><a href="#h_es_feature_info">Elasticsearch feature overview:</a></h5>
+<ol class="table_of_contents">
+	<li><a href="#es_about">About the Elasticsearch feature</a></li>
+	<li><a href="#es_version">Elasticsearch version</a></li>
+	<li><a href="#es_planning">Planning your Elasticsearch feature</a></li>
+	<li><a href="#es_ref_info">Links to additional information about Elasticsearch</a></li>
 </ol>
 
-<a name="es_install_embedded_two_pm_cm"></a><h4>Elasticsearch Embedded Mode Installation: Policy Manager and Community Manager in separate containers</h4>
-<p><strong>Note</strong>: for information on the field values, refer to the Site Admin help: <a href="../../cm/learnmore/site_admin_es.htm#fv_es_embedded">Configuring an Elasticsearch Embedded Node: Field Values</a>.</p>
-<h5>Installation:</h5>
-<p>If you have a multiple container scenario to support Elasticsearch, install these features in <strong>all</strong> PM and CM containers:</p>
-<ul>
-  <li><strong>Akana Embedded Elasticsearch Node feature</strong>: install it on <strong>all</strong> CM and PM containers.</li>
-  <li>Scheduled jobs: On <strong>all</strong> PM and CM containers, install both these features:
-    <ul>
-      <li><strong>Akana Community Manager Scheduled Jobs</strong></li>
-      <li><strong>Akana Scheduled Jobs</strong></li>
-    </ul>
-  </li>
-  </ul>
-<h5>Configuration:</h5>
-<ol>
-  <li>Optional: In the Akana Administration Console for the CM container, go to <strong>Configuration</strong> &gt; <strong>Configuration Actions</strong> &gt; <strong>Configure Elasticsearch Global Configuration</strong>. Here, you can review the settings, but it's not necessary. Nothing is needed.</li>
-  <li>In the <strong>Akana Administration Console</strong> for the PM container, go to <strong>Configuration</strong> &gt; <strong>Configuration Actions</strong> &gt; <strong>Configure Elasticsearch Embedded Node</strong>, as shown below.
-    <p><img src="images/config_es_embed_01.jpg" alt="configure Elasticsearch embedded node" /></p>
-    <p>On this page:</p>
-    <ul>
-      <li>Specify a node name.</li>
-      <li>Check the <strong>HTTP Enabled</strong> box.</li>
-      <li>Specify port numbers if there are no defaults; you can also change the defaults if you prefer to use different ports.</li>
-      <li>Review additional options and choose settings as needed. For full information, refer to the Site Admin help: <a href="../../cm/learnmore/site_admin_es.htm#fv_es_embedded">Configuring an Elasticsearch Embedded Node: Field Values</a>.</li>
-    </ul>
-    </li>
 
-    <li>Click <strong>Finish</strong>.</li>
-</ol>
-<p><a href="#top">Back to top</a></p>
+<h5 style="color: gray;"><a href="#h_es_configuring">Installing and Configuring Elasticsearch:</a></h5>
 
 
-
-<a name="es_install_standalone"></a><h3>Installation instructions: Standalone Mode</h3>
-<p>If you have your own Elasticsearch server, choose Standalone Mode. In this scenario, all you need to do is configure the global settings, once for the installation.</p>
-<p>&nbsp;</p>
-<h5>To configure the Elasticsearch global settings</h5>
-<p><strong>Note</strong>: for information on the field values, refer to the Site Admin help: <a href="../../cm/learnmore/site_admin_es.htm#fv_es_global">Elasticsearch Global Configuration: Field Values</a>.</p>
-<ol>
-  <li>After installing the product, in the Akana Administration Console, go to <strong>Configuration</strong> &gt; <strong>Configuration Actions</strong> &gt; <strong>Configure Elasticsearch Global Configuration</strong>. The fields are blank, as shown below. When you choose the deployment mode, additional fields appear.
-    <p><img src="images/es_config_global_01.jpg" alt="Elasticsearch global configuration" /></p>
-    </li>
-  <li>In the <strong>Deployment Mode</strong> field, choose <strong>Transport Client</strong>.</li>
-  <li>In the <strong>Cluster Name</strong> field, specify a cluster name.</li>
-  <li>In the <strong>ES Server URL</strong> field, specify the full URL for the Elasticsearch server.</li>
-  <li>Click <strong>Finish</strong>.</li>
+<ol class="table_of_contents">
+	<li><a href="#es_installing">Installing Elasticsearch</a></li>
+	<li><a href="#es_config_highlevel">High-level steps for Elasticsearch configuration</a></li>
+	<li><a href="#es_yaml">What changes do I need to make to the Elasticsearch YAML file?</a>
+		<ol>
+			<li><a href="#es_config_default_ports">Default ports for Elasticsearch configuration</a></li>
+		</ol>
+	</li>
+	<li><a href="#config_es_ac">How do I configure Elasticsearch?</a></li>
+	<li><a href="#es_deployment_mode">Should I choose Transport Client or REST Client mode?</a></li>
+	<li><a href="#es_config_settings">How do I configure the number of nodes and shards?</a></li>
 </ol>
 
-<h5>Client-Only mode</h5>
-<p>Client-only mode is used when a container running the embedded Elasticsearch feature becomes a node as part of an external standalone Elasticsearch server. The node will be in the cluster, but will not be a master node. When you choose this option, additional fields are available as shown below:</p>
-<img src="images/es_config_global_client_only.jpg" alt="Elasticsearch global configuration, Client Only mode" />
-<p>Specify these values:</p>
-<ul>
-  <li><strong> Cluster Name</strong>: specify a cluster name.</li>
-  <li><strong>Master Host URL</strong>: The URL for the master host that this is a client for.</li>
-  <li><strong>Multicast</strong>: Leave cleared unless  it is a multicast scenario.</li>
-</ul>
-<p><a href="#top">Back to top</a></p>
 
 
-
-<a name="es_ref_info"></a>
-<h3>Links to additional information about Elasticsearch</h3>
-<p>For more information about Elasticsearch, refer to the following:</p>
-<ul>
-  <li><a href="../../cm/learnmore/site_admin_es.htm">Elasticsearch: Information for Site Admins</a> (Akana API Platform Site Admin help)</li>
-  <li><a href="../../ag/assets/AAP_08_00_Upgrade_Guide.pdf" target="_blank">Akana API Platform: Upgrade Guide Version 7.2 to 8.0</a> (Upgrade Guide)</li>
-  <li>Elasticsearch glossary: <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/glossary.html" title="Elasticsearch glossary of terms" target="_blank">https://www.elastic.co/guide/en/elasticsearch/reference/current/glossary.html</a></li>
-</ul>
-<p><a href="#top">Back to top</a></p>
+<h5 style="color: gray;"><a href="#h_es_troubleshooting">Troubleshooting Elasticsearch:</a></h5>
 
 
+<ol class="table_of_contents">
+	<li><a href="#es_ts_port_config">Elasticsearch client can't connect to the nodes</a></li>
+	<li><a href="#es_index_clear">How do I clear out the Elasticsearch index?</a></li>
+</ol>
 
 
 
 
 <div class = "divider1"></div>
+<h3 id="h_es_feature_info">Elasticsearch feature information:</h3>
+
+
+
+
+<h3 id="es_about">About the Elasticsearch feature</h3>
+<p>Elasticsearch is a search engine based on Apache Lucene. It is robust, and allows fast indexing and responsive updating. It's an extremely popular tool in very broad use—a scalable search solution that uses JSON messaging over an HTTP interface with a native Java API.</p>
+<p>Elasticsearch is run in standalone mode. Your installation will need to have Elasticsearch installed on at least one server. Just as with a relational database, you'll need to provide the software and hardware required. You can get started with a trial license.</p>
+<p>All containers running the Akana API Platform can use Elasticsearch. A cluster is recommended for redundancy.</p>
+<p>There are two deployment options:</p>
+<ul>
+	<li><strong>Transport Client</strong>: previously supported by the platform.</li>
+	<li><strong>REST Client</strong>: New in 2018.0.0.</li>
+</ul>
+<p>Administration of Elasticsearch is done with the configuration wizard in the Akana Administration Console.</p>
+<p>For more information on Elasticsearch terminology, refer to the Elasticsearch glossary: <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/glossary.html" title="Elasticsearch glossary of terms" target="_blank">https://www.elastic.co/guide/en/elasticsearch/reference/current/glossary.html</a>.</p>
+<p><strong>Note</strong>: In version 8.0, Elasticsearch embedded mode was offered as a short-term option to help customers to migrate from Compass to Elasticsearch. This was never the recommended option; standalone mode is better. In version 2018.0.0, only standalone mode is supported.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="es_version">Elasticsearch version</h3>
+<p>Support for Elasticsearch was introduced in Akana API Platform version 8.0. The initial version, and all later versions prior to 2018.0.0, use Elasticsearch 1.5.</p>
+<p>In version 2018.0.0, the Akana API platform uses Elasticsearch 6.3.1.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="es_planning">Planning your Elasticsearch feature</h3>
+<p>As part of planning your installation, you'll need to make some decisions about how you want to set up the Elasticsearch feature:</p>
+<ul>
+	<li>Do you want one or more Elasticsearch servers? Additional servers are recommended, for fallback reasons.</li>
+	<li>Do you want dedicated Elasticsearch servers? You could also install Elasticsearch on one or more servers running the Akana API Platform.</li>
+	<li>Which deployment mode do you want to use, Transport Client or REST Client? see <a href="#es_deployment_mode">Should I choose Transport Client or REST Client mode?</a> below.</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="es_ref_info">Links to additional information about Elasticsearch</h3>
+<p>For more information about Elasticsearch, refer to the following:</p>
+<ul>
+	<li><a href="install_es_secure_tc.htm">Configuring Elasticsearch with Security</a></li>
+	<li>Elasticsearch glossary: <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/glossary.html" title="Elasticsearch glossary of terms" target="_blank">https://www.elastic.co/guide/en/elasticsearch/reference/current/glossary.html</a></li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+
+<div class = "divider1"></div>
+<h3 id="h_es_configuring">Installing and configuring Elasticsearch:</h3>
+
+
+
+
+<h3 id="es_installing">Installing Elasticsearch</h3>
+<p>You'll need to download Elasticsearch version 6.3.1, and install it on the server or servers you'll be using.</p>
+<p>Download file: <a href="https://www.elastic.co/downloads/past-releases/elasticsearch-6-3-1" title="Link for Elasticsearch 6.3.1 download" target="_blank">https://www.elastic.co/downloads/past-releases/elasticsearch-6-3-1</a>. Follow the instructions provided by Elasticsearch.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="es_config_highlevel">High-level steps for Elasticsearch configuration</h3>
+<p>To use Elasticsearch on the Akana API Platform you'll need to:</p>
+<ul>
+	<li>Install Elasticsearch on one or more servers. See <a href="#es_installing">Installing Elasticsearch</a> above.</li>
+	<li>As part of the Elasticsearch installation, modify the Elasticsearch YAML file. See <a href="#es_yaml">What changes do I need to make to the Elasticsearch YAML file?</a> below.</li>
+	<li>Optional: set up security for your Elasticsearch, which requires additional setup and additional modifications to the Elasticsearch YAML file. See <a href="install_es_secure_tc.htm">Configuring Elasticsearch with Security</a>.</li>
+	<li>Complete the global configuration steps, once for all containers. See <a href="#config_es_ac">How do I configure Elasticsearch?</a> below.</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="es_yaml">What changes do I need to make to the Elasticsearch YAML file?</h3>
+<p>You'll need to make some changes to one of the Elasticsearch configuration files, <strong>elasticsearch.yml</strong>, so that Elasticsearch will work for your Akana API Platform installation.</p>
+<p>The <strong>elasticsearch.yml</strong> file is generally stored in the<strong> {elasticsearch_home}/config</strong> folder. It might have some default placeholder content, but not all the placeholder values.</p>
+<p>As a starting point to model your changes, you can use the example in <a href="install_es_secure_tc.htm#yaml_xpack">Sample Elasticsearch YAML file</a>. Note that the example given there includes adding security. If you don't want security, you just need to set up these values:</p>
+<ul>
+	<li>Cluster name: needed for both Transport Client and REST Client. For example:
+		<pre>cluster.name: akana</pre>
+	</li>
+	<li>Node name: needed for Transport Client, if you want to name your own node. For example:
+		<pre>node.name: node-1</pre>
+	</li>
+	<li>Transport TCP port: needed for Transport Client. For example:
+		<pre>transport.tcp.port: 9300</pre>
+	</li>
+	<li>Path to directory where to store the data: needed for all. For example:
+		<pre>c:/_elastic631/data</pre>
+	</li>
+	<li>Optional if you don't want to bind to all interfaces: Set the bind address to a specific IP. For example:
+		<pre>network.host: 192.164.0.1</pre>
+	</li>
+	<li>Pass an initial list of hosts to perform discovery when new node is started. For example:
+		<pre>discovery.zen.ping.unicast.hosts: [&quot;localhost&quot;, &quot;[::1]&quot;]</pre>
+	</li>
+</ul>
+<p>For general information about the <strong>elasticsearch.yml</strong> file, see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html" title="Information about the elasticsearch.yml file" target="_blank">https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html</a>.</p>
+
+<h5 id="yaml_sample_no_xpack">Sample Elasticsearch YAML file</h5>
+<pre># ======================== Elasticsearch Configuration =========================
+#
+# NOTE: Elasticsearch comes with reasonable defaults for most settings.
+#       Before you set out to tweak and tune the configuration, make sure you
+#       understand what are you trying to accomplish and the consequences.
+#
+# The primary way of configuring a node is via this file. This template lists
+# the most important settings you may want to configure for a production cluster.
+#
+# Please consult the documentation for further information on configuration options:
+# https://www.elastic.co/guide/en/elasticsearch/reference/index.html
+#
+# ---------------------------------- Cluster -----------------------------------
+#
+# Use a descriptive name for your cluster:
+#
+cluster.name: akana
+#
+# ------------------------------------ Node ------------------------------------
+#
+# Use a descriptive name for the node:
+#
+node.name: node-1
+#
+# Add custom attributes to the node:
+#
+#node.attr.rack: r1
+#
+# ----------------------------------- Paths ------------------------------------
+#
+# Path to directory where to store the data (separate multiple locations by comma):
+#
+path.data: c:/_elastic631/data
+#
+# Path to log files:
+#
+path.logs: c:/_elastic631/logs
+#
+# ----------------------------------- Memory -----------------------------------
+#
+# Lock the memory on startup:
+#
+#bootstrap.memory_lock: true
+#
+# Make sure that the heap size is set to about half the memory available
+# on the system and that the owner of the process is allowed to use this
+# limit.
+#
+# Elasticsearch performs poorly when the system is swapping the memory.
+#
+# ---------------------------------- Network -----------------------------------
+#
+# Set the bind address to a specific IP (IPv4 or IPv6):
+#
+#network.host: 192.168.0.1
+network.host: 0.0.0.0
+
+transport.tcp.port: 9300
+#
+# Set a custom port for HTTP:
+#
+http.port: 9200
+#
+# For more information, consult the network module documentation.
+#
+# --------------------------------- Discovery ----------------------------------
+#
+# Pass an initial list of hosts to perform discovery when new node is started:
+# The default list of hosts is [&quot;127.0.0.1&quot;, &quot;[::1]&quot;]
+#
+discovery.zen.ping.unicast.hosts: [&quot;localhost&quot;, &quot;[::1]&quot;]
+#
+# Prevent the &quot;split brain&quot; by configuring the majority of nodes (total number of master-eligible nodes / 2 + 1):
+#
+discovery.zen.minimum_master_nodes: 1
+#
+# For more information, consult the zen discovery module documentation.
+#
+# ---------------------------------- Gateway -----------------------------------
+#
+# Block initial recovery after a full cluster restart until N nodes are started:
+#
+#gateway.recover_after_nodes: 3
+#
+# For more information, consult the gateway module documentation.
+#
+# ---------------------------------- Various -----------------------------------
+# (This section is needed only if you want to configure security)</pre>
+<p><strong>Note</strong>: If you want to use security with Elasticsearch, you'll need to set up additional values in the YAML file. See <a href="install_es_secure_tc.htm#yaml_xpack">Sample Elasticsearch YAML file with security settings</a>.</p>
+
+
+<h4 id="es_config_default_ports">Default ports for Elasticsearch configuration</h4>
+<p>The default ports for Elasticsearch configuration are as follows:</p>
+<ul>
+	<li><strong>HTTP</strong>: Default is 9200, default range is 9200&#8211;9299</li>
+	<li><strong>TCP</strong>: Default is 9300, default range is TCP is 9300&#8211;9399</li>
+</ul>
+<p>Range implies that if the first port is busy, the platform tries the next one and so on.</p>
+<p class="apidoc_note"><strong>Note to Administrators</strong>: When setting up your implementation, make sure that all ports in the range 9300&#8211;9305 are open, on all containers that the Elasticsearch feature is installed on.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="config_es_ac">How do I configure Elasticsearch?</h3>
+<p>In configuring the Elasticsearch feature for your Akana API Platform implementation, there are two deployment modes; follow the applicable set of steps as listed below.</p>
+<ul>
+	<li><a href="#proc_es_global_config_tc">Transport Client</a></li>
+	<li><a href="#proc_es_global_config_rc">REST Client</a> (recommended)</li>
+</ul>
+<p>For information on which mode to choose, see <a href="#es_deployment_mode">Should I choose Transport Client or REST Client mode?</a> below.</p>
+
+<h5 id="proc_es_global_config_tc">Configure Elasticsearch Global Configuration: Transport Client</h5>
+<ol>
+	<li>In the Akana Administration Console, on the <strong>Configuration</strong> tab, under <strong>Configuration Actions</strong>, choose <strong>Configure Elasticsearch Global Configuration</strong>. The wizard opens.</li>
+	<li>Make sure the Deployment Mode is set to <strong>Transport Client</strong>, as shown below.
+		<p><img src="images_2018/es_global_config_tc.jpg" alt="Configure Elasticsearch Global Configuration: Transport Client" /></p>
+	</li>
+	<li>Provide the name of the cluster for the Elasticsearch feature; for example, <strong>akana</strong>.</li>
+	<li>In the ES Server URL field, provide the transport address for the Elasticsearch server (one or more, separated by commas), in the format: {hostname}:{port}. For example, <strong>10.12.121.116:9300</strong> or <strong>10.12.121.116:9300,10.12.122.140:9300</strong>.</li>
+	<li>Click <strong>Finish</strong> and then click <strong>Close</strong>.</li>
+</ol>
+<h5 id="proc_es_global_config_rc">Configure Elasticsearch Global Configuration: REST Client</h5>
+<ol>
+	<li>In the Akana Administration Console, on the <strong>Configuration</strong> tab, under <strong>Configuration Actions</strong>, choose <strong>Configure Elasticsearch Global Configuration</strong>. The wizard opens.</li>
+	<li>For Deployment Mode, choose <strong>REST Client</strong>.
+	<p><img src="images_2018/es_global_config_rc.jpg" alt="Configure Elasticsearch Global Configuration: REST Client" /></p></li>
+	<li>In the <strong>ES HTTP URLs</strong> field, provide the HTTP URLs for each container where Elasticsearch is running. Provide full URLs; use a comma separator between values.</li>
+	<li>Click <strong>Finish</strong> and then click <strong>Close</strong>.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="es_deployment_mode">Should I choose Transport Client or REST Client mode?</h3>
+<p>There are two options for <strong>Deployment Mode</strong>:</p>
+<ul>
+	<li><strong>Transport Client</strong>: The client uses a TCP connection to communicate to the Elasticsearch server or cluster. Transport Client mode will be deprecated in a later version of Elasticsearch, and will be removed in 8.0. It's best to use REST Client.</li>
+	<li><strong>REST Client:</strong> The client communicates to the Elasticsearch server or cluster by accessing a URL. Introduced in a recent version of Elasticsearch. Recommended. Elasticsearch still uses TCP for node to node communications, but not for client to Elasticsearch cluster communications.</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="es_config_settings">How do I configure the number of nodes and shards?</h3>
+<h5 class="stamp">New in version: 8.0.3</h5>
+<p>The platform includes configuration settings that you can use to manage your Elasticsearch setup. These are controlled by configuration settings in the Akana Administration Console.</p>
+<p>In the Akana Administration Console, the configuration category is: <strong>com.akana.elasticsearch</strong>.</p>
+<p>In the default configuration, shown below, there are two shards and one replica. Let's say there are two nodes in the cluster. One shard, approximately half the index, is stored on each node. The one replica includes a replica of each shard:</p>
+<ul>
+	<li>Node 1 has Shard 1 and the replica of Shard 2</li>
+	<li>Node 2 has Shard 2 and the replica of Shard 1</li>
+</ul>
+<p>In this scenario, if one node goes down, the other node has the full search index. Additional nodes add additional safety.</p>
+<p>There are two settings, as shown below.</p>
+
+<dl>
+<dt>elastic.config.index.number.of.replicas</dt>
+	<dd>The number of replicas (additional copies) of the Elasticsearch index. Each replica includes a replica of each shard, so one replica might be distributed across multiple nodes, just as the index itself is split into shards which are distributed across nodes.</dd>
+	<dd>Default: 1</dd>
+<dt>elastic.config.index.number.of.shards</dt>
+	<dd>The number of <a href="../../cm/learnmore/basics_glossary.htm#gl_es_shard">shards</a> (splits) for the Elasticsearch index. </dd>
+	<dd><strong>Note</strong>: This is a one-time setting. An Elasticsearch index cannot be re-sharded; if you want to change the number of shards, after changing the setting you'll need to delete the /index folder that the search index is stored in and then rebuild the index.</dd>
+	<dd>Default: 2</dd>
+</dl>
+
+<p>For additional information about configuration settings in the Akana Administration Console, see <a href="../../cm/learnmore/site_admin_admin_console_settings.htm">Admin Console Settings</a>.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+
+<div class = "divider1"></div>
+<h3 id="h_es_troubleshooting">Troubleshooting Elasticsearch:</h3>
+
+
+
+
+<h3 id="es_ts_port_config">Elasticsearch client can't connect to the nodes</h3>
+<p>If the Elasticsearch client can't connect to the nodes, and/or the nodes can't connect to each other, check that you have the default Elasticsearch ports (all ports in the range 9300–9305) available on every container that the Elasticsearch feature is installed on.</p>
+<p>For more information, see <a href="#es_yaml">What changes do I need to make to the Elasticsearch YAML file?</a></p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="es_index_clear">How do I clear out the Elasticsearch index?</h3>
+<p>If you need to clear the Elasticsearch index, empty the INDEX_STATUS table in the database.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+
+<div class = "divider1"></div>
+
 
 
 
@@ -209,7 +377,7 @@ nav-title: Installing and Configuring Elasticsearch
 <ul>
 	<li><a href="install_cm_jython_script.htm">Installation Jython Script</a></li>
 	<li><a href="implementation_planning.htm">Planning Your Implementation</a></li>
-<!--	<li><a href="install_es_config.htm">Installing and Configuring Elasticsearch</a></li>-->
+	<li><a href="install_es_config.htm">Installing and Configuring Elasticsearch</a></li>
 	<li><a href="install_es_secure_tc.htm">Configuring Elasticsearch with Transport Client security</a></li>
 	<li><a href="install_mysql_dbsettings.htm">MySQL Database Property Settings</a></li>
 </ul>
@@ -218,3 +386,9 @@ nav-title: Installing and Configuring Elasticsearch
 	<li><a href="installing_policy_manager_v80.htm">Installing Policy Manager 8.x</a></li>
 </ul>
 </div>
+
+
+
+</div>
+</body>
+</html>
