@@ -1,0 +1,177 @@
+---
+layout: page
+title: Sample Deployment Scenario
+description: Illustration and overview for a sample deployment scenario.
+product: sp
+category: gs
+weight: 05
+sub-nav-class: Deployment
+type: page
+nav-title: Sample Deployment Scenario
+---
+<h2 id="top">Sample Deployment Scenario</h2>
+<p>Illustration and overview for a sample deployment scenario.</p>
+
+
+
+<p>
+<a href="../platform_install/installing_akana_api_platform_v84.htm" class="button secondary">Installing the Akana API Platform 8.4x</a>
+<a href="../admin_console/using_admin_console.htm" class="button secondary">Using the Admin Console</a>
+<a href="../admin_console/installing_tools.htm" class="button secondary">Installing Tools</a>
+<a href="../admin_console/installing_plugins.htm" class="button secondary">Installing Plug-ins</a>
+</p>
+
+<div class = "divider1"></div>
+<h3 style="color: gray;">Table of Contents</h3>
+<ul>
+	<li><a href="#overview">Introduction</a></li>
+	<li><a href="#deployment_secure">Sample deployment: clustered environment</a></li>
+	<li><a href="#components">Components</a>
+		<ul>
+			<li><a href="#components_pm">Policy Manager (PM)</a></li>
+			<li><a href="#components_cm">Community Manager (CM)</a></li>
+			<li><a href="#components_scheduler">Job Scheduler</a></li>
+			<li><a href="#components_oauth">OAuth</a></li>
+			<li><a href="#components_reverseproxy">Reverse Proxies</a></li>
+			<li><a href="#components_nd">API Gateway/Internal Gateway (Network Director)</a></li>
+			<li><a href="#components_app_dev">External App Developer</a></li>
+			<li><a href="#components_es">Elasticsearch</a></li>
+			<li><a href="#components_mongodb">MongoDB</a></li>
+		</ul>
+	</li>
+	<li>xx</li>
+</ul>
+<div class = "divider1"></div>
+
+
+
+<h3 id="overview">Introduction</h3>
+<p>There are many ways you can configure your implementation. This document provides an illustration of a simple clustered environment with various key components. It offers some high availability since there are multiple nodes for each key component.</p>
+<p>This is not a requirement, and might not be the best choice depending on the factors associated with your own unique scenario. However, it's a good baseline.</p>
+<p>There is a legend for the diagram, and a brief explanation of the various components that make up the diagram.</p>
+<p>The choices you make for your own implementation will vary depending on many factors, including:</p>
+<ul>
+	<li>The database connectivity from the containers</li>
+	<li>Load balancing and failover</li>
+	<li>Security restrictions that your organization might have. For example, perhaps:
+		<ul>
+			<li>The DMZ cannot connect to the database server</li>
+			<li>Requests cannot go directly to the internal network without having a hop in the DMZ</li>
+			<li>The developer user sessions and the API request traffic must be kept separate on different machines</li>
+		</ul>
+	</li>
+</ul>
+
+
+
+<h3 id="deployment_secure">Sample deployment: clustered environment</h3>
+<p>The illustration below shows a simple clustered environment. For more information, see:</p>
+<ul>
+	<li><a href="#legend">Legend</a></li>
+	<li><a href="#components">Components</a></li>
+</ul>
+<p><img src="assets/deploy_clustered.png" alt="Sample deployment: Highly secure, highly available" /></p>
+
+<h4 id="legend">Legend</h4>
+<p>The numbers in the diagram above correspond to the sequence of actions below:</p>
+<ol>
+	<li>The consuming app invokes the OAuth server to receive the access token. See <a href="#components_oauth">OAuth</a> below.</li>
+	<li>Authentication is validated, then the access token is returned to the consuming application.</li>
+	<li>The consuming application invokes an API hosted in the Akana API Gateway.</li>
+	<li>The Akana API Gateway, acting as the Policy Enforcement Point, reaches out to Policy Manager, which is acting as the Policy Decision Point, to authorize and authenticate the consuming application. See <a href="#components_pm">Policy Manager (PM)</a> and <a href="#components_nd">API Gateway/Internal Gateway (Network Director)</a> below.</li>
+	<li>Policy Manager receives data from the RDBMS.</li>
+	<li>The API Gateway invokes the downstream API, physical service.</li>
+	<li>The API Gateway saves analytic information about the request/response.</li>
+	<li>Policy Manager stores the analytic information in MongoDB. See <a href="#xxx"> MongoDB</a> below.</li>
+	<li>The response is returned to the consuming application.</li>
+</ol>
+
+<h3 id="components">Components</h3>
+<p>The example deployment above includes the following components:</p>
+<ul>
+	<li><a href="#components_pm">Policy Manager (PM)</a></li>
+	<li><a href="#components_cm">Community Manager (CM)</a></li>
+	<li><a href="#components_scheduler">Job Scheduler</a></li>
+	<li><a href="#components_oauth">OAuth</a></li>
+	<li><a href="#components_reverseproxy">Reverse Proxies</a></li>
+	<li><a href="#components_nd">API Gateway/Internal Gateway (Network Director)</a></li>
+	<li><a href="#components_app_dev">External App Developer</a></li>
+	<li><a href="#components_es">Elasticsearch</a></li>
+	<li><a href="#components_mongodb">MongoDB</a></li>
+</ul>
+
+
+<h4 id="components_pm">Policy Manager (PM)</h4>
+<p>This sample clustered deployment environment includes two dedicated Policy Manager containers, each of which should be on a different machine.</p>
+<p>Two containers are of course the minimum for a clustered environment, providing some redundancy.</p>
+<p>This configuration provides dedicated Policy Manager instances that are just for the Network Directors.</p>
+
+
+<h4 id="components_cm">Community Manager (CM)</h4>
+<p>This sample clustered environment includes two Community Manager containers, each of which should be on a different machine. Depending on the size of your implementation, you could have one PM container and one CM container on each of two machines, or have each container on a separate JVM.</p>
+<p>When we deploy Community Manager, it still does have Policy Manager under that, because that is a requirement for Community Manager. However, again, keeping Policy Manager separate, though not necessary, is a good configuration. </p>
+
+
+<h4 id="components_scheduler">Job Scheduler</h4>
+<p>This sample clustered deployment environment includes a dedicated container for the job scheduler. This is not necessary; however, by separating out the job scheduler you can help ensure that the scheduled jobs, such as xxx, don't affect your other containers.</p>
+<p>The scheduler only runs on one node; by making it a separate container, it can just run by itself without interference with or by the processing on other containers.</p>
+<p>The container that's running the job scheduler may or may not be on a separate machine. In either case, we recommend allocating plenty of memory for the scheduled jobs {<span class="apidoc_red">how much?</span>}</p>
+
+
+<h4 id="components_oauth">OAuth</h4>
+<p>OAuth provides the framework for authentication and authorization, whether the OAuth platform's inbuilt OAuth Provider is used, or an external OAuth Provider such as OpenID Connect, SAML, CA SiteMinder, or another.</p>
+<p>If the platform's inbuilt OAuth Provider is used, it connects directly to the database.</p>
+
+
+<h4 id="components_reverseproxy">Reverse Proxies</h4>
+<p>The reverse proxies provide a way for users to access the containers that are behind the firewall. This example shows two:</p>
+<ul>
+	<li>One allows external access into the CM containers</li>
+	<li>One allows apps to reverse proxy into the OAuth provider</li>
+</ul>
+<p>The platform doesn't provide reverse proxy functionality. You can use a third-party product such as  HAProxy, F5, or NGINX.</p>
+
+
+<h4 id="components_nd">API Gateway/Internal Gateway (Network Director)</h4>
+<p>This sample clustered deployment environment includes four Network Director containers:</p>
+<ul>
+	<li>External Gateways: an external cluster of two, outside the firewall</li>
+	<li>Internal Gateways: an internal cluster of two, inside the firewall.</li>
+</ul>
+<p>In this sample scenario, the external Network Director instances call the internal instances before calling the API. It's not necessary to configure your deployment that way, but it's a clean approach. {<span class="apidoc_red">EN: is there a good reason we can provide to do it? You said, it's a cleaner way to do it.</span>}</p>
+<p>The Network Director communicates with Policy Manager, and relays the messages downstream to the API.</p>
+
+
+<h4 id="components_app_dev">External App Developer</h4>
+<p>The external app developer accesses the Community Manager developer portal via the reverse proxy. Community Manager offers design-time features to allow the app developer to manage the app and get access to APIs.</p>
+
+
+<h4 id="components_es">Elasticsearch</h4>
+<p>This sample clustered deployment environment includes two Elasticsearch nodes, the minimum for redundancy.</p>
+<p>The two Elasticsearch nodes should be on separate machines, for failsafe purposes. However, they needn't be dedicated machines.</p>
+<p>For example, you could run Elasticsearch along with each of your Policy Manager containers.</p>
+
+
+<h4 id="components_mongodb">MongoDB</h4>
+<p>This sample clustered deployment environment includes three MongoDB instances, the minimum for sharding. It's a good idea to do sharding if you have multiple data centers.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<div class = "divider1"></div>
+
+
+
+<h3 id="related_topics">Related Topics</h3>
+<div class="relatedlinks">
+<ul>
+	<li><a href="../platform_install/installing_akana_api_platform_v84.htm">Installing the Akana API Platform 8.4x</a></li>
+	<li><a href="../platform_install/install_cm_jython_script.htm">Installation Jython Script</a></li>
+	<li><a href="../platform_install/implementation_planning.htm">Planning Your Implementation</a></li>
+</ul>
+<ul>
+	<li><a href="../platform_install/installing_akana_api_platform_v82.htm">Installing the Akana API Platform 8.2x</a></li>
+	<li><a href="../platform_install/installing_akana_platform.htm">Installing Akana Platform 8.x</a></li>
+	<li><a href="../platform_install/installing_policy_manager_v80.htm">Installing Policy Manager 8.x</a></li>
+</ul>
+</div>
