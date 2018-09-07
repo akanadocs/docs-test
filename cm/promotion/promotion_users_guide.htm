@@ -8,7 +8,6 @@ sub-nav-class: Lifecycle Coordinator
 weight: 20
 type: page
 nav-title: LC Promotion Guide
----
 <h2 id="top">Lifecycle Coordinator Promotion Guide</h2>
 <p>Provides information about how to use the Lifecycle Coordinator feature to manage the promotion feature.</p>
 <h5 class="stamp">API Platform Version: 8.4.3 and later</h5>
@@ -371,10 +370,31 @@ vsep.listenerName = "https"</td>
 
 
 <h4 id="config_preserveKeys">Unique ID Mapping behavior</h4>
-<p><span class="stamp">API Platform Version: 8.4.14 and later</span></p>
-<p>The property <strong>lifecycle.coordinator.config.preserveKeys</strong> in the <strong>com.akana.lifecycle.coordinator</strong> configuration category is used to configure the default behavior for preserving the unique IDs of an API's constituent elements as the API is promoted across environments.</p>
-<p>If this property is set to <strong>true</strong>, the unique IDs of the underlying Services and Organization are preserved. If it's set to <strong>false</strong>, these elements will be assigned new unique IDs when they are promoted, and a mapping between the keys used in each environment will be stored with the topology in Lifecycle Coordinator.</p>
-<p><strong>Note</strong>: If multiple tenants referenced in the same topology exist in the same API Platform instance (that is, share the same database), the value should be changed to <strong>false</strong>, since there might be some overlap in key values. If <strong>preserveKeys</strong> is set to true, any overlap in key values would cause promotion errors.</p>
+<p><span class="stamp">API Platform Version: 8.4.14 and later</span>. Updated for 2018.0.0.</p>
+<p>(<span class="apidoc_red">ATMO-25623</span>}</p>
+<p>When a source and target environment exist in the same API Platform instance, it is necessary to assign new unique IDs (keys) to the internal objects, such as services, that make up an API or app being promoted. This is because the keys must be unique across the API Platform instance, regardless of which tenant they exist in.</p>
+<p>By default, Lifecyle Coordinator determines whether to preserve the keys of the promoted objects, or to assign new keys, based on whether the source and target environments exist in the same API Platform instance:</p>
+<ul>
+	<li>If the source and target environments coexist in the same API Platform instance, the platform assigns new keys.</li>
+	<li>If the source and target environments are in different API Platform instances, the platform preserves the original keys from the source environment.</li>
+</ul>
+<p>In certain situations, it might be necessary to override the default key handling behavior. For example, assume that environment A is in one API Platform instance and environments B and C coexist in another API Platform instance. If a topology is configured to promote from environment A to environments B and C in parallel, the default key handling algorithm will attempt to assign the same keys to objects promoted to each environment, B and C. The result would be that one of the promotions would fail. In this case, you can override the default key handling behavior by setting the <strong>preserve-keys</strong> property on one of the Promotion Profiles involved.
+	For example, the Promotion Profiles for environment A would be configured as shown below.</p>
+<pre>"promotionProfiles": [
+{
+    "name": "B Promotion",
+    "targetEnvironment": "B"
+  },
+  {
+    "name": "C Promotion",
+    "targetEnvironment": "C",
+    "properties" : [
+      {"name":"preserve-keys","value":"false"}
+    ]
+  } 
+]</pre>
+<p>With this approach, the promoted keys in environment B would match those of the source, while environment C would have new keys assigned, eliminating conflict between the two co-located target environments.</p>
+<p><strong>Note</strong>: Be cautious in using the <strong>preserve-keys</strong> property. If the source and target environments are on the same API Platform instance, and the property is set to <strong>true</strong>, promotions will fail.</p>
 
 
 <h4 id="config_defaultFromEmail">Default "From Email" setting</h4>
