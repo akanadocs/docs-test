@@ -32,7 +32,7 @@ nav-title: Sample Deployment Scenario
 			<li><a href="#components_cm">Community Manager (CM)</a></li>
 			<li><a href="#components_scheduler">Job Scheduler</a></li>
 			<li><a href="#components_oauth">OAuth</a></li>
-			<li><a href="#components_reverseproxy">Reverse Proxies</a></li>
+			<li><a href="#components_reverseproxy">Reverse Proxy</a></li>
 			<li><a href="#components_nd">API Gateway/Internal Gateway (Network Director)</a></li>
 			<li><a href="#components_app_dev">External App Developer</a></li>
 			<li><a href="#components_es">Elasticsearch</a></li>
@@ -60,30 +60,40 @@ nav-title: Sample Deployment Scenario
 		</ul>
 	</li>
 </ul>
+<p><strong>Note</strong>: <span class="apidoc_red">Although this document presents a typical scenario, it's best to consult with a member of the Professional Services team to get recommendations on the ideal configuration for your deployment</span>.</p>
 
 
 
 <h3 id="deployment_secure">Sample deployment: clustered environment</h3>
-<p>The illustration below shows a simple clustered environment. For more information, see:</p>
+<p>The illustration below shows an example of a typical customer deployment with a single geographical data center (one physical location). For more information, see:</p>
 <ul>
 	<li><a href="#legend">Legend</a></li>
 	<li><a href="#components">Components</a></li>
 </ul>
-<p><img src="assets/deploy_clustered.png" alt="Sample deployment: Highly secure, highly available" /></p>
+<p><img src="assets/deploy_clustered.png" alt="Sample deployment: clustered environment" /></p>
 
 <h4 id="legend">Legend</h4>
 <p>The numbers in the diagram above correspond to the sequence of actions below:</p>
 <ol>
 	<li>The consuming app invokes the OAuth server to receive the access token. See <a href="#components_oauth">OAuth</a> below.</li>
-	<li>Authentication is validated, then the access token is returned to the consuming application.</li>
-	<li>The consuming application invokes an API hosted in the Akana API Gateway.</li>
-	<li>The Akana API Gateway, acting as the Policy Enforcement Point, reaches out to Policy Manager, which is acting as the Policy Decision Point, to authorize and authenticate the consuming application. See <a href="#components_pm">Policy Manager (PM)</a> and <a href="#components_nd">API Gateway/Internal Gateway (Network Director)</a> below.</li>
-	<li>Policy Manager receives data from the RDBMS.</li>
-	<li>The API Gateway invokes the downstream API, physical service.</li>
-	<li>The API Gateway saves analytic information about the request/response.</li>
-	<li>Policy Manager stores the analytic information in MongoDB. See <a href="#xxx"> MongoDB</a> below.</li>
-	<li>The response is returned to the consuming application.</li>
+	<li>Authentication is validated, and then the access token is returned to the consuming app.</li>
+	<li>The consuming app invokes an API hosted in the Akana API Gateway, accessing the external API Gateway (Network Director, ND).</li>
+	<li>The external API Gateway, acting as the Policy Enforcement Point, reaches out to Policy Manager (PM), which is acting as the Policy Decision Point, to authorize and authenticate the consuming application. See <a href="#components_pm">Policy Manager (PM)</a> and <a href="#components_nd">API Gateway/Internal Gateway (Network Director)</a> below.</li>
+	<li>The containers with Policy Manager/Community Manager installed <span class="apidoc_red">send and/or receive</span> data from the RDBMS.</li>
+	<li>The external API Gateway calls the internal API Gateway. {<span class="apidoc_red">EN: is this correct?</span>}</li>
+	<li>The internal API Gateway, acting as the Policy Enforcement Point, reaches out to Policy Manager (PM), which is acting as the Policy Decision Point, to authorize and authenticate the consuming application. See <a href="#components_pm">Policy Manager (PM)</a> and <a href="#components_nd">API Gateway/Internal Gateway (Network Director)</a> below. {<span class="apidoc_red">EN: I have the same for #4 and #7, external and internal: is that correct?</span>}</li>
+	<li>The internal API Gateway invokes the downstream API, physical service.</li>
+	<li>The internal API Gateway saves analytic information about the request/response. {<span class="apidoc_red">EN: I don't see a number for this in the diagram</span>}</li>
+	<li>Policy Manager stores the analytic information in MongoDB. See <a href="#components_mongodb"> MongoDB</a> below.</li>
+	<li>The response is returned to the consuming application. {<span class="apidoc_red">EN: I don't see this in the diagram</span>}</li>
 </ol>
+<p><strong>Notes:</strong></p>
+<ul>
+	<li>For this scenario to work well, the database and the PM/CM containers must be in the same physical location.</li>
+	<li><span class="apidoc_red">The above diagram includes an external consumer, accessing the deployment from outside the firewall, and an internal consumer such as a company employee</span>. {<span class="apidoc_red">EN: We have the Internal Consumer box, which you added -- but this diagram also already has &quot;Internal API Developers &amp; Administrators&quot; -- do we need both?</span>}</li>
+</ul>
+
+
 
 <h3 id="components">Components</h3>
 <p>The example deployment above includes the following components:</p>
@@ -92,7 +102,7 @@ nav-title: Sample Deployment Scenario
 	<li><a href="#components_cm">Community Manager (CM)</a></li>
 	<li><a href="#components_scheduler">Job Scheduler</a></li>
 	<li><a href="#components_oauth">OAuth</a></li>
-	<li><a href="#components_reverseproxy">Reverse Proxies</a></li>
+	<li><a href="#components_reverseproxy">Reverse Proxy</a></li>
 	<li><a href="#components_nd">API Gateway/Internal Gateway (Network Director)</a></li>
 	<li><a href="#components_app_dev">External App Developer</a></li>
 	<li><a href="#components_es">Elasticsearch</a></li>
@@ -104,29 +114,53 @@ nav-title: Sample Deployment Scenario
 <p>This sample clustered deployment environment includes two dedicated Policy Manager containers, each of which should be on a different machine.</p>
 <p>Two containers are of course the minimum for a clustered environment, providing some redundancy.</p>
 <p>This configuration provides dedicated Policy Manager instances that are just for the Network Directors.</p>
+<p>For containers running Policy Manager, you'll need to install:</p>
+<ul>
+	<li>xxx</li>
+</ul>
 
 
 <h4 id="components_cm">Community Manager (CM)</h4>
 <p>This sample clustered environment includes two Community Manager containers, each of which should be on a different machine. Depending on the size of your implementation, you could have one PM container and one CM container on each of two machines, or have each container on a separate JVM.</p>
-<p>When we deploy Community Manager, it still does have Policy Manager under that, because that is a requirement for Community Manager. However, again, keeping Policy Manager separate, though not necessary, is a good configuration. </p>
+<p>When we deploy Community Manager, it still does have Policy Manager under that, because that is a requirement for Community Manager. However, again, keeping Policy Manager separate, though not necessary, is a good configuration.</p>
+<p>For containers running Community Manager, you'll need to install:</p>
+<ul>
+	<li>xxx</li>
+</ul>
 
 
 <h4 id="components_scheduler">Job Scheduler</h4>
-<p>This sample clustered deployment environment includes a dedicated container for the job scheduler. This is not necessary; however, by separating out the job scheduler you can help ensure that the scheduled jobs, such as xxx, don't affect your other containers.</p>
-<p>The scheduler only runs on one node; by making it a separate container, it can just run by itself without interference with or by the processing on other containers.</p>
-<p>The container that's running the job scheduler may or may not be on a separate machine. In either case, we recommend allocating plenty of memory for the scheduled jobs {<span class="apidoc_red">EN: how much?</span>}</p>
+<p>This sample clustered deployment environment includes a dedicated container for the background job scheduler (Quartz scheduler). This container can run all of the PM and CM scheduled jobs.</p>
+<p>The job scheduler cannot be clustered; it runs on only one container.</p>
+<p>It's not necessary to have the job scheduler in its own container, completely separate from other components; however, by separating it out you can help ensure that the scheduled jobs, which can include a lot of data processing, can run without affecting other containers.</p>
+<p>Whether the container that's running the job scheduler is on a separate machine or not, we recommend allocating plenty of memory for the scheduled jobs. {<span class="apidoc_red">EN: anything we can say about how much memory we should allow? Or, maybe that's too much detail.</span>}</p>
+<p>The installation features that are installed on this standalone container, that add jobs to the Quartz scheduler, are:</p>
+<ul>
+	<li>Community Manager Scheduled Jobs</li>
+	<li>Akana Scheduled Jobs</li>
+</ul>
+<p><strong>Note</strong>: There are other scheduled jobs that are run on each container. For example, Network Director has a job scheduler that is responsible for reaching out to Policy Manager to get updated information on which APIs to load. These scheduled jobs are not separate installation features, they are built in to each container.</p>
 
 
 <h4 id="components_oauth">OAuth</h4>
 <p>OAuth provides the framework for authentication and authorization, whether the OAuth platform's inbuilt OAuth Provider is used, or an external OAuth Provider such as OpenID Connect, SAML, CA SiteMinder, or another.</p>
 <p>If the platform's inbuilt OAuth Provider is used, it connects directly to the database.</p>
-
-
-<h4 id="components_reverseproxy">Reverse Proxies</h4>
-<p>The reverse proxies provide a way for users to access the containers that are behind the firewall. This example shows two:</p>
+<p>The platform's OAuth feature requires that Community Manager is part of the deployment; however, it doesn't need to be installed in the same container as Community Manager. OAuth can be in its own container.</p>
+<p><strong>Note</strong>: If you're using PingFederate or the platform's inbuilt OAuth Provider, you could use bearer tokens. All other OAuth Providers use JWT.</p>
+<p>If your deployment will include OAuth, you'll need to install the following features:</p>
+<p>On each container running Network Director:</p>
 <ul>
-	<li>One allows external access into the CM containers</li>
-	<li>One allows apps to reverse proxy into the OAuth provider</li>
+	<li>Akana OAuth Provider Agent</li>
+</ul>
+<p>On the standalone OAuth container, or the container where you want the OAuth component to reside:</p>
+<ul>
+	<li>Akana OAuth Provider Grant Provisioning UI {<span class="apidoc_red">I've never seen this before; have to find out. Not sure if this installation info is correct.</span>}</li>
+</ul>
+<h4 id="components_reverseproxy">Reverse Proxy</h4>
+<p>The reverse proxy provides a way for users to access the containers that are behind the firewall. In this example, the reverse proxy performs two functions:</p>
+<ul>
+	<li>It allows external access into the CM containers.</li>
+	<li>It allows apps to reverse proxy into the OAuth provider.</li>
 </ul>
 <p>The platform doesn't provide reverse proxy functionality. You can use a third-party product such as  HAProxy, F5, or NGINX.</p>
 
@@ -137,8 +171,13 @@ nav-title: Sample Deployment Scenario
 	<li>External Gateways: an external cluster of two, outside the firewall</li>
 	<li>Internal Gateways: an internal cluster of two, inside the firewall.</li>
 </ul>
-<p>In this sample scenario, the external Network Director instances call the internal instances before calling the API. It's not necessary to configure your deployment that way, but it's a clean approach. {<span class="apidoc_red">EN: is there a good reason we can provide to do it? You said, it's a cleaner way to do it.</span>}</p>
+<p>In this sample scenario, the external Network Director instances call the internal Network Director instances before calling the API. It's not necessary to configure your deployment that way, but it's a clean approach. {<span class="apidoc_red">EN: is there a good reason we can provide to do it? You said, it's a cleaner way to do it.</span>}</p>
 <p>The Network Director communicates with Policy Manager, and relays the messages downstream to the API.</p>
+<p><strong>Note</strong>: At runtime, Network Director reaches out to Policy Manager. It is not asynchronous. It first sends an authorization (<strong>auz</strong>) call to Policy Manager to authenticate the consumer of an API. It then caches the authentication/authorization, and uses the cached values until they expire. If values don't exist in the cache, it reaches out to Policy Manager in a synchronous call.</p>
+<p>For containers running Network Director, you'll need to install:</p>
+<ul>
+	<li>xxx</li>
+</ul>
 
 
 <h4 id="components_app_dev">External App Developer</h4>
@@ -149,10 +188,18 @@ nav-title: Sample Deployment Scenario
 <p>This sample clustered deployment environment includes two Elasticsearch nodes, the minimum for redundancy.</p>
 <p>The two Elasticsearch nodes should be on separate machines, for failsafe purposes. However, they needn't be dedicated machines.</p>
 <p>For example, you could run Elasticsearch along with each of your Policy Manager containers.</p>
+<p>For Elasticsearch you'll need to:</p>
+<ul>
+	<li>Install Elasticsearch on each CM container. For instructions, see <a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a>.</li>
+</ul>
 
 
 <h4 id="components_mongodb">MongoDB</h4>
 <p>This sample clustered deployment environment includes three MongoDB instances, the minimum for sharding. It's a good idea to do sharding if you have multiple data centers.</p>
+<p>For containers running MongoDB, you'll need to install:</p>
+<ul>
+	<li>xxx</li>
+</ul>
 <p><a href="#top">Back to top</a></p>
 
 
