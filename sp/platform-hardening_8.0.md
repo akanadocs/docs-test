@@ -34,7 +34,7 @@ Akana Platform Hardening Guide Version 8.0.x
 		<li><a href="#disabling-sslv3">Disabling SSLv3</a></li>
 		<li><a href="#disabling_ssl_renegotiation">Disabling SSL renegotiation</a></li>
 		<li><a href="#restrict-cipher-suites">Restrict the cipher suites used</a></li>
-		<li><a href="#tls12-only">Enforcing TLS 1.2 Only</a></li>
+		<li><a href="#tls12-only">Enforcing TLS 1.2 behind a load balancer</a></li>
 		<li><a href="#disabling-outbound">Limiting Outbound SSL/TLS/Cipher support</a></li>
 		<li><a href="#prevent-forward-proxying">Prevent Forward Proxying</a></li>
 		<li><a href="#nd-header-propagation">Header Propagation in Network Director</a></li>
@@ -215,7 +215,7 @@ http.incoming.transport.config.cipherSuites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA25
 
 **Note**: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See http://docs.oracle.com/javase/7/docs/technotes/guides/security/SunProviders.html. This has to be added to the JRE.
 
-#### <a name="tls12-only"></a>Enforcing TLS 1.2 Only
+#### <a name="tls12-only"></a>Enforcing TLS 1.2 behind a load balancer
 Depending on the level of security required, you may way to restrict the protocol to TLS 1.2 only. Note - This will limit the accesibility of the platform to certain clients.
 **Scope**: All Containers
 
