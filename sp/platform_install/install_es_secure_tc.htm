@@ -10,12 +10,12 @@ type: page
 nav-title: Configuring Elasticsearch with security
 ---
 <h2 id="top">Configuring Elasticsearch with Security</h2>
-<p>If you're using Elasticsearch and want security over SSL/TLS to add encryption for node to node communication and cluster communication, you'll need to complete some additional setup and configuration steps. </p>
+<p>If you're using Elasticsearch and want security over SSL/TLS to add encryption for node to node communication and client communication, you'll need to complete some additional setup and configuration steps. </p>
 <p>This document provides information about implementing security for Elasticsearch. Depending on your API Platform version, you'll use one of these:</p>
 <ul>
-	<li><strong>X-Pack</strong>: Version 2018.0.0 uses Elasticsearch 6.3.1, which uses X-Pack for security. 
+	<li><strong>X-Pack</strong>: Version 2018.0.0 uses Elasticsearch 6.3.1, which uses X-Pack for security.
 		<p>X-Pack is bundled with the Elasticsearch install, but requires a license for activation.</p></li>
-	<li><strong>Shield</strong>: Versions prior to 2018.0.0 use Elasticsearch 1.5, which uses Shield for security.
+	<li><strong>Shield</strong>: Versions prior to 2018.0.0 use Elasticsearch 1.5, which uses Shield for security. Shield is not supported in version 2018.0.0.
 		<p>For full details about installing Shield, see <a href="https://www.elastic.co/guide/en/shield/shield-1.3/installing-shield.html" title="Elasticsearch Shield website" target="_blank">https://www.elastic.co/guide/en/shield/shield-1.3/installing-shield.html</a>.</p></li>
 </ul>
 
@@ -96,7 +96,7 @@ nav-title: Configuring Elasticsearch with security
 <p><strong>Message body:</strong></p>
 <pre>{
   "cluster":[
-    "all or the cluster name in elasticsearch.yaml"
+    "all or the cluster name in elasticsearch.yml"
   ],
   "indices":[
     {
@@ -115,7 +115,7 @@ nav-title: Configuring Elasticsearch with security
 <p><strong>Message body:</strong></p>
 <pre>{
   "cluster":[
-    "all or the cluster name in elasticsearch.yaml"
+    "all or the cluster name in elasticsearch.yml"
   ],
   "indices":[
     {
@@ -186,93 +186,13 @@ nav-title: Configuring Elasticsearch with security
 </ol>
 
 <h5 id="yaml_xpack">Sample Elasticsearch YAML file with security settings</h5>
+<p><strong>Note</strong>: The example below excludes the first part of the YAML file, and shows only the last part, with the security settings. For an example of the first part of the file, see <a href="install_es_config.htm#yaml_sample_no_xpack">Sample Elasticsearch YAML file</a>.</p>
 <pre># ======================== Elasticsearch Configuration =========================
 #
-# NOTE: Elasticsearch comes with reasonable defaults for most settings.
-#       Before you set out to tweak and tune the configuration, make sure you
-#       understand what are you trying to accomplish and the consequences.
-#
-# The primary way of configuring a node is via this file. This template lists
-# the most important settings you may want to configure for a production cluster.
-#
-# Please consult the documentation for further information on configuration options:
-# https://www.elastic.co/guide/en/elasticsearch/reference/index.html
-#
-# ---------------------------------- Cluster -----------------------------------
-#
-# Use a descriptive name for your cluster:
-#
-cluster.name: akana
-#
-# ------------------------------------ Node ------------------------------------
-#
-# Use a descriptive name for the node:
-#
-node.name: node-1
-#
-# Add custom attributes to the node:
-#
-#node.attr.rack: r1
-#
-# ----------------------------------- Paths ------------------------------------
-#
-# Path to directory where to store the data (separate multiple locations by comma):
-#
-path.data: c:/_elastic631/data
-#
-# Path to log files:
-#
-path.logs: c:/_elastic631/logs
-#
-# ----------------------------------- Memory -----------------------------------
-#
-# Lock the memory on startup:
-#
-#bootstrap.memory_lock: true
-#
-# Make sure that the heap size is set to about half the memory available
-# on the system and that the owner of the process is allowed to use this
-# limit.
-#
-# Elasticsearch performs poorly when the system is swapping the memory.
-#
-# ---------------------------------- Network -----------------------------------
-#
-# Set the bind address to a specific IP (IPv4 or IPv6):
-#
-#network.host: 192.168.0.1
-network.host: 0.0.0.0
-
-transport.tcp.port: 9300
-#
-# Set a custom port for HTTP:
-#
-http.port: 9200
-#
-# For more information, consult the network module documentation.
-#
-# --------------------------------- Discovery ----------------------------------
-#
-# Pass an initial list of hosts to perform discovery when new node is started:
-# The default list of hosts is ["127.0.0.1", "[::1]"]
-#
-discovery.zen.ping.unicast.hosts: ["localhost", "[::1]"]
-#
-# Prevent the "split brain" by configuring the majority of nodes (total number of master-eligible nodes / 2 + 1):
-#
-discovery.zen.minimum_master_nodes: 1
-#
-# For more information, consult the zen discovery module documentation.
-#
-# ---------------------------------- Gateway -----------------------------------
-#
-# Block initial recovery after a full cluster restart until N nodes are started:
-#
-#gateway.recover_after_nodes: 3
-#
-# For more information, consult the gateway module documentation.
+...
 #
 # ---------------------------------- Various -----------------------------------
+# (This section is needed only if you want to configure security)
 #
 # Require explicit names when deleting indices:
 #
@@ -283,14 +203,13 @@ xpack.security.enabled: true
 #xpack.ssl.verification_mode: certificate
 
 #xpack.security.transport.ssl.enabled: true
+
+#pkcs12 or jks
 #xpack.security.transport.ssl.verification_mode: certificate 
 #xpack.security.transport.ssl.keystore.path: certs/elastic-certificates.p12 
 #xpack.security.transport.ssl.truststore.path: certs/elastic-certificates.p12
-#xpack.security.transport.ssl.certificate_authorities: [ "certs/ca.cer" ]
-#xpack.security.transport.ssl.key: certs/instance.key 
-#xpack.security.transport.ssl.certificate: certs/instance.crt 
-#xpack.security.transport.ssl.certificate_authorities: [ "certs/ca.crt" ]
 
+#pem
 #xpack.security.transport.ssl.verification_mode: certificate 
 #xpack.security.transport.ssl.key: certs\instance.key 
 #xpack.security.transport.ssl.certificate: certs\instance.crt 
@@ -299,12 +218,7 @@ xpack.security.enabled: true
 xpack.security.http.ssl.enabled: true
 xpack.ssl.verification_mode: certificate
 xpack.security.http.ssl.keystore.path: certs/elastic-certificates.p12 
-xpack.security.http.ssl.truststore.path: certs/elastic-certificates.p12
-
-#xpack.security.http.ssl.enabled: true
-#xpack.security.http.ssl.key:  /home/es/config/node01.key 
-#xpack.security.http.ssl.certificate: /home/es/config/node01.crt 
-#xpack.security.http.ssl.certificate_authorities: [ "/home/es/config/ca.crt" ]</pre>
+xpack.security.http.ssl.truststore.path: certs/elastic-certificates.p12</pre>
 <p><a href="#top">back to top</a></p>
 
 
@@ -357,7 +271,7 @@ xpack.security.http.ssl.truststore.path: certs/elastic-certificates.p12
 			</ul>
 	</li>
 	
-	<li>If the mode is Rest Client, only PKCS12 and JKS formats are accepted. Provide the following:
+	<li>If the mode is Rest Client, only PKCS12 and JKS formats are supported. Provide the following:
 		<ul>
 			<li>elastic.client.keystorePath</li>
 			<li>elastic.client.keystorePassword</li>
@@ -536,7 +450,7 @@ elastic.client.keystorePath</pre>
 	<li><a href="install_cm_jython_script.htm">Installation Jython Script</a></li>
 	<li><a href="implementation_planning.htm">Planning Your Implementation</a></li>
 	<li><a href="install_es_config.htm">Installing and Configuring Elasticsearch</a></li>
-<!--	<li><a href="install_es_secure_tc.htm">Configuring Elasticsearch with Transport Client security</a></li>-->
+<!--	<li><a href="install_es_secure_tc.htm">Configuring Elasticsearch with security</a></li>-->
 	<li><a href="install_mysql_dbsettings.htm">MySQL Database Property Settings</a></li>
 </ul>
 <ul>
