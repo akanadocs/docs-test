@@ -37,10 +37,9 @@ nav-title: JOSE Security v2
 	<li><a href="#jose_unenc_config_values">Configuration values</a></li>
 	<li><a href="#jose_unenc_options_audit">Configuring JOSE Security Policy v2 Audit Options</a></li>
 	<li><a href="#policy_attach">Attaching the policy</a></li>
-	<li><a href="#json_vsus_compact">JSON versus compact structure</a></li>
-	<li><a href="#jose_unenc_message_examples">Message examples</a></li>
+	<li><a href="#json_vsus_compact">JSON versus compact structure, with examples</a></li>
 	<li><a href="#tools_encode">Online tools for encoding and decoding</a></li>
-	<li><a href="#jose_unenc_troubleshooting">JOSE Security Policy v2 (Unencoded Payload Support): troubleshooting</a></li>
+	<li><a href="#jose_unenc_troubleshooting">JOSE Security Policy v2 (Unencoded Payload Support): troubleshooting</a></li></ol>
 </ol>
 <div class = "divider1"></div>
 
@@ -487,74 +486,35 @@ nav-title: JOSE Security v2
 
 
 
-<h3 id="json_vsus_compact">JSON versus compact structure</h3>
-<p>For serialization, you can specify <strong>Compact</strong> (dot-separated, consumes less bandwidth) or <strong>JSON</strong> (key-value pairs, more human-readable). These are just two different ways of showing the same information.</p>
-
-
-<h4 id="structure_json">JSON, not detached</h4>
-<p>In the JSON format you have:</p>
-<ul>
-	<li>A JSON object, which can have a <strong>protected</strong> header.</li>
-	<li>A payload. In the non-detached format, the payload is required.</li>
-	<li>A signature for the content (signed with a public key).</li>
-	<li>The headers, which are raw data.</li>
-</ul>
-<p>The <strong>protected</strong> value is base-64 encoding of the above. The payload is the payload that you're trying to convey to the recipient, base 64-encoded, and the signature is a combination of all those things together, signed with the public key {<span class="apidoc_red">of the...XXXconsumer? sender? recipient?</span>}.</p>
-<p>For an example, see <a href="#json_det_no">JSON format, not detached</a> below.</p>
-
-
-<h4 id="structure_json_detached">JSON, detached</h4>
-<p>The detached versions of JSON is similar, but the payload is unsigned. The payload is sent in the body of the message, and the other values are sent in a header. The name of the header is defined as part of the policy definition setup.</p>
-<p>For an example, see <a href="#json_det_yes">JSON format, detached</a> below.</p>
-
-
-<h4 id="structure_compact">Compact, not detached</h4>
-<p>With Compact format, the request is similar in structure, but it's not a JSON object. It doesn't contain the actual header values&#8212;the <strong>protected</strong> header and the payload and the signature.</p>
-<p>The Compact structure is in three sections:</p>
-<ol>
-	<li>The <strong>protected</strong> value, followed by a period separator.</li>
-	<li>The payload value, followed by a period separator.</li>
-	<li>The signature (signed with a public key).</li>
-</ol>
-<p>It is simply a compact version of the information. The values should be exactly the same, if the content is the same.</p>
-<p>For an example, see <a href="#compact_det_no">Compact format, not detached</a> below.</p>
-<p>For more information, refer to the applicable sections in the JWS RFC: <a href="https://tools.ietf.org/html/rfc7515#section-7.1" title="Link to JWS RFC for JSON compact serialization" target="_blank">JWS Compact Serialization</a> and <a href="https://tools.ietf.org/html/rfc7515#section-7.2" title="Link to JWS RRC for JWS JSON serialization" target="_blank">JWS JSON Serialization</a>.</p>
-
-
-<h4 id="structure_compact_detached">Compact, detached</h4>
-<p>As with detached JSON, the payload is unsigned, so the middle part of the message, between the two periods, is missing. The raw payload is sent with the request or returned with the response.</p>
-<p>The structure is maintained in three sections:</p>
-<ol>
-	<li>The <strong>protected</strong> value, followed by a period separator.</li>
-	<li>No payload, just a second a period separator.</li>
-	<li>The signature (signed with a public key).</li>
-</ol>
-<p>In this scenario, the detached payload goes into a header.</p>
-<p>For an example, see <a href="#compact_det_yes">Compact format, detached</a> below.</p>
-<p><a href="#top">Back to top</a></p>
-
-
-
-
-<h3 id="jose_unenc_message_examples">Message examples</h3>
-<p>This section shows some examples of a simple basic message in the various formats. It includes:</p>
+<h3 id="json_vsus_compact">JSON versus compact structure, with examples </h3>
+<p>For serialization, you can specify <strong>Compact</strong> (dot-separated, consumes less bandwidth) or <strong>JSON</strong> (key-value pairs, more human-readable). These are just two different ways of showing the same information. </p>
+<p>For full details, refer to the applicable sections in the JWS RFC: <a href="https://tools.ietf.org/html/rfc7515#section-7.1" title="Link to JWS RFC for JSON compact serialization" target="_blank">JWS Compact Serialization</a> and <a href="https://tools.ietf.org/html/rfc7515#section-7.2" title="Link to JWS RRC for JWS JSON serialization" target="_blank">JWS JSON Serialization</a>.</p>
+<p>This section includes the following examples:</p>
 <ul>
 	<li><a href="#json_det_no">JSON format, not detached</a></li>
 	<li><a href="#json_det_yes">JSON format, detached</a></li>
 	<li><a href="#compact_det_no">Compact format, not detached</a></li>
 	<li><a href="#compact_det_yes">Compact format, detached</a></li>
 </ul>
+<p>These are just examples. For guidance on how to structure your messages, refer to the specification: <a href="https://tools.ietf.org/html/rfc7797">https://tools.ietf.org/html/rfc7797</a>.</p>
 
 
 <h4 id="json_det_no">JSON format, not detached</h4>
-<p>The example below shows a response message in JSON format.</p>
+<p>Refer to RFC 7797 JWS specification:</p>
+<ul>
+	<li>Section: <a href="https://tools.ietf.org/html/rfc7797#section-5.3" target="_blank">5.3.  Unencoded JWS JSON Serialization Payload</a>.</li>
+	<li>Example: <a href="https://tools.ietf.org/html/rfc7797#section-4.1" target="_blank">4.1.  Example with Header Parameters {&quot;alg&quot;:&quot;HS256&quot;}</a>.</li>
+</ul>
+<p>The example below shows a response message in JSON format with the payload not detached.</p>
 <p><strong>Body (payload)</strong></p>
 <p>This example has a <strong>protected</strong> header, payload, signature, and the headers themselves:</p>
 <ul>
 	<li>The headers are raw data.</li>
 	<li>The <strong>protected</strong> value is base-64 encoding of the headers.</li>
 	<li>The payload is base 64-encoded.</li>
-	<li>The signature signs all those things together.</li>
+	<li>The signature signs all those things together.  {<span class="apidoc_red">MM: updated example
+			<!--I removed the b64 from the below -->
+	per ATMO-25632</span>}</li>
 </ul>
 <pre>{
   "protected":"eyJraWQiOiJzaWduS2V5IiwiYWxnIjoiUlMyNTYiLCJjdHkiOiJhcHBsaWNhdGlvbi9qc29uIiwiY3JpdCI6WyJiNjQiXX0",
@@ -577,7 +537,13 @@ oCFYaoEOkGZlREUmWcQtQ",
 
 
 <h4 id="json_det_yes">JSON format, detached</h4>
-<p>The example below shows the same response message in JSON format&nbsp;with detached payload.</p>
+<p>Refer to RFC 7797 JWS specification:</p>
+<ul>
+	<li>Section: <a href="https://tools.ietf.org/html/rfc7797#section-5.1" target="_blank">5.1. Unencoded Detached Payload</a>.</li>
+	<li>Example: <a href="https://tools.ietf.org/html/rfc7797#section-4.2" target="_blank">4.2.  Example with Header Parameters</a>.</li>
+</ul>
+<p>The detached versions of JSON is similar, but the payload is unsigned. The payload is sent in the body of the message, and the other values are sent in a header. The name of the header is defined as part of the policy definition setup.</p>
+<p>The example below shows the same response message used in the previous example, in JSON format&nbsp;with detached payload.</p>
 <p>With JSON detached, you put the payload in the body and the rest of the message goes in the header.</p>
 <p><strong>Body (payload)</strong></p>
 <pre>{
@@ -603,9 +569,20 @@ stmZKsRWrVx-tnmLX7aIhz9NL0jOmRf1deh4HAenk7JKPzUgAxZssylmTCivkuV10yrdlIgyUYELkHNz
 
 
 <h4 id="compact_det_no">Compact format, not detached</h4>
-<p>The example below shows the body (payload) of the same response message in Compact format. Line breaks have been added for display purposes.</p>
-<p>The values in a JSON example or a Compact example should be the same, if the data is the same. They are just two ways of representing the same information.</p>
-<p>This example has the <strong>protected</strong> value, then a period, then the payload value, then another period, then the signature (signed with a public key).</p>
+<p>Refer to RFC 7797 JWS specification:</p>
+<ul>
+	<li>Section: <a href="https://tools.ietf.org/html/rfc7797#section-5.1" target="_blank">5.1. Unencoded Detached Payload</a>.</li>
+	<li>Example: <a href="https://tools.ietf.org/html/rfc7797#section-4.1" target="_blank">4.1.  Example with Header Parameters {"alg":"HS256"}</a>.</li>
+</ul>
+<p>With Compact format, the request is similar in structure, but it's not a JSON object.</p>
+<p>It is simply a compact version of the information. The values should be the same, if the content is the same.</p>
+<p>The example below shows the body (payload) of the same response message used in the previous examples, now in Compact format. Line breaks have been added for display purposes.</p>
+<p>The Compact structure is in three sections:</p>
+<ol>
+	<li>The <strong>protected</strong> value, followed by a period separator.</li>
+	<li>The payload value, followed by a period separator.</li>
+	<li>The signature (signed with the private key of the sender).</li>
+</ol>
 <pre>eyJraWQiOiJzaWduS2V5IiwiYWxnIjoiUlMyNTYiLCJjdHkiOiJhcHBsaWNhdGlvbi9qc29uIiwiY3JpdCI6WyJiNjQiXX0.eyJQVVQtcmVzcG9uc2UiOiJzaWd
 uZWQgam9zZSByZXNwb25zZSJ9.damrs8P_kUGDR0RJ6Vn1aB6VDHgGwZZyFXsYwzGLSXvHg60BNsTNn8geKAA-ObcnEDj_5-FTBt42u8Kt0MGkzWcvxkM4iU8mC
 yAaxqpA1zv_4r0I-bk46Odt9VeKXiLezjRoLLctLvD-LRgVvwNG9EMmwe_qV6tWUCChSdw7cAxH9dthqD3sKmHBtVWEzO1PVWIQn46TuWCEeBla0ggiK6UPYD4f
@@ -615,7 +592,20 @@ nJCpGiq_3r_6Ygb64YjnjSMScoF2-f8z8mGZptOZsojzlI_bcJ3yFRyzit__uwQcyMBQ73maen9gZnXb
 
 
 <h4 id="compact_det_yes">Compact format, detached</h4>
+<p>Refer to RFC 7797 JWS specification:</p>
+<ul>
+	<li>Section: <a href="https://tools.ietf.org/html/rfc7797#section-5.2" target="_blank">5.2.  Unencoded JWS Compact Serialization Payload</a>.</li>
+	<li>Example: <a href="https://tools.ietf.org/html/rfc7797#section-4.2" target="_blank">4.2.  Example with Header Parameters</a>.</li>
+</ul>
+<p>As with detached JSON, the payload is unsigned, so the middle part of the message, between the two periods, is missing. The raw payload is sent with the request or returned with the response.</p>
+<p>In this scenario, the detached payload goes into a header.</p>
 <p>The example below shows the body (payload) of the same response message in Compact format with detached payload. Line breaks have been added for display purposes.</p>
+<p>In this example, the structure is in three sections:</p>
+<ol>
+	<li>The <strong>protected</strong> value, followed by a period separator.</li>
+	<li>No payload, just a second period separator.</li>
+	<li>The signature (signed with a public key).</li>
+</ol>
 <p>The detached version is similar to the previous example, but the payload is&nbsp;sent separately in the body, un-encoded, and is not included as the second section of the detached header. The period separators are preserved.</p>
 <pre>{
   "PUT-response": "signed JOSE response"
