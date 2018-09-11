@@ -34,7 +34,7 @@ Akana Platform Hardening Guide Version 7.2.x
 		<li><a href="#disabling-sslv3">Disabling SSLv3</a></li>
 		<li><a href="#disabling_ssl_renegotiation">Disabling SSL renegotiation</a></li>
 		<li><a href="#restrict-cipher-suites">Restrict the cipher suites used</a></li>
-		<li><a href="#tls12-only">Enforcing TLS 1.2 behind a load balancer</a></li>
+		<li><a href="#tls12_only">Enforcing TLS 1.2</a></li>
 		<li><a href="#disabling-outbound">Limiting Outbound SSL/TLS/Cipher support</a></li>
 		<li><a href="#prevent-forward-proxying">Prevent Forward Proxying</a></li>
 		<li><a href="#nd-header-propagation">Header Propagation in Network Director</a></li>
@@ -215,19 +215,30 @@ http.incoming.transport.config.cipherSuites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA25
 
 **Note**: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See http://docs.oracle.com/javase/7/docs/technotes/guides/security/SunProviders.html. This has to be added to the JRE.
 
-#### <a name="tls12-only"></a>Enforcing TLS 1.2 behind a load balancer
-Depending on the level of security required, you may way to restrict the protocol to TLS 1.2 only. Note - This will limit the accesibility of the platform to certain clients.
-**Scope**: All Containers
+#### <a name="tls12_only"></a>Enforcing TLS 1.2
+<p>Depending on the level of security required, you may way to restrict the protocol to TLS 1.2 only. Note - This will limit the accessibility of the platform to certain clients.</p>
+<p>The above examples show two options:</p>
+<ul>
+	<li><a href="#tls12_01">Enabling TLS v1.2 only</a></li>
+	<li><a href="#tls12_lb">Enforcing TLS 1.2 behind a secure load balancer</a></li>
+</ul>
 
-Enable TLSv1.2 only:
+<h5 id="tls12_01">Enabling TLS v1.2 only</h5>
+<p>In the example below, only TLS v1.2 is enabled. Note that this option is only applicable if you don't have load balancing.</p>
+<p><strong>Scope</strong>: All Containers</p>
+<p>Enable TLSv1.2 only, with no load balancing:</p>
+<pre>com.soa.platform.jetty -&gt;
+http.incoming.transport.config.enabledProtocols=TLSv1.2</pre>
+<p><strong>Note</strong>: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/security/SunProviders.html" title="Java cryptography documentation" target="_blank">Java Cryptography Architecture Oracle Providers Documentation for Java Platform Standard Edition 7</a>. This must be added to the JRE.</p>
 
-```
-com.soa.transport.jetty ->
-http.incoming.transport.config.enabledProtocols=SSLv2Hello,TLSv1.2
-```
-
-
-Note: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See http://docs.oracle.com/javase/7/docs/technotes/guides/security/SunProviders.html. This has to be added to the JRE.
+<h5 id="tls12_lb">Enforcing TLS 1.2 behind a secure load balancer</h5>
+<p>In the example below, protocols are limited to TLS v1.2 and one additional protocol needed by the load balancer.</p>
+<p><strong>Scope</strong>: All Containers</p>
+<p>Enable TLSv1.2, with load balancing in place. Some secure load balancers require the <strong>SSLv2Hello</strong>&nbsp;protocol, so that needs to be included.</p>
+<p>As long as SSL is not enabled, the SSLv2Hello is only used during the initial handshake, and the protocol is not downgraded or renegotiated to use SSLv2 or SSLv3.</p>
+<pre>com.soa.platform.jetty -&gt;
+http.incoming.transport.config.enabledProtocols=SSLv2Hello,TLSv1.2</pre>
+<p><strong>Note</strong>: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/security/SunProviders.html" title="Java cryptography documentation" target="_blank">Java Cryptography Architecture Oracle Providers Documentation for Java Platform Standard Edition 7</a>. This must be added to the JRE.</p>
 
 
 #### <a name="disabling-outbound"></a>Limiting Outbound SSL/TLS/Cipher support
