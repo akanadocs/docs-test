@@ -31,16 +31,16 @@
     <wsdl:part name="getIndexQueueStateResponse" element="nms1:IndexQueueState">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getEmbeddedNodeConfigurationRequestMessage">
-    <wsdl:part name="ContainerKey" type="xs:string">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="updateMappingFileUploadRequestMessage">
     <wsdl:part name="index" type="xs:string">
     </wsdl:part>
     <wsdl:part name="type" type="xs:string">
     </wsdl:part>
     <wsdl:part name="parameter0" type="tns:BufferedInMultiPart">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getEmbeddedNodeConfigurationRequestMessage">
+    <wsdl:part name="ContainerKey" type="xs:string">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="indexResponseMessage">
@@ -53,9 +53,13 @@
     <wsdl:part name="type" type="xs:string">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getIndexQueueStateRequestMessage">
+  </wsdl:message>
   <wsdl:message name="getEmbeddedNodeConfigurationsResponseMessage">
     <wsdl:part name="getEmbeddedNodeConfigurationsResponse" element="nms1:EmbeddedNodeConfigurations">
     </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getClusterHealthRequestMessage">
   </wsdl:message>
   <wsdl:message name="getEmbeddedNodeConfigurationResponseMessage">
     <wsdl:part name="getEmbeddedNodeConfigurationResponse" element="nms1:EmbeddedNodeConfiguration">
@@ -71,13 +75,9 @@
     <wsdl:part name="parameter0" element="nms1:EmbeddedNodeConfiguration">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getIndexQueueStateRequestMessage">
-  </wsdl:message>
   <wsdl:message name="indexRequestMessage">
     <wsdl:part name="parameter0" element="nms1:IndexRequest">
     </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="getClusterHealthRequestMessage">
   </wsdl:message>
   <wsdl:message name="updateMappingFileUploadResponseMessage">
     <wsdl:part element="xs:any">
@@ -88,24 +88,6 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="IndexAPIPortType">
-    <wsdl:operation name="getEmbeddedNodeConfigurations">
-      <wsdl:input message="tns:getEmbeddedNodeConfigurationsRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getEmbeddedNodeConfigurationsResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getEmbeddedNodeConfiguration">
-      <wsdl:input message="tns:getEmbeddedNodeConfigurationRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getEmbeddedNodeConfigurationResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="updateEmbeddedNodeConfiguration">
-      <wsdl:input message="tns:updateEmbeddedNodeConfigurationRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:updateEmbeddedNodeConfigurationResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getIndexQueueState">
       <wsdl:input message="tns:getIndexQueueStateRequestMessage">
     </wsdl:input>
@@ -124,10 +106,10 @@
       <wsdl:output message="tns:updateMappingFromStoreResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="index">
-      <wsdl:input message="tns:indexRequestMessage">
+    <wsdl:operation name="getEmbeddedNodeConfigurations">
+      <wsdl:input message="tns:getEmbeddedNodeConfigurationsRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:indexResponseMessage">
+      <wsdl:output message="tns:getEmbeddedNodeConfigurationsResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getClusterHealth">
@@ -142,37 +124,27 @@
       <wsdl:output message="tns:deleteMappingResponseMessage">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getEmbeddedNodeConfiguration">
+      <wsdl:input message="tns:getEmbeddedNodeConfigurationRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getEmbeddedNodeConfigurationResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateEmbeddedNodeConfiguration">
+      <wsdl:input message="tns:updateEmbeddedNodeConfigurationRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:updateEmbeddedNodeConfigurationResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="index">
+      <wsdl:input message="tns:indexRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:indexResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="IndexAPIBinding" type="tns:IndexAPIPortType">
     <shttp:binding/>
-    <wsdl:operation name="getEmbeddedNodeConfigurations">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /index/nodeconfig</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/index/nodeconfig" method="GET" outputSerialization="application/json,application/vnd.soa.v83+json"/>
-      <wsdl:output>
-    <shttp:output name="getEmbeddedNodeConfigurationsResponse" part="getEmbeddedNodeConfigurationsResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getEmbeddedNodeConfiguration">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /index/{ContainerKey}/nodeconfig</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/index/{ContainerKey}/nodeconfig" method="GET" outputSerialization="application/json,application/vnd.soa.v83+json"/>
-      <wsdl:input>
-    <shttp:input name="ContainerKey" part="ContainerKey" type="path"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getEmbeddedNodeConfigurationResponse" part="getEmbeddedNodeConfigurationResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="updateEmbeddedNodeConfiguration">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /index/{ContainerKey}/nodeconfig</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="application/json,application/vnd.soa.v83+json" location="/index/{ContainerKey}/nodeconfig" method="PUT" outputSerialization="application/json,application/vnd.soa.v83+json"/>
-      <wsdl:input>
-    <shttp:input name="ContainerKey" part="ContainerKey" type="path"/>
-    <shttp:input name="parameter0" part="parameter0" type="entity"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="updateEmbeddedNodeConfigurationResponse" part="updateEmbeddedNodeConfigurationResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getIndexQueueState">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /index/queue/state</sdoc:displayName></wsdl:documentation>
     <shttp:operation location="/index/queue/state" method="GET" outputSerialization="application/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml"/>
@@ -203,14 +175,11 @@
     <shttp:output name="" part="" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="index">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /index</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="application/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml" location="/index" method="POST" outputSerialization="application/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml"/>
-      <wsdl:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"/>
-      </wsdl:input>
+    <wsdl:operation name="getEmbeddedNodeConfigurations">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /index/nodeconfig</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/index/nodeconfig" method="GET" outputSerialization="application/json,application/vnd.soa.v83+json"/>
       <wsdl:output>
-    <shttp:output name="indexResponse" part="indexResponse" type="entity"/>
+    <shttp:output name="getEmbeddedNodeConfigurationsResponse" part="getEmbeddedNodeConfigurationsResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getClusterHealth">
@@ -229,6 +198,37 @@
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="" part="" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getEmbeddedNodeConfiguration">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /index/{ContainerKey}/nodeconfig</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/index/{ContainerKey}/nodeconfig" method="GET" outputSerialization="application/json,application/vnd.soa.v83+json"/>
+      <wsdl:input>
+    <shttp:input name="ContainerKey" part="ContainerKey" type="path"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getEmbeddedNodeConfigurationResponse" part="getEmbeddedNodeConfigurationResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateEmbeddedNodeConfiguration">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /index/{ContainerKey}/nodeconfig</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="application/json,application/vnd.soa.v83+json" location="/index/{ContainerKey}/nodeconfig" method="PUT" outputSerialization="application/json,application/vnd.soa.v83+json"/>
+      <wsdl:input>
+    <shttp:input name="ContainerKey" part="ContainerKey" type="path"/>
+    <shttp:input name="parameter0" part="parameter0" type="entity"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="updateEmbeddedNodeConfigurationResponse" part="updateEmbeddedNodeConfigurationResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="index">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /index</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="application/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml" location="/index" method="POST" outputSerialization="application/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml"/>
+      <wsdl:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="indexResponse" part="indexResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
