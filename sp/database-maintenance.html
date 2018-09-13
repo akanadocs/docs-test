@@ -165,44 +165,103 @@ monitoring.delete.usage.enable=false</pre>
 <li>1-day rollup data in MO_ROLL_ORG_D older than 1 year</li>
 <li>alerts in AM_ALERTS, AM_ALERTS_SLAS, and AM_EMAILALERTS older than 1 month</li>
 </ul>
-<pre>delete from MO_USAGE_NEXTHOP where REQUESTDTS &lt; TIMESTAMPADD(MONTH, -1, now());
+<p><strong>Note</strong>: The intervals given here are sample time periods for the purpose of illustration. You can adjust time periods as needed depending on how often you want to run the job and how long you want to retain the data.</p>
+<p>The examples below illustrate how you can run the above scripts, for different database types:</p>
+<ul>
+	<li><a href="#cron_delete_mysql">Deleting/archiving data: MySQL</a></li>
+	<li><a href="#cron_delete_oracle">Deleting/archiving data: Oracle</a></li>
+</ul>
 
+
+<h4 id="cron_delete_mysql">Deleting/archiving data: MySQL</h4>
+<p>The example below shows database queries to run for a MySQL database.</p>
+<p><strong>The intervals given here are recommendations. Modify the intervals according to your needs.</strong></p>
+<p>{<span class="apidoc_red">Original MySQL version, modified, below</span>}</p>
+<pre>
+/* Queries to clean-up the data from Usage / Rollup tables */
+delete from MO_USAGE_NEXTHOP where REQUESTDTS &lt; TIMESTAMPADD(MONTH, -1, now());
 delete from MO_USAGEMSGS where MSGCAPTUREDDTS &lt; TIMESTAMPADD(MONTH, -1, now());
-
 delete from MO_USAGEDATA where REQUESTDTS &lt; TIMESTAMPADD(MONTH, -1, now());
-
 delete from MO_ROLLUPDATA where ROLLUPDATAID &lt; (select min(MAX_ID) from MO_STATUS) and INTVLSTARTDTS &lt; TIMESTAMPADD(MONTH, -1, now());
-
 delete from MO_ROLLUP15 where INTVLSTARTDTS &lt; TIMESTAMPADD(MONTH, -1, now());
-
 delete from MO_ROLL_ORG15 where INTVLSTARTDTS &lt; TIMESTAMPADD(MONTH, -1, now());
-
 delete from MO_ROLLUP_HOUR where INTVLSTARTDTS &lt; TIMESTAMPADD(MONTH, -3, now());
-
 delete from MO_ROLL_ORG_H where INTVLSTARTDTS &lt; TIMESTAMPADD(MONTH, -3, now());
-
 delete from MO_ROLLUP_DAY where INTVLSTARTDTS &lt; TIMESTAMPADD(YEAR, -1, now());
-
 delete from MO_ROLL_ORG_D where INTVLSTARTDTS &lt; TIMESTAMPADD(YEAR, -1, now());
 
+/* Queries to clean-up the data from ALERTS tables */ 
 delete e from AM_ALERTS a inner join AM_EMAILALERTS e on e.ALERTSID = a.ALERTSID where a.SOURCEDTS &lt; TIMESTAMPADD(MONTH, -1, now());
-
 delete s from AM_ALERTS a inner join AM_ALERTS_SLAS s on s.ALERTSID = a.ALERTSID where a.SOURCEDTS &lt; TIMESTAMPADD(MONTH, -1, now());
-
 delete from AM_ALERTS where SOURCEDTS &lt; TIMESTAMPADD(MONTH, -1, now());</pre>
 
 <p>For Community Manager, there are additional tables such as the Boards (Forums) that you might want to clean up:</p>
 <pre>delete from BOARD_ITEM_ASSIGNMENTS where ITEMID in (select ITEMID from BOARD_ITEMS where ARCHIVABLE='Y' and CREATEDDTS &lt; TIMESTAMPADD(YEAR, -1, now());
-
 delete from BOARD_ITEMS where ARCHIVABLE='Y' and CREATEDDTS &lt; TIMESTAMPADD(YEAR, -1, now());
-
 delete from API_CONTRACT_SLA_DATA where LASTMODIFIEDDTS &lt; TIMESTAMPADD(YEAR, -1, now());
-
 delete from API_SLA_DATA where LASTMODIFIEDDTS &lt; TIMESTAMPADD(YEAR, -1, now());</pre>
 
-<p>For sample scripts on MySql and Oracle (other databases coming soon) download the following zip archive: <a href="sample_scripts.zip">sample_scripts.zip</a></p>
+<p>For sample scripts on MySql and Oracle (other databases coming soon) download the following zip archive: <a href="assets/sample_scripts.zip">sample_scripts.zip</a></p>
+
+
+<p>{<span class="apidoc_red">HK update to MySQL:</span>}</p>
+<pre>/* Queries to clean-up the data from Usage / Rollup tables */
+delete from MO_USAGE_NEXTHOP where REQUESTDTS < TIMESTAMPADD(MONTH, -1, now());
+delete from MO_USAGEMSGS where MSGCAPTUREDDTS < TIMESTAMPADD(MONTH, -1, now());
+delete from MO_USAGEDATA where REQUESTDTS < TIMESTAMPADD(MONTH, -1, now());
+delete from MO_ROLLUPDATA where ROLLUPDATAID < (select min(MAX_ID) from MO_STATUS) and INTVLSTARTDTS < TIMESTAMPADD(MONTH, -1, now());
+delete from MO_ROLLUP15 where INTVLSTARTDTS < TIMESTAMPADD(MONTH, -1, now());
+delete from MO_ROLL_ORG15 where INTVLSTARTDTS < TIMESTAMPADD(MONTH, -1, now());
+delete from MO_ROLLUP_HOUR where INTVLSTARTDTS < TIMESTAMPADD(MONTH, -3, now());
+delete from MO_ROLL_ORG_H where INTVLSTARTDTS < TIMESTAMPADD(MONTH, -3, now());
+delete from MO_ROLLUP_DAY where INTVLSTARTDTS < TIMESTAMPADD(YEAR, -1, now());
+delete from MO_ROLL_ORG_D where INTVLSTARTDTS < TIMESTAMPADD(YEAR, -1, now());
+
+/* Queries to clean-up the data from ALERTS tables */ 
+delete e from AM_ALERTS a inner join AM_EMAILALERTS e on e.ALERTSID = a.ALERTSID where a.SOURCEDTS < TIMESTAMPADD(MONTH, -1, now());
+delete s from AM_ALERTS a inner join AM_ALERTS_SLAS s on s.ALERTSID = a.ALERTSID where a.SOURCEDTS < TIMESTAMPADD(MONTH, -1, now());
+delete from AM_ALERTS where SOURCEDTS < TIMESTAMPADD(MONTH, -1, now());</pre>
+<p>For Community Manager, there are additional tables such as the Boards (Forums) that you might want to clean up:</p>
+<pre>delete from BOARD_ITEM_ASSIGNMENTS where ITEMID in (select ITEMID from BOARD_ITEMS where ARCHIVABLE='Y' and CREATED < TIMESTAMPADD(YEAR, -1, now()));
+delete from BOARD_ITEMS where ARCHIVABLE='Y' and CREATED < TIMESTAMPADD(YEAR, -1, now());
+delete from API_CONTRACT_SLA_DATA where LASTMODIFIEDDTS < TIMESTAMPADD(YEAR, -1, now());
+delete from API_SLA_DATA where LASTMODIFIEDDTS < TIMESTAMPADD(YEAR, -1, now());</pre>
 <p>Once you're satisfied with the script, you can set up a cron job to execute it each night. For example, you could configure cron to execute at 1am each morning as follows:</p>
 <pre>0 1 * * * /xxx/bin/cleanup.sh</pre>
+
+
+<h4 id="cron_delete_oracle">Deleting/archiving data: Oracle</h4>
+<p>The example below shows database queries to run for an Oracle database.</p>
+<p><strong>The intervals given here are recommendations. Modify the intervals according to your needs.</strong></p>
+<pre>/* Queries to clean up the data from Usage / Rollup tables*/
+delete from MO_USAGE_NEXTHOP where REQUESTDTS < (SYSTIMESTAMP - INTERVAL '1' MONTH);
+delete from MO_USAGEMSGS where MSGCAPTUREDDTS < (SYSTIMESTAMP - INTERVAL '1' MONTH);
+delete from MO_USAGEDATA where REQUESTDTS < (SYSTIMESTAMP - INTERVAL '1' MONTH);
+delete from MO_ROLLUPDATA where ROLLUPDATAID < (select min(MAX_ID) from MO_STATUS) and INTVLSTARTDTS < (SYSTIMESTAMP - INTERVAL '1' MONTH);
+delete from MO_ROLLUP15 where INTVLSTARTDTS < (SYSTIMESTAMP - INTERVAL '1' MONTH);
+delete from MO_ROLL_ORG15 where INTVLSTARTDTS < (SYSTIMESTAMP - INTERVAL '1' MONTH);
+delete from MO_ROLLUP_HOUR where INTVLSTARTDTS < (SYSTIMESTAMP - INTERVAL '3' MONTH);
+delete from MO_ROLL_ORG_H where INTVLSTARTDTS < (SYSTIMESTAMP - INTERVAL '3' MONTH);
+delete from MO_ROLLUP_DAY where INTVLSTARTDTS < (SYSTIMESTAMP - INTERVAL '1' YEAR);
+delete from MO_ROLL_ORG_D where INTVLSTARTDTS < (SYSTIMESTAMP - INTERVAL '1' YEAR);
+
+/* Queries to clean-up the data from ALERTS tables*/ 
+delete from AM_EMAILALERTS e WHERE EXISTS (select a.ALERTSID from AM_ALERTS a where a.ALERTSID = e.ALERTSID and a.SOURCEDTS < (SYSTIMESTAMP - INTERVAL '1' MONTH));
+delete from AM_ALERTS_SLAS s WHERE EXISTS (select a.ALERTSID from AM_ALERTS a where a.ALERTSID = s.ALERTSID and a.SOURCEDTS < (SYSTIMESTAMP - INTERVAL '1' MONTH));
+delete from AM_ALERTS where SOURCEDTS < (SYSTIMESTAMP - INTERVAL '1' MONTH);</pre>
+
+<p>For Community Manager, there are additional tables such as the Boards (Forums) that you might want to clean up:</p>
+<pre>delete from BOARD_ITEM_ASSIGNMENTS where ITEMID in (select ITEMID from BOARD_ITEMS where ARCHIVABLE='Y' and CREATED < (SYSTIMESTAMP - INTERVAL '1' YEAR));
+delete from BOARD_ITEMS where ARCHIVABLE='Y' and CREATED < (SYSTIMESTAMP - INTERVAL '1' YEAR);
+delete from API_CONTRACT_SLA_DATA where LASTMODIFIEDDTS < (SYSTIMESTAMP - INTERVAL '1' YEAR);
+delete from API_SLA_DATA where LASTMODIFIEDDTS < (SYSTIMESTAMP - INTERVAL '1' YEAR);
+</pre>
+
+<p>For sample scripts on MySql and Oracle (other databases coming soon) download the following zip archive: <a href="assets/sample_scripts.zip">sample_scripts.zip</a></p>
+<p>Once you're satisfied with the script, you can set up a cron job to execute it each night. For example, you could configure cron to execute at 1am each morning as follows:</p>
+<pre>0 1 * * * /xxx/bin/cleanup.sh</pre>
+
+
 <p><a href="#top">Back to top</a></p>
 
 
@@ -380,7 +439,7 @@ INSERT INTO MO_USAGEDATA SELECT * FROM MO_USAGEDATA_BAK;
 INSERT INTO MO_USAGEMSGS SELECT * FROM MO_USAGEMSGS_BAK;</pre>
 
 <p>These scripts would be called several times with different, incremental values of X and Y where X and Y represents a small time interval like 6 hours. This keeps the merging of data discrete and less error-prone. </p>
-<p>You also might want to call this from a shell script to automate the process - see the sample script merge.sh in <a href="sample_scripts.zip">sample_scripts.zip</a>.</p>
+<p>You also might want to call this from a shell script to automate the process - see the sample script merge.sh in <a href="assets/sample_scripts.zip">sample_scripts.zip</a>.</p>
 <p><strong>Note:</strong> Table definitions might change based on product version. You should check to make sure that the definition above matches your table structure and alter it as necessary.</p>
 <p><a href="#top">Back to top</a></p>
 
@@ -569,7 +628,7 @@ INSERT INTO MO_USAGEMSGS
 	SELECT * FROM MO_USAGEMSGS_BCK where MSGCAPTUREDDTS between X and Y;</pre>
 <p><strong>Note:</strong> Table definitions might change based on product version. You should check to make sure that the definition above matches your table structure and alter it as necessary.</p>
 <p>These scripts would be called several times with different, incremental values of X and Y where X and Y represents a small time interval like 6 hours. This keeps the merging of data discrete and less error-prone.</p>
-<p>You also might want to call this from a shell script to automate the process - see the sample script merge.sh in <a href="sample_scripts.zip">sample_scripts.zip</a>.</p>
+<p>You also might want to call this from a shell script to automate the process - see the sample script merge.sh in <a href="assets/sample_scripts.zip">sample_scripts.zip</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -578,9 +637,9 @@ INSERT INTO MO_USAGEMSGS
 <p>The benefit of partitioning your data is that you can delete old data by simply dropping a partition. The next sections will describe how to drop partitions for different databases</p>
 <h4>Oracle</h4>
 <p>For Oracle, the tables will automatically create new partitions each week. </p>
-<p>For sample procedures to drop the partitions, download the following zip archive: <a href="sample_scripts.zip">sample_scripts.zip</a></p>
+<p>For sample procedures to drop the partitions, download the following zip archive: <a href="assets/sample_scripts.zip">sample_scripts.zip</a></p>
 <h4>MySQL</h4>
-<p>For MySQL, you will need to create new partitions and drop old partitions each week. For sample scripts on MySql download the following zip archive: <a href="sample_scripts.zip">sample_scripts.zip</a>.</p>
+<p>For MySQL, you will need to create new partitions and drop old partitions each week. For sample scripts on MySql download the following zip archive: <a href="assets/sample_scripts.zip">sample_scripts.zip</a>.</p>
 <p>Once satisfied with the scripts, you can set up a cron job to execute it each night. For example, you could configure cron to execute on Sunday morning at 1am as follows:</p>
 <pre>0 1 * * 0 /xxx/bin/partition.sh</pre>
 <p><a href="#top">back to top</a></p>
