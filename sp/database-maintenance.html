@@ -9,7 +9,7 @@ weight: 14
 type: page
 nav-title: Database Maintenance
 ---
-<h2><a name="top"></a>Akana Platform Database Maintenance</h2>
+<h2 id="top">Akana Platform Database Maintenance</h2>
 <h3 style="color: grey;">Table of Contents</h3>
 <ol class="table_of_contents">
 	<li><a href="#introduction">Introduction</a></li>
@@ -23,13 +23,13 @@ nav-title: Database Maintenance
 
 
 
-<h3><a name="introduction"></a>Introduction</h3>
+<h3 id="introduction">Introduction</h3>
 <p>This document describes the types of data that require regular archiving and ways to implement it.</p>
 <p><strong>Note:</strong> This document only applies to Policy Manager and Community Manager version 8.x and later.</p>
 
 
 
-<h3><a name="data"></a>Types of Volatile Data</h3>
+<h3 id="data">Types of Volatile Data</h3>
 <p>There are several key tables that require regular maintenance:</p>
 <h4>Policy Manager Tables:</h4>
 <table cellspacing="0px" class="doctable" style="width: 98%;">
@@ -122,14 +122,14 @@ nav-title: Database Maintenance
 
 
 
-<h3><a name="built-in"></a>Using the built-in jobs</h3>
+<h3 id="built-in">Using the built-in jobs</h3>
 <p>Policy Manager has a built-in capability to delete/archive data in the MO_USAGE* and MO_ROLL* tables. These jobs run every hour and can add significant overhead to the Policy Manager container, so are best suited to low-throughput environments with limited retained data. </p>
 <p>To configure the built-in jobs, go to the Policy Manager Administration Console &gt; <strong>Configuration</strong> tab &gt; <strong>com.soa.rollup.delete.old</strong>. The settings in this screen can be summarized as follows:</p>
 <ul>
-<li>*.enable - enable/disable the job</li>
-<li>*.exportDeleted - set to true if you want the data exported on delete</li>
-<li>*.unit - the time unit to retain data (hour, week, month, year)</li>
-<li>*.windowSize = the number of units to retain data</li>
+<li>*.enable&#8212;enable/disable the job</li>
+<li>*.exportDeleted&#8212;set to true if you want the data exported on delete</li>
+<li>*.unit&#8212;the time unit to retain data (hour, week, month, year)</li>
+<li>*.windowSize&#8212;the number of units to retain data</li>
 </ul>
 <p>For example, if you want to delete all the 15-minute rollup data more than 1 week old, you would set:</p>
 <pre>monitoring.delete.rollup.MO_ROLLUP15.enable=true
@@ -150,7 +150,7 @@ monitoring.delete.usage.enable=false</pre>
 
 
 
-<h3><a name="using-cron"></a>Leveraging cron to delete data</h3>
+<h3 id="using-cron">Leveraging cron to delete data</h3>
 <p>For higher throughput environments, it's better to offload the task to delete/archive data by simply executing scripts directly against the database using a cron job. The following scripts will delete all:</p>
 <ul>
 <li>next-hop data in MO_USAGE_NEXTHOP older than 1 month</li>
@@ -176,9 +176,7 @@ monitoring.delete.usage.enable=false</pre>
 <h4 id="cron_delete_mysql">Deleting/archiving data: MySQL</h4>
 <p>The example below shows database queries to run for a MySQL database.</p>
 <p><strong>The intervals given here are recommendations. Modify the intervals according to your needs.</strong></p>
-<p>{<span class="apidoc_red">Original MySQL version, modified, below</span>}</p>
-<pre>
-/* Queries to clean-up the data from Usage / Rollup tables */
+<pre>/* Queries to clean-up the data from Usage / Rollup tables */
 delete from MO_USAGE_NEXTHOP where REQUESTDTS &lt; TIMESTAMPADD(MONTH, -1, now());
 delete from MO_USAGEMSGS where MSGCAPTUREDDTS &lt; TIMESTAMPADD(MONTH, -1, now());
 delete from MO_USAGEDATA where REQUESTDTS &lt; TIMESTAMPADD(MONTH, -1, now());
@@ -194,38 +192,14 @@ delete from MO_ROLL_ORG_D where INTVLSTARTDTS &lt; TIMESTAMPADD(YEAR, -1, now())
 delete e from AM_ALERTS a inner join AM_EMAILALERTS e on e.ALERTSID = a.ALERTSID where a.SOURCEDTS &lt; TIMESTAMPADD(MONTH, -1, now());
 delete s from AM_ALERTS a inner join AM_ALERTS_SLAS s on s.ALERTSID = a.ALERTSID where a.SOURCEDTS &lt; TIMESTAMPADD(MONTH, -1, now());
 delete from AM_ALERTS where SOURCEDTS &lt; TIMESTAMPADD(MONTH, -1, now());</pre>
-
 <p>For Community Manager, there are additional tables such as the Boards (Forums) that you might want to clean up:</p>
-<pre>delete from BOARD_ITEM_ASSIGNMENTS where ITEMID in (select ITEMID from BOARD_ITEMS where ARCHIVABLE='Y' and CREATEDDTS &lt; TIMESTAMPADD(YEAR, -1, now());
-delete from BOARD_ITEMS where ARCHIVABLE='Y' and CREATEDDTS &lt; TIMESTAMPADD(YEAR, -1, now());
+<pre>delete from BOARD_ITEM_ASSIGNMENTS where ITEMID in (select ITEMID from BOARD_ITEMS where ARCHIVABLE='Y' and CREATED &lt; TIMESTAMPADD(YEAR, -1, now()));
+delete from BOARD_ITEMS where ARCHIVABLE='Y' and CREATED &lt; TIMESTAMPADD(YEAR, -1, now());
 delete from API_CONTRACT_SLA_DATA where LASTMODIFIEDDTS &lt; TIMESTAMPADD(YEAR, -1, now());
-delete from API_SLA_DATA where LASTMODIFIEDDTS &lt; TIMESTAMPADD(YEAR, -1, now());</pre>
+delete from API_SLA_DATA where LASTMODIFIEDDTS &lt; TIMESTAMPADD(YEAR, -1, now());
+YEAR, -1, now());</pre>
 
-<p>For sample scripts on MySql and Oracle (other databases coming soon) download the following zip archive: <a href="assets/sample_scripts.zip">sample_scripts.zip</a></p>
-
-
-<p>{<span class="apidoc_red">HK update to MySQL:</span>}</p>
-<pre>/* Queries to clean-up the data from Usage / Rollup tables */
-delete from MO_USAGE_NEXTHOP where REQUESTDTS < TIMESTAMPADD(MONTH, -1, now());
-delete from MO_USAGEMSGS where MSGCAPTUREDDTS < TIMESTAMPADD(MONTH, -1, now());
-delete from MO_USAGEDATA where REQUESTDTS < TIMESTAMPADD(MONTH, -1, now());
-delete from MO_ROLLUPDATA where ROLLUPDATAID < (select min(MAX_ID) from MO_STATUS) and INTVLSTARTDTS < TIMESTAMPADD(MONTH, -1, now());
-delete from MO_ROLLUP15 where INTVLSTARTDTS < TIMESTAMPADD(MONTH, -1, now());
-delete from MO_ROLL_ORG15 where INTVLSTARTDTS < TIMESTAMPADD(MONTH, -1, now());
-delete from MO_ROLLUP_HOUR where INTVLSTARTDTS < TIMESTAMPADD(MONTH, -3, now());
-delete from MO_ROLL_ORG_H where INTVLSTARTDTS < TIMESTAMPADD(MONTH, -3, now());
-delete from MO_ROLLUP_DAY where INTVLSTARTDTS < TIMESTAMPADD(YEAR, -1, now());
-delete from MO_ROLL_ORG_D where INTVLSTARTDTS < TIMESTAMPADD(YEAR, -1, now());
-
-/* Queries to clean-up the data from ALERTS tables */ 
-delete e from AM_ALERTS a inner join AM_EMAILALERTS e on e.ALERTSID = a.ALERTSID where a.SOURCEDTS < TIMESTAMPADD(MONTH, -1, now());
-delete s from AM_ALERTS a inner join AM_ALERTS_SLAS s on s.ALERTSID = a.ALERTSID where a.SOURCEDTS < TIMESTAMPADD(MONTH, -1, now());
-delete from AM_ALERTS where SOURCEDTS < TIMESTAMPADD(MONTH, -1, now());</pre>
-<p>For Community Manager, there are additional tables such as the Boards (Forums) that you might want to clean up:</p>
-<pre>delete from BOARD_ITEM_ASSIGNMENTS where ITEMID in (select ITEMID from BOARD_ITEMS where ARCHIVABLE='Y' and CREATED < TIMESTAMPADD(YEAR, -1, now()));
-delete from BOARD_ITEMS where ARCHIVABLE='Y' and CREATED < TIMESTAMPADD(YEAR, -1, now());
-delete from API_CONTRACT_SLA_DATA where LASTMODIFIEDDTS < TIMESTAMPADD(YEAR, -1, now());
-delete from API_SLA_DATA where LASTMODIFIEDDTS < TIMESTAMPADD(YEAR, -1, now());</pre>
+<p>For sample scripts on MySQL and Oracle (other databases coming soon) download the following zip archive: <a href="assets/sample_scripts.zip">sample_scripts.zip</a></p>
 <p>Once you're satisfied with the script, you can set up a cron job to execute it each night. For example, you could configure cron to execute at 1am each morning as follows:</p>
 <pre>0 1 * * * /xxx/bin/cleanup.sh</pre>
 
@@ -234,30 +208,30 @@ delete from API_SLA_DATA where LASTMODIFIEDDTS < TIMESTAMPADD(YEAR, -1, now());<
 <p>The example below shows database queries to run for an Oracle database.</p>
 <p><strong>The intervals given here are recommendations. Modify the intervals according to your needs.</strong></p>
 <pre>/* Queries to clean up the data from Usage / Rollup tables*/
-delete from MO_USAGE_NEXTHOP where REQUESTDTS < (SYSTIMESTAMP - INTERVAL '1' MONTH);
-delete from MO_USAGEMSGS where MSGCAPTUREDDTS < (SYSTIMESTAMP - INTERVAL '1' MONTH);
-delete from MO_USAGEDATA where REQUESTDTS < (SYSTIMESTAMP - INTERVAL '1' MONTH);
-delete from MO_ROLLUPDATA where ROLLUPDATAID < (select min(MAX_ID) from MO_STATUS) and INTVLSTARTDTS < (SYSTIMESTAMP - INTERVAL '1' MONTH);
-delete from MO_ROLLUP15 where INTVLSTARTDTS < (SYSTIMESTAMP - INTERVAL '1' MONTH);
-delete from MO_ROLL_ORG15 where INTVLSTARTDTS < (SYSTIMESTAMP - INTERVAL '1' MONTH);
-delete from MO_ROLLUP_HOUR where INTVLSTARTDTS < (SYSTIMESTAMP - INTERVAL '3' MONTH);
-delete from MO_ROLL_ORG_H where INTVLSTARTDTS < (SYSTIMESTAMP - INTERVAL '3' MONTH);
-delete from MO_ROLLUP_DAY where INTVLSTARTDTS < (SYSTIMESTAMP - INTERVAL '1' YEAR);
-delete from MO_ROLL_ORG_D where INTVLSTARTDTS < (SYSTIMESTAMP - INTERVAL '1' YEAR);
+delete from MO_USAGE_NEXTHOP where REQUESTDTS &lt; (SYSTIMESTAMP - INTERVAL '1' MONTH);
+delete from MO_USAGEMSGS where MSGCAPTUREDDTS &lt; (SYSTIMESTAMP - INTERVAL '1' MONTH);
+delete from MO_USAGEDATA where REQUESTDTS &lt; (SYSTIMESTAMP - INTERVAL '1' MONTH);
+delete from MO_ROLLUPDATA where ROLLUPDATAID &lt; (select min(MAX_ID) from MO_STATUS) and INTVLSTARTDTS &lt; (SYSTIMESTAMP - INTERVAL '1' MONTH);
+delete from MO_ROLLUP15 where INTVLSTARTDTS &lt; (SYSTIMESTAMP - INTERVAL '1' MONTH);
+delete from MO_ROLL_ORG15 where INTVLSTARTDTS &lt; (SYSTIMESTAMP - INTERVAL '1' MONTH);
+delete from MO_ROLLUP_HOUR where INTVLSTARTDTS &lt; (SYSTIMESTAMP - INTERVAL '3' MONTH);
+delete from MO_ROLL_ORG_H where INTVLSTARTDTS &lt; (SYSTIMESTAMP - INTERVAL '3' MONTH);
+delete from MO_ROLLUP_DAY where INTVLSTARTDTS &lt; (SYSTIMESTAMP - INTERVAL '1' YEAR);
+delete from MO_ROLL_ORG_D where INTVLSTARTDTS &lt; (SYSTIMESTAMP - INTERVAL '1' YEAR);
 
 /* Queries to clean-up the data from ALERTS tables*/ 
-delete from AM_EMAILALERTS e WHERE EXISTS (select a.ALERTSID from AM_ALERTS a where a.ALERTSID = e.ALERTSID and a.SOURCEDTS < (SYSTIMESTAMP - INTERVAL '1' MONTH));
-delete from AM_ALERTS_SLAS s WHERE EXISTS (select a.ALERTSID from AM_ALERTS a where a.ALERTSID = s.ALERTSID and a.SOURCEDTS < (SYSTIMESTAMP - INTERVAL '1' MONTH));
-delete from AM_ALERTS where SOURCEDTS < (SYSTIMESTAMP - INTERVAL '1' MONTH);</pre>
+delete from AM_EMAILALERTS e WHERE EXISTS (select a.ALERTSID from AM_ALERTS a where a.ALERTSID = e.ALERTSID and a.SOURCEDTS &lt; (SYSTIMESTAMP - INTERVAL '1' MONTH));
+delete from AM_ALERTS_SLAS s WHERE EXISTS (select a.ALERTSID from AM_ALERTS a where a.ALERTSID = s.ALERTSID and a.SOURCEDTS &lt; (SYSTIMESTAMP - INTERVAL '1' MONTH));
+delete from AM_ALERTS where SOURCEDTS &lt; (SYSTIMESTAMP - INTERVAL '1' MONTH);</pre>
 
 <p>For Community Manager, there are additional tables such as the Boards (Forums) that you might want to clean up:</p>
-<pre>delete from BOARD_ITEM_ASSIGNMENTS where ITEMID in (select ITEMID from BOARD_ITEMS where ARCHIVABLE='Y' and CREATED < (SYSTIMESTAMP - INTERVAL '1' YEAR));
-delete from BOARD_ITEMS where ARCHIVABLE='Y' and CREATED < (SYSTIMESTAMP - INTERVAL '1' YEAR);
-delete from API_CONTRACT_SLA_DATA where LASTMODIFIEDDTS < (SYSTIMESTAMP - INTERVAL '1' YEAR);
-delete from API_SLA_DATA where LASTMODIFIEDDTS < (SYSTIMESTAMP - INTERVAL '1' YEAR);
+<pre>delete from BOARD_ITEM_ASSIGNMENTS where ITEMID in (select ITEMID from BOARD_ITEMS where ARCHIVABLE='Y' and CREATED &lt; (SYSTIMESTAMP - INTERVAL '1' YEAR));
+delete from BOARD_ITEMS where ARCHIVABLE='Y' and CREATED &lt; (SYSTIMESTAMP - INTERVAL '1' YEAR);
+delete from API_CONTRACT_SLA_DATA where LASTMODIFIEDDTS &lt; (SYSTIMESTAMP - INTERVAL '1' YEAR);
+delete from API_SLA_DATA where LASTMODIFIEDDTS &lt; (SYSTIMESTAMP - INTERVAL '1' YEAR);
 </pre>
 
-<p>For sample scripts on MySql and Oracle (other databases coming soon) download the following zip archive: <a href="assets/sample_scripts.zip">sample_scripts.zip</a></p>
+<p>For sample scripts on MySQL and Oracle (other databases coming soon) download the following zip archive: <a href="assets/sample_scripts.zip">sample_scripts.zip</a></p>
 <p>Once you're satisfied with the script, you can set up a cron job to execute it each night. For example, you could configure cron to execute at 1am each morning as follows:</p>
 <pre>0 1 * * * /xxx/bin/cleanup.sh</pre>
 
@@ -266,7 +240,7 @@ delete from API_SLA_DATA where LASTMODIFIEDDTS < (SYSTIMESTAMP - INTERVAL '1' YE
 
 
 
-<h3><a name="partitioning"></a>Partitioning large data stores</h3>
+<h3 id="partitioning">Partitioning large data stores</h3>
 <p>When the amount of data in the MO_USAGE_DATA, MO_USAGEMSGS and MO_USAGE_NEXTHOP tables climbs over 100 GB of data, the deletion of data takes too long and locks up the tables for concurrent write operations. To overcome this, it is highly recommended that you implement a partitioning strategy that allows you to simply drop an entire partition without incurring any performance overhead. </p>
 <p>Partitioning is fairly complex. As a result, we recommend that you test this thoroughly before attempting it on a production system.</p>
 <p><strong>Note:</strong> If the tables contain a large amount of data, the process of partitioning will be extremely time and resource intensive and will be virtually impossible to perform under load. Refer to the next section for the correct approach in these circumstances.</p>
@@ -344,8 +318,8 @@ PARTITION BY RANGE (TO_DAYS(REQUESTDTS)) (
 </ul>
 
 
-<h5><a name="oracle_01"></a>Step 1: Create new tables</h5>
-<p>Create new, paritioned tables with a _NEW suffix. Note that the 'PARTITION BY RANGE (REQUESTDTS) INTERVAL' clause will result in new partitions being created automatically.</p>
+<h5 id="oracle_01">Step 1: Create new tables</h5>
+<p>Create new, partitioned tables with a _NEW suffix. Note that the 'PARTITION BY RANGE (REQUESTDTS) INTERVAL' clause will result in new partitions being created automatically.</p>
 <p><strong>Note</strong>: The values below are updated for version 8.0x and later.</p>
 <pre>CREATE TABLE MO_USAGE_NEXTHOP_NEW (
         NEXTHOPID number(38,0) NOT NULL,
@@ -421,7 +395,7 @@ CREATE  INDEX MO_USAGEDARA_IX1 ON MO_USAGEDATA_NEW(SERVICEID);</pre>
 <p><strong>Note:</strong> Table definitions might change based on product version. You should check to make sure that the definition above matches your table structure and alter it as necessary.</p>
 
 
-<h5><a name="oracle_02"></a>Step 2: Switch the new tables with the old tables</h5>
+<h5 id="oracle_02">Step 2: Switch the new tables with the old tables</h5>
 <p>Rename the existing live tables to *_BCK and replace them with the new, empty tables:</p>
 <pre>
 RENAME TABLE MO_USAGEMSGS TO MO_USAGEMSGS_BAK;
@@ -432,20 +406,20 @@ RENAME TABLE MO_USAGE_NEXTHOP TO MO_USAGE_NEXTHOP_BAK;
 RENAME TABLE MO_USAGE_NEXTHOP_NEW TO MO_USAGE_NEXTHOP;</pre>
 
 
-<h5><a name="oracle_03"></a>Step 3: Merge data</h5>
+<h5 id="oracle_03">Step 3: Merge data</h5>
 <p>Due to the fact that you created a set of new tables, you need to merge the data from the old tables into the new partitioned tables so that it is not lost.</p>
 <pre>INSERT INTO MO_USAGE_NEXTHOP SELECT * FROM MO_USAGE_NEXTHOP_BAK;
 INSERT INTO MO_USAGEDATA SELECT * FROM MO_USAGEDATA_BAK;
 INSERT INTO MO_USAGEMSGS SELECT * FROM MO_USAGEMSGS_BAK;</pre>
 
-<p>These scripts would be called several times with different, incremental values of X and Y where X and Y represents a small time interval like 6 hours. This keeps the merging of data discrete and less error-prone. </p>
-<p>You also might want to call this from a shell script to automate the process - see the sample script merge.sh in <a href="assets/sample_scripts.zip">sample_scripts.zip</a>.</p>
+<p>These scripts would be called several times with different, incremental values of X and Y where X and Y represents a small time interval such as 6 hours. This keeps the merging of data discrete and less error-prone. </p>
+<p>You also might want to call this from a shell script to automate the process&#8212;see the sample script merge.sh in <a href="assets/sample_scripts.zip">sample_scripts.zip</a>.</p>
 <p><strong>Note:</strong> Table definitions might change based on product version. You should check to make sure that the definition above matches your table structure and alter it as necessary.</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
-<h3><a name="partitioning-verylarge"></a>Partitioning large data stores under load (MySQL Only)</h3>
+<h3 id="partitioning-verylarge">Partitioning large data stores under load (MySQL Only)</h3>
 <p>If the usage tables contain a large amount of data you will need to rename, rotate and transfer data from the existing tables to a new set of partitioned tables. For Oracle, the steps are exactly the same as shown in the previous section. For MySQL, it is quicker to partition the tables with an ALTER statement and merge a much smaller dataset. This is shown below. The steps are:</p>
 <ul>
   <li><a href="#mysql_01">Step 1: Create new tables (MySQL only)</a></li>
@@ -457,7 +431,7 @@ INSERT INTO MO_USAGEMSGS SELECT * FROM MO_USAGEMSGS_BAK;</pre>
 </ul>
 
 
-<h4><a name="mysql_01"></a>Step 1: Create new tables (MySQL only)</h4>
+<h4 id="mysql_01">Step 1: Create new tables (MySQL only)</h4>
 <p>First, create new tables that will temporarily support the live system. These do not have to be partitioned as they will only support a small amount of data:</p>
 <pre>CREATE TABLE MO_USAGEMSGS_NEW (
 	EVENTID VARCHAR(41) NOT NULL,
@@ -533,14 +507,14 @@ CREATE TABLE MO_USAGE_NEXTHOP_NEW (
 <p><strong>Note:</strong> Table definitions might change based on product version. You should check to make sure that the definition above matches your table structure and alter it as necessary.</p>
 
 
-<h4><a name="mysql_02"></a>Step 2: Switch the new tables with the old tables (MySQL only)</h4>
+<h4 id="mysql_02">Step 2: Switch the new tables with the old tables (MySQL only)</h4>
 <p>Rename the existing live tables to *_BCK and replace them with the new, empty tables:</p>
 <pre>RENAME TABLE MO_USAGEMSGS TO MO_USAGEMSGS_BCK, MO_USAGEMSGS_NEW TO MO_USAGEMSGS;
 RENAME TABLE MO_USAGEDATA TO MO_USAGEDATA_BCK, MO_USAGEDATA_NEW TO MO_USAGEDATA;
 RENAME TABLE MO_USAGE_NEXTHOP TO MO_USAGE_NEXTHOP_BCK, MO_USAGE_NEXTHOP_NEW TO MO_USAGE_NEXTHOP;</pre>
 
 
-<h4><a name="mysql_03"></a>Step 3: Drop existing foreign keys and add new indexes (MySQL only)</h4>
+<h4 id="mysql_03">Step 3: Drop existing foreign keys and add new indexes (MySQL only)</h4>
 <p>Alter the tables as shown in the previous section, but this time against the *_BCK tables. </p>
 <p><strong>Note:</strong> This might take several hours.</p>
 <pre>ALTER TABLE MO_USAGE_NEXTHOP_BCK
@@ -561,8 +535,8 @@ ADD INDEX NUI_USG_EVENTID(EVENTID),
 ADD INDEX NUI_USG_USAGEDATAID(USAGEDATAID);</pre>
 
 
-<h4><a name="mysql_04"></a>Step 4: Create partitions (MySQL only)</h4>
-<p>You then create partitions as shown in the previous section - this time against the *_BCK tables. The dates and intervals would be changed to suit your system.</p>
+<h4 id="mysql_04">Step 4: Create partitions (MySQL only)</h4>
+<p>You then create partitions as shown in the previous section, this time against the *_BCK tables. The dates and intervals would be changed to suit your system.</p>
 <p><strong>Note:</strong> This might take several hours.</p>
 <pre>ALTER TABLE MO_USAGE_NEXTHOP_BCK
 PARTITION BY RANGE (TO_DAYS(REQUESTDTS)) (
@@ -605,14 +579,14 @@ PARTITION BY RANGE (TO_DAYS(REQUESTDTS)) (
 
 
 
-<h4><a name="mysql_05"></a>Step 5: Switch the partitioned tables back (MySQL only)</h4>
+<h4 id="mysql_05">Step 5: Switch the partitioned tables back (MySQL only)</h4>
 <p>Now switch the partitioned tables (*_BCK) with the new tables you created in Step 1. This will return the original data tables to live.</p>
 <pre>RENAME TABLE MO_USAGEDATA TO MO_USAGEDATA2, MO_USAGEDATA_BCK TO MO_USAGEDATA;
 RENAME TABLE MO_USAGEMSGS TO MO_USAGEMSGS2, MO_USAGEMSGS_BCK TO MO_USAGEMSGS;
 RENAME TABLE MO_USAGE_NEXTHOP TO MO_USAGE_NEXTHOP2, MO_USAGE_NEXTHOP_BCK TO MO_USAGE_NEXTHOP;</pre>
 
 
-<h4><a name="mysql_06"></a>Step 6: Merge data (MySQL only)</h4>
+<h4 id="mysql_06">Step 6: Merge data (MySQL only)</h4>
 <p>Due to the fact that you created a set of new tables to temporarily store live data while the partitioning was done, you need to merge the data from those tables back into the live tables so that it is not lost.</p>
 <pre>INSERT INTO MO_USAGE_NEXTHOP 
 	(EVENTID, URL, REQUESTDTS, CREATEDTS, RESPTIME) 
@@ -627,19 +601,19 @@ SELECT EVENTID PARENTEVENTID CLIENTHOST MPNAME OPERATIONID SERVICEID ORGID CONTR
 INSERT INTO MO_USAGEMSGS 
 	SELECT * FROM MO_USAGEMSGS_BCK where MSGCAPTUREDDTS between X and Y;</pre>
 <p><strong>Note:</strong> Table definitions might change based on product version. You should check to make sure that the definition above matches your table structure and alter it as necessary.</p>
-<p>These scripts would be called several times with different, incremental values of X and Y where X and Y represents a small time interval like 6 hours. This keeps the merging of data discrete and less error-prone.</p>
-<p>You also might want to call this from a shell script to automate the process - see the sample script merge.sh in <a href="assets/sample_scripts.zip">sample_scripts.zip</a>.</p>
+<p>These scripts would be called several times with different, incremental values of X and Y where X and Y represents a small time interval such as 6 hours. This keeps the merging of data discrete and less error-prone.</p>
+<p>You also might want to call this from a shell script to automate the process&#8212;see the sample script merge.sh in <a href="assets/sample_scripts.zip">sample_scripts.zip</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
-<h3><a name="drop-partitions"></a>Dropping partitions</h3>
+<h3 id="drop-partitions">Dropping partitions</h3>
 <p>The benefit of partitioning your data is that you can delete old data by simply dropping a partition. The next sections will describe how to drop partitions for different databases</p>
 <h4>Oracle</h4>
 <p>For Oracle, the tables will automatically create new partitions each week. </p>
 <p>For sample procedures to drop the partitions, download the following zip archive: <a href="assets/sample_scripts.zip">sample_scripts.zip</a></p>
 <h4>MySQL</h4>
-<p>For MySQL, you will need to create new partitions and drop old partitions each week. For sample scripts on MySql download the following zip archive: <a href="assets/sample_scripts.zip">sample_scripts.zip</a>.</p>
+<p>For MySQL, you will need to create new partitions and drop old partitions each week. For sample scripts on MySQL, download the following zip archive: <a href="assets/sample_scripts.zip">sample_scripts.zip</a>.</p>
 <p>Once satisfied with the scripts, you can set up a cron job to execute it each night. For example, you could configure cron to execute on Sunday morning at 1am as follows:</p>
 <pre>0 1 * * 0 /xxx/bin/partition.sh</pre>
 <p><a href="#top">back to top</a></p>
