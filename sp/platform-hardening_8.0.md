@@ -4,7 +4,7 @@ title: Platform Hardening 8.0.x
 description: A guide on how to harden the platform for secure deployments (version 8.0.x).
 product: sp
 category: ref
-sub-nav-class: Platform Management
+sub-nav-class: Platform Management 
 no-nav: true
 weight: 17
 type: page
@@ -14,7 +14,7 @@ nav-title: Platform Hardening 8.0.x
 Akana Platform Hardening Guide Version 8.0.x
 -------------------------------------
 
-> This document applies to versions 8.0 and later only. For a summary of available versions, please refer to <a href="platform-hardening_all.htm">Akana Platform Hardening Documentation</a>. 
+> This document applies to versions 8.0 and later only. For a summary of available versions, please refer to <a href="platform-hardening_all.htm">Akana Platform Hardening Documentation</a>.
 
 <h3 style="color: grey;">Table of Contents</h3>
 <ol class="table_of_contents">
@@ -213,7 +213,7 @@ http.incoming.transport.config.cipherSuites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA25
 
 ```
 
-**Note**: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See http://docs.oracle.com/javase/7/docs/technotes/guides/security/SunProviders.html. This has to be added to the JRE.
+**Note**: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See <a href="http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html" title="Java cryptography documentation" target="_blank">Java Cryptography Architecture Oracle Providers Documentation for Java Platform Standard Edition 8</a>. This has to be added to the JRE.
 
 #### <a name="tls12_only"></a>Enforcing TLS 1.2
 <p>Depending on the level of security required, you may way to restrict the protocol to TLS 1.2 only. Note - This will limit the accessibility of the platform to certain clients.</p>
@@ -229,7 +229,7 @@ http.incoming.transport.config.cipherSuites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA25
 <p>Enable TLSv1.2 only, with no load balancing:</p>
 <pre>com.soa.platform.jetty -&gt;
 http.incoming.transport.config.enabledProtocols=TLSv1.2</pre>
-<p><strong>Note</strong>: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/security/SunProviders.html" title="Java cryptography documentation" target="_blank">Java Cryptography Architecture Oracle Providers Documentation for Java Platform Standard Edition 7</a>. This must be added to the JRE.</p>
+<p><strong>Note</strong>: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See <a href="http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html" title="Java cryptography documentation" target="_blank">Java Cryptography Architecture Oracle Providers Documentation for Java Platform Standard Edition 8</a>. This must be added to the JRE.</p>
 
 <h5 id="tls12_lb">Enforcing TLS 1.2 behind a secure load balancer</h5>
 <p>In the example below, protocols are limited to TLS v1.2 and one additional protocol needed by the load balancer.</p>
@@ -238,7 +238,7 @@ http.incoming.transport.config.enabledProtocols=TLSv1.2</pre>
 <p>As long as SSL is not enabled, the SSLv2Hello is only used during the initial handshake, and the protocol is not downgraded or renegotiated to use SSLv2 or SSLv3.</p>
 <pre>com.soa.platform.jetty -&gt;
 http.incoming.transport.config.enabledProtocols=SSLv2Hello,TLSv1.2</pre>
-<p><strong>Note</strong>: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/security/SunProviders.html" title="Java cryptography documentation" target="_blank">Java Cryptography Architecture Oracle Providers Documentation for Java Platform Standard Edition 7</a>. This must be added to the JRE.</p>
+<p><strong>Note</strong>: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See <a href="http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html" title="Java cryptography documentation" target="_blank">Java Cryptography Architecture Oracle Providers Documentation for Java Platform Standard Edition 8</a>. This must be added to the JRE.</p>
 
 
 #### <a name="disabling-outbound"></a>Limiting Outbound SSL/TLS/Cipher support
@@ -260,7 +260,7 @@ https.socket.factory.cipherSuites=TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_
 
 ```
 
-**Note**: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See http://docs.oracle.com/javase/7/docs/technotes/guides/security/SunProviders.html. This has to be added to the JRE.
+**Note**: Cipher suites that use AES_256 require installation of the JCE Unlimited Strength Jurisdiction Policy Files. See <a href="http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html" title="Java cryptography documentation" target="_blank">Java Cryptography Architecture Oracle Providers Documentation for Java Platform Standard Edition 8</a>. This has to be added to the JRE.
 
 #### <a name="prevent-forward-proxying"></a>Prevent Forward Proxying
 Prevent unauthenticated users from initiating arbitrary internal connections from the Community Manager portal.
