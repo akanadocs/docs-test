@@ -42,7 +42,7 @@ nav-title: Sample Deployment Scenario
 	<li><a href="#container_features">Container features</a>
 		<ul>
 			<li><a href="#features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</a></li>
-			<li><a href="#features_nd_alone">Internal/External Gateway (Network Director) container features</a></li>
+			<li><a href="#features_nd_oauth">Standalone API Gateway (Network Director) with OAuth</a></li>
 			<li><a href="#features_sched_jobs">Scheduled Jobs container features</a></li>
 			<li><a href="#features_oauth_alone">Standalone OAuth container features</a></li>
 		</ul>
@@ -54,7 +54,7 @@ nav-title: Sample Deployment Scenario
 			<li><a href="#features_pm_remote_cm">Policy Manager with remote Community Manager</a></li>
 			<li><a href="#features_cm_alone">Standalone Community Manager</a></li>
 			<li><a href="#features_cm_oauth">Standalone Community Manager with OAuth</a></li>
-			<li><a href="#features_nd_oauth">Standalone API Gateway (Network Director) with OAuth</a></li>
+			<li><a href="#features_nd_alone">Internal/External Gateway (Network Director) container features</a></li>
 		</ul>
 		</li>
 </ul>
@@ -156,11 +156,6 @@ nav-title: Sample Deployment Scenario
 <p>If the platform's inbuilt OAuth Provider is used, it connects directly to the database.</p>
 <p>The platform's OAuth feature requires that Community Manager is part of the deployment; however, it doesn't need to be installed in the same container as Community Manager. OAuth can be in its own container.</p>
 <p><strong>Note</strong>: If you're using PingFederate or the platform's inbuilt OAuth Provider, you could use bearer tokens. All other OAuth Providers use JWT.</p>
-<p>If your deployment will include OAuth, you'll need to install the following features on each container running Network Director:</p>
-<ul>
-	<li>Akana OAuth Provider Agent (oauth.provider.agent) (<span class="apidoc_red">deployed only if the implementation is using Akana as the OAuth Provider, and only on the Network Director. EN please verify</span>)</li>
-	<li>Akana Community Manager OAuth Provider Agent (community.manager.oauth.provider.agent)</li>
-</ul>
 <p>For information on the features you'll need to install on the standalone OAuth container, or the container where you want the OAuth component to reside, see <a href="#features_oauth_alone">Standalone OAuth container features</a>.</p>
 
 
@@ -182,7 +177,8 @@ nav-title: Sample Deployment Scenario
 <p>In this sample scenario, the external Network Director instances call the internal Network Director instances before calling the API. It's not necessary to configure your deployment that way, but it's a clean approach. {<span class="apidoc_red">EN: is there a good reason we can provide to do it? You said, it's a cleaner way to do it.</span>}</p>
 <p>The Network Director communicates with Policy Manager, and relays the messages downstream to the API.</p>
 <p><strong>Note</strong>: At runtime, Network Director reaches out to Policy Manager. It is not asynchronous. It first sends an authorization (<strong>auz</strong>) call to Policy Manager to authenticate the consumer of an API. It then caches the authentication/authorization, and uses the cached values until they expire. If values don't exist in the cache, it reaches out to Policy Manager in a synchronous call.</p>
-<p>For information on the features you'll need to install on Network Director containers, see <a href="#features_nd_alone">Internal/External Gateway (Network Director) container features</a>.</p>
+<p>For information on the features you'll need to install on Network Director containers, see <a href="#features_nd_oauth">Standalone API Gateway (Network Director) with OAuth</a>.</p>
+<p>If you're installing in a deployment where you're not using OAuth, see <a href="#features_nd_alone">Internal/External Gateway (Network Director) container features</a>.</p>
 
 
 <h4 id="components_app_dev">External App Developer</h4>
@@ -252,11 +248,17 @@ nav-title: Sample Deployment Scenario
 </ul>
 
 
-<h4 id="features_nd_alone">Internal/External Gateway (Network Director) container features</h4>
+<h4 id="features_nd_oauth">Standalone API Gateway (Network Director) with OAuth</h4>
+<p>If your deployment will include OAuth, you'll need to install the following features on each container running Network Director:</p>
+<p>For Network Director:</p>
 <ul>
-	
 	<li>Akana Network Director  (network.director)</li>
 	<li>{<span class="apidoc_red">EN: What is this? Feature name?</span>} (api.security.policy.handler)</li>
+</ul>
+<p>Additional for OAuth:</p>
+<ul>
+	<li>Akana OAuth Provider Agent (oauth.provider.agent) (<span class="apidoc_red">deployed only if the implementation is using Akana as the OAuth Provider, and only on the Network Director. EN please verify</span>)</li>
+	<li>Akana Community Manager OAuth Provider Agent (community.manager.oauth.provider.agent)</li>
 </ul>
 
 
@@ -342,16 +344,12 @@ nav-title: Sample Deployment Scenario
 </ul>
 
 
-<h4 id="features_nd_oauth">Standalone API Gateway (Network Director) with OAuth</h4>
+<h4 id="features_nd_alone">Internal/External Gateway (Network Director) container features</h4>
 <ul>
-	<li>All features listed in <a href="#features_nd_alone">Internal/External Gateway (Network Director) container features</a> above.</li>
-	<li>Akana Community Manager OAuth Provider Agent (community.manager.oauth.provider.agent)</li>
-	<li>Akana OAuth Provider Agent (oauth.provider.agent)</li>
+	
+	<li>Akana Network Director  (network.director)</li>
+	<li>{<span class="apidoc_red">EN: What is this? Feature name?</span>} (api.security.policy.handler)</li>
 </ul>
-
-
-
-
 <p><a href="#top">Back to top</a></p>
 
 
