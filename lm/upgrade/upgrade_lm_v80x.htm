@@ -21,15 +21,13 @@ nav-title: Upgrading LM
     </li>
   
   <li><a href="#lm_upgrade_800_803">Upgrading Lifecycle Manager from 8.0.0 or 8.0.1 to 8.0.2 or later (create new container, connect to  existing database)</a>
-    <ul>
+  	<ul>
       <li><a href="#upgrade_800_802_01">Step 1: Back up existing installation and complete pre-install steps</a></li>
       <li><a href="#upgrade_800_802_02">Step 2: Install the Akana Platform and Lifecycle Manager, connecting to your existing database</a></li>
       <li><a href="#upgrade_800_802_03">Step 3: Verify that the upgrade was successful</a></li>
       <li><a href="#upgrade_800_802_04">Step 4: Complete post-install checks</a></li>
       </ul>
   </li>
-  <li><a href="#s01_01_upgrade_existing">Upgrading the Existing Container</a></li>
-  
   <li><a href="#lm_upgrade_71_803">Upgrading Lifecycle Manager from 7.1 to 8.0.2 or later</a>
     <ul>
       <li><a href="#upgrade_71_80_01">Step 1: Pre-Install Instructions</a></li>
@@ -57,7 +55,7 @@ nav-title: Upgrading LM
 		</tr>
 		<tr>
 		  <td><p>8.0.2 to 8.0.3 or later</p>
-		    <p>(Akana API Platform 8.4.11)</p></td>
+		    <p>(Akana Platform 8.4.11)</p></td>
 		  <td>Upgrade existing container</td>
 		  <td><a href="#lm_upgrade_802_803">Upgrading Lifecycle Manager from 8.0.2 to 8.0.3 or later (upgrade existing container)</a></td>
 		  </tr>
@@ -65,16 +63,10 @@ nav-title: Upgrading LM
 	<tbody>
 		<tr>
 		  <td><p>8.0 or 8.0.1 to 8.0.2 or later</p>
-		    <p>(requires upgrade to Akana API Platform 8.4.11)</p></td>
+		    <p>(requires upgrade to Akana Platform 8.4.11)</p></td>
 		  <td>Upgrade by creating a new container and connecting to the existing database</td>
 		  <td><a href="#lm_upgrade_800_803">Upgrading Lifecycle Manager from 8.0.0 or 8.0.1 to 8.0.2 or later (create new container, connect to  existing database)</a> (below)</td>
 		  </tr>
-<!--		<tr>
-		  <td><p>8.0.0 to 8.0.1</p>
-		    <p>(Akana API Platform 8.2.3)</p></td>
-		  <td>Upgrade existing container</td>
-		  <td>Akana Library (<a href="https://library.akana.com/display/MAIN/Akana+Library" target="_blank">https://library.akana.com/display/MAIN/Akana+Library</a>) &gt; <strong>Downloads</strong> &gt; <strong>Lifecycle Manager</strong> &gt; <strong>LM 8.0.1</strong> &gt; <strong>Documentation</strong> &gt; <strong>LifecycleManager_Upgrade_Instructions_8.0.x.pdf</strong></td>
-		  </tr>-->
 		<tr>
 		  <td>7.1 to 8.0.2 or later</td>
 		  <td>Upgrade by creating a new container and connecting to the existing database</td>
@@ -98,7 +90,7 @@ nav-title: Upgrading LM
 <h4 id="s01_01_upgrade_existing">Upgrade the existing container</h4>
 <p>The general steps for upgrading to version 8.0.3 by upgrading the existing container are given below.</p>
 <p>The Akana Platform provides an existing <strong>configurator</strong> container that, when invoked with an appropriate set of properties, upgrades the designated target container with the most recent feature bundles found in the [platform_home]/lib directory.</p>
-<p>If you are running the Akana Platform on Windows or another desktop environment, you can simply start up the configurator container without any parameters/properties, and you will be presented with a GUI dialog to select the container that you want to upgrade.</p>
+<p>If you're running the Akana Platform on Windows or another desktop environment, you can simply start up the configurator container without any parameters/properties, and you will be presented with a GUI dialog to select the container that you want to upgrade.</p>
 <p>For example:</p>
 <pre>c:\Akana\platform_home\bin\startup.bat configurator</pre>
 <p>If you are running the Akana Platform on Linux (without a desktop environment), or choosing a silent install on Windows, you'll need to create an update properties file, and then invoke the configurator container in silent mode while pointing to that file. The file must contain two properties:</p>
@@ -111,12 +103,14 @@ nav-title: Upgrading LM
 container.instance.name=lm
 wizard.mode=update</pre>
 
-<p>Extract the new feature bundle to your Akana Platform home directory. In the example below, the Akana Platform home directory is <strong>/opt/akana/plat8</strong>:</p>
-<pre>[akana@lm-aap84x-16 ~]$ unzip lifecyclemanager_8.0.2.00302.zip -d /opt/akana/plat84x/
+<p>Extract the new feature bundle to your Akana Platform home directory.</p>
+<p>Get the feature bundle from the temporary directory in which you unzipped the Lifecycle Manager download file (See <a href="../install/install_lm_v80x.htm#s02_unzip_files">Step 2: Unzip installation files in the correct sequence</a>, Step 3). Inside the main ZIP file, you'll see the main Lifecycle Manager platform file. For example: <strong>lifecyclemanagerplatform_8.0.6.xxxxx.zip</strong>.</p>
+<p>In the example below, the Akana Platform home directory is <strong>/opt/akana/plat84x</strong>:</p>
+<p>[akana@lm-aap84x-16 ~]$ unzip lifecyclemanager_8.0.2.00302.zip -d /opt/akana/plat84x/
 Archive:  lifecyclemanager_8.0.2.00302.zip
    creating: /opt/akana/plat84x/lib/lifecyclemanager_8.0.2.00302/
   inflating: /opt/akana/plat84x/lib/lifecyclemanager_8.0.2.00302/OpenSourceLicenses.txt
-...</pre>
+...</p>
 <p>Before upgrading an existing container, make sure that it's stopped/not running. In the example below, the target container name is <strong>lm</strong>:</p>
 <pre>[akana@lm-aap84x-16 bin]$ ./shutdown.sh lm
 Instance [lm] PID [48181] stopped
@@ -158,12 +152,12 @@ Starting instance [lm]
 
 <h3 id="lm_upgrade_800_803">Upgrading Lifecycle Manager from 8.0.0 or 8.0.1 to 8.0.2 or later (create new container, connect to  existing database)</h3>
 <h5 class="stamp">Supported Platforms: 8.4.11</h5>
-<p>Upgrade from 8.0.0 or 8.0.1 to 8.0.2 or later requires an upgrade from Akana API Platform 8.2.3 to 8.4.11. To perform this upgrade, you must back up, perform a fresh install, and connect to the existing database.</p>
+<p>Upgrade from 8.0.0 or 8.0.1 to 8.0.2 or later requires an upgrade from Akana Platform 8.2.3 to 8.4.11. To perform this upgrade, you must back up, perform a fresh install, and connect to the existing database.</p>
 
 <p>At a high level, the steps are:</p>
 <ol class="table_of_contents">
   <li><a href="#upgrade_800_802_01">Step 1: Back up existing installation and complete pre-install steps</a></li>
-	<li><a href="#upgrade_800_802_02">Step 2: Install the Akana Platform and Lifecycle Manager, connecting to your existing database</a></li>
+	<li><a href="#upgrade_800_802_02">Step 2: Download ZIP files and install the Akana Platform and Lifecycle Manager, connecting to your existing database</a></li>
 	<li><a href="#upgrade_800_802_03">Step 3: Verify that the upgrade was successful</a></li>
 	<li><a href="#upgrade_800_802_04">Step 4: Complete post-install checks</a></li>
 </ol>
@@ -191,10 +185,10 @@ Starting instance [lm]
 </ol>
 
 
-<h5 id="upgrade_800_802_02">Step 2: Install the Akana Platform and Lifecycle Manager, connecting to your existing database</h5>
+<h5 id="upgrade_800_802_02">Step 2: Step 2: Download ZIP files and install the Akana Platform and Lifecycle Manager, connecting to your existing database</h5>
 <p>The only difference between a new install of Lifecycle Manager 8.0.3 and an upgrade from 8.0.0 or 8.0.1 to 8.0.3 is that when you're configuring the Lifecycle Manager feature for the database, you'll choose to use your existing database rather than creating a new database. In the upgrade scenario, you'll point to your existing Lifecycle Manager 8.0 database in <a href="../install/install_lm_v80x.htm">Step 5 of the installation procedure</a>.</p>
 <p>Install Lifecycle Manager 8.0.3 with the Akana Platform 8.4.11.</p>
-<p>For detailed instructions, see <a href="../install/install_lm_v80x.htm">Installing Lifecycle Manager 8.0.3</a>.</p>
+<p>For detailed instructions, including file download locations and which files to download, see <a href="../install/install_lm_v80x.htm">Installing Lifecycle Manager 8.0.3</a>.</p>
 <p><strong>Note</strong>: You will follow the <a href="../install/install_lm_v80x.htm">Lifecycle Manager 8.0.3 install guide</a> up to the point of <strong>Step 5: Install and configure the Lifecycle Manager Feature</strong>. in this step, in the Database Wizard, you'll choose to use an existing database. At this point, provide the connection information to allow the connection to your existing database. Then, continue with the steps from the Lifecycle Manager 8.0.3 install guide.</p>
 <p>The feature list you'll install in Step 5 is identical for LM 8.0.1 and 8.0.2/8.0.3.</p>
 <p>The steps are summarized below:</p>
@@ -203,7 +197,8 @@ Starting instance [lm]
 	<li><a href="../install/install_lm_v80x.htm#s02_unzip_files">Step 2: Unzip installation files in the correct sequence</a></li>
 	<li><a href="../install/install_lm_v80x.htm#s03_lm_container">Step 3: Run Configurator to configure Lifecycle Manager container</a></li>
 	<li><a href="../install/install_lm_v80x.htm#s04_start_lm_instance">Step 4: Start the Lifecycle Manager instance</a></li>
-	<li><a href="../install/install_lm_v80x.htm#s05_lm_install">Step 5: Install and configure the Akana Lifecycle Manager Application feature</a>. In this step, rather than creating a new database, you'll point to the database for your existing LM version.</li>
+	<li><a href="../install/install_lm_v80x.htm#s05_lm_install">Step 5: Install and configure the Akana Lifecycle Manager Application feature</a>
+	<p><strong>Note</strong>: In this step, rather than creating a new database, you'll point to the database for your existing LM version.</p></li>
 	<li><a href="../install/install_lm_v80x.htm#s06_extract_client_zips">Step 6: Extract javaclients.zip file and specify the URL in the configuration settings</a></li>
 	<li><a href="../install/install_lm_v80x.htm#s07_lm_config">Step 7: Update the Lifecycle Manager configuration settings</a></li>
 	<li><a href="../install/install_lm_v80x.htm#s08_lm_create_library">Step 8: Create a Lifecycle Manager Library</a></li>
@@ -334,7 +329,7 @@ Click [Invoke]</pre>
 <div class="relatedlinks">
 <ul>
 	<li><a href="../install/install_lm_v80x.htm">Installing Lifecycle Manager</a></li>
-<!--	<li><a href="../upgrade/upgrade_lm_v80x.htm">Upgrading Lifecycle Manager</a></li>-->
+	<li><a href="../upgrade/upgrade_lm_v80x.htm">Upgrading Lifecycle Manager</a></li>
 </ul>
 <ul>
 	<li><a href="../../sp/platform_install/installing_akana_api_platform_v84.htm">Installing the Akana API Platform 8.4x</a></li>
