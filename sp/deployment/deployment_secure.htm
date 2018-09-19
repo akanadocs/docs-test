@@ -15,7 +15,7 @@ nav-title: Sample Deployment Scenario
 
 
 <p>
-<a href="../platform_install/installing_akana_api_platform_v84.htm" class="button secondary">Installing the Akana API Platform 8.4x</a>
+<a href="../platform_install/installing_akana_api_platform.htm" class="button secondary">Installing the Akana API Platform 2018.0.x</a>
 <a href="../admin_console/using_admin_console.htm" class="button secondary">Using the Admin Console</a>
 <a href="../admin_console/installing_tools.htm" class="button secondary">Installing Tools</a>
 <a href="../admin_console/installing_plugins.htm" class="button secondary">Installing Plug-ins</a>
@@ -38,7 +38,25 @@ nav-title: Sample Deployment Scenario
 			<li><a href="#components_es">Elasticsearch</a></li>
 			<li><a href="#components_mongodb">MongoDB</a></li>
 		</ul>
-	</li>
+		</li>
+	<li><a href="#container_features">Container features</a>
+		<ul>
+			<li><a href="#features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</a></li>
+			<li><a href="#features_nd_alone">Internal/External Gateway (Network Director) container features</a></li>
+			<li><a href="#features_sched_jobs">Scheduled Jobs container features</a></li>
+			<li><a href="#features_oauth_alone">Standalone OAuth container features</a></li>
+		</ul>
+		</li>
+	<li><a href="#container_features_other">Container features: additional information</a>
+		<ul>
+			<li><a href="#features_pm_alone">Container features for standalone Policy Manager container</a></li>
+			<li><a href="#features_pm_cm_oauth">Community Manager with Policy Manager and OAuth</a></li>
+			<li><a href="#features_pm_remote_cm">Policy Manager with remote Community Manager</a></li>
+			<li><a href="#features_cm_alone">Standalone Community Manager</a></li>
+			<li><a href="#features_cm_oauth">Standalone Community Manager with OAuth</a></li>
+			<li><a href="#features_nd_oauth">Standalone API Gateway (Network Director) with OAuth</a></li>
+		</ul>
+		</li>
 </ul>
 <div class = "divider1"></div>
 
@@ -60,7 +78,7 @@ nav-title: Sample Deployment Scenario
 		</ul>
 	</li>
 </ul>
-<p><strong>Note</strong>: <span class="apidoc_red">Although this document presents a typical scenario, it's best to consult with a member of the Professional Services team to get recommendations on the ideal configuration for your deployment</span>.</p>
+<p><strong>Note</strong>: Although this document presents a typical scenario, it's best to consult with a member of the Professional Services team to get recommendations on the ideal configuration for your deployment.</p>
 
 
 
@@ -78,19 +96,19 @@ nav-title: Sample Deployment Scenario
 	<li>The consuming app invokes the OAuth server to receive the access token. See <a href="#components_oauth">OAuth</a> below.</li>
 	<li>Authentication is validated, and then the access token is returned to the consuming app.</li>
 	<li>The consuming app invokes an API hosted in the Akana API Gateway, accessing the external API Gateway (Network Director, ND).</li>
-	<li>The external API Gateway, acting as the Policy Enforcement Point, reaches out to Policy Manager (PM), which is acting as the Policy Decision Point, to authorize and authenticate the consuming application. See <a href="#components_pm">Policy Manager (PM)</a> and <a href="#components_nd">API Gateway/Internal Gateway (Network Director)</a> below.</li>
-	<li>The containers with Policy Manager/Community Manager installed <span class="apidoc_red">send and/or receive</span> data from the RDBMS.</li>
-	<li>The external API Gateway calls the internal API Gateway. {<span class="apidoc_red">EN: is this correct?</span>}</li>
-	<li>The internal API Gateway, acting as the Policy Enforcement Point, reaches out to Policy Manager (PM), which is acting as the Policy Decision Point, to authorize and authenticate the consuming application. See <a href="#components_pm">Policy Manager (PM)</a> and <a href="#components_nd">API Gateway/Internal Gateway (Network Director)</a> below. {<span class="apidoc_red">EN: I have the same for #4 and #7, external and internal: is that correct?</span>}</li>
+	<li>The external API Gateway, acting as the Policy Enforcement Point, reaches out to Policy Manager (PM), which is acting as the Policy Decision Point, to authorize and authenticate the consuming application. See <a href="#components_pm">Policy Manager (PM)</a> and <a href="#components_nd">API Gateway/Internal Gateway (Network Director)</a> below (#4 and #7 show the same activity).</li>
+	<li>The containers with Policy Manager/Community Manager installed send and/or receive data to/from the RDBMS.</li>
+	<li>The external API Gateway calls the internal API Gateway.</li>
+	<li>The internal API Gateway, acting as the Policy Enforcement Point, reaches out to Policy Manager (PM), which is acting as the Policy Decision Point, to authorize and authenticate the consuming application. See <a href="#components_pm">Policy Manager (PM)</a> and <a href="#components_nd">API Gateway/Internal Gateway (Network Director)</a> below (#4 and #7 show the same activity).</li>
 	<li>The internal API Gateway invokes the downstream API, physical service.</li>
-	<li>The internal API Gateway saves analytic information about the request/response. {<span class="apidoc_red">EN: I don't see a number for this in the diagram</span>}</li>
+	<li>The internal API Gateway saves analytic information about the request/response, to MongoDB.</li>
 	<li>Policy Manager stores the analytic information in MongoDB. See <a href="#components_mongodb"> MongoDB</a> below.</li>
-	<li>The response is returned to the consuming application. {<span class="apidoc_red">EN: I don't see this in the diagram</span>}</li>
-</ol>
+	</ol>
+<p>The response is returned to the consuming application.</p>
 <p><strong>Notes:</strong></p>
 <ul>
 	<li>For this scenario to work well, the database and the PM/CM containers must be in the same physical location.</li>
-	<li><span class="apidoc_red">The above diagram includes an external consumer, accessing the deployment from outside the firewall, and an internal consumer such as a company employee</span>. {<span class="apidoc_red">EN: We have the Internal Consumer box, which you added -- but this diagram also already has &quot;Internal API Developers &amp; Administrators&quot; -- do we need both?</span>}</li>
+	<li>The above diagram includes an external consumer, accessing the deployment from outside the firewall, and an internal consumer such as a company employee.</li>
 </ul>
 
 
@@ -114,51 +132,22 @@ nav-title: Sample Deployment Scenario
 <p>This sample clustered deployment environment includes two dedicated Policy Manager containers, each of which should be on a different machine.</p>
 <p>Two containers are of course the minimum for a clustered environment, providing some redundancy.</p>
 <p>This configuration provides dedicated Policy Manager instances that are just for the Network Directors.</p>
-<p>For containers running Policy Manager, you'll need to install:</p>
-<ul>
-	<li>Akana Policy Manager Console</li>
-	<li>Akana Policy Manager Services (Includes Akana Management Services, Akana Security Services, and Akana Scheduled Jobs. For more information on this feature see <a href="../admin_console/using_pmservices_feature.htm">Using the Policy Manager Services Feature</a>.)</li>
-</ul>
+<p>For information on the features you'll need to install on Policy Manager containers, see <a href="#features_cm_pm">Community Manager with Policy Manager</a>.</p>
+<p>If you're installing Policy Manager in a standalone container, see <a href="#features_pm_alone">Container features for standalone Policy Manager container</a>.</p>
 
 
 <h4 id="components_cm">Community Manager (CM)</h4>
 <p>This sample clustered environment includes two Community Manager containers, each of which should be on a different machine. Depending on the size of your implementation, you could have one PM container and one CM container on each of two machines, or have each container on a separate JVM.</p>
-<p>When we deploy Community Manager, it still does have Policy Manager under that, because that is a requirement for Community Manager. However, again, keeping Policy Manager separate, though not necessary, is a good configuration.</p>
-<p>For containers running Community Manager, you'll need to install:</p>
-<p>Community Manager container, features:</p>
-<ul>
-	<li>Akana Community Manager APIs</li>
-	<li>Akana Community Manager OAuth Provider</li>
-	<li>Akana Community Manager Scheduled Jobs</li>
-	<li>Akana Embedded Elasticsearch Node</li>
-	<li>Akana OAuth Provider</li>
-	<li>Akana Policy Manager Console</li>
-	<li>Akana Policy Manager Services (Includes Akana Management Services, Akana Security Services, and Akana Scheduled Jobs. For more information on this feature see <a href="../admin_console/using_pmservices_feature.htm">Using the Policy Manager Services Feature</a>)</li>
-	<li>Akana Community Manager</li>
-</ul>
-<p>Community Manager container, plug-ins:</p>
-<ul>
-	<li>Akana Community Manager Policy Console</li>
-	<li>One or more of the following (at least one theme is required for Community Manager):
-		<ul>
-			<li>Akana Community Manager Default Theme</li>
-			<li>Akana Community Manager Hermosa Theme</li>
-			<li>Akana Community Manager Simple Developer Theme</li>
-		</ul>
-	</li>
-</ul>
+<p>When we deploy Community Manager, it still does have Policy Manager under that, because that is a requirement for Community Manager. However, again, keeping Policy Manager separate is a good configuration, although it's not necessary.</p>
+<p>For information on the features you'll need to install on the combined Community Manager/Policy Manager containers in this sample deployment scenario, see <a href="#features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</a>.</p>
 
 
 <h4 id="components_scheduler">Job Scheduler</h4>
 <p>This sample clustered deployment environment includes a dedicated container for the background job scheduler (Quartz scheduler). This container can run all of the PM and CM scheduled jobs.</p>
 <p>The job scheduler cannot be clustered; it runs on only one container.</p>
-<p>It's not necessary to have the job scheduler in its own container, completely separate from other components; however, by separating it out you can help ensure that the scheduled jobs, which can include a lot of data processing, can run without affecting other containers.</p>
-<p>Whether the container that's running the job scheduler is on a separate machine or not, we recommend allocating plenty of memory for the scheduled jobs. {<span class="apidoc_red">EN: anything we can say about how much memory we should allow? Or, maybe that's too much detail.</span>}</p>
-<p>The installation features that are installed on this standalone container, that add jobs to the Quartz scheduler, are:</p>
-<ul>
-	<li>Akana Scheduled Jobs&#8212;bundled with the Akana Policy Manager Services feature</li>
-	<li>Akana Community Manager Scheduled Jobs</li>
-</ul>
+<p>It's not necessary to have the job scheduler in its own container, completely separate from other components; however, by separating it out, you can help ensure that the scheduled jobs, which can include a lot of data processing, can run without affecting other containers.</p>
+<p>Whether the container that's running the job scheduler is on a separate machine or not, we recommend allocating plenty of memory for the scheduled jobs. For example, 2 GB of memory, 2 CPU, should be fine.</p>
+<p>For information on the features you'll need to install on this standalone container, to add jobs to the Quartz scheduler, see <a href="#features_sched_jobs">Scheduled Jobs container features</a>.</p>
 <p><strong>Note</strong>: There are other scheduled jobs that are run on each container. For example, Network Director has a job scheduler that is responsible for reaching out to Policy Manager to get updated information on which APIs to load. These scheduled jobs are not separate installation features, they are built in to each container.</p>
 
 
@@ -167,22 +156,19 @@ nav-title: Sample Deployment Scenario
 <p>If the platform's inbuilt OAuth Provider is used, it connects directly to the database.</p>
 <p>The platform's OAuth feature requires that Community Manager is part of the deployment; however, it doesn't need to be installed in the same container as Community Manager. OAuth can be in its own container.</p>
 <p><strong>Note</strong>: If you're using PingFederate or the platform's inbuilt OAuth Provider, you could use bearer tokens. All other OAuth Providers use JWT.</p>
-<p>If your deployment will include OAuth, you'll need to install the following features:</p>
-<p>On each container running Network Director:</p>
+<p>If your deployment will include OAuth, you'll need to install the following features on each container running Network Director:</p>
 <ul>
-	<li>Akana OAuth Provider Agent</li>
+	<li>Akana OAuth Provider Agent (oauth.provider.agent) (<span class="apidoc_red">deployed only if the implementation is using Akana as the OAuth Provider, and only on the Network Director. EN please verify</span>)</li>
+	<li>Akana Community Manager OAuth Provider Agent (community.manager.oauth.provider.agent)</li>
 </ul>
-<p>On the standalone OAuth container, or the container where you want the OAuth component to reside:</p>
-<ul>
-	<li>Akana OAuth Provider</li>
-	
-	<li>Akana Community Manager OAuth Provider&nbsp;{<span class="apidoc_red">? not sure</span>}</li>
-</ul>
+<p>For information on the features you'll need to install on the standalone OAuth container, or the container where you want the OAuth component to reside, see <a href="#features_oauth_alone">Standalone OAuth container features</a>.</p>
+
+
 <h4 id="components_reverseproxy">Reverse Proxies</h4>
 <p>The reverse proxies provide a way for users to access the containers that are behind the firewall. In this example, the reverse proxies perform two functions:</p>
 <ul>
-	<li><span class="apidoc_red">Allowing apps and external consumers external access into the CM containers</span>.</li>
-	<li><span class="apidoc_red">Allowing apps and external consumers to reverse proxy into the OAuth provider</span>.</li>
+	<li>Allowing apps and external consumers external access into the CM containers.</li>
+	<li>Allowing apps and external consumers to reverse proxy into the OAuth provider.</li>
 </ul>
 <p>The platform doesn't provide reverse proxy functionality. You can use a third-party product such as  HAProxy, F5, or NGINX.</p>
 
@@ -196,10 +182,7 @@ nav-title: Sample Deployment Scenario
 <p>In this sample scenario, the external Network Director instances call the internal Network Director instances before calling the API. It's not necessary to configure your deployment that way, but it's a clean approach. {<span class="apidoc_red">EN: is there a good reason we can provide to do it? You said, it's a cleaner way to do it.</span>}</p>
 <p>The Network Director communicates with Policy Manager, and relays the messages downstream to the API.</p>
 <p><strong>Note</strong>: At runtime, Network Director reaches out to Policy Manager. It is not asynchronous. It first sends an authorization (<strong>auz</strong>) call to Policy Manager to authenticate the consumer of an API. It then caches the authentication/authorization, and uses the cached values until they expire. If values don't exist in the cache, it reaches out to Policy Manager in a synchronous call.</p>
-<p>For containers running Network Director, you'll need to install:</p>
-<ul>
-	<li>Akana Network Director</li>
-</ul>
+<p>For information on the features you'll need to install on Network Director containers, see <a href="#features_nd_alone">Internal/External Gateway (Network Director) container features</a>.</p>
 
 
 <h4 id="components_app_dev">External App Developer</h4>
@@ -217,12 +200,160 @@ nav-title: Sample Deployment Scenario
 
 
 <h4 id="components_mongodb">MongoDB</h4>
-<p>This sample clustered deployment environment includes three MongoDB instances, the minimum for sharding. It's a good idea to do sharding if you have multiple data centers.</p>
-<p>For containers running MongoDB, you'll need to install:</p>
+<p>This sample clustered deployment environment includes three MongoDB instances, the minimum for sharding. It's a good idea to do sharding if you have multiple data centers. For more information, see <a href="../../ag/assets/api_gateway_multi_regional_deployment_v80.pdf" target="_blank">API Gateway 8.0 Multi-Regional Deployment</a> (PDF document).</p>
+<p>To run MongoDB, you'll need to install:</p>
 <ul>
-	<li>xxx {<span class="apidoc_red">Erik? Ian?</span>}</li>
+	<li><strong>Akana MongoDB Support</strong> (Plug-In). Must be installed on the Policy Manager and Community Manager containers.</li>
+	</ul>
+<p><strong>Note</strong>: In addition, if you're using MongoDB, the Network Director should be configured to use a remote writer. In the Akana Administration Console, <strong>Configuration</strong> &gt; <strong>com.soa.monitor.usage</strong>:</p>
+<ul>
+	<li><strong>usage.local.writer.enabled</strong> is true by default. Set it  to <strong>false</strong>.</li>
+	<li><strong>usage.remote.writer.enabled</strong> is false by default. Set it to <strong>true</strong>.</li>
 </ul>
 <p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="container_features">Container features for this sample deployment</h3>
+<p>To create the above deployment, you'd need to install the features below in the various containers.</p>
+<ul>
+	<li><a href="#features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</a></li>
+	<li><a href="#features_nd_alone">Internal/External Gateway (Network Director) container features</a></li>
+	<li><a href="#features_sched_jobs">Scheduled Jobs container features</a></li>
+	<li><a href="#features_oauth_alone">Standalone OAuth container features</a></li>
+</ul>
+
+
+<h4 id="features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</h4>
+<p>{<span class="apidoc_red">EN: does the below include access to MongoDB?</span>}</p>
+<p>In each CM/PM combo container shown in this sample deployment, install the following features:</p>
+<ul>
+	<li>Standalone Policy Manager features:
+		<ul>
+			<li>Akana Policy Manager Console (policy.manager.console)</li>
+			<li>Akana Policy Manager Services (policy.manager.services)</li>
+			<li>Akana Security Services (security.services)</li>
+			<li>Akana MongoDB Support (Plug-In) (mongo.db) (if using MongoDB for analytical data)</li>
+		</ul>
+	</li>
+	<li>Akana Community Manager (community.manager)	</li>
+	<li>Akana Community Manager Scheduled Jobs (community.manager.scheduled.jobs)</li>
+</ul>
+<p>Install the following plug-ins for Community Manager:</p>
+<ul>
+	<li>Akana Community Manager Policy Console {<span class="apidoc_red">EN: feature ID? If this is correct.</span>}</li>
+	<li>One or more of the following (at least one theme is required for Community Manager):
+		<ul>
+			<li>Akana Community Manager Default Theme (community.manager.default.theme)</li>
+			<li>Akana Community Manager Hermosa Theme (community.manager.hermosa.theme)</li>
+			<li>Akana Community Manager Simple Developer Theme (community.manager.simple.developer.theme)</li>
+		</ul>
+	</li>
+</ul>
+
+
+<h4 id="features_nd_alone">Internal/External Gateway (Network Director) container features</h4>
+<ul>
+	
+	<li>Akana Network Director  (network.director)</li>
+	<li>{<span class="apidoc_red">EN: What is this? Feature name?</span>} (api.security.policy.handler)</li>
+</ul>
+
+
+<h4 id="features_oauth_alone">Standalone OAuth container features</h4>
+<p>On the standalone OAuth container, or the container where you want the OAuth component to reside, install the following:</p>
+<ul>
+	<li>Akana OAuth Provider (oauth.provider)</li>
+	<li>{<span class="apidoc_red">EN: I had the below two features in different places. Which is correct for a standalone OAuth container?</span>}
+		<ul>
+			<li>Akana Community Manager OAuth Provider (community.manager.oauth.provider)</li>
+			<li>Akana Community Manager OAuth Provider Agent (community.manager.oauth.provider.agent)</li>
+			</ul>
+	</li>
+	<li>{<span class="apidoc_red">EN: What is the feature name for this? I couldn't find it. Perhaps because I'm looking at 2018.0.0 but not sure.</span>} (community.manager.plugin)</li>
+	<li>{<span class="apidoc_red">EN: We have Akana Lifecycle Coordinator and Akana Lifecycle Repository. Is it one of those?</span>} (community.manager.laas)</li>
+</ul>
+<h4 id="features_sched_jobs">Scheduled Jobs container features</h4>
+<p>The installation features that are installed on this standalone container, that add jobs to the Quartz scheduler, are:</p>
+<ul>
+	<li>Akana Scheduled Jobs&#8212;bundled with the Akana Policy Manager Services feature</li>
+	<li>Akana Community Manager Scheduled Jobs (community.manager.scheduled.jobs)</li>
+</ul>
+<p><strong>Note</strong>: There are other scheduled jobs that are run on each container. For example, Network Director has a job scheduler that is responsible for reaching out to Policy Manager to get updated information on which APIs to load. These scheduled jobs are not separate installation features, they are built in to each container.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="container_features_other">Container features: additional information</h3>
+<p>This section lists the features you'd need to install for some other common container configurations. The&nbsp;configurations below are not part of this example deployment, but are common configurations for various scenarios.</p>
+<!--<p>https://gitlab.com/akana/automation/blob/master/README.md. Section Container Features.</p>-->
+
+
+<h4 id="features_pm_alone">Container features for standalone Policy Manager container</h4>
+<ul>
+	<li>Akana Policy Manager Console (policy.manager.console)</li>
+	<li>Akana Policy Manager Services (policy.manager.services)</li>
+	<li>Akana Security Services (security.services)</li>
+	<li>Akana MongoDB Support (Plug-In) (mongo.db) (if using MongoDB for analytical data)</li>
+</ul>
+
+
+<h4 id="features_pm_cm_oauth">Community Manager with Policy Manager and OAuth</h4>
+<ul>
+	<li>All features listed in <a href="#features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</a> above.</li>
+	<li>Akana Community Manager OAuth Provider (community.manager.oauth.provider)</li>
+	<li>Akana OAuth Provider (oauth.provider)</li>
+</ul>
+
+
+<h4 id="features_pm_remote_cm">Policy Manager with remote Community Manager</h4>
+<ul>
+	<li>All features listed in <a href="#features_pm_alone">Container features for standalone Policy Manager container</a> above.</li>
+	<li>Akana Community Manager Scheduled Jobs (community.manager.scheduled.jobs)</li>
+	<li>community.manager.plugin)</li>
+	<li>community.manager.policy.console)</li>
+</ul>
+
+
+<h4 id="features_cm_alone">Standalone Community Manager</h4>
+<ul>
+	<li>{<span class="apidoc_red">EN: this section in your GitHub page didn't list the CM feature itself. We need that too, right?</span>}</li>
+	<li>{<span class="apidoc_red">EN: also what about the scheduled jobs? Akana Community Manager Scheduled Jobs (community.manager.scheduled.jobs) We have it listed in Community Manager with Policy Manager container section</span>}</li>
+	<li>Akana Community Manager APIs (community.manager.apis)</li>
+	</ul>
+<p>Install the following plug-ins for Community Manager:</p>
+<ul>
+	<li>Akana Community Manager Policy Console {<span class="apidoc_red">EN: do we need this too? Or not? We had it somewhere else.</span>}</li>
+	<li>One or more of the following (at least one theme is required for Community Manager):
+		<ul>
+			<li>Akana Community Manager Default Theme (community.manager.default.theme)</li>
+			<li>Akana Community Manager Hermosa Theme (community.manager.hermosa.theme)</li>
+			<li>Akana Community Manager Simple Developer Theme (community.manager.simple.developer.theme)</li>
+		</ul>
+	</li>
+</ul>
+
+
+<h4 id="features_cm_oauth">Standalone Community Manager with OAuth</h4>
+<ul>
+	<li>All features listed in <a href="#features_cm_alone">Standalone Community Manager</a> above.</li>
+	<li>Akana Community Manager OAuth Provider (community.manager.oauth.provider)</li>
+	<li>Akana OAuth Provider (oauth.provider)</li>
+</ul>
+
+
+<h4 id="features_nd_oauth">Standalone API Gateway (Network Director) with OAuth</h4>
+<ul>
+	<li>All features listed in <a href="#features_nd_alone">Internal/External Gateway (Network Director) container features</a> above.</li>
+	<li>Akana Community Manager OAuth Provider Agent (community.manager.oauth.provider.agent)</li>
+	<li>Akana OAuth Provider Agent (oauth.provider.agent)</li>
+</ul>
+
+
+
+
+<p><a href="#top">Back to top</a></p>
+
 
 
 
@@ -231,15 +362,21 @@ nav-title: Sample Deployment Scenario
 
 
 <h3 id="related_topics">Related Topics</h3>
-<div class="relatedlinks">
+<div class="relatedlinks" id="install">
 <ul>
-	<li><a href="../platform_install/installing_akana_api_platform_v84.htm">Installing the Akana API Platform 8.4x</a></li>
-	<li><a href="../platform_install/install_cm_jython_script.htm">Installation Jython Script</a></li>
-	<li><a href="../platform_install/implementation_planning.htm">Planning Your Implementation</a></li>
+	<li><a href="../upgrade/upgrading_akana_api_platform_84_2018.htm">Upgrading Akana API Platform from Version 8.4x to Version 2018.0.x</a></li>
+	<li><a href="../upgrade/upgrading_akana_api_platform_82_84.htm">Upgrading Akana API Platform from Version 8.2 to Version 8.4x</a></li>
+	<li><a href="../upgrade/upgrading_min_downtime.htm">Use Case: Upgrading with Minimum Downtime</a></li>
+	<li><a href="../upgrade/upgrading_micro.htm">Micro-Version Upgrade Notes: 2018.0.0</a></li>
+	<li><a href="../upgrade/upgrading_micro_84x.htm">Micro-Version Upgrade Notes: 8.4x</a></li>
 </ul>
 <ul>
+	<li><a href="../platform_install/installing_akana_api_platform.htm">Installing the Akana API Platform 2018.0.0</a></li>
+	<li><a href="../platform_install/installing_akana_api_platform_v84.htm">Installing the Akana API Platform 8.4x</a></li>
 	<li><a href="../platform_install/installing_akana_api_platform_v82.htm">Installing the Akana API Platform 8.2x</a></li>
-	<li><a href="../platform_install/installing_akana_platform.htm">Installing Akana Platform 8.x</a></li>
-	<li><a href="../platform_install/installing_policy_manager_v80.htm">Installing Policy Manager 8.x</a></li>
+	<li><a href="../platform_install/implementation_planning.htm">Planning Your Implementation</a></li>
+	<li><a href="../platform_install/install_cm_jython_script.htm">Installation Jython Script</a></li>
+	<li><a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a></li>
+	<li><a href="../platform_install/install_es_secure_tc.htm">Configuring Elasticsearch with security</a></li>
 </ul>
 </div>
