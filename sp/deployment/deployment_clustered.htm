@@ -67,16 +67,10 @@ nav-title: Sample Deployment Scenario
 <p>This is not a requirement, and might not be the best choice depending on the factors associated with your own unique scenario. However, it's a good baseline.</p>
 <p>There is a legend for the diagram, and a brief explanation of the various components that make up the diagram.</p>
 <p>The choices you make for your own implementation will vary depending on many factors, including:</p>
-<ul>
+<ul class="apidoc_red">
 	<li>The database connectivity from the containers</li>
 	<li>Load balancing and failover</li>
-	<li>Security restrictions that your organization might have. For example, perhaps:
-		<ul>
-			<li>The DMZ cannot connect to the database server</li>
-			<li>Requests cannot go directly to the internal network without having a hop in the DMZ</li>
-			<li>The developer user sessions and the API request traffic must be kept separate on different machines</li>
-		</ul>
-	</li>
+	<li>Security restrictions that your organization might have.</li>
 </ul>
 <p><strong>Note</strong>: Although this document presents a typical scenario, it's best to consult with a member of the Professional Services team to get recommendations on the ideal configuration for your deployment.</p>
 
@@ -145,7 +139,7 @@ nav-title: Sample Deployment Scenario
 <h4 id="components_scheduler">Job Scheduler</h4>
 <p>This sample clustered deployment environment includes a dedicated container for the background job scheduler (Quartz scheduler). This container can run all of the PM and CM scheduled jobs.</p>
 <p>The job scheduler cannot be clustered; it runs on only one container.</p>
-<p>It's not necessary to have the job scheduler in its own container, completely separate from other components; however, by separating it out, you can help ensure that the scheduled jobs, which can include a lot of data processing, can run without affecting other containers.</p>
+<p>It's not necessary to have the job scheduler in its own container, completely separate from other components. However, by separating it out, you can help ensure that the scheduled jobs, which can include a lot of data processing, can run without affecting other containers.</p>
 <p>Whether the container that's running the job scheduler is on a separate machine or not, we recommend allocating plenty of memory for the scheduled jobs. For example, 2 GB of memory, 2 CPU, should be fine.</p>
 <p>For information on the features you'll need to install on this standalone container, to add jobs to the Quartz scheduler, see <a href="#features_sched_jobs">Scheduled Jobs container features</a>.</p>
 <p><strong>Note</strong>: There are other scheduled jobs that are run on each container. For example, Network Director has a job scheduler that is responsible for reaching out to Policy Manager to get updated information on which APIs to load. These scheduled jobs are not separate installation features, they are built in to each container.</p>
@@ -174,8 +168,8 @@ nav-title: Sample Deployment Scenario
 	<li>External Gateways: an external cluster of two, outside the firewall</li>
 	<li>Internal Gateways: an internal cluster of two, inside the firewall.</li>
 </ul>
-<p>In this sample scenario, the external Network Director instances call the internal Network Director instances before calling the API. It's not necessary to configure your deployment that way, but it's a clean approach. {<span class="apidoc_red">EN: is there a good reason we can provide to do it? You said, it's a cleaner way to do it.</span>}</p>
-<p>The Network Director communicates with Policy Manager, and relays the messages downstream to the API.</p>
+<p>In this sample scenario, the external Network Director instances call the internal Network Director instances before calling the API. It's not necessary to configure your deployment that way, but it's a clean approach.</p>
+<p>The Network Director communicates with Policy Manager and relays the messages downstream to the API.</p>
 <p><strong>Note</strong>: At runtime, Network Director reaches out to Policy Manager. It is not asynchronous. It first sends an authorization (<strong>auz</strong>) call to Policy Manager to authenticate the consumer of an API. It then caches the authentication/authorization, and uses the cached values until they expire. If values don't exist in the cache, it reaches out to Policy Manager in a synchronous call.</p>
 <p>For information on the features you'll need to install on Network Director containers, see <a href="#features_nd_oauth">Standalone API Gateway (Network Director) with OAuth</a>.</p>
 <p>If you're installing in a deployment where you're not using OAuth, see <a href="#features_nd_alone">Standalone Internal/External Gateway (Network Director) container features (without OAuth</a>.</p>
@@ -280,7 +274,6 @@ nav-title: Sample Deployment Scenario
 
 <h3 id="container_features_other">Container features: additional information</h3>
 <p>This section lists the features you'd need to install for some other common container configurations. The&nbsp;configurations below are not part of this example deployment, but are common configurations for various scenarios.</p>
-<!--<p>https://gitlab.com/akana/automation/blob/master/README.md. Section Container Features.</p>-->
 
 
 <h4 id="features_pm_alone">Container features for standalone Policy Manager container</h4>
@@ -307,8 +300,8 @@ nav-title: Sample Deployment Scenario
 <ul>
 	<li>All features listed in <a href="#features_pm_alone">Container features for standalone Policy Manager container</a> above.</li>
 	<li>Akana Community Manager Scheduled Jobs (community.manager.scheduled.jobs)</li>
-	<li>Akana Community Manager Policy Console (community.manager.plugin)</li>
-	<li>{<span class="apidoc_red">EN what is this if Akana Community Manager Policy Console is community.manager.plugin?</span>} (community.manager.policy.console)</li>
+	<li>Akana API Platform Plug-In (community.manager.plugin)</li>
+	<li>Akana Community Manager Policy Console (community.manager.policy.console)</li>
 </ul>
 
 
@@ -374,3 +367,10 @@ nav-title: Sample Deployment Scenario
 	<li><a href="../platform_install/install_es_secure_tc.htm">Configuring Elasticsearch with security</a></li>
 </ul>
 </div>
+
+
+
+
+</div>
+</body>
+</html>
