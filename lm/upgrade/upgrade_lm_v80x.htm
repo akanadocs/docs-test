@@ -68,16 +68,16 @@ nav-title: Upgrading LM
 		  <td><a href="#lm_upgrade_800_803">Upgrading Lifecycle Manager from 8.0.0 or 8.0.1 to 8.0.2 or later (create new container, connect to  existing database)</a> (below)</td>
 		  </tr>
 		<tr>
-		  <td>7.1 to 8.0.2 or later</td>
-		  <td>Upgrade by creating a new container and connecting to the existing database</td>
-		  <td><a href="#lm_upgrade_71_803">Upgrading Lifecycle Manager from 7.1 to 8.0.2 or later</a></td>
-		  </tr>
+			<td>7.1 to 8.0.2 or later</td>
+			<td>Upgrade by creating a new container and connecting to the existing database</td>
+			<td><a href="#lm_upgrade_71_803">Upgrading Lifecycle Manager from 7.1 to 8.0.2 or later</a></td>
+		</tr>
 		<tr>
-		  <td>Versions earlier than 7.1</td>
-		  <td>Requires incremental upgrade to 7.1</td>
-		  <td><p>Readme file in the applicable installation ZIP file in the Rogue Wave Support Center:</p>
-		  	<p><a href="https://library.roguewave.com" target="_blank">https://library.roguewave.com</a> <strong>My Resources</strong> &gt; <strong>Product Downloads</strong> &gt; <strong>Akana - Product Downloads</strong>.</p></td>
-		  </tr>
+			<td>Versions earlier than 7.1</td>
+			<td>Requires incremental upgrade to 7.1</td>
+			<td><p>Readme file in the applicable installation ZIP file in the Rogue Wave Support Center:</p>
+				<p><a href="https://library.roguewave.com" target="_blank">https://library.roguewave.com</a> <strong>My Resources</strong> &gt; <strong>Product Downloads</strong> &gt; <strong>Akana - Product Downloads</strong>.</p></td>
+		</tr>
 	</tbody>
 </table>
 
@@ -85,11 +85,11 @@ nav-title: Upgrading LM
 
 <h3 id="lm_upgrade_802_803">Upgrading Lifecycle Manager from 8.0.2 to 8.0.3 or later (upgrade existing container)</h3>
 <h5 class="stamp">Supported Platforms: 8.4.11</h5>
-<p>Upgrade from 8.0.2 to 8.0.3 or later doesn't require a fresh install and reconnect to the existing database. Instead, you can just Upgrade the existing containers.</p>
+<p>Upgrade from 8.0.2 to 8.0.3 or later doesn't require a fresh install and reconnect to the existing database. Instead, you can just upgrade the existing containers.</p>
 
 
 <h4 id="s01_01_upgrade_existing">Upgrade the existing container</h4>
-<p>The general steps for upgrading to version 8.0.3 by upgrading the existing container are given below.</p>
+<p>The general steps for upgrading from version 8.0.2 to version 8.0.3 or later by upgrading the existing container are given below.</p>
 <p>The Akana Platform provides an existing <strong>configurator</strong> container that, when invoked with an appropriate set of properties, upgrades the designated target container with the most recent feature bundles found in the [platform_home]/lib directory.</p>
 <p>If you're running the Akana Platform on Windows or another desktop environment, you can simply start up the configurator container without any parameters/properties, and you will be presented with a GUI dialog to select the container that you want to upgrade.</p>
 <p>For example:</p>
@@ -104,13 +104,14 @@ nav-title: Upgrading LM
 container.instance.name=lm
 wizard.mode=update</pre>
 
+<p>First, download the&nbsp;ZIP file for the latest version, from the Rogue Wave Support Center (See <a href="../install/install_lm_v80x.htm#s01_gather_zip_files">Step 1: Gather ZIP files and download to the install folder</a>).</p>
 <p>Extract the new feature bundle to your Akana Platform home directory.</p>
-<p>Get the feature bundle from the temporary directory in which you unzipped the Lifecycle Manager download file (See <a href="../install/install_lm_v80x.htm#s02_unzip_files">Step 2: Unzip installation files in the correct sequence</a>, Step 3). Inside the main ZIP file, you'll see the main Lifecycle Manager platform file. For example: <strong>lifecyclemanagerplatform_8.0.6.xxxxx.zip</strong>.</p>
-<p>In the example below, the Akana Platform home directory is <strong>/opt/akana/plat84x</strong>:</p>
-<p>[akana@lm-aap84x-16 ~]$ unzip lifecyclemanager_8.0.2.00302.zip -d /opt/akana/plat84x/
+<p>Get the feature bundle from the temporary directory in which you unzipped the Lifecycle Manager download file (See <a href="../install/install_lm_v80x.htm#s02_unzip_files">Step 2: Unzip installation files in the correct sequence</a>, Step 3). Inside the main ZIP file, you'll see the main Lifecycle Manager file. For example: for example, <strong>lifecyclemanager_8.0.6.xxxxx.zip</strong>.</p>
+<p>In the example below, the Akana Platform home directory is <strong>/opt/akana/aap84x</strong>:</p>
+<p>[akana@lm-aap84x-16 ~]$ unzip lifecyclemanager_8.0.2.00302.zip -d /opt/akana/aap84x/
 Archive:  lifecyclemanager_8.0.2.00302.zip
-   creating: /opt/akana/plat84x/lib/lifecyclemanager_8.0.2.00302/
-  inflating: /opt/akana/plat84x/lib/lifecyclemanager_8.0.2.00302/OpenSourceLicenses.txt
+   creating: /opt/akana/aap84x/lib/lifecyclemanager_8.0.2.00302/
+  inflating: /opt/akana/aap84x/lib/lifecyclemanager_8.0.2.00302/OpenSourceLicenses.txt
 ...</p>
 <p>Before upgrading an existing container, make sure that it's stopped/not running. In the example below, the target container name is <strong>lm</strong>:</p>
 <pre>[akana@lm-aap84x-16 bin]$ ./shutdown.sh lm
@@ -124,8 +125,8 @@ akana    48404 47755  0 15:27 pts/1    00:00:00 grep --color=auto java
 [akana@lm-aap84x-16 bin]$</pre>
 
 <p>Purge the existing configurator container's <strong>cache</strong> directory, otherwise the configurator container may use some older cached feature bundles:</p>
-<pre>[akana@lm-aap84x-16 ~]$ cd /opt/akana/plat84x/bin/
-[akana@lm-aap84x-16 bin]$ rm -rf /opt/akana/plat84x/instances/configurator/cache/*
+<pre>[akana@lm-aap84x-16 ~]$ cd /opt/akana/aap84x/bin/
+[akana@lm-aap84x-16 bin]$ rm -rf /opt/akana/aap84x/instances/configurator/cache/*
 [akana@lm-aap84x-16 bin]$</pre>
 
 <p>Invoke the configurator container in silent mode while specifying the full path to the upgrade properties file, as shown below. This is identical to the process used to create the LM container during initial product installation.</p>
@@ -186,12 +187,12 @@ Starting instance [lm]
 </ol>
 
 
-<h5 id="upgrade_800_802_02">Step 2: Step 2: Download ZIP files and install the Akana Platform and Lifecycle Manager, connecting to your existing database</h5>
-<p>The only difference between a new install of Lifecycle Manager 8.0.3 and an upgrade from 8.0.0 or 8.0.1 to 8.0.3 is that when you're configuring the Lifecycle Manager feature for the database, you'll choose to use your existing database rather than creating a new database. In the upgrade scenario, you'll point to your existing Lifecycle Manager 8.0 database in <a href="../install/install_lm_v80x.htm">Step 5 of the installation procedure</a>.</p>
-<p>Install Lifecycle Manager 8.0.3 with the Akana Platform 8.4.11.</p>
-<p>For detailed instructions, including file download locations and which files to download, see <a href="../install/install_lm_v80x.htm">Installing Lifecycle Manager 8.0.3</a>.</p>
-<p><strong>Note</strong>: You will follow the <a href="../install/install_lm_v80x.htm">Lifecycle Manager 8.0.3 install guide</a> up to the point of <strong>Step 5: Install and configure the Lifecycle Manager Feature</strong>. in this step, in the Database Wizard, you'll choose to use an existing database. At this point, provide the connection information to allow the connection to your existing database. Then, continue with the steps from the Lifecycle Manager 8.0.3 install guide.</p>
-<p>The feature list you'll install in Step 5 is identical for LM 8.0.1 and 8.0.2/8.0.3.</p>
+<h5 id="upgrade_800_802_02">Step 2: Download ZIP files and install the Akana Platform and Lifecycle Manager, connecting to your existing database</h5>
+<p>The only difference between a new install of Lifecycle Manager 8.0.2 or later and an upgrade from 8.0.0 or 8.0.1 to 8.0.2 or later is that when you're configuring the Lifecycle Manager feature for the database, you'll choose to use your existing database rather than creating a new database. In the upgrade scenario, you'll point to your existing Lifecycle Manager 8.0 database in <a href="../install/install_lm_v80x.htm">Step 5 of the installation procedure</a>.</p>
+<p>Install Lifecycle Manager 8.0.2 or later with the Akana Platform 8.4.11.</p>
+<p>For detailed instructions, including file download locations and which files to download, see <a href="../install/install_lm_v80x.htm">Installing Lifecycle Manager</a>.</p>
+<p><strong>Note</strong>: You will follow the <a href="../install/install_lm_v80x.htm">Lifecycle Manager install guide</a> up to the point of <strong>Step 5: Install and configure the Lifecycle Manager Feature</strong>. in this step, in the Database Wizard, you'll choose to use an existing database. At this point, provide the connection information to allow the connection to your existing database. Then, continue with the steps from the Lifecycle Manager install guide.</p>
+<p>The feature list you'll install in Step 5 is identical for LM 8.0.1 and 8.0.2 or later.</p>
 <p>The steps are summarized below:</p>
 <ol>
 	<li><a href="../install/install_lm_v80x.htm#s01_gather_zip_files">Step 1: Gather ZIP files and download to the install folder</a></li>
@@ -211,7 +212,7 @@ Starting instance [lm]
 	<li>Verify the upgrade by logging on to the Lifecycle Manager admin console:
 		<ul>
 			<li>http://{web.server.url.host}/{contextroot}/admin/mainMenu.do</li>
-			<li>Verify that the Build number is <b>8.0.3.x</b>.</li>
+			<li>Verify that the Build number is correct; for example, <b>8.0.6</b>.</li>
 		</ul>
 	</li>
 </ul>
@@ -243,6 +244,7 @@ Click [Invoke]</pre>
 <p> If you are upgrading from 7.1, you can use any of the 7.1.x micro releases (including 7.1.6). Unlike the rule to sequentially iterate through the major or minor version releases, there's no need to do the same for the micro releases (such as 7.1.x). Each micro release includes all the incremental changes you'll need.</p>
 <p>You can also refer to the Install and System Admin Docs for more general Lifecycle Manager information. Lifecycle Manager documentation is in either of two locations:</p>
 <ul>
+	
 	<li>In the Rogue Wave Support Center (<a href="https://library.roguewave.com" target="_blank">https://library.roguewave.com</a>). In the <strong>My Resources section</strong>, click <strong>Product Downloads</strong>, then click <strong>Akana - Product Downloads</strong>. Choose the applicable Lifecycle Manager version, and look in the <strong>Documentation</strong> subfolder.</li>
 	<li>On the Akana documentation site: <a href="http://docs.akana.com/lm/index.html" title="Akana docs site, LM section" target="_self">http://docs.akana.com/lm/index.html</a>.</li>
 </ul>
