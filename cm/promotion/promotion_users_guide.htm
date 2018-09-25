@@ -8,6 +8,7 @@ sub-nav-class: Lifecycle Coordinator
 weight: 20
 type: page
 nav-title: LC Promotion Guide
+---
 <h2 id="top">Lifecycle Coordinator Promotion Guide</h2>
 <p>Provides information about how to use the Lifecycle Coordinator feature to manage the promotion feature.</p>
 <h5 class="stamp">API Platform Version: 8.4.3 and later</h5>
@@ -283,7 +284,6 @@ vsep.listenerName = "https"</td>
 <p>If you're installing Lifecycle Coordinator, you'll need a specific ZIP file in addition to the main ZIP files for Akana API Platform installation.</p>
 <p>Log in to the Rogue Wave Support Center (<a href="https://library.roguewave.com" target="_blank">https://library.roguewave.com</a>).</p>
 <p>In the <strong>My Resources section</strong>, click <strong>Product Downloads</strong>, then click <strong>Akana - Product Downloads</strong>. Download the applicable <strong>lifecyclemanagerplatform_8.4.xx.xxxxx.zip</strong> file for Lifecycle Manager; for example, <strong>lifecyclemanagerplatform_8.4.16.02264.zip</strong> file.</p>
-
 
 
 <h4 id="lc_install_feature">Installing the Lifecycle Coordinator feature</h4>
@@ -1141,7 +1141,7 @@ vsep.listenerName = "https"</td>
 
 <h3 id="runtime_config">Defaulting API Settings using Runtime Configurations</h3>
 <h5 class="stamp">API Platform Version: 8.4.17 and later</h5>
-<p><strong>Note</strong>: As of the 2018.0.0 release, the behavior in this section can now be defined within the topology directly, using the <strong>Environment Configuration</strong> element. See <a href="s08_03_environment_config">Environment Configuration</a>.</p>
+<p><strong>Note</strong>: As of the 2018.0.0 release, the behavior in this section can now be defined within the topology directly, using the <strong>Environment Configuration</strong> element. See <a href="#s08_03_environment_config">Environment Configuration</a>.</p>
 <p>The behavior described in this section is not part of Lifecycle Coordinator, but can be used to augment the capabilities of Lifecycle Coordinator to further tailor the configuration of APIs within each environment of a topology.</p>
 <p>The intent of the Runtime Configurations feature is to allow <strong>templates</strong> for API implementation properties to be established and selectively applied based on custom property filters. This is accomplished through customization of the Lifecycle Manager library in which custom properties for a tenant are configured. This configuration requires a working knowledge of the Lifecycle Manager application and the Configuration Designer Tool.</p>
 <p>As with the topology definition, it's best if Runtime Configuration assets are set up during the initial configuration of the environment. Changes to a Runtime Configuration do not retroactively affect pre-existing APIs unless those APIs are updated through the API Platform UI or subsequent promotions.</p>
@@ -1205,11 +1205,35 @@ vsep.listenerName = "https"</td>
 	<li>Service Level Policy (Physical Service)</li>
 </ul>
 
-<p><strong>Policy Replacement Behavior</strong></p>
+<p id="policy_replacement"><strong>Policy Replacement Behavior</strong></p>
 <p>The default behavior for setting policies on an API implementation or physical service is additive, meaning that policies specified by the Runtime Configuration will be added to any existing policies on the implementation or physical service.</p>
-<p>Using Configuration Designer, it is possible to customize the <strong>Apply Runtime Configuration</strong> API post-processing task by setting the <strong>Preserve Existing Policies</strong> property to <strong>false</strong>. This indicates that any existing policies on the implementation or physical service that are not specified in the Runtime Configuration will be removed, and replaced by those in the Runtime Configuration.</p>
+<p>In this section:</p>
+<ul>
+	<li><a href="#policy_replacement_pre2018">Behavior in versions prior to 2018.0.0</a></li>
+	<li><a href="#policy_replacement_2018">Behavior in version 2018.0.0 and later</a></li>
+</ul>
+<p id="policy_replacement_pre2018"><strong>Behavior in versions prior to 2018.0.0</strong></p>
+<p>{<span class="apidoc_red">mods for doc ATMO-25598&nbsp;eng ATMO-25577&nbsp;for TG rev 9/25</span>}</p>
+<p>In versions prior to 2018.0.0, it is possible to customize the <strong>Apply Runtime Configuration</strong> API post-processing task using the Configuration Designer by setting the <strong>Preserve Existing Policies</strong> property to <strong>false</strong>. This indicates that any existing policies on the implementation or physical service that are not specified in the Runtime Configuration will be removed, and replaced by those in the Runtime Configuration.</p>
 <p>When the <strong>Preserve Existing Policies</strong> property is set to <strong>false</strong>, you can specify the value of <strong>NONE</strong> for any of the policy classifiers. This indicates that all policies should be removed from the implementation or physical service.</p>
 <p>In any case, if a policy classifier has no value in the Runtime Configuration, no action will be taken with the policies associated with the implementation or physical service.</p>
+<p id="policy_replacement_2018"><strong>Behavior in version 2018.0.0 and later</strong></p>
+<p>In 2018.0.0 and later, there are two ways that you can customize policy replacement behavior:</p>
+<ul>
+	<li>By setting the <strong>preserve-existing-policies</strong> property</li>
+	<li>By setting the <strong>ENV:preserve-existing-policies</strong> property in the repository library</li>
+</ul>
+<p>In the example below, the <strong>preserve-existing-policies</strong> property is set to <strong>false</strong> in an environment configuration of a topology.</p>
+<pre>"configuration": {
+  "properties" : [
+    {"name":"preserve-existing-policies","value":"false"}
+  ],
+  "apiImplementationProfiles": [ 
+  ...
+  ]
+}</pre>
+<p>In the example below, the <strong>ENV:preserve-existing-policies</strong> library property is set directly in the LPC document of the repository library.</p>
+<pre>&lt;library-properties&gt;<br />  &lt;property name=&quot;ENV:preserve-existing-policies&quot;&gt;<br />    &lt;value&gt;false&lt;/value&gt;<br />  &lt;/property&gt;<br />&lt;/library-properties&gt;</pre>
 
 <h5 id="s08_01_05_virtual_host">Virtual Host</h5>
 <p>This classifier is used to set the vanity host name for every endpoint in the implementation. Leaving this classifier unset indicates that the host name of the endpoints should not be modified.</p>

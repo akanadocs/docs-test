@@ -1,16 +1,16 @@
 ---
 layout: page
-title: Implement 2-Way SSL using Policy Manager 7.x
+title: Implement 2-Way SSL using Policy Manager
 description: Learn how to use Policy Manager to implement mutual authentication using an SSL (Secure Socket Layer) Certificate.
 product: ag
 category: learn
 sub-nav-class: Mediation
 weight: 15
 type: page
-nav-title: Implement 2-Way SSL using Policy Manager 7.x
+nav-title: Implement 2-Way SSL using Policy Manager
 ---
 
-## <a name="top"></a> How To Implement 2-Way SSL Using Policy Manager 7.x
+## <a name="top"></a> How To Implement 2-Way SSL Using Policy Manager
 Learn how to use Policy Manager to implement mutual authentication using an SSL (Secure Socket Layer) Certificate to authenticate either your business' legal name and location or, alternatively, just your domain.
 
 ### Table of Contents
@@ -26,7 +26,6 @@ Learn how to use Policy Manager to implement mutual authentication using an SSL 
 * [Test](#test)
 
 
-<h5 class="stamp">Supported Platforms: 7.x</h5>
 
 ## SSL Overview
 
