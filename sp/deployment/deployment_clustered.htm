@@ -15,6 +15,7 @@ nav-title: Sample Deployment Scenario
 
 
 <p>
+<a href="../platform_install/installing_akana_api_platform.htm" class="button secondary">Installing the Akana API Platform 2018.0.x</a>
 <a href="../admin_console/using_admin_console.htm" class="button secondary">Using the Admin Console</a>
 <a href="../admin_console/installing_tools.htm" class="button secondary">Installing Tools</a>
 <a href="../admin_console/installing_plugins.htm" class="button secondary">Installing Plug-ins</a>
@@ -27,8 +28,7 @@ nav-title: Sample Deployment Scenario
 	<li><a href="#deployment_secure">Sample deployment: clustered environment</a></li>
 	<li><a href="#components">Components</a>
 		<ul>
-			<li><a href="#components_pm">Policy Manager (PM)</a></li>
-			<li><a href="#components_cm">Community Manager (CM)</a></li>
+			<li><a href="#components_pm_cm">Policy Manager and Community Manager running in the same container</a></li>
 			<li><a href="#components_scheduler">Job Scheduler</a></li>
 			<li><a href="#components_oauth">OAuth</a></li>
 			<li><a href="#components_reverseproxy">Reverse Proxies</a></li>
@@ -42,8 +42,8 @@ nav-title: Sample Deployment Scenario
 		<ul>
 			<li><a href="#features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</a></li>
 			<li><a href="#features_nd_oauth">Standalone API Gateway (Network Director) with OAuth</a></li>
-			<li><a href="#features_sched_jobs">Scheduled Jobs container features</a></li>
 			<li><a href="#features_oauth_alone">Standalone OAuth container features</a></li>
+			<li><a href="#features_sched_jobs">Scheduled Jobs container features</a></li>
 		</ul>
 		</li>
 </ul>
@@ -56,13 +56,7 @@ nav-title: Sample Deployment Scenario
 <ul class="apidoc_red">
 	<li>Database connectivity from the containers</li>
 	<li>Load balancing and failover requirements</li>
-	<li>Security and firewall restrictions<!--, such as: {<span class="apidoc_red">commenting out based on input from IH 9/21/18 ATMO-25680, The diagram accommodates these points below. He thinks it complicates matters. Commenting out so can publish. xxx</span>}
-<ul>
-			<li>The DMZ cannot connect to the database server</li>
-			<li>Requests cannot go directly to the internal network without having a hop in the DMZ</li>
-			<li>The developer user sessions and the API request traffic must be kept separate on different machines</li>
-		</ul>
-	--></li>
+	<li>Security and firewall restrictions</li>
 </ul>
 <p><strong>Note</strong>: It's best to consult with a member of the Akana Professional Services team to get recommendations on the ideal deployment for your requirements.</p>
 
@@ -150,7 +144,7 @@ nav-title: Sample Deployment Scenario
 	<li>External Gateways: an external cluster of two, outside the firewall</li>
 	<li>Internal Gateways: an internal cluster of two, inside the firewall.</li>
 </ul>
-<p>In this sample scenario, the external Network Director instances call the internal Network Director instances before calling the API. It's not necessary to configure your deployment this way, but it's a clean approach and avoids opening direct access to your internal network from your DMZ.<!--{<span class="apidoc_red">EN: is there a good reason we can provide to do it? You said, it's a cleaner way to do it. 9/21/18 for ATMO-25680</span>}--></p>
+<p>In this sample scenario, the external Network Director instances call the internal Network Director instances before calling the API. It's not necessary to configure your deployment this way, but it's a clean approach and avoids opening direct access to your internal network from your DMZ.</p>
 <p>The Network Director communicates with Policy Manager and relays the messages downstream to the API.</p>
 <p>For information on the features you'll need to install on Network Director containers, see <a href="#features_nd_oauth">Standalone API Gateway (Network Director) with OAuth</a>.</p>
 
@@ -187,9 +181,9 @@ nav-title: Sample Deployment Scenario
 <p>To create the above deployment, you'd need to install the features below in the various containers.</p>
 <ul>
 	<li><a href="#features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</a></li>
-	<li><a href="#features_nd_alone">Standalone Internal/External Gateway (Network Director) container features (without OAuth</a></li>
-	<li><a href="#features_sched_jobs">Scheduled Jobs container features</a></li>
+	<li><a href="#features_nd_oauth">Standalone API Gateway (Network Director) with OAuth</a></li>
 	<li><a href="#features_oauth_alone">Standalone OAuth container features</a></li>
+	<li><a href="#features_sched_jobs">Scheduled Jobs container features</a></li>
 </ul>
 
 
@@ -235,6 +229,8 @@ nav-title: Sample Deployment Scenario
 	<li>Akana OAuth Provider (oauth.provider)</li>
 	<li>Akana Community Manager OAuth Provider (community.manager.oauth.provider)</li>
 </ul>
+
+
 <h4 id="features_sched_jobs">Scheduled Jobs container features</h4>
 <p>The installation features that are installed on this standalone container, that add jobs to the Quartz scheduler, are:</p>
 <ul>
