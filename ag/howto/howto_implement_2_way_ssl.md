@@ -113,6 +113,8 @@ If you would like to use different outbound certificates for different services,
 
 ![](images/imp_2way_ssl_3.jpg)
 
+On the **Manage Outbound Identities** page, check the **Use Incoming Identities as Outbound Identities** box, as shown above. When you check this box, the platform uses the HTTP client's mutual SSL certificate. This allows using different client certificates for each service. If the box isn't checked, the listener certificate is used. 
+
 1. In *Policy Manager Workbench*, select the virtual service you would like to attach an Outbound Certificate to.
 2. On the *Service Details* screen, click **Manage PKI Keys** from the *Actions* portlet. 
 3. On the *Select Key Management Option* screen. Two options can be used.
@@ -128,6 +130,7 @@ If you would like to use different outbound certificates for different services,
 13. Click **Load Aliases**.
 14. Select the *Key Alias* you would like to import and click **Finish**.
 	![](images/imp_2way_ssl_4.jpg)
+15. From the **Details** page for the service, from the *Actions* portlet, click **Manage Outbound Identities**. Check the **Use Service Identity for Outbound HTTPS** box, as shown in the diagram at the beginning of this procedure. Click **Finish**. 
 
 ### Outbound HTTPS Certificate Configured on the Network Director Container
 
