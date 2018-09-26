@@ -506,10 +506,39 @@ vsep.listenerName = "https"</td>
 <h5 id="s05_01_tenantnames">Tenant Names</h5>
 <p>Tenants require a <strong>name</strong> property which is used to identify the tenant by environments within the topology. This name must be unique within the topology, but need not correspond to the actual tenant name.</p>
 
-<h5 id="s05_01_delegatedauth">Delegated Authentication</h5>
+<h5 id="s05_01_delegatedauth_pre_2018">Delegated Authentication</h5>
 <p>The Boolean <strong>userAuthenticationSource</strong> property is used to indicate that authentication for the underlying Lifecycle Repository library console is to be delegated to the specified tenant. This means that users of the specified tenant can log in to the topology library using their email and password for that tenant.</p>
 <p>Only one tenant can have the <strong>userAuthenticationSource</strong> property set to <strong>true</strong>, and that tenant must be local to the Lifecycle Coordinator.</p>
 
+<h5 id="s05_01_delegatedauth_2018">Delegated Authentication in API Platform Version 2018.0.0 and later</h5>
+<p>{<span class="apidoc_red">mods for doc ATMO-25745 eng ATMO-24807 for TG rev 9/26</span>}</p>
+<p>In version 2018.0.0, Lifecycle Coordinator relies on the Akana API Platform for user authentication. Since Lifecycle Coordinator is often deployed separately from tenants in the topology, an additional option was added that allows delegation of authentication and user management to a local tenant that is not in the topology.</p>
+<p>Lifecycle Coordinator can delegate user definition and authentication to a local tenant (a tenant in the same container that Lifecycle Coordinator is deployed in).</p>
+<p>You can specify the tenant to be used for authentication in either of two ways:</p>
+<ul>
+	<li>By setting the Boolean <strong>userAuthenticationSource</strong> property within a Tenant definition to indicate that the tenant will be used for authentication.
+		<p>An example is shown below.</p>
+		<pre>{ 
+  "name":"DevelopmentTenant",
+  "id":"tenant1",
+  "credentials":{ 
+    "email":"administrator1@roch.soa.local",
+    "password":"password1"
+  },
+  "userAuthenticationSource":true
+},</pre>
+	</li>
+	<li>By setting a tenant ID using the topology-scoped <strong>authentication-tenant-id</strong> property.  A tenant specified with the <strong>authentication-tenant-id</strong> property must be local, but doesn't need to be part of the topology.
+		<p>An example is shown below.</p>
+		<pre>{
+  "name": "Topology1",
+  "properties": [
+    {"name":"authentication-tenant-id","value":"authtenant"}
+  ],
+...</pre>
+	</li>
+</ul>
+<p>If neither of these approaches is used to specify the authentication tenant, the authentication tenant ID defaults to <strong>lifecycle_coordinator</strong>.</p>
 <h5 id="s05_01_tenantproperties">Tenant Properties (8.4.18 and later)</h5>
 <p>Tenant definitions can contain optional properties, as shown in the example below.</p>
 <pre>{
@@ -751,7 +780,7 @@ vsep.listenerName = "https"</td>
 
 
 <h4 id="resource_mapping">Resource Mappings (Scope Mapping)</h4>
-<p>{<span class="apidoc_red">mods for doc ATMO-25558 eng ATMO-24557 for TG rev 9/26</span>}</p>
+<!--<p>{<span class="apidoc_red">mods for doc ATMO-25558 TG OK 9/26</span>}</p>-->
 <h5 class="stamp">API Platform Version: 2018.0.0 and later</h5>
 <p>A PromotionProfile can, optionally, include a set of ResourceMappings that can be used to tailor the propagation and validation of resource references representing the <strong>scopes</strong> assigned to an API and its operations as the API is promoted to the target environment.</p>
 <p>A ResourceMapping consists of a <strong>sourceResource</strong> and a <strong>targetResource</strong> property, each specifying either the name or ID of a resource in the respective environment. The following PromotionProfile shows an example of a ResourceMapping that maps a resource (scope) by name.</p>
@@ -798,7 +827,7 @@ vsep.listenerName = "https"</td>
     {"name": "validate-api-resources","value": "true"}
   ]
 }</pre>
-<p>With the "validate-api-resources" property set to "true", promotion of an API with an unmatched resource reference will be aborted. A validation error is displayed to the user attempting to promote the resource.</p>
+<p>With the <strong>validate-api-resources</strong> property set to <strong>true</strong>, promotion of an API with an unmatched resource reference will be aborted. A validation error is displayed to the user attempting to promote the resource.</p>
 
 
 <h4 id="asset_notification">Asset Notifications</h4>
