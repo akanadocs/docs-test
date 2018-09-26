@@ -9,7 +9,7 @@ weight: 20
 type: page
 nav-title: LC Promotion Guide
 ---
-<h2 id="top">Lifecycle Coordinator Promotion Guide </h2>
+<h2 id="top">Lifecycle Coordinator Promotion Guide</h2>
 <p>Provides information about how to use the Lifecycle Coordinator feature to manage the promotion feature.</p>
 <h5 class="stamp">API Platform Version: 8.4.3 and later</h5>
 <div class = "divider1"></div>
@@ -53,6 +53,7 @@ nav-title: LC Promotion Guide
 			<li><a href="#s05_05">Filters</a></li>
 			<li><a href="#s05_06">Organization Mapping</a> (8.4.13 and later)</li>
 			<li><a href="#s05_07">Policy Mapping</a> (8.4.16 and later)</li>
+			<li><a href="#resource_mapping">Resource Mappings (Scope Mapping)</a> (2018.0.0 and later)</li>
 			<li><a href="#asset_notification">Asset Notifications</a> (8.4.17 and later)</li>
 			<li><a href="#properties_element">Properties</a> (8.4.17 and later)</li>
 		</ol>
@@ -373,7 +374,7 @@ vsep.listenerName = "https"</td>
 
 <h4 id="config_preserveKeys">Unique ID Mapping behavior</h4>
 <p><span class="stamp">API Platform Version: 8.4.14 and later</span>. Updated for 2018.0.0.</p>
-<p>(<span class="apidoc_red">ATMO-25623</span>}</p>
+<p>(<span class="apidoc_red">ATMO-25623, no rev needed</span>}</p>
 <p>When a source and target environment exist in the same API Platform instance, it is necessary to assign new unique IDs (keys) to the internal objects, such as services, that make up an API or app being promoted. This is because the keys must be unique across the API Platform instance, regardless of which tenant they exist in.</p>
 <p>By default, Lifecyle Coordinator determines whether to preserve the keys of the promoted objects, or to assign new keys, based on whether the source and target environments exist in the same API Platform instance:</p>
 <ul>
@@ -747,6 +748,57 @@ vsep.listenerName = "https"</td>
 </ul>
 <p>If none of the above criteria are met, a validation error is returned to the promoting user and the promotion is aborted.</p>
 <p><a href="#top">Back to top</a></p>
+
+
+<h4 id="resource_mapping">Resource Mappings (Scope Mapping)</h4>
+<p>{<span class="apidoc_red">mods for doc ATMO-25558 eng ATMO-24557 for TG rev 9/26</span>}</p>
+<h5 class="stamp">API Platform Version: 2018.0.0 and later</h5>
+<p>A PromotionProfile can, optionally, include a set of ResourceMappings that can be used to tailor the propagation and validation of resource references representing the <strong>scopes</strong> assigned to an API and its operations as the API is promoted to the target environment.</p>
+<p>A ResourceMapping consists of a <strong>sourceResource</strong> and a <strong>targetResource</strong> property, each specifying either the name or ID of a resource in the respective environment. The following PromotionProfile shows an example of a ResourceMapping that maps a resource (scope) by name.</p>
+<pre>{
+  "name": "Default Production Promotion",
+  "description": "Dev to production default profile",
+  "targetEnvironment": "production",
+  "resourceMappings": [
+    {
+      "sourceResource": {"resourceName" : "DevScope1"},
+      "targetResource": {"resourceName" : "ProdScope1"}
+    }
+  ]
+}</pre>
+<p>Resource mapping can also be done with unique IDs. In the example below, the ResourceMapping uses the unique IDs of the source and target resources.</p>
+<pre>{
+  " sourceResource ":{
+    "resourceId":"aa6d2ae0-299d-47d1-a899-f7e6be1b781a.tenant1"
+  },
+  " targetResource ":{
+    "resourceId":"3456bae0-299d-47d1-7799-f7e6be1b221a.tenant2"
+  }
+}</pre>
+
+<h5 id="resource_mapping_default">Default Mapping</h5>
+<p>By default, Lifecycle Coordinator maps resources (scopes) based on matching names. This means that references from an API to a scope in the source environment will be mapped to a scope of the same name (if it exists) in the target environment regardless of the IDs of the scopes. You can change this default behavior by setting the <strong>match-resources-by-name</strong> property on the PromotionProfile to <strong>false</strong> as shown below.</p>
+<pre>{
+  "name": "Default Production Promotion",
+  "description": "Dev to production default profile",
+  "targetEnvironment": "production",
+  "properties": [
+    {"name": "match-resources-by-name","value": "false"}
+  ]
+}</pre>
+
+<h5 id="resource_validation">Resource Validation</h5>
+<p>By default, if a resource referenced by an API or its operations does not match a resource in the target environment (either by ID, by resource mapping, or by default name matching behavior), promotion of the API will proceed without error with the resource reference removed from the promoted API.</p>
+<p>You can change this behavior by setting the <strong>validate-api-resources</strong> property on the PromotionProfile to <strong>true</strong>, as shown in the example below.</p>
+<pre>{
+  "name": "Default Production Promotion",
+  "description": "Dev to production default profile",
+  "targetEnvironment": "production",
+  "properties": [
+    {"name": "validate-api-resources","value": "true"}
+  ]
+}</pre>
+<p>With the "validate-api-resources" property set to "true", promotion of an API with an unmatched resource reference will be aborted. A validation error is displayed to the user attempting to promote the resource.</p>
 
 
 <h4 id="asset_notification">Asset Notifications</h4>
@@ -1213,10 +1265,16 @@ vsep.listenerName = "https"</td>
 	<li><a href="#policy_replacement_2018">Behavior in version 2018.0.0 and later</a></li>
 </ul>
 <p id="policy_replacement_pre2018"><strong>Behavior in versions prior to 2018.0.0</strong></p>
-<p>{<span class="apidoc_red">mods for doc ATMO-25598&nbsp;eng ATMO-25577&nbsp;for TG rev 9/25</span>}</p>
+<p>{<span class="apidoc_red">mods for doc ATMO-25598 eng ATMO-25577 for TG rev 9/25</span>}</p>
 <p>In versions prior to 2018.0.0, it is possible to customize the <strong>Apply Runtime Configuration</strong> API post-processing task using the Configuration Designer by setting the <strong>Preserve Existing Policies</strong> property to <strong>false</strong>. This indicates that any existing policies on the implementation or physical service that are not specified in the Runtime Configuration will be removed, and replaced by those in the Runtime Configuration.</p>
 <p>When the <strong>Preserve Existing Policies</strong> property is set to <strong>false</strong>, you can specify the value of <strong>NONE</strong> for any of the policy classifiers. This indicates that all policies should be removed from the implementation or physical service.</p>
 <p>In any case, if a policy classifier has no value in the Runtime Configuration, no action will be taken with the policies associated with the implementation or physical service.</p>
+<p>Here&nbsp;are a couple of examples of how this could be used:</p>
+<ul>
+	<li><strong>Adding a policy</strong>: Let's say there is a two-environment topology: (dev and prod), and the topology is configured so that policies from dev are preserved when promoting, but you also want to make sure that the prod-level security policy is in place for all APIs that are PCI-compliant. You could set up a Runtime Configuration with a <strong>pci = true</strong> filter that specifies the production-level security policy, but you probably wouldn't want to remove other policies the API may have.  In this scenario, you could set the <strong>Preserve Existing Policies</strong> property to <strong>true</strong>. The new policy is in addition to any existing policies.</li>
+	<li> <strong>Replacing existing policies</strong>: Let's say you want to completely automate the assignment of policies to APIs, managing it entirely based on properties set on the API.  In this case, you could set the preserve flag to false. The Runtime Configuration woudl then overwrite any policies that were manually set or were in the promotion from an earlier environment. The policies in the Runtime Configuration would replace all existing policies. </li>
+</ul>
+
 <p id="policy_replacement_2018"><strong>Behavior in version 2018.0.0 and later</strong></p>
 <p>In 2018.0.0 and later, there are two ways that you can customize policy replacement behavior:</p>
 <ul>
