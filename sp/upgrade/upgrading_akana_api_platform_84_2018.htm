@@ -13,6 +13,12 @@ nav-title: Upgrade 8.4x to 2018.0.x
 <p>{<span class="apidoc_red">Draft</span>}</p>
 <p>Learn how to upgrade from Akana API Platform 8.4x to 2018.0.x.</p>
 <p>In previous versions, upgrade instructions addressed upgrading existing containers. When moving to version 2018.0.x, we recommend that you create new containers. These instructions address the scenario of creating new containers for your 2018.0.x installation.</p>
+<p>This upgrade addresses a simple container scenario of:</p>
+<ul>
+	<li>One container with Policy Manager and Community Manager installed</li>
+	<li>One container running the API Gateway (Network Director)</li>
+	<li>One container running the scheduled jobs</li>
+</ul>
 <p><strong>Note</strong>: If you're upgrading Policy Manager for DataPower, follow the steps in this document that you would use for upgrading Network Director.</p>
 <p><strong>Note</strong>: This document covers instructions for 2018.0.0. For 8.4x, see <a href="upgrading_akana_api_platform_82_84.htm">Upgrading Akana API Platform from Version 8.2 to Version 8.4x</a>.</p>
 <!--<p><strong>Micro-Upgrade</strong>: If you're upgrading to a micro version&#8212;for example, 8.4.1 to 8.4.22&#8212;it's important to follow through the entire upgrade procedure. For additional notes and information about upgrading to a micro version, see <a href="upgrading_micro.htm">Micro-Version Upgrade</a>. {Commenting this out for the initial release of 2018.0.0 as it's inapplicable for an initial release. 9/4/18}</p>-->
@@ -109,7 +115,7 @@ nav-title: Upgrade 8.4x to 2018.0.x
 
 
 
-<h4 id="s01_00">Overview</h4>
+<h3 id="s01_00">Overview</h3>
 <p>In previous versions, upgrade instructions addressed upgrading existing containers. When moving to version 2018.0.0, we recommend that you create new containers. These instructions address the scenario of creating new containers for your 2018.0.x installation.</p>
 <p>There are some steps you might need to take before starting the upgrade process, and some information you'll need to consider to determine how to proceed, including:</p>
 <ul>
@@ -122,22 +128,22 @@ nav-title: Upgrade 8.4x to 2018.0.x
 
 
 
-<h4 id="s01_01">Step 1-1: Review release notes</h4>
+<h3 id="s01_01">Step 1-1: Review release notes</h3>
 <p>Review the release notes so that you are aware of changes to the platform. Check for upgrade notes.</p>
 <p>Release notes are available from the Rogue Wave Support Center (<a href="https://library.roguewave.com" target="_blank">https://library.roguewave.com</a>).</p>
 <p><a href="#top">back to top</a></p>
 
 
 
-<h4 id="s01_02">Step 1-2: Plan the upgrade</h4>
+<h3 id="s01_02">Step 1-2: Plan the upgrade</h3>
 <p>Before you start downloading and installing, plan your upgrade. In particular, you'll need to:</p>
 <ul>
 	<li>Decide what containers you'll have, and which features will be installed in which containers. For a recommended simple configuration, see <a href="../deployment/deployment_clustered.htm">Sample Deployment Scenario</a>.</li>
 	<li>Determine where you'll install Elasticsearch, needed for the search feature. For full information on Elasticsearch, see <a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a>.</li>
 	<li>If you have a specific add-on feature installed, such as the Integration Services option pack, SiteMinder Security Provider, or SAML Web SSO Security Provider feature, it's important that you download the new release version package for the same feature.</li>
-	<li>{<span class="apidoc_red">xxx any others</span>?}</li>
+	<li>Take all steps needed to save out container settings <span class="apidoc_red">xxx</span> so that you can reproduce the configuration on the new container, where applicable. {<span class="apidoc_red">need much more info on this</span>}</li>
 </ul>
-<p><strong>Note</strong>: <span class="apidoc_red">The SAML Web SSO feature remains at version 8.0. There is no upgrade to version 8.4</span>. {<span class="apidoc_red">old note: do we have a new SAML now?</span>}</p>
+<p><strong>Note</strong>: <span class="apidoc_red">The SAML Web SSO feature remains at version 8.0. There is no upgrade to version 8.4</span>. {<span class="apidoc_red">this was an old note. Do we have a new SAML now?</span>}</p>
 <p>{<span class="apidoc_red">Questions</span>}:</p>
 <ol>
 	<li><strong>What do they have to note from the previous installation, to reconfigure in the upgraded installation?</strong></li>
@@ -148,31 +154,19 @@ nav-title: Upgrade 8.4x to 2018.0.x
 
 
 
-<h4 id="s01_03">Step 1-3: Gather ZIP files and download to the upgrade folder</h4>
-<p>The first step is to download the required ZIP files.</p>
-<h5 id="proc_download_zips">To download the installation ZIP file or files</h5>
-<ol>
-	<li>First, create a folder for your 2018.0.x installation; for example, <strong>aap201800</strong>.</li>
-	<li>Log in to the Rogue Wave Support Center (<a href="https://library.roguewave.com" target="_blank">https://library.roguewave.com</a>).
-		<p><strong>Note</strong>: If you don't have a login for the site, contact Akana technical support to get access.</p>
-	</li>
-	<li>In the <strong>My Resources section</strong>, click <strong>Product Downloads</strong>, then click <strong>Akana - Product Downloads</strong> (<a href="https://library.roguewave.com/display/SUPPORT/Akana+-+Product+Downloads" title="Direct link to Akana product downloads" target="_blank">https://library.roguewave.com/display/SUPPORT/Akana+-+Product+Downloads</a>)</li>
-	<li>Download the Akana Platform 2018.0.0 file:
-		<ul>
-			<li>Search for <strong>Akana Platform 2018.0.0 GA</strong>, click the download link, and download the file to the folder you created.</li>
-		</ul>
-	</li>
-	<!--	<li>Download the update file for Akana Platform 8.4.11:
-		<ul>
-			<li>Search for <strong>Akana Platform 8.4.11</strong>, click the download link, and download the file.</li>
-		</ul>
-	</li>-->
-</ol>
+<h3 id="s01_03">Step 1-3: Gather ZIP files {<span class="apidoc_red">file?</span>}and download to a temporary folder</h3>
+<p>The first step is to download the required ZIP files&nbsp;and download to a temporary folder. From there, you'll unzip the files into your new installation folder. You'll need to:</p>
+<ul>
+	<li>Create a temporary folder for the downloaded ZIP file.</li>
+	<li>Create a folder for your 2018.0.x installation; for example, <strong>aap201800</strong>.</li>
+	<li>Download the ZIP file for version 2018.0.0. </li>
+</ul>
 <p>Depending on the scenario, you might also need one or more of the following files:</p>
 <ul>
 	<li><strong>Plug-ins</strong>: The ZIP file, and any updates, for any plug-ins you want to use in your installation.</li>
 	<li><strong>Updates</strong>: not applicable to version 2018.0.0 itself, but for future updates.</li>
 </ul>
+<p>For detailed instructions on this step, refer to the installation guide, <a href="../platform_install/installing_akana_api_platform.htm#gather_zip_files">Gather ZIP files and download to a temporary folder</a>.</p>
 <p><strong>Note</strong>: For notes about limitations and extra steps for specific databases, see <a href="../platform_install/installing_akana_api_platform.htm#supported_databases">Supported databases</a> (install doc). If you're using a MySQL database with API Platform and the Lifecycle Repository feature, see <a href="../platform_install/installing_akana_api_platform.htm#notes_database_mysql_rm">Database notes: MySQL with Lifecycle Repository</a>.</p>
 <p><a href="#top">back to top</a></p>
 
@@ -185,19 +179,74 @@ nav-title: Upgrade 8.4x to 2018.0.x
 
 
 
-<h4 id="s02_00">Overview</h4>
-<p><strong>Note</strong>: The instructions in this document are for upgrade from Akana API Platform 8.4x to Akana API Platform 2018.x. If you're upgrading from a version earlier than 8.4, you'll need to perform additional steps first, to upgrade to Policy Manager 8.2. For instructions, see http://docs.akana.com/ag/assets/AAP_80_82_Upgrade_Guide.pdf.</p>
+<h3 id="s02_00">Overview</h3>
+<p><strong>Note</strong>: The instructions in this document are for upgrade from Akana API Platform 8.4x to Akana API Platform 2018.x. If you're upgrading from an earlier version, you'll need to perform additional steps first, to upgrade to version 8.4. See <a href="upgrading_akana_api_platform_82_84.htm">Upgrading Akana API Platform from Version 8.2 to Version 8.4x</a>.</p>
 <p>At a high level, to perform the upgrade, you'll complete the following actions:</p>
 <ol>
-	<li>Install the Akana API Platform 8.4 in a new location.</li>
-	<li>Copy the AP82 container instances to the instances folder for the AP84 installation (except the configurator instance).</li>
+	<li>Install the Akana API Platform 2018.0.0 in a new location.</li>
+	<li>Create </li>
+	<li>{<span class="apidoc_red">whatever you need to do to get the properties to the new container</span>}</li>
 	<li>Perform the upgrade steps from the AP84 installation, following the exact sequence given below.</li>
 </ol>
 <p><a href="#top">back to top</a></p>
 
 
 
-<h4 id="s02_01">Step 2-1: Turn off scheduled jobs</h4>
+<h3 id="s02_01">Unzip installation files in the correct sequence</h3>
+<p>The next step is to extract the files, following the exact sequence below.</p>
+<p><strong>Note</strong>: You'll need a password to unzip the files. If you don't know the&nbsp;password, contact your Akana representative.</p>
+<h5>To unzip the installation files</h5>
+<ol>
+	<li>In the folder for your installation, unzip the Akana Platform 8.4 file.</li>
+	<li>In the folder for your installation, unzip the Akana Platform 8.4.11 file.</li>
+	<li>In the temporary folder, unzip the Akana Lifecycle Manager 8.0.6 file. The directory structure will include:
+		<ul>
+			<li>Lifecycle Manager 8.0.6 ZIP file: for example, <strong>lifecyclemanager_8.0.6.xxxxx.zip</strong>.</li>
+			<li>Java&nbsp;Clients ZIP file: for example, <strong>javaclients_8.0.6.00410.zip</strong>.</li>
+			<li>Other files, such as documentation.</li>
+		</ul>
+		</li>
+	
+	<li>From the temporary folder, copy the main Lifecycle Manager file to the folder for your installation.</li>
+	<li>In the folder for your installation, unzip the main Lifecycle Manager Platform file.</li>
+</ol>
+<p>For information about the folders and folder contents for the Akana API Platform, see <a href="../../sp/platform_install/installing_akana_api_platform.htm#installation_folder_structure">Installation folder structure</a>. {<span class="apidoc_red">need to update with the folder structure</span>}</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="s02_02">Create containers</h3>
+<p>Create the containers in this sequence:</p>
+<ol>
+	<li>The first Community&nbsp;Manager/Policy Manager container</li>
+	<li>Network Director container</li>
+	<li>OAuth container</li>
+	<li>Scheduled Jobs container</li>
+</ol>
+<p>{<span class="apidoc_red">check with EN re sequence of creating containers</span>}</p>
+<p>To create a container, follow the applicable instructions in the install guide:</p>
+<ul>
+	<li><a href="../platform_install/installing_akana_api_platform.htm#creating_container_windows">Creating a container via the GUI</a></li>
+	<li><a href="../platform_install/installing_akana_api_platform.htm#creating_container_silent">Creating a container using silent install (Linux)</a></li>
+</ul>
+<p>xxx</p>
+<p><a href="#top">back to top</a></p>
+
+
+
+
+
+
+
+
+
+
+
+<p>---------------------------- old stuff below this line ---</p>
+
+
+
+<h3 id="s02_01">Install the PM/ND container</h3>
 <p>Before upgrading, you must turn off scheduled jobs in the configuration settings, including the following two scheduled jobs in this sequence:</p>
 <ol>
 	<li>com.soa.scheduler.quartz</li>
@@ -221,7 +270,7 @@ nav-title: Upgrade 8.4x to 2018.0.x
 
 
 
-<h4 id="s02_02">Step 2-2: Back up and stop all containers for previous version</h4>
+<h3 id="s02_02">Step 2-2: Back up and stop all containers for previous version</h3>
 <p>The next step is to back up and stop the current version, before you upgrade. Follow the steps below.</p>
 <h5>To back up and stop version 8.4x</h5>
 <ol>
@@ -236,7 +285,7 @@ nav-title: Upgrade 8.4x to 2018.0.x
 
 
 
-<h4 id="s02_03">Step 2-3: Extract new ZIP files in sequence</h4>
+<h3 id="s02_03">Step 2-3: Extract new ZIP files in sequence</h3>
 <p>Now you're ready to install the new version. Make sure you install from the various ZIP files in the correct sequence.</p>
 <p><strong>Note</strong>: the filenames used below are examples. When you download files from the Rogue Wave Support Center (<a href="https://library.roguewave.com" target="_blank">https://library.roguewave.com</a>), you might have an updated variation.</p>
 <h5>To extract the new ZIP files</h5>
@@ -261,7 +310,7 @@ nav-title: Upgrade 8.4x to 2018.0.x
 
 
 
-<h4 id="s02_04">Step 2-4: Copy applicable version 8.4x files to version 2018.0.0 folder</h4>
+<h3 id="s02_04">Step 2-4: Copy applicable version 8.4x files to version 2018.0.0 folder</h3>
 <p>The next step is to copy container instances to your new installation.</p>
 <p><strong>Note</strong>: Do not copy the Configurator instance.</p>
 <h5>To copy version 8.4x files to version 2018.0.0 folder</h5>
@@ -283,7 +332,7 @@ AP82/instances/{instance}</li>
 
 
 
-<h4 id="s02_05">Step 2-5: Clear Configurator cache (if needed)</h4>
+<h3 id="s02_05">Step 2-5: Clear Configurator cache (if needed)</h3>
 <p>Before performing the upgrade, make sure the configurator cache is clear. At this point, there won't be any cache unless you launched the Configurator at the end of <a href="#s02_03">Step 2-3</a>. To be sure, follow the steps below.</p>
 <h5>To clear configurator cache</h5>
 <ol>
@@ -295,7 +344,7 @@ AP82/instances/{instance}</li>
 
 
 
-<h4 id="s02_06">Step 2-6: Upgrade container</h4>
+<h3 id="s02_06">Step 2-6: Upgrade container</h3>
 <p>You'll need to perform the upgrade procedure on each container you're upgrading to AP84, using the <strong>Configure Container Instance</strong> wizard.</p>
 <p><strong>Note</strong>: These instructions follow a sequence of upgrading the first Policy Manager container, then additional Policy Manager and Community Manager containers, and then Network Director and Agent containers. However, once you've done an initial Policy Manager upgrade to upgrade the database, the sequence of containers really doesn't matter. See <a href="#container_upgrade_sequence">Container upgrade sequence</a> below.</p>
 <p><strong>Note</strong>: Before you upgrade, make sure you've completed all previous steps, including copying the container instances (see <a href="#s02_04">Step 2-4: Copy applicable version 8.4 files to version 2018 folder</a>).</p>
@@ -307,7 +356,7 @@ AP82/instances/{instance}</li>
 </ul>
 
 
-<h4 id="s02_06_01">Upgrade container to Akana API Platform 8.4 (GUI)</h4>
+<h3 id="s02_06_01">Upgrade container to Akana API Platform 8.4 (GUI)</h3>
 <p>Upgrade via the GUI launches the Configurator wizard, which walks you through the upgrade process.</p>
 <h5>To upgrade the container to Akana API Platform 8.4 (via the GUI)</h5>
 <ol>
@@ -329,7 +378,7 @@ AP82/instances/{instance}</li>
 
 
 
-<h4 id="s02_06_02">Upgrade container to Akana API Platform 8.4 (silent upgrade)</h4>
+<h3 id="s02_06_02">Upgrade container to Akana API Platform 8.4 (silent upgrade)</h3>
 <p>You can set up the Configure Container Instance Wizard update process to run in an automated mode (silent mode).</p>
 <p>To do this you essentially need to set up a properties file that contains a set of property values that the wizard uses to automatically configure a container instance.</p>
 <h5>To upgrade to Akana API Platform 8.4 using silent mode</h5>
@@ -370,7 +419,7 @@ wizard.mode=update</pre></li>
 <p><strong>Note</strong>: If you are not using the Akana Administration Console, you are done with the upgrade; skip the rest of the upgrade steps.</p>
 
 
-<h4 id="s02_06_03">Upgrade container to Akana API Platform 8.4 (command line)</h4>
+<h3 id="s02_06_03">Upgrade container to Akana API Platform 8.4 (command line)</h3>
 <p>You can also perform the upgrade process from the command line. Follow the steps below.</p>
 <h5>To upgrade to Akana API Platform 8.4 from the command line</h5>
 <ol>
@@ -386,7 +435,7 @@ wizard.mode=update</pre></li>
 
 
 
-<h4 id="s02_07">Step 2-7: Upgrade additional containers</h4>
+<h3 id="s02_07">Step 2-7: Upgrade additional containers</h3>
 <p>Repeat the upgrade process for all additional containers. A suggested sequence is:</p>
 <ol>
 	<li>First, any additional containers running Policy Manager and/or the API Platform.</li>
@@ -403,7 +452,7 @@ wizard.mode=update</pre></li>
 
 
 
-<h4 id="s02_08">Step 2-8: (Conditional, Windows only): Unregister and re-register the Windows service</h4>
+<h3 id="s02_08">Step 2-8: (Conditional, Windows only): Unregister and re-register the Windows service</h3>
 <p>If your containers are registered as a Windows service, so that the container will start automatically when Windows starts, you must unregister the old version and register the new version, for each container.</p>
 <p>If you're not sure which containers are registered as a Windows service, you can check in the Windows Control Panel (<strong>Administrative Tools</strong> &gt; <strong>Services</strong>). To change the services, you must run as Administrator.</p>
 
@@ -421,7 +470,7 @@ wizard.mode=update</pre></li>
 
 
 
-<h4 id="s02_09">Step 2-9: Start the containers</h4>
+<h3 id="s02_09">Step 2-9: Start the containers</h3>
 <p><strong>Note</strong>: If you registered your containers as Windows services, in the previous step, the containers should already be running.</p>
 There are several ways you can start a container: Windows, as Windows service, or Unix. Follow the applicable procedure below.
 <h5>To start the container (Windows)</h5>
@@ -452,14 +501,14 @@ There are several ways you can start a container: Windows, as Windows service, o
 
 
 
-<h4 id="s02_10">Step 2-10: Clear browser cache</h4>
+<h3 id="s02_10">Step 2-10: Clear browser cache</h3>
 <p>Before launching the Akana Administration Console, clear the browser cache and then refresh the page, or start a new session in a browser private window. This ensures that you see the user interface changes included in the update.</p>
 <p>This completes the product installation. The next steps walk you through additional updates you'll need to make to complete the process, including updating database schemas and data.</p>
 <p><a href="#top">back to top</a></p>
 
 
 
-<h4 id="s02_11">Step 2-11: Launch the Akana Administration Console</h4>
+<h3 id="s02_11">Step 2-11: Launch the Akana Administration Console</h3>
 <p>Now it's time to launch the Administration Console and complete the installation tasks.</p>
 <p><strong>Note</strong>: The rest of the installation tasks are completed on containers running PM/CM only. There is no need to run them on Network Director containers.</p>
 <h5>To launch the Akana Administration Console</h5>
@@ -473,7 +522,7 @@ There are several ways you can start a container: Windows, as Windows service, o
 
 
 
-<h4 id="s02_12">Step 2-12: Refresh repository</h4>
+<h3 id="s02_12">Step 2-12: Refresh repository</h3>
 <p>Verify that the repository is there. Refresh if needed.</p>
 <h5>To verify/refresh the repository</h5>
 <ol>
@@ -490,7 +539,7 @@ There are several ways you can start a container: Windows, as Windows service, o
 
 
 
-<h4 id="s02_13">Step 2-13: Verify that features were updated correctly</h4>
+<h3 id="s02_13">Step 2-13: Verify that features were updated correctly</h3>
 <p>At this point, check that all the features installed in your implementation have been correctly upgraded to the new version you're installing:</p>
 <ol>
 	<li>In the Akana Administration Console, go to<strong> Installed Features</strong>.</li>
@@ -504,7 +553,7 @@ There are several ways you can start a container: Windows, as Windows service, o
 
 
 
-<h4 id="s02_14">Step 2-14: Run pending installation tasks and restart container</h4>
+<h3 id="s02_14">Step 2-14: Run pending installation tasks and restart container</h3>
 <p>Once you've installed and configured the Policy Manager features (Akana Policy Manager Console and Akana Policy Manager Services) on your container, the next step is to run any pending installation tasks. Some tasks start automatically; some might need to be started manually.</p>
 <p>Pending Installation tasks should include at least the below:</p>
 <ul>
@@ -527,7 +576,7 @@ There are several ways you can start a container: Windows, as Windows service, o
 
 
 
-<h4 id="s02_15">Step 2-15: Upgrade additional containers</h4>
+<h3 id="s02_15">Step 2-15: Upgrade additional containers</h3>
 <p>Make sure:</p>
 <ul>
 	<li>All containers are upgraded.</li>
@@ -539,7 +588,7 @@ There are several ways you can start a container: Windows, as Windows service, o
 
 
 
-<h4 id="s02_16">Step 2-16: Install and run upgrade tool: "Akana 8.2 to 8.4 model upgrade" (CM containers only)</h4>
+<h3 id="s02_16">Step 2-16: Install and run upgrade tool: "Akana 8.2 to 8.4 model upgrade" (CM containers only)</h3>
 <p>{<span class="apidoc_red">Not sure if there is a comparable step for upgrade to 2018.0.0: research. Note 9/4/18</span>}</p>
 <!--<p>{{<span class="apidoc_red">MM 3/27/17: Upgrade CM Models need to be run once, order should not matter.</span>}}</p>-->
 <p>The next step is to run the 8.2 to 8.4 upgrade tool, to update database objects from version 8.2 to 8.4.</p>
@@ -584,7 +633,7 @@ There are several ways you can start a container: Windows, as Windows service, o
 
 
 
-<h4 id="s02_17">Step 2-17: Turn scheduled jobs back on</h4>
+<h3 id="s02_17">Step 2-17: Turn scheduled jobs back on</h3>
 <p>Now it's time to turn back on the properties that you turned off in <a href="#s02_01">Step 2-1</a>. Restart the scheduled jobs in the opposite sequence; first the simple scheduler, and then the Quartz scheduler.</p>
 <p><strong>Note</strong>: Perform this step for all the AP82 containers with Policy Manager features installed, which have now been upgraded to AP84. Before performing this step, make sure the container was restarted.</p>
 <h5>To turn scheduled jobs back on</h5>
@@ -602,7 +651,7 @@ There are several ways you can start a container: Windows, as Windows service, o
 
 
 
-<h4 id="s02_18">Step 2-18: Update container metadata and authentication options</h4>
+<h3 id="s02_18">Step 2-18: Update container metadata and authentication options</h3>
 <p>The final step in the upgrade process is to update the Metadata URL and Authentication Options of each container you upgraded, in Policy Manager. This updates the container capabilities to support the latest features.</p>
 <h5>To update container metadata and authentication options</h5>
 <ol>
@@ -632,7 +681,7 @@ There are several ways you can start a container: Windows, as Windows service, o
 
 
 
-<h4 id="s03_00">Upgrade tasks when upgrading to 8.4: Overview</h4>
+<h3 id="s03_00">Upgrade tasks when upgrading to 8.4: Overview</h3>
 <p>Once you've completed the product version update, there are additional post-upgrade tasks you'll need to complete. Run these tasks on one of the containers with the Akana API Platform feature installed. Some of these steps are conditional depending on platform features you're using. They include:</p>
 <ul>
 	<li><a href="#s03_01">Step 3-1: Post-Upgrade Tasks for upgrades to 8.4: Provisioning</a></li>
@@ -647,7 +696,7 @@ There are several ways you can start a container: Windows, as Windows service, o
 
 
 
-<h4 id="s03_01">Step 3-1: Post-Upgrade Tasks for upgrades to 8.4: Provisioning</h4>
+<h3 id="s03_01">Step 3-1: Post-Upgrade Tasks for upgrades to 8.4: Provisioning</h3>
 <p>If you're upgrading from any previous version to version 8.4, you'll need to complete the <strong>Provisioning</strong> task as part of the upgrade process,  in all containers where the Policy Manager feature is installed.</p>
 <p>The provisioning step must be completed for each container running PM/CM.</p>
 <h5>To complete the Provisioning configuration action</h5>
@@ -663,7 +712,7 @@ There are several ways you can start a container: Windows, as Windows service, o
 
 
 
-<h4 id="s03_02">Step 3-2: Post-Upgrade Tasks for upgrades to 8.4: Upgrade CM Models</h4>
+<h3 id="s03_02">Step 3-2: Post-Upgrade Tasks for upgrades to 8.4: Upgrade CM Models</h3>
 <p>If you're upgrading from any previous version to version 8.4, you'll need to complete the <strong>Upgrade CM Models</strong> configuration action as part of the upgrade process, in all containers where the Community Manager feature is installed.</p>
 
 <h5>To complete the Upgrade CM Models configuration action</h5>
@@ -676,7 +725,7 @@ There are several ways you can start a container: Windows, as Windows service, o
 
 
 
-<h4 id="s03_04">Step 3-3: Post-Upgrade Task for upgrades to 8.4: Rebuild CM Styles</h4>
+<h3 id="s03_04">Step 3-3: Post-Upgrade Task for upgrades to 8.4: Rebuild CM Styles</h3>
 <p>As part of every upgrade, if you are using the developer portal, you'll need to run the <strong>Rebuild CM Styles</strong> configuration action as part of the upgrade process, in all containers where the Community Manager feature is installed.</p>
 <p> This makes sure that you have the latest style updates, for all themes and tenants.</p>
 <h5>To rebuild CM styles</h5>
@@ -690,7 +739,7 @@ There are several ways you can start a container: Windows, as Windows service, o
 
 
 
-<h4 id="s03_05">Step 3-4: Repeat configuration actions for additional containers and restart all containers</h4>
+<h3 id="s03_05">Step 3-4: Repeat configuration actions for additional containers and restart all containers</h3>
 <p>You might need to repeat some of the configuration actions for additional containers.</p>
 
 <h5>To complete configuration actions</h5>
@@ -708,7 +757,7 @@ There are several ways you can start a container: Windows, as Windows service, o
 
 
 
-<h4 id="s03_06">Step 3-5: Post-Upgrade task when upgrading to 8.4: delete and install object mappings</h4>
+<h3 id="s03_06">Step 3-5: Post-Upgrade task when upgrading to 8.4: delete and install object mappings</h3>
 <!--<p>{MM 3/27/17: Delete mappings can be done at any time after the upgrade.}</p>-->
 <p>Because of specific changes in the Elasticsearch mappings in version 8.3 and 8.4, as part of the upgrade process you'll need to delete the object mappings, and then add the updated mappings. This is because an additional object, Organizations, was added.</p>
 <p>You'll need to delete the existing Elasticsearch app and API mappings and then update app, API, and business organization mappings from the installation bundle.</p>
@@ -781,14 +830,14 @@ PUT
 
 
 
-<h4 id="s03_07">Step 3-6: Post-Upgrade Task for upgrades to 8.4: MongoDB Updates</h4>
+<h3 id="s03_07">Step 3-6: Post-Upgrade Task for upgrades to 8.4: MongoDB Updates</h3>
 <p>Version 8.4 includes some changes to the MongoDB database schema. To implement these updates, the upgrade process includes a new configuration action, <strong>Install Configuration Data and Indexes in MongoDB</strong>. Make sure you complete this configuration action along with all others when upgrading.</p>
 <p>The upgrade wizard steps you through the configuration action; if you don't complete the installation in one session, be sure to go back and make sure all configuration actions are complete. In the Akana Administration Console, Configuration tab, at the bottom left, the <strong>Configuration Actions</strong> section should be empty when the upgrade process is complete.</p>
 <p><a href="#top">back to top</a></p>
 
 
 
-<h4 id="s03_08">Step 3-7: Conditional, MongoDB/OAuth: Post-Upgrade Task for Data Migration</h4>
+<h3 id="s03_08">Step 3-7: Conditional, MongoDB/OAuth: Post-Upgrade Task for Data Migration</h3>
 <p><strong>Note</strong>: This task was introduced in version 8.4.4 and is applicable for upgrades to 8.4.4 and later versions.</p>
 <p>If you’re migrating from RDBMS to MongoDB and you use OAuth, you’ll need to run a data migration task, introduced in the upgrade to version 8.4.4, to ensure that OAuth tokens issued before the upgrade can still be used.</p>
 <p>After migrating the data, you'll need to update a configuration property and restart the container. Follow the steps below.</p>
@@ -843,6 +892,11 @@ PUT
 
 
 
+<!--<h3 id="xxx">Troubleshooting: error: xxx</h3>
+<p>xxx</p>
+<p><a href="#top">Back to top</a></p>-->
+
+
 
 <h3 id="ts_02_error_new_containers">Upgrading by creating new containers: notes</h3>
 <p>If you're upgrading by creating new containers, rather than upgrading existing containers, it's important that you delete the existing container from the Policy Manager workbench before creating the new container.</p>
@@ -853,6 +907,12 @@ Binding is attached to service endpoint.</pre>
 <p>If you encounter this message, delete the old container, and then retry the provisioning.</p>
 <p><a href="#top">Back to top</a></p>
 
+
+
+<!--<p>{Future procedures for this section:}</p>
+<p>Checking to make sure all the bundles have started correctly</p>
+<p>Stopping the scheduled jobs</p>
+<p>Starting the scheduled jobs</p>-->
 
 
 
