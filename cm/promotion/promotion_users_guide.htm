@@ -1285,29 +1285,23 @@ vsep.listenerName = "https"</td>
 </ul>
 
 <p id="policy_replacement"><strong>Policy Replacement Behavior</strong></p>
-<p>The default behavior for setting policies on an API implementation or physical service is additive, meaning that policies specified by the Runtime Configuration will be added to any existing policies on the implementation or physical service.</p>
-<p>In this section:</p>
-<ul>
-	<li><a href="#policy_replacement_pre2018">Behavior in versions prior to 2018.0.0</a></li>
-	<li><a href="#policy_replacement_2018">Behavior in version 2018.0.0 and later</a></li>
-</ul>
-<p id="policy_replacement_pre2018"><strong>Behavior in versions prior to 2018.0.0</strong></p>
-<p>{<span class="apidoc_red">mods for doc ATMO-25598 eng ATMO-25577 for TG rev 9/25</span>}</p>
-<p>In versions prior to 2018.0.0, it is possible to customize the <strong>Apply Runtime Configuration</strong> API post-processing task using the Configuration Designer by setting the <strong>Preserve Existing Policies</strong> property to <strong>false</strong>. This indicates that any existing policies on the implementation or physical service that are not specified in the Runtime Configuration will be removed, and replaced by those in the Runtime Configuration.</p>
-<p>When the <strong>Preserve Existing Policies</strong> property is set to <strong>false</strong>, you can specify the value of <strong>NONE</strong> for any of the policy classifiers. This indicates that all policies should be removed from the implementation or physical service.</p>
-<p>In any case, if a policy classifier has no value in the Runtime Configuration, no action will be taken with the policies associated with the implementation or physical service.</p>
+<!--<p>{<span class="apidoc_red">mods for doc ATMO-25598 eng ATMO-25577 for TG rev 9/25</span>}</p>-->
+<p>The default behavior for setting policies on an API implementation or physical service is additive, meaning that policies specified in the Runtime Configuration are added to any existing policies on the implementation or physical service. However, you can customize the default behavior to control policy replacement behavior.</p>
 <p>Here&nbsp;are a couple of examples of how this could be used:</p>
 <ul>
-	<li><strong>Adding a policy</strong>: Let's say there is a two-environment topology: (dev and prod), and the topology is configured so that policies from dev are preserved when promoting, but you also want to make sure that the prod-level security policy is in place for all APIs that are PCI-compliant. You could set up a Runtime Configuration with a <strong>pci = true</strong> filter that specifies the production-level security policy, but you probably wouldn't want to remove other policies the API may have.  In this scenario, you could set the <strong>Preserve Existing Policies</strong> property to <strong>true</strong>. The new policy is in addition to any existing policies.</li>
-	<li> <strong>Replacing existing policies</strong>: Let's say you want to completely automate the assignment of policies to APIs, managing it entirely based on properties set on the API.  In this case, you could set the preserve flag to false. The Runtime Configuration woudl then overwrite any policies that were manually set or were in the promotion from an earlier environment. The policies in the Runtime Configuration would replace all existing policies. </li>
+	<li><strong>Adding a policy</strong>: Let's say there is a two-environment topology: (dev and prod), and the topology is configured so that policies from dev are preserved when promoting, but you also want to make sure that the prod-level security policy is in place for all APIs that are PCI-compliant. You could set up a Runtime Configuration with a <strong>pci = true</strong> filter that specifies the production-level security policy, but you probably wouldn't want to remove other policies the API may have.  In this scenario, you could set the <strong>preserve-existing-policies</strong> property to <strong>true</strong>. The new policy is in addition to any existing policies.</li>
+	<li> <strong>Replacing existing policies</strong>: Let's say you want to completely automate the assignment of policies to APIs, managing it entirely based on properties set on the API.  In this case, you could set the <strong>preserve-existing-policies</strong> property to <strong>false</strong>. The Runtime Configuration would then overwrite any policies that were manually set or were in the promotion from an earlier environment. The policies in the Runtime Configuration would replace all existing policies. </li>
 </ul>
-
-<p id="policy_replacement_2018"><strong>Behavior in version 2018.0.0 and later</strong></p>
-<p>In 2018.0.0 and later, there are two ways that you can customize policy replacement behavior:</p>
+<p>There are two ways that you can customize policy replacement behavior:</p>
 <ul>
-	<li>By setting the <strong>preserve-existing-policies</strong> property</li>
-	<li>By setting the <strong>ENV:preserve-existing-policies</strong> property in the repository library</li>
+	<li><a href="#policy_replacement_pre_2018">By setting the <strong>preserve-existing-policies</strong> property</a></li>
+	<li><a href="#policy_replacement_2018">By setting the <strong>ENV:preserve-existing-policies</strong> property in the repository library</a> (2018.0.0 and later)</li>
 </ul>
+<p>In any case, if a policy classifier has no value in the Runtime Configuration, no action will be taken with the policies associated with the implementation or physical service.</p>
+
+<p id="policy_replacement_pre_2018"><strong>Setting the <strong>preserve-existing-policies</strong> property</strong></p>
+<p>You can customize the <strong>Apply Runtime Configuration</strong> API post-processing task using the Configuration Designer by setting the <strong>preserve-existing-policies</strong> property to <strong>false</strong>. This indicates that any existing policies on the implementation or physical service that are not specified in the Runtime Configuration will be removed, and replaced by those in the Runtime Configuration.</p>
+<p>When the <strong>preserve-existing-policies</strong> property is set to <strong>false</strong>, you can specify the value of <strong>NONE</strong> for any of the policy classifiers. This indicates that all policies should be removed from the implementation or physical service.</p>
 <p>In the example below, the <strong>preserve-existing-policies</strong> property is set to <strong>false</strong> in an environment configuration of a topology.</p>
 <pre>"configuration": {
   "properties" : [
@@ -1317,8 +1311,13 @@ vsep.listenerName = "https"</td>
   ...
   ]
 }</pre>
+<p id="policy_replacement_2018"><strong>Setting the ENV:preserve-existing-policies property in the repository library</strong> (2018.0.0 and later)</p>
 <p>In the example below, the <strong>ENV:preserve-existing-policies</strong> library property is set directly in the LPC document of the repository library.</p>
-<pre>&lt;library-properties&gt;<br />  &lt;property name=&quot;ENV:preserve-existing-policies&quot;&gt;<br />    &lt;value&gt;false&lt;/value&gt;<br />  &lt;/property&gt;<br />&lt;/library-properties&gt;</pre>
+<pre>&lt;library-properties&gt;
+  &lt;property name=&quot;ENV:preserve-existing-policies&quot;&gt;
+    &lt;value&gt;false&lt;/value&gt;
+  &lt;/property&gt;
+&lt;/library-properties&gt;</pre>
 
 <h5 id="s08_01_05_virtual_host">Virtual Host</h5>
 <p>This classifier is used to set the vanity host name for every endpoint in the implementation. Leaving this classifier unset indicates that the host name of the endpoints should not be modified.</p>
