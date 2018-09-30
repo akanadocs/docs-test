@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wsdl:definitions targetNamespace="urn:com.akana.lifecyclecoordinator.rest" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:com.akana.lifecyclecoordinator.rest" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nms2="urn:com.akana.lifecyclemanager.model.asset" xmlns:nms1="http://akana.com/xsd/topology/1.0" xmlns:shttp="http://soa.com/wsdl/http">
   <wsdl:types>
-    <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-<xs:complexType name="classifierCriteria"><xs:sequence><xs:element minOccurs="0" name="classifierName" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="values" nillable="true" type="valueSetValue"/></xs:sequence></xs:complexType>
-<xs:complexType name="valueSetValue"><xs:sequence><xs:element minOccurs="0" name="regularExpression" type="xs:boolean"/><xs:element minOccurs="0" name="value" type="xs:string"/></xs:sequence></xs:complexType>
-</xs:schema>
     <xs:schema targetNamespace="http://www.w3.org/XML/1998/namespace" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:attribute name="base" type="xs:anyURI"/>
 <xs:attribute name="lang" type="xs:string"/>
+</xs:schema>
+    <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:complexType name="classifierCriteria"><xs:sequence><xs:element minOccurs="0" name="classifierName" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="values" nillable="true" type="valueSetValue"/></xs:sequence></xs:complexType>
+<xs:complexType name="valueSetValue"><xs:sequence><xs:element minOccurs="0" name="regularExpression" type="xs:boolean"/><xs:element minOccurs="0" name="value" type="xs:string"/></xs:sequence></xs:complexType>
 </xs:schema>
     <xs:schema elementFormDefault="qualified" targetNamespace="http://www.w3.org/2005/Atom" version="1.0" xmlns:tns="http://www.w3.org/2005/Atom" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:import namespace="http://www.w3.org/XML/1998/namespace"/>
@@ -299,12 +299,12 @@
     <wsdl:part name="getMappingConfigurationResponse" type="tns:List">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="promoteAppResponseMessage">
-    <wsdl:part element="xs:any">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="addTopologyRequestMessage">
     <wsdl:part name="parameter0" element="nms1:topology">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="promoteAppResponseMessage">
+    <wsdl:part element="xs:any">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteMappingScriptRequestMessage">
@@ -341,12 +341,12 @@
     <wsdl:part name="profile-name" type="xs:string">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getTenantCredentialsResponseMessage">
-    <wsdl:part name="getTenantCredentialsResponse" type="nms1:">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="getTenantsRequestMessage">
     <wsdl:part name="topology-name" type="xs:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTenantCredentialsResponseMessage">
+    <wsdl:part name="getTenantCredentialsResponse" type="nms1:">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getPromotionProfileResponseMessage">
@@ -359,14 +359,14 @@
     <wsdl:part name="tenant-name" type="xs:string">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="removeTopologyRequestMessage">
+    <wsdl:part name="topology-name" type="xs:string">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getTenantRequestMessage">
     <wsdl:part name="topology-name" type="xs:string">
     </wsdl:part>
     <wsdl:part name="tenant-name" type="xs:string">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="removeTopologyRequestMessage">
-    <wsdl:part name="topology-name" type="xs:string">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getTopologyRequestMessage">
@@ -420,6 +420,24 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="TopologyAPIPortType">
+    <wsdl:operation name="addTopology">
+      <wsdl:input message="tns:addTopologyRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:addTopologyResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDeploymentZoneConfigurationMappingConfiguration">
+      <wsdl:input message="tns:getDeploymentZoneConfigurationMappingConfigurationRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getDeploymentZoneConfigurationMappingConfigurationResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteTenant">
+      <wsdl:input message="tns:deleteTenantRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:deleteTenantResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="addTenant">
       <wsdl:input message="tns:addTenantRequestMessage">
     </wsdl:input>
@@ -444,28 +462,16 @@
       <wsdl:output message="tns:getEnvironmentResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getTenant">
-      <wsdl:input message="tns:getTenantRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getTenantResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="updateTenant">
-      <wsdl:input message="tns:updateTenantRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:updateTenantResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getFilter">
       <wsdl:input message="tns:getFilterRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:getFilterResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getEnvironments">
-      <wsdl:input message="tns:getEnvironmentsRequestMessage">
+    <wsdl:operation name="getTenants">
+      <wsdl:input message="tns:getTenantsRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:getEnvironmentsResponseMessage">
+      <wsdl:output message="tns:getTenantsResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateTenantCredentials">
@@ -510,22 +516,22 @@
       <wsdl:output message="tns:promoteAppResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getTopology">
-      <wsdl:input message="tns:getTopologyRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getTopologyResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="removeTopology">
       <wsdl:input message="tns:removeTopologyRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:removeTopologyResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="addTopology">
-      <wsdl:input message="tns:addTopologyRequestMessage">
+    <wsdl:operation name="getTopology">
+      <wsdl:input message="tns:getTopologyRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:addTopologyResponseMessage">
+      <wsdl:output message="tns:getTopologyResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getEnvironments">
+      <wsdl:input message="tns:getEnvironmentsRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getEnvironmentsResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateTopology">
@@ -630,27 +636,55 @@
       <wsdl:output message="tns:getMappingConfigurationResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getDeploymentZoneConfigurationMappingConfiguration">
-      <wsdl:input message="tns:getDeploymentZoneConfigurationMappingConfigurationRequestMessage">
+    <wsdl:operation name="updateTenant">
+      <wsdl:input message="tns:updateTenantRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:getDeploymentZoneConfigurationMappingConfigurationResponseMessage">
+      <wsdl:output message="tns:updateTenantResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="deleteTenant">
-      <wsdl:input message="tns:deleteTenantRequestMessage">
+    <wsdl:operation name="getTenant">
+      <wsdl:input message="tns:getTenantRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:deleteTenantResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getTenants">
-      <wsdl:input message="tns:getTenantsRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getTenantsResponseMessage">
+      <wsdl:output message="tns:getTenantResponseMessage">
     </wsdl:output>
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="TopologyAPIBinding" type="tns:TopologyAPIPortType">
     <shttp:binding/>
+    <wsdl:operation name="addTopology">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /topologies</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Create a new topology.  The topology name must be unique.]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Create a new topology]]></sdoc:summary><sdoc:response code="201" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology Created]]></sdoc:description></sdoc:response><sdoc:response code="400" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Invalid topology]]></sdoc:description></sdoc:response><sdoc:response code="409" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology already exists]]></sdoc:description></sdoc:response></wsdl:documentation>
+    <shttp:operation inputSerialization="application/json" location="/topologies" method="POST" outputSerialization="application/json"/>
+      <wsdl:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="" part="" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDeploymentZoneConfigurationMappingConfiguration">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /topologies/{topology-name}/environments/{environment-name}/profiles/{profile-name}/deployments/{deploymentzone-configuration-name}/rules</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get the Rules defined for the specified DeploymentZoneConfiguration in the specified PromotionProfile in the specified Environment and Topology]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get Rules for DepolymentZoneConfiguration]]></sdoc:summary><sdoc:response code="200" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Rules retrieved]]></sdoc:description></sdoc:response><sdoc:response code="404" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology, Environment, PromotionProfile or DeploymentZoneConfiguration not found]]></sdoc:description></sdoc:response></wsdl:documentation>
+    <shttp:operation location="/topologies/{topology-name}/environments/{environment-name}/profiles/{profile-name}/deployments/{deploymentzone-configuration-name}/rules" method="GET" outputSerialization="application/json"/>
+      <wsdl:input>
+    <shttp:input name="topology-name" part="topology-name" type="path"/>
+    <shttp:input name="environment-name" part="environment-name" type="path"/>
+    <shttp:input name="profile-name" part="profile-name" type="path"/>
+    <shttp:input name="deploymentzone-configuration-name" part="deploymentzone-configuration-name" type="path"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getDeploymentZoneConfigurationMappingConfigurationResponse" part="getDeploymentZoneConfigurationMappingConfigurationResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteTenant">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">DELETE /topologies/{topology-name}/tenants/{tenant-name}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Delete the specified Tenant from the specified Topology]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Delete a Tenant]]></sdoc:summary><sdoc:response code="200" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Tenant Deleted]]></sdoc:description></sdoc:response><sdoc:response code="404" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology or Tenant not found]]></sdoc:description></sdoc:response></wsdl:documentation>
+    <shttp:operation inputSerialization="application/json" location="/topologies/{topology-name}/tenants/{tenant-name}" method="DELETE"/>
+      <wsdl:input>
+    <shttp:input name="topology-name" part="topology-name" type="path"/>
+    <shttp:input name="tenant-name" part="tenant-name" type="path"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="" part="" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="addTenant">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /topologies/{topology-name}/tenants</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Add a Tenant to the specified Environment in the specified Topology]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Add Tenant]]></sdoc:summary><sdoc:response code="201" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Tenant added]]></sdoc:description></sdoc:response><sdoc:response code="400" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Invalid Tenant]]></sdoc:description></sdoc:response><sdoc:response code="404" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology not found]]></sdoc:description></sdoc:response><sdoc:response code="409" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Tenant already exists]]></sdoc:description></sdoc:response></wsdl:documentation>
     <shttp:operation inputSerialization="application/json" location="/topologies/{topology-name}/tenants" method="POST" outputSerialization="application/json"/>
@@ -694,28 +728,6 @@
     <shttp:output name="getEnvironmentResponse" part="getEnvironmentResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getTenant">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /topologies/{topology-name}/tenants/{tenant-name}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get the specified Tenant from the specified Topology]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get a Tenant]]></sdoc:summary><sdoc:response code="200" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Tenant found]]></sdoc:description></sdoc:response><sdoc:response code="404" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology or Tenant not found]]></sdoc:description></sdoc:response></wsdl:documentation>
-    <shttp:operation location="/topologies/{topology-name}/tenants/{tenant-name}" method="GET" outputSerialization="application/json"/>
-      <wsdl:input>
-    <shttp:input name="topology-name" part="topology-name" type="path"/>
-    <shttp:input name="tenant-name" part="tenant-name" type="path"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getTenantResponse" part="getTenantResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="updateTenant">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /topologies/{topology-name}/tenants</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Update an existing Tenant in the specified Topology]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Update a Tenant]]></sdoc:summary><sdoc:response code="200" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Tenant Updated]]></sdoc:description></sdoc:response><sdoc:response code="400" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Invalid Tenant]]></sdoc:description></sdoc:response><sdoc:response code="404" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology or Tenant not found]]></sdoc:description></sdoc:response></wsdl:documentation>
-    <shttp:operation inputSerialization="application/json" location="/topologies/{topology-name}/tenants" method="PUT" outputSerialization="application/json"/>
-      <wsdl:input>
-    <shttp:input name="topology-name" part="topology-name" type="path"/>
-    <shttp:input name="parameter0" part="parameter0" type="entity"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="" part="" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getFilter">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /topologies/{topology-name}/filters/{filter-name}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get the specified AssetFilter for the specified Topology]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get an AssetFilter]]></sdoc:summary><sdoc:response code="200" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[AssetFilter Found]]></sdoc:description></sdoc:response><sdoc:response code="404" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology or AssetFilter not found]]></sdoc:description></sdoc:response></wsdl:documentation>
     <shttp:operation location="/topologies/{topology-name}/filters/{filter-name}" method="GET" outputSerialization="application/json"/>
@@ -727,14 +739,14 @@
     <shttp:output name="getFilterResponse" part="getFilterResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getEnvironments">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /topologies/{topology-name}/environments</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get all the Environments defined for the specified Topology]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get all Environments for Topology]]></sdoc:summary><sdoc:response code="200" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Environments retrieved]]></sdoc:description></sdoc:response><sdoc:response code="404" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology not found]]></sdoc:description></sdoc:response></wsdl:documentation>
-    <shttp:operation location="/topologies/{topology-name}/environments" method="GET" outputSerialization="application/json"/>
+    <wsdl:operation name="getTenants">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /topologies/{topology-name}/tenants</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get all Tenants defined for the specified Topology]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get all Tenants for a Topology]]></sdoc:summary><sdoc:response code="200" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Tenants retrieved]]></sdoc:description></sdoc:response><sdoc:response code="404" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology not found]]></sdoc:description></sdoc:response></wsdl:documentation>
+    <shttp:operation location="/topologies/{topology-name}/tenants" method="GET" outputSerialization="application/json"/>
       <wsdl:input>
     <shttp:input name="topology-name" part="topology-name" type="path"/>
       </wsdl:input>
       <wsdl:output>
-    <shttp:output name="getEnvironmentsResponse" part="getEnvironmentsResponse" type="entity"/>
+    <shttp:output name="getTenantsResponse" part="getTenantsResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateTenantCredentials">
@@ -821,16 +833,6 @@
     <shttp:output name="" part="" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getTopology">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /topologies/{topology-name}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get the topology specified by the topology name]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get the specified Topology]]></sdoc:summary><sdoc:response code="200" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology found]]></sdoc:description></sdoc:response><sdoc:response code="404" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology not found]]></sdoc:description></sdoc:response></wsdl:documentation>
-    <shttp:operation location="/topologies/{topology-name}" method="GET" outputSerialization="application/json"/>
-      <wsdl:input>
-    <shttp:input name="topology-name" part="topology-name" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Name of the topology to retrieve]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getTopologyResponse" part="getTopologyResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="removeTopology">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">DELETE /topologies/{topology-name}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Delete the specified topology.]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Delete a topology]]></sdoc:summary><sdoc:response code="200" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology deleted]]></sdoc:description></sdoc:response><sdoc:response code="404" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology not found]]></sdoc:description></sdoc:response></wsdl:documentation>
     <shttp:operation location="/topologies/{topology-name}" method="DELETE"/>
@@ -841,14 +843,24 @@
     <shttp:output name="" part="" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="addTopology">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /topologies</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Create a new topology.  The topology name must be unique.]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Create a new topology]]></sdoc:summary><sdoc:response code="201" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology Created]]></sdoc:description></sdoc:response><sdoc:response code="400" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Invalid topology]]></sdoc:description></sdoc:response><sdoc:response code="409" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology already exists]]></sdoc:description></sdoc:response></wsdl:documentation>
-    <shttp:operation inputSerialization="application/json" location="/topologies" method="POST" outputSerialization="application/json"/>
+    <wsdl:operation name="getTopology">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /topologies/{topology-name}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get the topology specified by the topology name]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get the specified Topology]]></sdoc:summary><sdoc:response code="200" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology found]]></sdoc:description></sdoc:response><sdoc:response code="404" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology not found]]></sdoc:description></sdoc:response></wsdl:documentation>
+    <shttp:operation location="/topologies/{topology-name}" method="GET" outputSerialization="application/json"/>
       <wsdl:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"/>
+    <shttp:input name="topology-name" part="topology-name" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Name of the topology to retrieve]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
       </wsdl:input>
       <wsdl:output>
-    <shttp:output name="" part="" type="entity"/>
+    <shttp:output name="getTopologyResponse" part="getTopologyResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getEnvironments">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /topologies/{topology-name}/environments</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get all the Environments defined for the specified Topology]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get all Environments for Topology]]></sdoc:summary><sdoc:response code="200" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Environments retrieved]]></sdoc:description></sdoc:response><sdoc:response code="404" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology not found]]></sdoc:description></sdoc:response></wsdl:documentation>
+    <shttp:operation location="/topologies/{topology-name}/environments" method="GET" outputSerialization="application/json"/>
+      <wsdl:input>
+    <shttp:input name="topology-name" part="topology-name" type="path"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getEnvironmentsResponse" part="getEnvironmentsResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateTopology">
@@ -1042,38 +1054,26 @@
     <shttp:output name="getMappingConfigurationResponse" part="getMappingConfigurationResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getDeploymentZoneConfigurationMappingConfiguration">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /topologies/{topology-name}/environments/{environment-name}/profiles/{profile-name}/deployments/{deploymentzone-configuration-name}/rules</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get the Rules defined for the specified DeploymentZoneConfiguration in the specified PromotionProfile in the specified Environment and Topology]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get Rules for DepolymentZoneConfiguration]]></sdoc:summary><sdoc:response code="200" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Rules retrieved]]></sdoc:description></sdoc:response><sdoc:response code="404" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology, Environment, PromotionProfile or DeploymentZoneConfiguration not found]]></sdoc:description></sdoc:response></wsdl:documentation>
-    <shttp:operation location="/topologies/{topology-name}/environments/{environment-name}/profiles/{profile-name}/deployments/{deploymentzone-configuration-name}/rules" method="GET" outputSerialization="application/json"/>
+    <wsdl:operation name="updateTenant">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /topologies/{topology-name}/tenants</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Update an existing Tenant in the specified Topology]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Update a Tenant]]></sdoc:summary><sdoc:response code="200" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Tenant Updated]]></sdoc:description></sdoc:response><sdoc:response code="400" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Invalid Tenant]]></sdoc:description></sdoc:response><sdoc:response code="404" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology or Tenant not found]]></sdoc:description></sdoc:response></wsdl:documentation>
+    <shttp:operation inputSerialization="application/json" location="/topologies/{topology-name}/tenants" method="PUT" outputSerialization="application/json"/>
       <wsdl:input>
     <shttp:input name="topology-name" part="topology-name" type="path"/>
-    <shttp:input name="environment-name" part="environment-name" type="path"/>
-    <shttp:input name="profile-name" part="profile-name" type="path"/>
-    <shttp:input name="deploymentzone-configuration-name" part="deploymentzone-configuration-name" type="path"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getDeploymentZoneConfigurationMappingConfigurationResponse" part="getDeploymentZoneConfigurationMappingConfigurationResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="deleteTenant">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">DELETE /topologies/{topology-name}/tenants/{tenant-name}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Delete the specified Tenant from the specified Topology]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Delete a Tenant]]></sdoc:summary><sdoc:response code="200" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Tenant Deleted]]></sdoc:description></sdoc:response><sdoc:response code="404" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology or Tenant not found]]></sdoc:description></sdoc:response></wsdl:documentation>
-    <shttp:operation inputSerialization="application/json" location="/topologies/{topology-name}/tenants/{tenant-name}" method="DELETE"/>
-      <wsdl:input>
-    <shttp:input name="topology-name" part="topology-name" type="path"/>
-    <shttp:input name="tenant-name" part="tenant-name" type="path"/>
+    <shttp:input name="parameter0" part="parameter0" type="entity"/>
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="" part="" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getTenants">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /topologies/{topology-name}/tenants</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get all Tenants defined for the specified Topology]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get all Tenants for a Topology]]></sdoc:summary><sdoc:response code="200" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Tenants retrieved]]></sdoc:description></sdoc:response><sdoc:response code="404" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology not found]]></sdoc:description></sdoc:response></wsdl:documentation>
-    <shttp:operation location="/topologies/{topology-name}/tenants" method="GET" outputSerialization="application/json"/>
+    <wsdl:operation name="getTenant">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /topologies/{topology-name}/tenants/{tenant-name}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get the specified Tenant from the specified Topology]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get a Tenant]]></sdoc:summary><sdoc:response code="200" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Tenant found]]></sdoc:description></sdoc:response><sdoc:response code="404" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Topology or Tenant not found]]></sdoc:description></sdoc:response></wsdl:documentation>
+    <shttp:operation location="/topologies/{topology-name}/tenants/{tenant-name}" method="GET" outputSerialization="application/json"/>
       <wsdl:input>
     <shttp:input name="topology-name" part="topology-name" type="path"/>
+    <shttp:input name="tenant-name" part="tenant-name" type="path"/>
       </wsdl:input>
       <wsdl:output>
-    <shttp:output name="getTenantsResponse" part="getTenantsResponse" type="entity"/>
+    <shttp:output name="getTenantResponse" part="getTenantResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
