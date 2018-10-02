@@ -87,6 +87,7 @@ nav-title: LC Promotion Guide
 			<li><a href="#s07_03">Promotion Requests</a></li>
 		</ol>
 	</li>
+	<li><a href="#env_decoupled_00">Support for Decoupled Environments in a Topology</a> {<span class="apidoc_red">TG re best position&nbsp;for this?</span>}</li>
 	<li><a href="#runtime_config">Defaulting API Settings using Runtime Configurations</a> (8.4.17 and later)
 	<ol>
 			<li><a href="#s08_01_create_asset">Creating a Runtime Configuration Asset</a></li>
@@ -1216,6 +1217,63 @@ vsep.listenerName = "https"</td>
 <p>Clicking <strong>approve</strong> allows the promotion to succeed or proceed to the next role approval.</p>
 <h5>Rejecting Requests</h5>
 <p>A user may choose to reject the request by clicking on <strong>rejection properties</strong> and then clicking <strong>reject</strong>. In this case, the Iteration asset remains in a <strong>Promotion Pending</strong> state, however, the API Platform UI shows the state of the promotion as <strong>Promotion Rejected</strong> and allows the promotion to be requested again.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="env_decoupled_00">Support for Decoupled Environments in a Topology</h3>
+<p>{<span class="apidoc_red">ATMO-26129 10/2 for rev</span>}</p>
+<p>In a standard topology, Lifecycle Coordinator communicates directly with the environments in the topology to:</p>
+<ul>
+	<li>Periodically retrieve context information for the environment (read).</li>
+	<li>Import a promoted asset to the environment (write).</li>
+</ul>
+<p>However, in some situations, an environment (generally a production environment) might be physically isolated from Lifecycle Coordinator and other internal systems for security purposes.</p>
+<p>Lifecycle Coordinator supports this scenario by allowing tenants to be designated as not connected. This is done using the <strong>connected</strong> property, as in this example tenant definition:</p>
+<pre>{
+  "name": "ProductionTenant",
+  "id": "prod",
+  "connected" : "false"
+}</pre>
+<p>In the case where a tenant is marked as not connected, only the tenant's name and id must be specified. Credentials and address are omitted, since Lifecycle Coordinator does not communicate with that tenant.</p>
+<p>When a tenant is marked as not connected, Lifecycle Coordinator assumes that it is on a remote system and that the <strong>preserve-keys</strong> mode is applicable.</p>
+<p>Normally, a tenant that is not connected is the final environment in the promotion path.</p>
+<p>Because Lifecycle Coordinator cannot communicate directly with a tenant that is not connected, some external system or user must facilitate the exchange of data between Lifecycle Coordinator and the decoupled tenant. The two scenarios are:</p>
+<ul>
+	<li><a href="#env_decoupled_01">Updating Environment Context information</a></li>
+	<li><a href="#env_decoupled_02">Promoting Assets</a></li>
+</ul>
+<h4 id="env_decoupled_01">Updating Environment Context information</h4>
+<p>Lifecycle Coordinator needs to have some understanding of the target environment supported by a decoupled tenant so that it can validate for the existence of dependencies when an asset is promoted to that environment. To accomplish this, the promotion context information must be fetched from the decoupled tenant with a GET call to the <strong>getEnvironmentPromotionContext</strong> operation of the TenantAdministrationAPI on the isolated system.</p>
+<pre>{host:port}/api/tenants/{tenant id}/{environment name}/promotion/context?includeServiceInfo=true&amp;includeAPIInfo=true</pre>
+<p>Content-type is application/json.</p>
+<p>For example:</p>
+<pre>GET http://tenant3:9940/api/tenants/tenant3/production/promotion/context?includeServiceInfo=true&amp;includeAPIInfo=true</pre>
+<p>The resulting JSON document can then be passed as the request body to the TopologyAPI <span class="apidoc_code"><strong>updateEnvironmentContext</strong></span> method on the Lifecycle Coordinator system using a PUT call to:</p>
+<pre>{host:port}/lc/api/topologies/Topology1/environments/{environment name}/context</pre>
+<p>For example:</p>
+<pre>PUT http://localhost:9920/lc/api/topologies/Topology1/environments/production/context</pre>
+<p>This process should be repeated when any relevant context information in the decoupled environment changes. For example, a new policy or organization is added in the decoupled tenant.</p>
+
+
+<h4 id="env_decoupled_02">Promoting Assets</h4>
+<p>Since Lifecycle Coordinator cannot directly call the import API on the decoupled tenant, the following steps should be taken to promote to that environment.</p>
+<h5>To promote assets for a&nbsp;decoupled tenant</h5>
+<ol>
+	<li>Request promotion of the API to the decoupled environment in the normal way, using the API Platform user interface or via the TopologyAPI promote operation. {<span class="apidoc_red">TG do we need to give this API call?</span>}
+	<p>When the promotion is complete, the status of the asset for the decoupled environment shows as <strong>promoted</strong>. In this case, the <strong>promoted</strong> status indicates that all processing of the archive has been completed and the archive is ready for importing into the target environment.</p></li>
+	<li>Use the <strong>getPackage</strong> method in the TopologyAPI to retrieve the processed import package from Lifecycle Coordinator:
+		<pre>GET {host:port}/lc/api/topologies/{topology-name}/environments/{environment-name}/assets/{asset-id}/package</pre>
+		<p>In this operation, {asset-id} is either an API version ID or App version ID. For example:</p>
+		<pre>GET http://localhost:9920/lc/api/topologies/Topology1/environments/production/assets/ffc4ba19-c5cb-4e9d-ae39-78ab6e0efc84.tenant1/package</pre>
+		<p>This returns the archive as a ZIP file.</p></li>
+	<li>On the isolated system, upload the archive ZIP file to the decoupled tenant in one of these ways:
+		<ul>
+			<li>Via the import wizard in the API Platform UI: see <a href="../learnmore/bus_admin_export_import.htm#import_org_app_api">How do I import site, app, or API information from an export file?</a></li>
+			<li>By using the importPackage operation on the TenantAdministrationAPI: see <a href="../api/tenantadmin/m_tenantadmin_importPackage.htm"><span class="apidoc_code">POST /api/tenants/{TenantFedMemberID}/packages</span></a>.</li>
+		</ul>
+		</li>
+</ol>
 <p><a href="#top">Back to top</a></p>
 
 
