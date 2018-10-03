@@ -9,7 +9,7 @@ sub-nav-class: Upgrade - Lifecycle Coordinator
 type: page
 nav-title: LC 2018.0.0 Upgrade Notes
 ---
-<h2><a name="top"></a>Lifecycle Coordinator 2018.0.0 Upgrade Notes</h2>
+<h2 id="top">Lifecycle Coordinator Upgrade Notes for 2018.0.0</h2>
 <p>This document provides information applicable to upgrading Lifecycle Coordinator to version 2018.0.0.</p>
 <p>In addition to a number of new features such as promotion support for orchestrated APIs, there are a few significant changes to Lifecycle Coordinator (LC) to consider when upgrading from 8.4 to 2018.0.0.</p>
 
@@ -45,14 +45,14 @@ nav-title: LC 2018.0.0 Upgrade Notes
 
 
 <h3 id="overview">What is Lifecycle Coordinator?</h3>
-<p><a href="../../cm/learnmore/basics_glossary.htm#gl_lc">Lifecycle Coordinator</a> (LC) is a separate configurable component that coordinates promotion across multiple instances of API Platform tenants.  It can be deployed standalone or can be co-located with a <a href="../../cm/learnmore/basics_glossary.htm#gl_tenant">tenant</a> (or multiple tenants in the SaaS environment). Lifecycle Coordinator governs the <a href="../../cm/learnmore/basics_glossary.htm#gl_promotion">promotion</a> process and the transfer of data between environments.</p>
+<p><a href="../../cm/learnmore/basics_glossary.htm#gl_lc">Lifecycle Coordinator</a> (LC) is a separate configurable component that coordinates promotion across multiple instances of API Platform tenants. It can be deployed standalone or can be co-located with a <a href="../../cm/learnmore/basics_glossary.htm#gl_tenant">tenant</a> (or multiple tenants in the SaaS environment). Lifecycle Coordinator governs the <a href="../../cm/learnmore/basics_glossary.htm#gl_promotion">promotion</a> process and the transfer of data between environments.</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
 <h3 id="lc_upgrade_01">Deployment</h3>
 <p>With the 2018.0.0 release, the Lifecycle Coordinator feature is assumed to be co-deployed with the Community Manager component, with at least one local tenant to which authentication is delegated.</p>
-<p>This is assumed to be the case even in a standalone Lifecycle Coordinator deployment where all tenants in the topology are remote from the LC instance. An existing topology set up to use LDAP, configured through Lifecycle Manager, will not be impacted. However, any new topology created will by default expect a local tenant  to be specified in one of these ways:</p>
+<p>This is assumed to be the case even in a standalone Lifecycle Coordinator deployment where all tenants in the topology are remote from the LC instance. An existing topology set up to use LDAP, configured through Lifecycle Manager, will not be impacted. However, any new topology created will by default expect a local tenant to be specified in one of these ways:</p>
 <ul>
 	<li>By using the <strong>userAuthenticationSource</strong> property on a local tenant in the topology.</li>
 	<li>By designating a local tenant that is not in the topology by using the <strong>authentication-tenant-id</strong> topology property.</li>
@@ -73,6 +73,7 @@ nav-title: LC 2018.0.0 Upgrade Notes
 	"environments": [...],
 	&quot;tenants&quot;: [...]
 }</pre>
+<p><strong>Note</strong>: When a topology is configured to use the Lifecycle Manager LDAP domain, users from this domain will not be able to authenticate through the new DevOps standalone Lifecycle Coordinator feature introduced in the 2018.0.0 release. Users of standalone Lifecycle Coordinator UI must be Community Manager users.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -90,8 +91,8 @@ nav-title: LC 2018.0.0 Upgrade Notes
 <h3 id="lc_upgrade_04">Synchronizing tenant data</h3>
 <p>To allow validation of APIs and apps being promoted, LC must have an overview of the entities that exist in the target environment.</p>
 <p>With the 2018.0.0 release, LC updates this information with a single periodic call for each environment.</p>
-<p>The frequency of this polling is controlled by a configuration property in the Akana Administration Console:{<span class="apidoc_red">TG: is there a configuration category?</span>}</p>
-<p><strong>Configuration</strong> &gt; <strong>lifecycle.coordinator.config.tenantSyncInterval</strong></p>
+<p>The frequency of this polling is controlled by a configuration property in the Akana Administration Console:</p>
+<p><strong>Configuration</strong> &gt; <strong>com.akana.lifecycle.coordinator</strong> &gt; <strong>lifecycle.coordinator.config.tenantSyncInterval</strong></p>
 <p>The default is five minutes.</p>
 <p>With this approach, it might take a period of time up to the length of the interval for LC to become aware of a newly created entity in a target environment (for example, a new policy). </p>
 <p><a href="#top">Back to top</a></p>
@@ -99,13 +100,13 @@ nav-title: LC 2018.0.0 Upgrade Notes
 
 
 <h3 id="lc_upgrade_05">Runtime Configuration support</h3>
-<p>With the 2018.0.0 release, Lifecycle Coordinator now supports configuration of the Lifecycle Manager  Runtime Configuration functionality within the topology definition itself, using the <strong>configuration</strong> property on environments in the topology. This avoids the need to explicitly create Runtime Configuration assets within the Lifecycle Manager user interface, and combines the two configuration concepts (promotion and Runtime Configuration) into a single document.</p>
+<p>With the 2018.0.0 release, Lifecycle Coordinator now supports configuration of the Lifecycle Manager Runtime Configuration functionality within the topology definition itself, using the <strong>configuration</strong> property on environments in the topology. This avoids the need to explicitly create Runtime Configuration assets within the Lifecycle Manager user interface, and combines the two configuration concepts (promotion and Runtime Configuration) into a single document.</p>
 <p>For information on environment configuration, see <a href="../../cm/promotion/promotion_users_guide.htm#s08_03_environment_config">Environment Configuration</a> (Promotion Guide).</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
-<h3 id="lc_upgrade_06">Migration scenarios</h3>
+<h3 id="lc_upgrade_06">Migration scenarios </h3>
 <p>There are two possible migration scenarios:</p>
 <ul>
 	<li><a href="#lc_upgrade_06_01">Existing co-located Lifecycle Coordinator</a></li>
