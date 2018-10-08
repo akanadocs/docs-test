@@ -99,7 +99,7 @@ nav-title: LC Promotion Guide
 			<li><a href="#s09_01_referenced_svcs">Referenced Services</a></li>
 		</ol>
 	</li>
-	<li><a href="#app_b_prop_is_consumer">Appendix B: Legacy property to support service-to-service contracts</a></li>
+	<li><a href="#app_b_client_apps">Appendix B: Support for client apps</a></li>
 	</ol>
 <div class = "divider1"></div>
 
@@ -1509,6 +1509,12 @@ Defining process and script mappings by using IDs</h5>
 
 
 
-<h3 id="app_b_prop_is_consumer">Appendix B: Legacy property to support service-to-service contracts</h3>
-<p>For customers migrating from the legacy Lifecycle Manager/Policy Manager integration which supports service-to-service contracts, there is an additional Boolean property, <strong>Is Consumer</strong>. If set to <strong>true</strong>, this property generates a "shadow app" for the API. Because there is currently no way to represent service-to-service contracts in the developer portal user interface, the platform uses this property to generate a shadow app for the consuming API, to simulate service-to-service contracts.</p>
+<h3 id="app_b_client_apps">Appendix B: Support for client apps</h3>
+<p>Currently, the API Platform allows contracts to be established between apps and APIs, but does not support direct API to API access. This can be mitigated through the use of a pattern where an API is represented with a <strong>client App</strong>. With this approach, each API has an accompanying client app that is used to establish access to other APIs for the represented API. Contracts between a client app and another API are logically contracts between the source and target APIs, allowing for full dependency analysis of composite APIs.</p>
+<p>You can configure the API Platform Repository plug-in to support the client app pattern by adding the <strong>Create Client App</strong> task to the post-processing phase of the API submission process. For additional information about configuring a submission process, contact Rogue Wave Technical Support. This task will cause a client app to be created as each API is created. The client app will be named as <strong>{api name}_app</strong> and a <strong>client-app</strong> property will be set on the represented API pointing to the client app. The generated client app will, in turn, have a <strong>represented-api</strong> property to point back to the API. </p>
+<p>Note that the <strong>Create Client App</strong> task can be configured to run based on the setting of a custom property on the API, such as <strong>isConsumer</strong>, allowing the creator of the API to determine whether a client app is needed.</p>
+
+
+<h4 id="app_b_promotion_support">Promotion Support</h4>
+<p>When an API with an accompanying client app is promoted using Lifecycle Coordinator, the client app will also be promoted to the target environment as well as any contracts it has to other APIs. These contracts will be validated prior to API promotion in the same manner as the dependencies for a standard app are validated prior to app promotion.</p>
 <p><a href="#top">Back to top</a></p>
