@@ -41,6 +41,7 @@ nav-title: Managing API Implementations
 	<li><a href="#api_impl_specify_listener">How do I specify a listener when adding/editing an implementation endpoint?</a></li>
 	<li><a href="#api_impl_dependencies">How can I see implementation dependencies?</a></li>
 	<li><a href="#api_impl_dependencies_tool_using">How do I use the implementation dependencies tool?</a></li>
+	<li><a href="#api_impl_pox_jms">How do I set up my API implementation to support POX or JMS bindings?</a></li>
 </ol>
 
 
@@ -102,8 +103,8 @@ nav-title: Managing API Implementations
 
 
 <h3 id="api_impl_what_is">What is an API implementation?</h3>
-<p>Different implementations of an API represent the different endpoints of the API in the same <a href="basics_glossary.htm#gl_lifecyclestage">lifecycle stage</a>. For example, it is common for an API to have <strong>Sandbox</strong> and <strong><!-- #BeginLibraryItem "/Library/environ_live.lbi" -->Live<!-- #EndLibraryItem --></strong> implementations.</p>
-<p>When you create your initial API definition, the API platform creates the <strong><!-- #BeginLibraryItem "/Library/environ_live.lbi" -->Live<!-- #EndLibraryItem --></strong> implementation automatically. You can create a second implementation for Sandbox, if needed.</p>
+<p>Different implementations of an API represent the different endpoints of the API in the same <a href="basics_glossary.htm#gl_lifecyclestage">lifecycle stage</a>. For example, it is common for an API to have <strong>Sandbox</strong> and <strong>Live</strong> implementations.</p>
+<p>When you create your initial API definition, the API platform creates the <strong>Live</strong> implementation automatically. You can create a second implementation for Sandbox, if needed.</p>
 <p>If an existing implementation is deleted, you can create another; however, you cannot have more than two implementations of an API at the same lifecycle stage.</p>
 <h5>Implementation Summary</h5>
 <p>The Implementations page for your API (API Details &gt; Implementations) will look something like the below:</p>
@@ -120,7 +121,7 @@ nav-title: Managing API Implementations
 	<li><strong>Top section</strong>: modify metadata about the implementation such as description and proxy URL.</li>
 	<li><strong>Deployments section</strong>: modify the technical details about the implementation such as deployment zones and vanity hostname.</li>
 	<li><strong>Policies section</strong>: specify policies to be applied to API traffic for this implementation.</li>
-	<li><strong>Identities</strong> section: manage identity settings for the implementation, and add, modify, or delete identities.</li>
+	<li><strong>Identities</strong> section: manage identity settings for the implementation, and add, modify, or delete identities. See <a href="#api_impl_identities_settings">How do I manage my implementation identity settings?</a></li>
 	<li><strong>Certificates section</strong>: manage certificates for the implementation. See <a href="#api_impl_keys_certs">How do I manage keys and certificates for my API?</a></li>
 	<li><strong>Resources section</strong>: view a list of resources for the implementation, and manage processes for individual resources.</li>
 </ul>
@@ -129,7 +130,7 @@ nav-title: Managing API Implementations
 
 
 <h3 id="api_impl_how_add">How do I add an API implementation?</h3>
-<p>If you create your API by importing an API description document, the platform creates the <!-- #BeginLibraryItem "/Library/environ_live.lbi" -->Live<!-- #EndLibraryItem --> implementation as part of creating the API. In this scenario, it's best to review the API implementation definition, and modify if needed. See <a href="#api_impl_how_edit">How do I edit an API Implementation?</a> below.</p>
+<p>If you create your API by importing an API description document, the platform creates the Live implementation as part of creating the API. In this scenario, it's best to review the API implementation definition, and modify if needed. See <a href="#api_impl_how_edit">How do I edit an API Implementation?</a> below.</p>
 <p>If you created your API from scratch, or you want a second implementation for an existing API, you'll need to add a new implementation. Follow the steps below.</p>
 <h5 id="proc_impl_add">To add an API implementation</h5>
 <ol>
@@ -143,7 +144,6 @@ nav-title: Managing API Implementations
       <li><strong>Pattern</strong>: Choose <strong>Proxy</strong> for a simple scenario where the API implementation has a 1:1 relationship with a back-end physical service/API; then provide the API endpoint that you want to set up a proxy for. Choose <strong>Orchestration</strong> for a more complex API implementation that might include one or more services, processes, or additional steps.</li>
       </ul>
     </li>
-<!--  <li>Choose a pattern. This determines how you want to create the new implementation. Choices: Proxy, Clone, Existing Service, Mock Service, or Orchestration. For more information, see <a href="#api_impl_pattern">What is an implementation pattern and which one should I choose?</a> below.</li>-->
 	<li>Click <strong>Save</strong>.</li>
 	<li>At the Implementations page, click the link for the new implementation to add additional values. See <a href="#proc_impl_edit">To edit an API implementation</a> below.</li>
 </ol>
@@ -153,9 +153,9 @@ nav-title: Managing API Implementations
 
 <h3 id="api_impl_how_add_sbox">How do I add a Sandbox implementation?</h3>
 <p>If you're designing your API from scratch, there are no implementations until you create them. In this scenario, to add a Sandbox implementation, follow the instructions in <a href="#proc_impl_add">To add a new API implementation</a> above.</p>
-<p>If you create the API from an API description document, the first implementation is automatically created as a <!-- #BeginLibraryItem "/Library/environ_live.lbi" -->Live<!-- #EndLibraryItem --> implementation.</p>
+<p>If you create the API from an API description document, the first implementation is automatically created as a Live implementation.</p>
 <p>If you want to add an additional implementation for Sandbox, follow the instructions in <a href="#proc_impl_add">To add a new API implementation</a> above.</p>
-<p>If you want <strong>only</strong> a Sandbox implementation, first add the new Sandbox implementation, and then delete the <!-- #BeginLibraryItem "/Library/environ_live.lbi" -->Live<!-- #EndLibraryItem --> implementation following the instructions in <a href="#api_impl_how_delete">How do I delete an API implementation?</a> below.</p>
+<p>If you want <strong>only</strong> a Sandbox implementation, first add the new Sandbox implementation, and then delete the Live implementation following the instructions in <a href="#api_impl_how_delete">How do I delete an API implementation?</a> below.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -170,8 +170,8 @@ nav-title: Managing API Implementations
 
 
 <h3 id="api_impl_how_many">How many API implementations can I have?</h3>
-<p>You can have two API implementations for each <a href="basics_glossary.htm#gl_lifecyclestage">lifecycle stage</a>. Each implementation represents a different endpoint; generally, <strong><!-- #BeginLibraryItem "/Library/environ_live.lbi" -->Live<!-- #EndLibraryItem --></strong> and <strong>Sandbox</strong>.</p>
-<p>When you create your initial API definition, by default the <strong><!-- #BeginLibraryItem "/Library/environ_live.lbi" -->Live<!-- #EndLibraryItem --></strong> implementation is created. You can create a second implementation for Sandbox, if needed.</p>
+<p>You can have two API implementations for each <a href="basics_glossary.htm#gl_lifecyclestage">lifecycle stage</a>. Each implementation represents a different endpoint; generally, <strong>Live</strong> and <strong>Sandbox</strong>.</p>
+<p>When you create your initial API definition, by default the <strong>Live</strong> implementation is created. You can create a second implementation for Sandbox, if needed.</p>
 <p>If an existing implementation is deleted, you can create another; however, you cannot have more than two implementations of an API at the same lifecycle stage.</p>
 <p><a href="#top">Back to top</a></p>
 
@@ -309,7 +309,7 @@ nav-title: Managing API Implementations
 <p>The endpoint is made up of the HTTP verb and the full URL, including protocol, hostname, optional port, context path, and object path.</p>
 <ul>
   <li><strong>HTTP verb</strong>: most commonly GET, POST, PUT, or DELETE. OPTIONS, HEAD, and PATCH are also supported.</li>
-  <li><strong>Protocol</strong>: generally HTTP or HTTPS.</li>
+  <li><strong>Protocol</strong>: generally HTTP or HTTPS. The platform also supports <strong>POX</strong> and <strong>JMS</strong> bindings.</li>
   <li><strong>Target hostname</strong>: the part after the protocol and before the context path (see below). Example:  http://www.<strong>acmepaymentscorp.com</strong>.</li>
   <li><strong>Port (optional)</strong>: port number, sometimes part of the URL. Example: http://example.com:<strong>7900</strong>/atmosphere/#/home/landing.</li>
   <li><strong>Context path</strong>: The context path is the next part of the API endpoint, after the hostname (and optional port). It provides the context for the specific API; this is the part of the URL that's consistent for each operation within the API. Occasionally, there might be nothing specified in the context path, in which case it's just a forward slash (/) and is called <strong>root</strong>. Example of a context path: <strong>/api/payments</strong>.</li>
@@ -503,6 +503,39 @@ nav-title: Managing API Implementations
 
 
 
+<h3 id="api_impl_pox_jms">How do I set up my API implementation to support POX or JMS bindings?</h3>
+<p>The most common bindings for API implementations are HTTP and HTTPS (see <a href="#context_path_define">What is the context path and how do I make sure I have the right context path for my API implementation?</a>). However, you might want to support <a href="basics_glossary.htm#gl_pox">POX</a> or <a href="basics_glossary.htm#gl_jms">JMS</a> bindings.</p>
+<p>To do this, you'll have to do a little bit of setup in Policy Manager, part of the underlying infrastructure of the developer portal. Coordinate with the Administrator as needed if you don't have access to Policy Manager.</p>
+<h5>To set up an API implementation to support POX or JMS</h5>
+<ol>
+	<li>Log in to Policy Manager.</li>
+	<li>Choose <strong>Configure</strong> &gt; <strong>Registry</strong> &gt; <strong>Bindings</strong> and then click <strong>Import Bindings from WSDL</strong>.</li>
+	<li>On the <strong>Select WSDL Import Option</strong> page, import the WSDL file for your service that uses POX or JMS and save.</li>
+	<li>Next, go the the Network Director container and add a JMS listener. Provide values for <strong>Listener Name</strong> (for example, jms-listener), <strong>JNDI URL</strong>, <strong>JNDI Initial Context</strong>, and <strong>JMS Destionation Factory Name</strong>.</li>
+	<li>Log in to the developer portal and create an API using the same WSDL file.</li>
+	<li>In Policy Manager, find the virtual service for the API: Under <strong>Workbench</strong> &gt; <strong>Browse</strong>, search for the name.</li>
+	<li>Select the virtual service and click <strong>Access Points</strong>.</li>
+	<li>Delete all existing access points.</li>
+	<li>Conditional for JMS: Add a new access point:
+		<ul>
+			<li>Specify the Network Director container and click <strong>Next</strong>.</li>
+			<li>Make sure <strong>JMS</strong> is selected for the binding, and make sure that the Listener is set to the JMS listener you created in Step 3 above.</li>
+		</ul>
+		</li>
+	
+	<li>Conditional for POX: add a new access point:
+		<ul>
+			<li>Specify the Network Director container and click <strong>Next</strong>.</li>
+			<li>Make sure <strong>POX</strong> is selected for the binding, and make sure that the Listener is set to the JMS listener you created in Step 3 above.</li>
+		</ul>
+	</li>
+	<li>In the developer portal, go back to the API. On the <strong>API Details</strong> page, and other pages where the API endpoint is displayed, you'll see the POX HTTP URL or the JMS <strong>jms://</strong> endpoint.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+
 <div class = "divider1"></div>
 <h3 id="h_deployment_zones">Managing Deployment Zones for an API Implementation:</h3>
 
@@ -556,7 +589,7 @@ nav-title: Managing API Implementations
 	<li>If a new deployment zone becomes available on the platform, and it matches the criteria for your API, you can then add it to your API.</li>
 </ul>
 <p>When you create your API from an API description document, the platform automatically matches up your API definition against the existing deployment zones, and deploys the API to all deployment zones for which it matches the criteria.</p>
-<p>Note that <strong><!-- #BeginLibraryItem "/Library/environ_live.lbi" -->Live<!-- #EndLibraryItem --></strong> and <strong>Sandbox</strong> implementations are likely to be deployed to different deployment zones.</p>
+<p>Note that <strong>Live</strong> and <strong>Sandbox</strong> implementations are likely to be deployed to different deployment zones.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -566,7 +599,7 @@ nav-title: Managing API Implementations
 <p>The number of deployment zones for an API is determined by these factors:</p>
 <ul>
 	<li>The number of deployment zones defined on the platform.</li>
-	<li>The eligibility requirements for each deployment zone; for example, a specific deployment zone might be limited to <!-- #BeginLibraryItem "/Library/environ_live.lbi" -->Live<!-- #EndLibraryItem --> implementations, so an API's Sandbox implementation would not have access to it.</li>
+	<li>The eligibility requirements for each deployment zone; for example, a specific deployment zone might be limited to Live implementations, so an API's Sandbox implementation would not have access to it.</li>
 	<li>The API definition.</li>
 </ul>
 <p><a href="#top">Back to top</a></p>
@@ -603,7 +636,7 @@ nav-title: Managing API Implementations
 
 <h5 id="fieldvalues_parameter_add_edit">Add Deployment Zone / Edit Deployment Zone Dialog: Field Values</h5>
 <p>The Add Deployment Zone / Edit Deployment Zone dialog provides the following:</p>
-<dl class="apidoc_dl">
+<dl>
   <dt>Map view</dt>
   <dd>To view information about a deployment zone, click the zone on the map.</dd>
   <dt>Zone</dt>
@@ -675,7 +708,7 @@ nav-title: Managing API Implementations
 
 
 <h3 id="api_impl_policies_available">What types of policies are available for my API?</h3>
-<p>The platform allows you to secure and monitor your APIs with policies. A selection of policies is available to apply different rules to your API.</p>
+<p>The platform allows you to secure and monitor your APIs with <a href="basics_glossary.htm#gl_policy">policies</a>. A selection of policies is available to apply different rules to your API.</p>
 <p>There are three main policy categories:</p>
 <ul>
 	<li><strong>Simple Header Security</strong>&#8212;Used to identify (authenticate) the application that is attempting to consume an API to determine if it is authorized or not. This policy type supports multiple mechanisms for the app to present its identity, including plain text App Id, signed header with X.509 or a shared secret, or OAuth (1.0a or 2.0).</li>
@@ -683,6 +716,7 @@ nav-title: Managing API Implementations
 	<li><strong>OAuth</strong>&#8212;Provides support for applications performing authentication and authorization using OAuth.</li>
 </ul>
 <p>For details, see below.</p>
+<p><strong>Note</strong>: For general information about all policies, see <a href="../../ag/policies/about_policies_view.htm">About Policies</a> (Policy Manager help).</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -690,7 +724,7 @@ nav-title: Managing API Implementations
 <h3 id="what_security_and_monitoring_policies_are_supported">What security and monitoring policies are supported?</h3>
 <p>The platform offers the preconfigured policies listed below.</p>
 
-<dl class="apidoc_dl">
+<dl>
   <dt>AtmosphereApplicationSecurityPolicy</dt>
   <dd>This is a default security policy for Enterprise API Platform applications. It provides support for SHA1 (Shared Secret), allowing the API to authenticate the app.</dd>
   <dd>For full documentation about this type of policy, refer to: <a href="http://docs.akana.com/ag/policies/policy_op_api_consumer_app_security.htm" target="_blank">Using the API Consumer Application Security Policy</a> (Akana docs site).</dd>
@@ -732,9 +766,10 @@ nav-title: Managing API Implementations
 <p>Your selection of one or more policies for a specific API will be determined by the level of security required, whether monitoring is required, whether the API supports OAuth, and other factors.</p>
 <p>If the API doesn't allow anonymous requests, you'll need to have the <strong>AtmosphereApplicationSecurityPolicy</strong> in place so that the API can authenticate app requests.</p>
 <p>If the API allows anonymous requests, do not specify any policies.</p>
-<p><strong>Note</strong>: We don't recommend accepting anonymous requests. At minimum, particularly for a <!-- #BeginLibraryItem "/Library/environ_live.lbi" -->Live<!-- #EndLibraryItem --> implementation, it's best to include at least the <strong>AtmosphereApplicationSecurityPolicy</strong>.</p>
+<p><strong>Note</strong>: We don't recommend accepting anonymous requests. At minimum, particularly for a Live implementation, it's best to include at least the <strong>AtmosphereApplicationSecurityPolicy</strong>.</p>
 <p>If you want to have monitoring for your API, choose one of the monitoring policies also.</p>
 <p>If you want your API to support OAuth, enable the OAuthSecurity policy.</p>
+<p><strong>Note</strong>: Only attach one auditing policy to an API; for example, <a href="../../ag/policies/policy_op_basic_auditing.htm">Basic Auditing</a> policy or <a href="../../ag/policies/policy_op_detailed_auditing.htm">Detailed Auditing</a> policy, but not both.</p>
 <p>For more information about policies, see <a href="api_admin_policy_list.htm">Policy List</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
@@ -879,7 +914,7 @@ nav-title: Managing API Implementations
 <ul>
 	<li>Choose to use incoming identities as outbound identities (the default) or map outbound identities.</li>
 	<li>Add one or more outbound identities.</li>
-	<li>Choose to use the service identity for outbound HTTPS. This option configures the identity to be used when communicating over the next hop.<!-- {<span class="apidoc_red">Clarify what this is and how it works. Noting 6/14/17 in working on ATMO-20521. Message to Barbara/Aren.</span>}--></li>
+	<li>Choose to use the service identity for outbound HTTPS. This option configures the identity to be used when communicating over the next hop.</li>
 </ul>
 
 <h5 id="proc_impl_identity_settings_manage">To manage implementation identity settings</h5>
@@ -1006,6 +1041,7 @@ nav-title: Managing API Implementations
 	<li>In the implementation, designate that you want to use the API-specific key and certificate.</li>
 </ol>
 <p>For details, see <a href="#api_impl_sni">How do I set up my API to support SNI?</a> below.</p>
+<p><strong>Note</strong>: The developer portal also supports SNI at the tenant level, for developer portal access. See <a href="site_admin_site.htm#settings_theme_security_manage">How do I manage security for a developer portal theme?</a> (Site Admin help).</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -1030,7 +1066,7 @@ nav-title: Managing API Implementations
 
 
 <h3 id="related_topics">Related Topics</h3>
-<div class="relatedlinks">
+<div class="relatedlinks" id="api_admin">
 <ul>
 	<li><a href="apiadmin_getting_started.htm">Getting Started for API Developers</a></li>
 	<li><a href="apiadmin_overview.htm">API Administration: Overview</a></li>
@@ -1042,13 +1078,14 @@ nav-title: Managing API Implementations
 <ul>
 	<li><a href="apiadmin_api_add.htm">Adding an API</a></li>
 	<li><a href="apiadmin_api_design.htm">Add or Modify an API Using API Designer</a></li>
-<!--  <li><a href="apiadmin_implementations.htm">Manage API Implementations</a></li>-->
+	<li><a href="apiadmin_implementations.htm">Manage API Implementations</a></li>
 	<li><a href="api_admin_testing_tc.htm">API Testing with Test Client</a></li>
 	<li><a href="api_admin_managing_contracts.htm">Managing Contracts for your API</a></li>
 	<li><a href="api_admin_monitoring.htm">Monitoring API Analytics</a></li>
 </ul>
 <ul>
 	<li><a href="api_admin_api_publishing.htm">API Visibility, Licenses, and Settings</a></li>
+	<li><a href="apiadmin_api_phys_svc.htm">Working with Physical Services</a></li>
 	<li><a href="api_admin_oauth_support.htm">OAuth Support</a></li>
 	<li><a href="api_admin_content_guidelines.htm">Content Development Guidelines</a></li>
 	<li><a href="api_admin_documentation_maintenance.htm">API Documentation Maintenance</a></li>
@@ -1057,3 +1094,6 @@ nav-title: Managing API Implementations
 	<li><a href="basics_glossary.htm">Glossary of Terms</a></li>
 </ul>
 </div>
+
+
+
