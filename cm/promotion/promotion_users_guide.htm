@@ -101,7 +101,7 @@ nav-title: LC Promotion Guide
 		</ol>
 	</li>
 	<li><a href="#app_b_client_apps">Appendix B: Support for client apps</a> (2018.0.0 and later)</li>
-	</ol>
+</ol>
 <div class = "divider1"></div>
 
 
@@ -1114,7 +1114,7 @@ vsep.listenerName = "https"</td>
 <p>An <strong>apiImplementationProfile</strong> collection can specify:</p>
 <ul>
 	<li>The Deployment Zones that an API Implementation is to be deployed to:
-		<p>Specify the deployment zone names in the <strong>deploymentZones</strong> property.</p></li>
+		<p>Specify the deployment zone names in the <strong>deploymentZones</strong> property (for additional details, see <a href="#dz_config">Deployment Zone Configuration</a> {following section}).</p></li>
 	<li>The policies that are to be applied to the Implementation:
 		<p>Specify either the <strong>policyName</strong> or <strong>policyId</strong> for each policy to be applied.</p></li>
 	<li>The policies that are to be applied to the physical service of a proxy Implementation (not shown in example above):
@@ -1134,24 +1134,71 @@ vsep.listenerName = "https"</td>
 
 
 
+<p>{<span class="apidoc_red">TG new piece below. Not sure whether it should be same importance as xxx or a lower heading level? Please review. Thx!</span>}</p>
 
 
+<h5 id="dz_config">Deployment Zone Configuration</h5>
+<p>The <strong>deploymentZones</strong> property of an <strong>apiImplementationProfile</strong> is used to specify which deployment zones and optionally which listeners within a deployment zone and API should support an API's endpoints. In the simplest case, a deployment zone can be specified with no additional details, as in this example:</p>
+<pre>{
+  "name" : "DZ9941"
+}</pre>
+<p>In this example, APIs that are using this apiImplementationProfile will be deployed to all listeners within the designated deployment zone.</p>
+<p>The following example goes a step further and specifies a specific listener within the deployment zone that should be used:</p>
+<pre>{
+  "name": "DZ9941",
+  "listeners": [
+    {
+      "name": "default-http0"
+    }
+  ]
+}</pre>
+<p>Additionally, listener-specific settings can be defined as in this example:</p>
+<pre>{
+  "name": "DZWest",
+  "listeners": [
+    {
+      "name": "default-http",
+      "public": "false",
+      "virtualHost": "listenerscopedhost",
+      "path": "listenerscopedpath"
+    },
+    {
+      "name": "default-https",
+      "useImplementationKeyforSSL": "true"
+    }
+  ]
+}</pre>
+<p>In this case, two listeners were specified within the DZWest deployment zone. Endpoints deployed in the <strong>default-http</strong> listener will:</p>
+<ul>
+	<li>Be set to private.</li>
+	<li>Use a listener-specific host name (which overrides the <strong>virtualHost</strong> property set in the <strong>apiImplementationProfile</strong>).</li>
+	<li>Use a listener-specific path (which overrides the <strong>path</strong> property set in the <strong>apiImplementationProfile</strong>).</li>
+</ul>
+<p>Endpoints deployed in the <strong>default-https</strong> listener are set to use the API Implementation's Key/Certificate for SSL, but will be public by default and will use the <strong>virtualHost</strong> and <strong>path</strong> of the containing <strong>apiImplementationProfile</strong> (if <strong>virtualHost</strong> and <strong>path</strong> are specified).</p>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<h5 id="replacement_parms">Replacement Parameters</h5>
+<p>A limited number of replacement parameters are available for use in setting the <strong>virtualHost</strong> and <strong>path</strong> properties at the apiImplementationProfile and listener level of an Environment configuration. To use these parameters, specify the parameter name within braces <strong>{&lt;parameter&gt;}</strong> within either the <strong>virtualHost</strong> or <strong>path</strong> properties. For example:</p>
+<pre>"path" : "{api.name_normalized}_{api.version_normalized}"</pre>
+<p>At runtime, the platform replaces these parameters with information from the API. In the above example, an API with name <strong>CurrencyConverter</strong> and version <strong>1</strong> would result in a path of <strong>currencyconverter_1</strong>.</p>
+<p>The following replacement parameters are currently available:</p>
+<ul>
+	<li><strong>api.name</strong>
+<p>The actual name of the API.</p></li>
+	<li><strong>api.version</strong>
+<p>The actual version of the API.</p></li>
+	<li><strong>api.name.normalized</strong>
+<p>The api nam,e normalized for use as an NM token.</p></li>
+	<li><strong>api.version.normalized</strong>
+<p>The api version, normalized for use as an NM token.</p></li>
+	<li><strong>api.physical_url_path.live</strong>
+<p>The path of the first physical endpoint for the live implementation of the API. This is only applicable when the API implementation is using the proxy pattern.</p></li>
+	<li><strong>api.physical_url_path.sandbox</strong>
+<p>The path of the first physical endpoint for the sandbox implementation of the API. This is only applicable when the API implementation is using the proxy pattern.</p></li>
+	<li><strong>api.property</strong>
+<p>The value of the specified custom API property. For example, if an API has the property <strong>classification</strong> set to <strong>restricted</strong>, the parameter <strong>{api.property.classification}</strong> will resolve to <strong>restricted</strong>.</p></li>
+</ul>
+<p><strong>Note</strong>: A parameter that cannot be resolved or is not recognized will remain in the unresolved form.</p>
+<p><a href="#top">Back to top</a></p>
 
 
 
@@ -1295,7 +1342,7 @@ vsep.listenerName = "https"</td>
 			<li>Via the import wizard in the API Platform UI: see <a href="../learnmore/bus_admin_export_import.htm#import_org_app_api">How do I import site, app, or API information from an export file?</a></li>
 			<li>By using the importPackage operation on the TenantAdministrationAPI: see <a href="../api/tenantadmin/m_tenantadmin_importPackage.htm"><span class="apidoc_code">POST /api/tenants/{TenantFedMemberID}/packages</span></a>.</li>
 		</ul>
-		</li>
+	</li>
 </ol>
 <p><a href="#top">Back to top</a></p>
 
@@ -1321,6 +1368,7 @@ vsep.listenerName = "https"</td>
 	<li><a href="#s08_01_05_virtual_host">Virtual Host</a></li>
 	<li><a href="#s08_01_06_path">Path</a></li>
 	<li><a href="#s08_01_06b_dzs">Deployment Zones</a></li>
+	<li><a href="#new">uptohere xxx</a></li>
 	<li><a href="#s08_01_07_anon_access">Allow Anonymous Access</a></li>
 	<li><a href="#s08_01_08_approval_req">Approval Required</a></li>
 	<li><a href="#s08_01_09_debug_mode">Debug Mode Enabled</a></li>
@@ -1423,6 +1471,34 @@ vsep.listenerName = "https"</td>
 <p><strong>Deployment Zone Replacement Behavior</strong></p>
 <p>By default, the deployment zones specified on the Runtime Configuration asset replace those already enabled for a matching API implementation.</p>
 <p>Using Configuration Designer, it is possible to customize the <strong>Apply Runtime Configuration API</strong> post-processing task by setting the <strong>Preserve Existing Deployment Zones</strong> property <strong>to</strong> true. This indicates that any existing deployment zones enabled for a matching API implementation will be merged with those specified on the Runtime Configuration asset.</p>
+
+
+<h5 id="s08_01_07b_xxx">xxx</h5>
+<p>{<span class="apidoc_red">TG not sure if this is a separate section or an add-on to the previous section?</span>}</p>
+<p>{<span class="apidoc_red">TG: for this one, JIRA says API Platform Version: 8.4.18 and later  but doc says API Platform Version: 2018.0.0 and later</span>}</p>
+<p>While the Deployment Zones classifier mentioned above can specify deployment zones for an API to be deployed to, it is sometimes necessary to also specify listeners within a deployment zone as well as specific settings for each listener. If this level of granularity is needed, the Deployment Zones classifier should be left unset and instead the <strong>Deployment Zone Configuration</strong> artifact in the Runtime Configuration asset should be used. This artifact should be a JSON document containing a JSON array of deploymentZone properties in the same format as shown for the deploymentZones property of an Environment Configuration (link to Environment Configuration section). Here is a sample Deployment Zones Configuration document:</p>
+<pre>[
+  {
+    "name": "DZ9921"
+  },
+  {
+    "name": "DZ9941",
+    "listeners": [
+      {
+        "name": "default-http0",
+        "public": "false",
+        "virtualHost": "{api.property.internal}",
+        "path": "{api.name_normalized}_{api.version_normalized}"
+      },
+      {
+        "name": "default-https",
+        "useImplementationKeyforSSL": "true"
+      }
+    ]
+  }
+]</pre>
+<p>Note that only the deployment zone name is required in each <strong>deploymentZone</strong> property. Also be aware that there is no configuration-time validation of the information specified in the Deployment Zones Configuration document, so care must be taken to ensure that it is in sync with the actual deployment zones and listeners defined in the API platform instance.</p>
+
 
 <h5 id="s08_01_07_anon_access">Allow Anonymous Access</h5>
 <p>This classifier is used to set the <strong>allow anonymous access</strong> value of the implementation. Leaving this classifier unset indicates that the <strong>allow anonymous access</strong> value of the implementation should not be modified.</p>
