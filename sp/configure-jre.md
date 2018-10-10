@@ -5,7 +5,7 @@ description: A guide to how to setup an external JRE to run the Akana Platform
 product: sp
 category: gs
 sub-nav-class: Installation - Akana API Platform
-weight: 11
+weight: 10
 type: page
 nav-title: Configure Java Runtime
 ---
