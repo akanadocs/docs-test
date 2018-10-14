@@ -9,7 +9,7 @@ sub-nav-class: Installation - Akana API Platform
 type: page
 nav-title: Installing Akana API Platform 2018.0.0
 ---
-<h2 id="top">Installing the Akana API Platform 2018.0.x </h2>
+<h2 id="top">Installing the Akana API Platform 2018.0.x</h2>
 <p>Learn how to download, install, and configure the Akana API Platform 2018.0.x, including the Akana Platform and all features previously included in Policy Manager and Community Manager.</p>
 <p><strong>Note</strong>: This document covers instructions for the combined features available in version 2018.0.x. For 8.4x, refer to <a href="installing_akana_api_platform_v84.htm">Installing Akana API Platform 8.4x</a>.</p>
 
@@ -27,21 +27,18 @@ nav-title: Installing Akana API Platform 2018.0.0
 
 
 <h5 style="color: gray;"><a href="#h_install_planning">Planning the Installation</a></h5>
-
-
 <ol class="table_of_contents">
 	<li><a href="#overview">Overview</a></li>
-	<li><a href="#gather_zip_files">Gather ZIP files and download to the install folder</a></li>
+	<li><a href="#s01_01">Step 1-1: Plan the installation</a></li>
+	<li><a href="#s01_02">Step 1-2: Install and configure Elasticsearch (if not already done)</a></li>
 </ol>
 
 
 
-<h5 style="color: gray;"><a href="#h_install_procedure">Installation Procedure:</a></h5>
-
-
-
+<h5 style="color: gray;"><a href="#h_install_procedure">Performing the Installation:</a></h5>
 <ol class="table_of_contents">
-	<li><a href="#unzip_files">Step 2: Unzip files into the installation folder in the correct sequence</a></li>
+	<li><a href="#gather_zip_files">Step 1: Gather ZIP file or files and download to a temporary folder</a></li>
+	<li><a href="#unzip_files">Step 2: Extract installation files in the correct sequence</a></li>
 	<li><a href="#run_configurator_pm">Step 3: Run Configurator to create the first container</a></li>
 	<li><a href="#install_pm_cm">Step 4: Install Policy Manager/Community Manager features on the container</a></li>
 	<li><a href="#install_plugins">Step 5: (as needed) Install plug-ins on the container</a></li>
@@ -55,9 +52,6 @@ nav-title: Installing Akana API Platform 2018.0.0
 
 
 <h5 style="color: gray;"><a href="#h_install_tasks_reference">Installation Tasks/Reference:</a></h5>
-
-
-
 <ol class="table_of_contents">
 	<li><a href="#supported_databases">Supported databases</a></li>
 	<li><a href="#database_notes">Database notes</a>
@@ -75,7 +69,7 @@ nav-title: Installing Akana API Platform 2018.0.0
 	<li><a href="#clear_configurator_cache">Clear Configurator cache</a></li>
 	<li><a href="#starting_container">Starting a container</a></li>
 	<li><a href="#stopping_container">Stopping a container</a></li>
-	<li><a href="#creating_container_windows">Creating a container via the GUI</a></li>
+	<li><a href="#creating_container_gui">Creating a container via the GUI</a></li>
 	<li><a href="#creating_container_silent">Creating a container using silent install (Linux)</a></li>
 	<li><a href="#unregister_reregister_windows_service">Unregistering and re-registering the Windows service</a></li>
 	<li><a href="#linux_java_home_variable">Linux install: exporting the JAVA_HOME variable</a></li>
@@ -88,7 +82,8 @@ nav-title: Installing Akana API Platform 2018.0.0
 	<li><a href="#install_tasks_nd_configure_wsmex">Installation wizard, ND container: Configure WS-Metadata Exchange Options</a></li>
 	<li><a href="#install_options">Installation Options: Full List</a></li>
 	<li><a href="#pm_add_container_wizard">Policy Manager Add Container wizard</a></li>
-	<li><a href="#installation_scenarios">Sample installation scenarios</a></li>
+	<li><a href="#installation_scenarios">Container features</a></li>
+	<li><a href="#container_creation_sequence">Container creation sequence</a></li>
 	<li><a href="#fn_scheduled_jobs">Feature notes: Scheduled jobs</a></li>
 	<li><a href="#fn_embedded_es_node">Feature Notes: Akana Embedded Elasticsearch Node feature</a></li>
 	<li><a href="#optional_additional_features">Optional additional features</a></li>
@@ -102,12 +97,14 @@ nav-title: Installing Akana API Platform 2018.0.0
 
 
 <h3 id="overview">Overview</h3>
-<p>This document provides instructions for installing the Akana API Platform version 2018.0.0</p>
-<p>It covers a very simple scenario of setting up two containers:</p>
-<ol>
-	<li>One container for Policy Manager and Community Manager.</li>
-	<li>One container for Network Director.</li>
-</ol>
+<p>This document provides instructions for installing the Akana API Platform version 2018.0.0.</p>
+<p>It covers a very simple scenario of setting up these containersf:</p>
+<ul>
+	<li>One container with Policy Manager and Community Manager installed</li>
+	<li>One container running the API Gateway (Network Director)</li>
+	<li>One container running the scheduled jobs</li>
+</ul>
+
 <p>This document covers the following broad activities associated with the installation process:</p>
 <ul>
 	<li>Preparation (Steps 1 and 2)</li>
@@ -123,17 +120,44 @@ nav-title: Installing Akana API Platform 2018.0.0
 	<li>You can create one container, configure it, and then create the next container, or you can create all containers and then configure the containers. It really doesn't matter. This documentation creates and configures the first container and then the next.</li>
 	<li>You can install features and then configure them before installing plug-ins, or you can install features and plug-ins and then configure them. Again, it really doesn't matter. Just make sure all pending installation tasks are complete, on all containers, before creating the developer portal tenant. This documentation installs features and plug-ins and then configures.</li>
 </ul>
+<p><a href="#top">back to top</a></p>
 
 
 
-<h3 id="gather_zip_files">Gather ZIP files and download to a temporary folder</h3>
+<h3 id="s01_01">Step 1-1: Plan the installation</h3>
+<p>Before you start, plan your installation. In particular, you'll need to:</p>
+<ul>
+	<li>Decide what containers you'll have, and which features will be installed in which containers. For a recommended simple configuration, see <a href="../deployment/deployment_clustered.htm">Sample Deployment Scenario</a>.</li>
+	<li>Determine where you'll install Elasticsearch, needed for the search feature. For full information on Elasticsearch, see <a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a>.</li>
+	<li>Determine whether you'll be using a specific add-on feature, such as the SAML Web SSO Security Provider. {<span class="apidoc_red">Is SAML still a separate download? Presumably?</span>}</li>
+</ul>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h3 id="s01_02">Step 1-2: Install and configure Elasticsearch (if not already done)</h3>
+<p>Version 2018.0.0 requires standalone Elasticsearch. REST Client mode is recommended.</p>
+<p>For instructions, see <a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a>.</p>
+<p>{<span class="apidoc_red">MM question. Should they configure ES before setting up the containers? Or after?</span>}</p>
+<p><a href="#top">back to top</a></p>
+
+
+
+
+<div class = "divider1"></div>
+<h3 id="h_install_procedure">Performing the Installation:</h3>
+
+
+
+
+<h3 id="gather_zip_files">Step 1: Gather ZIP file or files and download to a temporary folder</h3>
 <p>The first step is to download the required ZIP files.</p>
 
 <h5 id="proc_download_zips">To download the installation ZIP file or files</h5>
 <ol>
 	<li>First, create two folders:
 		<ul>
-			<li>A temporary download location for the download ZIP file&nbsp;or files.</li>
+			<li>A temporary download location for the download ZIP fileor files.</li>
 			<li>A folder for your installation; for example, <strong>aap201800</strong>.</li>
 		</ul>
 	</li>
@@ -143,43 +167,29 @@ nav-title: Installing Akana API Platform 2018.0.0
 	<li>In the <strong>My Resources section</strong>, click <strong>Product Downloads</strong>, then click <strong>Akana - Product Downloads</strong> (<a href="https://library.roguewave.com/display/SUPPORT/Akana+-+Product+Downloads" title="Direct link to Akana product downloads" target="_blank">https://library.roguewave.com/display/SUPPORT/Akana+-+Product+Downloads</a>)</li>
 	<li>Download the Akana Platform 2018.0.0 file:
 		<ul>
-			<li>Search for <strong>Akana Platform 2018.0.0 GA</strong>, click the download link, and download the file&nbsp;to the folder you created.</li>
+			<li>Search for <strong>Akana Platform 2018.0.0 GA</strong>, click the download link, and download the fileto the temporary download folder you created.</li>
 		</ul>
 		</li>
-<!--	<li>Download the update file for Akana Platform 8.4.11:
-		<ul>
-			<li>Search for <strong>Akana Platform 8.4.11</strong>, click the download link, and download the file.</li>
-		</ul>
-	</li>-->
 </ol>
 <p>Depending on the scenario, you might also need one or more of the following files:</p>
 <ul>
 	<li><strong>Plug-ins</strong>: The ZIP file, and any updates, for any plug-ins you want to use in your installation.</li>
 	<li><strong>Updates</strong>: not applicable to version 2018.0.0 itself, but for future updates.</li>
-<!--	<li><strong>Incremental updates to the Akana Platform</strong>: download any that are available, up to the latest version.</li>
-	<li><strong>Incremental updates to the Akana API Platform</strong>: download any that are available, up to the latest version.</li>
--->
 </ul>
 <p><a href="#top">Back to top</a></p>
 
 
 
-<div class = "divider1"></div>
-<h3 id="h_install_procedure">Installation Procedure:</h3>
+<h3 id="unzip_files">Step 2: Extract installation files in the correct sequence</h3>
+<p>The installation ZIP file is a combo ZIP file, containing other ZIP files within it. You'll first need to extract the contents of the main ZIP file, in the temporary folder, and then extract individual ZIP files, in the correct sequence as given below, into your installation folder in the sequence listed below.</p>
 
-
-
-<h3 id="unzip_files">Step 2: Unzip files into the installation folder in the correct sequence</h3>
-<p>When you've downloaded all applicable ZIP files, extract the files into your <strong>aap201800</strong> folder in the sequence listed below.</p>
-<p><strong>Note</strong>: The sequence is very important. Be sure to install products, and updates, in the sequence given below.</p>
 
 <ol>
-	<li><a href="../../cm/learnmore/basics_glossary.htm#gl_akana_platform">Akana Platform</a> main file.</li>
-	<li>Akana Platform updates if applicable: One or more updates if there are any, beginning with the earliest update, up to the latest. If you're prompted whether to overwrite a file, select <strong>Yes</strong>.</li>
-	<li><a href="../../cm/learnmore/basics_glossary.htm#gl_akana_api_platform">Akana API Platform</a> main file.</li>
-	<li>Akana API Platform updates if applicable: One or more updates if there are any, beginning with the earliest update, up to the latest. If you're prompted whether to overwrite a file, select <strong>Yes</strong>.</li>
-	<li>Plug-ins for your installation, if any.</li>
-	<li>Updates to the plug-ins, if applicable: earliest to latest, overwriting if needed, as above.</li>
+	<li>In the temporary folder, unzip the Akana API Platform 2018.0.0 file.</li>
+	<li>Unzip to <a href="../../cm/learnmore/basics_glossary.htm#gl_akana_platform">Akana Platform</a> main file to your installation folder.</li>
+	<li>Akana Platform updates (if applicable): If there are any updates, unzip them, beginning with the earliest update, up to the latest. If you're prompted whether to overwrite a file, select <strong>Yes</strong>.</li>
+	<li>Plug-ins (if applicable): Unzip any separate plug-ins for your installation, if applicable.</li>
+	<li>Plug-in updates  (if applicable): if there are any updates to the plug-ins, unzip them, earliest to latest, overwriting if needed, as above.</li>
 </ol>
 <p><a href="#top">back to top</a></p>
 
@@ -190,7 +200,7 @@ nav-title: Installing Akana API Platform 2018.0.0
 <p>Once you've created the container, you can go into the Akana Administration Console for the container and install features into it.</p>
 <p>You can create a container:</p>
 <ul>
-	<li>Via the GUI, a Windows-based wizard that steps you through the installation process: See <a href="#creating_container_windows">Creating a container via the GUI</a>.</li>
+	<li>Via the GUI, a Windows-based wizard that steps you through the installation process: See <a href="#creating_container_gui">Creating a container via the GUI</a>.</li>
 	<li>Via silent install using a properties file: see <a href="#creating_container_silent">Creating a container using silent install (Linux)</a>.</li>
 </ul>
 <p>Follow the applicable linked procedure to create the first container, and then continue to the next step.</p>
@@ -200,23 +210,12 @@ nav-title: Installing Akana API Platform 2018.0.0
 
 <h3 id="install_pm_cm">Step 4: Install Policy Manager/Community Manager features on the container</h3>
 <p>Follow the short procedure below to install the Policy Manager/Community Manager features on the first container for this two-container scenario (one PM/CM, one ND). For additional information on features for different scenarios, see <a href="#installation_scenarios">Sample installation scenarios</a>.</p>
-<p>For a summary of features and add-ins for this scenario, see <a href="#one_pmcm">One container with both Policy Manager and Community Manager installed</a>.</p>
 
 <h5>To install Policy Manager/Community Manager features on the container</h5>
 <ol>
 	<li>In the <strong>Akana Administration Console</strong>, go to the <strong>Available Features</strong> list.</li>
-	<li>Choose the options applicable to your install, and then click <strong>Install Feature</strong>; then, at the Resolution Summary, click <strong>Install Feature</strong> again. In this example, you'd choose the features below for the PM/CM container:
-		<ul>
-			<li>Akana Community Manager</li>
-			<li>Akana Community Manager APIs</li>
-			<li>Akana Community Manager OAuth Provider</li>
-			<li>Akana Community Manager Scheduled Jobs</li>
-			<li>Akana Embedded Elasticsearch Node</li>
-			<li>Akana OAuth Provider</li>
-			<li>Akana Policy Manager Console (for more information on this feature see <a href="../admin_console/using_pmconsole_feature.htm">Using the Policy Manager Console Feature</a>)</li>
-			<li>Akana Policy Manager Services (Includes Akana Management Services, Akana Security Services, and Akana Scheduled Jobs. For more information on this feature see <a href="../admin_console/using_pmservices_feature.htm">Using the Policy Manager Services Feature</a>.)</li>
-		</ul>
-		</li>
+	<li>Choose the options applicable to your install. See <a href="#features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</a>.</li>
+	<li>Click <strong>Install Feature</strong>; then, at the Resolution Summary, click <strong>Install Feature</strong> again.	</li>
 	<li>At the <strong>Installation Complete</strong> summary, click <strong>Configure</strong> (if you are installing plug-ins, click <strong>Close</strong> and install plug-ins first).</li>
 </ol>
 	<p>For additional information, if needed, refer to the following topics:</p>
@@ -224,7 +223,7 @@ nav-title: Installing Akana API Platform 2018.0.0
 	<li>For more detailed installation instructions: <a href="../container_management/configure_standalone_container.htm">Configure Standalone Container</a>.</li>
 	<li>For container deployment options: <a href="../container_management/container_management.htm#deployment">Container Deployment Options</a>.</li>
 </ul>
-<p>The next step is to install any plug-ins that are needed for the container.</p>
+<p>The next step is to install any plug-ins that are needed for the container. See <a href="#install_plugins">Step 5: (as needed) Install plug-ins on the container</a> below.</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -494,7 +493,7 @@ nav-title: Installing Akana API Platform 2018.0.0
 	<li>Paste the URL in the browser. The browser redirects to the default landing page; for example: <strong>http://localhost:9901/acmepaymentscorp/#/home/landing</strong>.</li>
 	<li>Log in, using the username and password from the Jython script.</li>
 </ol>
-<p>For information about tasks relating to the developer portal, including Site Admin tasks such as configuring platform login, setting up domains, and choosing platform settings, as well as user tasks such as adding apps and APIs, refer to the platform help: <a href="http://docs.akana.com/cm/learning.html" title="Learning about Community Manager" target="_blank">http://docs.akana.com/cm/learning.html</a>.</p>
+<p>For information about tasks relating to the developer portal, including Site Admin tasks such as configuring platform login, setting up domains, and choosing platform settings, as well as user tasks such as adding apps and APIs, refer to the platform help: <a href="../../cm/learning.html" title="Learning about Community Manager" target="_blank">../../cm/learning.html</a>.</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -512,16 +511,16 @@ nav-title: Installing Akana API Platform 2018.0.0
 
 
 <h3 id="supported_databases">Supported databases</h3>
-<p>Akana API Platform 8.4.x supports the following database versions: </p>
+<p>Akana API Platform 2018.0.0 supports the following database versions: </p>
 <ul>
-	<li>Oracle 11g, 12c, and 12c Release 2 (supported in version 8.4.16 and later). See <a href="#notes_database_oracle">Database notes: Oracle</a> below.</li>
-	<li>MySQL 5.6. <strong>Note</strong>:
+	<li>Oracle 12c and 12c Release 2. See <a href="#notes_database_oracle">Database notes: Oracle</a> below.</li>
+	<li>MySQL 5.6 and 5.7. <strong>Note</strong>:
 		<ul>
 			<li>If you're using MySQL, there are specific configuration requirements for certain MySQL properties. See <a href="#notes_database_mysql_settings">MySQL: database settings for the API Platform</a> below.</li>
 			<li>If you're running MySQL and are using the Lifecycle Repository feature, see <a href="#notes_database_mysql_rm">Database notes: MySQL with Lifecycle Repository</a> below.</li>
 		</ul>
 	</li>
-	<li>Microsoft SQL Server 2012, 2014 (supported in version 8.4.2 and later), and 2016 (supported in version 8.4.15 and later). Note that you'll need to modify a specific property in the Akana Administration Console; see <a href="#notes_database_ms_sql_server">Database notes: Microsoft SQL Server</a> below.</li>
+	<li>Microsoft SQL Server 2014 and 2016. Note that you'll need to modify a specific property in the Akana Administration Console; see <a href="#notes_database_ms_sql_server">Database notes: Microsoft SQL Server</a> below.</li>
 </ul>
 
 
@@ -603,15 +602,6 @@ ALTER DATABASE {db.instance.name}
 	<li>max_allowed_packet=1073741824; (<a href="http://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html#sysvar_max_allowed_packet" title="http://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html#sysvar_max_allowed_packet" target="_blank">http://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html#sysvar_max_allowed_packet</a>)</li>
 </ul>
 <p>For more information, refer to <a href="install_mysql_dbsettings.htm">MySQL Database Property Settings</a>.</p>
-<!--<p><strong>MySQL 5.7:</strong></p>
-<p>If you're using MySQL 5.7, there is one additional flag required in the <strong>my.ini</strong> file:</p>
-<ul>
-	<li>optimizer_switch='derived_merge=off'</li>
-</ul>
-<p>Also, the <strong>sql-mode</strong> value should not contain NO_ZERO_DATE attribute. Below is an example for <strong>sql-mode</strong>:</p>
-<pre>sql-mode="STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION</pre> {commented out 3/5 per ATMO-23415-->
-<!--<p>Above info is from EB 9/7/16</p>-->
-
 
 <h5 id="notes_database_mysql_rm">Database notes: MySQL with Lifecycle Repository</h5>
 <p>For Akana API Platform 8.4 installs using the Lifecycle Repository feature, the Lifecycle Manager database user requires specific additional grants when using MySQL. These grants are required for successful completion of the <strong>Initialize Repository Database</strong> configuration task; otherwise, the task fails.</p>
@@ -654,9 +644,9 @@ ALTER DATABASE {db.instance.name}
 </ul>
 <p>Database options, with driver information:</p>
 <ul>
-	<li><strong>MySQL</strong>: install this file:
-	<p><strong>mysql-connector-java-5.1.40-bin.jar</strong></p>
-	<p>Downloadable from: <a href="https://mvnrepository.com/artifact/mysql/mysql-connector-java/5.1.40" title="download location for MySQL database driver" target="_blank">https://mvnrepository.com/artifact/mysql/mysql-connector-java/5.1.40</a></p>
+	<li><strong>MySQL 5.6 or 5.7</strong>: install this file: 
+		<p><strong>mysql-connector-java-5.1.40-bin.jar</strong> {<span class="apidoc_red">not sure of the new filename?</span>}</p>
+	<p>Downloadable from: <a href="https://mvnrepository.com/artifact/mysql/mysql-connector-java" title="download location for MySQL database driver" target="_blank">https://mvnrepository.com/artifact/mysql/mysql-connector-java</a>  {<span class="apidoc_red">download location is updated but not the filename yet</span>}</p>
 	</li>
 	<li><strong>Oracle 12c Release 2</strong>: install this file:
 <p><strong>Ojdbc8.jar</strong></p>
@@ -668,10 +658,6 @@ ALTER DATABASE {db.instance.name}
 	<p>Downloadable from: <a href="http://www.oracle.com/technetwork/database/features/jdbc/jdbc-drivers-12c-download-1958347.html" title="download location for Oracle 12c database driver" target="_blank">http://www.oracle.com/technetwork/database/features/jdbc/jdbc-drivers-12c-download-1958347.html</a> (download requires accepting the agreement and logging in).</p>
 		<p>Also, for Oracle 12c and later, see <a href="#note_oracle_12c">note about database permissions needed</a>.</p>
 	</li>
-	<li><strong>Oracle 11g</strong>: install this file:
-		<p><strong>Ojdbc5.jar</strong></p>
-	<p>Downloadable from: <a href="http://www.java2s.com/Code/Jar/o/Downloadojdbc5jar.htm" title="download location for Oracle 11g database driver" target="_blank">http://www.java2s.com/Code/Jar/o/Downloadojdbc5jar.htm</a></p>
-	</li>
 	<li><strong>Microsoft SQL Server</strong>: no database driver installation is required.</li>
 </ul>
 <p><a href="#top">back to top</a></p>
@@ -679,8 +665,10 @@ ALTER DATABASE {db.instance.name}
 
 
 <h3 id="installation_folder_structure">Installation folder structure</h3>
-<p>The installation process creates the folder structure shown below.:</p>
-<p><img src="images_84/install_folders.jpg" alt="Installation folder structure" /></p>
+
+<h5 id="install_platform">Installation folders: Akana Platform</h5>
+<p>When you install the Akana Platform, the installation process creates the folder structure shown below:</p>
+<p><img src="images_201800/install_folders_platform.jpg" alt="Installation folder structure: Akana Platform" /></p>
 <p>Installation includes the following folders:</p>
 
 <dl class="apidoc_dl">
@@ -728,12 +716,49 @@ ALTER DATABASE {db.instance.name}
 <dd>Includes the <strong>jar</strong> files needed by the available Akana features.</dd>
 
 
+<dt>recipes</dt>
+<dd>{<span class="apidoc_red">xxx TBD uptohere find out</span>}</dd>
+
+
 <dt>scripts</dt>
 <dd>Includes script utilities that you can use to create containers without using the <strong>Configure Container Instance wizard</strong> UI. </dd>
 
 
 <dt>yajsw</dt>
 <dd>Includes files used by the Akana Platform to support YAJSW. See <a href="http://yajsw.sourceforge.net" title="http://yajsw.sourceforge.net" target="_blank">http://yajsw.sourceforge.net</a>.</dd>
+</dl>
+
+<h5 id="install_aap">Installation folders: Akana API Platform</h5>
+<p>When you install the Akana API Platform, some additional folders are added. The full folder structure is shown below.</p>
+<p><img src="images_201800/install_folders_aap.jpg" alt="Installation folder structure: Akana API Platform" /></p>
+<p>The following additional folders are installed:</p>
+<dl class="apidoc_dl">
+<dt>api-portal-dbscripts</dt>
+<dd>{<span class="apidoc_red">xxx TBD uptohere find out</span>}</dd>
+
+
+<dt>dbscripts</dt>
+<dd>{<span class="apidoc_red">xxx TBD uptohere find out</span>}</dd>
+
+
+<dt>license</dt>
+<dd>Contains license agreements for add-in products. {<span class="apidoc_red">xxx TBD uptohere find out</span>}</dd>
+
+
+<dt>mib</dt>
+<dd>{<span class="apidoc_red">xxx TBD uptohere find out</span>}</dd>
+
+
+<dt>samples</dt>
+<dd>{<span class="apidoc_red">xxx TBD uptohere find out</span>}</dd>
+
+
+<dt>schemas</dt>
+<dd>{<span class="apidoc_red">xxx TBD uptohere find out</span>}</dd>
+
+
+<dt>tenant</dt>
+<dd>{<span class="apidoc_red">xxx TBD uptohere find out</span>}</dd>
 </dl>
 <p><a href="#top">back to top</a></p>
 
@@ -842,22 +867,22 @@ ALTER DATABASE {db.instance.name}
 
 
 
-<h3 id="creating_container_windows">Creating a container via the GUI</h3>
+<h3 id="creating_container_gui">Creating a container via the GUI</h3>
 <p>As part of <a href="#run_configurator_pm">Step 3: Run Configurator to create the first container</a>, you might choose to create the container via the GUI, a Windows-based wizard that steps you through the installation process.</p>
 
 <h5 id="proc_create_container_gui">To create a container via the GUI</h5>
 <p>For more information on the wizard, see <a href="#wizard_configure_container_instance">Installation wizard: Configure Container Instance</a>.</p>
 <ol>
-	<li>Open a command prompt.
-<p><strong>Note</strong>: if you want to install the container as a Windows service, open the command prompt in Administrator mode.</p></li>
-	<li>Go to the new folder where you unzipped the version 2018.0.0 files (for example,<strong>aap201800</strong>).</li>
+	<li>In Windows, open a command prompt.
+		<p><strong>Note</strong>: if you want to install the container as a Windows service, open the command prompt in Administrator mode.</p></li>
+	<li>Go to the new folder where you unzipped the version 2018.0.0 files (for example, <strong>aap2018</strong>).</li>
 	<li>Navigate to the \bin subfolder and run one of the following commands, depending on your operating system:
 		<p><strong>Windows</strong>:</p>
 		<pre>startup.bat configurator</pre>
 		<p><strong>Unix</strong>:</p>
 		<pre>startup.sh configurator</pre>
 		<p>The Configurator starts with the <strong>Welcome to Configure Container Instance wizard</strong> page, as shown below.</p>
-		<p><img src="images_84/03_configurator.jpg" alt="Configurator" /></p>
+		<p><img src="images_201800/ac_configurator.jpg" alt="Configurator" /></p>
 	</li>
 	<li>Click <strong>Next</strong>. The wizard steps you through the following pages:
 		<ol>
@@ -897,7 +922,7 @@ default.port={port}
 container.key=</strong>{container_key_name}
 </pre>
 <p><strong>Sample properties file with values:</strong></p>
-<pre>container.instance.name=AAP84
+<pre>container.instance.name=<strong>aap2018</strong>
 credential.username = administrator
 credential.password = password
 default.host=rhe12345.akana.local
@@ -910,7 +935,7 @@ default.port=9945
 <p>Then:</p>
 <ul>
 	<li>Start the container.</li>
-	<li>Continue with the rest of the procedure from <a href="#install_pm_cm">Step 4: Install Policy Manager/Community Manager features on the container</a>.</li>
+	<li>Continue with the rest of the installation procedure from <a href="#install_pm_cm">Step 4: Install Policy Manager/Community Manager features on the container</a>.</li>
 </ul>
 <p>For full instructions, refer to: <a href="../container_management/configure_standalone_container.htm#container_silent">Configure Container (Silent Option)</a>.</p>
 <p><a href="#top">back to top</a></p>
@@ -955,8 +980,9 @@ default.port=9945
 
 <h3 id="install_tasks_add_database">Installation wizard: Add Database</h3>
 <p>The <strong>Add Database</strong> pending installation task opens the <strong>Configure Database Options</strong> wizard. This task creates the database for the installation. The wizard has two pages, as shown below.</p>
+<p><strong>Note</strong>: Depending on which database server you're using, you might need to install a database driver before running the <strong>Configure Database Options</strong> Wizard. See <a href="#database_drivers">Database drivers</a>.</p>
 <p>On the first page, specify new or existing database, and then click <strong>Next</strong>.</p>
-<p><img src="images_2018/ca_add_database.jpg" alt=" Configure Database Options wizard, page 1" /></p>
+<p><img src="images_201800/ca_add_database.jpg" alt=" Configure Database Options wizard, page 1" /></p>
 <p>On the second page, enter all the database details such as type and credentials, and then click <strong>Finish</strong>.</p>
 <p><img src="images_84/pi_tasks_ConfigureDatabaseOptions_02.jpg" alt=" Configure Database Options wizard, page 2" /></p>
 <p><a href="#top">back to top</a></p>
@@ -965,7 +991,7 @@ default.port=9945
 <h3 id="install_tasks_manage_schemas">Installation wizard: Manage Schemas</h3>
 <p>The <strong>Manage Schemas</strong> pending installation task opens the <strong>Manage Schemas</strong> wizard. This task manages the database schemas for the container.</p>
 <p>Make sure available schemas are checked, and then click <strong>Finish</strong>.</p>
-<p><img src="images_84/pi_tasks_ManageSchemas_01.jpg" alt=" Manage Schemas wizard, page 1" /></p>
+<p><img src="images_201800/pi_tasks_install_schemas.jpg" alt=" Manage Schemas wizard, page 1" /></p>
 <p>When schema installation is complete, a <strong>Summary</strong> page is displayed. Click <strong>Go to Next Task</strong>.</p>
 <p><a href="#top">back to top</a></p>
 
@@ -1013,18 +1039,22 @@ default.port=9945
 <h3 id="install_options">Installation Options: Full List</h3>
 <p>Installation can include one or more of the following:</p>
 <ul>
-	<li><strong>Features</strong>: Core products or major features that support core products.</li>
-	<li><strong>Plug-Ins</strong>: Additions to core products that add to the functionality.</li>
-	<li><strong>Tools</strong>: Tools that provide specific functionality for maintaining or upgrading features and plug-ins.</li>
+	<li><strong><a href="#installation_features">Features</a></strong>: Core products or major features that support core products.</li>
+	<li><strong><a href="#installation_plugins">Plug-Ins</a></strong>: Additions to core products that add to the functionality.</li>
+	<li><strong><a href="#installation_tools">Tools</a></strong>: Tools that provide specific functionality for maintaining or upgrading features and plug-ins.</li>
 </ul>
+
+<h5 id="installation_features">Installation Features</h5>
 <p>The full list of installation features is shown below.</p>
-<p><img src="images_84/List_01_Features.jpg" alt=" Features" /></p>
+<p><img src="images_201800/List_01_Features.jpg" alt=" Features" /></p>
 
+<h5 id="installation_plugins">Installation Plug-ins</h5>
 <p>The full list of plug-ins is shown below.</p>
-<p><img src="images_84/List_02_Plug_In.jpg" alt=" Plug-Ins" /></p>
+<p><img src="images_201800/List_02_PlugIns.jpg" alt=" Plug-Ins" /></p>
 
+<h5 id="installation_tools">Installation Tools</h5>
 <p>The full list of tools is shown below.</p>
-<p><img src="images_84/List_03_Tool.jpg" alt=" Tools" /></p>
+<p><img src="images_201800/List_03_Tools.jpg" alt=" Tools" /></p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -1054,86 +1084,163 @@ default.port=9945
 
 
 
-<h3 id="installation_scenarios">Sample installation scenarios</h3>
-<p>{<span class="apidoc_red">here, we will add a link to the deployment doc which will be added shortly, stating that this is a recommended scenario. That doc already will include which features to install.</span>}</p>
-<p>The examples below show which features to install for some sample scenarios, including:</p>
+<h3 id="container_features">Container features</h3>
+<p>The installation scenarios below list the installation options you should choose depending on the features you'll be running in your containers. It includes the containers for the simple installation scenario covered in this document:</p>
 <ul>
-	<li><a href="#one_pm">One container with Policy Manager installed (no Community Manager)</a></li>
-	<li><a href="#multi_pm">Multi-container setup with Policy Manager installed (no Community Manager)</a></li>
-	<li><a href="#one_pmcm">One container with both Policy Manager and Community Manager installed</a></li>
-	<li><a href="#multi_no_cm">Needed in any multi-container deployment that does not include Community Manager</a></li>
+	<li><a href="#features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</a></li>
+	<li><a href="#features_nd_oauth">Standalone API Gateway (Network Director) (with OAuth)</a></li>
+	<li><a href="#features_oauth_alone">Standalone OAuth container features</a></li>
+	<li><a href="#features_sched_jobs">Scheduled Jobs container features</a></li>
+</ul>
+
+<p>This section also includes feature installation information for the following additional container scenarios:</p>
+<ul>
+	<li><a href="#features_pm_alone">Container features for standalone Policy Manager container</a></li>
+	<li><a href="#features_pm_cm_oauth">Community Manager with Policy Manager and OAuth</a></li>
+	<li><a href="#features_pm_remote_cm">Policy Manager with remote Community Manager</a></li>
+	<li><a href="#features_cm_alone">Standalone Community Manager (developer portal)</a></li>
+	<li><a href="#features_cm_oauth">Standalone Community Manager with OAuth</a></li>
+	<li><a href="#features_nd_alone">Standalone Internal/External Gateway (Network Director) container features (without OAuth</a></li>
 </ul>
 
 
-<h4 id="one_pm">One container with Policy Manager installed (no Community Manager)</h4>
-<p>Install these features on the Policy Manager container:</p>
+<h4 id="features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</h4>
+<p>In each CM/PM combo container shown in this sample deployment, install the following features:</p>
 <ul>
-	<li>Akana Policy Manager Console</li>
-	<li>Akana Policy Manager Services (Includes Akana Management Services, Akana Security Services, and Akana Scheduled Jobs. For more information on this feature see <a href="../admin_console/using_pmservices_feature.htm">Using the Policy Manager Services Feature</a>.)</li>
+	<li>Akana Policy Manager Console <!--(policy.manager.console)--></li>
+	<li>Akana Policy Manager Services <!--(policy.manager.services)--></li>
+	<li>Akana Security Services <!--(security.services)--></li>
+	<li>Akana Community Manager <!--(community.manager)--></li>
+	<li>Akana Community Manager Scheduled Jobs <!--(community.manager.scheduled.jobs)--></li>
 </ul>
-
-<p>Install this feature on the Network Director container:</p>
+<p>Install the following plug-ins:</p>
 <ul>
-	<li>Akana Network Director</li>
-</ul>
-
-
-<h4 id="multi_pm">Multi-container setup with Policy Manager installed (no Community Manager)</h4>
-<p><strong>Policy Manager Container Features:</strong></p>
-
-<ul>
-	<li>Akana Policy Manager Console</li>
-	<li>Akana Policy Manager Services (Includes Akana Management Services, Akana Security Services, and Akana Scheduled Jobs. For more information on this feature see <a href="../admin_console/using_pmservices_feature.htm">Using the Policy Manager Services Feature</a>.)</li>
-</ul>
-<p><strong>Network Director Container Features:</strong></p>
-<ul>
-	<li>Akana Network Director</li>
-</ul>
-
-<h4 id="one_pmcm">One container with both Policy Manager and Community Manager installed</h4>
-<p><strong>Community Manager Container Features:</strong></p>
-<p>Install these features:</p>
-<ul>
-	<li>Akana Community Manager APIs</li>
-	<li>Akana Community Manager OAuth Provider</li>
-	<li>Akana Community Manager Scheduled Jobs</li>
-	<li>Akana Embedded Elasticsearch Node</li>
-	<li>Akana OAuth Provider</li>
-	<li>Akana Policy Manager Console</li>
-	<li>Akana Policy Manager Services (Includes Akana Management Services, Akana Security Services, and Akana Scheduled Jobs. For more information on this feature see <a href="../admin_console/using_pmservices_feature.htm">Using the Policy Manager Services Feature</a>)</li>
-	<li>Akana Community Manager</li>
-</ul>
-
-<h5 id="cm_plug_ins">Community Manager Container Plug-ins:</h5>
-<p>Install these plug-ins:</p>
-<ul>
-	<li>Akana Community Manager Policy Console</li>
+	<li>Akana MongoDB Support (Plug-In)<!-- (mongo.db)--> (if using MongoDB for analytics)</li>
+	<li>Akana Community Manager Policy Console <!--(community.manager.plugin)--></li>
 	<li>One or more of the following (at least one theme is required for Community Manager):
 		<ul>
-			<li>Akana Community Manager Default Theme</li>
-			<li>Akana Community Manager Hermosa Theme</li>
-			<li>Akana Community Manager Simple Developer Theme</li>
+			<li>Akana Community Manager Default Theme <!--(community.manager.default.theme)--></li>
+			<li>Akana Community Manager Hermosa Theme <!--(community.manager.hermosa.theme)--></li>
+			<li>Akana Community Manager Simple Developer Theme <!--(community.manager.simple.developer.theme)--></li>
 		</ul>
 	</li>
 </ul>
 
-<p>Install this feature on every Network Director container:</p>
+
+<h4 id="features_nd_oauth">Standalone API Gateway (Network Director)</h4>
+<p>Install the following features on each container running Network Director:</p>
 <ul>
-	<li>Akana Network Director</li>
+	<li>Akana Network Director <!--(network.director)--></li>
+	<li>Akana API Platform ND Extensions Feature <!--(api.security.policy.handler)--></li>
+	<li>Akana Community Manager OAuth Provider Agent <!--(community.manager.oauth.provider.agent)--></li>
+</ul>
+<p>Required if you are using the Akana API Platform as your OAuth Provider:</p>
+<ul>
+	<li>Akana OAuth Provider Agent<!-- (oauth.provider.agent)--> (deployed only if the implementation is using Akana as the OAuth Provider, and only on the Network Director)</li>
+</ul>
+<p>Install the following plug-in:</p>
+<ul>
+	<li>Akana API Platform ND Extensions Feature (needed for API analytics)</li>
 </ul>
 
 
-<h4 id="multi_no_cm">Needed in any multi-container deployment that does not include Community Manager</h4>
-<p>Install these features on every non-Network Director container:</p>
+<h4 id="features_oauth_alone">Standalone OAuth container features</h4>
+<p>If you are using the Akana API Platform as your OAuth Provider, install the following features on the standalone OAuth container, or the container where you want the OAuth feature to reside. These are not required if you're using an external OAuth provider.</p>
 <ul>
-	<li>Akana Policy Manager Services (Includes Akana Management Services, Akana Security Services, and Akana Scheduled Jobs. For more information on this feature see <a href="../admin_console/using_pmservices_feature.htm">Using the Policy Manager Services Feature</a>.)</li>
+	<li>Akana OAuth Provider <!--(oauth.provider)--></li>
+	<li>Akana Community Manager OAuth Provider <!--(community.manager.oauth.provider)--></li>
 </ul>
 
-<p>Install this feature on every Network Director container:</p>
+
+<h4 id="features_sched_jobs">Scheduled Jobs container features</h4>
+<p>The installation features that are installed on this standalone container, that add jobs to the Quartz scheduler, are:</p>
 <ul>
-	<li>Akana Network Director</li>
+	<li>Akana Policy Manager Services&#8212;this feature bundle includes the Akana Scheduled Jobs feature which adds jobs to the Quartz scheduler</li>
+	<li>Akana Community Manager Scheduled Jobs <!--(community.manager.scheduled.jobs)--></li>
 </ul>
-<p><a href="#top">back to top</a></p>
+<p><strong>Note</strong>: There are other scheduled jobs that are run on each container. For example, Network Director has a job scheduler that is responsible for reaching out to Policy Manager to get updated information on which APIs to load. These scheduled jobs are not separate installation features, they are built in to each container.</p>
+<p><a href="#top">Back to top</a></p>
+<!--<p>https://gitlab.com/akana/automation/blob/master/README.md. Section Container Features.</p>-->
+
+
+<h4 id="features_pm_alone">Container features for standalone Policy Manager container</h4>
+<p>Install the following features:</p>
+<ul>
+	<li>Akana Policy Manager Console <!--(policy.manager.console)--></li>
+	<li>Akana Policy Manager Services<!-- (policy.manager.services)--></li>
+	<li>Akana Security Services <!--(security.services)--></li>
+	<li>Akana MongoDB Support (Plug-In)<!-- (mongo.db)--> (if using MongoDB for analytics)</li>
+</ul>
+
+
+<h4 id="features_pm_cm_oauth">Community Manager with Policy Manager and OAuth</h4>
+<p>Install the following features:</p>
+<ul>
+	<li>All features listed in <a href="#features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</a> above.</li>
+	<li>Akana Community Manager OAuth Provider <!--(community.manager.oauth.provider-->)</li>
+	<li>Akana OAuth Provider <!--(oauth.provider)--></li>
+</ul>
+
+
+<h4 id="features_pm_remote_cm">Policy Manager with remote Community Manager</h4>
+<p>Install the following features:</p>
+<ul>
+	<li>All features listed in <a href="#features_pm_alone">Container features for standalone Policy Manager container</a> above.</li>
+	<li>Akana Community Manager Scheduled Jobs <!--(community.manager.scheduled.jobs)--></li>
+	<li>Akana API Platform Plug-In <!--(community.manager.plugin)--></li>
+	<li>Akana Community Manager Policy Console <!--(community.manager.policy.console)--></li>
+</ul>
+
+
+<h4 id="features_cm_alone">Standalone Community Manager (developer portal)</h4>
+<p><strong>Note</strong>: The developer portal would be for app developers only.</p>
+<p>Install the following features:</p>
+<ul>
+	<li>Akana Community Manager APIs <!--(community.manager.apis)--></li>
+</ul>
+<p>Install the following plug-ins for Community Manager:</p>
+<ul>
+	<li>One or more of the following (at least one theme is required for Community Manager):
+		<ul>
+			<li>Akana Community Manager Default Theme <!--(community.manager.default.theme)--></li>
+			<li>Akana Community Manager Hermosa Theme <!--(community.manager.hermosa.theme)--></li>
+			<li>Akana Community Manager Simple Developer Theme <!--(community.manager.simple.developer.theme)--></li>
+		</ul>
+	</li>
+</ul>
+
+
+<h4 id="features_cm_oauth">Standalone Community Manager with OAuth</h4>
+<p>Install the following features:</p>
+<ul>
+	<li>All features listed in <a href="#features_cm_alone">Standalone Community Manager</a> above.</li>
+	<li>Akana Community Manager OAuth Provider <!--(community.manager.oauth.provider)--></li>
+	<li>Akana OAuth Provider <!--(oauth.provider)--></li>
+</ul>
+
+
+<h4 id="features_nd_alone">Standalone Internal/External Gateway (Network Director) container features (without OAuth)</h4>
+<p>Install the following features:</p>
+<ul>
+	
+	<li>Akana Network Director <!--(network.director)--></li>
+	<li>Akana API Platform ND Extensions Feature <!--(api.security.policy.handler)--></li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+<!--<p>https://gitlab.com/akana/automation/blob/master/README.md. Section Container Features.</p>-->
+
+
+
+<h3 id="container_creation_sequence">Container creation sequence</h3>
+<p>In terms of the sequence of containers, it's best to start by upgrading one of the Policy Manager containers. This accomplishes the database upgrade as well.</p>
+<p>After that point, the sequence of containers really doesn't matter. These upgrade instructions suggest the following sequence once the first container has been updated:</p>
+<ol>
+	<li>First, any additional containers running Policy Manager and/or the API Platform.</li>
+	<li>Then, any Network Director or Agent containers.</li>
+</ol>
+<p>However, the sequence is not important after the first container. You could upgrade the Network Director container at any point. There is no dependency; containers that have been upgraded will work with containers that haven't yet been upgraded. You can even upgrade additional containers in parallel.</p>
+<p>Just make sure you upgrade an initial Policy Manager container first, with the associated database upgrade, and then follow any logical approach, making sure that each step completes successfully before starting the next one.</p>
+<p><a href="#top">Back to top</a></p>
 
 
 
@@ -1153,7 +1260,7 @@ default.port=9945
 <p>If you are using Elasticsearch in Embedded Mode, note that the <strong>Akana Embedded Elasticsearch Node</strong> feature requires that the <strong>Akana Community Manager Scheduled Jobs</strong> feature is installed on the same container, as well as the Community Manager portal features where the search is being performed.</p>
 <p>However, bear in mind that we do not recommend using Elasticsearch Embedded mode in a production environment.</p>
 <p>If you are running an external Elasticsearch server with Transport Client mode, it's not necessary to install the <strong>Akana Embedded Elasticsearch Node</strong> feature.</p>
-<p>For more information on installing and configuring Elasticsearch, see <a href="http://docs.akana.com/cm/learnmore/site_admin_es.htm">Elasticsearch: Information for Site Admins</a> (developer portal help).</p>
+<p>For more information on installing and configuring Elasticsearch, see <a href="../../cm/learnmore/site_admin_es.htm">Elasticsearch: Information for Site Admins</a> (developer portal help).</p>
 <p><a href="#top">back to top</a></p>
 
 
