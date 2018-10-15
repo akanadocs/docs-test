@@ -185,7 +185,7 @@ nav-title: Upgrade 8.4x to 2018.0.x
 <ol>
 	<li>Shut down all containers in your installation.</li>
 	<li>Copy the entire installation folder structure to a secure backup location.</li>
-	<li>When you're completely sure that the backup is complete, successful, and secure, delete the contents of your original installation folder. You'll use this for the new version. {<span class="apidoc_red">MM: does it make a difference if they use a new folder instead of the existing one? ML always used the same name.</span>}</li>
+	<li>When you're completely sure that the backup is complete, successful, and secure, delete the contents of your original installation folder. You'll use this for the new version. {<span class="apidoc_red">MM: does it make a difference if they use a new folder instead of the existing one? ML always used the same name.</span>} {<span class="apidoc_red">MM: do they need to back up the database?</span>}</li>
 </ol>
 <p><a href="#top">Back to top</a></p>
 
@@ -199,22 +199,25 @@ nav-title: Upgrade 8.4x to 2018.0.x
 	<li>In the temporary folder that you created for the downloaded ZIP file in step 2-1, unzip the downloaded ZIP file.</li>
 	<li>Unzip the Akana Platform 2018.0.0 file to the folder for your installation.</li>
 	
-	<li>When the previous step is complete, unzip the Akana Akana Platform 2018.0.0 file to the folder for your installation.</li>
-</ol>
+	<li>When the previous step is complete, unzip the Akana Akana Platform 2018.0.0 file to the folder for your installation.
 <p>For example:</p>
 <pre>unzip -o /akana/downloads/akana-platform-linux-jre-2018.0.0.18.zip -d /akana/aap2018
 unzip -o /akana/downloads/akana-api-platform-2018.0.0.340.zip -d /akana/aap2018</pre>
-<p>For information about the folders and folder contents for the Akana API Platform, see <a href="../platform_install/installing_akana_api_platform.htm#installation_folder_structure">Installation folder structure</a>.</p>
+<p>For information about the folders and folder contents for the Akana Platform, see <a href="../platform_install/installing_akana_api_platform.htm#installation_folder_structure">Installation folder structure</a>.</p></li>
+<li>If applicable, unzip any add-on products, such as the SAML Web SSO Security Provider.</li>
+</ol>
 <p><a href="#top">Back to top</a></p>
 
 
 
 <h3 id="s02_04">Step 2-4: Verify that Elasticsearch is running</h3>
 <p>Elasticsearch is a separate installation. Make sure it's installed successfully and is running.</p>
-<p>For example, running this command:</p>
-<pre>/etc/elasticsearch-6.3.1/bin/elasticsearch -d -p pid</pre>
-<p>Might give these results:</p>
-<p><img src="images_201800/es_running.jpg" alt="Verifying that Elasticsearch is running" /></p>
+<p>For example, run this command:</p>
+<pre>
+ps -ef
+</pre>
+<p>If there is response content, Elasticsearch is running. For example:</p>
+<pre>/usr/share/elasticsearch/modules/x-pack/x-pack-ml/platform/linux-x86_64/bin/controller</pre>
 <p>See also:</p>
 <ul>
 	<li> Elasticsearch website: <a href="https://www.elastic.co/">https://www.elastic.co/</a>.</li>
@@ -376,7 +379,7 @@ unzip -o /akana/downloads/akana-api-platform-2018.0.0.340.zip -d /akana/aap2018<
 
 
 <h3 id="s03_03">Step 3-3: Update context root</h3>
-<p>You'll need to re-set the Content Root value for the developer portal. </p>
+<p>If you customized the Content Root value for the developer portal, you'll need to re-set it.</p>
 <p> In the Akana Administration Console for each container with Community Manager isntalled:</p>
 <p><strong>Configuration</strong> &gt; <strong>com.soa.atmosphere.console</strong> &gt; atmosphere.context.root.</p>
 <p>For example, <strong>/acmepaymentscorp</strong>.</p>
@@ -447,17 +450,24 @@ unzip -o /akana/downloads/akana-api-platform-2018.0.0.340.zip -d /akana/aap2018<
 
 
 <h3 id="s03_07">Step 3-7: Configure API Gateway/Network Director</h3>
-<p>In your new Policy Manager/Community Manager container, you'll need to:</p>
+<p>In your new Policy Manager/Community Manager container, you'll need to&nbsp;move the hosted services from the old Network Director container for the previous version, over to the new Network Director container. Follow the steps below.</p>
+
+<h5 id="proc_move_hosted_svcs">To move hosted services to the new Network Director container</h5>
 <ol>
 	<li>In Policy Manager, find where the old Network Director container is still displayed.</li>
-	<li>Modify the existing listener:
-		<ol>
-			<li>Change the port number.</li>
-			<li>change the Network Director name (not necessary, but helps to differentiate).</li>
-		</ol>
-	</li>
-	<li>Add the new Network Director. {<span class="apidoc_red">This part and anything after it, needs more work.</span>}</li>
-	<li>Clone hosted services from the old listener to the new listener.</li>
+	<li>Change the Network Director name (not necessary, but helps to differentiate).&nbsp; For example, <strong>nd_old</strong>.</li>
+	<li>Add a new Network Director container (<strong>Containers</strong> &gt; <strong>Add Container</strong>). For instructions, see <a href="../container_management/container_management.htm#add_container">Add Container</a>.
+		<p>For <strong>Metadata URL</strong>, use the same URL as the old container, and provide an instance name.</p></li>
+	<li>Go back to the old Network Director container and do the following:
+		<ul>
+			<li>Choose <strong>Clone Hosted Services</strong>.</li>
+			<li>Check <strong>Preserve Virtual Service Access Point Paths</strong>.</li>
+			<li>Choose to clone to the new container, click through the summary page, and then click <strong>Finish</strong>.</li>
+			</ul>
+		</li>
+	
+	<li>In the developer portal user interface, modify the deployment zone to use the new Network Directory (<strong>Admin</strong> &gt; Deployment Zones). For instructions, see <a href="../../cm/learnmore/bus_admin_dzs.htm#dz_edit">How do I make changes to a deployment zone?</a> (developer portal help).</li>
+	<li>Test to make sure that the new Network Director is working correctly.</li>
 	<li>Delete the old listener.</li>
 </ol>
 <p><a href="#top">back to top</a></p>
