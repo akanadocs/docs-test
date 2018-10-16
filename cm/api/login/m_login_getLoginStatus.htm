@@ -11,36 +11,33 @@ sub-nav-class: login
 no-catalog: true
 ---
 
+<div class="apidocContent">
 <!-- InstanceBeginEditable name="Heading" -->
-<h2><a name="top" id="top"></a>GET&nbsp;/api/login/status</h2>
+<h2 id="top">GET&nbsp;/api/login/status</h2>
 <!-- InstanceEndEditable -->
 
 <!-- InstanceBeginEditable name="Intro_AuthRoles" --><p><!-- #BeginLibraryItem "/Library/desc_getLoginStatus.lbi" -->Returns information about the current user's login status, including whether there is a pending login task that the user must complete as part of the login process.<!-- #EndLibraryItem --></p>
 <p>The user is detected by the presence of the platform cookie.</p>
 <p>This operation can be used at any time to determine the next step in the login process. If a login pending task is required, only the next task is returned. When that task is complete, run this operation again to check whether there is an additional login task or the login process is now complete. The response is the same response as the <span class="apidoc_code"><a href="m_login_login.htm">POST&nbsp;/api/login</a></span> operation.</p>
-<p id="id_roles"><strong>Authorization Roles/Permissions: </strong>No permission required.</p>
+<p id="id_roles"><strong>Authorization Roles/Permissions</strong>: No permission required.</p>
 <!-- InstanceEndEditable --><!-- #BeginLibraryItem "/Library/_whatdoyouwanttoreadabout.lbi" -->
 <p>This topic includes the following sections:</p>
-<table width="600" border="0" cellspacing="0" cellpadding="2">
-  <tr>
-    <td width="200"><ul>
+<div class="relatedlinks">
+<ul>
   <li><a href="#httpmethod">HTTP Method</a></li>
   <li><a href="#endpoint">URL</a></li>
   <li><a href="#samplerequest">Sample Request</a></li>
   <li><a href="#requestheaders">Request Headers</a></li>
   <li><a href="#requestparameters">Request Parameters</a></li>
 </ul>
-</td>
-    <td width="400"><ul>
+<ul>
   <li><a href="#response">Response</a></li>
   <li><a href="#sampleresponse">Sample Response</a></li>
   <li><a href="#responseheaders">Response Headers</a></li>
   <li><a href="#responsebody">Response Body</a></li>
   <li><a href="#errorcodes">Error Codes/Messages</a></li>
 </ul>
-</td>
-  </tr>
-</table><!-- #EndLibraryItem --><h3 id="httpmethod">HTTP Method</h3>
+</div><!-- #EndLibraryItem --><h3 id="httpmethod">HTTP Method</h3>
 <!-- InstanceBeginEditable name="HTTP Method" -->
 <p class="httpverb">GET</p>
 <!-- InstanceEndEditable -->
@@ -61,8 +58,7 @@ no-catalog: true
 <p><strong>Sample request headers</strong></p>
 <pre>GET http://{hostname}/api/login/status HTTP/1.0
 Host: {hostname}
-Accept: application/json, text/javascript, */*; q=0.01
-Content-Type: application/json</pre>
+Accept: application/json</pre>
 <p><strong>Sample request body</strong></p>
 <p>Not applicable.</p>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
@@ -72,11 +68,11 @@ Content-Type: application/json</pre>
 <!-- InstanceBeginEditable name="Request Headers" -->
 <h3 id="requestheaders">Request Headers</h3>
 <p>For general information on request header values, refer to <a href="../aaref/Ref_HTTPHeaders.htm#ref_httprequestheaders">HTTP Request Headers</a>.</p>
-<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableparmsresponse">
   <thead>
     <tr>
-      <th width="20%">Header</th>
-      <th width="80%">Description</th>
+      <th>Header</th>
+      <th>Description</th>
     </tr>
   </thead>
   <tbody>
@@ -109,67 +105,76 @@ Content-Type: application/json</pre>
 
 
 <!-- InstanceBeginEditable name="Sample Response" -->
-<h3 id="sampleresponse">Sample Response</h3>
-<p id="id_sampleresponse">The sample response below shows successful completion of this operation.</p>
-<p><strong>Sample response headers: application/json</strong></p>
+<h3 id="sampleresponse">Sample Response #1: 2FA</h3>
+<p id="id_sampleresponse">In the example below, login is initiated. Custom workflow is in place and two-factor authenticaction is required, so the user is directed to this task.</p>
+<p><strong>Sample response headers</strong></p>
 <pre>HTTP/1.1 200 OK
 Content-Type: application/json
 Expires: Tue, 08 Sep 2015 15:45:55 GMT</pre>
-<p><strong>Sample response body #1</strong></p>
-<p>In the example below, login is initiated. Custom workflow is in place and two-factor authenticaction is required, so the user is directed to this task.</p>
+<p><strong>Sample response body</strong></p>
 <pre>{
-  "pendingTasks" : [ "2fa.required" ],
-  "pendingTaskData" : {
-    "2fa.required" : {
-      "attemptsLeft" : 3,
-      "codeLength" : 6,
-      "status" : {
-        "status" : "",
-        "statusCode" : "",
-        "statusMessage" : ""
+  &quot;pendingTasks&quot; : [ &quot;2fa.required&quot; ],
+  &quot;pendingTaskData&quot; : {
+    &quot;2fa.required&quot; : {
+      &quot;attemptsLeft&quot; : 3,
+      &quot;codeLength&quot; : 6,
+      &quot;status&quot; : {
+        &quot;status&quot; : &quot;&quot;,
+        &quot;statusCode&quot; : &quot;&quot;,
+        &quot;statusMessage&quot; : &quot;&quot;
       },
-      "codeValidFor" : 0,
-      "codeSentTo" : "",
-      "codeSent" : true,
-      "type" : ""
+      &quot;codeValidFor&quot; : 0,
+      &quot;codeSentTo&quot; : &quot;&quot;,
+      &quot;codeSent&quot; : true,
+      &quot;type&quot; : &quot;&quot;
     }
   },
-  "loginState" : "login.inprocess",
-  "pendingNotifications" : 0
+  &quot;loginState&quot; : &quot;login.inprocess&quot;,
+  &quot;pendingNotifications&quot; : 0
 }</pre>
 
-<p><strong>Sample response body #2: login tasks in process</strong></p>
+
+
+<h3 id="sampleresponse_02">Sample Response #2: login tasks in process</h3>
 <p>In the example below, there is still at least one pending task the user must complete to be fully logged in.</p>
+<p><strong>Sample response body</strong></p>
 <pre>{
-  "pendingAgreements" : [ "signupagrmtv1.acmepaymentscorp" ],
-  "pendingTasks" : [ "2fa.required" ],
-  "pendingTaskData" : {
-    "2fa.required" : {
-      "attemptsLeft" : 3,
-      "codeLength" : 6,
-      "status" : {
-        "status" : "",
-        "statusCode" : "",
-        "statusMessage" : ""
+  &quot;pendingAgreements&quot; : [ &quot;signupagrmtv1.acmepaymentscorp&quot; ],
+  &quot;pendingTasks&quot; : [ &quot;2fa.required&quot; ],
+  &quot;pendingTaskData&quot; : {
+    &quot;2fa.required&quot; : {
+      &quot;attemptsLeft&quot; : 3,
+      &quot;codeLength&quot; : 6,
+      &quot;status&quot; : {
+        &quot;status&quot; : &quot;&quot;,
+        &quot;statusCode&quot; : &quot;&quot;,
+        &quot;statusMessage&quot; : &quot;&quot;
       },
-      "codeValidFor" : 300,
-      "codeSentTo" : "",
-      "codeSent" : true,
-      "type" : ""
+      &quot;codeValidFor&quot; : 300,
+      &quot;codeSentTo&quot; : &quot;&quot;,
+      &quot;codeSent&quot; : true,
+      &quot;type&quot; : &quot;&quot;
     }
   },
-  "loginState" : "login.inprocess",
-  "pendingNotifications" : 0
+  &quot;loginState&quot; : &quot;login.inprocess&quot;,
+  &quot;pendingNotifications&quot; : 0
 }</pre>
 
-<p><strong>Sample response body #3: login complete</strong></p>
+
+
+<h3 id="sampleresponse_03">Sample Response #3: login complete</h3>
 <p>In the example below, there are no pending tasks. The user logs in and login is complete.</p>
+<p><strong>Sample response headers: application/json</strong></p>
+<pre>HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Thu, 26 Jul 2018 13:21:56 GMT</pre>
+<p><strong>Sample response body</strong></p>
 <pre>{
-  "userName" : "adminAcmePaymentsCorp",
-  "loginState" : "login.complete",
-  "avatarURL" : "http://acmepaymentscorp.com/api/users/6b5c2dc3-6cc6-4d87-8698-edb493bcada0.acmepaymentscorp/avatar",
-  "userFDN" : "6b5c2dc3-6cc6-4d87-8698-edb493bcada0.acmepaymentscorp",
-  "pendingNotifications" : 0
+  &quot;userName&quot; : &quot;adminAcmePaymentsCorp&quot;,
+  &quot;loginState&quot; : &quot;login.complete&quot;,
+  &quot;avatarURL&quot; : &quot;http://acmepaymentscorp.com/api/users/6b5c2dc3-6cc6-4d87-8698-edb493bcada0.acmepaymentscorp/avatar&quot;,
+  &quot;userFDN&quot; : &quot;6b5c2dc3-6cc6-4d87-8698-edb493bcada0.acmepaymentscorp&quot;,
+  &quot;pendingNotifications&quot; : 0
 }</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 <!-- InstanceEndEditable -->
@@ -178,11 +183,11 @@ Expires: Tue, 08 Sep 2015 15:45:55 GMT</pre>
 <!-- InstanceBeginEditable name="Response Headers" -->
 <h3 id="responseheaders">Response Headers</h3>
 <p>For general information on response header values, refer to <a href="../aaref/Ref_HTTPHeaders.htm#ref_httpresponseheaders">HTTP Response Headers</a>.</p>
-<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableparmsresponse">
   <thead>
-    <tr bgcolor="#DDDDDD">
-      <th width="20%">Header</th>
-      <th width="80%">Description</th>
+    <tr>
+      <th>Header</th>
+      <th>Description</th>
     </tr>
   </thead>
   <tbody>
@@ -202,12 +207,12 @@ Expires: Tue, 08 Sep 2015 15:45:55 GMT</pre>
 
 <!-- InstanceBeginEditable name="Response Body" -->
 <h3 id="responsebody">Response Body</h3>
-<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableparmsresponse">
   <thead>
-    <tr bgcolor="#DDDDDD">
-      <th width="20%">Name</th>
-      <th width="15%">Type</th>
-      <th width="65%">Description</th>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
     </tr>
   </thead>
   <tbody>
@@ -225,11 +230,20 @@ Expires: Tue, 08 Sep 2015 15:45:55 GMT</pre>
 <h3 id="errorcodes">Error Codes/Messages</h3>
 <p>If the call is unsuccessful an error code/message is returned. One or more examples of possible errors for this operation are shown below.</p>
 <!-- InstanceBeginEditable name="Error Messages" -->
-<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableparmsresponse">
   <thead>
-    <tr bgcolor="#DDDDDD">
-      <th width="20%">Item</th>
-      <th width="80%">Value</th>
+    <tr>
+      <th>Item</th>
+      <th>Value</th>
+    </tr>
+    <tr>
+      <td><a href="../aaref/Ref_HTTPStatusCodes.htm#http404">404</a></td>
+      <td><p>The resource could not be found.</p>
+        For example, you might get this if the user hadn't logged in (no login cookie present).</td>
+    </tr>
+    <tr>
+      <td><a href="../aaref/Ref_HTTPStatusCodes.htm#http406">406</a></td>
+      <td><!-- #BeginLibraryItem "/Library/http_406.lbi" -->Returned if the request format is not acceptable. For example, you would get this if you specified an incorrect media type for the Accept header.<!-- #EndLibraryItem --></td>
     </tr>
   </thead>
   <tbody>
@@ -245,19 +259,15 @@ Expires: Tue, 08 Sep 2015 15:45:55 GMT</pre>
 
 
 <h3 id="relatedtopics">Related Topics</h3><!-- #BeginLibraryItem "/Library/_RelatedTopics.lbi" -->
-<table width="700" border="0" cellspacing="0" cellpadding="2">
-  <tr>
-    <td width="300"><ul>
-  <li><a href="../index.htm">Akana API Platform API: Overview</a></li>
-  <li><a href="../Ref_Glossary_CommunityPlatform.htm">Glossary of Terms</a></li>
-  <li><a href="../Ref_DocConventions.htm">Documentation Conventions</a></li>
+<div class="relatedlinks">
+<ul>
+	<li><a href="../index.htm">Akana API Platform API: Overview</a></li>
+	<li><a href="../Ref_Glossary_CommunityPlatform.htm">Glossary of Terms</a></li>
+	<li><a href="../Ref_DocConventions.htm">Documentation Conventions</a></li>
 </ul>
-</td>
-    <td width="400"><ul>
-  <li><a href="../Ref_AuthenticationAndSecurity.htm">Authentication and Security</a></li>
-  <li><a href="../Ref_TroubleshootingAndSupport.htm">Troubleshooting and Support</a></li>
-  <li><a href="../Ref_API_Reference.htm">Akana API Platform API: Reference Material</a></li>
-</ul>
-</td>
-  </tr>
-</table><!-- #EndLibraryItem -->
+<ul>
+	<li><a href="../Ref_AuthenticationAndSecurity.htm">Authentication and Security</a></li>
+	<li><a href="../Ref_TroubleshootingAndSupport.htm">Troubleshooting and Support</a></li>
+	<li><a href="../Ref_API_Reference.htm">Akana API Platform API: Reference Material</a></li>
+</ul> 
+</div><!-- #EndLibraryItem --></div>

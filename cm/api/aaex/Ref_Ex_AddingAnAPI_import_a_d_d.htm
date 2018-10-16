@@ -1,0 +1,106 @@
+---
+layout: apipage
+title: Example - Adding an App | How-To Material | Akana API Platform API
+description: This example walks you through adding an API to the&nbsp;Akana API Platform&nbsp;by importing an API description document, using the platform API rather than the user interface. This example uses the Swagger Petstore API.
+product: cm
+category: ref
+nav-title: Example - Adding an App 
+no-nav: api
+sub-nav: true
+sub-nav-class: aaex
+no-catalog: true
+---
+
+<div class="apidocContent">
+<h2 id="top">Example: Adding an API by importing an API description document</h2>
+<p>This example walks you through adding an API to the&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Akana API Platform<!-- #EndLibraryItem -->&nbsp;by importing an API description document, using the platform API rather than the user interface. This example uses the Swagger Petstore API.</p>
+<p>This exercise assumes that you already have a valid login for the&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Akana API Platform<!-- #EndLibraryItem -->. You can't add an API unless you're an authorized user. Before running the procedures below, go into the user interface to set up your user account.</p>
+<p>You'll complete these four activities, in sequence:</p>
+<ol>
+  <li>Log in using the credentials for the user account you've already set up. Operation: <span class="apidoc_code"><a href="../login/m_login_login.htm">POST&nbsp;/api/login</a></span>.</li>
+  <li>Upload an API description document to the Dropbox. Operation: <span class="apidoc_code"><a href="../dropbox/m_dropbox_readFileDetails.htm">POST&nbsp;/api/dropbox/readfiledetails</a></span>.</li>
+  <li>Add an API, referencing the Dropbox ID for the API description document you just uploaded. This also adds the first API version. Operation: <span class="apidoc_code"><a href="../apis/m_apis_createAPI.htm">POST&nbsp;/api/apis</a></span>.</li>
+  <li>Log out. Operation: <span class="apidoc_code"><a href="../login/m_login_logout.htm">POST&nbsp;/api/login/logout</a></span>.</li>
+</ol>
+<p>Once you've completed Step 3, the APIID is returned in the response and the API is ready for use.</p>
+
+
+<h4>To add an API in the&nbsp;<!-- #BeginLibraryItem "/Library/_PlatformName.lbi" -->Akana API Platform<!-- #EndLibraryItem -->&nbsp;using the platform API</h4>
+<ol>
+  <li>Log in via the <span class="apidoc_code"><a href="../login/m_login_login.htm">POST&nbsp;/api/login</a></span> operation, using your own email and password in the body of the operation instead of the placeholder values given below.
+    <ul>
+      <li>HTTP method: POST</li>
+      <li>URL: <strong><span class="apidoc_div_codeendpoint"><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem --></span>login</strong></li>
+      <li>Accept header: <strong>application/json</strong></li>
+      <li>Content-Type header: <strong>application/json</strong></li>
+      <li>Request Body:
+      <pre>{
+  "email":"MyEmailAddress",
+  "password":"MyPassword"
+}</pre>
+      </li>
+    </ul>
+		<p>The platform API returns the login cookie, which you'll need to send with the request headers for any operation that requires login.</p>
+  </li>
+  <li>Upload an API description document to the Dropbox, using the <span class="apidoc_code"><a href="../dropbox/m_dropbox_readFileDetails.htm">POST&nbsp;/api/dropbox/readfiledetails</a></span> operation. The document must be locally available. In your API call, use the values below, modifying the URL path as needed, and uploading the API description document.
+<ul>
+        <li>HTTP method: POST</li>
+      <li>URL: <strong><span class="apidoc_div_codeendpoint"><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem --></span>dropbox/readfiledetails</strong></li>
+      <li>Accept header: <strong>application/json</strong></li>
+      <li>CSRF header: see <a href="../aaref/Ref_CookiesOnThePlatform.htm#cookie_csrftoken">Csrf-Token_{fedmemberid}</a>. Include it if needed. If you are not sure whether it's needed or not, refer to <a href="../aaref/Ref_CSRFPreventionOnThePlatform.htm#checking_if_csrf_is_required">CSRF Prevention on the Platform</a>.</li>
+      <li>Login cookie: see <a href="../aaref/Ref_CookiesOnThePlatform.htm#cookie_atmoauthtoken">AtmoAuthToken_{fedmemberid}</a>.</li>
+      <li>Request Body: the request body is the uploaded API description document, in <strong>multipart/form-data</strong> format. In the example below, in the <a href="../Ref_Glossary_CommunityPlatform.htm#gl_postman">Postman</a> client, the file is <strong>swagger.json</strong>:
+				<p><img src="../assets/dropbox_readfiledetails_01.jpg" alt="Uploading an API description file" /></p>
+      	</li>
+    </ul>
+  </li>
+  <li>From the API response, get the <strong>FileName</strong> and <strong>DropboxFileId</strong><strong> </strong>for the uploaded document. An example is shown below.
+		<p><img src="../assets/dropbox_readfiledetails_02.jpg" alt="Getting the DropboxID from the response" /></p></li>
+  <li>Add the API, using the <span class="apidoc_code"><a href="../apis/m_apis_createAPI.htm">POST&nbsp;/api/apis</a></span> operation and referencing the DropboxFileId for the API description document that you uploaded. In your API call, use the values below, modifying the URL path as needed. Use the values from the previous response to tailor the request body.
+  	<ul>
+  		<li>HTTP method: POST</li>
+  		<li>URL: <strong><span class="apidoc_div_codeendpoint"><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem --></span>apis</strong></li>
+  		<li>Accept header: <strong>application/vnd.soa.v81+json</strong></li>
+  		<li>Content-Type header: <strong>application/vnd.soa.v81+json</strong></li>
+  		<li>CSRF header: see <a href="../aaref/Ref_CookiesOnThePlatform.htm#cookie_csrftoken">Csrf-Token_{fedmemberid}</a>. Include it if needed. If you are not sure whether it's needed or not, refer to <a href="../aaref/Ref_CSRFPreventionOnThePlatform.htm#checking_if_csrf_is_required">CSRF Prevention on the Platform</a>.</li>
+			<li>Login cookie: see <a href="../aaref/Ref_CookiesOnThePlatform.htm#cookie_atmoauthtoken">AtmoAuthToken_{fedmemberid}</a>.</li>
+  		<li>Request Body (be sure to update the <strong>ServiceName</strong>, <strong>FileName</strong>, and <strong>DropboxFileId</strong> from the previous response):
+	<pre>{
+  "DLDescriptor":{
+    "ServiceDescriptorReference":{
+      "ServiceName":"Swagger_Petstore",
+      "FileName":"swagger.json",
+      "DropboxFileId":1001
+    }
+  }
+}</pre>
+  			</li>
+  		</ul>
+  	</li>
+  <li>You should get an HTTP 200 response, with the full API object. An example is shown below (only a portion of the API response shown).
+  	<p><img src="../assets/apis_createAPI_02.jpg" alt="Create API, successful response" /></p>
+  </li>
+  <li>When done, remember to log out using the <span class="apidoc_code"><a href="../login/m_login_logout.htm">POST&nbsp;/api/login/logout</a></span> operation. Use the following values:
+      <ul>
+        <li>URL: <strong><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->login/logout</strong></li>
+        <li>Accept header: <strong>application/json</strong></li>
+        <li>Content-Type header: <strong>application/x-www-form-urlencoded</strong></li>
+      </ul>
+  </li>
+</ol>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+<h3 id="relatedtopics">Related Topics</h3><!-- #BeginLibraryItem "/Library/_RelatedTopics.lbi" -->
+<div class="relatedlinks">
+<ul>
+	<li><a href="../index.htm">Akana API Platform API: Overview</a></li>
+	<li><a href="../Ref_Glossary_CommunityPlatform.htm">Glossary of Terms</a></li>
+	<li><a href="../Ref_DocConventions.htm">Documentation Conventions</a></li>
+</ul>
+<ul>
+	<li><a href="../Ref_AuthenticationAndSecurity.htm">Authentication and Security</a></li>
+	<li><a href="../Ref_TroubleshootingAndSupport.htm">Troubleshooting and Support</a></li>
+	<li><a href="../Ref_API_Reference.htm">Akana API Platform API: Reference Material</a></li>
+</ul> 
+</div><!-- #EndLibraryItem --></div>

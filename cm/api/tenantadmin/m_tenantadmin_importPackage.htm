@@ -11,8 +11,9 @@ sub-nav-class: tenantadmin
 no-catalog: true
 ---
 
+<div class="apidocContent">
 <!-- InstanceBeginEditable name="Heading" -->
-<h2><a name="top" id="top"></a>POST&nbsp;/api/tenants/{TenantFedMemberID}/packages</h2>
+<h2 id="top">POST&nbsp;/api/tenants/{FedmemberID}/packages</h2>
 <!-- InstanceEndEditable -->
 
 <!-- InstanceBeginEditable name="Intro_AuthRoles" -->
@@ -20,30 +21,27 @@ no-catalog: true
 <p><strong>Note</strong>: For the import to be successful, the file must be an export from the same version or from an earlier minor update of the same major version (for example, export from 8.4.23 and import to 8.4.24). For more information, see <a href="../../learnmore/bus_admin_export_import.htm#exp_imp_version_compatibility">Can I export/import between different versions?</a> (developer portal help).</p>
 <p>Supports upload of a ZIP file containing the information previously exported from the same or another platform instance, and an optional migration properties file. Migration properties allow for URL mapping of physical service endpoints between the source environment that the information was exported from and the target environment you're importing it to. For more information on the import properties file, see <a href="http://docs.akana.com/cm/learnmore/bus_admin_export_import.htm#import_properties_file" title="Import Properties file" target="_blank">What is the import properties file and when do I need it?</a> (developer portal help).</p>
 <p><strong>Note</strong>: To export the package, use this operation: <span class="apidoc_code"><a href="../businesses/m_businesses_exportPackage.htm">GET&nbsp;/api/businesses/{BusinessID}/package</a></span>.</p>
-<p id="id_roles"><strong>Authorization Roles/Permissions: </strong> Must have Modify permission for the tenant; <a href="../aaref/Ref_AuthorizationRolesOnThePlatform.htm#authroles_siteadmin">Site Admin</a>.</p>
+<p>For an illustration of running this operation in Postman, see <a href="../aaref/Ref_ManagingMultipartFormDataUploads.htm#fileupload_example_tenant_import">Managing Multipart/Form-Data Uploads: Tenant Administration Service: Import Package</a>.</p>
+<p id="id_roles"><strong>Authorization Roles/Permissions</strong>:<!-- #BeginLibraryItem "/Library/roles_user.lbi" --> Must be <a href="../Ref_Glossary_CommunityPlatform.htm#gl_login">logged in</a>.<!-- #EndLibraryItem --> Must have Modify permission for the tenant; <a href="../aaref/Ref_AuthorizationRolesOnThePlatform.htm#authroles_siteadmin">Site Admin</a>.</p>
 <!--<p>@PermissionRequired(action=AuzAction.MODIFY, resourceType=FDN.RESOURCE_TYPE_TENANT</p>-->
 <!-- InstanceEndEditable --><!-- #BeginLibraryItem "/Library/_whatdoyouwanttoreadabout.lbi" -->
 <p>This topic includes the following sections:</p>
-<table width="600" border="0" cellspacing="0" cellpadding="2">
-  <tr>
-    <td width="200"><ul>
+<div class="relatedlinks">
+<ul>
   <li><a href="#httpmethod">HTTP Method</a></li>
   <li><a href="#endpoint">URL</a></li>
   <li><a href="#samplerequest">Sample Request</a></li>
   <li><a href="#requestheaders">Request Headers</a></li>
   <li><a href="#requestparameters">Request Parameters</a></li>
 </ul>
-</td>
-    <td width="400"><ul>
+<ul>
   <li><a href="#response">Response</a></li>
   <li><a href="#sampleresponse">Sample Response</a></li>
   <li><a href="#responseheaders">Response Headers</a></li>
   <li><a href="#responsebody">Response Body</a></li>
   <li><a href="#errorcodes">Error Codes/Messages</a></li>
 </ul>
-</td>
-  </tr>
-</table><!-- #EndLibraryItem --><h3 id="httpmethod">HTTP Method</h3>
+</div><!-- #EndLibraryItem --><h3 id="httpmethod">HTTP Method</h3>
 <!-- InstanceBeginEditable name="HTTP Method" -->
 <p class="httpverb">POST</p>
 <!-- InstanceEndEditable -->
@@ -51,7 +49,7 @@ no-catalog: true
 
 <h3 id="endpoint">URL</h3>
 <!-- InstanceBeginEditable name="URL" -->
-<pre class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->tenants/{TenantFedMemberID}/packages</pre>
+<pre class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->tenants/{FedmemberID}/packages</pre>
 <!-- InstanceEndEditable -->
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 
@@ -65,12 +63,13 @@ no-catalog: true
 <pre>POST /api/tenants/acmepaymentscorp/packages HTTP/1.1
 Host: {hostname}
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-<!-- #BeginLibraryItem "/Library/hdr_xcsrf.lbi" -->X-Csrf-Token_{tenant}: {TokenID}<!-- #EndLibraryItem --></pre>
+<!-- #BeginLibraryItem "/Library/hdr_xcsrf.lbi" -->X-Csrf-Token_acmepaymentscorp":"TokenID%3D8ed70a13-8469-11e8-b37a-b155e4eabeb8%2CexpirationTime%3D153...<!-- #EndLibraryItem --></pre>
 <p><strong>Sample request body</strong></p>
 <p>The request body is the import ZIP file and possibly an optional properties file. The example below shows a snippet of the import file to demonstrate how the additional attribute, Package and filename, is used in the POST content. In this example, there is no mapping properties file.</p>
 <pre>-----------------------------11829702124658
-Content-Disposition: form-data; name="Package"; filename="business-export.zip"
+Content-Disposition: form-data; name=&quot;Package&quot;; filename=&quot;business-export.zip&quot;
 Content-Type: application/zip</pre>
+<p>For an illustration of running this operation in Postman, see <a href="../aaref/Ref_ManagingMultipartFormDataUploads.htm#fileupload_example_tenant_import">Managing Multipart/Form-Data Uploads: Tenant Administration Service: Import Package</a>.</p>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 <!-- InstanceEndEditable -->
 
@@ -78,11 +77,11 @@ Content-Type: application/zip</pre>
 <!-- InstanceBeginEditable name="Request Headers" -->
 <h3 id="requestheaders">Request Headers</h3>
 <p>For general information on request header values, refer to <a href="../aaref/Ref_HTTPHeaders.htm#ref_httprequestheaders">HTTP Request Headers</a>.</p>
-<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableparmsresponse">
   <thead>
     <tr>
-      <th width="20%">Header</th>
-      <th width="80%">Description</th>
+      <th>Header</th>
+      <th>Description</th>
     </tr>
   </thead>
   <tbody>
@@ -104,7 +103,7 @@ Content-Type: application/zip</pre>
     </tr>
     <tr>
       <td><a href="../aaref/Ref_HTTPHeaders.htm#csrf_token_request">X-Csrf-Token_{fedmemberID}</a></td>
-      <td>The CSRF prevention header; may or may not be required, depending on platform settings. See <a href="../aaref/Ref_CSRFPreventionOnThePlatform.htm">CSRF Prevention on the Platform</a>.</td>
+      <td><!-- #BeginLibraryItem "/Library/hrdval_csrf.lbi" -->The CSRF prevention header; may or may not be required, depending on platform settings. See <a href="../aaref/Ref_CSRFPreventionOnThePlatform.htm">CSRF Prevention on the Platform</a>. By default, the CSRF header is not required for GET operations and is required for all others, with a few exceptions relating to user login.<!-- #EndLibraryItem --></td>
     </tr>
   </tbody>
 </table>
@@ -114,25 +113,24 @@ Content-Type: application/zip</pre>
 
 <!-- InstanceBeginEditable name="Request Parameters" -->
 <h3 id="requestparameters">Request Parameters</h3>
-<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableparmsresponse">
   <thead>
     <tr>
-      <th width="11%">Parameter</th>
-      <th width="9%">Parm Type</th>
-      <th width="11%">Data Type</th>
-      <th width="11%">Required</th>
-      <th width="58%">Description</th>
+      <th>Parameter</th>
+      <th>Parm Type</th>
+      <th>Data Type</th>
+      <th>Required</th>
+      <th>Description</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><a href="../aaref/Ref_IDsOnThePlatform.htm#id_tenantfedmemberid">TenantFedMemberID</a></td>
-      <td>Path</td>
-      <td>TenantFedMemberID</td>
-      <td>Required</td>
-      <td><p>Same as <a href="../aaref/Ref_IDsOnThePlatform.htm#id_tenantid">TenantID</a>.</p>
-        <!-- #BeginLibraryItem "/Library/o_ID_TenantID.lbi" -->Unique ID for a specific tenant, in a federation (multi-tenant) scenario.<!-- #EndLibraryItem --></td>
-    </tr>
+    	<td><a href="../aaref/Ref_IDsOnThePlatform.htm#id_fedmemberid">FedmemberID</a></td>
+    	<td>Path</td>
+    	<td>String</td>
+    	<td>Required</td>
+    	<td><!-- #BeginLibraryItem "/Library/o_ID_FedMemberID.lbi" -->Unique ID for a specific tenant, in a federation (multi-tenant) scenario; for example, <strong>acmepaymentscorp</strong>.<!-- #EndLibraryItem --></td>
+    	</tr>
   </tbody>
 </table>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
@@ -162,11 +160,11 @@ Date: Fri, 15 Jul 2016 18:53:19 GMT</pre>
 <!-- InstanceBeginEditable name="Response Headers" -->
 <h3 id="responseheaders">Response Headers</h3>
 <p>For general information on response header values, refer to <a href="../aaref/Ref_HTTPHeaders.htm#ref_httpresponseheaders">HTTP Response Headers</a>.</p>
-<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableparmsresponse">
   <thead>
-    <tr bgcolor="#DDDDDD">
-      <th width="20%">Header</th>
-      <th width="80%">Description</th>
+    <tr>
+      <th>Header</th>
+      <th>Description</th>
     </tr>
   </thead>
   <tbody>
@@ -194,17 +192,17 @@ Date: Fri, 15 Jul 2016 18:53:19 GMT</pre>
 <h3 id="errorcodes">Error Codes/Messages</h3>
 <p>If the call is unsuccessful an error code/message is returned. One or more examples of possible errors for this operation are shown below.</p>
 <!-- InstanceBeginEditable name="Error Messages" -->
-<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableparmsresponse">
   <thead>
-    <tr bgcolor="#DDDDDD">
-      <th width="20%">Item</th>
-      <th width="80%">Value</th>
+    <tr>
+      <th>Item</th>
+      <th>Value</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td><a href="../aaref/Ref_HTTPStatusCodes.htm#http401">401</a></td>
-      <td><!-- #BeginLibraryItem "/Library/401_CSRF.lbi" -->Unauthorized. For example, you would get this response if you didn't include the custom <a href="../Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_{fedmemberID}</a> header in the request, when it was required by the platform settings; or if you included an invalid or expired value for this header.<!-- #EndLibraryItem --></td>
+      <td><!-- #BeginLibraryItem "/Library/401_CSRF.lbi" -->Unauthorized. For example, you would get this response if you didn't include the custom <a href="../Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_{fedmemberID}</a> header in the request, when it was required by the platform settings; or if you included an invalid or expired value for this header. You would also get this response for any operation that requires login (almost all) if the login cookie was missing.<!-- #EndLibraryItem --></td>
     </tr>
     <tr>
       <td><a href="../aaref/Ref_HTTPStatusCodes.htm#http404">404</a></td>
@@ -227,19 +225,15 @@ Date: Fri, 15 Jul 2016 18:53:19 GMT</pre>
 
 
 <h3 id="relatedtopics">Related Topics</h3><!-- #BeginLibraryItem "/Library/_RelatedTopics.lbi" -->
-<table width="700" border="0" cellspacing="0" cellpadding="2">
-  <tr>
-    <td width="300"><ul>
-  <li><a href="../index.htm">Akana API Platform API: Overview</a></li>
-  <li><a href="../Ref_Glossary_CommunityPlatform.htm">Glossary of Terms</a></li>
-  <li><a href="../Ref_DocConventions.htm">Documentation Conventions</a></li>
+<div class="relatedlinks">
+<ul>
+	<li><a href="../index.htm">Akana API Platform API: Overview</a></li>
+	<li><a href="../Ref_Glossary_CommunityPlatform.htm">Glossary of Terms</a></li>
+	<li><a href="../Ref_DocConventions.htm">Documentation Conventions</a></li>
 </ul>
-</td>
-    <td width="400"><ul>
-  <li><a href="../Ref_AuthenticationAndSecurity.htm">Authentication and Security</a></li>
-  <li><a href="../Ref_TroubleshootingAndSupport.htm">Troubleshooting and Support</a></li>
-  <li><a href="../Ref_API_Reference.htm">Akana API Platform API: Reference Material</a></li>
-</ul>
-</td>
-  </tr>
-</table><!-- #EndLibraryItem -->
+<ul>
+	<li><a href="../Ref_AuthenticationAndSecurity.htm">Authentication and Security</a></li>
+	<li><a href="../Ref_TroubleshootingAndSupport.htm">Troubleshooting and Support</a></li>
+	<li><a href="../Ref_API_Reference.htm">Akana API Platform API: Reference Material</a></li>
+</ul> 
+</div><!-- #EndLibraryItem --></div>

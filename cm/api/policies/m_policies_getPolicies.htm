@@ -11,36 +11,33 @@ sub-nav-class: policies
 no-catalog: true
 ---
 
+<div class="apidocContent">
 <!-- InstanceBeginEditable name="Heading" -->
-<h2><a name="top"></a>GET&nbsp;/api/policies</h2>
+<h2 id="top">GET&nbsp;/api/policies</h2>
 <!-- InstanceEndEditable -->
 
 <!-- InstanceBeginEditable name="Intro_AuthRoles" -->
 <p><!-- #BeginLibraryItem "/Library/desc_getPolicies.lbi" -->Returns a list of supported policies, such as Service Level, Management, or Compliance policies.<!-- #EndLibraryItem --></p>
-<p id="id_roles"><strong>Authorization Roles/Permissions: </strong><!-- #BeginLibraryItem "/Library/roles_user.lbi" -->
-To complete this operation successfully, a user must be logged in.<!-- #EndLibraryItem --></p>
+<p>The list includes policies that are available to all APIs, such as the <strong>AtmosphereApplicationSecurityPolicy</strong> and the <strong>CORSAllowAll</strong> policy, and also includes policies that were specifically defined. Unless the optional parameter is included, only policies that have been activated are included in the results.</p>
+<p id="id_roles"><strong>Authorization Roles/Permissions</strong>:<!-- #BeginLibraryItem "/Library/roles_user.lbi" --> Must be <a href="../Ref_Glossary_CommunityPlatform.htm#gl_login">logged in</a>.<!-- #EndLibraryItem --></p>
 <!-- InstanceEndEditable --><!-- #BeginLibraryItem "/Library/_whatdoyouwanttoreadabout.lbi" -->
 <p>This topic includes the following sections:</p>
-<table width="600" border="0" cellspacing="0" cellpadding="2">
-  <tr>
-    <td width="200"><ul>
+<div class="relatedlinks">
+<ul>
   <li><a href="#httpmethod">HTTP Method</a></li>
   <li><a href="#endpoint">URL</a></li>
   <li><a href="#samplerequest">Sample Request</a></li>
   <li><a href="#requestheaders">Request Headers</a></li>
   <li><a href="#requestparameters">Request Parameters</a></li>
 </ul>
-</td>
-    <td width="400"><ul>
+<ul>
   <li><a href="#response">Response</a></li>
   <li><a href="#sampleresponse">Sample Response</a></li>
   <li><a href="#responseheaders">Response Headers</a></li>
   <li><a href="#responsebody">Response Body</a></li>
   <li><a href="#errorcodes">Error Codes/Messages</a></li>
 </ul>
-</td>
-  </tr>
-</table><!-- #EndLibraryItem --><h3 id="httpmethod">HTTP Method</h3>
+</div><!-- #EndLibraryItem --><h3 id="httpmethod">HTTP Method</h3>
 <!-- InstanceBeginEditable name="HTTP Method" -->
 <p class="httpverb">GET</p>
 <!-- InstanceEndEditable -->
@@ -48,7 +45,7 @@ To complete this operation successfully, a user must be logged in.<!-- #EndLibra
 
 <h3 id="endpoint">URL</h3>
 <!-- InstanceBeginEditable name="URL" -->
-<pre class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->policies?Type={Type}</pre>
+<pre class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->policies[?]Type={Type}[&amp;][BusinessID={BusinessID}][&amp;][IncludeInactivePolicies={boolean}]</pre>
 <!-- InstanceEndEditable -->
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 
@@ -56,14 +53,20 @@ To complete this operation successfully, a user must be logged in.<!-- #EndLibra
 <!-- InstanceBeginEditable name="Sample Request" -->
 <h3 id="samplerequest">Sample Request</h3>
 <p><strong>Sample request URL #1</strong></p>
-<p>Returns all policies:</p>
+<p>Returns all policies.</p>
 <pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->policies</pre>
+
 <p><strong>Sample request URL #2</strong></p>
-<p>Returns compliance policies:</p>
+<p>Returns compliance policies.</p>
 <pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->policies?Type=Compliance%20Policy</pre>
+
+<p><strong>Sample request URL #3</strong></p>
+<p>Returns operational policies for the specified business organization, including policies that have not yet been activated.</p>
+<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->policies?Type=Operational%20Policy&amp;BusinessID=tenantbusiness.acmepaymentscorp&amp;IncludeInactivePolicies=true</pre>
+
 <p><strong>Sample request headers</strong></p>
 <pre>Accept: application/json
-<!-- #BeginLibraryItem "/Library/hdr_xcsrf.lbi" -->X-Csrf-Token_{tenant}: {TokenID}<!-- #EndLibraryItem --></pre>
+</pre>
 <p><strong>Sample request body</strong></p>
 <p>Not applicable.</p>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
@@ -73,22 +76,26 @@ To complete this operation successfully, a user must be logged in.<!-- #EndLibra
 <!-- InstanceBeginEditable name="Request Headers" -->
 <h3 id="requestheaders">Request Headers</h3>
 <p>For general information on request header values, refer to <a href="../aaref/Ref_HTTPHeaders.htm#ref_httprequestheaders">HTTP Request Headers</a>.</p>
-<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableparmsresponse">
   <thead>
     <tr>
-      <th width="20%">Header</th>
-      <th width="80%">Description</th>
+      <th>Header</th>
+      <th>Description</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><a href="../aaref/Ref_HTTPHeaders.htm#acceptheader">Accept</a></td>
-      <td><p><!-- #BeginLibraryItem "/Library/hdrval_appjson.lbi" --><strong>application/json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_textxml.lbi" --><strong>text/xml</strong><!-- #EndLibraryItem --></p>
-        <p><!-- #BeginLibraryItem "/Library/hdrval_appjson_71.lbi" --><strong>application/vnd.soa.v71+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml_71.lbi" --><strong>application/vnd.soa.v71+xml</strong><!-- #EndLibraryItem --></p>
-        <p><!-- #BeginLibraryItem "/Library/hdrval_appjson_72.lbi" --><strong>application/vnd.soa.v72+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml_72.lbi" --><strong>application/vnd.soa.v72+xml</strong><!-- #EndLibraryItem --></p>
-        <p><!-- #BeginLibraryItem "/Library/hdrval_appjson_80.lbi" --><strong>application/vnd.soa.v80+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml_80.lbi" --><strong>application/vnd.soa.v80+xml</strong><!-- #EndLibraryItem --></p>
-        <p><!-- #BeginLibraryItem "/Library/hdrval_appjson_81.lbi" --><strong>application/vnd.soa.v81+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml_81.lbi" --><strong>application/vnd.soa.v81+xml</strong><!-- #EndLibraryItem --></p></td>
-    </tr>
+    	<td><a href="../aaref/Ref_HTTPHeaders.htm#acceptheader">Accept</a></td>
+    	<td><p><!-- #BeginLibraryItem "/Library/hdrval_appjson.lbi" --><strong>application/json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_textxml.lbi" --><strong>text/xml</strong><!-- #EndLibraryItem --></p>
+    		<p><!-- #BeginLibraryItem "/Library/hdrval_appjson_71.lbi" --><strong>application/vnd.soa.v71+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml_71.lbi" --><strong>application/vnd.soa.v71+xml</strong><!-- #EndLibraryItem --></p>
+    		<p><!-- #BeginLibraryItem "/Library/hdrval_appjson_72.lbi" --><strong>application/vnd.soa.v72+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml_72.lbi" --><strong>application/vnd.soa.v72+xml</strong><!-- #EndLibraryItem --></p>
+    		<p><!-- #BeginLibraryItem "/Library/hdrval_appjson_80.lbi" --><strong>application/vnd.soa.v80+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml_80.lbi" --><strong>application/vnd.soa.v80+xml</strong><!-- #EndLibraryItem --></p>
+    		<p><!-- #BeginLibraryItem "/Library/hdrval_appjson_81.lbi" --><strong>application/vnd.soa.v81+json</strong><!-- #EndLibraryItem -->, <!-- #BeginLibraryItem "/Library/hdrval_appxml_81.lbi" --><strong>application/vnd.soa.v81+xml</strong><!-- #EndLibraryItem --></p></td>
+    	</tr>
+    <tr>
+    	<td><a href="../aaref/Ref_HTTPHeaders.htm#csrf_token_request">X-Csrf-Token_{fedmemberID}</a></td>
+    	<td><!-- #BeginLibraryItem "/Library/hrdval_csrf.lbi" -->The CSRF prevention header; may or may not be required, depending on platform settings. See <a href="../aaref/Ref_CSRFPreventionOnThePlatform.htm">CSRF Prevention on the Platform</a>. By default, the CSRF header is not required for GET operations and is required for all others, with a few exceptions relating to user login.<!-- #EndLibraryItem --></td>
+    	</tr>
   </tbody>
 </table>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
@@ -97,14 +104,14 @@ To complete this operation successfully, a user must be logged in.<!-- #EndLibra
 
 <!-- InstanceBeginEditable name="Request Parameters" -->
 <h3 id="requestparameters">Request Parameters</h3>
-<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableparmsresponse">
   <thead>
     <tr>
-      <th width="11%">Parameter</th>
-      <th width="9%">Parm Type</th>
-      <th width="11%">Data Type</th>
-      <th width="11%">Required</th>
-      <th width="58%">Description</th>
+      <th>Parameter</th>
+      <th>Parm Type</th>
+      <th>Data Type</th>
+      <th>Required</th>
+      <th>Description</th>
     </tr>
   </thead>
   <tbody>
@@ -113,8 +120,16 @@ To complete this operation successfully, a user must be logged in.<!-- #EndLibra
       <td>Query</td>
       <td>string</td>
       <td>Optional</td>
-      <td><p><!-- #BeginLibraryItem "/Library/parm_policies_Type.lbi" --> The <a href="../aaref/Ref_Values.htm#values_policytypes">policy type</a> governing API operation.<!-- #EndLibraryItem --></p>
+      <td><p><!-- #BeginLibraryItem "/Library/parm_policies_Type.lbi" -->Indicates that only policies of the specified type should be returned. For values, see <a href="../aaref/Ref_Values.htm#values_policytypes">Policy Types</a>.<!-- #EndLibraryItem --></p>
         <p>If this parameter is not specified, all types are returned. To request multiple types, include this parameter multiple times.</p></td>
+    </tr>
+    <tr>
+      <td><a href="../aaref/Ref_IDsOnThePlatform.htm#id_businessid">BusinessID</a></td>
+      <td>Path</td>
+      <td>string</td>
+      <td>Optional</td>
+      <td><p><!-- #BeginLibraryItem "/Library/o_ID_BusinessID.lbi" --> The unique ID for a specific business <a href="../Ref_Glossary_CommunityPlatform.htm#gl_organization">organization</a> on the platform.<!-- #EndLibraryItem --></p>
+        <p>If this parameter is not specified, policies for all business organizations are returned.</p></td>
     </tr>
     <tr>
       <td>IncludeInactivePolicies</td>
@@ -143,138 +158,135 @@ To complete this operation successfully, a user must be logged in.<!-- #EndLibra
 <p><strong>Sample response headers: application/json</strong></p>
 <pre>HTTP/1.1 200 OK
 Content-Type: application/json
-Date: Tue, 03 May 2016 21:39:44 GMT</pre>
-<p><a name="rss_policies_json"></a><strong>Sample response body: application/json</strong></p>
+Date: Fri, 01 Jun 2018 00:18:49 GMT</pre>
+<p id="rss_policies_json"><strong>Sample response body: application/json</strong></p>
 <pre>{
-  "channel" : {
-    "title" : "Policies",
-    "item" : [ {
-      "title" : "AtmosphereApplicationSecurityPolicy",
-      "description" : "",
-      "category" : [ {
-        "value" : "policy.apisec",
-        "domain" : "soa.com:policy:subtype"
-      }, {
-        "value" : "Operational Policy",
-        "domain" : "soa.com:policy:type"
-      } ],
-      "guid" : {
-        "value" : "Atmosphere-AtmosphereApplicationSecurityPolicy"
-      }
-    }, {
-      "title" : "BasicAuditing",
-      "description" : "",
-      "category" : [ {
-        "value" : "policy.auditservice",
-        "domain" : "soa.com:policy:subtype"
-      }, {
-        "value" : "Operational Policy",
-        "domain" : "soa.com:policy:type"
-      } ],
-      "guid" : {
-        "value" : "Atmosphere-BasicAuditing"
-      }
-    }, {
-      "title" : "CORSAllowAll",
-      "description" : "",
-      "category" : [ {
-        "value" : "policy.cors",
-        "domain" : "soa.com:policy:subtype"
-      }, {
-        "value" : "Operational Policy",
-        "domain" : "soa.com:policy:type"
-      } ],
-      "guid" : {
-        "value" : "Atmosphere-CORSAllowAll"
-      }
-    }, {
-      "title" : "DetailedAuditing",
-      "description" : "",
-      "category" : [ {
-        "value" : "policy.auditservice",
-        "domain" : "soa.com:policy:subtype"
-      }, {
-        "value" : "Operational Policy",
-        "domain" : "soa.com:policy:type"
-      } ],
-      "guid" : {
-        "value" : "Atmosphere-DetailedAuditing"
-      }
-    }, {
-      "title" : "OAuthSecurity",
-      "description" : "",
-      "category" : [ {
-        "value" : "policy.oauth",
-        "domain" : "soa.com:policy:subtype"
-      }, {
-        "value" : "Operational Policy",
-        "domain" : "soa.com:policy:type"
-      } ],
-      "guid" : {
-        "value" : "Atmosphere-OAuthSecurity"
-      }
-    } ]
-  },
-  "version" : "1.0"
+    "channel": {
+        "title": "Policies",
+        "item": [
+            {
+                "title": "AtmosphereApplicationSecurityPolicy",
+                "description": "",
+                "category": [
+                    {
+                        "value": "policy.apisec",
+                        "domain": "soa.com:policy:subtype"
+                    },
+                    {
+                        "value": "Operational Policy",
+                        "domain": "soa.com:policy:type"
+                    }
+                ],
+                "guid": {
+                    "value": "automation-AtmosphereApplicationSecurityPolicy"
+                }
+            },
+            {
+                "title": "BasicAuditing",
+                "description": "",
+                "category": [
+                    {
+                        "value": "policy.auditservice",
+                        "domain": "soa.com:policy:subtype"
+                    },
+                    {
+                        "value": "Operational Policy",
+                        "domain": "soa.com:policy:type"
+                    }
+                ],
+                "guid": {
+                    "value": "automation-BasicAuditing"
+                }
+            },
+            {
+                "title": "CORSAllowAll",
+                "description": "",
+                "category": [
+                    {
+                        "value": "policy.cors",
+                        "domain": "soa.com:policy:subtype"
+                    },
+                    {
+                        "value": "Operational Policy",
+                        "domain": "soa.com:policy:type"
+                    }
+                ],
+                "guid": {
+                    "value": "automation-CORSAllowAll"
+                }
+            },
+            {
+                "title": "DetailedAuditing",
+                "description": "",
+                "category": [
+                    {
+                        "value": "policy.auditservice",
+                        "domain": "soa.com:policy:subtype"
+                    },
+                    {
+                        "value": "Operational Policy",
+                        "domain": "soa.com:policy:type"
+                    }
+                ],
+                "guid": {
+                    "value": "automation-DetailedAuditing"
+                }
+            },
+            {
+                "title": "OAuthSecurity",
+                "description": "",
+                "category": [
+                    {
+                        "value": "policy.oauth",
+                        "domain": "soa.com:policy:subtype"
+                    },
+                    {
+                        "value": "Operational Policy",
+                        "domain": "soa.com:policy:type"
+                    }
+                ],
+                "guid": {
+                    "value": "automation-OAuthSecurity"
+                }
+            },
+            {
+                "title": "API Consumer Application Security Policy for ACME Payments Corp Billing Dept",
+                "description": "API Consumer Application Security Policy for ACME Payments Corp Billing Dept",
+                "category": [
+                    {
+                        "value": "policy.apisec",
+                        "domain": "soa.com:policy:subtype"
+                    },
+                    {
+                        "value": "Operational Policy",
+                        "domain": "soa.com:policy:type"
+                    }
+                ],
+                "guid": {
+                    "value": "uddi:0d60c514-1343-4ac5-bd4f-59b93864bb17"
+                }
+            },
+            {
+                "title": "JOSE Policy v2",
+                "description": "JOSE Policy v2",
+                "category": [
+                    {
+                        "value": "policy.jose.v2",
+                        "domain": "soa.com:policy:subtype"
+                    },
+                    {
+                        "value": "Operational Policy",
+                        "domain": "soa.com:policy:type"
+                    }
+                ],
+                "guid": {
+                    "value": "uddi:3e8b8f14-e8ba-4818-a89b-7a90d2704fae"
+                }
+            }
+        ]
+    },
+    "version": "1.0"
 }</pre>
-<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
-
-<p><strong>Sample response headers: application/vnd.soa.v81+xml</strong></p>
-<pre>HTTP/1.1 200 OK
-Content-Type: application/vnd.soa.v81+xml
-Date: Tue, 03 May 2016 21:50:58 GMT</pre>
-<p><a name="rss_policies_xml"></a><strong>Sample response body: application/vnd.soa.v81+xml</strong></p>
-<pre>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
-&lt;rss xmlns:ns2="http://soa.com/xsd/business/1.0" xmlns:ns3="http://soa.com/xsd/user/1.0" 
-xmlns:ns4="http://soa.com/xsd/rss/1.0" xmlns:ns5="http://soa.com/xsd/comment/1.0" 
-xmlns:ns6="http://soa.com/xsd/board/1.0" xmlns:ns7="http://soa.com/xsd/dnmodel/1.0" 
-xmlns:ns8="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns9="http://soa.com/xsd/resource/1.0" 
-xmlns:ns10="http://soa.com/xsd/legals/1.0" xmlns:ns11="http://soa.com/xsd/fault/1.0" 
-xmlns:ns12="http://soa.com/xsd/api/1.0" xmlns:ns13="http://soa.com/xsd/deploymentzone/1.0" 
-xmlns:ns14="http://soa.com/xsd/asset/1.0" xmlns:ns15="http://soa.com/xsd/ticket/1.0" 
-xmlns:ns16="http://soa.com/xsd/app/1.0" xmlns:ns17="http://soa.com/xsd/review/1.0" 
-xmlns:ns18="http://soa.com/xsd/alert/1.0" xmlns:ns19="http://soa.com/xsd/contract/1.0" 
-xmlns:ns20="http://soa.com/xsd/discussion/1.0" xmlns:ns21="http://soa.com/xsd/search/1.0" 
-xmlns:ns22="http://soa.com/xsd/workflow/1.0" xmlns:ns23="http://soa.com/xsd/client/services/1.0" version="1.0"&gt;
-  &lt;channel&gt;
-    &lt;title&gt;Policies&lt;/title&gt;
-    &lt;item&gt;
-      &lt;title&gt;AtmosphereApplicationSecurityPolicy&lt;/title&gt;
-      &lt;description&gt;&lt;/description&gt;
-      &lt;category domain="soa.com:policy:subtype"&gt;policy.apisec&lt;/category&gt;
-      &lt;category domain="soa.com:policy:type"&gt;Operational Policy&lt;/category&gt;
-      &lt;guid&gt;Atmosphere-AtmosphereApplicationSecurityPolicy&lt;/guid&gt;
-    &lt;/item&gt;
-    &lt;item&gt;
-      &lt;title&gt;BasicAuditing&lt;/title&gt;
-      &lt;description&gt;&lt;/description&gt;
-      &lt;category domain="soa.com:policy:subtype"&gt;policy.auditservice&lt;/category&gt;
-      &lt;category domain="soa.com:policy:type"&gt;Operational Policy&lt;/category&gt;
-      &lt;guid&gt;Atmosphere-BasicAuditing&lt;/guid&gt;
-    &lt;/item&gt;
-    &lt;item&gt;
-      &lt;title&gt;CORSAllowAll&lt;/title&gt;
-      &lt;description&gt;&lt;/description&gt;
-      &lt;category domain="soa.com:policy:subtype"&gt;policy.cors&lt;/category&gt;
-      &lt;category domain="soa.com:policy:type"&gt;Operational Policy&lt;/category&gt;
-      &lt;guid&gt;Atmosphere-CORSAllowAll&lt;/guid&gt;
-    &lt;/item&gt;
-    &lt;item&gt;
-      &lt;title&gt;DetailedAuditing&lt;/title&gt;
-      &lt;description&gt;&lt;/description&gt;
-      &lt;category domain="soa.com:policy:subtype"&gt;policy.auditservice&lt;/category&gt;
-      &lt;category domain="soa.com:policy:type"&gt;Operational Policy&lt;/category&gt;
-      &lt;guid&gt;Atmosphere-DetailedAuditing&lt;/guid&gt;
-    &lt;/item&gt;
-    &lt;item&gt;
-      &lt;title&gt;OAuthSecurity&lt;/title&gt;
-      &lt;description&gt;&lt;/description&gt;
-      &lt;category domain="soa.com:policy:subtype"&gt;policy.oauth&lt;/category&gt;
-      &lt;category domain="soa.com:policy:type"&gt;Operational Policy&lt;/category&gt;
-      &lt;guid&gt;Atmosphere-OAuthSecurity&lt;/guid&gt;
-    &lt;/item&gt;
-  &lt;/channel&gt;
-&lt;/rss&gt;</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 <!-- InstanceEndEditable -->
 
@@ -282,11 +294,11 @@ xmlns:ns22="http://soa.com/xsd/workflow/1.0" xmlns:ns23="http://soa.com/xsd/clie
 <!-- InstanceBeginEditable name="Response Headers" -->
 <h3 id="responseheaders">Response Headers</h3>
 <p>For general information on response header values, refer to <a href="../aaref/Ref_HTTPHeaders.htm#ref_httpresponseheaders">HTTP Response Headers</a>.</p>
-<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableparmsresponse">
   <thead>
-    <tr bgcolor="#DDDDDD">
-      <th width="20%">Header</th>
-      <th width="80%">Description</th>
+    <tr>
+      <th>Header</th>
+      <th>Description</th>
     </tr>
   </thead>
   <tbody>
@@ -307,11 +319,11 @@ xmlns:ns22="http://soa.com/xsd/workflow/1.0" xmlns:ns23="http://soa.com/xsd/clie
 <!-- InstanceBeginEditable name="Response Body" -->
 <h3 id="responsebody">Response Body</h3>
 <p><!-- #BeginLibraryItem "/Library/_rss_responsetable_intro.lbi" --> The response body is in the form of an RSS channel, and includes the items listed below. The RSS version is 1.0.<!-- #EndLibraryItem --> The title of the RSS channel is <strong>Policies</strong>. Each item in the channel represents a governance policy, and includes the information listed below.</p>
-<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableparmsresponse">
   <thead>
-  <tr bgcolor="#DDDDDD">
-    <th width="20%">Name</th>
-    <th width="65%">Description</th>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
     </tr>
 </thead>
 <tbody>
@@ -340,15 +352,15 @@ xmlns:ns22="http://soa.com/xsd/workflow/1.0" xmlns:ns23="http://soa.com/xsd/clie
 <h3 id="errorcodes">Error Codes/Messages</h3>
 <p>If the call is unsuccessful an error code/message is returned. One or more examples of possible errors for this operation are shown below.</p>
 <!-- InstanceBeginEditable name="Error Messages" -->
-<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableparmsresponse">
   <thead>
-    <tr bgcolor="#DDDDDD">
-      <th width="20%">Item</th>
-      <th width="80%">Value</th>
+    <tr>
+      <th>Item</th>
+      <th>Value</th>
     </tr>
     <tr>
       <td><a href="../aaref/Ref_HTTPStatusCodes.htm#http401">401</a></td>
-      <td><!-- #BeginLibraryItem "/Library/401_CSRF.lbi" -->Unauthorized. For example, you would get this response if you didn't include the custom <a href="../Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_{fedmemberID}</a> header in the request, when it was required by the platform settings; or if you included an invalid or expired value for this header.<!-- #EndLibraryItem --></td>
+      <td><!-- #BeginLibraryItem "/Library/401_CSRF.lbi" -->Unauthorized. For example, you would get this response if you didn't include the custom <a href="../Ref_Glossary_CommunityPlatform.htm#gl_xcsrf_token_fedmemberid">X-Csrf-Token_{fedmemberID}</a> header in the request, when it was required by the platform settings; or if you included an invalid or expired value for this header. You would also get this response for any operation that requires login (almost all) if the login cookie was missing.<!-- #EndLibraryItem --></td>
     </tr>
   </thead>
   <tbody>
@@ -364,19 +376,15 @@ xmlns:ns22="http://soa.com/xsd/workflow/1.0" xmlns:ns23="http://soa.com/xsd/clie
 
 
 <h3 id="relatedtopics">Related Topics</h3><!-- #BeginLibraryItem "/Library/_RelatedTopics.lbi" -->
-<table width="700" border="0" cellspacing="0" cellpadding="2">
-  <tr>
-    <td width="300"><ul>
-  <li><a href="../index.htm">Akana API Platform API: Overview</a></li>
-  <li><a href="../Ref_Glossary_CommunityPlatform.htm">Glossary of Terms</a></li>
-  <li><a href="../Ref_DocConventions.htm">Documentation Conventions</a></li>
+<div class="relatedlinks">
+<ul>
+	<li><a href="../index.htm">Akana API Platform API: Overview</a></li>
+	<li><a href="../Ref_Glossary_CommunityPlatform.htm">Glossary of Terms</a></li>
+	<li><a href="../Ref_DocConventions.htm">Documentation Conventions</a></li>
 </ul>
-</td>
-    <td width="400"><ul>
-  <li><a href="../Ref_AuthenticationAndSecurity.htm">Authentication and Security</a></li>
-  <li><a href="../Ref_TroubleshootingAndSupport.htm">Troubleshooting and Support</a></li>
-  <li><a href="../Ref_API_Reference.htm">Akana API Platform API: Reference Material</a></li>
-</ul>
-</td>
-  </tr>
-</table><!-- #EndLibraryItem -->
+<ul>
+	<li><a href="../Ref_AuthenticationAndSecurity.htm">Authentication and Security</a></li>
+	<li><a href="../Ref_TroubleshootingAndSupport.htm">Troubleshooting and Support</a></li>
+	<li><a href="../Ref_API_Reference.htm">Akana API Platform API: Reference Material</a></li>
+</ul> 
+</div><!-- #EndLibraryItem --></div>

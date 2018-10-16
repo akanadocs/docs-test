@@ -1,7 +1,7 @@
 ---
 layout: apipage
 title: Log In | Login Service | Akana API Platform API
-description: Initiates the login process by verifying the credentials of a user who is attempting to log in to the platform. If there are pending login tasks, this operation directs the user to the next task; if there are no pending tasks, it logs the user in, returning an authentication cookie that is used to make authenticated calls to the platform. The cookie is valid for 25 minutes. To renew it, use the <span class="apidoc_code"><a href="m_login_renewToken.htm">POST&nbsp;/api/login/renewToken</a></span> operation.
+description:  Initiates the login process by verifying the credentials of a user who is attempting to log in to the platform. If there are pending login tasks, this operation directs the user to the next task; if there are no pending tasks, it logs the user in, returning an authentication cookie that is used to make authenticated calls to the platform. The cookie is valid for 30 minutes. To renew it, use the <span class="apidoc_code"><a href="m_login_renewToken.htm">POST&nbsp;/api/login/renewToken</a></span> operation.
 product: cm
 category: ref
 nav-title: Log In 
@@ -11,12 +11,14 @@ sub-nav-class: login
 no-catalog: true
 ---
 
+<div class="apidocContent">
 <!-- InstanceBeginEditable name="Heading" -->
-<h2><a name="top"></a>POST&nbsp;/api/login</h2>
+<h2 id="top">POST&nbsp;/api/login</h2>
 <!-- InstanceEndEditable -->
 
 <!-- InstanceBeginEditable name="Intro_AuthRoles" -->
-<p><!-- #BeginLibraryItem "/Library/desc_login_.lbi" -->Initiates the login process by verifying the credentials of a user who is attempting to log in to the platform. If there are pending login tasks, this operation directs the user to the next task; if there are no pending tasks, it logs the user in, returning an authentication cookie that is used to make authenticated calls to the platform. The cookie is valid for 25 minutes. To renew it, use the <span class="apidoc_code"><a href="m_login_renewToken.htm">POST&nbsp;/api/login/renewToken</a></span> operation.<!-- #EndLibraryItem --></p>
+<p><!-- #BeginLibraryItem "/Library/desc_login_.lbi" -->
+Initiates the login process by verifying the credentials of a user who is attempting to log in to the platform. If there are pending login tasks, this operation directs the user to the next task; if there are no pending tasks, it logs the user in, returning an authentication cookie that is used to make authenticated calls to the platform. The cookie is valid for 30 minutes. To renew it, use the <span class="apidoc_code"><a href="m_login_renewToken.htm">POST&nbsp;/api/login/renewToken</a></span> operation.<!-- #EndLibraryItem --></p>
 <p>When a new user is logging in for the first time, depending on platform configuration, there might be tasks that the user must complete. The login operation checks whether any of those tasks are pending. If there are one or more pending tasks, the response specifies the next task to be completed. When all tasks are complete, login is complete. Pending tasks are prioritized as follows:</p>
 <ol>
   <li>Changing the password (this requirement can be specified by the Site Admin when adding a user by invoking the <span class="apidoc_code"><a href="../users/m_users_addUser.htm">POST&nbsp;/api/users</a></span> operation). To complete this task using the API, invoke the <span class="apidoc_code"><a href="../users/m_users_modifyPassword.htm">PUT&nbsp;/api/users/{UserID}/password</a></span> operation.</li>
@@ -24,29 +26,25 @@ no-catalog: true
   <li>Providing answers to security challenge questions. To complete this task using the API, invoke the <span class="apidoc_code"><a href="../users/m_users_saveChallenges.htm">PUT&nbsp;/api/users/{UserID}/challenges</a></span> operation.</li>
 </ol>
 <p><strong>Note</strong>:In versions prior to 8.0, this operation returned the <strong>AtmoAuthToken</strong> in the response. From 8.0 onwards it returns the token in the Set-Cookie header. </p>
-<p id="id_roles"><strong>Authorization Roles/Permissions: </strong>To complete this operation successfully, a user must be registered on the platform or be in process of registering.</p>
+<p id="id_roles"><strong>Authorization Roles/Permissions</strong>: To complete this operation successfully, a user must be registered on the platform or be in process of registering.</p>
 <!-- InstanceEndEditable --><!-- #BeginLibraryItem "/Library/_whatdoyouwanttoreadabout.lbi" -->
 <p>This topic includes the following sections:</p>
-<table width="600" border="0" cellspacing="0" cellpadding="2">
-  <tr>
-    <td width="200"><ul>
+<div class="relatedlinks">
+<ul>
   <li><a href="#httpmethod">HTTP Method</a></li>
   <li><a href="#endpoint">URL</a></li>
   <li><a href="#samplerequest">Sample Request</a></li>
   <li><a href="#requestheaders">Request Headers</a></li>
   <li><a href="#requestparameters">Request Parameters</a></li>
 </ul>
-</td>
-    <td width="400"><ul>
+<ul>
   <li><a href="#response">Response</a></li>
   <li><a href="#sampleresponse">Sample Response</a></li>
   <li><a href="#responseheaders">Response Headers</a></li>
   <li><a href="#responsebody">Response Body</a></li>
   <li><a href="#errorcodes">Error Codes/Messages</a></li>
 </ul>
-</td>
-  </tr>
-</table><!-- #EndLibraryItem --><h3 id="httpmethod">HTTP Method</h3>
+</div><!-- #EndLibraryItem --><h3 id="httpmethod">HTTP Method</h3>
 <!-- InstanceBeginEditable name="HTTP Method" -->
 <p class="httpverb">POST</p>
 <!-- InstanceEndEditable -->
@@ -74,6 +72,12 @@ Content-Type: application/json; charset=UTF-8</pre>
   &quot;email&quot;:&quot;myemailaddress@myemail.com&quot;,
   &quot;password&quot;:&quot;Mypwd_12345&quot;
 }</pre>
+<p id=samplerequest_curl><strong>Sample request: Curl</strong></p>
+<pre>curl -X POST -H 'Content-Type: application/json' -H 'Accept: application/json' -i '<!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->login' --data '{
+  "email":"administrator@acmepaymentscorp",
+  "password":"Pa$sW0rd_12345",
+  "federationLogins":true
+}'</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 <!-- InstanceEndEditable -->
 
@@ -81,11 +85,11 @@ Content-Type: application/json; charset=UTF-8</pre>
 <!-- InstanceBeginEditable name="Request Headers" -->
 <h3 id="requestheaders">Request Headers</h3>
 <p>For general information on request header values, refer to <a href="../aaref/Ref_HTTPHeaders.htm#ref_httprequestheaders">HTTP Request Headers</a>.</p>
-<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableparmsresponse">
   <thead>
     <tr>
-      <th width="20%">Header</th>
-      <th width="80%">Description</th>
+      <th>Header</th>
+      <th>Description</th>
     </tr>
   </thead>
   <tbody>
@@ -106,14 +110,14 @@ Content-Type: application/json; charset=UTF-8</pre>
 
 <!-- InstanceBeginEditable name="Request Parameters" -->
 <h3 id="requestparameters">Request Parameters</h3>
-<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableparmsresponse">
   <thead>
     <tr>
-      <th width="11%">Parameter</th>
-      <th width="9%">Parm Type</th>
-      <th width="11%">Data Type</th>
-      <th width="11%">Required</th>
-      <th width="58%">Description</th>
+      <th>Parameter</th>
+      <th>Parm Type</th>
+      <th>Data Type</th>
+      <th>Required</th>
+      <th>Description</th>
     </tr>
   </thead>
   <tbody>
@@ -139,7 +143,7 @@ Content-Type: application/json; charset=UTF-8</pre>
 
 <!-- InstanceBeginEditable name="Sample Response" -->
 <h3 id="sampleresponse">Sample Response</h3>
-<p id="id_sampleresponse">The sample response below shows the user logging in. The cookie is returned in the Set-Cookie header.</p>
+<p id="id_sampleresponse">The sample response below shows the user logging in. The cookie is returned in the Set-Cookie header.&nbsp;This example also includes the <a href="../aaref/Ref_HTTPHeaders.htm#csrf_token_request">X-Csrf-Token_{fedmemberID}</a> header, which may or may not be returned, based on platform settings. For more information, see <a href="../aaref/Ref_CookiesOnThePlatform.htm">Cookies in the Akana API Platform</a> and <a href="../aaref/Ref_CSRFPreventionOnThePlatform.htm">CSRF Prevention on the Platform</a>.</p>
 <h5>Sample response headers</h5>
 <pre>HTTP/1.1 200 OK
 Content-Type: application/json
@@ -161,95 +165,97 @@ gu61Dk7vIIiVhBJV1AIRZiHKoDim04hq-tjw8NIeHdH6DV7M2COAaTZA
 <p>To change the password, invoke the <span class="apidoc_code"><a href="../users/m_users_modifyPassword.htm">PUT&nbsp;/api/users/{UserID}/password</a></span> operation.</p>
 <pre>
 {
-  "loginState" : "login.complete",
-  "authTokenValidUntil" : "2017-05-25T19:31:02.477Z",
-  "avatarURL" : "http://api.acmepaymentscorp.com:7900/api/users/avatar/_VeOpbQ0ztsM0WHiH3iUkBYg",
-  "loginDomainID" : "siteusers.acmepaymentscorp",
-  "lastLoginDate" : "2017-05-25T18:55:30Z",
-  "userName" : "adminacmepaymentscorp",
-  "userFDN" : "461b3899-37c6-4eb8-936b-9abf8ba74c0a.acmepaymentscorp",
-  "pendingNotifications" : 0,
-  "status" : "success"
+    "userFDN": "3d764293-d647-4bfb-8d8b-f82b98457021.acmepaymentscorp",
+    "userName": "JaneMead",
+    "status": "success",
+    "pendingTasks": [
+        "change.password"
+    ],
+    "loginDomainID": "siteusers.acmepaymentscorp",
+    "loginState": "login.inprocess",
+    "authTokenValidUntil": "2018-08-01T19:15:10.404Z",
+    "avatarURL": "http://api.acmepaymentscorp.com/api/users/avatar/_VeOpbQ0ztsM0WHiH3iUkBYg",
+    "pendingNotifications": 0
 }</pre>
 <h5>Sample response body #2</h5>
 <p id="id_sampleresponse_2">The example below shows a scenario where the user must accept a pending legal agreement. Until the legal agreement is accepted, the login process isn't complete. Tokens have been abbreviated.</p>
 <p>If there is a pending legal agreement, you must invoke the <span class="apidoc_code"><a href="../legals/m_legals_acceptAgreement.htm">POST&nbsp;/api/legals/agreements</a></span> operation, part of the Legals service, so that the user can accept the legal agreement and complete the login process.</p>
 <pre>{
-  "loginDomainID" : "siteusers.acmepaymentscorp",
-  "pendingTasks" : [ "force.accept.agreements" ],
-  "loginState" : "login.inprocess",
-  "avatarURL" : "http://{hostname}/api/users/1d75a0e7-b805-4152-baa0-2f9978711d6e.acmepaymentscorp/avatar",
-  "pendingAgreements" : [ "signupagrmtv1.acmepaymentscorp" ],
-  "pendingNotifications" : 0,
-  "status" : "success",
-  "authTokenValidUntil" : "2016-01-01T00:00:00.410Z",
-  "userName" : "PhilipPirrip",
-  "userFDN" : "1d75a0e7-b805-4152-baa0-2f9978711d6e.acmepaymentscorp",
+  &quot;loginDomainID&quot; : &quot;siteusers.acmepaymentscorp&quot;,
+  &quot;pendingTasks&quot; : [ &quot;force.accept.agreements&quot; ],
+  &quot;loginState&quot; : &quot;login.inprocess&quot;,
+  &quot;avatarURL&quot; : &quot;http://{hostname}/api/users/1d75a0e7-b805-4152-baa0-2f9978711d6e.acmepaymentscorp/avatar&quot;,
+  &quot;pendingAgreements&quot; : [ &quot;signupagrmtv1.acmepaymentscorp&quot; ],
+  &quot;pendingNotifications&quot; : 0,
+  &quot;status&quot; : &quot;success&quot;,
+  &quot;authTokenValidUntil&quot; : &quot;2016-01-01T00:00:00.410Z&quot;,
+  &quot;userName&quot; : &quot;PhilipPirrip&quot;,
+  &quot;userFDN&quot; : &quot;1d75a0e7-b805-4152-baa0-2f9978711d6e.acmepaymentscorp&quot;,
 }</pre>
 <h5>Sample response body #3</h5>
 <p id="id_sampleresponse_3">In the example below, login is not yet complete because the user must provide answers to the security challenge questions. Tokens have been abbreviated.</p>
 <p>To complete this task using the API, invoke the <span class="apidoc_code"><a href="../users/m_users_saveChallenges.htm">PUT&nbsp;/api/users/{UserID}/challenges</a></span> operation.</p>
 <pre>{
-  "loginDomainID" : "siteusers.acmepaymentscorp",
-  "pendingTasks" : [ "collect.security.question.answers" ],
-  "loginState" : "login.inprocess",
-  "avatarURL" : "http://{hostname}/api/users/1d75a0e7-b805-4152-baa0-2f9978711d6e.acmepaymentscorp/avatar",
-  "pendingNotifications" : 0,
-  "status" : "success",
+  &quot;loginDomainID&quot; : &quot;siteusers.acmepaymentscorp&quot;,
+  &quot;pendingTasks&quot; : [ &quot;collect.security.question.answers&quot; ],
+  &quot;loginState&quot; : &quot;login.inprocess&quot;,
+  &quot;avatarURL&quot; : &quot;http://{hostname}/api/users/1d75a0e7-b805-4152-baa0-2f9978711d6e.acmepaymentscorp/avatar&quot;,
+  &quot;pendingNotifications&quot; : 0,
+  &quot;status&quot; : &quot;success&quot;,
   &quot;authTokenValidUntil&quot; : &quot;2016-01-01T00:00:00.410Z&quot;,
-  "userName" : "PhilipPirrip",
-  "userFDN" : "1d75a0e7-b805-4152-baa0-2f9978711d6e.acmepaymentscorp",
+  &quot;userName&quot; : &quot;PhilipPirrip&quot;,
+  &quot;userFDN&quot; : &quot;1d75a0e7-b805-4152-baa0-2f9978711d6e.acmepaymentscorp&quot;,
 }</pre>
 <h5>Sample response body #4</h5>
 <p id="id_sampleresponse_4">The example below shows a LoginResponse object returned when a user has completed all pending tasks, or when a user signs in under normal circumstances; there are no pending tasks, just a simple login. Tokens have been abbreviated.</p>
 <pre>
 {
-  "userFDN" : "4fa1a6c9-c846-4186-87c1-7dab542aad22.acmepaymentscorp",
-  "userName" : "adminAtmosphere",
-  "loginDomainID" : "siteusers.acmepaymentscorp",
-  "loginState" : "login.complete",
-  "sessionValidUntil" : "2016-01-14T18:15:53.538Z",
-  "authTokenValidUntil" : "2016-01-14T17:47:53.812Z",
-  "avatarURL" : "http://www.acmepaymentscorp.com/api/users/avatar/_VCpiEj0keo1zHfcA_5usV3w",
-  "status" : "success",
-  "pendingNotifications" : 0
+  &quot;userFDN&quot; : &quot;4fa1a6c9-c846-4186-87c1-7dab542aad22.acmepaymentscorp&quot;,
+  &quot;userName&quot; : &quot;adminAtmosphere&quot;,
+  &quot;loginDomainID&quot; : &quot;siteusers.acmepaymentscorp&quot;,
+  &quot;loginState&quot; : &quot;login.complete&quot;,
+  &quot;sessionValidUntil&quot; : &quot;2016-01-14T18:15:53.538Z&quot;,
+  &quot;authTokenValidUntil&quot; : &quot;2016-01-14T17:47:53.812Z&quot;,
+  &quot;avatarURL&quot; : &quot;http://www.acmepaymentscorp.com/api/users/avatar/_VCpiEj0keo1zHfcA_5usV3w&quot;,
+  &quot;status&quot; : &quot;success&quot;,
+  &quot;pendingNotifications&quot; : 0
 }</pre>
 <h5>Sample response body #5</h5>
 <p id="id_sampleresponse_5">The example below shows a LoginResponse object returned when a user is logging in and two-factor authentication is set up on the platform, with delivery options for the authentication code. The user must choose a delivery mechanism and then complete the two-factor authentication process, putting in the verification code, before completing any additional pending login tasks.</p>
 <pre>{
-  "status" : "success",
-  "userName" : "JaneMead",
-  "pendingAgreements" : [ "signupagrmtv1.acmepaymentscorp" ],
-  "pendingTaskData" : {
-    "2fa.required" : {
-      "codeLength" : 6,
-      "codeValidFor" : 300,
-      "deliveryOptions" : [ {
-        "target" : "*************@acmepaymentscorp.com",
-        "targetType" : "Email",
-        "deliveryMechanism" : "Email",
-        "deliveryTargetKey" : "7jiuw9TkN6T8kbcvhq/hV45nWeHzLPruN0NNtav4HxWVurpaecfO9PK3kglvGzUH7sSaFCsceuTWbylBzAOwow=="
+  &quot;status&quot; : &quot;success&quot;,
+  &quot;userName&quot; : &quot;JaneMead&quot;,
+  &quot;pendingAgreements&quot; : [ &quot;signupagrmtv1.acmepaymentscorp&quot; ],
+  &quot;pendingTaskData&quot; : {
+    &quot;2fa.required&quot; : {
+      &quot;codeLength&quot; : 6,
+      &quot;codeValidFor&quot; : 300,
+      &quot;deliveryOptions&quot; : [ {
+        &quot;target&quot; : &quot;*************@acmepaymentscorp.com&quot;,
+        &quot;targetType&quot; : &quot;Email&quot;,
+        &quot;deliveryMechanism&quot; : &quot;Email&quot;,
+        &quot;deliveryTargetKey&quot; : &quot;7jiuw9TkN6T8kbcvhq/hV45nWeHzLPruN0NNtav4HxWVurpaecfO9PK3kglvGzUH7sSaFCsceuTWbylBzAOwow==&quot;
       }, {
-        "target" : "***-***-2463",
-        "targetType" : "Phone",
-        "deliveryMechanism" : "Voice",
-        "deliveryTargetKey" : "9pYvAYrP58nleQrV7KYiSS9ktisEc6RO7evmugUm+36b7BoHnIVJHbLc/fzrmbyY"
+        &quot;target&quot; : &quot;***-***-2463&quot;,
+        &quot;targetType&quot; : &quot;Phone&quot;,
+        &quot;deliveryMechanism&quot; : &quot;Voice&quot;,
+        &quot;deliveryTargetKey&quot; : &quot;9pYvAYrP58nleQrV7KYiSS9ktisEc6RO7evmugUm+36b7BoHnIVJHbLc/fzrmbyY&quot;
       }, {
-        "target" : "***-***-2463",
-        "targetType" : "Phone",
-        "deliveryMechanism" : "Text",
-        "deliveryTargetKey" : "+GqJt3MD4MGGJrVkIH5hg6EEOrdyzD9pJu8SlfUUo5zUpzJhczS7Ag=="
+        &quot;target&quot; : &quot;***-***-2463&quot;,
+        &quot;targetType&quot; : &quot;Phone&quot;,
+        &quot;deliveryMechanism&quot; : &quot;Text&quot;,
+        &quot;deliveryTargetKey&quot; : &quot;+GqJt3MD4MGGJrVkIH5hg6EEOrdyzD9pJu8SlfUUo5zUpzJhczS7Ag==&quot;
       } ],
-      "attemptsLeft" : 3,
-      "codeSent" : false
+      &quot;attemptsLeft&quot; : 3,
+      &quot;codeSent&quot; : false
     }
   },
-  "pendingTasks" : [ "2fa.required" ],
+  &quot;pendingTasks&quot; : [ &quot;2fa.required&quot; ],
   &quot;avatarURL&quot; : &quot;http://{hostname}/api/users/df492b7e-ce2a-478c-86d2-b0bf09c27e52.acmepaymentscorp/avatar&quot;
-  "userFDN" : "4e57ead2-4e61-4d7a-8b34-95d3c0ae2bc3.acmepaymentscorp",
-  "loginState" : "login.inprocess",
-  "pendingNotifications" : 0,
-  "loginDomainID" : "siteusers.acmepaymentscorp"
+  &quot;userFDN&quot; : &quot;4e57ead2-4e61-4d7a-8b34-95d3c0ae2bc3.acmepaymentscorp&quot;,
+  &quot;loginState&quot; : &quot;login.inprocess&quot;,
+  &quot;pendingNotifications&quot; : 0,
+  &quot;loginDomainID&quot; : &quot;siteusers.acmepaymentscorp&quot;
 }</pre>
 <h5>Sample response body #6</h5>
 <p id="id_sampleresponse_6">The example below shows a LoginResponse object returned when a user is logging in and two-factor authentication (2FA) is set up on the platform, with only one delivery option, email (the platform default).</p>
@@ -258,31 +264,31 @@ gu61Dk7vIIiVhBJV1AIRZiHKoDim04hq-tjw8NIeHdH6DV7M2COAaTZA
   &quot;userName&quot; : &quot;JaneMead&quot;,
   &quot;pendingAgreements&quot; : [ &quot;signupagrmtv1.acmepaymentscorp&quot; ],
   &quot;pendingTaskData&quot; : {
-    "2fa.required" : {
-      "target" : "*************@acmepaymentscorp.com",
-      "targetType" : "Email",
-      "status" : {
-        "status" : "Success"
+    &quot;2fa.required&quot; : {
+      &quot;target&quot; : &quot;*************@acmepaymentscorp.com&quot;,
+      &quot;targetType&quot; : &quot;Email&quot;,
+      &quot;status&quot; : {
+        &quot;status&quot; : &quot;Success&quot;
       },
-      "codeLength" : 6,
-      "codeValidFor" : 300,
-      "deliveryOptions" : [ {
-        "target" : "*************@acmepaymentscorp.com",
-        "targetType" : "Email",
-        "deliveryMechanism" : "Email",
-        "deliveryTargetKey" : "+88ZidsUU03JzQxiZWILHAY4exsijs0iwJSy5iW4SgjSC9/v7N8rLu+zdJkttnHVsZWy91aYS1dTtpEnMlKzXg=="
+      &quot;codeLength&quot; : 6,
+      &quot;codeValidFor&quot; : 300,
+      &quot;deliveryOptions&quot; : [ {
+        &quot;target&quot; : &quot;*************@acmepaymentscorp.com&quot;,
+        &quot;targetType&quot; : &quot;Email&quot;,
+        &quot;deliveryMechanism&quot; : &quot;Email&quot;,
+        &quot;deliveryTargetKey&quot; : &quot;+88ZidsUU03JzQxiZWILHAY4exsijs0iwJSy5iW4SgjSC9/v7N8rLu+zdJkttnHVsZWy91aYS1dTtpEnMlKzXg==&quot;
       } ],
-      "attemptsLeft" : 3,
-      "deliveryMechanism" : "Email",
-      "codeSent" : true
+      &quot;attemptsLeft&quot; : 3,
+      &quot;deliveryMechanism&quot; : &quot;Email&quot;,
+      &quot;codeSent&quot; : true
     }
   },
-  "pendingTasks" : [ "2fa.required" ],
+  &quot;pendingTasks&quot; : [ &quot;2fa.required&quot; ],
   &quot;avatarURL&quot; : &quot;http://{hostname}/api/users/df492b7e-ce2a-478c-86d2-b0bf09c27e52.acmepaymentscorp/avatar&quot;
-  "userFDN" : "da612fdd-ca13-46a3-9cc0-86598f7b22e3.acmepaymentscorp",
-  "loginState" : "login.inprocess",
-  "pendingNotifications" : 0,
-  "loginDomainID" : "siteusers.acmepaymentscorp"
+  &quot;userFDN&quot; : &quot;da612fdd-ca13-46a3-9cc0-86598f7b22e3.acmepaymentscorp&quot;,
+  &quot;loginState&quot; : &quot;login.inprocess&quot;,
+  &quot;pendingNotifications&quot; : 0,
+  &quot;loginDomainID&quot; : &quot;siteusers.acmepaymentscorp&quot;
 }</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 <!-- InstanceEndEditable -->
@@ -291,11 +297,11 @@ gu61Dk7vIIiVhBJV1AIRZiHKoDim04hq-tjw8NIeHdH6DV7M2COAaTZA
 <!-- InstanceBeginEditable name="Response Headers" -->
 <h3 id="responseheaders">Response Headers</h3>
 <p>For general information on response header values, refer to <a href="../aaref/Ref_HTTPHeaders.htm#ref_httpresponseheaders">HTTP Response Headers</a>.</p>
-<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableparmsresponse">
   <thead>
-    <tr bgcolor="#DDDDDD">
-      <th width="20%">Header</th>
-      <th width="80%">Description</th>
+    <tr>
+      <th>Header</th>
+      <th>Description</th>
     </tr>
   </thead>
   <tbody>
@@ -305,7 +311,7 @@ gu61Dk7vIIiVhBJV1AIRZiHKoDim04hq-tjw8NIeHdH6DV7M2COAaTZA
     </tr>
     <tr>
       <td>Set-Cookie</td>
-      <td>The AtmoAuthToken_{TenantID} cookie is returned in the response when the user is fully logged in.</td>
+      <td>The <a href="../aaref/Ref_CookiesOnThePlatform.htm#cookie_atmoauthtoken">AtmoAuthToken_{fedmemberid}</a> cookie is returned in the response when the user is fully logged in.</td>
     </tr>
   </tbody>
 </table>
@@ -315,12 +321,12 @@ gu61Dk7vIIiVhBJV1AIRZiHKoDim04hq-tjw8NIeHdH6DV7M2COAaTZA
 
 <!-- InstanceBeginEditable name="Response Body" -->
 <h3 id="responsebody">Response Body</h3>
-<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableparmsresponse">
   <thead>
-    <tr bgcolor="#DDDDDD">
-      <th width="20%">Name</th>
-      <th width="15%">Type</th>
-      <th width="65%">Description</th>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
     </tr>
   </thead>
   <tbody>
@@ -338,11 +344,11 @@ gu61Dk7vIIiVhBJV1AIRZiHKoDim04hq-tjw8NIeHdH6DV7M2COAaTZA
 <h3 id="errorcodes">Error Codes/Messages</h3>
 <p>If the call is unsuccessful an error code/message is returned. One or more examples of possible errors for this operation are shown below.</p>
 <!-- InstanceBeginEditable name="Error Messages" -->
-<table class="tableparmsresponse" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableparmsresponse">
   <thead>
-    <tr bgcolor="#DDDDDD">
-      <th width="20%">Item</th>
-      <th width="80%">Value</th>
+    <tr>
+      <th>Item</th>
+      <th>Value</th>
     </tr>
   </thead>
   <tbody>
@@ -363,19 +369,15 @@ gu61Dk7vIIiVhBJV1AIRZiHKoDim04hq-tjw8NIeHdH6DV7M2COAaTZA
 
 
 <h3 id="relatedtopics">Related Topics</h3><!-- #BeginLibraryItem "/Library/_RelatedTopics.lbi" -->
-<table width="700" border="0" cellspacing="0" cellpadding="2">
-  <tr>
-    <td width="300"><ul>
-  <li><a href="../index.htm">Akana API Platform API: Overview</a></li>
-  <li><a href="../Ref_Glossary_CommunityPlatform.htm">Glossary of Terms</a></li>
-  <li><a href="../Ref_DocConventions.htm">Documentation Conventions</a></li>
+<div class="relatedlinks">
+<ul>
+	<li><a href="../index.htm">Akana API Platform API: Overview</a></li>
+	<li><a href="../Ref_Glossary_CommunityPlatform.htm">Glossary of Terms</a></li>
+	<li><a href="../Ref_DocConventions.htm">Documentation Conventions</a></li>
 </ul>
-</td>
-    <td width="400"><ul>
-  <li><a href="../Ref_AuthenticationAndSecurity.htm">Authentication and Security</a></li>
-  <li><a href="../Ref_TroubleshootingAndSupport.htm">Troubleshooting and Support</a></li>
-  <li><a href="../Ref_API_Reference.htm">Akana API Platform API: Reference Material</a></li>
-</ul>
-</td>
-  </tr>
-</table><!-- #EndLibraryItem -->
+<ul>
+	<li><a href="../Ref_AuthenticationAndSecurity.htm">Authentication and Security</a></li>
+	<li><a href="../Ref_TroubleshootingAndSupport.htm">Troubleshooting and Support</a></li>
+	<li><a href="../Ref_API_Reference.htm">Akana API Platform API: Reference Material</a></li>
+</ul> 
+</div><!-- #EndLibraryItem --></div>
