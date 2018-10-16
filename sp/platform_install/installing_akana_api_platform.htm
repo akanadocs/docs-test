@@ -98,11 +98,10 @@ nav-title: Installing Akana API Platform 2018.0.0
 
 <h3 id="overview">Overview</h3>
 <p>This document provides instructions for installing the Akana API Platform version 2018.0.0.</p>
-<p>It covers a very simple scenario of setting up these containersf:</p>
+<p>It covers a very simple scenario of setting up these containers:</p>
 <ul>
 	<li>One container with Policy Manager and Community Manager installed</li>
 	<li>One container running the API Gateway (Network Director)</li>
-	<li>One container running the scheduled jobs</li>
 </ul>
 
 <p>This document covers the following broad activities associated with the installation process:</p>
@@ -185,7 +184,7 @@ nav-title: Installing Akana API Platform 2018.0.0
 
 <ol>
 	<li>In the temporary folder, unzip the Akana API Platform 2018.0.0 file.</li>
-	<li>Unzip to <a href="../../cm/learnmore/basics_glossary.htm#gl_akana_platform">Akana Platform</a> main file to your installation folder.</li>
+	<li>Unzip the <a href="../../cm/learnmore/basics_glossary.htm#gl_akana_platform">Akana Platform</a> main file to your installation folder.</li>
 	<li>Akana Platform updates (if applicable): If there are any updates, unzip them, beginning with the earliest update, up to the latest. If you're prompted whether to overwrite a file, select <strong>Yes</strong>.</li>
 	<li>Plug-ins (if applicable): Unzip any separate plug-ins for your installation, if applicable.</li>
 	<li>Plug-in updates  (if applicable): if there are any updates to the plug-ins, unzip them, earliest to latest, overwriting if needed, as above.</li>
@@ -213,7 +212,18 @@ nav-title: Installing Akana API Platform 2018.0.0
 <h5>To install Policy Manager/Community Manager features on the container</h5>
 <ol>
 	<li>In the <strong>Akana Administration Console</strong>, go to the <strong>Available Features</strong> list.</li>
-	<li>Choose the options applicable to your install. See <a href="#features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</a>.</li>
+	<li>Install the following features:
+		<ul>
+			<li>Akana Community Manager </li>
+			<li>Akana Community Manager APIs {<span class="apidoc_red">ML had this, EN didn't. MM: do we need it?</span>}</li>
+			<li>Akana Community Manager OAuth Provider {<span class="apidoc_red">MM: ML installs this. Do we need it for a very simple scenario?</span>}</li>
+			<li>Akana Community Manager Scheduled Jobs </li>
+			<li>Akana Management Services {<span class="apidoc_red">MM: ML had this, EN didn't. If you have scheduled jobs on another container do you not need it? Just need it somewhere?</span>}</li>
+			<li>Akana OAuth Provider {<span class="apidoc_red">MM: ML installs this. When do we need Akana CM Oauth Provider vs Akana OAuth Provider?</span>}</li>
+			<li>Akana Policy Manager Console </li>
+			<li>Akana Policy Manager Services&#8212;this feature bundle includes the Akana Scheduled Jobs feature which adds jobs to the Quartz scheduler. It also includes Akana Security Services<!--(security.services)-->. This feature is needed on all containers except Network Director.</li>
+		</ul>
+	<p><strong>Note</strong>: If you're following the sample deployment scenario, see <a href="#features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</a>.</p></li>
 	<li>Click <strong>Install Feature</strong>; then, at the Resolution Summary, click <strong>Install Feature</strong> again.	</li>
 	<li>At the <strong>Installation Complete</strong> summary, click <strong>Configure</strong> (if you are installing plug-ins, click <strong>Close</strong> and install plug-ins first).</li>
 </ol>
@@ -234,7 +244,7 @@ nav-title: Installing Akana API Platform 2018.0.0
 <h5>To install plug-ins on the PM/CM container</h5>
 <ol>
 	<li>At the Available Features list, from the <strong>Filter</strong> drop-down list at the top left, choose <strong>Plug-Ins</strong>.</li>
-	<li>Choose features to install. For example, if Community Manager is installed on the container you'd choose the Akana Community Manager Policy Console and one or more themes:
+	<li>Install the <strong>Akana Community Manager Policy Console</strong> plug-in and one or more themes:
 		<ul>
 			<li>Akana Community Manager Policy Console</li>
 			<li>Akana Community Manager Default Theme</li>
@@ -321,6 +331,7 @@ nav-title: Installing Akana API Platform 2018.0.0
 		<ul>
 			<li>Akana Network Director</li>
 		</ul>
+			<p><strong>Note</strong>: If your installation includes OAuth, you'd also install the Akana Community Manager OAuth Provider Agent.</p>
 	</li>
 	<li>Install any needed plug-ins on the container.
 		<p>For the Network Director container, you don't need any plug-ins unless you are setting up a cluster.</p>
@@ -1078,15 +1089,14 @@ default.port=9945
 <p>In each CM/PM combo container shown in this sample deployment, install the following features:</p>
 <ul>
 	<li>Akana Policy Manager Console <!--(policy.manager.console)--></li>
-	<li>Akana Policy Manager Services <!--(policy.manager.services)--></li>
-	<li>Akana Security Services <!--(security.services)--></li>
+	<li>Akana Policy Manager Services&#8212;this feature bundle includes the Akana Scheduled Jobs feature which adds jobs to the Quartz scheduler. It also includes Akana Security Services<!--(security.services)-->. This feature is needed on all containers except Network Director.<!--(policy.manager.services)--></li>
 	<li>Akana Community Manager <!--(community.manager)--></li>
 	<li>Akana Community Manager Scheduled Jobs <!--(community.manager.scheduled.jobs)--></li>
 </ul>
 <p>Install the following plug-ins:</p>
 <ul>
 	<li>Akana MongoDB Support (Plug-In)<!-- (mongo.db)--> (if using MongoDB for analytics)</li>
-	<li>Akana Community Manager Policy Console <!--(community.manager.plugin)--></li>
+	<li>Akana Community Manager Policy Console <!--(community.manager.plugin)-->(needed on every CM container. Without it the API security policy configuration GUI is not available; XML is shown instead)</li>
 	<li>One or more of the following (at least one theme is required for Community Manager):
 		<ul>
 			<li>Akana Community Manager Default Theme <!--(community.manager.default.theme)--></li>
@@ -1123,9 +1133,9 @@ default.port=9945
 
 
 <h4 id="features_sched_jobs">Scheduled Jobs container features</h4>
-<p>The installation features that are installed on this standalone container, that add jobs to the Quartz scheduler, are:</p>
+<p>If you have a standalone container for the Scheduled Jobs features, that add jobs to the Quartz scheduler, install the following:</p>
 <ul>
-	<li>Akana Policy Manager Services&#8212;this feature bundle includes the Akana Scheduled Jobs feature which adds jobs to the Quartz scheduler</li>
+	<li>Akana Policy Manager Services&#8212;this feature bundle includes the Akana Scheduled Jobs feature which adds jobs to the Quartz scheduler. It also includes Akana Security Services<!--(security.services)-->. This feature is needed on all containers except Network Director.</li>
 	<li>Akana Community Manager Scheduled Jobs <!--(community.manager.scheduled.jobs)--></li>
 </ul>
 <p><strong>Note</strong>: There are other scheduled jobs that are run on each container. For example, Network Director has a job scheduler that is responsible for reaching out to Policy Manager to get updated information on which APIs to load. These scheduled jobs are not separate installation features, they are built in to each container.</p>
@@ -1137,8 +1147,7 @@ default.port=9945
 <p>Install the following features:</p>
 <ul>
 	<li>Akana Policy Manager Console <!--(policy.manager.console)--></li>
-	<li>Akana Policy Manager Services<!-- (policy.manager.services)--></li>
-	<li>Akana Security Services <!--(security.services)--></li>
+	<li>Akana Policy Manager Services&#8212;this feature bundle includes the Akana Scheduled Jobs feature which adds jobs to the Quartz scheduler. It also includes Akana Security Services<!--(security.services)-->. This feature is needed on all containers except Network Director.<!-- (policy.manager.services)--></li>
 	<li>Akana MongoDB Support (Plug-In)<!-- (mongo.db)--> (if using MongoDB for analytics)</li>
 </ul>
 
