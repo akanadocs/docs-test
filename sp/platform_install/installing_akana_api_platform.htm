@@ -214,9 +214,8 @@ nav-title: Installing Akana API Platform 2018.0.0
 	<li>In the <strong>Akana Administration Console</strong>, go to the <strong>Available Features</strong> list.</li>
 	<li>Install the following features:
 		<ul>
-			<li>Akana Community Manager </li>
-			<li>Akana Community Manager APIs {<span class="apidoc_red">ML had this, EN didn't. MM: do we need it?</span>}</li>
-			<li>Akana Community Manager OAuth Provider {<span class="apidoc_red">MM: ML installs this. Do we need it for a very simple scenario?</span>}</li>
+			<li>Akana Community Manager (includes Akana Community Manager APIs)</li>
+			<li>Akana Community Manager OAuth Provider (Should be installed for any Community Manager container) </li>
 			<li>Akana Community Manager Scheduled Jobs </li>
 			<li>Akana Management Services {<span class="apidoc_red">MM: ML had this, EN didn't. If you have scheduled jobs on another container do you not need it? Just need it somewhere?</span>}</li>
 			<li>Akana OAuth Provider {<span class="apidoc_red">MM: ML installs this. When do we need Akana CM Oauth Provider vs Akana OAuth Provider?</span>}</li>
@@ -244,13 +243,20 @@ nav-title: Installing Akana API Platform 2018.0.0
 <h5>To install plug-ins on the PM/CM container</h5>
 <ol>
 	<li>At the Available Features list, from the <strong>Filter</strong> drop-down list at the top left, choose <strong>Plug-Ins</strong>.</li>
-	<li>Install the <strong>Akana Community Manager Policy Console</strong> plug-in and one or more themes:
+	<li>Install these plug-ins:
+		<ul>
+			<li>Akana Community Manager Policy Console plug-in</li>
+			<li>Optional: Akana OAuth Plug-In (must be installed on the Community Manager container if OAuth is installed on a separate container)</li>
+		</ul>
+		</li>
+	
+	<li>Install one or more themes (also in the plug-ins list):
 		<ul>
 			<li>Akana Community Manager Policy Console</li>
 			<li>Akana Community Manager Default Theme</li>
 			<li>Akana Community Manager Hermosa Theme</li>
 			<li>Akana Community Manager Simple Developer Theme</li>
-		</ul>
+			</ul>
 	</li>
 	<li>Click <strong>Install Feature</strong>; then, at the Resolution Summary, click <strong>Install Feature</strong> again.</li>
 	<li>Review the installation summary. To continue to the configuration step, click <strong>Configure</strong>.</li>
@@ -1097,6 +1103,7 @@ default.port=9945
 <ul>
 	<li>Akana MongoDB Support (Plug-In)<!-- (mongo.db)--> (if using MongoDB for analytics)</li>
 	<li>Akana Community Manager Policy Console <!--(community.manager.plugin)-->(needed on every CM container. Without it the API security policy configuration GUI is not available; XML is shown instead)</li>
+	<li>Akana OAuth Plug-In (must be installed on the Community Manager container if OAuth is installed on a separate container)</li>
 	<li>One or more of the following (at least one theme is required for Community Manager):
 		<ul>
 			<li>Akana Community Manager Default Theme <!--(community.manager.default.theme)--></li>
@@ -1130,8 +1137,7 @@ default.port=9945
 	<li>Akana OAuth Provider <!--(oauth.provider)--></li>
 	<li>Akana Community Manager OAuth Provider <!--(community.manager.oauth.provider)--></li>
 </ul>
-
-
+<p><strong>Note</strong>: If you install OAuth on a separate container from Community Manager, make sure the <strong>Akana OAuth Plug-In</strong> is installed on the Community Manager container. This is needed so that you can configure OAuth via the Community Manager portal.</p>
 <h4 id="features_sched_jobs">Scheduled Jobs container features</h4>
 <p>If you have a standalone container for the Scheduled Jobs features, that add jobs to the Quartz scheduler, install the following:</p>
 <ul>
@@ -1179,12 +1185,13 @@ default.port=9945
 </ul>
 <p>Install the following plug-ins for Community Manager:</p>
 <ul>
+	<li>Akana OAuth Plug-In (must be installed on the Community Manager container if OAuth is installed on a separate container)</li>
 	<li>One or more of the following (at least one theme is required for Community Manager):
 		<ul>
 			<li>Akana Community Manager Default Theme <!--(community.manager.default.theme)--></li>
 			<li>Akana Community Manager Hermosa Theme <!--(community.manager.hermosa.theme)--></li>
 			<li>Akana Community Manager Simple Developer Theme <!--(community.manager.simple.developer.theme)--></li>
-		</ul>
+			</ul>
 	</li>
 </ul>
 
@@ -1215,7 +1222,7 @@ default.port=9945
 <p>After that point, the sequence of containers really doesn't matter. These upgrade instructions suggest the following sequence once the first container has been updated:</p>
 <ol>
 	<li>First, any additional containers running Policy Manager and/or the API Platform.</li>
-	<li>Then, any Network Director or Agent containers.</li>
+	<li>Then, any Network Director or other containers.</li>
 </ol>
 <p>However, the sequence is not important after the first container. You could upgrade the Network Director container at any point. There is no dependency; containers that have been upgraded will work with containers that haven't yet been upgraded. You can even upgrade additional containers in parallel.</p>
 <p>Just make sure you upgrade an initial Policy Manager container first, with the associated database upgrade, and then follow any logical approach, making sure that each step completes successfully before starting the next one.</p>
