@@ -61,7 +61,7 @@ nav-title: Upgrade 8.4x to 2018.0.x
 <ol class="table_of_contents">
 	<li><a href="#s03_01">Step 3-1: Check for pending installation tasks</a></li>
 	<li><a href="#s03_02">Step 3-2: Perform configuration actions</a></li>
-	<li><a href="#s03_03">Step 3-3: Update context root</a></li>
+	<li><a href="#s03_03">Step 3-3: Update container properties</a></li>
 	<li><a href="#s03_04">Step 3-4: Check system health</a></li>
 	<li><a href="#s03_05">Step 3-5: Configure Elasticsearch</a></li>
 	<li><a href="#s03_06">Step 3-6: Restart all containers</a></li>
@@ -81,6 +81,7 @@ nav-title: Upgrade 8.4x to 2018.0.x
 	<li><a href="#s02_09">Starting a container</a></li>
 	<li><a href="#s02_12">Refreshing the repository</a></li>
 	<li><a href="#ts_02_error_new_containers">Upgrading by creating new containers: notes</a></li>
+<!--	<li><a href="#auto_prop_xfer">Automating the transfer of container properties</a></li>-->
 	<li><a href="#tech_support_contact">Contacting Rogue Wave Technical Support</a></li>
 </ol>
 
@@ -115,17 +116,18 @@ nav-title: Upgrade 8.4x to 2018.0.x
 
 <h3 id="s01_02">Step 1-2: Plan the upgrade</h3>
 <p>Before you start downloading and installing, plan your upgrade. In particular, you'll need to:</p>
-<ul>
+<ol>
 	<li>Decide what containers you'll have, and which features will be installed in which containers. For a recommended simple configuration, see <a href="../deployment/deployment_clustered.htm">Sample Deployment Scenario</a>.</li>
 	<li>Determine where you'll install Elasticsearch, needed for the search feature. For full information on Elasticsearch, see <a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a>.</li>
 	<li>If you have a specific add-on feature installed, such as the Integration Services option pack, SiteMinder Security Provider, or SAML Web SSO Security Provider feature, it's important that you download the new release version package for the same feature.</li>
-	<li>Take all steps needed to save out container settings so that you can reproduce the configuration on the new container, where applicable. Save:
+	<li>Take all steps needed to save out container settings so that you can reproduce the configuration on the new container, where applicable. You'll need this information for <a href="#s03_03">Step 3-3: Update container properties</a>. Save:
 		<ul>
-			<li>The context root. You'll need this value for <a href="#s03_03">Step 3-3: Update context root</a>.</li>
-			<li>Your configuration settings. {<span class="apidoc_red">TBD</span>}</li>
+			<li>The context root. </li>
+			<li>All other container properties that you've customized.</li>
 		</ul>
 	</li>
-	</ul>
+</ol>
+<!--<p><strong>Note</strong>: For information about how you can automate the reconfiguring of your container properties, see <a href="#auto_prop_xfer">Automating the transfer of container properties</a>.</p>-->
 <p><a href="#top">back to top</a></p>
 
 
@@ -179,7 +181,7 @@ nav-title: Upgrade 8.4x to 2018.0.x
 <ol>
 	<li>Shut down all containers in your installation.</li>
 	<li>Copy the entire installation folder structure to a secure backup location.</li>
-	<li>Make sure you have&nbsp;a backup of your database also.</li>
+	<li>Make sure you have a backup of your database also.</li>
 	<li>When you're completely sure that the backup is complete, successful, and secure, delete the contents of your original installation folder.</li>
 	<li>Create a new folder for your new installation, or use the existing, empty folder.</li>
 </ol>
@@ -230,7 +232,7 @@ ps -ef
 <h5 id="proc_container_first">To create and configure the first container</h5>
 <ol>
 	<li>Run Configurator to create the first container, either via the GUI or using silent install. See <a href="../platform_install/installing_akana_api_platform.htm#run_configurator_pm">Step 3: Run Configurator to create the first container</a>.</li>
-	<li>Conditional: if you saved configuration properties from your old container, copy them to the new container, then start it. {<span class="apidoc_red">EN question. Do they still run configurator, just not install any features?&nbsp;Or, install the features but not configure them?</span>}</li>
+	<li>Conditional: if you saved configuration properties from your old container, copy them to the new container, then start it. {<span class="apidoc_red">EN question. Do they still run configurator, just not install any features? Or, install the features but not configure them?</span>}</li>
 	<li>Install Policy Manager/Community Manager. See <a href="../platform_install/installing_akana_api_platform.htm#install_pm_cm">Step 4: Install Policy Manager/Community Manager features on the container</a> (installation doc).</li>
 	<li>At the <strong>Installation Complete</strong> summary, click <strong>Configure</strong> to complete pending tasks. See <a href="../platform_install/installing_akana_api_platform.htm#configure_pm">Step 6: Complete pending tasks to configure container features</a>. The pending tasks are:
 		<ol>
@@ -253,14 +255,15 @@ ps -ef
 			</li>
 		</ol>
 	</li>
+	<li>At the Restart prompt, to install the plug-ins before restarting, press <strong>Cancel</strong>.
+	</li>
+	<li>If applicable, install plug-ins. See <a href="../platform_install/installing_akana_api_platform.htm#install_plugins">Step 5: (as needed) Install plug-ins on the container</a>.</li>
 	<li>Restart the container. For instructions, see:
 		<ul>
 			<li><a href="../platform_install/installing_akana_api_platform.htm#starting_container">Starting a container</a></li>
 			<li><a href="../platform_install/installing_akana_api_platform.htm#stopping_container">Stopping a container</a></li>
 		</ul>
 	</li>
-	<li>If applicable, install plug-ins. See <a href="../platform_install/installing_akana_api_platform.htm#install_plugins">Step 5: (as needed) Install plug-ins on the container</a>.</li>
-	<li>Restart the container.</li>
 </ol>
 <p><a href="#top">back to top</a></p>
 
@@ -302,7 +305,7 @@ ps -ef
 <ul>
 	<li><a href="#s03_01">Step 3-1: Check for pending installation tasks</a></li>
 	<li><a href="#s03_02">Step 3-2: Perform configuration actions</a></li>
-	<li><a href="#s03_03">Step 3-3: Update context root</a></li>
+	<li><a href="#s03_03">Step 3-3: Update container properties</a></li>
 	<li><a href="#s03_04">Step 3-4: Check system health</a></li>
 	<li><a href="#s03_05">Step 3-5: Configure Elasticsearch</a></li>
 	<li><a href="#s03_06">Step 3-6: Restart all containers</a></li>
@@ -374,9 +377,12 @@ ps -ef
 
 
 
-<h3 id="s03_03">Step 3-3: Update context root</h3>
-<p>If you customized the Content Root value for the developer portal, you'll need to re-set it.</p>
-<p> In the Akana Administration Console for each container with Community Manager isntalled:</p>
+<h3 id="s03_03">Step 3-3: Update container properties</h3>
+<p>When you've created the new container and installed the features, it's time to set the configuration properties. You'll need to transfer any customized settings that were set on the old container, to the new container.</p>
+<p>Use the setting values that you saved out in <a href="#s01_02">Step 1-2: Plan the upgrade</a>, point #4, and set them on the new container.</p>
+<!--<p><strong>Note</strong>: For information about how you can automate the reconfiguring of your container properties, see <a href="#auto_prop_xfer">Automating the transfer of container properties</a>.</p>-->
+<p>For example, if you customized the Content Root value for the developer portal, you'll need to re-set it.</p>
+<p> In the Akana Administration Console for each container with Community Manager installed:</p>
 <p><strong>Configuration</strong> &gt; <strong>com.soa.atmosphere.console</strong> &gt; atmosphere.context.root.</p>
 <p>For example, <strong>/acmepaymentscorp</strong>.</p>
 <p>For detailed instructions, see <a href="../platform_install/installing_akana_api_platform.htm#s9b_update_config">Conditional: updating configuration setting for new context root</a> (installation doc).</p>
@@ -446,12 +452,12 @@ ps -ef
 
 
 <h3 id="s03_07">Step 3-7: Configure API Gateway/Network Director</h3>
-<p>In your new Policy Manager/Community Manager container, you'll need to&nbsp;move the hosted services from the old Network Director container for the previous version, over to the new Network Director container. Follow the steps below.</p>
+<p>In your new Policy Manager/Community Manager container, you'll need to move the hosted services from the old Network Director container for the previous version, over to the new Network Director container. Follow the steps below.</p>
 
 <h5 id="proc_move_hosted_svcs">To move hosted services to the new Network Director container</h5>
 <ol>
 	<li>In Policy Manager, find where the old Network Director container is still displayed.</li>
-	<li>Change the Network Director name (not necessary, but helps to differentiate).&nbsp; For example, <strong>nd_old</strong>.</li>
+	<li>Change the Network Director name (not necessary, but helps to differentiate). For example, <strong>nd_old</strong>.</li>
 	<li>Add a new Network Director container (<strong>Containers</strong> &gt; <strong>Add Container</strong>). For instructions, see <a href="../container_management/container_management.htm#add_container">Add Container</a>.
 		<p>For <strong>Metadata URL</strong>, use the same URL as the old container, and provide an instance name.</p></li>
 	<li>Go back to the old Network Director container and do the following:
@@ -642,6 +648,25 @@ cannot be disassociated from service [uddi:soa.com:metadataattachment-servicekey
 Binding is attached to service endpoint.</pre>
 <p>If you encounter this message, delete the old container, and then retry the provisioning.</p>
 <p><a href="#top">Back to top</a></p>
+
+
+
+<!--<h3 id="auto_prop_xfer">Automating the transfer of container properties</h3>
+<p>When upgrading by creating a new container, you'll need to transfer, or re-create, the configuration settings on the new container.</p>
+<p>The configuration settings are stored in the instances/{container_name}/cm subfolder.</p>
+<p>Because there are changes between versions, you can't just copy and paste the folder between versions. However, you can use a tool to extract the old settings and the new ones, compare the two sets of information, and arrive at a diff that you can use as a guide for setting up your new container.</p>
+
+<h5 id="proc_xfer_properties">To transfer configuration properties from an old container to a new container</h5>
+<ol>
+	<li>At the beginning of <a href="#s02_05">Step 2-5: Create and configure the first container</a>, after shutting down the old container and before creating the new one, run discovery on all of the containers in the previous installation, and save out the old configuration settings for all containers.</li>
+	<li>At the end of <a href="#s02_05">Step 2-5: Create and configure the first container</a>, Step #6, after doing the initial configuration steps, shut down the container. Rather than restarting as in Step #7, save out the new configuration settings at that point.</li>
+	<li>Compare the new settings with the old settings to arrive at the settings that will need to be configured on the new container.</li>
+	<li>If available, use automation to update the container configuration.</li>
+	<li>Now complete <a href="#s02_05">Step 2-5: Create and configure the first container</a> by restarting the container, and verify that the configuration properties are set correctly.</li>
+	<li>Follow steps 2 through 5 for additional containers until they are all configured.</li>
+	<li>Continue with the post-install steps.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>-->
 
 
 
