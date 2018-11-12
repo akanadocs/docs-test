@@ -1,13 +1,13 @@
 ---
 layout: page
-title: Publishing a Simple API Using Policy Manager 7.x
+title: Publishing a Simple API Using Policy Manager
 description: A guide to install and configure the Community Manager developer portal, and publish an API using Policy Manager 7.x.
 product: sp
 category: gs	
 sub-nav-class: API Management
 weight: 14
 type: page
-nav-title: Publishing a Simple API using Policy Manager 7.x
+nav-title: Publishing a Simple API using Policy Manager
 ---
 
 

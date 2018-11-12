@@ -1,13 +1,13 @@
 ---
 layout: page
-title: Managing a Simple API Using Policy Manager 7.x
+title: Managing a Simple API Using Policy Manager
 description: A guide to install and configure the API Gateway to manage a simple API using Policy Manager 7.x.
 product: sp
 category: gs	
 sub-nav-class: API Management
 weight: 14
 type: page
-nav-title: Managing a Simple API using Policy Manager 7.x
+nav-title: Managing a Simple API using Policy Manager
 ---
 
 
