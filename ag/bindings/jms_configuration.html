@@ -5,66 +5,61 @@ description: Learn how to configure JMS or AMQP to initiate an HTTP/SOAP call th
 product: ag
 category: learn
 sub-nav-class: Bindings
-weight:  13
+weight: 13
 type: page
 nav-title: JMS Configuration
 ---
 <h2 id="top">JMS Configuration</h2>
 <p>Learn how to configure JMS or AMQP to initiate an HTTP/SOAP call that is then sent to JMS in a queue.</p>
-<h5 class="stamp">Supported Platforms: 7.2</h5>
+
 
 
 
 <div class = "divider1"></div>
 <h3 style="color: gray;">Table of Contents</h3>
 <ol class="table_of_contents">
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#general_create_jms_listener">General: Create JMS Listener</a></li>
-<li><a href="#use_case_1_existing_http_based_wsdl_over_jms">Use Case 1: Existing HTTP-based WSDL over JMS</a></li>
-<li><a href="#existing_jms_based_wsdl">Use Case 2: Existing JMS-Based WSDL</a></li>
-<li><a href="#testing_and_debugging">Testing and Debugging</a></li>
+	<li><a href="#introduction">Introduction</a></li>
+	<li><a href="#general_create_jms_listener">General: Create JMS Listener</a></li>
+	<li><a href="#use_case_1_existing_http_based_wsdl_over_jms">Use Case 1: Existing HTTP-based WSDL over JMS</a></li>
+	<li><a href="#existing_jms_based_wsdl">Use Case 2: Existing JMS-Based WSDL</a></li>
+	<li><a href="#testing_and_debugging">Testing and Debugging</a></li>
 </ol>
 <div class = "divider1"></div>
 
 
 
-<a name="introduction"></a><h3>Introduction</h3>
+<h3 id="introduction">Introduction</h3>
 <p>This topic provides documentation about two typical use cases when working with a JMS (AMQP setup is similar).</p>
-<p>The result will allow you to initiate a HTTP/SOAP call (for example, via SOAPUI) that is then sent to the JMS in a queue. The result will be pulled from a result queue and sent back over HTTP to the client.</p>
+<p>The result will allow you to initiate an HTTP/SOAP call (for example, via SOAPUI) that is then sent to the JMS in a queue. The result will be pulled from a result queue and sent back, over HTTP, to the client.</p>
 
 
 
-<a name="general_create_jms_listener"></a><h3>General: Create JMS Listener</h3>
-<p>For both use cases a JMS Listener must be configured first.</p>
+<h3 id="general_create_jms_listener">General: Create JMS Listener</h3>
+<p>For both use cases you must configure a JMS Listener first.</p>
 
 
 <h4>Client libraries</h4>
-<p>For the different JMS vendors, you'll need to deploy client libraries of the target system into the Network Director instance you are planning to use for the connections. Those are typically version dependent and should be taken from the actual JMS server you are binding to.</p>
-<ul>
-  <li>Copy them to your Network Director deploy directory, then restart the instance:
-  <pre>cp clientLibs.jar /opt/soa/sm70/instance/NetworkDirectorForJMS/deploy/</pre></li>
-</ul>
-<h5>ActiveMQ</h5>
-<ul>
-<li>The client library is called <code>activemq-all-VERSION.jar</code> and can be found in the root directory of the <code>ActiveMQ</code> installation.</li>
-</ul>
-<h5>Tibco EMS</h5>
-<ul>
-<li>The client libraries are called <code>tibcrypt.jar</code>, <code>tibjmsadmin.jar</code>, <code>jms.jar</code> and <code>tibjms.jar</code> and can be found in the folder <code>/yourTibcoInstallation/ems/VERSION/lib</code>.</li>
-</ul>
-<p><strong>Note:</strong> Some versions of the libraries do not expose all needed classes so rebinding them might be needed. Contact <em>Akana Customer Support</em> or Professional Services if you need help. This has been discovered on Tibco version 7.0. but might be true for other versions too.</p>
+<p>For the different JMS vendors, you'll need to deploy client libraries of the target system into the Network Director instance you are planning to use for the connections. Those are typically version-dependent and should be taken from the actual JMS server you are binding to.</p>
+<ol>
+	<li>Copy them to your Network Director deploy directory. For example:
+		<pre>cp activemq-client-5.15.4.jar /akana/aap201800/instance/NetworkDirectorForJMS/deploy/</pre>
+		<pre>cp geronimo-j2ee-management_1.1_spec-1.0.1.jar /akana/aap201800/instance/NetworkDirectorForJMS/deploy/</pre>
+		<pre>cp hawtbuf-1.11.jar /akana/aap201800/instance/NetworkDirectorForJMS/deploy/</pre></li>
+	<li>Restart the instance.</li>
+</ol>
+<p>The above files are just an example, taken from a specific implementation of Apache ActiveMQ.</p>
 
 
 <h4>Configuring Network Director</h4>
 <ol>
-<li>Choose <strong>Add Container Listener</strong> and select <strong>JMS</strong> as Listener Type. In the following window provide the connection details of the JMS server:
+	<li>Choose <strong>Add Container Listener</strong> and select <strong>JMS</strong> as Listener Type. In the following window provide the connection details of the JMS server:
 <ul>
-<li><strong>JNDI URL</strong> - Address of the server, for example <code>tibjmsnaming://tibco.emeademo.de:7222</code> (Tibco) or <code>tcp://activemq.emeademo.de:61616</code> (ActiveMQ)</li>
-<li><strong>JNDI Initial Context</strong> - <code>com.tibco.tibjms.naming.TibjmsInitialContextFactory</code> (Tibco) <code>org.apache.activemq.jndi.ActiveMQInitialContextFactory</code> (ActiveMQ)</li>
-<li><strong>JMS Destination Factory Name</strong> - Depending on the JMS server configuration, for example <code>ConnectionFactory</code></li>
+	<li><strong>JNDI URL</strong> - Address of the server, for example <strong>tibjmsnaming://tibco.emeademo.de:7222</strong> (Tibco) or <strong>tcp://activemq.emeademo.de:61616</strong> (ActiveMQ)</li>
+	<li><strong>JNDI Initial Context</strong> - <strong>com.tibco.tibjms.naming.TibjmsInitialContextFactory</strong> (Tibco) <strong>org.apache.activemq.jndi.ActiveMQInitialContextFactory</strong> (ActiveMQ)</li>
+	<li><strong>JMS Destination Factory Name</strong> - Depending on the JMS server configuration, for example <strong>ConnectionFactory</strong></li>
 </ul>
 </li>
-<li>If you need to enter credentials or other specific parameters for the connection to the server use the <strong>Add Property</strong> link and add the parameters. Refer to <a href="jms_connection_properties.html">JMS Additional Properties</a> for the available options.
+	<li>If you need to enter credentials or other specific parameters for the connection to the server use the <strong>Add Property</strong> link and add the parameters. Refer to <a href="jms_connection_properties.html">JMS Additional Properties</a> for the available options.
 <p><img src="images/jms_http_1.jpg" alt="Messaging Binding" title="Configure JMS Connection Listener" /></p></li>
 </ol>
 <p><a href="#top">back to top</a></p>
@@ -72,16 +67,16 @@ nav-title: JMS Configuration
 
 
 
-<a name="use_case_1_existing_http_based_wsdl_over_jms"></a><h3>Use Case 1: Existing HTTP-based WSDL over JMS</h3>
+<h3 id="use_case_1_existing_http_based_wsdl_over_jms">Use Case 1: Existing HTTP-based WSDL over JMS</h3>
 <p>This use case is based on the assumption that there is a WSDL, with the HTTP binding, for the underlying service.</p>
 
 
 <h4>Create Physical Service</h4>
 <ol>
-<li>Create a new physical service by providing the WSDL.
+	<li>Create a new physical service by providing the WSDL.
 <p><img src="images/jms_http_2.jpg" alt="JMS/HTTP" title="Create Physical Service" /></p>
 </li>
-<li>Choose <strong>Do not manage this time</strong> when being asked to create virtual service.
+	<li>Choose <strong>Do not manage this time</strong> when being asked to create virtual service.
 <p><img src="../bindings/images/jms_http_3.jpg" alt="JMS/HTTP" title="Select Service Management Option" /></p>
 </li>
 </ol>
@@ -89,27 +84,27 @@ nav-title: JMS Configuration
 
 <h4>Add SOAP/JMS Binding</h4>
 <ol>
-<li>Go to <em>Configure &gt; Binding</em> and select <strong>Add Binding</strong>.</li>
-<li>Use the search field to find the physical service you just created in the drop-down.>
+	<li>Go to <strong>Configure &gt; Binding</strong> and select <strong>Add Binding</strong>.</li>
+	<li>Use the search field to find the physical service you just created in the drop-down.>
 <p><img src="images/jms_http_4.jpg" alt="JMS/HTTP" title="Select Interfaces" /></p>
 </li>
-<li>Choose SOAP 1.1 or SOAP 1.2 according to your physical service.
+	<li>Choose SOAP 1.1 or SOAP 1.2 according to your physical service.
 <p><img src="images/jms_http_5.jpg" alt="JMS/HTTP" title="Specify Binding Details" /></p>
 </li>
-<li>On the next screen, choose <code>JMS</code> for <strong>Transport</strong> and the <strong>Transport URI</strong> depending on the JMS server you are using.
+	<li>On the next screen, choose <strong>JMS</strong> for <strong>Transport</strong> and the <strong>Transport URI</strong> depending on the JMS server you are using.
 <p><img src="images/jms_http_6.jpg" alt="JMS/HTTP" title="Configure SOAP 1.1 Binding Properties" /></p>
 </li>
-<li>For the SOAP action, check with the WSDL and JMS server setup for what option to choose.</li>
+	<li>For the SOAP action, check with the WSDL and JMS server setup for what option to choose.</li>
 </ol>
 
 
 <h4>Create Virtual Service for JMS</h4>
 <ol>
-<li>Navigate to your physical service and select the <strong>Virtualize Service</strong> from the Actions Portlet.
-<p><em>Hint: Call the service <code>YourServiceName_JMS</code> so it can be easily identified.</em></p>
+	<li>Navigate to your physical service and select the <strong>Virtualize Service</strong> from the Actions Portlet.
+<p><strong>Hint</strong>: Call the service <strong>YourServiceName_JMS</strong> so it can be easily identified.</p>
 <p><img src="images/jms_http_7.jpg" alt="JMS/HTTP" title="Virtualize Service" /></p>
 </li>
-<li>Choose <strong>Select Container later</strong>, then <strong>Finish</strong>.
+	<li>Choose <strong>Select Container later</strong>, then <strong>Finish</strong>.
 <p><img src="images/jms_http_8.jpg" alt="JMS/HTTP" title="Select Container" /></p>
 </li>
 </ol>
@@ -117,10 +112,10 @@ nav-title: JMS Configuration
 
 <h4>Manage Bindings</h4>
 <ol>
-<li>In <em>Service Overview &gt; Interfaces and Bindings</em>, select <strong>Manage Bindings</strong>.
+	<li>In <strong>Service Overview &gt; Interfaces and Bindings</strong>, select <strong>Manage Bindings</strong>.
 <p><img src="images/jms_http_9.jpg" alt="JMS/HTTP" title="Manage Bindings" /></p>
 </li>
-<li>Change the binding from the original SOAP/HTTP to the newly created SOAP/JMS.
+	<li>Change the binding from the original SOAP/HTTP to the newly created SOAP/JMS.
 <p><img src="images/jms_http_10.jpg" alt="JMS/HTTP" title="Select Bindings" /></p>
 </li>
 </ol>
@@ -128,74 +123,74 @@ nav-title: JMS Configuration
 
 <h4>Add Access Point</h4>
 <ol>
-<li>Add a new Access Point for your virtual service.
+	<li>Add a new Access Point for your virtual service.
 <p><img src="images/jms_http_11.jpg" alt="JMS/HTTP" title="Add Access Point" /></p>
 </li>
-<li>Choose the Network Director instance which has been configured for JMS (see above).
+	<li>Choose the Network Director instance which has been configured for JMS (see above).
 <p><img src="images/jms_http_12.jpg" alt="JMS/HTTP" title="Select Container" /></p>
 </li>
-<li>Make sure to choose the right JMS Listener for your JMS server.
+	<li>Make sure to choose the right JMS Listener for your JMS server.
 <p><img src="images/jms_http_13.jpg" alt="JMS/HTTP" title="Choose JMS Listener" /></p>
 </li>
-<li>Add the parameter for the destination Queue.</li>
-<li>For our use case and depending on the configuration of the server you need to also define the reply queue name. This is either a fixed one or you can choose to have a temporary one being created on each request.</li>
-<li>For a temporary queue, set the <code>jms.use.temporaries</code> to <code>true</code>.
+	<li>Add the parameter for the destination Queue.</li>
+	<li>For our use case and depending on the configuration of the server you need to also define the reply queue name. This is either a fixed one or you can choose to have a temporary one being created on each request.</li>
+	<li>For a temporary queue, set the <strong>jms.use.temporaries</strong> to <strong>true</strong>.
 <p><img src="images/jms_http_14.jpg" alt="JMS/HTTP" title="Add Parameter for Destination Queue" /></p>
 </li>
-<li>For a fixed reply queue, set the <code>jms.replyto.name</code> to the name of the reply queue.
+	<li>For a fixed reply queue, set the <strong>jms.replyto.name</strong> to the name of the reply queue.
 <p><img src="images/jms_http_15.jpg" alt="JMS/HTTP" title="Add Parameter for Reply Queue" /></p>
 </li>
-<li>See also the <a href="jms_connection_properties.html">JMS Additional Properties</a> for more parameters.</li>
+	<li>See also the <a href="jms_connection_properties.html">JMS Additional Properties</a> for more parameters.</li>
 </ol>
 
 
 <h4>Create Virtual Service for HTTP</h4>
 <ol>
-<li>Virtualize your just created JMS virtual service.<ul>
-<li><em>Hint: Name it <code>YourServiceName_JMS_HTTP</code> so it can be easily identified.</em></li>
+	<li>Virtualize your just created JMS virtual service.<ul>
+	<li><strong>Hint</strong>: Name it <strong>YourServiceName_JMS_HTTP</strong> so it can be easily identified.</li>
 </ul>
 <p><img src="images/jms_http_16.jpg" alt="JMS/HTTP" title="Virtualize JMS Virtual Service" /></p>
 </li>
-<li>Once again choose to <strong>Select Container later</strong>:
+	<li>Once again choose to <strong>Select Container later</strong>:
 <p><img src="images/jms_http_17.jpg" alt="JMS/HTTP" title="Select Container Later" /></p>
 </li>
-<li>Manage the binding of the just created virtual service.
+	<li>Manage the binding of the just created virtual service.
 <p><img src="images/jms_http_18.jpg" alt="JMS/HTTP" title="Manage Binding of Virtual Service" /></p>
 </li>
-<li>Choose the non-JMS binding of the service (the opposite of what you did in the first virtual service). This HTTP-based binding has been already generated at the creation of the physical service in this use case.
+	<li>Choose the non-JMS binding of the service (the opposite of what you did in the first virtual service). This HTTP-based binding has been already generated at the creation of the physical service in this use case.
 <p><img src="images/jms_http_19.jpg" alt="JMS/HTTP" title="Choose non-JMS Binding" /></p>
 </li>
-<li>Create an access point for the new virtual service.
+	<li>Create an access point for the new virtual service.
 <p><img src="images/jms_http_20.jpg" alt="JMS/HTTP" title="Create Access Point for Virtual Service" /></p>
 </li>
-<li>Choose a container with a HTTP binding. In typical scenarios, this is not the same container as the one with the JMS Listener.
+	<li>Choose a container with a HTTP binding. In typical scenarios, this is not the same container as the one with the JMS Listener.
 <p><img src="images/jms_http_21.jpg" alt="JMS/HTTP" title="Select Container with HTTP Binding" /></p>
 </li>
-<li>Choose your HTTP Listener.
+	<li>Choose your HTTP Listener.
 <p><img src="images/jms_http_22.jpg" alt="JMS/HTTP" title="Select HTTP Listener" /></p>
 </li>
-<li>Choose virtual host and context path
+	<li>Choose virtual host and context path
 <p><img src="images/jms_http_23.jpg" alt="JMS/HTTP" title="Chose Virtual Host and Context Path" /></p>
 </li>
-<li>The configuration is complete. Grab the WSDL of this virtual service and start sending messages to the service. Be sure to have authentication policy or contract applied.</li>
+	<li>The configuration is complete. Grab the WSDL of this virtual service and start sending messages to the service. Be sure to have authentication policy or contract applied.</li>
 </ol>
 <p><a href="#top">back to top</a></p>
 
 
 
-<a name="existing_jms_based_wsdl"></a><h3>Use Case 2: Existing JMS-Based WSDL</h3>
+<h3 id="existing_jms_based_wsdl">Use Case 2: Existing JMS-Based WSDL</h3>
 <p>This use case is about having a WSDL with JMS binding included. This means we will have the physical service being JMS and consumed over a virtual HTTP-based service.</p>
 
 
 <h4>Create Physical Service</h4>
 <ol>
-<li>Create a physical service using the existing WSDL with a JMS binding.</li>
+	<li>Create a physical service using the existing WSDL with a JMS binding.</li>
 </ol>
 
 
 <h4>Checking WSDL</h4>
 <ol>
-<li><strong>Important note:</strong> Some JMS servers do provide vendor specific JMS binding properties in the WSDL. Those entries might be in a format which cannot be imported directly in the Policy Manager and therefor will be configured manually (see below). In this case <em>remove the wsdl:port from the WSDL before importing</em>.
+	<li><strong>Important note:</strong> Some JMS servers do provide vendor specific JMS binding properties in the WSDL. Those entries might be in a format which cannot be imported directly in the Policy Manager and therefor will be configured manually (see below). In this case, <strong>remove the wsdl:port from the WSDL before importing</strong>.
 <pre>
 &lt;wsdl:service name=&quot;serviceESB&quot;&gt;
   &lt;wsdl:port name=&quot;serviceJMS&quot; binding=&quot;tns:serviceJMS&quot;&gt;
@@ -215,10 +210,10 @@ nav-title: JMS Configuration
 
 <h4>Import WSDL</h4>
 <ol>
-<li>Select <strong>Create Physical Service</strong> and import the WSDL.
+	<li>Select <strong>Create Physical Service</strong> and import the WSDL.
 <p><img src="images/jms_http_24.jpg" alt="JMS/HTTP" title="Import WSDL" /></p>
 </li>
-<li>Choose to virtualize the service later.
+	<li>Choose to virtualize the service later.
 <p><img src="images/jms_http_25.jpg" alt="JMS/HTTP" title="Do Not Manage Service" /></p>
 </li>
 </ol>
@@ -226,20 +221,20 @@ nav-title: JMS Configuration
 
 <h4>Add JMS Binding</h4>
 <ol>
-<li>This task is only required if you need to remove the wsdl:port (see above). Otherwise the binding is already configured automatically.</li>
-<li>Go to <strong>Configure &gt; Bindings</strong> and select <strong>Add Binding</strong>.</li>
-<li>Choose the interface of your service:
+	<li>This task is only required if you need to remove the wsdl:port (see above). Otherwise the binding is already configured automatically.</li>
+	<li>Go to <strong>Configure &gt; Bindings</strong> and select <strong>Add Binding</strong>.</li>
+	<li>Choose the interface of your service:
 <p><img src="images/jms_http_26.jpg" alt="JMS/HTTP" title="Select an Interface" /></p>
 </li>
-<li>Choose Binding Type <code>Messaging</code>.</li>
-<li>Choose Transport JMS and Transport URI depending on your JMS server.</li>
-<li>For the operations in the service, choose the correct parameters for the queues and content types (see screenshot for example).
+	<li>Choose Binding Type <strong>Messaging</strong>.</li>
+	<li>Choose Transport JMS and Transport URI depending on your JMS server.</li>
+	<li>For the operations in the service, choose the correct parameters for the queues and content types (see screenshot for example).
 <p><img src="images/jms_http_27.jpg" alt="JMS/HTTP" title="Choose Binding Type, Transport, and Transport URI" /></p>
 </li>
-<li>Add the binding to the service by choosing the <strong>Manage</strong> link on Interfaces and bindings.
+	<li>Add the binding to the service by choosing the <strong>Manage</strong> link on Interfaces and bindings.
 <p><img src="images/jms_http_28.jpg" alt="JMS/HTTP" title="Add Binding to Service" /></p>
 </li>
-<li>Choose your created JMS binding.
+	<li>Choose your created JMS binding.
 <p><img src="images/jms_http_29.jpg" alt="JMS/HTTP" title="Select JMS Binding" /></p>
 </li>
 </ol>
@@ -247,30 +242,30 @@ nav-title: JMS Configuration
 
 <h4>Add Access Point</h4>
 <ol>
-<li>Add an access point to the physical service.
+	<li>Add an access point to the physical service.
 <p><img src="images/jms_http_30.jpg" alt="JMS/HTTP" title="Add Access Point to Physical Service" /></p>
 </li>
-<li>Choose the Network Director instance with JMS Listener configured.
+	<li>Choose the Network Director instance with JMS Listener configured.
 <p><img src="images/jms_http_31.jpg" alt="JMS/HTTP" title="Choose Network Director with JMS Listener Configured" /></p>
 <p><img src="images/jms_http_32.jpg" alt="JMS/HTTP" title="Choose Network Director with JMS Listener Configured" /></p>
 </li>
-<li>Set the parameters according to the JMS server.
+	<li>Set the parameters according to the JMS server.
 <p><img src="images/jms_http_33.jpg" alt="JMS/HTTP" title="Set Parameters According to JMS Server" /></p>
 <ul>
-<li><strong>JNDI URL</strong> - Address of the server, for example <code>tibjmsnaming://tibco.emeademo.de:7222</code> (Tibco) or <code>tcp://activemq.emeademo.de:61616</code> (ActiveMQ)</li>
-<li><strong>JNDI Initial Context</strong> - <code>com.tibco.tibjms.naming.TibjmsInitialContextFactory</code> (Tibco) <code>org.apache.activemq.jndi.ActiveMQInitialContextFactory</code> (ActiveMQ)</li>
-<li><strong>JMS Destination Factory Name</strong> - Depending on the JMS server configuration, for example <code>ConnectionFactory</code></li>
+	<li><strong>JNDI URL</strong> - Address of the server, for example <strong>tibjmsnaming://tibco.emeademo.de:7222</strong> (Tibco) or <strong>tcp://activemq.emeademo.de:61616</strong> (ActiveMQ)</li>
+	<li><strong>JNDI Initial Context</strong> - <strong>com.tibco.tibjms.naming.TibjmsInitialContextFactory</strong> (Tibco) <strong>org.apache.activemq.jndi.ActiveMQInitialContextFactory</strong> (ActiveMQ)</li>
+	<li><strong>JMS Destination Factory Name</strong> - Depending on the JMS server configuration, for example <strong>ConnectionFactory</strong></li>
 </ul>
 <p>Those parameters are inherited from the Network Director instance.</p>
 </li>
-<li>If you need to enter credentials or other specific parameters for the connection to the server use the <strong>Add Property</strong> link and add the parameters. See <a href="jms_connection_properties.html">JMS Additional Properties</a> for the available options.</li>
+	<li>If you need to enter credentials or other specific parameters for the connection to the server use the <strong>Add Property</strong> link and add the parameters. See <a href="jms_connection_properties.html">JMS Additional Properties</a> for the available options.</li>
 </ol>
 
 
 <h4>Virtualize Service as HTTP</h4>
 <ol>
-<li>Choose <strong>Virtualize Service</strong> on your physical service.</li>
-<li>Select the container later.
+	<li>Choose <strong>Virtualize Service</strong> on your physical service.</li>
+	<li>Select the container later.
 <p><img src="images/jms_http_34.jpg" alt="JMS/HTTP" title="Virtualize Service as HTTP" /></p>
 </li>
 </ol>
@@ -278,55 +273,55 @@ nav-title: JMS Configuration
 
 <h4>Create a HTTP binding</h4>
 <ol>
-<li>Navigate to <em>Configure &gt; Bindings</em> and select <strong>Add Binding</strong> to create a new binding.</li>
-<li>Use the search field to find your service in the drop-down.
+	<li>Navigate to <strong>Configure &gt; Bindings</strong> and select <strong>Add Binding</strong> to create a new binding.</li>
+	<li>Use the search field to find your service in the drop-down.
 <p><img src="images/jms_http_35.jpg" alt="JMS/HTTP" title="Add Binding" /></p></li>
-<li>Choose Binding type SOAP 1.1 or 1.2 depending of your service.
-<p><img src="images/jms_http_36.jpg" alt="JMS/HTTP" title="Select SOAP 1.1 or 1.2" /></p></li>
-<li>Choose HTTP as transport, the parameters for SOAP Action depend on the actual service you are configuring.
+	<li>Choose a Binding Type of SOAP 1.1 or 1.2.
+		<p><img src="images/jms_http_36.jpg" alt="JMS/HTTP" title="Select SOAP 1.1 or 1.2" /></p></li>
+	<li>Choose HTTP as transport, the parameters for SOAP Action depend on the actual service you are configuring.
 <p><img src="images/jms_http_37.jpg" alt="JMS/HTTP" title="Configure Binding Properties" /></p></li>
-<li>Manage your virtual service’s Interfaces and Bindings.
+	<li>Manage your virtual service’s Interfaces and Bindings.
 <p><img src="images/jms_http_38.jpg" alt="JMS/HTTP" title="Manage Interfaces and Bindings" /></p></li>
-<li>Choose your just created HTTP Binding.
+	<li>Choose your just created HTTP Binding.
 <p><img src="images/jms_http_39.jpg" alt="JMS/HTTP" title="Select HTTP Binding" /></p></li>
 </ol>
 
 
 <h4>Add Access Point</h4>
 <ol>
-<li>Add a new access point for your virtual service.
+	<li>Add a new access point for your virtual service.
 <p><img src="images/jms_http_40.jpg" alt="JMS/HTTP" title="Add Access Point" /></p>
 </li>
-<li>Choose a container with an HTTP binding. In typical scenarios this is not the same container as the one with the JMS Listener.
+	<li>Choose a container with an HTTP binding. In typical scenarios this is not the same container as the one with the JMS Listener.
 <p><img src="images/jms_http_41.jpg" alt="JMS/HTTP" title="Select Container with HTTP Binding" /></p>
 </li>
-<li>Choose your HTTP Listener.
+	<li>Choose your HTTP Listener.
 <p><img src="images/jms_http_42.jpg" alt="JMS/HTTP" title="Select HTTP Listener" /></p>
 </li>
-<li>Choose virtual host and context path:
+	<li>Choose virtual host and context path:
 <p><img src="images/jms_http_43.jpg" alt="JMS/HTTP" title="Specify Virtual Host and Context Path" /></p>
 </li>
-<li>The configuration is complete. Grab the WSDL of this virtual service and start sending messages to the service. Be sure to have authentication policy or contract applied.</li>
+	<li>The configuration is complete. Grab the WSDL of this virtual service and start sending messages to the service. Be sure to have authentication policy or contract applied.</li>
 </ol>
 <p><a href="#top">back to top</a></p>
 
 
 
 
-<a name="testing_and_debugging"></a><h3>Testing and Debugging</h3>
+<h3 id="testing_and_debugging">Testing and Debugging</h3>
 <p>This section provides some general hints on how to test and debug your settings.</p>
 
 
 <h4>Set Auditing and Debug</h4>
-<p>For all your virtual services apply the <em>Detailed Auditing</em> Operational Policy.</p>
+<p>For all your virtual services apply the <strong>Detailed Auditing</strong> Operational Policy.</p>
 <p>Also add debug settings to them by configuring the Audit Logging Level using <strong>Configure Message Processing</strong>.</p>
 <p><img src="images/jms_http_44.jpg" alt="JMS/HTTP" title="Add debug settings using Configure Message Processing" /></p>
 <p><img src="images/jms_http_45.jpg" alt="JMS/HTTP" title="Update Auditing Logging Level in Configure Message Processing" /></p>
 
 
 <h4>Places to Look for Information</h4>
-<p>Typically you follow the way of the request through your virtual services, so the <em>Monitoring</em> tab of the virtual services (both Alerts and Logs) is a good point to start.</p>
-<p>Also the log files in the file system (<code>instances/yourNetworkDirector/log</code>) to host some more detailed data. Keep in mind that in typical scenarios using two Network Director instances (HTTP and JMS) are involved.</p>
+<p>Typically you follow the way of the request through your virtual services, so the <strong>Monitoring</strong> tab of the virtual services (both Alerts and Logs) is a good point to start.</p>
+<p>Also the log files in the file system (<strong>instances/yourNetworkDirector/log</strong>) to host some more detailed data. Keep in mind that in typical scenarios using two Network Director instances (HTTP and JMS) are involved.</p>
 <p>Finally, for the overall connection, the monitoring of Network Director with JMS configured might show some more logs:</p>
 <p><img src="images/jms_http_46.jpg" alt="JMS/HTTP" title="View Monitoring Data" /></p>
 
@@ -336,3 +331,33 @@ nav-title: JMS Configuration
 <p>Other JMS servers are configured in a similar way.</p>
 <p><img src="images/jms_http_47.jpg" alt="JMS/HTTP" title="Tibco EMS Setup" /></p>
 <p><a href="#top">back to top</a></p>
+
+
+
+<div class = "divider1"></div>
+
+
+
+<h3 id="related_topics">Related Topics</h3>
+<div class="relatedlinks" id="bindings">
+<ul>
+	<li><a href="bindings_toc.html">Bindings (Home)</a></li>
+	<li><a href="about_bindings.html">About Bindings</a></li>
+	<li><a href="add_binding.html">Add Binding</a></li>
+	<li><a href="delete_binding.html">Delete Binding</a></li>
+	<li><a href="binding_categories.html">Binding Categories</a></li>
+	<li><a href="using_messaging_binding.html">Using the Messaging Binding</a></li>
+	<li><a href="view_service_references_binding.html">View Service References (Binding)</a></li>
+</ul>
+<ul>
+	<li><a href="binding_identifiers.html">Binding Identifiers</a></li>
+	<li><a href="config_amqp_binding_rest_messaging_soap.html">Configure AMQP binding for REST, Messaging, and SOAP services</a></li>
+	<li><a href="view_binding_details.html">View Binding Details</a></li>
+	<li><a href="import_binding_from_wsdl.html">Import Binding from WSDL</a></li>
+	<li><a href="view_wsdl_binding.html">View WSDL (Binding)</a></li>
+	<li><a href="wsdl_properties_custom.htm">Custom WSDL properties</a></li>
+	<li><a href="jms_configuration.html">JMS Configuration</a></li>
+	<li><a href="jms_connection_properties.html">JMS Connection Properties</a></li>
+	<li><a href="../assets/bindings/messaging_binding_use_cases.pdf">Messaging Binding Use Cases (PDF)</a></li>
+</ul>
+</div>
