@@ -48,6 +48,7 @@ nav-title: Multi-Regional Deployment
 			<li><a href="#dc_slave">Slave Data Center</a></li>
 		</ul>
 		</li>
+	<li><a href="#config_sample">Sample Configuration File</a>
 </ul>
 <div class = "divider1"></div>
 
@@ -633,4 +634,107 @@ nav-title: Multi-Regional Deployment
 		</li>
 	<li>Follow the previous steps for additional slave Policy Manager containers to provide increased scale or fault tolerance.</li>
 </ol>
+<p><a href="#top">Back to top</a></p>
+
+
+<h3 id="config_sample">Sample Configuration File</h3>
+<p>The sample file below is a shard configuration file from a working installation with East and West data centers.</p>
+<pre>use PM
+
+db.ALERTS.createIndex(
+	{ 	"containerKey" : 1, 
+		"_id" : 1 
+	},
+	{"name" : "containerKey_1__id_1", background : true}
+);
+
+use PM_AUDIT
+db.AUDIT.createIndex(
+                {
+                        "containerKey" : 1,
+                        "eventId" : 1
+                },
+                {"name" : "containerKey_1_eventId_1", background : true}
+				);
+				
+use METRIC_RAW_DATA
+db.OPERATIONAL_METRIC.createIndex(
+                {
+                        "containerKey" : 1,
+                        "_id" : 1
+                },
+                {"name" : "containerKey_1__id_1", background : true}
+				);			
+
+use METRIC_ROLLUP_DATA
+db.OPERATIONAL_METRIC.createIndex(
+                {
+                        "containerKey" : 1,
+                        "_id" : 1
+                },
+                {"name" : "containerKey_direct_1__id_1", background : true}
+				);
+				
+use admin
+sh.addShardTag("DCWest", "DCWest")
+sh.addShardTag("DCEast", "DCEast")
+sh.enableSharding("PM")
+sh.enableSharding("PM_AUDIT")
+sh.enableSharding("METRIC_RAW_DATA")
+sh.enableSharding("METRIC_ROLLUP_DATA")
+
+use PM
+sh.shardCollection("PM.ALERTS",
+{"containerKey":1, _id: 1}
+)
+
+use PM_AUDIT
+sh.shardCollection("PM_AUDIT.AUDIT",
+{"containerKey":1, eventId: 1}
+)
+
+use METRIC_RAW_DATA
+sh.shardCollection("METRIC_RAW_DATA.OPERATIONAL_METRIC",
+{"containerKey":1, _id: 1}
+)
+
+use METRIC_ROLLUP_DATA
+sh.shardCollection("METRIC_ROLLUP_DATA.OPERATIONAL_METRIC",
+{"containerKey":1, _id: 1}
+)
+
+sh.addTagRange("PM.ALERTS",{ "containerKey": "$minKey"},{ "containerKey": "5000000"}, "DCWest")
+
+sh.addTagRange ("PM_AUDIT.AUDIT",{ "containerKey": "$minKey"},{ "containerKey": "5000000"}, "DCWest")
+
+sh.addTagRange ("METRIC_RAW_DATA.OPERATIONAL_METRIC",{ "containerKey": "$minKey"},{ "containerKey": "5000000"}, "DCWest")
+
+sh.addTagRange ("METRIC_ROLLUP_DATA.OPERATIONAL_METRIC", { "_id" : { "containerKey": "$minKey"}},{ "_id" :{ "containerKey": "5000000" }}, "DCWest")
+
+sh.addTagRange("PM.ALERT_AUDIT_TRAIL", { "containerKey": "$minKey"},{ "containerKey": "5000000"}, "DCWest")
+
+sh.addTagRange("PM.CONTAINER_STATE", { "containerKey": "$minKey"},{ "containerKey": "5000000"}, "DCWest")
+
+sh.addTagRange("PM.SECURITY_AUDIT_TRAIL", { "containerKey": "$minKey"},{ "containerKey": "5000000"}, "DCWest")
+
+sh.addTagRange("PM_AUDIT.AUDIT_TRANSACTION_METRIC", { "containerKey": "$minKey"},{ "containerKey": "5000000"}, "DCWest")
+
+
+-- DCEast
+
+sh.addTagRange("PM.ALERTS",{ "containerKey": "5000000"},{ "containerKey": "6000000"}, "DCEast")
+
+sh.addTagRange ("PM_AUDIT.AUDIT",{ "containerKey": "5000000"},{ "containerKey": "6000000"}, "DCEast")
+
+sh.addTagRange ("METRIC_RAW_DATA.OPERATIONAL_METRIC",{ "containerKey": "5000000"},{ "containerKey": "6000000"}, "DCEast")
+
+sh.addTagRange ("METRIC_ROLLUP_DATA.OPERATIONAL_METRIC", { "_id" : { "containerKey": "5000000"}},{ "_id" :{ "containerKey": "6000000" }}, "DCEast")
+
+sh.addTagRange("PM.ALERT_AUDIT_TRAIL", { "containerKey": "5000000"},{ "containerKey": "6000000"}, "DCEast")
+
+sh.addTagRange("PM.CONTAINER_STATE", { "containerKey": "5000000"},{ "containerKey": "6000000"}, "DCEast")
+
+sh.addTagRange("PM.SECURITY_AUDIT_TRAIL", { "containerKey": "5000000"},{ "containerKey": "6000000"}, "DCEast")
+
+sh.addTagRange("PM_AUDIT.AUDIT_TRANSACTION_METRIC", { "containerKey": "5000000"},{ "containerKey": "6000000"}, "DCEast")</pre>
 <p><a href="#top">Back to top</a></p>
