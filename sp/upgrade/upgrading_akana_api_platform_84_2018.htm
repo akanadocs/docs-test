@@ -81,6 +81,7 @@ nav-title: Upgrade 8.4x to 2018.0.x
 	<li><a href="#s02_09">Starting a container</a></li>
 	<li><a href="#s02_12">Refreshing the repository</a></li>
 	<li><a href="#ts_02_error_new_containers">Upgrading by creating new containers: notes</a></li>
+<!--	<li><a href="#auto_prop_xfer">Automating the transfer of container properties</a></li>-->
 	<li><a href="#tech_support_contact">Contacting Rogue Wave Technical Support</a></li>
 </ol>
 
@@ -116,16 +117,25 @@ nav-title: Upgrade 8.4x to 2018.0.x
 <h3 id="s01_02">Step 1-2: Plan the upgrade</h3>
 <p>Before you start downloading and installing, plan your upgrade. In particular, you'll need to:</p>
 <ol>
-	<li>Decide what containers you'll have, and which features will be installed in which containers. For a recommended simple configuration, see <a href="../deployment/deployment_clustered.htm">Sample Deployment Scenario</a>.</li>
-	<li>Determine where you'll install Elasticsearch, needed for the search feature. For full information on Elasticsearch, see <a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a>.</li>
-	<li>If you have a specific add-on feature installed, such as the Integration Services option pack, SiteMinder Security Provider, or SAML Web SSO Security Provider feature, it's important that you download the new release version package for the same feature.</li>
-	<li>Take all steps needed to save out container settings so that you can reproduce the configuration on the new container, where applicable. You'll need this information for <a href="#s03_03">Step 3-3: Update container properties</a>. Save:
+	<li>Examine  your existing installation and make sure you've saved out the following information:
 		<ul>
-			<li>The context root. </li>
-			<li>All other container properties that you've customized.</li>
+			<li>Number of containers.</li>
+			<li>A list of the features  and add-ons installed in each container.</li>
 		</ul>
 	</li>
+	
+	<li>Conditional: If standalone Elasticsearch is new for your implementation, determine where you'll install Elasticsearch, needed for the search feature. For full information on Elasticsearch, see <a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a>.</li>
+	<li>Take all steps needed to save out container settings so that you can reproduce the configuration on the new container, where applicable. You'll need this information for <a href="#s03_03">Step 3-3: Update container properties</a>. Do the following:
+		<ul>
+			<li>Save the context root. </li>
+			<li>Save all other container properties that you've customized.</li>
+			<li>Save out the container certificates in the Policy Manager console (<span class="apidoc_red">xxx link to doc for this</span>). You can then upload the same certificates when configuring the container.</li>
+		</ul>
+	</li>
+	<li>Update the properties file for each existing container to add a new property, <strong>container.key</strong>, that specifies the existing container IDs. For example:
+		<pre>container.key=&quot;fcd54dc8-ccd2-439f-a580-436d3ef2&quot;</pre></li>
 </ol>
+<!--<p><strong>Note</strong>: For information about how you can automate the reconfiguring of your container properties, see <a href="#auto_prop_xfer">Automating the transfer of container properties</a>.</p>-->
 <p><a href="#top">back to top</a></p>
 
 
@@ -171,6 +181,7 @@ nav-title: Upgrade 8.4x to 2018.0.x
 	<li><strong>Plug-ins</strong>: The ZIP file, and any updates, for any plug-ins you want to use in your installation.</li>
 	<li><strong>Updates</strong>: not applicable to version 2018.0.0 itself, but for future updates.</li>
 </ul>
+<p>If you have a specific add-on feature installed, such as the Integration Services option pack, SiteMinder Security Provider, or SAML Web SSO Security Provider feature, it's important that you download the new release version package for the same feature.</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -230,7 +241,7 @@ ps -ef
 <h5 id="proc_container_first">To create and configure the first container</h5>
 <ol>
 	<li>Run Configurator to create the first container, either via the GUI or using silent install. See <a href="../platform_install/installing_akana_api_platform.htm#run_configurator_pm">Step 3: Run Configurator to create the first container</a>.</li>
-	<li>Conditional: if you saved configuration properties from your old container, copy them to the new container, then start it.</li>
+	<li>Copy the configuration properties file from the old container, which you saved out and updated with a new <strong>container.key</strong> property in <a href="#s01_02">Step 1-2: Plan the upgrade</a> (procedure step #5), to the new container. Then start the new container.</li>
 	<li>Install Policy Manager/Community Manager. See <a href="../platform_install/installing_akana_api_platform.htm#install_pm_cm">Step 4: Install Policy Manager/Community Manager features on the container</a> (installation doc).</li>
 	<li>At the <strong>Installation Complete</strong> summary, click <strong>Configure</strong> to complete pending tasks. See <a href="../platform_install/installing_akana_api_platform.htm#configure_pm">Step 6: Complete pending tasks to configure container features</a>. The pending tasks are:
 		<ol>
@@ -280,13 +291,14 @@ ps -ef
 	<li>OAuth container. For features to install, see <a href="../platform_install/installing_akana_api_platform.htm#features_oauth_alone">OAuth Provider</a>.</li>
 	<li>Scheduled Jobs container. For features to install, see <a href="../platform_install/installing_akana_api_platform.htm#features_sched_jobs">Job Scheduler</a>.</li>
 </ol>
+<p><strong>Note</strong>: In each case, be sure to copy the configuration properties file from the old container, which you saved out and updated with a new <strong>container.key</strong> property in <a href="#s01_02">Step 1-2: Plan the upgrade</a> (procedure step #5), to the new container.</p>
 <p>Create containers in this sequence:</p>
 <ol>
 	<li>First, create all Policy Manager/Community Manager containers.</li>
 	<li>Then, create all Network Director containers.
 	<p>You can create a Network Director container using either <a href="../admin_console/using_network_director_feature.htm#container_gui">GUI</a> or <a href="../admin_console/using_network_director_feature.htm#container_silent">Silent</a> options. For instructions on how to install a Network Director Container (<strong>ND1</strong>), install and configure the Network Director feature, and register the <strong>ND1</strong> container in Policy Manager, refer to <a href="../admin_console/using_network_director_feature.htm">Using Network Director Feature</a>.</p></li>
 </ol>
-<p>For details about the features and plug-ins to install for additional container configurations, see <a href="../platform_install/installing_akana_api_platform.htm#container_features">Container features</a>.</p>
+<p>For information about the features and plug-ins to install for additional container configurations, see <a href="../platform_install/installing_akana_api_platform.htm#installation_scenarios">Sample Deployment Scenarios</a> (Install doc).</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -376,8 +388,10 @@ ps -ef
 
 
 <h3 id="s03_03">Step 3-3: Update container properties</h3>
+<p>{<span class="apidoc_red">xxx new for ATMO-26622</span>} <span class="apidoc_red">DR said: <strong>Not sure where we should import certs (PKI keys?). Maybe here?</strong>. But, as well, these are instructions for manual update of container properties. Not needed if we switch out the properties file in <a href="#s02_05">Step 2-5</a>. I think</span>?</p>
 <p>When you've created the new container and installed the features, it's time to set the configuration properties. You'll need to transfer any customized settings that were set on the old container, to the new container.</p>
 <p>Use the setting values that you saved out in <a href="#s01_02">Step 1-2: Plan the upgrade</a>, point #4, and set them on the new container.</p>
+<!--<p><strong>Note</strong>: For information about how you can automate the reconfiguring of your container properties, see <a href="#auto_prop_xfer">Automating the transfer of container properties</a>.</p>-->
 <p>For example, if you customized the Content Root value for the developer portal, you'll need to re-set it.</p>
 <p> In the Akana Administration Console for each container with Community Manager installed:</p>
 <p><strong>Configuration</strong> &gt; <strong>com.soa.atmosphere.console</strong> &gt; atmosphere.context.root.</p>
@@ -449,6 +463,7 @@ ps -ef
 
 
 <h3 id="s03_07">Step 3-7: Configure API Gateway/Network Director</h3>
+<p>{<span class="apidoc_red">xxx new for ATMO-26622</span>} <span class="apidoc_red">DR said: </span>Will need to revamp this section. Cloning hosted services won't be necessary.</p>
 <p>In your new Policy Manager/Community Manager container, you'll need to move the hosted services from the old Network Director container for the previous version, over to the new Network Director container. Follow the steps below.</p>
 
 <h5 id="proc_move_hosted_svcs">To move hosted services to the new Network Director container</h5>
@@ -485,7 +500,7 @@ ps -ef
 <ol>
 	<li>Launch the Akana Administration Console for the container instance:
 <pre>http://{hostname}:{port}/admin</pre></li>
-	<li>Log in to the Akana Administration Console as an Administrator. The Akana Administration Console launches and displays the <strong>Available Features</strong> tab. See <a href="../platform_install/installing_akana_api_platform.htm#install_features">Installation Features</a>.</li>
+	<li>Log in to the Akana Administration Console as an Administrator. The Akana Administration Console launches and displays the <strong>Available Features</strong> tab. See <a href="../platform_install/installing_akana_api_platform.htm#install_options">Installation Options: Full List</a> (installation doc).</li>
 </ol>
 <p><a href="#top">back to top</a></p>
 
@@ -648,6 +663,25 @@ Binding is attached to service endpoint.</pre>
 
 
 
+<!--<h3 id="auto_prop_xfer">Automating the transfer of container properties</h3>
+<p>When upgrading by creating a new container, you'll need to transfer, or re-create, the configuration settings on the new container.</p>
+<p>The configuration settings are stored in the instances/{container_name}/cm subfolder.</p>
+<p>Because there are changes between versions, you can't just copy and paste the folder between versions. However, you can use a tool to extract the old settings and the new ones, compare the two sets of information, and arrive at a diff that you can use as a guide for setting up your new container.</p>
+
+<h5 id="proc_xfer_properties">To transfer configuration properties from an old container to a new container</h5>
+<ol>
+	<li>At the beginning of <a href="#s02_05">Step 2-5: Create and configure the first container</a>, after shutting down the old container and before creating the new one, run discovery on all of the containers in the previous installation, and save out the old configuration settings for all containers.</li>
+	<li>At the end of <a href="#s02_05">Step 2-5: Create and configure the first container</a>, Step #6, after doing the initial configuration steps, shut down the container. Rather than restarting as in Step #7, save out the new configuration settings at that point.</li>
+	<li>Compare the new settings with the old settings to arrive at the settings that will need to be configured on the new container.</li>
+	<li>If available, use automation to update the container configuration.</li>
+	<li>Now complete <a href="#s02_05">Step 2-5: Create and configure the first container</a> by restarting the container, and verify that the configuration properties are set correctly.</li>
+	<li>Follow steps 2 through 5 for additional containers until they are all configured.</li>
+	<li>Continue with the post-install steps.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>-->
+
+
+
 <h3 id="tech_support_contact">Contacting Rogue Wave Technical Support</h3>
 <p>If you need to contact Technical Support, submit an email to <a href="mailto:support@akana.com">support@akana.com</a>.</p>
 <p>When sending a support query, please provide the following information:</p>
@@ -673,7 +707,8 @@ Binding is attached to service endpoint.</pre>
 	<li><a href="../upgrade/upgrading_akana_api_platform_84_2018.htm">Upgrading Akana API Platform from Version 8.4x to Version 2018.0.x</a></li>
 	<li><a href="../upgrade/upgrading_akana_api_platform_82_84.htm">Upgrading Akana API Platform from Version 8.2 to Version 8.4x</a></li>
 	<li><a href="../upgrade/upgrading_min_downtime.htm">Use Case: Upgrading with Minimum Downtime</a></li>
-	<li><a href="../upgrade/upgrading_micro.htm">Micro-Version Upgrade</a></li>
+	<li><a href="../upgrade/upgrading_micro.htm">Micro-Version Upgrade Notes: 2018.0.0</a></li>
+	<li><a href="../upgrade/upgrading_micro_84x.htm">Micro-Version Upgrade Notes: 8.4x</a></li>
 </ul>
 <ul>
 	<li><a href="../platform_install/installing_akana_api_platform.htm">Installing the Akana API Platform 2018.0.0</a></li>
