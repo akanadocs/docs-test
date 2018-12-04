@@ -9,7 +9,7 @@ weight: 20
 type: page
 nav-title: LC Promotion Guide
 ---
-<h2 id="top">Lifecycle Coordinator Promotion Guide </h2>
+<h2 id="top">Lifecycle Coordinator Promotion Guide</h2>
 <p>Provides information about how to use the Lifecycle Coordinator feature to manage the promotion feature.</p>
 <p><a href="promotion_samples.htm" class="button secondary">Sample Topologies</a></p>
 
@@ -101,6 +101,7 @@ nav-title: LC Promotion Guide
 		</ol>
 	</li>
 	<li><a href="#app_b_client_apps">Appendix B: Support for client apps</a> (2018.0.0 and later)</li>
+	<li><a href="#app_c_tips">Appendix C: Promotion tips and best practices</a></li>
 </ol>
 <div class = "divider1"></div>
 
@@ -1454,21 +1455,74 @@ vsep.listenerName = "https"</td>
 <p>This classifier is used to set the vanity host name for every endpoint in the implementation. Leaving this classifier unset indicates that the host name of the endpoints should not be modified.</p>
 
 <h5 id="s08_01_06_path">Path Classifier</h5>
-<p>The <strong>path</strong> classifier supports the Lifecycle Manager concept of <strong>context parameters</strong>. It is used to set the context path for every endpoint in the implementation. This allows aspects of the API, such as the API name or the values of custom properties, to be used within the path. Leaving this classifier unset indicates that the context path of the endpoints should not be modified.</p>
-<p>For example, setting the path value to <strong>/{catalog_asset.name_normalized}</strong> indicates that the path should consist of the API's name. If an API had a custom classifier called <strong>visibility</strong> set to a value <strong>external</strong>, using a value of <strong>/rest/{catalog_asset.classifier.visibility}</strong> for the path would result in endpoint paths set to <strong>/rest/external</strong>.</p>
+<p>The <strong>path</strong> classifier supports the Lifecycle Manager concept of <strong>context parameters</strong>. It is used to set the context path for every endpoint in the implementation. This allows aspects of the API, such as the API name or the values of custom properties, to be used within the path.</p>
+<p>If you leave the <strong>path</strong> classifier unset, the default API&nbsp;context path, assigned by the API portal, applies&nbsp;to the API created by the runtime configuration. However, you can use one or more of the <strong>path</strong> classifiers to control the context path for the API created using the configuration. See examples below.</p>
 <p>The following parameters are available to be used for the <strong>path</strong> classifier:</p>
 <ul>
-	<li>{catalog_asset.id}</li>
-	<li>{catalog_asset.name}</li>
-	<li>{catalog_asset.name_normalized}</li>
-	<li>{catalog_asset.version}</li>
-	<li>{catalog_asset.version_normalized}</li>
-	<li>{catalog_asset.property.&lt;property name&gt;}</li>
-	<li>{catalog_asset.classifier.&lt;classifier name&gt;}</li>
-	<li>{catalog_asset.group.name}</li>
-
+	<li><strong>{catalog_asset.id}</strong>
+<p>Indicates that the path should include  the asset ID (APIID, App ID, or UserID). {<span class="apidoc_red">TJ: not sure if I heard this correctly please check</span>}</p></li>
+	<li><strong>{catalog_asset.name}</strong>
+<p>Indicates that the path should include the asset name (for example, App03). If you're not sure what the asset name is, check in the Lifecycle Coordinator, as shown below. In this example, the asset name is <strong>Training-1</strong>.</p>
+<p><img src="images/promotion_pathclassifier_01_01.jpg" alt="Path classifier example -- input" /></p>
+	</li>
+	<li><strong>{catalog_asset.name_normalized}</strong>
+<p>Indicates that the path should include the API's name, with normalization applied for any spaces or other characters that are not URL-safe.</p></li>
+	<li><strong>{catalog_asset.version}</strong>
+<p>Indicates that the asset path should include the version.</p></li>
+	<li><strong>{catalog_asset.version_normalized}</strong>
+<p>Indicates that the asset path should include the version, with normalization applied for any spaces or other characters that are not URL-safe. For example, <strong>version 1</strong> becomes <strong>version_1</strong>.</p></li>
+	<li><strong>{catalog_asset.property.&lt;property name&gt;}</strong>
+<p>Indicates that the value of a specific property defined for the API should be used in the context path.</p></li>
+	<li><strong>{catalog_asset.classifier.&lt;classifier name&gt;}</strong>
+<p>Indicates that the value of a specific classifier defined for the API should be used in the context path. For example, if an API had a custom classifier called <strong>visibility</strong> set to a value <strong>external</strong>, using a value of <strong>/rest/{catalog_asset.classifier.visibility}</strong> for the path would result in endpoint paths set to <strong>/rest/external</strong>.</p></li>
+	<li><strong>{catalog_asset.group.name}</strong>
+<p>The group name, as defined in the Lifecycle Coordinator user interface, corresponds to the business name as defined in the developer portal. If this classifier is used, the gorup name is included in the API context path. See example below.</p></li>
 </ul>
-<p>The available parameters are also specified in the Lifecycle Manager Configuration guide (available on the Akana Library site, in the Documentation folder for your <a href="https://library.roguewave.com/display/MAIN/Lifecycle+Manager" title="Link to Lifecycle Manager download" target="_blank">Lifecycle Manager installation</a>). Note that the context asset for parameter resolution is the API asset.</p>
+<p><strong>Note</strong>: The above is a list of key path classifiers. For a complete list, refer to the the Lifecycle Manager Configuration guide (available on the Akana Library site, in the Documentation folder for <a href="https://library.roguewave.com/display/MAIN/Lifecycle+Manager" title="Link to Lifecycle Manager download" target="_blank">Lifecycle Manager installation for your version</a>). Note that the context asset for parameter resolution is the API asset.</p>
+
+<p id="rc_path_classifier_eg_01"><strong>Example #1: No path classifier set</strong></p>
+<p>If no path is specified in the Runtime Configuration, the default path is assigned when the API is created in the developer portal. An example is shown below.</p>
+<p><img src="images/promotion_pathclassifier_00_01.jpg" alt="Path classifier example -- unset" /></p>
+
+<p id="rc_path_classifier_eg_02"><strong>Example #2: Three classifier values</strong></p>
+<p>In the example below, three values are concatenated: <strong>{catalog_asset.group.name}</strong>, <strong>{catalog_asset.version_normalized}</strong>, and <strong>{catalog_asset.name_normalized}</strong>.</p>
+<p>In the Runtime Configuration:</p>
+<p><img src="images/promotion_pathclassifier_04_01.jpg" alt="Path classifier example -- concatenated with three" /></p>
+<p>The resulting API path, as displayed on the <strong>API Details</strong> page in the developer portal, is shown below.</p>
+<p><img src="images/promotion_pathclassifier_04_02.jpg" alt="Path classifier example -- concatenated with three: result" /></p>
+
+<p id="rc_path_classifier_eg_03"><strong>Example #3: Four classifier values</strong></p>
+<p>In the example below, four values are concatenated: <strong>{catalog_asset.group.name}</strong>, <strong>{catalog_asset.classifier.&lt;classifier name&gt;}</strong>, <strong>{catalog_asset.version_normalized}</strong>, and <strong>{catalog_asset.name_normalized}</strong>.</p>
+<p><img src="images/promotion_pathclassifier_03_01.jpg" alt="Path classifier example -- concatenated with three" /></p>
+<p>The resulting API path, as displayed on the <strong>API Details</strong> page in the developer portal, is shown below. In the last value, the space is normalized with an underscore.</p>
+<p><img src="images/promotion_pathclassifier_03_02.jpg" alt="Path classifier example -- concatenated with three" /></p>
+<p>xxx</p>
+<p>xxx</p>
+<p>xxx</p>
+<dl>
+	<dd>&nbsp;</dd>
+	</dl>
+
+<p>&nbsp;</p>
+
+<p>The parameters shown below are available to be used for the <strong>path</strong> classifier.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>In the example below, two values are concatenated: <strong>{catalog_asset.version_normalized}</strong> and <strong>{catalog_asset.name_normalized}</strong>.</p>
+<p><img src="images/promotion_pathclassifier_02_01.jpg" alt="Path classifier example -- input" /></p>
+<p>The resulting API path, as displayed on the <strong>API Details</strong> page in the developer portal, is shown below. The first value is replaced by CRM and the asset xx<span class="apidoc_red">xxxxx</span></p>
+<p><img src="images/promotion_pathclassifier_02_02.jpg" alt="Path classifier example -- result" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>See the example above under <strong>{catalog_asset.name_normalized}</strong>.</p>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
 
 
 <h5 id="s08_01_06b_dzs">Deployment Zones</h5>
@@ -1629,4 +1683,10 @@ Defining process and script mappings by using IDs</h5>
 
 <h4 id="app_b_promotion_support">Promotion Support</h4>
 <p>When an API with an accompanying client app is promoted using Lifecycle Coordinator, the client app will also be promoted to the target environment as well as any contracts it has to other APIs. These contracts will be validated prior to API promotion in the same manner as the dependencies for a standard app are validated prior to app promotion.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="app_c_tips">Appendix C: Promotion tips and best practices</h3>
+<p>When making changes to an asset in the hierarchy, always make changes in the Dev environment (or whichever environment is first in the promotion chain). If you make changes in a later environment, they will be lost on a subsequent iteration.</p>
 <p><a href="#top">Back to top</a></p>
