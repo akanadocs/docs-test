@@ -13,7 +13,7 @@ nav-title: Getting Started with Scripts
 <p>Learn about the script creation process, using a script activity in a process, documentation, and management tools.</p>
 
 
-<p><a href="script_management.htm" class="button secondary">Managing Scripts</a>  
+<p><a href="script_management.htm" class="button secondary">Managing Scripts</a> 
 <a href="../apidoc_scripting_api_all.htm" class="button secondary">Policy Manager Scripting API</a></p>
 
 
@@ -24,7 +24,7 @@ nav-title: Getting Started with Scripts
 	<li><a href="#add_script">Add Script</a></li>
 	<li><a href="#reference_script">Reference Script</a></li>
 	<li><a href="#script_activity">Script Activity</a></li>
-	<li><a href="#script_predefined_methods">Pre-Defined Methods</a></li>
+	<li><a href="#script_predefined_methods">Pre-Defined Script Objects</a></li>
 	<li><a href="#script_proc_seq">Sequence of Script Processing</a></li>
 	<li><a href="#policy_manager_scripting_api">Policy Manager Scripting API</a></li>
 	<li><a href="#process_reference">Process Reference</a></li>
@@ -51,7 +51,7 @@ nav-title: Getting Started with Scripts
 	<li>You can define a script object in the <strong>Scripts</strong> section, using the <strong>Add Script</strong> function. This is useful for building a library of scripts you can reuse in your Process or Script Policy definitions. </li>
 	<li> You can create a process, add a Script Activity, and then import an existing script. </li>
 	<li>You can create a QoS or Operational Script Policy and then, from within that context, define a new script or import an existing script. For example, choose <strong>Policies</strong> &gt; <strong>Operational Policies</strong> &gt; <strong>Add Policy</strong> and choose either <strong>Private Operational Script Policy</strong> or <strong>Public Operational Script Policy</strong>. Once you've defined the policy, you can add the script, in JavaScript, Jython, or BeanShell Engine. For more information, see <a href="../policies/policy_op_op_script.htm">Using the Public and Private Operational Script Policies</a>.</li>
-	<li> If there is a portion of a pre-defined script object that you want to use in your local script, you can import the script object and then reference functions in the imported script. </li>
+	<li> If there is a portion of a pre-defined script object that you want to use in your local script, you can import the script object and then reference it in the imported script. </li>
 	<li>You can use scripts in workflows. See <a href="../workflow/07_pm_wf_scripts.htm">Using Scripts in Workflows</a>.</li>
 </ul>
 <p><a href="#top">Back to top</a></p>
@@ -107,17 +107,22 @@ nav-title: Getting Started with Scripts
 
 
 
-<h3 id="script_predefined_methods">Pre-Defined Methods</h3>
-<p>The platform includes some pre-defined methods that you can use in your scripts.</p>
-<p>From the script workspace, to access the list of pre-defined methods, type CTRL+Space, choose from the list below, and then type a period (.) after the method.</p>
+<h3 id="script_predefined_methods">Pre-Defined Script Objects</h3>
+<p>The platform includes some pre-defined objects that you can use in your scripts.</p>
+<p>From the script workspace, to access the list of pre-defined script objects, type CTRL+Space, and then choose from the list below. Typing a period (.) after the script object name followed by CTRL+Space allows the available methods for the object to be selected.</p>
 <div class="relatedlinks">
-<p><img src="images/scripts_default_methods_be_jython.jpg" alt="Default methods for scripts" /></p>
+	<p><img src="images/scripts_default_methods_be_jython.jpg" alt="Default methods for scripts" /></p>
 <p><img src="images/scripts_default_methods_be_jython_02.jpg" alt="Default methods for scripts, detail" /></p>
 </div>
-<p>For Jython and BeanShell Engine, the pre-defined methods are shown below.</p>
+<p>For Jython and BeanShell Engine, the pre-defined script objects are shown below.</p>
 <ul>
-	<li id="result"><strong>result</strong>: Stops the processing for the message exchange, so the proxy endpoint is not called and the response is HTTP 200 with empty content. <strong>(2018.0.0 and later)</strong></li>
-	<li id="recorder"><strong>recorder</strong>: Provides an interface for recording content in the Policy Manager usage log pages. </li>
+	<li id="result"><strong>result</strong> <strong>(2018.0.0 and later)</strong>: Allows the script to indicate its status to the policy framework. The <strong>result</strong> object has two methods:
+<ul>
+			<li><strong>result.isSuccess()</strong>: Returns a Boolean indicating whether or not message processing should proceed</li>
+			<li><strong>result.setSuccess(Boolean status)</strong>: Accepts a Boolean value indicating whether or not script execution was successful and message processing should proceed as normal.</li>
+		</ul>
+	</li>
+	<li><strong>recorder</strong>: Provides an interface for recording content in the Policy Manager usage log pages. </li>
 	<li id="auditlog"><strong>auditLog: </strong> Provides logging functions to the process audit log. If auditing is enabled for the virtual service operation that is invoking the process statements logged using this variable, log information will be inserted into the audited message log for the operation&rsquo;s execution. In Policy Manager, you can find this information on the <strong>Monitoring</strong> tab for the service, in the <strong>Logs</strong> sub-tab.</li>
 	<li id="messagecontext"><strong>messageContext</strong>: Provides information about the platform's message handler framework's processing of a message. From the context you can get information such as the message being processed, the role of the message in a message exchange (IN, OUT, FAULT), and properties that can be changed and read by the chain of handlers that process the message.</li>
 	<li id="alerter"><strong>alerter: </strong> Provides an interface for generating alerts that are displayed on the Policy Manager alert pages. <strong></strong></li>
@@ -176,7 +181,7 @@ nav-title: Getting Started with Scripts
 <p>The script associated with an Operational Script policy is executed before the script associated with a process. For this reason, some proprties in messages might be missing.</p>
 <p>In the context of an Operational Script policy, the <a href="#messagecontext">messageContext</a> method is available.</p>
 <p>In the context of a process, the <a href="#processcontext">processContext</a> and <a href="#recorder">recorder</a> methods are available.</p>
-<p>Other available method listed in <a href="#script_predefined_methods">Pre-Defined Methods</a> above are available in both contexts: <a href="#result">result</a>, <a href="#auditlog">auditLog</a>, <a href="#systemlog">systemLog</a>, <a href="#alerter">alerter</a>, <a href="#msgfactory">msgFactory</a>, and <a href="#msgrservice">msgrService</a>.</p>
+<p>Other available objects listed in <a href="#script_predefined_methods">Pre-Defined Objects</a> above are available in both contexts: <a href="#result">result</a>, <a href="#auditlog">auditLog</a>, <a href="#systemlog">systemLog</a>, <a href="#alerter">alerter</a>, <a href="#msgfactory">msgFactory</a>, and <a href="#msgrservice">msgrService</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
