@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Using the OAuth Client Policy
-description: Learn how to xxx using the OAuth Client Policy.
+description: Learn how to use the OAuth Client policy to allow the API Gateway to act as the client, generating the OAuth 2.0 token and sending it to the downstream API.
 product: ag
 category: learn
 sub-nav-class: Policies - Operational
@@ -10,13 +10,10 @@ type: page
 nav-title: OAuth Client
 ---
 <h2 id="top">Using the OAuth Client Policy</h2>
-<p>Learn how to xxx using the OAuth Client Policy.</p>
-<p>{<span class="apidoc_red">sends authorization header using that OAuth provider to that service's back end. Usually with a normal oauth security policy it's attached to the VS, so when the consumer sends a request to the API they have to be sure to include it. This adds it to the request for the downstream service. Once it's set up, in TC normally uou have to generate tokens but this does it for you so you don't need to do all that.</span>}</p>
-
-<p>
-<a href="about_policies_view.htm" class="button secondary">About Policies</a> 
-<a href="policy_management.htm" class="button secondary">Managing Policies</a> 
-<a href="policies_operational_about.htm" class="button secondary">About Operational Policies</a></p>
+<p>Learn how to use the OAuth Client policy to allow the API Gateway to act as the client, generating the OAuth 2.0 token and sending it to the downstream API.</p>
+<p><a href="about_policies_view.htm" class="button secondary">About Policies</a> 
+	<a href="policy_management.htm" class="button secondary">Managing Policies</a> 
+	<a href="policies_operational_about.htm" class="button secondary">About Operational Policies</a></p>
 <p>For information about using policies in the context of the developer portal, see <a href="../../cm/learnmore/bus_admin_organizations.htm#h_business_policies">Business Policies</a>.</p>
 
 
@@ -37,11 +34,14 @@ nav-title: OAuth Client
 
 
 <h3 id="introduction">Introduction</h3>
-<p>The OAuth Client Policy is an operational policy that xxx.</p>
-<p>Options include:</p>
-<ul>
-	<li>xxx</li>
-</ul>
+<p>The OAuth Client Policy is an operational policy that allows the API Gateway to send an OAuth 2.0 token downstream.</p>
+<p>In general terms, the API Gateway is in the middle, between the consumer and the downstream service. The consumer calls the Gateway, and then the Gateway typically calls the downstream service.</p>
+<p>The <a href="policy_op_oauth_security.htm">OAuth Security Policy</a> operates on the front side of the transaction, between the consumer and the Gateway; a consumer calling the API via the Gateway passes a valid OAuth token authenticating the caller as an approved consumer. The OAuth Security policy is normally attached to the virtual service; a consumer sending a request to the API includes the OAuth token, and the Gateway adds it to the request for the downstream service.</p>
+<p>With the OAuth Client policy, the API Gateway acts as the client, generating the token and sending it to the downstream API.</p>
+<p>This policy acts as the consumer of the downstream API. It gets a new OAuth token, nothing to do with the consumer that's calling the Gateway, and passes the token to the downstream service.</p>
+<p>As an example, if a client wants to call a Google API, downstream, the client, not the consumer, needs to identify with Google. In this scenario, the Gateway acts as the client.</p>
+<p><strong>Note</strong>: This policy is available only for two-legged OAuth grant types: <a href="../../cm/learnmore/basics_glossary.htm#gl_oauth_grant_passwordcredentials">Resource Owner</a> (Resource Owner Password Credentials grant type) or <a href="../../cm/learnmore/basics_glossary.htm#gl_oauth_grant_clientcredentials">Client Credentials</a>.</p>
+<p><a href="#top">back to top</a></p>
 
 
 
@@ -81,15 +81,15 @@ nav-title: OAuth Client
 <p>The OAuth Client policy includes the configuration options listed below.</p>
 <dl>
 <dt>Scope</dt>
-<dd>Update the appropriate Scope as provided by the OAuth provider. {<span class="apidoc_red">can you have multiple scopes? Separator?</span>}</dd>
+<dd>Update the appropriate scope as provided by the OAuth provider.</dd>
 
 
 <dt>Grant Type</dt>
-<dd>Indicate the OAuth 2.0 grant type that the policy will use. Supported options: <a href="../../cm/learnmore/basics_glossary.htm#gl_oauth_grant_passwordcredentials">Resource Owner</a> (Resource Owner Password Credentials grant type) or <a href="../../cm/learnmore/basics_glossary.htm#gl_oauth_grant_clientcredentials">Client Credentials</a>.</dd>
+<dd>Indicate the OAuth 2.0 grant type that the policy will use. Two-legged OAuth grant types are supported: <a href="../../cm/learnmore/basics_glossary.htm#gl_oauth_grant_passwordcredentials">Resource Owner</a> (Resource Owner Password Credentials grant type) or <a href="../../cm/learnmore/basics_glossary.htm#gl_oauth_grant_clientcredentials">Client Credentials</a>.</dd>
 
 
 <dt>OAuth Provider Connection Details</dt>
-<dd>Check the box to provide the OAuth Provider connection details {<span class="apidoc_red">clarify. what if you do, what if you don't, when would you, how do you know what to put?</span>}</dd>
+<dd>Check the box to provide the OAuth Provider connection details.</dd>
 
 
 <dt>HTTP Verb</dt>
@@ -97,19 +97,25 @@ nav-title: OAuth Client
 
 
 <dt>Provider Location</dt>
-<dd>Set the Location for the OAuth Provider {<span class="apidoc_red">where would they get this from?</span>} {URL for the OAuth 2.0 token: service URL /oauth/oauth20/token</dd>
-
-
-<dt>Provider Content Type</dt>
-<dd>The content-type value specified as required in the authorization call to the OAuth Provider.</dd>
-
-
-<dt>Service QName</dt>
-<dd>{<span class="apidoc_red">xxx</span>}</dd>
-
-
-<dt>Operation QName</dt>
-<dd>{<span class="apidoc_red">xxx</span>}</dd>
+<dd>Provide the full token endpoint for the OAuth Provider. This is the valid URL for the OAuth Provider's OAuth 2.0 token service. Examples:
+	<ul>
+	<li>If you're using the platform's own OAuth provider, the location URL is: {hostname} /oauth/oauth20/token.</li>
+	<li>For PingFederate the provider token endpoint is: /as/token.oauth2.</li>
+	<li>For Google it is: https://www.googleapis.com/oauth2/v4/token.</li>
+</ul>
+</dd>
+	
+	
+	<dt>Provider Content Type</dt>
+	<dd>The content-type value specified as required in the call to the OAuth Provider.</dd>
+	
+	
+	<dt>Service QName</dt>
+	<dd>Accept the default value.</dd>
+	
+	
+	<dt>Operation QName</dt>
+	<dd>Accept the default value.</dd>
 </dl>
 <p><a href="#top">back to top</a></p>
 
@@ -139,7 +145,7 @@ nav-title: OAuth Client
 
 
 <h3 id="uc_policy_op_oauth_client">OAuth Client Policy: use case</h3>
-<p>This section provides a usage scenario for using the OAuth Client policy to xxx.</p>
+<p>This section provides a usage scenario for using the OAuth Client policy to generate an OAuth token and send it to the downstream service.</p>
 <p>It includes the following high-level steps:</p>
 <ol>
 	<li><a href="#uc_policy_op_oauth_client_01">Configure New OAuth Client Policy</a></li>
@@ -160,7 +166,7 @@ nav-title: OAuth Client
 	<li>Log in to the Policy Manager workbench.</li>
 	<li>Choose the organization that the policy will belong to, and go to the <strong>Policies</strong> &gt; <strong>Operational Policies</strong> folder.</li>
 	<li>Click <strong>Add Policy</strong>.</li>
-	<li>On the <strong>Select Policy Creation Option</strong> page, from the <strong>Type</strong> drop-down, choose <strong>OAuth Client Policy</strong>&nbsp;and click <strong>Next</strong>.</li>
+	<li>On the <strong>Select Policy Creation Option</strong> page, from the <strong>Type</strong> drop-down, choose <strong>OAuth Client Policy</strong> and click <strong>Next</strong>.</li>
 	<li>Specify a value for <strong>Policy Name</strong> and click <strong>Finish</strong>.</li>
 	<li>At the completion summary, click <strong>Close</strong>. The <strong>OAuth Client Policy Details</strong> page is displayed.</li>
 	<li>The next step is to configure the policy details. In the center section, click <strong>Modify</strong>.</li>
@@ -169,8 +175,8 @@ nav-title: OAuth Client
 			<li>Scope: specify the scope provided by the OAuth Provider.</li>
 			<li>Choose the OAuth 2.0 grant type that the policy will support: <a href="../../cm/learnmore/basics_glossary.htm#gl_oauth_grant_passwordcredentials">Resource Owner</a> (Resource Owner Password Credentials grant type) or <a href="../../cm/learnmore/basics_glossary.htm#gl_oauth_grant_clientcredentials">Client Credentials</a>.</li>
 			<li>Check the <strong>OAuth Provider Connection Details</strong> box.</li>
-			<li>Choose the HTTP verb that the OAuth Provider uses {<span class="apidoc_red">for xxx</span>}: GET or POST.</li>
-			<li>Specify the <strong>Location</strong> of the OAuth provider.{<span class="apidoc_red">where do they get this from?</span>}</li>
+			<li>Choose the HTTP verb that the OAuth Provider's token endpoint uses: GET or POST.</li>
+			<li>Specify the <strong>Location</strong> of the OAuth provider. For examples, see <a href="#oauth_client_config_options">OAuth Client Policy Configuration Options</a>.</li>
 			<li>Set the required Content-Type that will be set to the OAuth Provider.
 			<p><img src="images/oauth_client_policy_uc_01.png" alt="OAuth Client Policy Options" /></p></li>
 			<li>Click <strong>Finish</strong>.</li>
@@ -180,81 +186,79 @@ nav-title: OAuth Client
 	<li>Under the Workflow actions, click the <strong>Activate Policy</strong> link.</li>
 	<li>Click <strong>OK</strong> to activate the policy.</li>
 </ol>
-<p></p>
+
+
 <h4 id="uc_policy_op_oauth_client_02">Create user to be used for Client ID and Shared Secret</h4>
 <p>The client id and shared secret is used when invoking the OAuth provider. The gateway will send these to identify itself with the OAuth provider. The first step would be obtaining this information by registering this service in the OAuth provider. See the documentation provided by the OAuth provider for these steps.</p>
 <p>If you are using the Akana OAuth Provider, follow these steps:</p>
 <ol>
 	<li>Log in to the Community Manager Portal.</li>
-	<li>Create a new APP by selecting it from the create '+', if this APP belongs to a child organization select that organization first.</li>
+	<li>Create a new app: From the Plus icon (<strong>+</strong>), select <strong>Add App</strong>. To create an app in the context of a child organization, choose the organization first.</li>
 	<li>Define the app, and then click <strong>Finish</strong>.</li>
-	<li>Retrieve the Client Id and Shared Secret from the created app:
-		<ol>
-			<li>Note the Client Id</li>
-			<li>Click the <strong>Show Keys</strong> link to view the Shared Secret</li>
-			<li>Note the Shared Secret
-				<p><img src="images/oauth_client_policy_uc_02.png" alt="xxx" /></p></li>
-		</ol>
-	</li>
-	</ol>
+	<li>		On the <strong>App Details</strong> page, under <strong>Security</strong>, note the App ID. </li>
+	<li>Click <strong>Show Keys</strong> to view the Shared Secret. An example is shown below.
+			<p><img src="images/oauth_client_policy_uc_02.png" alt="xxx" /></p></li>
+	<li>Copy the Shared Secret.</li>
+</ol>
 
-<p>The client id and shared secret need to be stored as an outbound identity for the invoked service.</p>
-<h5>Follow these steps to create the user:</h5>
-<p>{<span class="apidoc_red">these steps not needed per Buck? He got an error</span>}</p>
+<p>Store the Client ID and Shared Secret values as an outbound identity for the invoked service.</p>
+
+<h5 id="proc_create_client">To create the Client user</h5>
+<p><strong>Note</strong>: If you're using the platform's OAuth Provider, you can skip this step. The platform uses the credentials for the app you created. If you're using an external OAuth Provider, follow the steps below.</p>
 <ol>
 	<li>Log in to the Policy Manager workbench.</li>
-	<li>Click the Security tab.</li>
-	<li>From the Users sub-tab, on the bottom of the screen, click <strong>Add User</strong>.</li>
-	<li>Properly populate the information. The Client Id from the OAuth Provider will be the user id and the Shared Secret will be the password.
-	<p><img src="images/oauth_client_policy_uc_03.png" alt="xxx" /></p>
+	<li>Click the <strong>Security</strong> tab.</li>
+	<li>From the <strong>Users</strong> sub-tab, on the bottom of the screen, click <strong>Add User</strong>.</li>
+	<li>Populate the information: username, full name, and password. The Client Id from the OAuth Provider will be the user ID and the Shared Secret will be the password.
+		<p><img src="images/oauth_client_policy_uc_03.png" alt="xxx" /></p></li>
 	<li>Click <strong>Finish</strong>.</li>
 </ol>
 
 
 <h4 id="uc_policy_op_oauth_client_03">Create user to be used for Resource Owner</h4>
-<p>When using the Resource Owner flow, a user name and password is required to be passed to the OAuth Provider. This user name and password will need to be created as a local user and added to the service as an outbound identity.</p>
-<h5>To create the Resource Owner user</h5>
-<p>{<span class="apidoc_red">Buck: not understand why need to set this up. Need a login domain... why creating this user when it already exists in the LDAP domain. you have to provide a user to authenticate against, that's how you generate the tokens. The users already exist in the domain so not sure why we need to create a Resource Owner user in the local domain.</span></p>
-<p><span class="apidoc_red">When you add the outbound identities to the API, one of the identities is that user. Using the LDAP domain instead, didn't work. Had to create this user for the local domain.</span>}</p>
+<p>When using the Resource Owner flow, a user name and password is required to be passed to the OAuth Provider. Even though the username and password exist in the LDAP domain, you must set the user up as a local user and then add it to the service as an outbound identity. The policy uses these credentials to put in the request when calling the OAuth Provider.</p>
+
+<h5 id="proc_create_ro">To create the Resource Owner user</h5>
 <ol>
 	<li>Log in to the Policy Manager workbench.</li>
-	<li>click the <strong>Security</strong> tab.</li>
-	<li>From the Users sub tab, on the bottom of the screen, click <strong>Add User</strong>.</li>
-	<li>Properly populate the information.
-	<p><img src="images/oauth_client_policy_uc_04.png" alt="xxx" /></p></li>
+	<li>Click the <strong>Security</strong> tab.</li>
+	<li>From the <strong>Users</strong> sub-tab, on the bottom of the screen, click <strong>Add User</strong>.</li>
+	<li>Populate the information: username, full name, and password.
+		<p><img src="images/oauth_client_policy_uc_04.png" alt="xxx" /></p>
+	</li>
 	<li>Click <strong>Finish</strong>.</li>
 </ol>
 
 
 <h4 id="uc_policy_op_oauth_client_04">Configure Service to use OAuth Client Policy</h4>
 <p>Assumption is that an API has been properly created in the platform.</p>
-<p></p>
 <p>The OAuth Client Policy is done on the Outbound side, so this policy needs to be added to the Physical Service (target) object that was created. The users that were created above will also need to be added to this service as Outbound Identities. Follow these steps to properly configure a service to use the OAuth Client Policy.</p>
 <h5>To configure the service to use the OAuth Client policy</h5>
 <ol>
 	<li>Log in to the Policy Manager workbench to configure the Physical Service.</li>
 	<li>Navigate to the proper organization structure where this service was created.</li>
-	<li>Select the physical service, this is the service with the name of target on it.</li>
-	<li>Scroll down to the <strong>Policy Attachments</strong> section and click <strong>Manage</strong>, next to the Operational section.</li>
+	<li>Select the physical service (the service with the name of target on it).</li>
+	<li>Scroll down to the <strong>Policy Attachments</strong> section. In the Operational sub-section, click <strong>Manage</strong>.</li>
 	<li>From the pop-up screen, navigate to the Policy -> Operational directory under the organization that the OAuth Client Policy was created and select it.
 	<p><img src="images/oauth_client_policy_uc_05.png" alt="Manage Operational Policy Attachments page" /></p></li>
 	<li>Click <strong>Apply</strong>.</li>
 </ol>
 
 <h4 id="uc_policy_op_oauth_client_05">Configure outbound identity</h4>
-<p>At this point, the Outbound Identities need to be configured. This can be done from either the Policy Manager Workbench or the Community Manager Portal. These directions will describe the steps using the Community Manager Portal.</p>
-<p>If the Resource Owner flow is being used two outbound identities are required, one for the end user and the other for the client identity.</p>
+<p>At this point, the Outbound Identities need to be configured. This can be done from either the Policy Manager Workbench or the Community Manager Portal. These directions describe the steps using the Community Manager Portal.</p>
+<p>If the Resource Owner flow is being used, two outbound identities are required, one for the end user and the other for the client identity.</p>
+<p><strong>Note</strong>: While you're modifying the implementation, it's a good idea to enable debug mode, on the Implementation Details page, so that you get transaction logging. For instructions, see <a href="../../cm/learnmore/apiadmin_implementations.htm#debug_mode_enable">How do I turn on debug mode for my implementation?</a></p>
 
 <h5>To configure the end-user identity</h5>
 <ol>
 	<li>Log in to the Community Manager Portal.</li>
 	<li>Navigate to the API that will be used for this configuration.</li>
-	<li>On the Left Navigation, select the <strong>Implementations</strong> link.</li>
-	<li>Select the Endpoint that will be configured.</li>
+	<li>On the left navigation, click <strong>Implementations</strong>.</li>
+	<li>Choose the endpoint that will be configured.</li>
 	<li>Scroll down to the Identities section and click <strong>Edit</strong>.</li>
-	<li>Select <strong>Specify Outbound Identities</strong>, click <strong>Add</strong>.</li>
+	<li>Select <strong>Specify Outbound Identities</strong> and click <strong>Add</strong>.</li>
 	<li>On the Source Identity, select <strong>Static User</strong>.</li>
-	<li>The domain needs to be set to Local Domain, then populate the Username and password that was created above.</li>
+	<li>Make sure the domain is set to Local Domain, and then populate the resource owner username and password that you created in <a href="#proc_create_ro">To create the Resource Owner user</a> above.</li>
 	<li>Under Outbound Identity, select <strong>End User</strong>.
 	<p><img src="images/oauth_client_policy_uc_06.png" alt="xxx" /></p></li>
 	<li>Click <strong>Finish</strong>.</li>
@@ -262,25 +266,25 @@ nav-title: OAuth Client
 
 <h5>To configure the client outbound identity</h5>
 <ol>
-	<li>Using the client identity created above, on the same API where the end user outbound identity was configured select the Implementations link.</li>
-	<li>Select the Endpoint that will be configured.</li>
+	<li>Using the client identity created above, on the same API where the end-user outbound identity was configured, click <strong>Implementations</strong>.</li>
+	<li>Choose the endpoint that will be configured.</li>
 	<li>Scroll down to the Identities section and click <strong>Edit</strong>.</li>
 	<li>Select <strong>Specify Outbound Identities</strong> and click <strong>Add</strong>.</li>
-	<li>On the Source Identity, select <strong>Status User</strong>.</li>
-	<li>Select the Local Domain and the Username and password for the client identity create above.</li>
-	<li>In the Outbound Identity enter: <strong>GrantTypeCredentials</strong> in the <strong>User Defined Category</strong> field.</li>
+	<li>On the Source Identity, select <strong>Static User</strong>.</li>
+	<li>Make sure the domain is set to Local Domain, and then populate the username and password for the client identity that you created in <a href="#proc_create_client">To create the Client user</a> above. If you're using the platform as an OAuth provider, the values are the AppID and Secret.</li>
+	<li>In the <strong>User Defined Category</strong> field, enter: <strong>GrantTypeCredentials</strong>.</li>
 	<li>Click <strong>Finish</strong>.</li>
 </ol>
 
 
 <h4 id="uc_policy_op_oauth_client_06">Cache Configuration</h4>
-<p>Tokens can be stored in a local cache to the Network Directory. Tokens are cached based on a</p>
-<p>{<span class="apidoc_red">Web results concatenation of the client id and scope</span>}, if using Resource Owner the user id is appended to the cache key. Cache values can be controlled with an /admin category. Follow these steps to properly configure the cache.</p>
-<p></p>
+<p>Tokens can be stored in a local cache to the Network Directory. Tokens are cached based on a concatenation of the client id and scope. If you're using the Resource Owner grant type, the user UD is appended to the cache key. Cache values can be controlled with a configuration category in the Akana Administration Console. To configure the cache, follow the steps below.</p>
+
+<h5>To set cache configuration values</h5>
 <ol>
 	<li>Log in to Akana Administration Console for the Network Director container.</li>
 	<li>Select the <strong>Configuration</strong> tab.</li>
-	<li>In the Configuration Categories tab, select <strong>com.akana.policy.oauth.client</strong>.</li>
+	<li>Under <strong>Configuration Categories</strong>, select <strong>com.akana.policy.oauth.client</strong>.</li>
 	<li>Set values for the following:
 		<ul>
 			<li>Cache Expiration Time</li>
@@ -288,7 +292,7 @@ nav-title: OAuth Client
 			<li>Cache Invalidate Time</li>
 		</ul>
 	</li>
-	</ol>
+</ol>
 
 
 <h4 id="uc_policy_op_oauth_client_07">Test</h4>
@@ -308,7 +312,6 @@ nav-title: OAuth Client
 <p><img src="images/oauth_client_policy_uc_07.png" alt="xxx" /></p></li>
 </ol>
 <p><a href="#top">Back to top</a></p>
-<p><span class="apidoc_red">To get downstream record... need to enable debug mode on the API implementation and check the box for Generate Audit Data for the operation testing it on.</span>xxx</p>
 
 
 
