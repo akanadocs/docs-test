@@ -11,7 +11,8 @@ nav-title: LC Promotion Guide
 ---
 <h2 id="top">Lifecycle Coordinator Promotion Guide</h2>
 <p>Provides information about how to use the Lifecycle Coordinator feature to manage the promotion feature.</p>
-<p><a href="promotion_samples.htm" class="button secondary">Sample Topologies</a></p>
+<p><a href="../../sp/install_promotion/install_promotion.htm" class="button secondary">Lifecycle Coordinator Installation</a> 
+<a href="promotion_samples.htm" class="button secondary">Sample Topologies</a></p>
 
 <h5 class="stamp">API Platform Version: 8.4.3 and later</h5>
 <div class = "divider1"></div>
@@ -32,20 +33,7 @@ nav-title: LC Promotion Guide
 			<li><a href="#s03_07_00">Asset Model</a></li>
 		</ol>
 	</li>
-	<li><a href="#lc_installation">Lifecycle Coordinator Installation</a>
-		<ol>
-			<li><a href="#lc_install_zip">Getting the installation ZIP file</a></li>
-			<li><a href="#lc_install_feature">Installing the Lifecycle Coordinator feature</a></li>
-			<li><a href="#lc_install_db_notes">Checking for database-specific requirements</a></li>
-			<li><a href="#lc_install_secure_api">Securing the Topology REST API</a></li>
-			<li><a href="#com_soa_promotion">Remote container address (com.soa.promotion)</a></li>
-			<li><a href="#com_akana_lifecycle_coordinator">Properties to secure the Topology REST API (com.akana.lifecycle.coordinator)</a> (8.4.15 and later)</li>
-			<li><a href="#config_preserveKeys">Unique ID Mapping behavior</a></li>
-			<li><a href="#config_defaultFromEmail">Default "From Email" setting</a></li>
-			<li><a href="#config_tenant_synch_interval">Tenant Synchronization Interval</a> (8.4.16 and later)</li>
-		</ol>
-	</li>
-
+	<li><a href="#lc_installation">Lifecycle Coordinator Installation</a></li>
 	<li><a href="#topology_config">Topology Configuration</a>
 		<ol>
 			<li><a href="#s05_01">Tenants</a></li>
@@ -273,165 +261,7 @@ vsep.listenerName = "https"</td>
 
 
 <h3 id="lc_installation">Lifecycle Coordinator Installation</h3>
-<p>This section includes:</p>
-<ul>
-	<li><a href="#lc_install_zip">Getting the installation ZIP file</a></li>
-	<li><a href="#lc_install_feature">Installing the Lifecycle Coordinator feature</a></li>
-	<li><a href="#lc_install_db_notes">Checking for database-specific requirements</a></li>
-	<li><a href="#lc_install_secure_api">Securing the Topology REST API</a></li>
-	<li><a href="#com_soa_promotion">Remote container address (com.soa.promotion)</a></li>
-	<li><a href="#com_akana_lifecycle_coordinator">Properties to secure the Topology REST API (com.akana.lifecycle.coordinator)</a></li>
-	<li><a href="#config_preserveKeys">Unique ID Mapping behavior</a></li>
-	<li><a href="#config_defaultFromEmail">Default "From Email" setting</a></li>
-	<li><a href="#config_tenant_synch_interval">Tenant Synchronization Interval</a></li>
-</ul>
-
-
-<h4 id="lc_install_zip">Getting the installation ZIP file</h4>
-<p>For versions prior to 2018.0.0, if you're installing Lifecycle Coordinator, you'll need a specific ZIP file in addition to the main ZIP files for Akana API Platform installation.</p>
-<p>In version 2018.0.0 and later, Lifecycle Coordinator is part of the main Akana API Platform ZIP file; you don't need any additional ZIP file.</p>
-<p>Log in to the Rogue Wave Support Center (<a href="https://library.roguewave.com" target="_blank">https://library.roguewave.com</a>).</p>
-<p>In the <strong>My Resources section</strong>, click <strong>Product Downloads</strong>, then click <strong>Akana - Product Downloads</strong>. Download the applicable <strong>lifecyclemanagerplatform_8.4.xx.xxxxx.zip</strong> file for Lifecycle Manager; for example, <strong>lifecyclemanagerplatform_8.4.16.02264.zip</strong> file.</p>
-
-
-<h4 id="lc_install_feature">Installing the Lifecycle Coordinator feature</h4>
-<p>For an on-premise installation of the Akana API Platform, the Lifecycle Coordinator feature must be separately installed from the Akana Administration Console:</p>
-<p><img src="images/promotion_07.jpg" alt="Lifecycle Coordinator feature" /></p>
-<p>Installing Lifecycle Coordinator implicitly installs the Lifecycle Repository feature as well. After selecting Lifecycle Coordinator for installation, the user is guided through a number of configuration tasks for the Lifecycle Repository feature.</p>
-
-
-<h4 id="lc_install_db_notes">Checking for database-specific requirements</h4>
-<p>Depending on the database version you're using, there might be additional steps you need to take. You should perform these steps after installation and before the additional configuration steps.</p>
-<p>For details of the requirements for specific database types and versions, refer to the <a href="../../sp/platform_install/installing_akana_api_platform_v84.htm#database_notes">database notes</a> section of the Akana API Platform installation documentation. Specifically, there are notes for Microsoft SQL Server and MySQL relating to installation of Lifecycle Repository.</p>
-<p>Complete any applicable steps before continuing.</p>
-
-
-<h4 id="lc_install_secure_api">Securing the Topology REST API</h4>
-<p>There is also a task to secure the Topology REST API, as shown below.</p>
-<p><img src="images/promotion_08.jpg" alt="Set Topology API Credentials task" /></p>
-<p>This sets up the credentials for basic authentication on calls to the Topology REST API.</p>
-
-
-<h4 id="com_soa_promotion">Remote container address (com.soa.promotion)</h4>
-<p>If the Lifecycle Coordinator is installed remotely, a URL to the remote container hosting the Lifecycle Coordinator instance must be configured for each container hosting tenants from which promotion can be requested.</p>
-<p>To set this up:</p>
-<ol>
-	<li>In the Akana Administration Console, open the <strong>Configuration</strong> tab.</li>
-	<li>Select the <strong>com.soa.promotion</strong> category.</li>
-	<li>Set the <strong>remote.promoter.address</strong> property to the host address of the container hosting the Lifecycle Coordinator instance. An example is shown below.
-<p><img src="images/promotion_09.jpg" alt="Setting remote.provider.address" /></p></li>
-	<li>Save the changes.</li>
-</ol>
-
-<h4 id="com_akana_lifecycle_coordinator">Properties to secure the Topology REST API (com.akana.lifecycle.coordinator)</h4>
-<p class="stamp"><strong>API Platform Version: 8.4.15 and later</strong></p>
-<p>You can set up the global configuration properties for Lifecycle Coordinator in the Akana Admin Console.</p>
-<p>With the three properties listed below, you can configure the Topology REST API to require basic authentication for all requests.</p>
-<ol>
-	<li>In the Akana Administration Console, open the <strong>Configuration</strong> tab.</li>
-	<li>Select the <strong>com.akana.lifecycle.coordinator</strong> category.</li>
-	<li>Set the properties. For details, see <a href="#lc_property_details">com.akana.lifecycle.coordinator properties</a> below.</li>
-	<li>Save the changes.</li>
-</ol>
-<h5 id="lc_property_details"><strong>com.akana.lifecycle.coordinator</strong> properties</h5>
-<dl>
-<dt>lifecycle.coordinator.config.apiUser</dt>
-<dd>This field and the next are used to set the <strong>global</strong> basic authentication credentials for the Topology REST API. If this property is left empty, the Topology API will not require authentication of requests.</dd>
-<dt>lifecycle.coordinator.config.apiPassword properties</dt>
-<dd>If a value was set for lifecycle.coordinator.config.apiUser, specify the password.</dd>
-<dt>lifecycle.coordinator.config.enableTenantScopedAuthentication</dt>
-<dd>Boolean. Used to allow delegation of authentication to the primary tenant in the topology being acted on. The primary tenant is the tenant marked as the <strong>userAuthenticationSource</strong> in the topology. If no tenant is marked as the userAuthenticationSource, the initial tenant in the topology is used for authentication.</dd>
-<dd>To be able to access the Lifecycle Coordinator user interface, a user must be registered in the tenant that's specified as the <strong>userAuthenticationSource</strong> and must also be assigned one or both of these roles, in Policy Manager: <strong>LC User</strong> or <strong>LC Administrator</strong>. See <a href="../learnmore/site_admin_lc.htm#lc_user_role">Who can use the Lifecycle Coordinator UI?</a></dd>
-</dl>
-
-<p>The following table summarizes the authentication behavior.</p>
-<table cellspacing="0px" class="doctable" style="width: 98%;">
-	<thead>
-		<tr>
-			<th width="20%">Global Credentials Set</th>
-			<th width="20%">Tenant Scoped Authentication Enabled</th>
-			<th width="59%">Behavior</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>No</td>
-			<td>N/A</td>
-			<td>Requests are not authenticated</td>
-		</tr>
-		<tr>
-			<td>Yes</td>
-			<td>false</td>
-			<td>Requests must specify global credentials</td>
-		</tr>
-		<tr>
-			<td>Yes</td>
-			<td>true</td>
-			<td><p>Requests can specify either of these:</p>
-				<ul>
-					<li>The email and password of a site admin user in the primary tenant of the topology being acted on.</li>
-					<li>The global credentials</li>
-				</ul></td>
-		</tr>
-	</tbody>
-</table>
-
-
-<p><strong>Note</strong>: Requests for the <strong>getTopologies</strong> method (<span class="apidoc_code">GET /lc/api/topologies</span>) must specify the global credentials since there is no specific topology being acted on.</p>
-
-
-<h4 id="config_preserveKeys">Unique ID Mapping behavior</h4>
-<p class="stamp"><strong>API Platform Version: 8.4.14 and later. Updated for 2018.0.0.</strong></p>
-<p>When a source and target environment exist in the same API Platform instance, it is necessary to assign new unique IDs (keys) to the internal objects, such as services, that make up an API or app being promoted. This is because the keys must be unique across the API Platform instance, regardless of which tenant they exist in.</p>
-<p>By default, Lifecyle Coordinator determines whether to preserve the keys of the promoted objects, or to assign new keys, based on whether the source and target environments exist in the same API Platform instance:</p>
-<ul>
-	<li>If the source and target environments coexist in the same API Platform instance, the platform assigns new keys.</li>
-	<li>If the source and target environments are in different API Platform instances, the platform preserves the original keys from the source environment.</li>
-</ul>
-<p>In certain situations, it might be necessary to override the default key handling behavior. For example, assume that environment A is in one API Platform instance and environments B and C coexist in another API Platform instance. If a topology is configured to promote from environment A to environments B and C in parallel, the default key handling algorithm will attempt to assign the same keys to objects promoted to each environment, B and C. The result would be that one of the promotions would fail. In this case, you can override the default key handling behavior by setting the <strong>preserve-keys</strong> property on one of the Promotion Profiles involved.
-	For example, the Promotion Profiles for environment A would be configured as shown below.</p>
-<pre>"promotionProfiles": [
-{
-    "name": "B Promotion",
-    "targetEnvironment": "B"
-  },
-  {
-    "name": "C Promotion",
-    "targetEnvironment": "C",
-    "properties" : [
-      {"name":"preserve-keys","value":"false"}
-    ]
-  } 
-]</pre>
-<p>With this approach, the promoted keys in environment B would match those of the source, while environment C would have new keys assigned, eliminating conflict between the two co-located target environments.</p>
-<p><strong>Note</strong>: Be cautious in using the <strong>preserve-keys</strong> property. If the source and target environments are on the same API Platform instance, and the property is set to <strong>true</strong>, promotions will fail.</p>
-
-
-<h4 id="config_defaultFromEmail">Default "From Email" setting</h4>
-<p>You can set the default <strong>from</strong> email address used in emails sent from Lifecycle Coordinator, in the <strong>repository.config.defaultFromEmail property</strong> of the <strong>com.soa.repository</strong> configuration category.</p>
-<p>You can also override the <strong>from</strong> email address for a specific topology. To do this, go into the topology library as an admin user or superuser, click <strong>Support Center</strong>, click <strong>Configure Library</strong> and set the <strong>Sender Email</strong> field, as shown below.</p>
-<p><img src="images/promotion_lm_from_email.jpg" alt="Setting From Email in LM" /></p>
-
-
-<h4 id="config_tenant_synch_interval">Tenant Synchronization Interval</h4>
-<p class="stamp"><strong>API Platform Version: 8.4.16 and later</strong></p>
-<p>Lifecycle Coordinator periodically updates cached policy and organization information for tenants referenced in a topology. The specific interval for this update is controlled by the following property:</p>
-<dl>
-<dt>Configuration category</dt>
-<dd>com.soa.repository</dd>
-
-
-<dt>Configuration property</dt>
-<dd>repository.config.tenantSyncInterval</dd>
-
-
-<dt>Explanation:</dt>
-<dd>Sets the interval between updates to cached policy and organizational information. The value is set in milliseconds.</dd>
-
-
-<dt>Default value:</dt>
-<dd>300000 (5 minutes)</dd>
-</dl>
+<p>For installation information, refer to <a href="../../sp/install_promotion/install_promotion.htm">Lifecycle Coordinator Installation</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
