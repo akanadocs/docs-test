@@ -11,11 +11,8 @@ nav-title: Multi-Regional Deployment
 ---
 <h2 id="top">Akana API Gateway Multi-Regional Deployment</h2>
 <p>Find out how to configure a multi-regional deployment with MongoDB.</p>
-
-
-
 <p>
-<a href="../platform_install/installing_akana_api_platform.htm" class="button secondary">Installing the Akana API Platform 2018.0.x</a>
+<a href="../platform_install/installing_akana_api_platform.htm" class="button secondary">Installing the Akana API Platform 2018.0.x</a> 
 <a href="deployment_clustered.htm" class="button secondary">Sample Deployment Scenario</a>
 </p>
 
@@ -51,7 +48,6 @@ nav-title: Multi-Regional Deployment
 	<li><a href="#config_sample">Sample Configuration File</a></li>
 </ul>
 <div class = "divider1"></div>
-
 
 
 
@@ -140,7 +136,6 @@ nav-title: Multi-Regional Deployment
 	<li><a href="#query_routers">Query Routers</a></li>
 	<li><a href="#database_servers">Database Servers</a></li>
 	<li><a href="#arbiters">Arbiters</a></li>
-
 	<li><a href="#shards">Shards</a></li>
 	<li><a href="#db_driver_settings">Database Driver Settings</a></li>
 	<li><a href="#troubleshooting">Troubleshooting</a></li>
@@ -181,13 +176,13 @@ nav-title: Multi-Regional Deployment
 <p>A query router must be configured in each data center that will route inserts and queries to the correct database servers in the MongoDB cluster. The query routers must all use the same set of config servers, so that queries and inserts work on consistent data across the data centers. The following are the steps to configure a query router:</p>
 <p>Step 1 - Create a configuration file that the query router will read on startup. The configuration file will include the addresses of the config servers and the network address of the server. An example file is shown below.</p>
 <pre>01) sharding:
-02)     configDB: hostA:27019, hostB:27019, hostC:27019
+02)     configDB: &lt;replica set name&gt;/hostA:27019,hostB:27019,hostC:27019
 03) net:
 04)     bindIp: hostA
 05)     port: 27018</pre>
 <p>In the above:</p>
 <ul>
-	<li>Line 02 identifies the host:port of each config server, separated by commas.</li>
+	<li>On Line 02, &lt;replica set name&gt; is the name of the replica set passed into the mongod <span class="apidoc_code">--replSet</span> parameter when starting the configuration database servers.</li>
 	<li>Lines 04 and 05 identify the host and port that the query router is listening on.</li>
 	<li>The default port for all MongoDB processes is 27017.</li>
 </ul>
@@ -419,6 +414,7 @@ nav-title: Multi-Regional Deployment
 	<li><a href="#verify_data_distrib">Verify Proper Data Distribution across Shards</a></li>
 	<li><a href="#check_mongodb_logs">Check MongoDB Process Logs</a></li>
 	<li><a href="#flush_query_router_config">Flush a Query Router's Configuration</a></li>
+	<li><a href="#error_local_voted_doc">Error: Did not find local voted for document at startup</a></li>
 </ul>
 
 
@@ -457,12 +453,33 @@ nav-title: Multi-Regional Deployment
 	<li>Line 01 starts the systemLog section.</li>
 	<li>Line 02 provides a location to which log files will be written. There are several other options for logging, described in detail at <a href="https://docs.mongodb.org/manual/reference/configuration-options/" title="https://docs.mongodb.org/manual/reference/configuration-options/" target="_blank">https://docs.mongodb.org/manual/reference/configuration-options/</a>.</li>
 </ul>
+
 <h5 id="flush_query_router_config">Flush a Query Router's Configuration</h5>
 <p>If there is a concern that a query router is using stale information because its cache is out of date, you can flush the cache and force the query router to re-read the config database. To flush a query router's cache, perform the following steps.</p>
 <p>Step 1: Connect to the admin shell of the query router, as shown in the example below.</p>
 <pre>mongo hostA:27018/admin</pre>
 <p>Step 2: From the shell, flush the cache, as shown in the example below.</p>
 <pre>> db.adminCommand("flushRouterConfig")</pre>
+
+<h5 id="error_local_voted_doc">Error: Did not find local voted for document at startup</h5>
+<p>In certain instances, on starting up the configuration server you might encounter the following error:</p>
+<p><img src="assets/deploy_error_local_voted_doc.jpg" width="978" height="40" alt="Configuration server startup error" /></p>
+<pre>Did not find local voted for document at startup.
+Did not find local replica set cofiguration document at startup. Did not find replica set configuration document in local.system.replset</pre>
+<p>If you encounter this error, connect to the configuration database and do an <span class="apidoc_code">rs.initiate()</span>. An example is shown below.</p>
+<pre>rs.initiate(
+  {
+    _id: "&lt;replica set name&gt;",
+    configsvr: true,
+    members: [
+      { _id : 0, host : "&lt;hostA&gt;:27019" },
+      { _id : 1, host : "&lt;hostB&gt;:27019" },
+      { _id : 2, host : "&lt;hostC&gt;:27019" }
+    ]
+  }
+)</pre>
+<p>In the above, &lt;replica set name&gt; is the name of the replica set passed into the mongod <span class="apidoc_code">--replSet</span> parameter when starting the configuration database servers.</p>
+<p>For more information, refer to the MongoDB documentation: <a href="https://docs.mongodb.com/manual/tutorial/deploy-shard-cluster/#initiate-the-replica-set" title="Link to specific MongoDB article re replica set" target="_blank">https://docs.mongodb.com/manual/tutorial/deploy-shard-cluster/#initiate-the-replica-set</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
