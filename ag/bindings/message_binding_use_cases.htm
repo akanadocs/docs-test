@@ -1,330 +1,166 @@
 ---
 layout: page
-title: Message Binding Use Cases
-description: Learn how to xxx
+title: Message Binding Usage Scenario for Policy Manager (AMQP/JMS).
+description: Learn how to configure an AMQP binding for REST, Messaging, and SOAP services and use it with a virtual service.
 product: ag
 category: learn
 sub-nav-class: Bindings
-weight: xx
+weight: 15
 type: page
-nav-title: Message Binding Use Cases
+nav-title: Message Binding Usage Scenario for PM (AMQP/JMS)
 ---
-<h2 id="top">Message Binding Use Cases for Policy Manager</h2>
-<p>xxx</p>
-<p><a href="bindings_toc.html" class="button secondary">Bindings (Home)</a> <a href="../bindings/about_bindings.html" class="button secondary">About Bindings</a> <a href="../bindings/view_binding_details.html" class="button secondary">View Binding Details</a> <a href="../bindings/add_binding.html" class="button secondary">Add Binding</a> 
+<h2 id="top">Message Binding Usage Scenario for Policy Manager (AMQP/JMS)</h2>
+<p>Learn how to create an AMQP binding for REST, Messaging, and SOAP services and use with a virtual service.</p>
+<p><a href="../bindings/using_messaging_binding.html" target="_blank" class="button secondary">Using the Messaging Binding</a></p>
 
-
-
-<a href="../bindings/binding_identifiers.html" class="button secondary">Binding Identifiers</a></p>
-<p> <a href="../bindings/import_binding_from_wsdl.html" class="button secondary">Import Binding from WSDL</a> <a href="../bindings/view_wsdl_binding.html" class="button secondary">View WSDL (Binding)</a> <a href="../bindings/view_service_references_binding.html" class="button secondary">View Service References (Binding)</a> <a href="../bindings/delete_binding.html" class="button secondary">Delete Binding</a></p>
 <div class = "divider1"></div>
 
 <h3 style="color: gray;">Table of Contents</h3>
 <ol class="table_of_contents">
-	<li><a href="#s01_intro">Introduction</a></li>
-	<li><a href="#s02_binding_add">Add Messaging Binding (AMQP or JMS)</a></li>
-	<li><a href="#s03">Add AMQP listener</a></li>
-	<li><a href="#s04">Add JMS listener</a></li>
-	<li><a href="#s05">Assign Messaging Binding to Service</a></li>
-	<li><a href="#s06">Send Requests to API Using ActiveMQ</a></li>
-	<li><a href="#s07">Create Virtual Service to Provide RESTful Interface for Placing Messages</a></li>
-	<li><a href="#s08">
-</a></li>
+	<li><a href="#introduction">Introduction</a></li>
+	<li><a href="#step_1_add_messaging_binding_amqp_or_jms">Step 1 - Add Messaging Binding (AMQP or JMS)</a></li>
+	<li><a href="#step_2_add_amqp_listener">Step 2 - Add AMQP Listener</a></li>
+	<li><a href="#step_3_add_jms_listener">Step 3 - Add JMS Listener</a></li>
+	<li><a href="#step_4_assign_messaging_binding_to_service">Step 4 - Assign Messaging Binding to Service</a></li>
+	<li><a href="#step_5_send_requests_to_api_using_activemq">Step 5 - Send Requests to API Using ActiveMQ</a></li>
+	<li><a href="#step_6_create_virtual_service">Step 6 - Create Virtual Service to Provide RESTful Interface for Placing Messages</a></li>
+	<li><a href="#step_7_logging">Step 7 - Logging</a></li>
 </ol>
 <div class = "divider1"></div>
 
 
 
-<h3 id="s01_intro">Chapter 1 | Introduction</h3>
-
-<p>This document describes how to perform the following tasks in SOA Software Policy Manager.</p>
-<p>Create AMQP binding for services of any type (REST, Messaging, SOAP).</p>
-<p>Create a virtual service that provides a messaging (AMQP or JMS) interface to one or more existing services of any type (REST, Messaging, SOAP).</p>
-<p>Create a virtual service that provides a RESTful interface for placing messages onto, and pulling messages from a JMS or AMQP queue.</p>
-
-
-
-<h3 id="s02_binding_add">Chapter 2 | Add Messaging Binding (AMQP or JMS)</h3>
-<p>1	Launch the Policy Manager Management Console.</p>
-<p>2	Select Create Physical Service, create a physical service with http://www.ebi.ac.uk/ebisearch/ws/rest?_wadl</p>
-<p>3	Navigate to Configure >Registry >Bindings and select Add Binding.</p>
-<p>4	Select the service added in Step 2.</p>
-<p>5	On the next screen, select the Messaging Binding type.</p>
-<p>6	In next screen, select AMQP as the Transport protocol.</p>
-<p>7	Provide Destination and Reply To fields with desired I/O/Fault Serializations.</p>
-<p>8	Select Part type in Parts section. This sections is used to assign Path parameters, Query parameters, Body parameters (e.g., http://agubba- e6420:9901/VS/{domainid}/entry/{entryids}?fields=<fields>&fieldurl=<fieldurl>&viewurl=<viewurl>&f ormat<format>) is the URL to hit. In that case, the Binding screen configuration should be something like</p>
-<p>So that the request will hit,  http://agubba- e6420:9901/VS/uniprot/entry/WAP_RAT,WAP_MOUSE?fields=descAltName,organism_scientific_na</p>
-<p>me&fieldurl=true&viewurl=true&format=json</p>
-<p>9	Provide an XPath or SQL query for Use selector option (e.g., Operation='get').</p>
-<p>10  After adding the required fields, finish the process.</p>
-<p>11  Similarly, select JMS in Transport field, if it is desired to have a Messaging Binding over JMS protocol</p>
+<h3 id="introduction">Introduction</h3>
+<p>This topic describes how to perform the following tasks in Akana Policy Manager.</p>
+<ul>
+	<li>Create AMQP binding for services of any type (REST, Messaging, SOAP).</li>
+	<li>Create a virtual service that provides a messaging (AMQP or JMS) interface to one or more existing services of any type (REST, Messaging, SOAP).</li>
+	<li>Create a virtual service that provides a RESTful interface for placing messages onto, and pulling messages from a JMS or AMQP queue.</li>
+</ul>
+<p><a href="#top">back to top</a></p>
 
 
 
-<h3 id="s03">Chapter 3 1    Add AMQP listener</h3>
-<p>1 Select the Containers folder where you will be adding the AMQP listener, and select Add Listener.</p>
-<p>2	Select the AMQP Listener type.</p>
-<p>3	Add an AMQP listener  with details as shown below.</p>
-<p>CJ SOA Software Policy Manager - Add Container istener - G009le Chrome	l= I @)  IWJ.l</p>
-<p>[J iocalhost9900/faces/container/add_contai ner_listener_select_category.faces</p>
-<p>PO L IC Y MANAGERN</p>
-<p>Configure AMQP Container	listener Details	 	</p>
-<p>Listener 	listener Name:	jAMOP The "Confgure AMOP Container Listener" screen</p>
-<p>aktws you to c.onf.gure an AMOP listener for the current Poicy Manager Contaner. The screen ts organized as folows:</p>
-<p>Description:	L</p>
-<p>Listener Detals·	AMQP Details</p>
-<p>Listener Name - Specify an nstance name for the 	Vinual Host Name!;ubba-·e6420.soa.iotal</p>
-<p>listener.</p>
-<p>Description .Specify a description of the tislener. 	Pon:	70</p>
-<p>AMOP Detals·</p>
-<p>VrtualHost Name - This option alowsyou to</p>
-<p>A uthentication R equireu</p>
-<p>specify the vrtual host name of the AMOP broker. 	Identity Source:	LocalDomain	External</p>
-<p>Port .Displays the defauplort 5672 used for</p>
-<p>AMOP conne<:tions.	Username:	J</p>
-<p>Aulhenticaoon Requrecf	Confirm</p>
-<p>If the AMOP binding wble used to authent ate an 	Password:</p>
-<p>AMOP registry where AMOP destinations or targets</p>
-<p>are located,or to authentate the AMOP system 	r<:onnect on Propenies ijseff,authenOC&tion may be requl"ed. To enable</p>
-<p>authentation,sele<t the checkbox and specify the 	Name:read.timeout	Value:{)()()()	Remove</p>
-<p>username and password credentials.</p>
-<p>Connedion Properties: 	Add Property</p>
-<p>Connettion Pfoperties are user-defned addijional Pfoperties that allow you to specify the messaging engine that an application wclonnedto.Only "String" type message Pfoperties are supported. Connection Properties are confgured by entering a "Propeny Name• and"Propeny Vakle.You can enter unlinCted con.nection properttes.  Enterilg a Connection Propeny is optional.</p>
-<p>Configure the tislener PfOperties based on your requirements. After you have completed your</p>
-<p>m 	am m lmii!II!!D</p>
+
+<h3 id="step_1_add_messaging_binding_amqp_or_jms">Step 1 - Add Messaging Binding (AMQP or JMS)</h3>
+<ol>
+	<li>Launch the Policy Manager Management Console.</li>
+	<li>Select <strong>Create Physical Service</strong>, and then create a physical service using the WADL file at http://www.ebi.ac.uk/ebisearch/ws/rest?_wadl</li>
+	<li>Navigate to <strong>Configure</strong> &gt; <strong>Registry</strong> &gt; <strong>Bindings</strong> and select <strong>Add Binding</strong>.</li>
+	<li>Select the service you just added.
+  <p><img src="images/message_binding_usecase1.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p></li>
+	<li>On the next screen, select the Messaging Binding type.
+<p><img src="images/message_binding_usecase1.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p></li>
+	<li>On the next screen, select <strong>AMQP</strong> as the Transport protocol.</li>
+	<li>Provide <strong>Destination</strong> and <strong>Reply To</strong> fields with desired I/O/Fault Serializations.</li>
+	<li>Select <strong>Part Type</strong> in Parts section. This section is used to assign Path parameters, Query parameters, Body parameters (for example, <strong>http://agubba-e6420:9901/VS/{domainid}/entry/{entryids}?fields={fields}&amp;fieldurl={fieldurl}&amp;viewurl={viewurl}&amp;format{format</strong>}) is the URL to hit. In this case, the Binding screen configuration should be something like:
+<p><img src="images/message_binding_usecase3.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+<p>In the above example, the request will go to the following URL:</p>
+<p>http://agubba-e6420:9901/VS/uniprot/entry/WAP_RAT,WAP_MOUSE?fields=descAltName,organism_scientific_name&amp;fieldurl=true&amp;viewurl=true&amp;format=json</p>
+</li>
+	<li>Provide an XPath or SQL query for Use selector option (for example, Operation='get').</li>
+	<li>After adding the required fields, finish the process.</li>
+	<li>Similarly, select JMS in Transport field, if it is desired to have a Messaging Binding over JMS protocol.</li>
+</ol>
+<p><a href="#top">back to top</a></p>
 
 
 
-<h3 id="s04">Chapter 4 | Add JMS listener</h3>
-<p>1	Select the Containers folder and Network Director (ND1) container where you will be adding the JMS</p>
-<p>listener, and select Add Listener.</p>
-<p>2	Select the JMS listener type.</p>
-<p>3	Add the JMS listener with details as shown below.</p>
+
+<h3 id="step_2_add_amqp_listener">Step 2 - Add AMQP Listener</h3>
+<ol>
+	<li>Select the <strong>Containers</strong> folder where you will be adding the AMQP listener, and select <strong>Add Listener</strong>.</li>
+	<li>Select the <strong>AMQP</strong> Listener type.</li>
+	<li>Add an AMQP listener with details as shown below.
+<p><img src="images/message_binding_usecase4.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p></li>
+</ol>
+<p><a href="#top">back to top</a></p>
 
 
 
-<h3 id="s05">Chapter 5 | Assign Messaging Binding to Service</h3>
-<p>1	Select the Services folder for the Physical Service. In the Service Overview section select Manage in the</p>
-<p>Interfaces and Bindings section.</p>
-<p>2	On the Select Interfaces screen, select the Messaging Binding and assign it to the service (i.e., copy to the Interfaces Assigned panel), and complete the wizard.</p>
-<p>3	Select Virtualize Service and virtualize the physical service on the AMQP/JMS listener on Network</p>
-<p>Director (ND1), and assign a service name (e.g., VS1).</p>
-<p>4	The virtual service should be hosted on the ND1 where we have previously added the AMQP/JMS</p>
-<p>listeners.</p>
-<p>:'!PVIl: SOt.. SoftNMe 'o ic:   x</p>
-<p>+-	C " C) agubba -e5L20:9900/ms/ms.do'time=1424766912003:</p>
-<p>.P O L IC Y</p>
-<p>C===========--------iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiilm=U· '  . .</p>
-<p>f"-' """';D;;;:;;;;;;.;.;;•;.•</p>
-<p>lJ..Jisty</p>
-<p>UwoP</p>
-<p>-C) Pnxes;e,</p>
-<p>-'tl   Scrbte</p>
-<p>\""""</p>
-<p>Q  RMI_S«Vic•</p>
-<p>@\ Re$1_SeM:e_\SO</p>
-<p>.....•..,."''1-·., "''    ® Rt_ns·ir:,.,_\1!10 1</p>
-<p>amoo:!/a<1ubba-t642C.soa JO<al:5672</p>
-<p>P.!Qt 1     o' l</p>
-<p>Rest Sefvite PatTv</p>
+
+<h3 id="step_3_add_jms_listener">Step 3 - Add JMS Listener</h3>
+<ol>
+	<li>Select the <strong>Containers</strong> folder and Network Director (<strong>ND1</strong>) container where you will be adding the JMS listener, and select <strong>Add Listener</strong>.</li>
+	<li>Select the JMS listener type.</li>
+	<li>Add the JMS listener with details as shown below.
+<p><img src="images/message_binding_usecase5.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p></li>
+</ol>
+<p><a href="#top">back to top</a></p>
 
 
 
-<h3 id="s06">Chapter 6 1  Send Requests to API Using ActiveMQ</h3>
-<p>1  Network Directory (NDl) must be connected to an AMQP broker such as apache-activemq-5.10.0.</p>
-<p>2	Run ActiveMQ.</p>
-<p>3 	Access activeMQ client at 'http://agubba-e6420:8161/admin/'.</p>
-<p>4	Navigate to the Queues tab or Topics tab depending on the destination  type used during Messaging</p>
-<p>Binding creation.</p>
-<p>5	Select the Queue viz., dynamicQueues/dest5 in this scenario.</p>
-<p>6	Click on SendTo against the destination name.</p>
-<p>7	Provide the appropriate Correlation ID, ReplyTo and Message Body and send the request.</p>
-<p>C 	Cl ag ubba-e6420:8161/admin/send.jsp?JMSDestination=dynamicQueues%2fdestS&JMSDesti nationType=queue</p>
-<p>ctiveMO</p>
-<p>Home IQueues  I Topocs ISubscnbers IConnecto ons INetwork IScheduled  ISend</p>
-<p>Send a JMS Message</p>
-<p>Mesoso ge Heill dtr</p>
-<p>Destination</p>
-<p>@Y namicQueues/destS	Queue or Topic</p>
-<p>Queue  •</p>
-<p>Correlation ID</p>
-<p>j Persistent Delivery	u</p>
-<p>Rt!ply To</p>
-<p>Type</p>
-<p>ynamicQueues/dest6</p>
-<p>Priority</p>
-<p>Time  to live 	L</p>
-<p>Me.ssage Group</p>
-<p>L---------    -_J Message Group Si!quence Number	c 	</p>
-<p>del ay( ms) 	Time(ms)  to Hait  befoschedulin; again</p>
-<p>Number of  repeats</p>
-<p>tJse. a CR.ON string for scheduling 	L</p>
-<p>Number of  messages  to send    ------	Header to store the counter</p>
-<p>JMSXMessageCounter---=:J</p>
-<p>Menoge body</p>
-<p>Enter some  te•t here  for the message body ..•</p>
-<p>I 	 	Reset  I</p>
+
+<h3 id="step_4_assign_messaging_binding_to_service">Step 4 - Assign Messaging Binding to Service</h3>
+<ol>
+	<li>Select the <strong>Services</strong> folder for the Physical Service. In the <strong>Service Overview</strong> section select <strong>Manage</strong> in the <strong>Interfaces and Bindings</strong> section.
+<p><img src="images/message_binding_usecase6.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+</li>
+	<li>On the <strong>Select Interfaces</strong> screen, select the <strong>Messaging Binding</strong> and assign it to the service (copy to the <strong>Interfaces Assigned</strong> panel), and complete the wizard.
+<p><img src="images/message_binding_usecase7.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+<p><img src="images/message_binding_usecase8.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p></li>
+	<li>Select <strong>Virtualize Service</strong> and virtualize the physical service on the AMQP/JMS listener on Network Director (<strong>ND1</strong>), and assign a service name (for example, <strong>VS1</strong>).
+<p><img src="images/message_binding_usecase9.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+</li>
+	<li>The virtual service should be hosted on the <strong>ND1</strong> where we have previously added the AMQP/JMS listeners.
+<p><img src="images/message_binding_usecase10.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+</li>
+</ol>
+<p><a href="#top">back to top</a></p>
 
 
 
-<h3 id="s07">Chapter 7 | Create Virtual Service to Provide RESTful Interface for Placing Messages</h3>
-<p>1	Virtualize the above service on Network Director (ND2) with HTTP binding, and assign a name (e.g.,</p>
-<p>VS2).</p>
-<p>2	Send requests to VS2.</p>
-<p>3	The requests will hit the VS1 > physical service</p>
+
+<h3 id="step_5_send_requests_to_api_using_activemq">Step 5 - Send Requests to API Using ActiveMQ</h3>
+<ol>
+	<li>Network Directory (<strong>ND1</strong>) must be connected to an AMQP broker such as apache-activemq-5.10.0.</li>
+	<li>Run ActiveMQ.
+<p><img src="images/message_binding_usecase11.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+</li>
+	<li>Access the activeMQ client at <strong>http://agubba-e6420:8161/admin/</strong>.</li>
+	<li>Navigate to the <strong>Queues</strong> tab or <strong>Topics</strong> tab depending on the destination type used during Messaging Binding creation.</li>
+	<li>Select the Queue; in this scenario, dynamicQueues/dest5.
+<p><img src="images/message_binding_usecase12.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+</li>
+	<li>Click on <strong>SendTo</strong> against the destination name.</li>
+	<li>Provide the appropriate Correlation ID, ReplyTo and Message Body and send the request.
+<p><img src="images/message_binding_usecase13.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+</li>
+</ol>
+<p><a href="#top">back to top</a></p>
+
+
+
+
+<h3 id="step_6_create_virtual_service">Step 6 - Create Virtual Service to Provide RESTful Interface for Placing Messages</h3>
+<ol>
+	<li>Virtualize the above service on Network Director (<strong>ND2</strong>) with HTTP binding, and assign a name (for example, <strong>VS2</strong>).</li>
+	<li>Send requests to <strong>VS2</strong>.</li>
+	<li>The requests will hit the <strong>VS1</strong> &gt; physical service.
+<p><img src="images/message_binding_usecase14.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+</li>
+</ol>
 <p>And the response is seen.</p>
-
-
-
-<h3 id="s08">Chapter 8 1      Logging</h3>
-<p>1 If the Detailed Auditing policy is attached to VSl and VS2, usage logs wi II be generated.</p>
-<p>2	VS21ogs:</p>
-<p>C  fi .;yu i.JL.:·Oc'6420:.9900/111JI 'I.Jui iii=142476E912:03.</p>
-<p>.. ..JI MANAGtR··</p>
-<p>c.-.-TrN</p>
-<p>,(.J't:t.fiH</p>
-<p>s.;.::.b.IKJP</p>
-<p>I IIi    ..  14          0 lint  :iet"tke  vs<l v s J</p>
-<p>Aerb  LOQl>    REai-T me Ct  rb H bfic.<!IC1a      Oepen'.e:</p>
-<p>i et:"'</p>
-<p>lif    ')( U</p>
-<p>0 @] :sa......</p>
-<p>-ltm t  l-it HIIf    	</p>
-<p>• :;t.r)d:c :;tm T mc Cnof C)d,.  C®.t'KtI.W T:</p>
-<p>l itMt.r  - ·</p>
-<p>-cootent fiJter·--------------------,</p>
-<p>L-G FC-:!I:_tcNc<_'dl_W"JO</p>
-<p>!i; tJ s</p>
-<p>m t:J</p>
-<p>i m- t:J Conl3iMR</p>
-<p>"".........""</p>
-<p>c:::=--=:::Jc..oc" c:::=-=:::::J</p>
-<p>c;.c:.M"a.,t K rr---- -	-</p>
-<p>Oveld.Lu       AI	"'J</p>
-<p>ont ,.l t...,</p>
-<p>Trantion rllef"</p>
-<p>::non:    lranu <t<li'"IS (t.lf	•)</p>
-<p>D SOA Software Policy Manager - Usage Data  Details - Google Chrome</p>
-<p>Container:	ND2 (1aDSa788-a6b4-4935-b462-22583d78) Container transaction Unique ID:   5caa4e56-bc()9.11e4-8b52-fc7158a1d8cc</p>
-<p>Client Host:	10.7.20.76</p>
-<p>Request Date/Time: Response Time:</p>
-<p>Bound Request Message  Size: Bound Response Message  Size: WSDL Request Message Si ze: WSDL Response Message  Size: Next Hop URL:</p>
-<p>Time Taken for Next Hop:</p>
-<p>Is Soap Faul t by Next Hop: Is Soap Faul t by Contai ner: Listener URL:</p>
-<p>End-User Identity: Consumer Identity: Service Key: Operation Name: Contract Name: Contract Key: Custom Field 1: Error Category: Error Message:</p>
-<p>Error Detail s:</p>
-<p>Verb:</p>
-<p>Status Code:</p>
-<p>02124/2015 15:11:52.0</p>
-<p>6733 ms</p>
-<p>2171 bytes</p>
-<p>jbi://{http:/J\oNNt.ebi.ac.uklebisearchlws/rest}Rest_Service_vsO/s</p>
-<p>6722 ms false false</p>
-<p>http://AGUBBA-E6420.soa.local:99021vs2/uniproUentryNAP_RAT,WAP_MOUSE</p>
-<p>uddi:430e3e5c-bc06-11e4-8d36-a8c1e63ea02d Rest_Service_vsO_vsO.GET 1/{domainid}/entry/{entryids} asd</p>
-<p>9bdc70fd-bbfe-11e4-8d36-a8c1e63ea02d:1002</p>
-<p>0</p>
-<p>GET</p>
-<p>200</p>
-<p>[] SOA Softwa re Policy Manager - Usage Data Details - Google Ch rome</p>
-<p>is a list of the SOAP messages associated with the Usage record summarized above. Click on any record to see the corresponding message.</p>
-<p>Message Date/Time</p>
-<p>Record Name 	Type</p>
-<p>_J 02/24/2015 15:11:52</p>
-<p>APPLIC ATION</p>
-<p>Complete request</p>
-<p>_J 02/2412015 15:11:59	APPLICATION	Complete response</p>
-<p>Message Details</p>
-<p>EMPTY MESSAGE</p>
-<p>Raw Format (I ncludes HTTP Headers):</p>
-<p>..</p>
-<p>3	VS1 logs:</p>
-<p>[] SOA Software Policy Manager - Usage Data  Details - Google Chrome</p>
-<p>Container:</p>
-<p>ND1 (92a63ef9-3a92-4761-a738-146a44ed)</p>
-<p>Container transaction Unique ID:    60921014-bc09-11e4-b842-bcf.l03086e87</p>
-<p>Client Host: 	org.apache.qpid.amqp_1_0.jms.impi.Olleuel mp@l   38f748e5</p>
-<p>Request Date/Time: Response Time:</p>
-<p>Bound Request Message  Size:</p>
-<p>0212412015 15:11:58.0</p>
-<p>255ms</p>
-<p>Bound Response Message  Size:    2171 bytes</p>
-<p>WSDL Request Message Si ze: WSDL Response Message Size: Next Hop URL:</p>
-<p>Time Taken for Next Hop:</p>
-<p>Is Soap Faul t by Next Hop: Is Soap Faul t by Contai ner: Listener URL:</p>
-<p>End-User Identity:</p>
-<p>Consumer Identity: Service Key: Operation Name: Contract Name: Contract K ey: Custom Field 1: Error Category: Error Message:  Error Detail s: Status Code:</p>
-<p>http:/lwww.ebi.ac.uklebisearch/Wslrestluniprotlentry/WAP_RAT,WAP_MOUSE?</p>
-<p>f eldurl-1:rue&viewurl-1:rue&format  json&f elds;descAitName%2Corganism_scientifiC_name</p>
-<p>167ms false false</p>
-<p>jbi:/l{http:/Ntww.ebi.ac.uklebisearchlwslres}i Rest_Service_vsOJs</p>
-<p>uddi:d9adbb8f-bc04-11e4-8d36-a8c1e63ea02d Rest_Service_vsO.GET /l{domainid} entry/{entryids} asd</p>
-<p>9bdc70fd-bbfe-11e4-8d36-a8c1e63ea02d:1002</p>
-<p>0</p>
-<p>200 	..</p>
-<p>[] SOA Softwa re Policy Manager - Usage Data Details - Google Ch rome</p>
-<p>is a list of the SOAP messages associated with the Usage record summarized above. Click on any record to see the corresponding message.</p>
-<p>Message Date/Time</p>
-<p>Record Name 	Type</p>
-<p>_J 02/24/201S 1 S:11:58</p>
-<p>APPLICATION</p>
-<p>Complete request</p>
-<p>_J 02/241201S 1S:11:59 	APPLICATION	Complete response</p>
-<p>Message Details</p>
-<p>EMPTY MESSAGE</p>
-<p>Raw Format (I ncludes HTTP Headers):</p>
-<p>..</p>
-<p>[] SOA Software Policy Manager - Usage Data Details - Google Ch rome</p>
-<p>is a list of the SOAP messages associated with the Usage record summarized above. Click on any record to see the corresponding message.</p>
-<p>Message Date/Time</p>
-<p>Record Name 	Type</p>
-<p>--102/2412015 15:11:58</p>
-<p>--1 02/2412015 15:11:59</p>
-<p>APPLICATION APPLICATION</p>
-<p>Complete request</p>
-<p>Complete response</p>
-<p>Message Details	Raw Format (I ncludes HTTP Headers):	Q</p>
-<p>{"entries":[{"acc•:•P01174","id":''WAP_RAT","soorce•:•unipror,"ftelds":{"descAJtName•:rJ\'hey phosphoprotein1,"organism_sc:ientifte_name•: ["Rattus norvegicus")},"fiekiURLs":[{"name•:•id","Value":"http:/I>INNI.uniprot.orgluniprot/WAP_RAT1, f'name":"descRecName","Value":"http:/IIWtw.uniprot.orgluniprot/WAP_RAT1, f'name•:•acc","Value":"http:/I>INNI.uniprot.orgluniprotJIJI.'AP_RAT"}],"ViewURLs":</p>
-<p>[{"name":"Launch FASTA ."Value":"http://>INNI.eb.iac.uk/Toolslservites/webltoonorm.ebi?tool=fasta&context=protein&sequence=uniprot:WAP_RA Ti,</p>
-<p>{"name":"Launch NCBl BLAST","Value":"http://>INNI.ebi.ac.uk/Toolslservites/webltoonorm.ebi?</p>
-<p>tool=ncbiblast&context=protein&1>eQllence=vniprot:WAP_RAT1,</p>
-<p>{"name":"Lavnch lnterProScan","Value":"http:/I>INNI.ebi.ac.uk/Toolslservices/webltoonorm.ebi?tool=iprscanS&sequence=uniprot:WAP_RAT"},</p>
-<p>{"name":"in lnterpro Matches","Value":"http:I>INNI.ebi.ac.uk/interprolprotein/P011741 ,</p>
-<p>{"name•:•in UniSave","Vaaue":"http://www.ebi.ac.vkluniprot/unisave/appl#/searchiP011741 ,</p>
-<p>{"name":"in UniProt format","Value":"http://>INNI.ebi.ac.uk/Toolsldbfetchldbfetch?db.ounjprot&id=WAP_RAT&-style=raw"}J},</p>
-<p>{"acc":"P01173","id":"WAP_MOUSE","source":"unipror,"ftekls":{"descAJtName":O,"organism_scientifte_name":["Mus mvsculus")},"ftekiURLs": [{"name":"descRecName","Value":"http:I>INNJ.uniprot.orgluniprot/WAP_MOUSEj,{"name":"acc","Value":"http:/I>INNJ.vniprot.orgluniprot/WAP_MOUSEj,</p>
-<p>{"name":..td'","Value":"http://>INNI.uniprot.org/uniprot/WAP_MOUSEj],"ViewURLs": [{"name":"in UniSave","Value":"http:/floi\Wt.ebi.ac.ukluniprot/unisaveJappl#/search/P01173  ,</p>
-<p>{"name":"  aunch NCBl BLAST","Value":"http://>INNI.ebi.ac.uk/Toolslservices/webltoonorm.ebi?</p>
-<p>tool=ncbiblast&context=protein&sequence=uniprot:WAP_MOUSEj,{"name":"in UniProt format","Value":"http://www.ebi.ac.uk/Toolsldbfetchldbfetch?</p>
-<p>db=uniprot&id=WAP_MOUSE&style=raw1,{"name":"Launch FASTA"."Value":"http://>INNI.ebi.ac.uk/Toolslserviceslwebltoonorm.ebi?</p>
-<p>tool=1asta&context=protein&seqvence=vmprot:WAP_MOUSEj,{"name":"in lnterpro Matches","Valve":"http://>INNI.ebi.ac.ukl terprolprotein/P01173,1</p>
-<p>{"name":"Launch lnterProScan","Value":"http:/I>INNJ.ebi.ac.uk/Toolslservices/webltoonorm.ebi?tool=iprscanS&sequence=uniprot:WAP_MOUSEjJ}J}</p>
-<p>..</p>
-
 <p><a href="#top">back to top</a></p>
 
 
 
-<h3 id="xxx">xxx</h3>
-<p>xxx</p>
-<p><a href="#top">back to top</a></p>
 
-
-
-<h3 id="xxx">xxx</h3>
-<p>xxx</p>
-<p><a href="#top">back to top</a></p>
-
-
-
-<h3 id="xxx">xxx</h3>
-<p>xxx</p>
-<p><a href="#top">back to top</a></p>
-
-
-
-<h3 id="xxx">xxx</h3>
-<p>xxx</p>
+<h3 id="step_7_logging">Step 7 - Logging</h3>
+<ol>
+	<li>If the Detailed Auditing policy is attached to <strong>VS1</strong> and <strong>VS2</strong>, usage logs will be generated.</li>
+	<li><strong>VS2</strong> logs:
+<p><img src="images/message_binding_usecase15.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+<p><img src="images/message_binding_usecase16.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+<p><img src="images/message_binding_usecase17.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+<p><img src="images/message_binding_usecase18.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+</li>
+	<li><strong>VS1</strong> logs:
+<p><img src="images/message_binding_usecase19.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+<p><img src="images/message_binding_usecase20.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+<p><img src="images/message_binding_usecase21.jpg" alt="Messaging Binding" title="Add Messaging Binding" /></p>
+</li>
+</ol>
 <p><a href="#top">back to top</a></p>
 
 
@@ -346,7 +182,7 @@ nav-title: Message Binding Use Cases
 	<li><a href="binding_identifiers.html">Binding Identifiers</a></li>
 </ul>
 <ul>
-	<li><a href="uc_message_binding_amqp_jms.htm">Message Binding Usage Scenario for Policy Manager (AMQP/JMS)</a></li>
+	<li><a href="message_binding_use_cases.htm">Message Binding Usage Scenario for Policy Manager (AMQP/JMS)</a></li>
 	<li><a href="view_binding_details.html">View Binding Details</a></li>
 	<li><a href="import_binding_from_wsdl.html">Import Binding from WSDL</a></li>
 	<li><a href="view_wsdl_binding.html">View WSDL (Binding)</a></li>
