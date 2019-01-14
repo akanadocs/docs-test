@@ -167,20 +167,19 @@ nav-title: Runtime Configuration
 <p><img src="images_rc/promotion_pathclassifier_01_01.jpg" alt="Path classifier example -- input" /></p>
 	</li>
 	<li><strong>{catalog_asset.name_normalized}</strong>
-<p>Indicates that the path should include the API's name, with normalization applied for any spaces or other characters that are not URL-safe. For normalization rules, see <a href="#rc_path_classifier_norm">Normalization in Classifiers</a> below.</p></li>
+<p>Indicates that the path should include the API's name, with normalization applied for any spaces or other characters that are not URL-safe. For normalization rules, see <a href="#rc_path_classifier_norm">Normalization in classifiers</a> below.</p></li>
 	<li><strong>{catalog_asset.version}</strong>
 <p>Indicates that the asset path should include the version.</p></li>
 	<li><strong>{catalog_asset.version_normalized}</strong>
-<p>Indicates that the asset path should include the version, with normalization applied for any spaces or other characters that are not URL-safe. For example, <strong>version 1</strong> becomes <strong>version_1</strong>. For normalization rules, see <a href="#rc_path_classifier_norm">Normalization in Classifiers</a> below.</p>
+<p>Indicates that the asset path should include the version, with normalization applied for any spaces or other characters that are not URL-safe. For example, <strong>version 1</strong> becomes <strong>version_1</strong>. For normalization rules, see <a href="#rc_path_classifier_norm">Normalization in classifiers</a> below.</p>
 	</li>
 	<li><strong>{catalog_asset.property.&lt;property name&gt;}</strong>
 <p>Indicates that the value of a specific property defined for the API should be used in the context path.</p></li>
 	<li><strong>{catalog_asset.classifier.&lt;classifier name&gt;}</strong>
 <p>Indicates that the value of a specific classifier defined for the API should be used in the context path. For example, if an API had a custom classifier called <strong>visibility</strong> set to a value <strong>external</strong>, using a value of <strong>/rest/{catalog_asset.classifier.visibility}</strong> for the path would result in endpoint paths set to <strong>/rest/external</strong>.</p></li>
 	<li><strong>{catalog_asset.group.name}</strong>
-<p>The group name, as defined in the Lifecycle Coordinator user interface, corresponds to the organization name as defined in the developer portal. If this classifier is used, the group/organization name is included in the API context path. See example below.</p></li>
-	<li><strong>{catalog_asset.group.name<span class="apidoc_red">_normalized</span>}</strong>
-<p>Indicates that the asset path should include the group name, with normalization applied for any spaces or other characters that are not URL-safe. For example, <strong>Developer Group 1</strong> becomes <strong>Developer_Group_1</strong>. For normalization rules, see <a href="#rc_path_classifier_norm">Normalization in Classifiers</a> below.</p>
+<p>The group name, as defined in the Lifecycle Coordinator user interface, corresponds to the organization name as defined in the developer portal. If this classifier is used, the group/organization name is included in the API context path. See example below.</p>
+<p>Note: You could also use modifiers with your path classifiers to normalize the copy. For more information, see <a href="#rc_path_classifier_modifier">Modifiers with path classifiers</a> below.</p>
 	</li>
 </ul>
 <p><strong>Note</strong>: The above is a list of key path classifiers. For a complete list, refer to the Lifecycle Manager Configuration guide.</p>
@@ -202,7 +201,7 @@ nav-title: Runtime Configuration
 <p>The resulting API path, as displayed on the <strong>API Details</strong> page in the developer portal, is shown below.</p>
 <p><img src="images_rc/promotion_pathclassifier_03_02.jpg" alt="Path classifier example -- concatenated with three" /></p>
 
-<h5 id="rc_path_classifier_norm">Normalization in Classifiers</h5>
+<h5 id="rc_path_classifier_norm">Normalization in classifiers</h5>
 <p>If you use a path classifier that includes normalization, the following rules are applied.</p>
 <ul>
 	<li>Uppercase is changed to lowercase, so all letters are lowercase.</li>
@@ -218,6 +217,18 @@ nav-title: Runtime Configuration
 	</li>
 </ul>
 <p>For example, a space in an API name or API version name would be removed.</p>
+
+<h5 id="rc_path_classifier_modifier">Modifiers with path classifiers</h5>
+<p class="stamp"><strong>API Platform Version: 8.4.30 and later<!--, 2018.0.3 and later--></strong></p>
+<p>You can also use the <strong>context_path_safe</strong> modifier, with path classifiers such as <strong>catalog_asset.group.name</strong>, to transform the resolved parameter value as follows:</p>
+<ul>
+	<li>Removes characters that aren't letters or numbers</li>
+	<li>Strips accents from accented characters (for example, <strong>é</strong> becomes <strong>e</strong>)</li>
+	<li>Changes remaining characters to lowercase</li>
+</ul>
+<p>For example, if you have a group name <strong>Nuestra Compañía #1</strong>, the following path classifier, with the modifier added, would result in a URL-safe group name value of <strong>nuestracompania1</strong>:</p>
+<pre>{catalog_asset.group.name.context_path_safe}</pre>
+
 
 <h4 id="s08_01_06b_dzs">Deployment Zones</h4>
 <p>A Runtime Configuration asset can include a Deployment Zones classifier. This allows deployment zones to be designated for deployment of API implementations that match the filter of the Runtime Configuration asset. This section includes:</p>
