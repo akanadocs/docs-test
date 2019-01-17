@@ -39,7 +39,7 @@ nav-title: JOSE Security v2
 	<li><a href="#policy_attach">Attaching the policy</a></li>
 	<li><a href="#json_vsus_compact">JSON versus compact structure, with examples</a></li>
 	<li><a href="#tools_encode">Online tools for encoding and decoding</a></li>
-	<li><a href="#jose_unenc_troubleshooting">JOSE Security Policy v2 (Unencoded Payload Support): troubleshooting</a></li></ol>
+	<li><a href="#jose_unenc_troubleshooting">JOSE Security Policy v2 (Unencoded Payload Support): troubleshooting</a></li>
 </ol>
 <div class = "divider1"></div>
 
@@ -87,21 +87,78 @@ nav-title: JOSE Security v2
 <h3 id="jose_unenc_support_open_banking">JOSE Security Policy v2 support of the Open Banking specification</h3>
 <p>JOSE Security Policy v2 includes the option to enable Open Banking support (Version 8.4.18 and later).</p>
 <p>When you enable this feature, the policy enforces additional rules determined by the Open Banking specification (<a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/4011436/Payment+Initiation+API+Specification+-+v1.0.0" title="Link to Open Banking specification" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/4011436/Payment+Initiation+API+Specification+-+v1.0.0</a>).</p>
-<p>For example, it supports specifications regarding the <strong>Content-Type</strong> and <strong>Accept</strong> header values as well as the required <strong>crit</strong> header with specific values.</p>
+<p>{<span class="apidoc_red">xxx need to list which OB specs we're working with -- versions and links.</span>}</p>
+<p>Some examples of Open Banking support are:</p>
+<ul>
+	<li><a href="#jose_ob_01">Content-Type and Accept header values</a></li>
+	<li><a href="#jose_ob_02"><strong>crit</strong> claim</a></li>
+	<li><a href="#jose_ob_03"><strong>iss</strong> header</a></li>
+	<li><a href="#jose_ob_04"><strong>tan</strong> claim</a></li>
+	<li><a href="#jose_ob_05"><strong>typ</strong> claim</a></li>
+	<li><a href="#jose_ob_06">Support of detached payload</a></li>
+	<li><a href="#jose_ob_07">xxx</a></li>
+</ul>
+
+
+<h4 id="jose_ob_01">Content-Type and Accept header values</h4>
+<p>It supports specifications regarding the <strong>Content-Type</strong> and <strong>Accept</strong> header values.</p>
+
+
+<h4 id="jose_ob_02">crit claim</h4>
+<p>The crit claim in required in the JOSE header per the Open Banking 3.0 specification, and it must be a string array of three specific values as shown below:</p>
+<pre>"b64", "http://openbanking.org.uk/iat", "http://openbanking.org.uk/iss", "http://openbanking.org.uk/tan"</pre>
+<p>The JOSE v2 policy supports the required <strong>crit</strong> claim with specific values.</p>
+<p>For more information, see the Open Banking 3.0 specification: <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload" title="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload</a> (Step 2).</p>
+
+
+<h4 id="jose_ob_03">iss header</h4>
+<p>iss header using the x5c claim from the JWKS</p>
+<p>The <a href="../../cm/learnmore/basics_glossary.htm#gl_x5c">X5C</a> (X.509 Certificate Chain) parameter is defined as part of the <a href="#gl_jsonwebkey">JSON Web Key (JWK)</a> spec. This parameter contains a chain of one or more certificates. The certificate chain is represented as a JSON array of certificate value strings.</p>
+<p>xxx</p>
+<p>A JOSE policy using the JWKS URL option can retrieve the certificate to verify the <strong>iss</strong> claim from the JWKS rather than requiring the <strong>x5c</strong> claim to be in the JWS header. When retrieving the certificate, The policy looks in the following locations, in the specified sequence:</p>
+<ol>
+	<li>The <strong>x5c</strong> parameter in the JWS header</li>
+	<li>The <strong>x5c</strong> parameter from the JWKS URL</li>
+	<li>The certificate for the consumer (app) </li>
+</ol>
+
+
+<h4 id="jose_ob_04">tan claim</h4>
+<p>The <strong>tan</strong> claim is required in the JOSE header per the Open Banking 3.0 specification, and it must have the value <strong> openbanking.org.uk</strong>.</p>
+<p>{MM: should I call them parameters, or claims? Are they interchangeable or is there a difference in meaning? </p>
+<p>The JOSE Security Policy v2 validates that the <strong>tan</strong> claim exists and that it has the correct value.</p>
+<p>When Open Banking support is enabled in the policy, if a <strong>tan</strong> parameter exists in the JWS header, the policy validates the header value and validates that it is present in the <strong>crit</strong> headers list. For Open Banking 3.x compliance, add the <strong>tan</strong> claim to the policy definition in the <strong>IN Message Options</strong> page under <strong>Private Header</strong>. See <a href="#jose_unenc_options_in_provider">Configuring JOSE Security Policy v2 IN Message options for Provider</a>.</p>
+<p>For more information, see the Open Banking 3.0 specification: <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload" title="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload</a> (Step 2).</p>
+
+
+<h4 id="jose_ob_05">typ claim</h4>
+<p>The <strong>typ</strong> claim is optional in the JOSE header per the Open Banking 3.0 specification. If present, it must have the value <strong>JOSE</strong>.</p>
+<p>The JOSE Security Policy v2 validates that if a <strong>typ</strong> header exists, it has the correct value.</p>
+<p>For more information, see the Open Banking 3.0 specification: <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload" title="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload</a> (Step 2).</p>
+
+
+<h4 id="jose_ob_06">Support of detached payload</h4>
+<p>The JOSE Policy v2 supports unencoded detached payload for either JSON or compact serialization. Detached payload is enabled via a checkbox on the <a href="#jose_unenc_options_p1">Configuring JOSE Security Policy v2 options</a> page.</p>
+
+
+<h4 id="jose_ob_07">xxx</h4>
+<p>xxx</p>
+
+
 <p>For full details, see <a href="#jose_unenc_options_p1">Configuring JOSE Security Policy v2 options</a> below (<a href="#enforce_open_banking">Enforce Open Banking</a> section).</p>
 <p><a href="#top">back to top</a></p>
 
 
 
 <h3 id="jose_unenc_create">Creating a JOSE Security Policy v2</h3>
-<p>The first step in creating a policy is to define the basic policy information. Then, you can configure the policy details.</p>
+<p>The first step in creating a policy is to define the basic policy information.</p>
 
 <h5>To add an operational policy</h5>
 <ol>
 	<li>Go to <strong>Workbench</strong> &gt; <strong>Browse</strong> &gt; <strong>Organization</strong>, and select <strong>Policies</strong> &gt; <strong>Operational Policies</strong>. The <strong>Policies Summary</strong> is displayed.</li>
 	<li>Click <strong>Add Policy</strong>.</li>
 	<li>Choose the policy type and click <strong>Next</strong>.</li>
-	<li>Specify a name (required) and description (optional) and click <strong>Finish</strong>. At the <strong>Completion Summary</strong>, Click <strong>Close</strong>. The <strong>Add Policy</strong> Wizard creates a draft policy instance that you can then configure on the <strong>Policy Details</strong> page.</li>
+	<li>Specify a name (required) and description (optional) and click <strong>Finish</strong>. At the <strong>Completion Summary</strong>, click <strong>Close</strong>. The <strong>Add Policy</strong> Wizard creates a draft policy instance that you can then configure on the <strong>Policy Details</strong> page.</li>
 </ol>
 <p>For more information, see <a href="policy_management.htm#add_policy">Add Policy</a>.</p>
 <p><a href="#top">back to top</a></p>
@@ -139,7 +196,7 @@ nav-title: JOSE Security v2
 
 <h3 id="jose_unenc_options_p1">Configuring JOSE Security Policy v2 options</h3>
 <p><img src="images/jose_v2_01_options.jpg" alt="JOSE Security Policy v2 (Unencoded Payload Support): policy options" /></p>
-<p>On this page, you specify general configuration settings. Refer to the details below.</p>
+<p>On the <strong>Specify JOSE Security Policy v2 Options</strong> page, you specify general configuration settings. Refer to the details below.</p>
 
 <dl>
 <dt>Protection Scope</dt>
@@ -212,7 +269,7 @@ nav-title: JOSE Security v2
 <p>There are two main categories of settings: <strong>Signed Content</strong> and <strong>Encrypted Content</strong>. For each, if you choose to sign and/or encrypt, additional configuration options are available so that you can specify the identity of the signed content for IN messages, as shown below.</p>
 <dl>
 <dt>Signed content, Subject Category</dt>
-<dd>If you specify signed content for IN messages, define the Subject Category, the identity whose private key is used to sign the message. For IN messages, the options are:
+<dd>If you specify signed content for IN messages, define the Subject Category, the identity whose public key is used to sign the message. For IN messages, the options are:
 	<ul>
 		<li><strong>Consumer</strong>: If you choose Consumer, you can specify that the configuration settings should be read from the JWKS URL for the identity specified in the <strong>kid</strong> in the incoming header. See <a href="#jwks_url_app_oauth_profile_in_provider">Referencing the JWKS URL from the App OAuth Profile</a> below.</li>
 		<li><strong>End User</strong>: The end-user identity associated with the message.</li>
@@ -515,16 +572,16 @@ nav-title: JOSE Security v2
 	<li>The signature signs all those things together.</li>
 </ul>
 <pre>{
-  &quot;protected&quot;:&quot;eyJraWQiOiJzaWduS2V5IiwiYWxnIjoiUlMyNTYiLCJjdHkiOiJhcHBsaWNhdGlvbi9qc29uIiwiY3JpdCI6WyJiNjQiXX0&quot;,
-  &quot;payload&quot;:&quot;eyJQVVQtcmVzcG9uc2UiOiJzaWduZWQgam9zZSByZXNwb25zZSJ9&quot;,
-  &quot;signature&quot;:&quot;damrs8P_kUGDR0RJ6Vn1aB6VDHgGwZZyFXsYwzGLSXvHg60BNsTNn8geKAA-ObcnEDj_5-FTBt42u8Kt0MGkzWcvxkM4iU8mC
+  "protected":"eyJraWQiOiJzaWduS2V5IiwiYWxnIjoiUlMyNTYiLCJjdHkiOiJhcHBsaWNhdGlvbi9qc29uIiwiY3JpdCI6WyJiNjQiXX0",
+  "payload":"eyJQVVQtcmVzcG9uc2UiOiJzaWduZWQgam9zZSByZXNwb25zZSJ9",
+  "signature":"damrs8P_kUGDR0RJ6Vn1aB6VDHgGwZZyFXsYwzGLSXvHg60BNsTNn8geKAA-ObcnEDj_5-FTBt42u8Kt0MGkzWcvxkM4iU8mC
 yAaxqpA1zv_4r0I-bk46Odt9VeKXiLezjRoLLctLvD-LRgVvwNG9EMmwe_qV6tWUCChSdw7cAxH9dthqD3sKmHBtVWEzO1PVWIQn46TuWCEeBla0
 ggiK6UPYD4fnJCpGiq_3r_6Ygb64YjnjSMScoF2-f8z8mGZptOZsojzlI_bcJ3yFRyzit__uwQcyMBQ73maen9gZnXb48RCy-QTdEAQbhOWXYDe8
-oCFYaoEOkGZlREUmWcQtQ&quot;,
-  &quot;header&quot;:{
-    &quot;kid&quot;:&quot;signKey&quot;,
-    &quot;alg&quot;:&quot;RS256&quot;,
-    &quot;cty&quot;:&quot;application/json&quot;
+oCFYaoEOkGZlREUmWcQtQ",
+  "header":{
+    "kid":"signKey",
+    "alg":"RS256",
+    "cty":"application/json"
   }
 }</pre>
 <p><strong>Detached header</strong></p>
@@ -538,7 +595,7 @@ oCFYaoEOkGZlREUmWcQtQ&quot;,
 	<li>Example: <a href="https://tools.ietf.org/html/rfc7797#section-4.2" target="_blank">4.2.  Example with Header Parameters</a>.</li>
 </ul>
 <p>The detached versions of JSON is similar, but the payload is unsigned. The payload is sent in the body of the message, and the other values are sent in a header. The name of the header is defined as part of the policy definition setup.</p>
-<p>The example below shows the same response message used in the previous example, in JSON format&nbsp;with detached payload.</p>
+<p>The example below shows the same response message used in the previous example, in JSON format with detached payload.</p>
 <p>With JSON detached, you put the payload in the body and the rest of the message goes in the header.</p>
 <p><strong>Body (payload)</strong></p>
 <pre>{
@@ -601,7 +658,7 @@ nJCpGiq_3r_6Ygb64YjnjSMScoF2-f8z8mGZptOZsojzlI_bcJ3yFRyzit__uwQcyMBQ73maen9gZnXb
 	<li>No payload, just a second period separator.</li>
 	<li>The signature (signed with a public key).</li>
 </ol>
-<p>The detached version is similar to the previous example, but the payload is&nbsp;sent separately in the body, un-encoded, and is not included as the second section of the detached header. The period separators are preserved.</p>
+<p>The detached version is similar to the previous example, but the payload is sent separately in the body, un-encoded, and is not included as the second section of the detached header. The period separators are preserved.</p>
 <pre>{
   "PUT-response": "signed JOSE response"
 }</pre>
