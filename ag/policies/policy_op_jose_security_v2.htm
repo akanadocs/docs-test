@@ -66,7 +66,7 @@ nav-title: JOSE Security v2
 <ul>
 	<li>Support of the Unencoded Payload specification</li>
 	<li>Support of additional algorithms (PS256, PS384, and PS512)</li>
-	<li>Support of the <strong>crit</strong> headers required by the Open Banking specification</li>
+	<li>Support of the <strong>crit</strong> claim required by the Open Banking specification</li>
 	<li>JWKS support (when configured for consumer Apps in the App OAuth Profile)</li>
 </ul>
 <p><a href="#top">back to top</a></p>
@@ -78,71 +78,71 @@ nav-title: JOSE Security v2
 <ul>
 	<li>JSON Web Signature (JWS) Unencoded Payload Option (<a href="https://tools.ietf.org/html/rfc7797">https://tools.ietf.org/html/rfc7797</a>)</li>
 	<li>JSON Web Encryption (JWE) (<a href="https://tools.ietf.org/html/rfc7516" title="JWE standard" target="_blank">https://tools.ietf.org/html/rfc7516</a>)</li>
-	<li>Open Banking (<a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/4011436/Payment+Initiation+API+Specification+-+v1.0.0" title="Link to Open Banking specification" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/4011436/Payment+Initiation+API+Specification+-+v1.0.0</a>). It supports sending the custom <strong>iat</strong> and <strong>iss</strong> headers, and of specifying those custom headers in the <strong>crit</strong> header, as per the Open Banking specification.</li>
+	</ul>
+<p>In addition, it supports the following versions of the UK Open Banking specification:</p>
+<ul>
+	<li>2.0: <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/127009221/Read+Write+Data+API+Specification+-+v2.0.0" title="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/127009221/Read+Write+Data+API+Specification+-+v2.0.0" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/127009221/Read+Write+Data+API+Specification+-+v2.0.0</a></li>
+	<li>3.1: <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1" title="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1</a></li>
 </ul>
 <p><a href="#top">Back to top</a></p>
 
 
 
 <h3 id="jose_unenc_support_open_banking">JOSE Security Policy v2 support of the Open Banking specification</h3>
-<p>JOSE Security Policy v2 includes the option to enable Open Banking support (Version 8.4.18 and later).</p>
-<p>When you enable this feature, the policy enforces additional rules determined by the Open Banking specification (<a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/4011436/Payment+Initiation+API+Specification+-+v1.0.0" title="Link to Open Banking specification" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/4011436/Payment+Initiation+API+Specification+-+v1.0.0</a>).</p>
-<p>{<span class="apidoc_red">xxx need to list which OB specs we're working with -- versions and links.</span>}</p>
+<p>The JOSE Security Policy v2 includes the option to enable Open Banking support (Version 8.4.18 and later).</p>
+<p>This policy supports UK Open Banking versions as specified above.</p>
+<p>When you enable this feature, the policy enforces additional rules determined by the Open Banking specification that you specify.</p>
 <p>Some examples of Open Banking support are:</p>
 <ul>
-	<li><a href="#jose_ob_01">Content-Type and Accept header values</a></li>
-	<li><a href="#jose_ob_02"><strong>crit</strong> claim</a></li>
-	<li><a href="#jose_ob_03"><strong>iss</strong> header</a></li>
-	<li><a href="#jose_ob_04"><strong>tan</strong> claim</a></li>
-	<li><a href="#jose_ob_05"><strong>typ</strong> claim</a></li>
-	<li><a href="#jose_ob_06">Support of detached payload</a></li>
-	<li><a href="#jose_ob_07">xxx</a></li>
+	<li><a href="#jose_ob_ct_accept">Content-Type and Accept header values</a></li>
+	<li><a href="#jose_ob_crit"><strong>crit</strong> claim</a></li>
+	<li><a href="#jose_ob_iss"><strong>iss</strong> claim</a></li>
+	<li><a href="#jose_ob_tan"><strong>tan</strong> claim</a> (v3.1)</li>
+	<li><a href="#jose_ob_typ"><strong>typ</strong> claim</a> (v3.1)</li>
 </ul>
 
 
-<h4 id="jose_ob_01">Content-Type and Accept header values</h4>
-<p>It supports specifications regarding the <strong>Content-Type</strong> and <strong>Accept</strong> header values.</p>
+<h4 id="jose_ob_ct_accept">Content-Type and Accept header values</h4>
+<p>The JOSE Security Policy v2 enforces the requirements regarding the content-type and accept header values as per the applicable Open Banking specification.</p>
 
 
-<h4 id="jose_ob_02">crit claim</h4>
-<p>The crit claim in required in the JOSE header per the Open Banking 3.0 specification, and it must be a string array of three specific values as shown below:</p>
+<h4 id="jose_ob_crit">crit claim</h4>
+<p>The JOSE Security Policy v2 supports the required <strong>crit</strong> claim with specific values.</p>
+<p><strong>2.0:</strong></p>
+<p>For Open Banking 2.0, the JOSE policy v2 supports sending the custom <strong>iat</strong> and <strong>iss</strong> claims, and supports specifying those custom claims in the <strong>crit</strong> claim, as per the specification.</p>
+<p>In version 2.0, the <strong>crit</strong> claim is required, and must be a string array of the three specific values shown below:</p>
+<pre>"b64", "http://openbanking.org.uk/iat", "http://openbanking.org.uk/iss"</pre>
+<p><strong>3.1:</strong></p>
+<p>In version 3.1, the JOSE Security Policy v2 supports sending the additional <strong>tan</strong> claim which is required, see <a href="#jose_ob_tan"><strong>tan</strong> claim</a> below, and supports including the <strong>tan</strong> claim in the <strong>crit</strong> claim, as per the specification.</p>
+<p>In version 3.1, the <strong>crit</strong> claim is required and must be a string array of the four specific values shown below:</p>
 <pre>"b64", "http://openbanking.org.uk/iat", "http://openbanking.org.uk/iss", "http://openbanking.org.uk/tan"</pre>
-<p>The JOSE v2 policy supports the required <strong>crit</strong> claim with specific values.</p>
-<p>For more information, see the Open Banking 3.0 specification: <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload" title="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload</a> (Step 2).</p>
+<p>For more information, see the Open Banking 3.1 specification: <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload" title="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload</a> (Step 2).</p>
 
 
-<h4 id="jose_ob_03">iss header</h4>
-<p>iss header using the x5c claim from the JWKS</p>
-<p>The <a href="../../cm/learnmore/basics_glossary.htm#gl_x5c">X5C</a> (X.509 Certificate Chain) parameter is defined as part of the <a href="#gl_jsonwebkey">JSON Web Key (JWK)</a> spec. This parameter contains a chain of one or more certificates. The certificate chain is represented as a JSON array of certificate value strings.</p>
-<p>xxx</p>
-<p>A JOSE policy using the JWKS URL option can retrieve the certificate to verify the <strong>iss</strong> claim from the JWKS rather than requiring the <strong>x5c</strong> claim to be in the JWS header. When retrieving the certificate, The policy looks in the following locations, in the specified sequence:</p>
+<h4 id="jose_ob_iss">iss claim</h4>
+<p>JOSE Security Policy v2 supports the custom <strong>iss</strong> private header parameter claim.</p>
+<p><strong>2.0:</strong></p>
+<p>For version 2.0, the <strong>iss</strong> claim must be a string with the ID of the third-party provider, and it must match the domain name of the signing certificate.</p>
+<p><strong>3.1:</strong></p>
+<p>For version 3.1, a JOSE policy using the JWKS URL option can retrieve the certificate to verify the <strong>iss</strong> claim from the JWKS rather than requiring the <strong>x5c</strong> claim to be in the JWS header. When retrieving the certificate, the policy looks in the following locations, in the specified sequence:</p>
 <ol>
 	<li>The <strong>x5c</strong> parameter in the JWS header</li>
 	<li>The <strong>x5c</strong> parameter from the JWKS URL</li>
 	<li>The certificate for the consumer (app) </li>
 </ol>
+<p>The <a href="../../cm/learnmore/basics_glossary.htm#gl_x5c">X5C</a> (X.509 Certificate Chain) parameter is defined as part of the <a href="../../cm/learnmore/basics_glossary.htm#gl_jsonwebkey">JSON Web Key (JWK)</a> spec. This parameter contains a chain of one or more certificates. The certificate chain is represented as a JSON array of certificate value strings.</p>
 
 
-<h4 id="jose_ob_04">tan claim</h4>
-<p>The <strong>tan</strong> claim is required in the JOSE header per the Open Banking 3.0 specification, and it must have the value <strong> openbanking.org.uk</strong>.</p>
-<p>{MM: should I call them parameters, or claims? Are they interchangeable or is there a difference in meaning? </p>
-<p>The JOSE Security Policy v2 validates that the <strong>tan</strong> claim exists and that it has the correct value.</p>
-<p>When Open Banking support is enabled in the policy, if a <strong>tan</strong> parameter exists in the JWS header, the policy validates the header value and validates that it is present in the <strong>crit</strong> headers list. For Open Banking 3.x compliance, add the <strong>tan</strong> claim to the policy definition in the <strong>IN Message Options</strong> page under <strong>Private Header</strong>. See <a href="#jose_unenc_options_in_provider">Configuring JOSE Security Policy v2 IN Message options for Provider</a>.</p>
-<p>For more information, see the Open Banking 3.0 specification: <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload" title="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload</a> (Step 2).</p>
+<h4 id="jose_ob_tan">tan claim (v3.1)</h4>
+<p>The <strong>tan</strong> claim is required in the JOSE header per the Open Banking 3.1 specification.</p>
+<p>When Open Banking support is enabled in the policy, if a <strong>tan</strong> claim exists in the JWS header, the JOSE Security Policy v2 validates the header value and validates that it is present in the <strong>crit</strong> claim list.</p>
+<p>For more information, see the Open Banking 3.1 specification: <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload" title="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload</a> (Step 2).</p>
 
 
-<h4 id="jose_ob_05">typ claim</h4>
-<p>The <strong>typ</strong> claim is optional in the JOSE header per the Open Banking 3.0 specification. If present, it must have the value <strong>JOSE</strong>.</p>
-<p>The JOSE Security Policy v2 validates that if a <strong>typ</strong> header exists, it has the correct value.</p>
-<p>For more information, see the Open Banking 3.0 specification: <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload" title="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload</a> (Step 2).</p>
-
-
-<h4 id="jose_ob_06">Support of detached payload</h4>
-<p>The JOSE Policy v2 supports unencoded detached payload for either JSON or compact serialization. Detached payload is enabled via a checkbox on the <a href="#jose_unenc_options_p1">Configuring JOSE Security Policy v2 options</a> page.</p>
-
-
-<h4 id="jose_ob_07">xxx</h4>
-<p>xxx</p>
+<h4 id="jose_ob_typ">typ claim (v3.1)</h4>
+<p>The <strong>typ</strong> claim is optional in the JOSE header per the Open Banking 3.1 specification. If present, it must have the value <strong>JOSE</strong>.</p>
+<p>The JOSE Security Policy v2 validates that if a <strong>typ</strong> claim exists, it has the correct value.</p>
+<p>For more information, see the Open Banking 3.1 specification: <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload" title="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload</a> (Step 2).</p>
 
 
 <p>For full details, see <a href="#jose_unenc_options_p1">Configuring JOSE Security Policy v2 options</a> below (<a href="#enforce_open_banking">Enforce Open Banking</a> section).</p>
@@ -235,7 +235,7 @@ nav-title: JOSE Security v2
 <dt>Unencoded Detached Payload</dt>
 <dd>Check this box if you want to exclude the payload from the signed and/or encrypted portion of the message. Instead, the payload is sent in the message body, unencoded. You'll also need to specify the <strong>Header Parameter Name</strong>&#8212;the name of the header containing a detached JWS signature of the body of the payload.</dd>
 <dd> If you want the signing/encryption to apply to all parts of the message, including the payload, leave this box cleared (the default).</dd>
-<dd><strong>Note</strong>: If you check this box, for IN messages the client must send the <strong>b64</strong> header, with a value of <strong>false</strong>; for OUT or FAULT messages, the platform sends the b64 header with a value of <strong>false</strong>. If the detached payload option is not used, the <strong>b64</strong> header is not sent.</dd>
+<dd><strong>Note</strong>: If you check this box, for IN messages the client must send the <strong>b64</strong> claim, with a value of <strong>false</strong>; for OUT or FAULT messages, the platform sends the b64 claim with a value of <strong>false</strong>. If the detached payload option is not used, the <strong>b64</strong> claim is not sent.</dd>
 <dd>Sample header for unencoded detached payload:
 <pre>{&quot;kid&quot;:&quot;signKey&quot;,&quot;alg&quot;:&quot;RS256&quot;,&quot;cty&quot;:&quot;application/json&quot;, &quot;b64&quot;:false, &quot;crit&quot;:[&quot;b64&quot;]}</pre></dd>
 <dd>Sample header when unencoded detached payload is not selected:
@@ -247,8 +247,8 @@ nav-title: JOSE Security v2
 	<ul>
 	<li>The Content-Type header must be set to <strong>application/json</strong>.</li>
 	<li>If there is an Accept header, it is set to <strong>application/json</strong>.</li>
-	<li>The <strong>crit</strong> header is a string array of the <strong>b64</strong>, <strong>iat</strong>, and <strong>iss</strong> headers: &quot;b64&quot;, &quot;http://openbanking.org.uk/iat&quot;, &quot;http://openbanking.org.uk/iss&quot;.</li>
-	<li>The values for the <strong>iat</strong> and <strong>iss</strong> headers comply with the Open Banking specification, as per the above.</li>
+	<li>The <strong>crit</strong> claim is a string array of the <strong>b64</strong>, <strong>iat</strong>, and <strong>iss</strong> claims: &quot;b64&quot;, &quot;http://openbanking.org.uk/iat&quot;, &quot;http://openbanking.org.uk/iss&quot;.</li>
+	<li>The values for the <strong>iat</strong> and <strong>iss</strong> claims comply with the Open Banking specification, as per the above.</li>
 </ul>
 </dd>
 </dl>
