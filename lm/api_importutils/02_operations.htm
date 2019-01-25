@@ -1,0 +1,278 @@
+---
+layout: page
+title: Lifecycle Manager | Import Utilities API
+description: Details about the Lifecycle Manager Import API.
+product: lm
+category: ref
+sub-nav-class: Import Utilities API
+weight: 06
+type: page
+nav-title: Operations
+no-nav: true
+---
+<h2 id="top">Lifecycle Manager Import API: Operations</h2>
+<p>Contains details about the operations in the Lifecycle Manager Import Utilities API.</p>
+<p>
+<a href="../install/install_lm_v80x.htm" class="button secondary">Installing Lifecycle Manager</a> 
+<a href="01_intro.htm" class="button secondary">Import API: Overview</a> 
+<a href="../SysAdmin-OSGi.html" class="button secondary">System Administrator Guide</a>
+</p>
+
+
+
+<h3 style="color: gray;">Table of Contents</h3>
+<ol class="table_of_contents">
+	<li><a href="#importassets">Import Assets</a></li>
+	<li><a href="#clearassets">Clear Assets</a></li>
+	<li><a href="#getimportstatus">Get Import Status</a></li>
+	<li><a href="#getlibrarystatus">Get Library Status</a></li>
+</ol>
+<div class = "divider1"></div>
+
+
+
+<h3 id="importassets">Import Assets</h3>
+<p>This function is the equivalent of running the DelimitedFileAssetImporter from the LM UI. It responds with a <strong>run id</strong> that can be used to monitor the progress of the import.</p>
+
+
+<h4 id="http_verb_importassets">HTTP Operation</h4>
+<p class="httpverb">POST</p>
+
+
+<h4>Path</h4>
+<p>.../import</p>
+
+
+<h4>Request Content Type</h4>
+<p>JSON (if import file specified as URL)</p>
+<p>multipart/mixed (if import file attached)</p>
+
+
+<h4>Parameters</h4>
+<p>None</p>
+
+
+<h4>Request Details</h4>
+<p>The request should consist of a JSON part specifying the import parameters and import document. If the import document is not specified as a URL then a File part must be provided on the request with a name matching that specified in the JSON Document element.</p>
+<p>Here’s an example JSON import request for a URL type import document showing all possible properties:</p>
+<pre>{
+  "user":"support",
+  "concurrentThread":1,
+  "loadFactor":10,
+  "attributeDelimiter":"|",
+  "attributeValueDelimiter":"^",
+  "threadSleep":250,
+  "replace":true,
+  "emailResults":false,
+  "ignoreAssetId":false,
+  "bypassGovernance":true,
+  "validate":true,
+  "submissionNote":"A submission note",
+  "importFile":{
+    "url":"http://acme.com/imports/contents_LibraryDemo.zip"
+  },
+  "submit":true
+}</pre>
+<p>Note that all properties with the exception of "importFile&quot; are optional.</p>
+<p>The properties <strong>concurrentThread</strong>,<strong>loadFactor</strong>, <strong>attributeDelimiter</strong>, <strong>attributeValueDelimiter</strong>,<strong>threadSleep</strong>, <strong>emailResults</strong>, <strong>ignoreAssetId</strong>, and <strong>bypassGovernance</strong> correspond to configuration properties for the DelimitedFileAssetImporter and are described in the Importer section of the Library Configuration Guide.</p>
+<p>The properties <strong>importFile</strong>, <strong>validate</strong>, <strong>replace</strong>, and <strong>submissionNote</strong> correspond to input parameters for the DelimitedFileAssetImporter and are also described in the Library Configuration Guide.</p>
+<p>The <strong>user</strong> property is optional and allows a user to be specified for use in creating and submitting imported assets. The specified user must have the ACE role. If not specified and BASIC mode is used, the specified basic authentication user will be used. Otherwise, the system user will be used.</p>
+<p>The <strong>importFile</strong> property may be of the form of a URL:</p>
+<pre>"importFile":{
+  "url": http://acme.com/imports/contents_LibraryDemo.zip
+}</pre>
+<p>Or an attached file:</p>
+<pre>"importFile":{
+  "name":"contents_LibraryDemo.zip"
+}</pre>
+<p>In the latter case, the import request must be of multipart/mixed with the import file attached as a <strong>file</strong> part with a name matching that used in the <strong>name</strong> property.</p>
+
+
+<h4>Response Codes</h4>
+<ul>
+	<li>200&#8212;Import file submitted for processing (note this does not indicate the success of the import itself).</li>
+	<li>400&#8212;The request was invalid in some way. The response body will be text containing details about the error.</li>
+	<li>401&#8212;Occurs if BASIC authentication is used and the basic authentication credentials are missing or incorrect. May also occur if a specified user does not have ACE role.</li>
+	<li>500&#8212;Import could not be processed due to an unexpected error within the server.</li>
+	<li>The response body will be text containing details about the error.</li>
+</ul>
+
+
+<h4>Response</h4>
+<p>The response body will be of type JSON with the following properties:</p>
+
+<dl>
+<dt>run-id</dt>
+<dd>The id of the import run. This id can be used to check the status of the import.</dd>
+
+<dt>parsingErrorsExist</dt>
+<dd>Indicates that some rows of the import were not successfully parsed.</dd>
+
+<dt>assetImportMessages</dt>
+<dd>An array of import result properties for each row that failed to parse correctly. These properties will contain the following.
+<ul>
+	<li><strong>valid</strong>&#8212;Indicates that the row was valid. This will be false in this scenario.</li>
+	<li><strong>assetName</strong>&#8212;Name of the asset to import.</li>
+	<li><strong>assetVersion</strong>&#8212;Version of the asset to import.</li>
+	<li><strong>assetId</strong>&#8212;Id of the asset to import.</li>
+	<li><strong>assetDescription</strong>&#8212;Description of the asset to import.</li>
+	<li><strong>resultMessage</strong>&#8212;Parsing error message</li>
+</ul>
+</dd>
+</dl>
+
+
+<h4>Example Response</h4>
+	<pre>{
+  "parsingErrorsExist":false,
+  "runid":"import_2016-01-22_15-35-07.484",
+  "assetImportMessages":[
+
+  ]
+}</pre>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="clearassets">Clear Assets</h3>
+<p>This method is used to remove all assets and asset requests from a library. Since there is no way to</p>
+<p>undo this operation is should be used with caution. If run with BASIC authentication mode, the specified user in the basic authentication credentials must have the Usage Controller role for the Enterprise</p>
+<p>Group. If run with authentication mode of NONE the system user will be used.</p>
+
+
+<h4 id="http_verb_clearassets">HTTP Operation</h4>
+<p class="httpverb">POST</p>
+
+
+<h4>Path</h4>
+<pre class="soaapidoc_endpoint">.../clearassets</pre>
+
+
+<h4>Request Content Type</h4>
+<p>N/A</p>
+
+
+<h4>Parameters</h4>
+<dl>
+<dt>clearevents</dt>
+<dd>Passing <strong>true</strong> for the clearevents indicates that all pending events in the event queue should be removed also. This can be useful for cases where there is still pending asset activity at the time of the clearassets call. The default for clearevents is <strong>false</strong>.</dd>
+</dl>
+
+
+<h4>Request Details</h4>
+<p>No request body is expected.</p>
+
+
+<h4>Response Codes</h4>
+<ul>
+	<li>200&#8212;Assets, requests and optionally events were successfully removed</li>
+	<li>401&#8212;Occurs if BASIC authentication is used and the basic authentication credentials are missing or incorrect. May also occur if the specified basica authentication user does not have Usage Controller authority for the Enterprise Group.</li>
+	<li>500&#8212;Operation could not be performed due to an unexpected error within the server. The response body will be text containing details about the error.</li>
+</ul>
+
+
+<h4>Response</h4>
+<p>N/A</p>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="getimportstatus">Get Import Status</h3>
+<p>This method is used to check the status of an import job.</p>
+
+
+<h4 id="http_verb_getimportstatus">HTTP Operation</h4>
+<p class="httpverb">GET</p>
+
+
+<h4>Path</h4>
+<pre class="soaapidoc_endpoint">.../getimportstatus</pre>
+
+
+<h4>Request Content Type</h4>
+<p>N/A</p>
+
+
+<h4>Parameters</h4>
+<dl>
+<dt>runid</dt>
+<dd>run id of the import job. This is the <strong>runid</strong> property returned from the import operation.</dd>
+</dl>
+
+
+<h4>Request Details</h4>
+<p>No request body is expected.</p>
+
+
+<h4>Response Codes</h4>
+<ul>
+	<li>200&#8212;Status successfully retrieved</li>
+	<li>500&#8212;Status could not be retrieved due to an unexpected error within the server. The response body will be text containing details about the error.</li>
+</ul>
+
+
+<h4>Response</h4>
+<p>The response body will be of type JSON with the following property:</p>
+<dl>
+<dt>unpublished-assets</dt>
+<dd>This is the count of assets from the specified import that are not yet published. If the total asset count for an import run are not yet calculated, a value of -1 will be returned. A value of 0 indicates the import is completed. Since not all assets in an import may successfully publish, the returned value for this call may never reach 0.  It is expected that clients will poll on this method, looking for either 0 or a positive result that does not change over a period of time to conclude that an import has completed.</dd>
+</dl>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="getlibrarystatus">Get Library Status</h3>
+<p>This method is used to retrieve statistical information about the activity in a library.</p>
+
+
+<h4 id="http_verb_getlibrarystatus">HTTP Operation</h4>
+<p class="httpverb">GET</p>
+
+
+<h4>Path</h4>
+<pre class="soaapidoc_endpoint">.../getlibrarystatus</pre>
+
+
+<h4>Request Content Type</h4>
+<p>N/A</p>
+
+
+<h4>Request Details</h4>
+<p>No request body is expected.</p>
+
+
+<h4>Response Codes</h4>
+<ul>
+	<li>200&#8212;Library statistics successfully retrieved</li>
+	<li>500&#8212;Library statistics could not be retrieved due an unexpected error within the server. The response body will be text containing details about the error.</li>
+</ul>
+
+
+<h4>Response</h4>
+<p>The response body will be of type JSON with the following properties:</p>
+<dl>
+<dt>catalogAssets</dt>
+<dd>The number of assets in the catalog (this is the total count of assets in a library).</dd>
+<dt>publishedAssets</dt>
+<dd>The number of published assets in the library.</dd>
+<dt>projects</dt>
+<dd>The number of projects in the library.</dd>
+<dt>users</dt>
+<dd>The number of users in the library.</dd>
+<dt>activeRequests</dt>
+<dd>The number of requests in the library that have a non-completed status.</dd>
+<dt>pendingEvents</dt>
+<dd>The number of events in the event queue.</dd>
+</dl>
+
+
+<h4>Example Response</h4>
+<pre>{
+  "catalogAssets":11,
+  "publishedAssets":11,
+  "projects":3,
+  "users":16,
+  "activeRequests":0,
+  "pendingEvents":0
+}</pre>
+<p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
