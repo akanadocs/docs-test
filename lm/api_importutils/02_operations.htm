@@ -10,7 +10,7 @@ type: page
 nav-title: Operations
 ---
 <h2 id="top">Lifecycle Manager Import API: Operations</h2>
-<p>Contains details about the operations in the Lifecycle Manager Import Utilities API.</p>
+<p>Contains details about the operations in the Lifecycle Manager Import Utilities API, a REST (HTTP) interface for programmatically invoking and monitoring Asset import jobs using the DelimitedFileAssetImporter.</p>
 <p>
 <a href="../install/install_lm_v80x.htm" class="button secondary">Installing Lifecycle Manager</a> 
 <a href="01_intro.htm" class="button secondary">Import API: Overview</a> 
@@ -39,7 +39,7 @@ nav-title: Operations
 
 
 <h4>Path</h4>
-<p>.../import</p>
+<pre class="soaapidoc_endpoint">.../import</pre>
 
 
 <h4>Request Content Type</h4>
@@ -72,15 +72,32 @@ nav-title: Operations
   },
   "submit":true
 }</pre>
-<p>Note that all properties with the exception of "importFile&quot; are optional.</p>
-<p>The properties <strong>concurrentThread</strong>,<strong>loadFactor</strong>, <strong>attributeDelimiter</strong>, <strong>attributeValueDelimiter</strong>,<strong>threadSleep</strong>, <strong>emailResults</strong>, <strong>ignoreAssetId</strong>, and <strong>bypassGovernance</strong> correspond to configuration properties for the DelimitedFileAssetImporter and are described in the Importer section of the Library Configuration Guide.</p>
-<p>The properties <strong>importFile</strong>, <strong>validate</strong>, <strong>replace</strong>, and <strong>submissionNote</strong> correspond to input parameters for the DelimitedFileAssetImporter and are also described in the Library Configuration Guide.</p>
+<p>Note that all properties with the exception of <strong>importFile</strong> are optional.</p>
+<p>The following properties correspond to configuration properties for the <strong>DelimitedFileAssetImporter</strong>, and are described in the Importer section of the Library Configuration Guide:</p>
+<ul>
+	<li>concurrentThread</li>
+	<li>loadFactor</li>
+	<li>attributeDelimiter</li>
+	<li>attributeValueDelimiter</li>
+	<li>threadSleep</li>
+	<li>emailResults</li>
+	<li>ignoreAssetId</li>
+	<li>bypassGovernance</li>
+</ul>
+<p>The following properties correspond to input parameters for the <strong>DelimitedFileAssetImporter</strong>, and are also described in the Library Configuration Guide:</p>
+<ul>
+	<li>importFile</li>
+	<li>validate</li>
+	<li>replace</li>
+	<li>submissionNote</li>
+</ul>
 <p>The <strong>user</strong> property is optional and allows a user to be specified for use in creating and submitting imported assets. The specified user must have the ACE role. If not specified and BASIC mode is used, the specified basic authentication user will be used. Otherwise, the system user will be used.</p>
-<p>The <strong>importFile</strong> property may be of the form of a URL:</p>
+<p>The <strong>importFile</strong> property may be in the form of either of the below:</p>
+<p>A URL:</p>
 <pre>"importFile":{
   "url": http://acme.com/imports/contents_LibraryDemo.zip
 }</pre>
-<p>Or an attached file:</p>
+<p>An attached file:</p>
 <pre>"importFile":{
   "name":"contents_LibraryDemo.zip"
 }</pre>
@@ -89,16 +106,15 @@ nav-title: Operations
 
 <h4>Response Codes</h4>
 <ul>
-	<li>200&#8212;Import file submitted for processing (note this does not indicate the success of the import itself).</li>
-	<li>400&#8212;The request was invalid in some way. The response body will be text containing details about the error.</li>
-	<li>401&#8212;Occurs if BASIC authentication is used and the basic authentication credentials are missing or incorrect. May also occur if a specified user does not have ACE role.</li>
-	<li>500&#8212;Import could not be processed due to an unexpected error within the server.</li>
-	<li>The response body will be text containing details about the error.</li>
+	<li><strong>200</strong>&#8212;Import file submitted for processing (note this does not indicate the success of the import itself).</li>
+	<li><strong>400</strong>&#8212;The request was invalid in some way. The response body will be text containing details about the error.</li>
+	<li><strong>401</strong>&#8212;Occurs if BASIC authentication is used and the basic authentication credentials are missing or incorrect. May also occur if a specified user does not have ACE role.</li>
+	<li><strong>500</strong>&#8212;Import could not be processed due to an unexpected error within the server. The response body will be text containing details about the error.</li>
 </ul>
 
 
 <h4>Response</h4>
-<p>The response body will be of type JSON with the following properties:</p>
+<p>The response body will be of type JSON with the properties shown below.</p>
 
 <dl>
 <dt>run-id</dt>
@@ -134,9 +150,7 @@ nav-title: Operations
 
 
 <h3 id="clearassets">Clear Assets</h3>
-<p>This method is used to remove all assets and asset requests from a library. Since there is no way to</p>
-<p>undo this operation is should be used with caution. If run with BASIC authentication mode, the specified user in the basic authentication credentials must have the Usage Controller role for the Enterprise</p>
-<p>Group. If run with authentication mode of NONE the system user will be used.</p>
+<p>This method is used to remove all assets and asset requests from a library. Since there is no way to undo this operation is should be used with caution. If run with BASIC authentication mode, the specified user in the basic authentication credentials must have the Usage Controller role for the Enterprise Group. If run with authentication mode of NONE, the system user will be used.</p>
 
 
 <h4 id="http_verb_clearassets">HTTP Operation</h4>
@@ -164,9 +178,9 @@ nav-title: Operations
 
 <h4>Response Codes</h4>
 <ul>
-	<li>200&#8212;Assets, requests and optionally events were successfully removed</li>
-	<li>401&#8212;Occurs if BASIC authentication is used and the basic authentication credentials are missing or incorrect. May also occur if the specified basica authentication user does not have Usage Controller authority for the Enterprise Group.</li>
-	<li>500&#8212;Operation could not be performed due to an unexpected error within the server. The response body will be text containing details about the error.</li>
+	<li><strong>200</strong>&#8212;Assets, requests and optionally events were successfully removed</li>
+	<li><strong>401</strong>&#8212;Occurs if BASIC authentication is used and the basic authentication credentials are missing or incorrect. May also occur if the specified basica authentication user does not have Usage Controller authority for the Enterprise Group.</li>
+	<li><strong>500</strong>&#8212;Operation could not be performed due to an unexpected error within the server. The response body will be text containing details about the error.</li>
 </ul>
 
 
@@ -205,16 +219,16 @@ nav-title: Operations
 
 <h4>Response Codes</h4>
 <ul>
-	<li>200&#8212;Status successfully retrieved</li>
-	<li>500&#8212;Status could not be retrieved due to an unexpected error within the server. The response body will be text containing details about the error.</li>
+	<li><strong>200</strong>&#8212;Status successfully retrieved</li>
+	<li><strong>500</strong>&#8212;Status could not be retrieved due to an unexpected error within the server. The response body will be text containing details about the error.</li>
 </ul>
 
 
 <h4>Response</h4>
-<p>The response body will be of type JSON with the following property:</p>
+<p>The response body will be of type JSON with the property shown below.</p>
 <dl>
 <dt>unpublished-assets</dt>
-<dd>This is the count of assets from the specified import that are not yet published. If the total asset count for an import run are not yet calculated, a value of -1 will be returned. A value of 0 indicates the import is completed. Since not all assets in an import may successfully publish, the returned value for this call may never reach 0.  It is expected that clients will poll on this method, looking for either 0 or a positive result that does not change over a period of time to conclude that an import has completed.</dd>
+<dd>This is the count of assets from the specified import that are not yet published. If the total asset count for an import run are not yet calculated, a value of <strong>-1</strong> will be returned. A value of <strong>0</strong> indicates the import is completed. Since not all assets in an import may successfully publish, the returned value for this call may never reach <strong>0</strong>.  It is expected that clients will poll on this method, looking for either 0 or a positive result that does not change over a period of time to conclude that an import has completed.</dd>
 </dl>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 
@@ -242,13 +256,13 @@ nav-title: Operations
 
 <h4>Response Codes</h4>
 <ul>
-	<li>200&#8212;Library statistics successfully retrieved</li>
-	<li>500&#8212;Library statistics could not be retrieved due an unexpected error within the server. The response body will be text containing details about the error.</li>
+	<li><strong>200</strong>&#8212;Library statistics successfully retrieved</li>
+	<li><strong>500</strong>&#8212;Library statistics could not be retrieved due an unexpected error within the server. The response body will be text containing details about the error.</li>
 </ul>
 
 
 <h4>Response</h4>
-<p>The response body will be of type JSON with the following properties:</p>
+<p>The response body will be of type JSON with the properties shown below.</p>
 <dl>
 <dt>catalogAssets</dt>
 <dd>The number of assets in the catalog (this is the total count of assets in a library).</dd>
@@ -275,3 +289,4 @@ nav-title: Operations
   "pendingEvents":0
 }</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
