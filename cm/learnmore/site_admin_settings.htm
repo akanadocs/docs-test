@@ -7,7 +7,7 @@ category: learn
 sub-nav-class: Site Administration
 weight: 3226
 type: page
-nav-title: Site Resource Settings
+nav-title: Settings
 ---
 <h2 id="top">Site Resource Settings</h2>
 <p>Configure settings for resources on the platform such as alerts, apps, APIs, connections, comments, discussions, groups, tickets, users, reviews, and business security.</p>
@@ -35,6 +35,8 @@ nav-title: Site Resource Settings
 	<li><a href="#settings_config_password_policy">How do I configure settings for password policy?</a></li>
 	<li><a href="#settings_config_reviews">How do I configure settings for reviews?</a></li>
 	<li><a href="#settings_config_security_business">How do I configure settings for business security?</a></li>
+	<li><a href="#session_cookie_info">What information is stored in the session cookie?</a></li>
+	<li><a href="#cookie_add_attr_domain">How do I add the domain attribute to the session cookie for the developer portal?</a> (Version: 2018.0.4 and later)</li>
 	<li><a href="#settings_config_captcha">How do I configure CAPTCHA on the platform?</a></li>
 	<li><a href="#settings_config_tickets">How do I configure settings for tickets?</a></li>
 	<li><a href="#settings_config_users">How do I configure settings for users?</a></li>
@@ -315,7 +317,7 @@ nav-title: Site Resource Settings
   		<p><strong>Note</strong>: If you change this setting when there are existing apps on the platform, it is effective immediately for all apps. If you make a change, make sure app developers are notified.</p></td>
   	</tr>
   <tr>
-  	<td id="settings_app_promotion2">App Promotion (8.4.19 and later)</td>
+  	<td id="settings_app_promotion2">App Promotion (API Platform Version: 8.4.19 and later)</td>
   	<td><p>Applicable only if the <a href="basics_glossary.htm#gl_promotion">promotion</a> feature is enabled: Determines whether app developers can promote apps between environments. If the <strong>App Promotion</strong> setting is disabled, the app developer sees the app's topology chain, but there is no <strong>Promote</strong> button to promote the app to the next environment in the chain (taxonomy).</p>
   		<p><strong>Note</strong>: For app promotion to work, the <strong><a href="#appsettings_user_defined_identity">User-Defined Identity</a></strong> setting must also be enabled (either of the two Enabled settings is fine).</p></td>
   	</tr>
@@ -450,7 +452,15 @@ nav-title: Site Resource Settings
   <tbody>
     <tr>
       <td>Allowed Grant Types</td>
-      <td>By default, all grant types supported by the OAuth Provider are allowed (<strong>Global Setting</strong>). To restrict the OAuth grant types allowed, click and then specify which grant types are allowed for this app.</td>
+      <td><p>By default, all grant types supported by the OAuth Provider are allowed (<strong>Global Setting</strong>). To restrict the OAuth grant types allowed, click and then specify which grant types are allowed for this app. Possible values for selection, based on the OAuth Provider configuration, are:</p>
+      	<ul>
+      		<li>Global Setting</li>
+      		<li>HTTP Form-Based Authentication</li>
+      		<li>Private Key JWT</li>
+      		<li>Client Secret JWT</li>
+      		<li>HTTP Basic Authentication</li>
+      		</ul>
+      	<p>If you choose <strong>Global Setting</strong>, all authentication methods supported by the OAuth Provider are valid for the app, including <strong>Secret</strong> and <strong>PKI</strong>. If you choose one of the other settings, <strong>Secret</strong> and <strong>PKI</strong> are supported also.</p></td>
     </tr>
     <tr>
       <td>OpenID Connect Supported</td>
@@ -1049,35 +1059,41 @@ table above.</li>
       <p><strong>Note</strong>: If this setting is disabled, and you enable it, you and any other users already logged in when the setting change takes effect (up to five minutes) will need to refresh, or log out and log back in again.</p></td>
   </tr>
   <tr>
+  	<td>CSRF Support for Write Requests</td>
+  	<td><p>If enabled, a CSRF token must be sent with all Write requests. The CSRF token is sent on login; including it in requests helps prevent malicious CSRF attacks.</p>
+  		<p><strong>Note</strong>: If this setting is disabled, and you enable it, you and any other users already logged in when the setting change takes effect (up to five minutes) will need to refresh, or log out and log back in again.</p></td>
+  	</tr>
+  <tr>
+  	<td>Allow User Enum</td>
+  	<td>If disabled, additional security is in effect for new account setup and password reset scenarios, to help prevent user enumeration. For more information, refer to <a href="site_admin_users.htm#security_for_signup_forgot_password">How can I protect from vulnerability in Signup and Forgot Password scenarios?</a></td>
+  	</tr>
+  <tr>
+  	<td>CAPTCHA Supported</td>
+  	<td>If enabled, CAPTCHA challenges are used in the developer portal; for example, on the Forgot Password page. See <a href="#settings_config_captcha">How do I configure CAPTCHA on the platform?</a> below.</td>
+  	</tr>
+  <tr>
     <td>Encrypt Challenge Answers</td>
     <td>If enabled, the user's answers to security challenge questions are encrypted in the database.</td>
   </tr>
   <tr>
-    <td>CSRF Support for Write Requests</td>
-    <td><p>If enabled, a CSRF token must be sent with all Write requests. The CSRF token is sent on login; including it in requests helps prevent malicious CSRF attacks.</p>
-      <p><strong>Note</strong>: If this setting is disabled, and you enable it, you and any other users already logged in when the setting change takes effect (up to five minutes) will need to refresh, or log out and log back in again.</p></td>
-  </tr>
+  	<td>Challenge Count</td>
+  	<td><p>Determines how many security challenge questions a single user must answer. Cannot exceed the total number of questions defined.</p>
+  		<p><strong>Note</strong>: If you want to require security challenge questions but no challenge count is available, you must first set up the questions. See <a href="site_admin_config.htm#howto_config_sec_challenge_questions">How do I configure security challenge questions?</a></p></td>
+  	</tr>
   <tr>
-    <td>Challenge Count</td>
-    <td><p>Determines how many security challenge questions a single user must answer. Cannot exceed the total number of questions defined.</p>
-      <p><strong>Note</strong>: If you want to require security challenge questions but no challenge count is available, you must first set up the questions. See <a href="site_admin_config.htm#howto_config_sec_challenge_questions">How do I configure security challenge questions?</a></p></td>
-  </tr>
+  	<td>Allow users to modify their own profiles</td>
+  	<td>If enabled, a user can modify the profile information, including the email address if it is associated with a local account.</td>
+  	</tr>
   <tr>
-    <td>Allow User Enum</td>
-    <td>If disabled, additional security is in effect for new account setup and password reset scenarios, to help prevent user enumeration. For more information, refer to <a href="site_admin_users.htm#security_for_signup_forgot_password">How can I protect from vulnerability in Signup and Forgot Password scenarios?</a></td>
-  </tr>
+  	<td><p>Allow Site Admin to initiate user email address update</p>
+  		<p>(API Platform Version: 2018.1.0 and later)</p></td>
+  	<td><p>If this setting is disabled, only the individual user can update his/her email address. Enabling this setting allows the Site Admin to help a user who loses access to an email account, but authenticating the validity of the request is the Site Admin's responsibility.</p>
+  		To complete the change initiated by the Site Admin, the user must change the password on the account. For more information, see <a href="site_admin_users.htm#user_account_email_change">How do I change the email address for a user?</a></td>
+  	</tr>
   <tr>
-    <td>Allow users to modify their own profiles</td>
-    <td>If enabled, a user can modify the profile information, including the email address if it is associated with a local account.</td>
-  </tr>
-  <tr>
-    <td>CAPTCHA Supported</td>
-    <td>If enabled, CAPTCHA challenges are used in the developer portal; for example, on the Forgot Password page. See <a href="#settings_config_captcha">How do I configure CAPTCHA on the platform?</a> below.</td>
-  </tr>
-  <tr>
-    <td>Allow display of external content in developer portal content pages</td>
-    <td>If enabled, users can view external webpages if they are referenced in platform content pages. For more information, see <a href="#settings_prevent_ref_extsite">How do I prevent referencing external sites in developer portal content pages?</a> below.</td>
-  </tr>
+  	<td>Allow display of external content in developer portal content pages</td>
+  	<td>If enabled, users can view external webpages if they are referenced in platform content pages. For more information, see <a href="#settings_prevent_ref_extsite">How do I prevent referencing external sites in developer portal content pages?</a> below.</td>
+  	</tr>
 </tbody>
 </table>
 
@@ -1087,6 +1103,110 @@ table above.</li>
 	<li>Go to <strong>Settings</strong> &gt; <strong>Security</strong>.</li>
 	<li>Change the settings as needed. For explanations of your choices, refer to the table above.</li>
 	<li>When done, click <strong>Save</strong>.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+
+
+
+
+<h3 id="session_cookie_info">What information is stored in the session cookie?</h3>
+<p>When a user logs in to the developer portal, a session cookie is created. The cookie is named: AtmoAuthToken_{fedmemberid}. For example:</p>
+<ul>
+	<li>Developer portal URL:
+	<p>https://<strong>abctenant</strong>.acmepaymentscorp.com/#/home/landing</p></li>
+	<li>Cookie name:
+	<p>AtmoAuthToken_<strong>abctenant</strong></p></li>
+</ul>
+<p>The cookie includes information that affects the user's session, such as:</p>
+<ul>
+	<li>Login information</li>
+	<li>Time the session started, and time it is valid for (might be default values or customized in settings)</li>
+	<li>The user's permissions to add, modify, delete, and view resources such as apps, APIs, and groups</li>
+</ul>
+<p>An example of a session cookie is shown below, and then a breakdown of the various parts of the cookie.</p>
+<p>In the cookie below, line breaks have been added for display reasons.</p>
+<pre>TokenID=5a3c3dd0-24a2-11e9-b868-f52f4729875d,claimed_id=urn:atmosphere:user:bcolless:e4bd4e7b
+-03a6-4f93-97bd-65cadc2ce45f,issueTime=1548861532881,expirationTime=1548863392871,UserName=rc
+oaless-JaneMead,UserFDN=e4bd4e7b-03a6-4f93-97bd-65cadc2ce45f%2Ebcolless,AttributesInclu
+ded=false,sig=gs2a7T9Ks5Td4dkaA8NVJ3NMr3qP3UfwEKjO-7yRu5oVcq5Fmc1znq9WZTM-tSwC5h8JdE5zoDSBKv9
+maqTbw5kJrYqisiCD-vc6q2--kcYlMn6fTpuFfruPhWZlOjOPWDYIO-0dNDk7RgMvTs7N_veiTn5SbHxf-a96Zgj6iKY</pre>
+<p>This includes the following name/value pairs, separated by commas:</p>
+<pre>TokenID=5a3c3dd0-24a2-11e9-b868-f52f4729875d,
+claimed_id=urn:atmosphere:user:bcolless:e4bd4e7b-03a6-4f93-97bd-65cadc2ce45f,
+issueTime=1548861532881,
+expirationTime=1548863392871,
+UserName=bcolless-JaneMead,
+UserFDN=e4bd4e7b-03a6-4f93-97bd-65cadc2ce45f%2Ebcolless,
+AttributesIncluded=false,
+sig=gs2a7T9Ks5Td4dkaA8NVJ3NMr3qP3UfwEKjO-7yRu5oVcq5Fmc1znq9WZTM-tSwC5h8JdE5zoDSBKv9maqTbw5kJrYqisiCD-
+vc6q2--kcYlMn6fTpuFfruPhWZlOjOPWDYIO-0dNDk7RgMvTs7N_veiTn5SbHxf-a96Zgj6iKY</pre>
+<ul>
+	<li><strong>TokenID</strong>: A unique ID for the token.</li>
+	<li><strong>claimed_id</strong>: xxx {<span class="apidoc_red">MM?</span>}</li>
+	<li><strong>issueTime</strong>: The time the cookie was issued, in xxx format. {<span class="apidoc_red">MM: It isn't UTC. Is it Epoch time? Or what?</span>}</li>
+	<li><strong>expirationTIme</strong>: The time the cookie expires, in xxx format. At that time, even if the user is engaged in an active session, the user is automatically logged out and must log in again.</li>
+	<li><strong>UserName</strong>: A value composed of the user's first name and last name. For example, for a first name of Joe and a last name of Brown, the UserName is JoeBrown.</li>
+	<li><strong>UserFDN</strong>: The platform's Fully Distinguished Name (User ID) that uniquely identifies the user.
+	</li>
+	<li><strong>AttributesIncluded</strong>: xxx {<span class="apidoc_red">MM?</span>}</li>
+	<li><strong>sig</strong>: xxx {<span class="apidoc_red">MM?</span>}</li>
+</ul>
+<p>In some cases, you might see different values in the session cookie. It can be customized to add the <strong>domain</strong> attribute: see below.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="cookie_add_attr_domain">How do I add the domain attribute to the session cookie for the developer portal?</h3>
+<h5>Version: 2018.0.4 and later</h5>
+<p>As an added security step, you can define the <strong>domain</strong> attribute in the session cookie for the developer portal. </p>
+<p>There are three possible values for this setting, as shown below.</p>
+<table class="doctable">
+	<thead>
+		<tr>
+			<th>domain attribute value</th>
+			<th>Meaning</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>com.soa.auth.token.cookie.domain.hostname</td>
+			<td>There should be a Domain attribute on the Set-Cookie header.</td>
+		</tr>
+		<tr>
+			<td>com.soa.auth.token.cookie.domain.hostname.mustset</td>
+			<td>There must be a Domain attribute on the Set-Cookie header with the complete hostname for the tenant being accessed..</td>
+		</tr>
+		<tr>
+			<td>com.soa.auth.token.cookie.domain.domainname</td>
+			<td><p>The first part of the domain should cut off to use the subdomain.</p>
+				<p>For example, if the host is <strong>open.akana.com</strong> the Domain attribute value in the Set-Cookie header should be <strong>akana.com</strong> and the same value should appear in the cookie in the browser.</p></td>
+		</tr>
+	</tbody>
+</table>
+<p>To set this up, you'll need to run the database script shown below. Where placeholder values in square brackets are shown below, specify the appropriate values for your installation:</p>
+<ul>
+	<li>The appropriate value from the three options above</li>
+	<li>Your BusinessID</li>
+</ul>
+<pre>SELECT * FROM BUSINESS_SECURITY_SETTINGS;
+
+update BUSINESS_SECURITY_SETTINGS set AUTH_TOKEN_COOKIE_DOMAIN = '[domain_attribute_value]' 
+where BUSINESSID=[BusinessID];</pre>
+
+<h5>Example</h5>
+<p>The example below uses the first attribute value, <strong>com.soa.auth.token.cookie.domain.hostname</strong>, and an example BusinessID.</p>
+<pre>SELECT * FROM BUSINESS_SECURITY_SETTINGS;
+
+update BUSINESS_SECURITY_SETTINGS set AUTH_TOKEN_COOKIE_DOMAIN = 'com.soa.auth.token.cookie.domain.hostname' 
+where BUSINESSID= 10002;</pre>
+
+<p><span class="apidoc_red">MM queries</span>:</p>
+<ol>
+	<li>What is the BusinessID, where do they get that from?</li>
+	<li>There is a space before the BusinessID value in your example in the JIRA, is that correct?</li>
 </ol>
 <p><a href="#top">Back to top</a></p>
 
@@ -1195,53 +1315,59 @@ table above.</li>
     <td>The workflow definition that will apply to all new users on the platform. Existing users are also added to the workflow when they log in if the Upgrade CM Models action is invoked as part of upgrade.</td>
   </tr>
   <tr>
-    <td>News Update Notification</td>
-    <td>If enabled, news update notifications can be sent to all users, as long as the users have not opted out by clearing the <strong>Email me news updates</strong> check box on the user profile page. For more information, see <a href="basics_account_management.htm#email_notifications_manage">How do I enable or disable email notifications?</a></td>
-  </tr>
+  	<td>Validity Period for Account Added by Site Admin (days)</td>
+  	<td><p>The period, in days, for which a new user account added by a Site Admin is valid. If the user doesn't log in during the validity period, the account expires.</p>
+  		<p>Choices: any single digit 1&#8211;30; 45, 60, 90, 120, 150, or 180. You can also choose <strong>Never Expire</strong>.</p></td>
+  	</tr>
   <tr>
-    <td>Validity Period for Account Added by Site Admin (days)</td>
-    <td><p>The period, in days, for which a new user account added by a Site Admin is valid. If the user doesn't log in during the validity period, the account expires.</p>
-      <p>Choices: any single digit 1&#8211;30; 45, 60, 90, 120, 150, or 180. You can also choose <strong>Never Expire</strong>.</p></td>
-  </tr>
+  	<td>Validity Period for Password Reset Code (in hours)</td>
+  	<td><p>The period, in hours, for which a password reset code is valid.</p>
+  		<p>Choices: 2, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 60, 120, 180, or 240. You can also choose <strong>Never Expire</strong>.</p>
+  		<!--<p>Table/Field: BUSINESS_USER_SETTINGS/RESETCODEVALIDHOURS</p>-->
+  		<p>Default: 48 hours.</p></td>
+  	</tr>
   <tr>
-    <td>Enforce Challenge Questions on Login</td>
-    <td>If enabled, users must provider answers to security challenge questions when logging in to the platform for the first time.</td>
-  </tr>
+  	<td><p>Validity Period for Update Email Code (in hours)</p>
+		<p>(API Platform Version: 2018.1.0 and later)</p></td>
+  	<td><p>The validity period, in hours, for the code sent to a user who initiates change of email address on the user account.</p>
+  		<p>For more information about the process when a user initiates change of email address, see <a href="basics_account_management.htm#user_email_change">How do I change my email address?</a></p></td>
+  	</tr>
   <tr>
-    <td>Validity Period for Password Reset Code (in hours)</td>
-    <td><p>The period, in hours, for which a password reset code is valid.</p>
-      <p>Choices: 2, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 60, 120, 180, or 240. You can also choose <strong>Never Expire</strong>.</p>
-      <!--<p>Table/Field: BUSINESS_USER_SETTINGS/RESETCODEVALIDHOURS</p>-->
-      <p>Default: 48 hours.</p></td>
-  </tr>
+  	<td>Validity Period for Signup Code (in days)</td>
+  	<td><p>The period, in days, for which a signup code is valid. The signup code is issued in the email confirmation for self-signup registration.</p>
+  		<p>Choices: any single digit 1&#8211;14; you can also choose <strong>Never Expire</strong>.</p>
+  		<!--<p>able/Field BUSINESS_USER_SETTINGS/SIGNUPUSERSVALIDDAYS</p>-->
+  		<p>Default: 7 days.</p></td>
+  	</tr>
   <tr>
-    <td>User Self-Signup</td>
-    <td><p>Determines whether the platform signup page is generally available for users to sign themselves up.</p>
-      <!--<p>Table/Field: BUSINESS_USER_SETTINGS/SELFSIGNUP</p>-->
-      <p>Default: Enabled.</p></td>
-  </tr>
+  	<td>Validity Period for Invitation Code (in days)</td>
+  	<td><p>The period, in days, for which an invitation code is valid. The invitation code is issued in an email when a group/team member invites a non-platform user to join the group/team.</p>
+  		<p>Choices: any single digit 1&#8211;30; you can also choose <strong>Never Expire</strong>.</p>
+  		<!--<p>BUSINESS_USER_SETTINGS/INVITEDUSERSVALIDDAYS</p>-->
+  		<p>Default: 7 days.</p></td>
+  	</tr>
   <tr>
-    <td>Validity Period for Signup Code (in days)</td>
-    <td><p>The period, in days, for which a signup code is valid. The signup code is issued in the email confirmation for self-signup registration.</p>
-      <p>Choices: any single digit 1&#8211;14; you can also choose <strong>Never Expire</strong>.</p>
-      <!--<p>able/Field BUSINESS_USER_SETTINGS/SIGNUPUSERSVALIDDAYS</p>-->
-      <p>Default: 7 days.</p></td>
-  </tr>
+  	<td>News Update Notification</td>
+  	<td>If enabled, news update notifications can be sent to all users, as long as the users have not opted out by clearing the <strong>Email me news updates</strong> check box on the user profile page. For more information, see <a href="basics_account_management.htm#email_notifications_manage">How do I enable or disable email notifications?</a></td>
+  	</tr>
   <tr>
-    <td>Invite Unregistered Users</td>
-    <td><p>Determines whether unregistered users can be invited to sign up to the platform or to join platform groups.</p>
-      <p>By default, all users can be invited; unregistered users are invited to sign up and then invite the group membership invitation. If this option is disabled, an unregistered user cannot be invited to sign up to the platform or to join a platform group.</p>
-      <p><strong>Note</strong>: If this option is disabled, the option to invite new users is removed from the <a href="basics_navigation.htm#plus_menu">Plus menu</a>.</p>
-      <!--<p>Table/Field: BUSINESS_USER_SETTINGS/INVITEUNREGUSERS</p>-->
-      <p>Default: Enabled.</p></td>
-  </tr>
+  	<td>Enforce Challenge Questions on Login</td>
+  	<td>If enabled, users must provider answers to security challenge questions when logging in to the platform for the first time.</td>
+  	</tr>
   <tr>
-    <td>Validity Period for Invitation Code (in days)</td>
-    <td><p>The period, in days, for which an invitation code is valid. The invitation code is issued in an email when a group/team member invites a non-platform user to join the group/team.</p>
-      <p>Choices: any single digit 1&#8211;30; you can also choose <strong>Never Expire</strong>.</p>
-      <!--<p>BUSINESS_USER_SETTINGS/INVITEDUSERSVALIDDAYS</p>-->
-      <p>Default: 7 days.</p></td>
-  </tr>
+  	<td>User Self-Signup</td>
+  	<td><p>Determines whether the platform signup page is generally available for users to sign themselves up.</p>
+  		<!--<p>Table/Field: BUSINESS_USER_SETTINGS/SELFSIGNUP</p>-->
+  		<p>Default: Enabled.</p></td>
+  	</tr>
+  <tr>
+  	<td>Invite Unregistered Users</td>
+  	<td><p>Determines whether unregistered users can be invited to sign up to the platform or to join platform groups.</p>
+  		<p>By default, all users can be invited; unregistered users are invited to sign up and then invite the group membership invitation. If this option is disabled, an unregistered user cannot be invited to sign up to the platform or to join a platform group.</p>
+  		<p><strong>Note</strong>: If this option is disabled, the option to invite new users is removed from the <a href="basics_navigation.htm#plus_menu">Plus menu</a>.</p>
+  		<!--<p>Table/Field: BUSINESS_USER_SETTINGS/INVITEUNREGUSERS</p>-->
+  		<p>Default: Enabled.</p></td>
+  	</tr>
 </tbody>
 </table>
 
