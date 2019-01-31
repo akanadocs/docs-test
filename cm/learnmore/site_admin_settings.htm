@@ -1113,48 +1113,14 @@ table above.</li>
 
 
 <h3 id="session_cookie_info">What information is stored in the session cookie?</h3>
-<p>When a user logs in to the developer portal, a session cookie is created. The cookie is named: AtmoAuthToken_{fedmemberid}. For example:</p>
-<ul>
-	<li>Developer portal URL:
-	<p>https://<strong>abctenant</strong>.acmepaymentscorp.com/#/home/landing</p></li>
-	<li>Cookie name:
-	<p>AtmoAuthToken_<strong>abctenant</strong></p></li>
-</ul>
+<p>When a user logs in to the developer portal, a session cookie is created. The cookie is named: AtmoAuthToken_{<a href="basics_glossary.htm#gl_fedmemberid">fedmemberID</a>}.</p>
 <p>The cookie includes information that affects the user's session, such as:</p>
 <ul>
 	<li>Login information</li>
 	<li>Time the session started, and time it is valid for (might be default values or customized in settings)</li>
 	<li>The user's permissions to add, modify, delete, and view resources such as apps, APIs, and groups</li>
 </ul>
-<p>An example of a session cookie is shown below, and then a breakdown of the various parts of the cookie.</p>
-<p>In the cookie below, line breaks have been added for display reasons.</p>
-<pre>TokenID=5a3c3dd0-24a2-11e9-b868-f52f4729875d,claimed_id=urn:atmosphere:user:bcolless:e4bd4e7b
--03a6-4f93-97bd-65cadc2ce45f,issueTime=1548861532881,expirationTime=1548863392871,UserName=rc
-oaless-JaneMead,UserFDN=e4bd4e7b-03a6-4f93-97bd-65cadc2ce45f%2Ebcolless,AttributesInclu
-ded=false,sig=gs2a7T9Ks5Td4dkaA8NVJ3NMr3qP3UfwEKjO-7yRu5oVcq5Fmc1znq9WZTM-tSwC5h8JdE5zoDSBKv9
-maqTbw5kJrYqisiCD-vc6q2--kcYlMn6fTpuFfruPhWZlOjOPWDYIO-0dNDk7RgMvTs7N_veiTn5SbHxf-a96Zgj6iKY</pre>
-<p>This includes the following name/value pairs, separated by commas:</p>
-<pre>TokenID=5a3c3dd0-24a2-11e9-b868-f52f4729875d,
-claimed_id=urn:atmosphere:user:bcolless:e4bd4e7b-03a6-4f93-97bd-65cadc2ce45f,
-issueTime=1548861532881,
-expirationTime=1548863392871,
-UserName=bcolless-JaneMead,
-UserFDN=e4bd4e7b-03a6-4f93-97bd-65cadc2ce45f%2Ebcolless,
-AttributesIncluded=false,
-sig=gs2a7T9Ks5Td4dkaA8NVJ3NMr3qP3UfwEKjO-7yRu5oVcq5Fmc1znq9WZTM-tSwC5h8JdE5zoDSBKv9maqTbw5kJrYqisiCD-
-vc6q2--kcYlMn6fTpuFfruPhWZlOjOPWDYIO-0dNDk7RgMvTs7N_veiTn5SbHxf-a96Zgj6iKY</pre>
-<ul>
-	<li><strong>TokenID</strong>: A unique ID for the token.</li>
-	<li><strong>claimed_id</strong>: xxx {<span class="apidoc_red">MM?</span>}</li>
-	<li><strong>issueTime</strong>: The time the cookie was issued, in xxx format. {<span class="apidoc_red">MM: It isn't UTC. Is it Epoch time? Or what?</span>}</li>
-	<li><strong>expirationTIme</strong>: The time the cookie expires, in xxx format. At that time, even if the user is engaged in an active session, the user is automatically logged out and must log in again.</li>
-	<li><strong>UserName</strong>: A value composed of the user's first name and last name. For example, for a first name of Joe and a last name of Brown, the UserName is JoeBrown.</li>
-	<li><strong>UserFDN</strong>: The platform's Fully Distinguished Name (User ID) that uniquely identifies the user.
-	</li>
-	<li><strong>AttributesIncluded</strong>: xxx {<span class="apidoc_red">MM?</span>}</li>
-	<li><strong>sig</strong>: xxx {<span class="apidoc_red">MM?</span>}</li>
-</ul>
-<p>In some cases, you might see different values in the session cookie. It can be customized to add the <strong>domain</strong> attribute: see below.</p>
+<p>The cookie can be customized to add the <strong>domain</strong> attribute: see below.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -1173,7 +1139,8 @@ vc6q2--kcYlMn6fTpuFfruPhWZlOjOPWDYIO-0dNDk7RgMvTs7N_veiTn5SbHxf-a96Zgj6iKY</pre>
 	<tbody>
 		<tr>
 			<td>com.soa.auth.token.cookie.domain.hostname</td>
-			<td>There should be a Domain attribute on the Set-Cookie header.</td>
+			<td><p>There should not be a Domain attribute on the Set-Cookie header.</p>
+				<p>This is the default.</p></td>
 		</tr>
 		<tr>
 			<td>com.soa.auth.token.cookie.domain.hostname.mustset</td>
@@ -1186,31 +1153,23 @@ vc6q2--kcYlMn6fTpuFfruPhWZlOjOPWDYIO-0dNDk7RgMvTs7N_veiTn5SbHxf-a96Zgj6iKY</pre>
 		</tr>
 	</tbody>
 </table>
-<p>To set this up, you'll need to run the database script shown below. Where placeholder values in square brackets are shown below, specify the appropriate values for your installation:</p>
+<p>To set this up, you'll need to run the database query shown below. Where placeholder values in square brackets are shown below, specify the appropriate values for your installation:</p>
 <ul>
 	<li>The appropriate value from the three options above</li>
-	<li>Your BusinessID</li>
+	<li>Your <a href="basics_glossary.htm#gl_fedmemberid">FedmemberID</a></li>
 </ul>
 <pre>SELECT * FROM BUSINESS_SECURITY_SETTINGS;
 
 update BUSINESS_SECURITY_SETTINGS set AUTH_TOKEN_COOKIE_DOMAIN = '[domain_attribute_value]' 
-where BUSINESSID=[BusinessID];</pre>
+where BUSINESSID = (SELECT BUSINESSID FROM TENANTS WHERE fedmemberid = '[FedmemberID]');</pre>
 
 <h5>Example</h5>
-<p>The example below uses the first attribute value, <strong>com.soa.auth.token.cookie.domain.hostname</strong>, and a BusinessID of 10002.</p>
+<p>The example below uses the second attribute value, <strong>com.soa.auth.token.cookie.domain.hostname.mustset</strong>, and a FedmemberID of <strong>acmepaymentscorp</strong>.</p>
 <pre>SELECT * FROM BUSINESS_SECURITY_SETTINGS;
 
-update BUSINESS_SECURITY_SETTINGS set AUTH_TOKEN_COOKIE_DOMAIN = 'com.soa.auth.token.cookie.domain.hostname' 
-where BUSINESSID= 10002;</pre>
+update BUSINESS_SECURITY_SETTINGS set AUTH_TOKEN_COOKIE_DOMAIN = '[domain_attribute_value]' 
+where BUSINESSID = (SELECT BUSINESSID FROM TENANTS WHERE fedmemberid = 'acmepaymentscorp');</pre>
 
-<p><span class="apidoc_red">MM queries</span>:</p>
-<p><span class="apidoc_red">BM query is a little bit different </span>(a line break was added in the query below for display purposes):</p>
-<pre>UPDATE 'acmepaymentscorp'.'BUSINESS_SECURITY_SETTINGS' 
-SET 'AUTH_TOKEN_COOKIE_DOMAIN' = 'com.soa.auth.token.cookie.domain.hostname.mustset' WHERE ('BUSINESSID' = '10042');</pre>
-<ol>
-	<li>What is the BusinessID, where do they get that from? The example doesn't look like our usual BusinessID. And, can this be set at the business level rather than the tenant level?</li>
-	<li>There is a space before the BusinessID value in your example in the JIRA, is that correct?</li>
-</ol>
 <p>Sample cookie with the <strong>com.soa.auth.token.cookie.domain.hostname.mustset</strong> setting enabled (line breaks added for display purposes). The Domain value is in the last line.</p>
 <pre>Set-Cookie: AtmoAuthToken_atmosphere=TokenID%3D337b02b3-24de-11e9-975c-e9caa5f7441a%2Cclaimed_id%3D
 urn%3Aatmosphere%3Auser%3Aatmosphere%3A5f138d5a-cae8-4ab7-ba4a-e87791e669bd%2CissueTime%3D1548887237660%2C
@@ -1227,17 +1186,6 @@ AttributesIncluded%3Dfalse%2Csig%3DJqN9yPJwB4T-BnzexNGZ-kSSR3TqD5rg9TIM3FoJkdAUh
 Hy2LFc5D7-jZnJIdi2837LshgiSc1m-aCcZj74or1DOS7ZBFyeE8re63-zze3fTyb-igjQ_IT-CNN9qNbMx8fqEl84Qa8Dyq0M6kXQA1YH12ibEHgA-laJr
 07B4phZP2wo2EmhxfSgk8XwacKd6OeoGZPYhYN6pfcnVAtGrH5aPan7APg_f9BOf9FnSgnbOiz6UAqKpqwr3o3yeDfPbcGSGbKmIO4nUWMHtLfAr2X_f8hp
 eGFgOaYFBmLjw1CMKmqg;path=/;HttpOnly;Domain=api.acmepaymentscorp.com;expires=Wed, 30 Jan 2019 22:49:05 GMT</pre>
-
-<h5 id="xxx">Getting the BusinessID</h5>
-<p>If you don't know the BusinessID for your implementation, you can run the query shown below to get that value. You'll need:</p>
-<ul>
-	<li>TenantID</li>
-	<li>FedmemberID</li>
-</ul>
-<pre>SELECT BUSINESSID FROM {TenantID}.TENANTS WHERE fedmemberid = '{FedmemberID}';
-Where you would replace 'atmosphere' with the actual fedmemberid</pre>
-<p>For example:</p>
-<pre>SELECT BUSINESSID FROM acmepaymentscorp.TENANTS WHERE fedmemberid = 'atmosphere';</pre>
 <p><a href="#top">Back to top</a></p>
 
 
