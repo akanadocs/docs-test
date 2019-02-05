@@ -59,8 +59,8 @@ nav-title: Installing Akana API Platform 2018.0.0
 			<li><a href="#notes_database_general">Database notes, all: user permissions</a></li>
 			<li><a href="#notes_database_oracle">Database notes: Oracle</a></li>
 			<li><a href="#notes_database_ms_sql_server">Database notes: Microsoft SQL Server</a></li>
-			<li><a href="#notes_database_mysql_settings">MySQL: database settings for the API Platform</a></li>
-			<li><a href="#notes_database_mysql_rm">Database notes: MySQL with Lifecycle Repository</a></li>
+			<li><a href="#notes_database_mysql">Database notes: MySQL</a></li>
+
 		</ul>
 		</li>
 	
@@ -261,8 +261,8 @@ nav-title: Installing Akana API Platform 2018.0.0
 			<li>Akana Community Manager (includes Akana Community Manager APIs)</li>
 			<li>Akana Community Manager OAuth Provider (Should be installed for any Community Manager container) </li>
 			<li>Akana Community Manager Scheduled Jobs </li>
-			<li>Akana Management Services</li>
-			<li>Akana OAuth Provider</li>
+			<li>Akana Management Services<!-- {<span class="apidoc_red">MM: ML had this, EN didn't. If you have scheduled jobs on another container do you not need it? Just need it somewhere?</span>}--></li>
+			<li>Akana OAuth Provider<!-- {<span class="apidoc_red">MM: ML installs this. When do we need Akana CM Oauth Provider vs Akana OAuth Provider?</span>}--></li>
 			<li>Akana Policy Manager Console </li>
 			<li>Akana Policy Manager Services&#8212;this feature bundle includes the Akana Scheduled Jobs feature which adds jobs to the Quartz scheduler. It also includes Akana Security Services<!--(security.services)-->. This feature is needed on all containers except Network Director.</li>
 		</ul>
@@ -593,7 +593,8 @@ nav-title: Installing Akana API Platform 2018.0.0
 	<li><a href="#notes_database_general">Database notes, all: user permissions</a></li>
 	<li><a href="#notes_database_oracle">Database notes: Oracle</a></li>
 	<li><a href="#notes_database_ms_sql_server">Database notes: Microsoft SQL Server</a></li>
-	<li><a href="#notes_database_mysql_settings">MySQL: database settings for the API Platform</a></li>
+	<li><a href="#notes_database_mysql_settings">Database Notes, MySQL: database settings for the API Platform</a></li>
+	<li><a href="#notes_database_mysql_settings">Database Notes, </a><a href="#notes_database_mysql_sql_mode">MySQL 5.7: modifications to sql_mode default value</a></li>
 	<li><a href="#notes_database_mysql_rm">Database notes: MySQL with Lifecycle Repository</a></li>
 </ul>
 
@@ -609,6 +610,8 @@ nav-title: Installing Akana API Platform 2018.0.0
 	</li>
 	<li><strong>Runtime user</strong>: The runtime user created by the scripts should have a minimal set of permissions for runtime plus schema updates. If you remove this user's ability to add/alter/drop objects, you'll need to add them back when it's time to perform schema updates.</li>
 </ul>
+
+
 <h4 id="notes_database_oracle">Database notes: Oracle</h4>
 <p>Please note the following if you're working with an Oracle database:</p>
 <ul>
@@ -628,7 +631,7 @@ nav-title: Installing Akana API Platform 2018.0.0
 
 
 <h4 id="notes_database_ms_sql_server">Database notes: Microsoft SQL Server</h4>
-<p>Please note the following if you're working with a Microsoft SQL Server database:</p>
+<p>If you're working with a Microsoft SQL Server database, please note the following:</p>
 <ul>
 	<li><a href="#note_ms_sql_server_quartz_trigger">Verifying the quartz trigger property for Microsoft SQL Server</a></li>
 	<li><a href="#note_ms_sql_server_snapshot">Database notes: Microsoft SQL Server with Lifecycle Repository</a></li>
@@ -644,7 +647,8 @@ nav-title: Installing Akana API Platform 2018.0.0
 	<li>Save your changes.</li>
 </ol>
 
-<h5 id="note_ms_sql_server_snapshot">Database notes: Microsoft SQL Server with Lifecycle Repository</h5>
+
+<h4 id="note_ms_sql_server_snapshot">Database notes: Microsoft SQL Server with Lifecycle Repository</h4>
 <p>When using any version of MSSQL with Lifecycle Repository, the DBA will need to manually alter the database to set read committed snapshot and enable snapshot isolation mode. This is not required for installation; however, it will affect how the application behaves once asset content is being populated. Run the following:</p>
 <pre>ALTER DATABASE {db.instance.name}
   SET READ_COMMITTED_SNAPSHOT ON;
@@ -652,7 +656,16 @@ ALTER DATABASE {db.instance.name}
   SET ALLOW_SNAPSHOT_ISOLATION ON;</pre>
 
 
-<h4 id="notes_database_mysql_settings">MySQL: database settings for the API Platform</h4>
+<h4 id="notes_database_mysql">Database Notes, MySQL</h4>
+<p>If you're working with a MySQL database, please note the following:</p>
+<ul>
+	<li><a href="#notes_database_mysql_settings">Database Notes, MySQL: database settings for the API Platform</a></li>
+	<li><a href="#notes_database_mysql_sql_mode">Database Notes, MySQL 5.7: modifications to sql_mode default value</a></li>
+	<li><a href="#notes_database_mysql_rm">Database notes: MySQL with Lifecycle Repository</a></li>
+</ul>
+
+
+<h5 id="notes_database_mysql_settings">Database Notes, MySQL: database settings for the API Platform</h5>
 <p>If you're using MySQL 5.6, the settings below are required for the API Platform. You'll need to configure these settings in the <strong>my.ini</strong> file <strong>before</strong> loading the database schema in MySQL.</p>
 <p>Specific properties are listed below, with references to the applicable MySQL documentation:</p>
 <ul>
@@ -664,6 +677,16 @@ ALTER DATABASE {db.instance.name}
 	<li>max_allowed_packet=1073741824; (<a href="http://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html#sysvar_max_allowed_packet" title="http://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html#sysvar_max_allowed_packet" target="_blank">http://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html#sysvar_max_allowed_packet</a>)</li>
 </ul>
 <p>For more information, refer to <a href="install_mysql_dbsettings.htm">MySQL Database Property Settings</a>.</p>
+
+
+<h5 id="notes_database_mysql_sql_mode">Database Notes, MySQL 5.7: modifications to sql_mode default value</h5>
+<p>In MySQL 5.7, the default value of <span class="apidoc_code">sql_mode</span> includes <strong>NO_ZERO_IN_DATE</strong> and <strong>NO_ZERO_DATE</strong>, which are not currently compatible with Akana.</p>
+<p>The default value for <span class="apidoc_code">sql_mode</span> in MySQL 5.7 is:</p>
+<pre>ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION</pre>
+<p>If you're using MySQL 5.7 with Akana products, you must modify <span class="apidoc_code">sql_mode</span> in your MySQL config files to exclude these two values.</p>
+<p>An example of a valid setting for <span class="apidoc_code">sql_mode</span> with the Akana API Platform is:</p>
+<pre>sql_mode=STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION,ALLOW_INVALID_DATES</pre>
+
 
 <h5 id="notes_database_mysql_rm">Database notes: MySQL with Lifecycle Repository</h5>
 <p>For Akana API Platform installs using the Lifecycle Repository feature, the Lifecycle Manager database user requires specific additional grants when using MySQL. These grants are required for successful completion of the <strong>Initialize Repository Database</strong> configuration task; otherwise, the task fails.</p>
@@ -986,9 +1009,7 @@ default.port=9945
 	<pre>.\sm70\bin\unregisterContainerServiceYAJWS.bat{instance_name}</pre></li>
 <li>Register the new version as a Windows service:
 <pre>.\{<strong>aap201800</strong>_foldername}\bin\registerContainerServiceYAJWS.bat {instance_name}</pre>
-<p>If you're running in Administrator mode, Windows registers the service and also starts it.</p>
-<p><strong>Note</strong>: The product also includes files <strong>unregisterContainerService.bat</strong> and <strong>registerContainerService.bat</strong>. These are present for compatibility with earlier versions. Do <strong>not</strong> use those files; use the versions listed above.</p>
-</li>
+<p>If you're running in Administrator mode, Windows registers the service and also starts it.</p></li>
 <li>Repeat steps 2 and 3 for each additional container that's registered as a Windows service.</li>
 </ol>
 <p><a href="#top">back to top</a></p>
@@ -1172,7 +1193,8 @@ default.port=9945
 	<li>Akana OAuth Provider Agent<!-- (oauth.provider.agent)--> (deployed only if the implementation is using Akana as the OAuth Provider, and only on the Network Director)</li>
 </ul>
 <p>Install the following plug-in:</p>
-<ul><li>Akana API Platform ND Extensions Feature (needed for API analytics and Akana API Platform OAuth and security policies)</li>
+<ul>
+	<li>Akana API Platform ND Extensions Feature (needed for API analytics and Akana API Platform OAuth and security policies)<!--(api.security.policy.handler)--></li>
 </ul>
 
 
@@ -1253,14 +1275,12 @@ default.port=9945
 <h4 id="features_nd_alone">Standalone Internal/External Gateway (Network Director) container features (without OAuth)</h4>
 <p>Install the following feature:</p>
 <ul>
-	<li>Akana Network Director
-		<!--(network.director)-->
-	</li>
+	
+	<li>Akana Network Director <!--(network.director)--></li>
 </ul>
 <p>Install the following plug-in:</p>
 <ul>
-	<li>Akana API Platform ND Extensions Feature (needed for API analytics and Akana API Platform OAuth and security policies) <!--(api.security.policy.handler)-->
-	</li>
+	<li>Akana API Platform ND Extensions Feature (needed for API analytics and Akana API Platform OAuth and security policies)<!--(api.security.policy.handler)--></li>
 </ul>
 <p><a href="#top">Back to top</a></p>
 <!--<p>https://gitlab.com/akana/automation/blob/master/README.md. Section Container Features.</p>-->
