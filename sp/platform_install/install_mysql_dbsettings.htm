@@ -10,14 +10,15 @@ type: page
 nav-title: MySQL Database Property Settings
 ---
 <h2 id="top">MySQL Database Property Settings</h2>
-<p>If you're using MySQL 5.6 <!--or higher -->with Policy Manager 8.0 or higher and/or Policy Manager 8.0 or higher with Community Manager 8.0 or higher, the following MySQL property settings must be configured as outlined below:</p>
+<p>If you're using MySQL 5.6 or higher with Policy Manager 8.0 or higher and/or Policy Manager 8.0 or higher with Community Manager 8.0 or higher, the following MySQL property settings must be configured as outlined below:</p>
 <ul>
-  <li><a href="#mysql_innodb_file_per_table">innodb_file_per_table</a></li>
-  <li><a href="#mysql_innodb_large_prefix">innodb_large_prefix</a></li>
-  <li><a href="#mysql_innodb_file_format">innodb_file_format</a></li>
-  <li><a href="#mysql_max_allowed_packet">max_allowed_packet</a></li>
-  <li><a href="#mysql_innodb_flush_log_at_trx_commit">innodb_flush_log_at_trx_commit</a></li>
+	<li><a href="#mysql_innodb_file_per_table">innodb_file_per_table</a></li>
+	<li><a href="#mysql_innodb_large_prefix">innodb_large_prefix</a></li>
+	<li><a href="#mysql_innodb_file_format">innodb_file_format</a></li>
+	<li><a href="#mysql_max_allowed_packet">max_allowed_packet</a></li>
+	<li><a href="#mysql_innodb_flush_log_at_trx_commit">innodb_flush_log_at_trx_commit</a></li>
 </ul>
+<p><strong>Note</strong>: For additional information about running the Akana Platform with a MySQL database, see <a href="installing_akana_api_platform.htm#notes_database_mysql">Database notes: MySQL</a>.</p>
 
 
 
@@ -29,23 +30,23 @@ nav-title: MySQL Database Property Settings
 
 <h5>Advantages</h5>
 <ul>
-  <li>Tables created in file-per-table tablespaces use the Barracuda file format. The Barracuda file format enables features such as compressed and dynamic row formats. Tables created in the system tablespace cannot use these features.</li>
-  <li>You can reclaim disk space when truncating or dropping a table stored in a file-per-table tablespace. Truncating or dropping tables stored in the system tablespace creates free space internally in the system tablespace data files (ibdata files) which can only be used for new <span class="apidoc_code">InnoDB</span> data. </li>
-  <li>The <span class="apidoc_code">TRUNCATE TABLE</span> operation is faster when run on tables stored in file-per-table tablespaces.</li>
-  <li>You can run <span class="apidoc_code">OPTIMIZE TABLE</span> to compact or recreate a file-per-table tablespace. When you run an <span class="apidoc_code">OPTIMIZE TABLE</span>, <span class="apidoc_code">InnoDB</span> creates a new <strong>.ibd</strong> file with a temporary name, using only the space required to store actual data. When the optimization is complete, <span class="apidoc_code">InnoDB</span> removes the old <strong>.ibd</strong> file and replaces it with the new one. If the previous <strong>.ibd</strong> file grew significantly but the actual data only accounted for a portion of its size, running <span class="apidoc_code">OPTIMIZE TABLE</span> can reclaim the unused space.</li>
-  <li>File-per-table tablespaces might improve chances for a successful recovery and save time if a corruption occurs, when a server cannot be restarted, or when backup and binary logs are unavailable. </li>
-  <li>You can back up or restore individual tables quickly using the MySQL Enterprise Backup product, without interrupting the use of other <span class="apidoc_code">InnoDB</span> tables. This is beneficial if you have tables that require backup less frequently or on a different backup schedule.</li>
-  <li>File-per-table tablespaces are convenient for per-table status reporting when copying or backing up tables. </li>
-  <li>You can monitor table size at a file system level, without accessing MySQL. </li>
-  <li>The system tablespace stores the data dictionary and undo logs, and has a 64TB size limit. By comparison, each file-per-table tablespace has a 64TB size limit, which provides you with room for growth.</li>
+	<li>Tables created in file-per-table tablespaces use the Barracuda file format. The Barracuda file format enables features such as compressed and dynamic row formats. Tables created in the system tablespace cannot use these features.</li>
+	<li>You can reclaim disk space when truncating or dropping a table stored in a file-per-table tablespace. Truncating or dropping tables stored in the system tablespace creates free space internally in the system tablespace data files (ibdata files) which can only be used for new <span class="apidoc_code">InnoDB</span> data. </li>
+	<li>The <span class="apidoc_code">TRUNCATE TABLE</span> operation is faster when run on tables stored in file-per-table tablespaces.</li>
+	<li>You can run <span class="apidoc_code">OPTIMIZE TABLE</span> to compact or recreate a file-per-table tablespace. When you run an <span class="apidoc_code">OPTIMIZE TABLE</span>, <span class="apidoc_code">InnoDB</span> creates a new <strong>.ibd</strong> file with a temporary name, using only the space required to store actual data. When the optimization is complete, <span class="apidoc_code">InnoDB</span> removes the old <strong>.ibd</strong> file and replaces it with the new one. If the previous <strong>.ibd</strong> file grew significantly but the actual data only accounted for a portion of its size, running <span class="apidoc_code">OPTIMIZE TABLE</span> can reclaim the unused space.</li>
+	<li>File-per-table tablespaces might improve chances for a successful recovery and save time if a corruption occurs, when a server cannot be restarted, or when backup and binary logs are unavailable. </li>
+	<li>You can back up or restore individual tables quickly using the MySQL Enterprise Backup product, without interrupting the use of other <span class="apidoc_code">InnoDB</span> tables. This is beneficial if you have tables that require backup less frequently or on a different backup schedule.</li>
+	<li>File-per-table tablespaces are convenient for per-table status reporting when copying or backing up tables. </li>
+	<li>You can monitor table size at a file system level, without accessing MySQL. </li>
+	<li>The system tablespace stores the data dictionary and undo logs, and has a 64TB size limit. By comparison, each file-per-table tablespace has a 64TB size limit, which provides you with room for growth.</li>
 </ul>
 
 <h5>Disadvantages</h5>
 <ul>
-  <li>With file-per-table tablespaces, each table may have unused space, which can only be used by rows of the same table. This could lead to wasted space if not properly managed.</li>
-  <li><span class="apidoc_code">fsync</span> operations must run on each open table rather than on a single file. Because there is a separate <span class="apidoc_code">fsync</span> operation for each file, write operations on multiple tables cannot be combined into a single I/O operation. This may require <span class="apidoc_code">InnoDB</span> to perform a higher total number of <span class="apidoc_code">fsync</span> operations. </li>
-  <li><strong>mysqld</strong> must keep one open file handle per table, which may impact performance if you have numerous tables in file-per-table tablespaces. </li>
-  <li>If many tables are growing, there is potential for more fragmentation, which can impede <span class="apidoc_code">DROP TABLE</span> and table scan performance. However, when fragmentation is managed, having files in their own tablespace can improve performance.</li>
+	<li>With file-per-table tablespaces, each table may have unused space, which can only be used by rows of the same table. This could lead to wasted space if not properly managed.</li>
+	<li><span class="apidoc_code">fsync</span> operations must run on each open table rather than on a single file. Because there is a separate <span class="apidoc_code">fsync</span> operation for each file, write operations on multiple tables cannot be combined into a single I/O operation. This may require <span class="apidoc_code">InnoDB</span> to perform a higher total number of <span class="apidoc_code">fsync</span> operations. </li>
+	<li><strong>mysqld</strong> must keep one open file handle per table, which may impact performance if you have numerous tables in file-per-table tablespaces. </li>
+	<li>If many tables are growing, there is potential for more fragmentation, which can impede <span class="apidoc_code">DROP TABLE</span> and table scan performance. However, when fragmentation is managed, having files in their own tablespace can improve performance.</li>
 </ul>
 <p>MySQL online documentation for this property:&nbsp;<a href="http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_file_per_table" title="http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_file_per_table" target="_blank">http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_file_per_table</a>.</p>
 <p><a href="#top">back to top</a></p>
@@ -67,7 +68,7 @@ nav-title: MySQL Database Property Settings
 <pre>set global innodb_file_format=barracuda;</pre>
 <h5>Advantages</h5>
 <ul>
-  <li>The <span class="apidoc_code">DYNAMIC</span> row format maintains the efficiency of storing long data values such as <span class="apidoc_code">BLOB</span> and TEXT.</li>
+	<li>The <span class="apidoc_code">DYNAMIC</span> row format maintains the efficiency of storing long data values such as <span class="apidoc_code">BLOB</span> and TEXT.</li>
 </ul>
 <p>MySQL online documentation for this property: <a href="http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_file_format" title="http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_file_format" target="_blank">http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_file_format</a>.</p>
 <p><a href="#top">back to top</a></p>
@@ -87,9 +88,9 @@ nav-title: MySQL Database Property Settings
 <a name="mysql_innodb_flush_log_at_trx_commit"></a><h3>innodb_flush_log_at_trx_commit</h3>
 <p>Controls the balance between strict ACID compliance for commit operations, and higher performance that is possible when commit-related I/O operations are rearranged and done in batches. You can achieve better performance by changing the default value, but then you can lose up to a second of transactions in a crash.</p>
 <ul>
-  <li>The default value of 1 is required for full ACID compliance. With this value, the contents of the <span class="apidoc_code">InnoDB</span> log buffer are written out to the log file at each transaction commit and the log file is flushed to disk. </li>
-  <li>With a value of 0, the contents of the <span class="apidoc_code">InnoDB</span> log buffer are written to the log file approximately once per second and the log file is flushed to disk. No writes from the log buffer to the log file are performed at transaction commit. Once-per-second flushing is not 100% guaranteed to happen every second, due to process scheduling issues. Because the flush to disk operation only occurs approximately once per second, you can lose up to a second of transactions with any <strong>mysqld</strong> process crash.</li>
-  <li>With a value of 2, the contents of the <span class="apidoc_code">InnoDB</span> log buffer are written to the log file after each transaction commit and the log file is flushed to disk approximately once per second. Once-per-second flushing is not 100% guaranteed to happen every second, due to process scheduling issues. Because the flush to disk operation only occurs approximately once per second, you can lose up to a second of transactions in an operating system crash or a power outage.</li>
+	<li>The default value of 1 is required for full ACID compliance. With this value, the contents of the <span class="apidoc_code">InnoDB</span> log buffer are written out to the log file at each transaction commit and the log file is flushed to disk. </li>
+	<li>With a value of 0, the contents of the <span class="apidoc_code">InnoDB</span> log buffer are written to the log file approximately once per second and the log file is flushed to disk. No writes from the log buffer to the log file are performed at transaction commit. Once-per-second flushing is not 100% guaranteed to happen every second, due to process scheduling issues. Because the flush to disk operation only occurs approximately once per second, you can lose up to a second of transactions with any <strong>mysqld</strong> process crash.</li>
+	<li>With a value of 2, the contents of the <span class="apidoc_code">InnoDB</span> log buffer are written to the log file after each transaction commit and the log file is flushed to disk approximately once per second. Once-per-second flushing is not 100% guaranteed to happen every second, due to process scheduling issues. Because the flush to disk operation only occurs approximately once per second, you can lose up to a second of transactions in an operating system crash or a power outage.</li>
 </ul>
 <p>Akana does not require this setting changed from default value <strong>1</strong>. However if you are seriously looking at improving the performance, the value can be changed to <strong>0</strong> or <strong>2</strong>.</p>
 <pre>set global innodb_flush_log_at_trx_commit=0;</pre>
