@@ -20,6 +20,8 @@ nav-title: App OAuth Profile
 	<li><a href="#app_oauth_profile_options">What is the OAuth Profile and what choices should I make?</a></li>
 	<li><a href="#app_oauth_profile_config_howto">How do I configure my app's OAuth profile settings?</a></li>
 	<li><a href="#app_oauth_profile_settings">What are the settings available on the App OAuth Profile page?</a></li>
+	<li><a href="#tc_redirect_uri">What is the redirect URI for Test Client?</a></li>
+	<li><a href="#tc_redirect_uri_register">Why do I need to register the Test Client redirect URI with my OAuth Provider?</a></li>
 	<li><a href="#app_oauth_config_credentials">How do I configure OAuth credentials?</a></li>
 	<li><a href="#app_oauth_config_res_owner_auth_page">How do I configure a Resource Owner OAuth Authorization page for my app?</a></li>
 	<li><a href="#oauth_20_client_types">What are the OAuth 2.0 Client Types?</a></li>
@@ -111,7 +113,7 @@ nav-title: App OAuth Profile
     </tr>
     <tr>
       <td>Description</td>
-      <td>Represents the description of the app that displays below the sub-title (for example, This is the app description).</td>
+      <td>Represents the description of the app that displays below the sub-title (for example, <strong>This is the app description</strong>).</td>
     </tr>
     <tr>
       <td>Legal Disclaimer</td>
@@ -210,17 +212,19 @@ nav-title: App OAuth Profile
         <p><strong>Note</strong>: You cannot restrict <strong>code</strong> and <strong>id_token token</strong>. These response types are valid for all apps.</p></td>
     </tr>
     <tr>
-    	<td id="redirect_uri">Redirect URI</td>
-    	<td><p>The Client Redirection URI, which the user is redirected to after authentication/authorization; the redirect_uri value that you register with the OAuth Provider.</p>
-    		<p>Specify all redirect <a href="basics_glossary.htm#gl_uri">URIs</a> or<a href="basics_glossary.htm#gl_urn"> URN</a>s that are valid for the app.</p>
-    		<p>Valid values: either a fully-qualified URL, including protocol, or a valid Google iOS app mobile schema, per <a href="https://developers.google.com/identity/toolkit/ios/" title="Link to Google page re mobile URI schema" target="_blank">https://developers.google.com/identity/toolkit/ios/</a>.</p>
-    		<p>Example: <strong>com.googleusercontent.apps.902730282010-ks3kd03ksoasioda93jldas93jjj22kr:/oauth2redirect</strong>.</p>
-    		<p>If Akana is the OAuth Provider, either register the redirect_uri with Akana, or the redirect_uri must be a subset of the authorization server URL.</p>
-    		<p>Note: If you want to use OAuth in Test Client, you'll also need to specify, and register with the OAuth Provider, the Test Client redirect_uri:</p>
-    		<ul>
-    			<li><strong>{base_url}/api/devconsole/oauth/redirect</strong></li>
-   			</ul></td>
-   	</tr>
+      <td id="redirect_uri">Redirect URI</td>
+      <td><p>The Client Redirection URI, which the user is redirected to after authentication/authorization; the redirect_uri value that you register with the OAuth Provider.</p>
+      	<p>Specify all redirect <a href="basics_glossary.htm#gl_uri">URIs</a> or<a href="basics_glossary.htm#gl_urn"> URNs</a> that are valid for the app.</p>
+      	<p>Valid values: either a fully-qualified URL, including protocol, or a valid Google iOS app mobile schema, per <a href="https://developers.google.com/identity/toolkit/ios/" title="Link to Google page re mobile URI schema" target="_blank">https://developers.google.com/identity/toolkit/ios/</a>.</p>
+      	<p>Example: <strong>com.googleusercontent.apps.902730282010-ks3kd03ksoasioda93jldas93jjj22kr:/oauth2redirect</strong>.</p>
+      	<p>If Akana is the OAuth Provider, either register the redirect_uri with Akana, or the redirect_uri must be a subset of the authorization server URL.</p>
+      	<p><strong>Note</strong>: If you want to test APIs using OAuth, via Test Client, the Test Client redirect_uri value must be registered with the OAuth/OIDC provider:</p>
+      	<ul>
+      		<li><strong>{base_url}/api/devconsole/oauth/redirect</strong></li>
+      		</ul>
+      	<p>For more information, see <a href="#tc_redirect_uri_register">Registering the Test Client redirect URI with your OAuth Authentication Provider</a>.</p>
+			</td>
+    </tr>
   </tbody>
 </table>
 
@@ -252,6 +256,26 @@ nav-title: App OAuth Profile
     </tr>
   </tbody>
 </table>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="tc_redirect_uri">What is the redirect URI for Test Client?</h3>
+<p>The redirect URI that Test Client uses is:</p>
+<ul>
+	<li><strong>{base_url}/api/devconsole/oauth/redirect</strong></li>
+</ul>
+<p>Test Client acts in the client role for the purpose of testing apps with APIs in the developer portal. In a real-world scenario, the client (end-user) is redirected back to the app; in the context of Test Client, the redirect is back to Test Client.</p>
+<p>If you're testing an app and API with OAuth in Test Client, the Test Client redirect URI will need to be registered with the OAuth Provider. If it isn't, the client redirect part of the OAuth exchange, where the client is redirected back to the app after authenticating with the identity provider and authorizing the scopes, will fail and the message response will not be successful.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="tc_redirect_uri_register">Registering the Test Client redirect URI with the OAuth Authentication Provider</h3>
+<p>If you want to test in Test Client using your app and an API that supports OAuth, you'll need to register the special Test Client redirect_uri value with your OAuth/OpenID Connect Identity Provider.</p>
+<p>Each OAuth Provider is different, but the app must always register with the OAuth Provider so that the app is a trusted party. In the context of Test Client, you'll need to add the redirect URI so that Test Client is treated as a trusted party and the message exchange can complete successfully.</p>
+<p>As an example, if authentication is with Google, you'll register the app at the Google Developers Console: <a href="https://console.developers.google.com/" title="Link to Google Developers Console" target="_blank">https://console.developers.google.com/</a>. Create an account, add the app, and add the URL in the Authorized Redirect URIs field, as shown below.</p>
+<p><img src="assets/tc_redirect_uri_register_01.jpg" alt="Adding the redirect URI in the Google Developers Console" /></p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -326,6 +350,3 @@ nav-title: App OAuth Profile
 	<li><a href="basics_glossary.htm">Glossary of Terms</a></li>
 </ul>
 </div>
-
-
-
