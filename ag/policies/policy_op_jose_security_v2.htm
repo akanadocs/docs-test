@@ -39,6 +39,7 @@ nav-title: JOSE Security v2
 	<li><a href="#json_vsus_compact">JSON versus compact structure, with examples</a></li>
 	<li><a href="#tools_encode">Online tools for encoding and decoding</a></li>
 	<li><a href="#jose_unenc_troubleshooting">JOSE Security Policy v2 (Unencoded Payload Support): troubleshooting</a></li>
+	<li><a href="#jose_error_codes_ob">Open Banking error messages for the JOSE Security Policy v2</a> (2018.0.5 and later)</li>
 </ol>
 <div class = "divider1"></div>
 
@@ -113,7 +114,6 @@ nav-title: JOSE Security v2
 <p>For Open Banking 3.0 and earlier, the JOSE policy v2 supports sending the custom <strong>iat</strong> and <strong>iss</strong> claims, and supports specifying those custom claims in the <strong>crit</strong> claim, as per the specification.</p>
 <p>For example, in version 2.0, the <strong>crit</strong> claim is required, and must be a string array of the three specific values shown below:</p>
 <pre>"b64", "http://openbanking.org.uk/iat", "http://openbanking.org.uk/iss"</pre>
-<p>&nbsp;</p>
 <p><strong>3.1:</strong></p>
 <p>In version 3.1, the JOSE Security Policy v2 supports sending the additional <strong>tan</strong> claim which is required, see <a href="#jose_ob_tan"><strong>tan</strong> claim</a> below, and supports including the <strong>tan</strong> claim in the <strong>crit</strong> claim, as per the specification.</p>
 <p>In version 3.1, the <strong>crit</strong> claim is required and must be a string array of the four specific values shown below:</p>
@@ -159,9 +159,10 @@ nav-title: JOSE Security v2
 <p>For full details, see <a href="#jose_unenc_options_p1">Configuring JOSE Security Policy v2 options</a> below (<a href="#jose_v2_uk_ob">UK Open Banking</a> section).</p>
 
 
-<h4 id="jose_ob_error_msging">Error messaging requirements  (v3.1)</h4>
+<h4 id="jose_ob_error_msging">Error messaging requirements (v3.1)</h4>
 <p><strong>Valid in version: 2018.0.4 and later</strong></p>
 <p>When you enable Open Banking support on the JOSE Security Policy v2, and choose version 3.1, the error messages returned to the API client application are formatted according to the Open Banking specification version 3.1; see <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ErrorResponseStructure" title="Open Banking 3.1 specification, section titled Standard Error Code(s)" target="_blank">Open Banking 3.1 specification, section titled Standard Error Code(s)</a>. By default, only a generic summary error message is returned.</p>
+<p>For more information about the specific messaging used, see <a href="#jose_error_codes_ob">Open Banking error messages for the JOSE Security Policy v2</a>.</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -729,7 +730,787 @@ character ({char}) at position ({position}).</pre>
 
 
 
-<div class = "divider1"></div>
+<h3 id="jose_error_codes_ob">Open Banking error messages for the JOSE Security Policy v2</h3>
+<p><strong>Valid in version: 2018.0.0 and later</strong></p>
+<p>as part of the UK Open Banking specification 3.1, error messages are returned as JSON objects with a specific format. </p>
+<p>For full details, review the <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/641992418/Read%2BWrite%2BData%2BAPI%2BSpecification%2B-%2Bv3.0#Read/WriteDataAPISpecification-v3.0-ErrorResponseStructure" title="link to Error Response section of the Open Banking 3.1 specification" target="_blank">Error Response section of the Open Banking 3.1 specification</a>.</p>
+<p>This section includes information about the specific error messaging that Akana provides. An example is given below.</p>
+<pre>{
+  "Code":"[400] Bad Request",
+  "Id":"94428-19d48b3e-c1ac-404a-9ac3-aaa1bc93e314",
+  "Message":"An invalid or no value is supplied in the JOSE header.",
+  "Errors":[
+    {
+      "ErrorCode":"UK.OBIE.Signature.Missing",
+      "Message":"No JWS content found using header [x-jws-signature].",
+      "Path":"x-jws-signature",
+      "Url":"https://openbanking.atlassian.net/wiki/spaces/DZ/pages/16254920/Documentation"
+    }
+  ]
+}</pre>
+<p>The Open Banking error message format includes the following values:</p>
+<ul>
+	<li><strong>Code</strong>&#8212;Standard HTTP message code and definition.</li>
+	<li><strong>Id</strong>&#8212;A unique ID assigned by the Akana platform.</li>
+	<li><strong>Message</strong>&#8212;A short general explanation of the error.</li>
+	<li><strong>Errors</strong>:
+<ul>
+			<li><strong>ErrorCode</strong>&#8212;UK Open Banking standard error code.</li>
+			<li><strong>Message</strong>&#8212;An explanation of the error as it relates to the Open Banking context; for example, a header required by the Open Banking specification is missing.</li>
+			<li><strong>Path</strong>&#8212;The {<span class="apidoc_red">xxx</span>}</li>
+			<li><strong>Url</strong>&#8212;A URL to additional information about UK Open Banking.</li>
+		</ul>
+	</li>
+	</ul>
+<p>The tables below provide information about the specific error messages you might encounter when using the JOSE Security Policy v2 to process messages using the UK Open Banking version 3.1. Messages are broken down into the following groups:</p>
+<ul>
+	<li><a href="#jose_unenc_error_400">Errors returning HTTP 400 Bad Request</a></li>
+	<li><a href="#jose_unenc_error_500">Errors returning HTTP 500 Internal Server Error</a></li>
+</ul>
+<p><strong>Note</strong>: To find details about a specific error message, look for any value in the message and search in the tables below. In some cases there are multiple entries for a specific OB code or OB message. To arrive at the exact message applicable to your scenario, it's a good idea to search for the five-digit code at the beginning of the Id, which corresponds to the CM ID code below. For example, in the sample above, the Id value is <strong>94428-19d48b3e-c1ac-404a-9ac3-aaa1bc93e314</strong>. The applicable line entry is <strong>94428-uuid</strong> below.</p>
+
+<h5 id="jose_unenc_error_400">Errors returning HTTP 400 Bad Request</h5>
+<p>Information on all HTTP 400 messages is below. Use the CM ID, or another value, to identify a specific message.</p>
+<table class="doctable">
+	<thead>
+		<tr>
+			<th>OB code/CM ID</th>
+			<th>Value</th>
+			<th>Meaning</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Header.Invalid</p>
+				<p>94415-uuid</p></td>
+			<td>Reason</td>
+			<td>If Accept header is sent with the JOSE request, the value must be <strong>application/json</strong>.</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An HTTP header is invalid.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Accept header value [{0}] is invalid. The value should be [{1}].</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Header.Missing</p>
+				<p>94414-uuid</p></td>
+			<td>Reason</td>
+			<td> Content-Type header is expected in the JOSE request.</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An HTTP header is invalid.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Content-Type header missing.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.Invalid</p>
+				<p>94455-uuid</p></td>
+			<td>Reason</td>
+			<td>Error occurred during signature verification. JOSE-specific error is logged.</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Error verifying the message.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Error verifying signature of the message. </td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.Invalid</p>
+				<p>94413-uuid</p></td>
+			<td>Reason</td>
+			<td>Error occurred during signature verification. No JOSE errors were thrown, but verification did not succeed.</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Error verifying the message.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Signature verification failure.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.InvalidClaim</p>
+				<p>94457-uuid</p></td>
+			<td>Reason</td>
+			<td>The Alorigthm used to create a signature is using an algorithm that is unsupported.</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An invalid value is supplied in the JOSE header.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Algorithm is not supported.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.InvalidClaim</p>
+				<p>94459-uuid</p></td>
+			<td>Reason</td>
+			<td>JWT is invalid, as determined by JOSE. </td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>The JOSE request has an invalid JWT.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>JOSE specific error.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.InvalidClaim</p>
+				<p>94463-uuid</p></td>
+			<td>Reason</td>
+			<td>A header listed in crit header list is missing from the policy configuration Private Headers list.</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An invalid value is supplied in the JOSE header.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Crit header missing private key.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.InvalidClaim</p>
+				<p>94464-uuid</p></td>
+			<td>Reason</td>
+			<td>b64 header is expected in the JOSE request, with a value of false</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An invalid value is supplied in the JOSE header.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>b64 header value is incorrect. It should be false.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.InvalidClaim</p>
+				<p>94465-uuid</p></td>
+			<td>Reason</td>
+			<td>iat header is expected in the JOSE request, whose value is time in milliseconds</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An invalid value is supplied in the JOSE header.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>iat header value is incorrect. It should be timestamp in seconds.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.InvalidClaim</p>
+				<p>94466-uuid</p></td>
+			<td>Reason</td>
+			<td>iat header value is expected in the JOSE request, with a value in the past.</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An invalid value is supplied in the JOSE header.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>iat header value is incorrect. It should be timestamp in the past.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.InvalidClaim</p>
+				<p>94467-uuid</p></td>
+			<td>Reason</td>
+			<td>iss header is expected in the JOSE request, with property values that match the cert for the JOSE request. Examples of these properties are CN=value, OU=value, O=value, L=value, ST=value, C=value</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An invalid value is supplied in the JOSE header.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>iss header value is incorrect. It should match the certificate issuer DN.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.InvalidClaim</p>
+				<p>94468-uuid</p></td>
+			<td>Reason</td>
+			<td>tan header is expected in the JOSE request, with a String value that is non-null and non-empty</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An invalid value is supplied in the JOSE header.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>tan header value is incorrect. It should be a string value.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.InvalidClaim</p>
+				<p>94469-uuid</p></td>
+			<td>Reason</td>
+			<td>tan header is expected in the JOSE request, with a value equal to the domain, 'openbanking.org.uk'</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An invalid value is supplied in the JOSE header.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>tan header value is incorrect. It must match the domain name.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.InvalidClaim</p>
+				<p>94470-uuid</p></td>
+			<td>Reason</td>
+			<td>If typ header is in the JOSE request, it must be set to the value &quot;JOSE&quot;</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An invalid value is supplied in the JOSE header.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>typ header value is incorrect. </td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.InvalidClaim</p>
+				<p>94412-uuid</p></td>
+			<td>Reason</td>
+			<td>Unable to determine verification key</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An invalid value is supplied in the JOSE header.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Could not determine the verification key using subject category [subject category]</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.InvalidClaim</p>
+				<p>94428-uuid</p></td>
+			<td>Reason</td>
+			<td>No JWS content found. It could be that x-jws-signature was empty or header name in the policy config is incorrect.</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An invalid or no value is supplied in the JOSE header.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>No JWS content found using header [header name].</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.InvalidClaim</p>
+				<p>94430-uuid</p></td>
+			<td>Reason</td>
+			<td>JWK not found for kid header</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>The JOSE request has an invalid claim that is mandatory.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Claim [claim name] is invalid.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.Malformed</p>
+				<p>94418-uuid</p></td>
+			<td>Reason</td>
+			<td>Signature verification error trying to get JWS content</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An invalid value is supplied in the JOSE header.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Error retrieving JWS during verification. JOSE spcecific message.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.Malformed</p>
+				<p>94453-uuid</p></td>
+			<td>Reason</td>
+			<td>A serialization error occurred during signing</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td> Error serializing or deserializing the message.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>JOSE specific error.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.Malformed</p>
+				<p>94454-uuid</p></td>
+			<td>Reason</td>
+			<td>A deserialization error occurred during verification</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td> Error serializing or deserializing the message.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>JOSE specific error.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.MissingClaim</p>
+				<p>94461-uuid</p></td>
+			<td>Reason</td>
+			<td>crit header is found in the JOSE request, but one of the headers it specifies is missing from the request</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An invalid value is supplied in the JOSE header.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Crit header [header name] is missing.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.MissingClaim</p>
+				<p>94462-uuid</p></td>
+			<td>Reason</td>
+			<td>crit header is expected in the JOSE request, with a value that is expected to be an array.</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An invalid value is supplied in the JOSE header.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Crit header must be an instance of a list.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.MissingClaim</p>
+				<p>94471-uuid</p></td>
+			<td>Reason</td>
+			<td>b64 header is expected in the JOSE request, but is missing</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An invalid value is supplied in the JOSE header.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>b64 header is missing.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.MissingClaim</p>
+				<p>94472-uuid</p></td>
+			<td>Reason</td>
+			<td>iat header is expected in the JOSE request, but is missing</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An invalid value is supplied in the JOSE header.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>iat header is missing.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.MissingClaim</p>
+				<p>94473-uuid</p></td>
+			<td>Reason</td>
+			<td>iss header is expected in the JOSE request, but is missing</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An invalid value is supplied in the JOSE header.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>iss header is missing.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.MissingClaim</p>
+				<p>94474-uuid</p></td>
+			<td>Reason</td>
+			<td>tan header is expected in the JOSE request, but is missing</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An invalid value is supplied in the JOSE header.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>tan header is missing.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.MissingClaim</p>
+				<p>94475-uuid</p></td>
+			<td>Reason</td>
+			<td>typ header is expected in the JOSE request, but is missing</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An invalid value is supplied in the JOSE header.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>typ header is missing.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.MissingClaim</p>
+				<p>94476-uuid</p></td>
+			<td>Reason</td>
+			<td>crit header is expected in the JOSE request, but is missing</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An invalid value is supplied in the JOSE header.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>crit header is missing.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.MissingClaim</p>
+				<p>94431-uuid</p></td>
+			<td>Reason</td>
+			<td>A requried claim , such as kid or x5c, is missing</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>The JOSE request has a missing claim that is mandatory.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Claim [claim name] is missing.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.Signature.Unexpected</p>
+				<p>94429-uuid</p></td>
+			<td>Reason</td>
+			<td>x-jws-signature header was sent with request, but was not expected.</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>An unexpected JOSE header was found.</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Header [x-jws-signature] was found, but was not expected.</td>
+		</tr>
+	</tbody>
+</table>
+
+<h5 id="jose_unenc_error_500">Errors returning HTTP 500 Internal Server Error</h5>
+<p>Information on all HTTP 500 messages is below. Use the CM ID, or another value, to identify a specific message.</p>
+<table class="doctable">
+	<thead>
+		<tr>
+			<th>OB code/CM ID</th>
+			<th>Value</th>
+			<th>Meaning</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.UnexpectedError</p>
+				<p>94403</p></td>
+			<td>Reason</td>
+			<td>Private subject is missing</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Unexpected error</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Private subject key is missing. Cannot decrypt the content. </td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.UnexpectedError</p>
+				<p>94405</p></td>
+			<td>Reason</td>
+			<td>Cannot use service for direct</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Unexpected error</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Cannot use service for Direct Algorithm.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.UnexpectedError</p>
+				<p>94406</p></td>
+			<td>Reason</td>
+			<td>No key found for signing</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Unexpected error</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>No key found for signing.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.UnexpectedError</p>
+				<p>94407</p></td>
+			<td>Reason</td>
+			<td>Missing content (message content is null)</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Unexpected error</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>No message content found to enforce JOSE policy.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.UnexpectedError</p>
+				<p>94408</p></td>
+			<td>Reason</td>
+			<td>Unsupported encoding</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Unexpected error</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Unsupported encoding exception: {system error message}.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.UnexpectedError</p>
+				<p>94409</p></td>
+			<td>Reason</td>
+			<td>Cannot determine the decrypt key</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Unexpected error</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Could not determine the decrypt key using subject category [subject category].</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.UnexpectedError</p>
+				<p>94410</p></td>
+			<td>Reason</td>
+			<td>Invalid algorithm</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Unexpected error</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Invalid algorithm exception: {system error message}</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.UnexpectedError</p>
+				<p>94411</p></td>
+			<td>Reason</td>
+			<td>HMAC not supported with JWKS</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Unexpected error</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>HMAC algorithm not supported when reading the key using JWKS URL.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.UnexpectedError</p>
+				<p>94416</p></td>
+			<td>Reason</td>
+			<td>JWE decryption error</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Unexpected error</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Error retrieving JWE during decryption. {system error message}</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.UnexpectedError</p>
+				<p>94417</p></td>
+			<td>Reason</td>
+			<td>No subject found for HMAC</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Unexpected error</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>No subject found using hmac for verification.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.UnexpectedError</p>
+				<p>94419</p></td>
+			<td>Reason</td>
+			<td>No public key when uising jwks url</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Unexpected error</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>No Consumer found in subject when getting public key and cert from Jwks Url.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.UnexpectedError</p>
+				<p>94420</p></td>
+			<td>Reason</td>
+			<td>Missing app id</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Unexpected error</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>No Application Identity Interface is found. Community Manager product features might not be installed.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.UnexpectedError</p>
+				<p>94422</p></td>
+			<td>Reason</td>
+			<td>Missing header name for JWS</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Unexpected error</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Missing header name. When using detached/unencoded payload, header parameter name is required.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.UnexpectedError</p>
+				<p>94423</p></td>
+			<td>Reason</td>
+			<td>Missing detached payload and signature</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Unexpected error</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Missing detached/unencoded payload and signature.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.UnexpectedError</p>
+				<p>94424</p></td>
+			<td>Reason</td>
+			<td>Private subject is missing for signing</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Unexpected error</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Private subject key is missing. Cannot sign the content. </td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.UnexpectedError</p>
+				<p>94425</p></td>
+			<td>Reason</td>
+			<td>Missing public key for encrypting</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Unexpected error</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Public key subject is missing. Cannot encrypt the content.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.UnexpectedError</p>
+				<p>94426</p></td>
+			<td>Reason</td>
+			<td>Missing public key for encrypting</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Unexpected error</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>No key found for encrypting.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.UnexpectedError</p>
+				<p>94427</p></td>
+			<td>Reason</td>
+			<td>Cannot determine embed key</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Unexpected error</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>Could not determine embed key to use for signing.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.UnexpectedError</p>
+				<p>94451</p></td>
+			<td>Reason</td>
+			<td>An encryption error occurred during encryption</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Unexpected error</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>JOSE specific error.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.UnexpectedError</p>
+				<p>94452</p></td>
+			<td>Reason</td>
+			<td>A decryption error occurred during decryption</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Unexpected error</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>JOSE specific error.</td>
+		</tr>
+		<tr>
+			<td rowspan="3"><p>UK.OBIE.UnexpectedError</p>
+				<p>94458</p></td>
+			<td>Reason</td>
+			<td>Error creating PublicJsonWebKey</td>
+		</tr>
+		<tr>
+			<td>OB Msg</td>
+			<td>Unexpected error</td>
+		</tr>
+		<tr>
+			<td>OB Errors Msg</td>
+			<td>JOSE specific error.</td>
+		</tr>
+	</tbody>
+</table>
+<p><a href="#top">Back to top</a></p><div class = "divider1"></div>
 
 
 
