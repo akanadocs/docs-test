@@ -68,7 +68,7 @@ nav-title: Troubleshooting PM
 
 <h5 id="proc_increase_max_db_threads">To increase the maximum number of database threads</h5>
 <ol>
-	<li>Log in to the Policy Manager Admin Console.</li>
+	<li>Log in to the Akana Administration Console for the Policy Manager instance.</li>
 	<li>Click the <strong>Configuration</strong> tab.</li>
 	<li>In the <strong>Configuration Categories</strong> section on the left, choose <strong>com.soa.database.config</strong>, and then select the applicable config ID.</li>
 	<li>Change the <strong>maxPoolSize</strong> value from <strong>30</strong> to <strong>50</strong>.</li>
@@ -86,14 +86,14 @@ nav-title: Troubleshooting PM
 
 <h5 id="proc_set_quartz_scheduler">To set the Quartz scheduler to run on only one Policy Manager instance</h5>
 <ol>
-	<li>Log in to the Policy Manager Admin Console for the instance of Policy Manager that you want the Quartz scheduler to run on.</li>
+	<li>Log in to the Akana Administration Console for the instance of Policy Manager that you want the Quartz scheduler to run on.</li>
 	<li>Click the <strong>Configuration</strong> tab.</li>
 	<li>In the <strong>Configuration Categories</strong> section on the left, choose <strong>com.soa.scheduler.quartz</strong>, and then click the container.</li>
-	<li>On the right, make sure the org.quartz.scheduler.enabled value is set to true. If you change the value, click <strong>Apply Changes</strong>.</li>
-	<li>Log in to the Policy Manager Admin Console for the next instance of Policy Manager. Make sure the <strong>org.quartz.scheduler.enabled</strong> value is set to <strong>false</strong>. If you change the value, <strong>click Apply Changes</strong>.</li>
+	<li>On the right, make sure the <strong>org.quartz.scheduler.enabled</strong> value is set to <strong>true</strong>. If you change the value, click <strong>Apply Changes</strong>.</li>
+	<li>Log in to the Akana Administration Console for the next instance of Policy Manager. Make sure the <strong>org.quartz.scheduler.enabled</strong> value is set to <strong>false</strong>. If you change the value, <strong>click Apply Changes</strong>.</li>
 	<li>Repeat Step 5 for all other Policy Manager instances.</li>
 </ol>
-<p><span class="apidoc_note"><strong>Note</strong>: You do not need to restart the container after making these changes.</span></p>
+<p class="apidoc_note"><strong>Note</strong>: You do not need to restart the container after making these changes.</p>
 
 
 <h4 id="s02_02_03">Policy Manager Alert Code 92304, Retry Count Exceeded, when Database is Not Full</h4>
@@ -114,7 +114,7 @@ nav-title: Troubleshooting PM
 
 <h5 id="proc_change_db_password">To change the database password in Policy Manager</h5>
 <ol>
-	<li>Log in to the Policy Manager Admin Console.</li>
+	<li>Log in to the Akana Administration Console for the Policy Manager instance.</li>
 	<li>Click the <strong>Configuration</strong> tab.</li>
 	<li>In the <strong>Configuration Categories</strong> section on the left, choose <strong>com.soa.database.config</strong>, and then select the applicable config ID.</li>
 	<li>In the password field, specify the new password.</li>
@@ -131,27 +131,27 @@ nav-title: Troubleshooting PM
 </ol>
 <h4 id="s02_02_05">Container Running Out of Memory</h4>
 <h5 class="stamp">Valid in version: 7.0 and later</h5>
-<p> <strong>Note</strong>: This article applies to Policy Manager containers in version 6.1.6 update or later versions. </p>
+<p class="apidoc_note"><strong>Note</strong>: This article applies to Policy Manager containers in version 6.1.6 update or later versions. </p>
 <p>If the container is running out of memory, it could be because the automated rollup data deletion job is running, consuming memory.</p>
 <p>By default, Policy Manager creates rollups for its own services, recording performance statistics for calls made to it, usually from Network Director.</p>
 <p>The rollup data accumulates in the database over time if not cleaned out regularly. Automatic rollup data deletion jobs periodically clean out the accumulated data, but can slow down the system and even cause out of memory issues.</p>
-<p>The automatic rollup data deletion job retrieves information older than a specified date, archives the data in the Export folder, and then deletes the archived information from the database. The job runs in the Policy Manager container. If there are a lot of calls to the Policy Manager at the time the job is running, you might see a condition where the Policy Manager container runs out of memory.</p>
+<p>The automatic rollup data deletion job retrieves information older than a specified date, archives the data in the Export folder, and then deletes the archived information from the database. The job runs in the Policy Manager container. If there are a lot of calls to Policy Manager at the time the job is running, you might see a condition where the Policy Manager container runs out of memory.</p>
 <h5>Solution:</h5>
 <p>If there are memory issues and you suspect the automated data deletion jobs are the cause, you can change the settings so that the data deletion job does not run automatically.</p>
 <p>If your system is becoming slow, or you are getting memory errors, it might be because of the job that is required to process all the rollup data.</p>
 <p>Typically, if there is a memory error, the container will consume all the CPU cycles and the memory usage for this process will be at 100%.</p>
 <p>Some troubleshooting steps you can take:</p>
 <ul>
-	<li>Add the monitoring tool. This will help you determine the issue. See To install the monitoring tool in <strong>Chapter 1</strong>.</li>
-	<li>If the metrics are not important, you can disable the setting in the Policy Manager container's admin console so they are not generated (see <a href="#proc_disable_rollup">To disable unnecessary rollup data metrics</a> below).</li>
+	<li>Add the monitoring tool. This will help you determine the issue. See <a href="ts_pm_nd_01.htm#proc_install_monitoring">To install the monitoring tool</a>.</li>
+	<li>If the metrics are not important, you can disable the setting in the Akana Administration Console for the Policy Manager container so that they are not generated (see <a href="#proc_disable_rollup">To disable unnecessary rollup data metrics</a> below).</li>
 	<li>You can manually delete unnecessary data from the database (see To manually delete unnecessary rollup data from the database below). Some customers prefer not to have automatic rollup data deletion jobs scheduled so that they can choose the best time to run this maintenance task.
-	<p><span class="apidoc_note"><strong>Note</strong>: If you do this, you'll need to delete the data manually later.</span></p></li>
-	<li>If you continue to experience memory issues after disabling the automated data deletion job, you can allocate more memory to the container Java process. The default is 1 GB, but you could increase the memory to 2 GB or more by changing to 64-bit JRE (see Out of memory errors on the error log).</li>
+	<p class="apidoc_note"><strong>Note</strong>: If you do this, you'll need to delete the data manually later.</p></li>
+	<li>If you continue to experience memory issues after disabling the automated data deletion job, you can allocate more memory to the container Java process. The default is 1 GB, but you could increase the memory to 2 GB or more by changing to 64-bit JRE (see <a href="#s02_08_02">Out of memory errors on the error log</a>).</li>
 </ul>
 
 <h5 id="proc_disable_rollup">To disable unnecessary rollup data metrics</h5>
 <ol>
-	<li>Log in to the Policy Manager Admin Console.</li>
+	<li>Log in to the Akana Administration Console for the Policy Manager instance.</li>
 	<li>Click the <strong>Configuration</strong> tab.</li>
 	<li>In the <strong>Configuration Categories</strong> section on the left, choose <strong>com.soa.metrics</strong>.</li>
 	<li>In the right pane, set the value of the <strong>metrics.rollup.reporter.requireMetricsPolicy</strong> property to <strong>true</strong>.</li>
@@ -160,17 +160,17 @@ nav-title: Troubleshooting PM
 
 <h5 id="proc_monitoring_off_deletions">To turn off automatic monitoring data deletion jobs</h5>
 <ol>
-	<li>Log in to the Policy Manager Admin Console.</li>
+	<li>Log in to the Akana Administration Console for the Policy Manager instance.</li>
 	<li>Click the <strong>Configuration</strong> tab.</li>
 	<li>In the <strong>Configuration Categories</strong> section on the left, choose <strong>com.soa.rollup.delete.old</strong>.</li>
 	<li>Change one or more of the rollup enable properties from <strong>true</strong> to <strong>false</strong>.</li>
 	<li>Click <strong>Apply Changes</strong>.</li>
 </ol>
-<p><span class="apidoc_note"><strong>Note</strong>: You must restart the Policy Manager container for the change to take effect.</span></p>
+<p class="apidoc_note"><strong>Note</strong>: You must restart the Policy Manager container for the change to take effect.</p>
 
 <h5>To manually delete unnecessary rollup data from the database</h5>
 <p>To manually purge the rollup data from the database, run the queries below.</p>
-<p><span class="apidoc_note"><strong>Note</strong>: Modify the date in the scripts below to reflect how much data you want to delete (the <strong>to_date</strong> value). Any information older than the date you specify is deleted.</span></p>
+<p class="apidoc_note"><strong>Note</strong>: Modify the date in the scripts below to reflect how much data you want to delete (the <strong>to_date</strong> value). Any information older than the date you specify is deleted.</p>
 <p><strong>Backing up before deletion</strong>—You can also back up the data before deletion, or you can export the monitoring data before deletion.</p>
 <p><strong>Delete rollup (chart) data script:</strong></p>
 <pre>delete from MO_ROLLUPDATA where INTVLSTARTDTS &lt; to_date ('2013-12-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')<br />delete from MO_ROLLUP15 where INTVLSTARTDTS &lt; to_date ('2013-12-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')<br />delete from MO_ROLL_ORG15 where INTVLSTARTDTS &lt; to_date ('2013-12-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')<br />delete from MO_ROLLUP_HOUR where INTVLSTARTDTS &lt; to_date ('2013-12-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')<br />delete from MO_ROLL_ORG_H where INTVLSTARTDTS &lt; to_date ('2013-12-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')<br />delete from MO_ROLLUP_DAY where INTVLSTARTDTS &lt; to_date ('2013-12-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')<br />delete from MO_ROLL_ORG_D where INTVLSTARTDTS &lt; to_date ('2013-12-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')</pre>
@@ -188,8 +188,7 @@ nav-title: Troubleshooting PM
 
 
 <h4 id="s02_03_01">No Data in Historical Charts</h4>
-<p>If you are seeing real-time charts, but there is no data in the historical charts, it might be because the</p>
-<p>MAX_ID value in the MO_STATUS table has reached its limit.</p>
+<p>If you are seeing real-time charts, but there is no data in the historical charts, it might be because the MAX_ID value in the MO_STATUS table has reached its limit.</p>
 <h5>Solution:</h5>
 <p>To resolve this issue, run the following query on your Policy Manager database:</p>
 <pre>select MAX(ROLLUPDATAID) from MO_ROLLUPDATA
@@ -199,7 +198,7 @@ job_name='ms.generate.rollups.job.Trigger'</pre>
 
 
 <h4 id="s02_03_02">Historical Charts Displayed for Some Increments but Not Others</h4>
-<p><span class="apidoc_note"><strong>Note</strong>: This issue might occur in the Policy Manager 6.x environment for systems upgraded from an earlier version of Policy Manager. For new 6.x installations it will not occur.</span></p>
+<p class="apidoc_note"><strong>Note</strong>: This issue might occur in the Policy Manager 6.x environment for systems upgraded from an earlier version of Policy Manager. For new 6.x installations it will not occur.</p>
 <p>Issues with historical chart information display are frequently due to the time zone configuration settings in Policy Manager. For example, if you can see daily data by the hour and weekly data by the day, but cannot see monthly data by day or week, this is caused by a configuration issue.</p>
 <p>Historical chart data is stored in the ROLLUP data tables in the database. By default, this data is stored in GMT time. However, when you go to the Policy Manager Workbench, on the monitoring tab of the service, you will see that the time is shown in the time zone you configured in your Policy Manager profile.</p>
 <p>To see accurate historical information for your implementation, this data should be set to display in the same time zone as your Policy Manager profile.</p>
@@ -209,16 +208,15 @@ job_name='ms.generate.rollups.job.Trigger'</pre>
 
 <h5 id="proc_rollup_config_time_zone">To configure the time zone setting for the rollup data tables</h5>
 <ol>
-	<li>Log in to the Policy Manager Admin Console.</li>
+	<li>Log in to the Akana Administration Console for the Policy Manager instance.</li>
 	<li>Click the <strong>Configuration</strong> tab.</li>
 	<li>In the <strong>Configuration Categories</strong> section on the left, choose <strong>com.soa.rollup.configuration</strong>.</li>
 	<li>In the right pane, set the <strong>monitoring.rollup.configuration.dailyRollupTimeZones</strong> property.
 	<p>This property should list the time zones for which you want to collect the historical data. For example, to collect usage data for the GMT and MST time zones, you would enter: <strong>GMT, MST</strong>.</p></li>
-	<li>In the right pane, set the <strong>statistic.dao.timeZoneMappings property</strong>.</li>
-</ol>
+	<li>In the right pane, set the <strong>statistic.dao.timeZoneMappings property</strong>.
 <p>This property value should list the time zones that you want the data to display in when it is viewed in the console. For example, to display the historical charts for both GMT and MST, you would enter: <strong>UTC:GMT, America/Phoenix:MST</strong>.</p>
-<p><span class="apidoc_note"><strong>Note</strong>: If you are not sure what value to use for time zone, you can check the setting in Policy Manager. In the Policy Manager Console, at the top right, click MyProfile and check the value specified in the Time Zone field. The user profile and the rollup tables should both be set to the same time zone.</span></p>
-
+<p class="apidoc_note"><strong>Note</strong>: If you are not sure what value to use for time zone, you can check the setting in Policy Manager. In the Policy Manager Console, at the top right, click MyProfile and check the value specified in the Time Zone field. The user profile and the rollup tables should both be set to the same time zone.</p></li>
+</ol>
 
 <h4 id="s02_03_03">Historical Data Shows but Real-Time Data Does Not Show</h4>
 <p>Note: This issue might occur in the Policy Manager 6.x environment for systems upgraded from an earlier version of Policy Manager. In new 6.x installations it will not occur.</p>
@@ -234,7 +232,7 @@ job_name='ms.generate.rollups.job.Trigger'</pre>
 <ul>
 	<li><a href="#s02_04_01">Cannot Log In to Policy Manager Console When Using Load Balancer</a></li>
 	<li><a href="#s02_04_02">Lost the Only Admin Password</a></li>
-	<li><a href="#s02_04_03">Access to the Admin Console Needs to Be Restricted to Localhost Only</a></li>
+	<li><a href="#s02_04_03">Access to the Akana Administration Console Needs to Be Restricted to Localhost Only</a></li>
 </ul>
 
 
@@ -276,21 +274,19 @@ Cookie: JSESSIONID_pm_container=6jl7s7i4lm8qg</pre>
 <p>There is only one administrator password for Policy Manager and it isn't available.</p>
 
 <h5>Solution:</h5>
-<p>You can reset the Policy Manager Console Admin password via the Policy Manager Admin Console. Follow the steps below.</p>
+<p>You can reset the Policy Manager Console Admin password via the Akana Administration Console for the Policy Manager instance. Follow the steps below.</p>
 
 <h5 id="proc_reset_admin_password">To reset the Admin password</h5>
 <ol>
-	<li>Log in to the Policy Manager Admin Console.</li>
+	<li>Log in to the Akana Administration Console for the Policy Manager instance.</li>
 	<li>Click the <strong>Configuration</strong> tab.</li>
 	<li>In the <strong>Configuration Categories</strong> section on the left, choose <strong>com.soa.admin.console.task.status</strong>.</li>
 	<li>In the right panel, set the value of the <strong>com.soa.create.admin.user</strong> property to <strong>false</strong>.</li>
 	<li>Click <strong>Apply Changes</strong>.</li>
 	<li>Log out, and then log back in again.</li>
 	<li>Click the <strong>Installed Features</strong> tab. <strong>Create Policy Manager Admin User</strong> is listed at the bottom as a pending task.</li>
-	<li>Click <strong>Complete Configuration</strong> and set up the admin user.</li>
-</ol>
-<p><span class="apidoc_note"><strong>Note</strong>: You will need to restart Policy Manager for the new settings to take effect.</span></p>
-<ol>
+	<li>Click <strong>Complete Configuration</strong> and set up the admin user.
+	<p class="apidoc_note"><strong>Note</strong>: You will need to restart Policy Manager for the new settings to take effect.</p></li>
 	<li>Run the following database query, which resets the password for the administrator account (and nothing else):</li>
 	<li>Log in using the following credentials:
 		<ul>
@@ -303,18 +299,18 @@ Cookie: JSESSIONID_pm_container=6jl7s7i4lm8qg</pre>
 </ol>
 
 
-<h4 id="s02_04_03">Access to the Admin Console Needs to Be Restricted to Localhost Only</h4>
-<p>For security reasons, it's best to make sure that access to the Admin Console is restricted so that it's only accessible from the local machine (localhost).</p>
-<p>To make sure the Admin Console is accessible only from localhost, follow the procedure below.</p>
+<h4 id="s02_04_03">Access to the Akana Administration Console Needs to Be Restricted to Localhost Only</h4>
+<p>For security reasons, it's best to make sure that access to the Akana Administration Console is restricted so that it's only accessible from the local machine (localhost).</p>
+<p>To make sure the Akana Administration Console is accessible only from localhost, follow the procedure below.</p>
 
-<h5 id="proc_restrict_ac_access">To restrict access to the Admin Console so that it is accessible only from localhost</h5>
+<h5 id="proc_restrict_ac_access">To restrict access to the Akana Administration Console so that it is accessible only from localhost</h5>
 <ol>
 	<li>Create a file in the ./sm60 directory named: <strong>com.soa.admin.console.cfg</strong>. Enter the following lines in the file:
 <pre>admin.console.localhost.only=true
 admin.console.access.restricted=true</pre></li>
 	<li>Copy the <strong>com.soa.admin.console.cfg</strong> file into the ./sm60/instances/
 		{instance_name}/deploy directory.</li>
-	<li>From the Admin Console, go to the <strong>Configuration</strong> tab. Verify that there is a configuration category named com.soa.admin.console and that it includes these two properties:
+	<li>From the Akana Administration Console, go to the <strong>Configuration</strong> tab. Verify that there is a configuration category named com.soa.admin.console and that it includes these two properties:
 <ul>
 	<li><strong>admin.console.localhost.only</strong> property set to <strong>true</strong></li>
 	<li><strong>admin.console.access.restricted</strong> property set to <strong>true</strong></li>
@@ -322,7 +318,7 @@ admin.console.access.restricted=true</pre></li>
 		</li>
 	<li>Restart the container. </li>
 	</ol>
-<p>Once this setting is in place, when the container is up and running, the Admin Console should only be accessible on the local machine. If an attempt is made to access it from another machine, a 404 error is returned.</p>
+<p>Once this setting is in place, when the container is up and running, the Akana Administration Console should only be accessible on the local machine. If an attempt is made to access it from another machine, a 404 error is returned.</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -346,14 +342,14 @@ admin.console.access.restricted=true</pre></li>
 <p>Configure the email alert forwarding settings.</p>
 
 <h5 id="proc_config_email_alerts">To configure email alerts</h5>
-<p>Note: Before configuring email alerts you must set up the SMTP server if it isn't set up yet.</p>
+<p class="apidoc_note"><strong>Note</strong>: Before configuring email alerts you must set up the SMTP server if it isn't set up yet.</p>
 <ol>
-	<li>Log in to the Policy Manager.</li>
+	<li>Log in to Policy Manager.</li>
 	<li>Click the <strong>Alerts</strong> tab.</li>
 	<li>Click <strong>Email Groups</strong>.</li>
 	<li>Add or modify email groups as needed.</li>
 </ol>
-<p>As part of adding or modifying an email group, you must specify the SMTP server used to send the emails. You can verify that the setup is correct by clicking Verify Connection. This sends a test message to all email addresses in the group.</p>
+<p>As part of adding or modifying an email group, you must specify the SMTP server used to send the emails. You can verify that the setup is correct by clicking <strong>Verify Connection</strong>. This sends a test message to all email addresses in the group.</p>
 
 
 <h4 id="s02_05_02">Incorrect &quot;From&quot; Address On Alert Notifications</h4>
@@ -364,14 +360,15 @@ admin.console.access.restricted=true</pre></li>
 
 <h5 id="proc_alerts_config_from_address">To configure the &quot;From&quot; address for alert emails</h5>
 <ol>
-	<li>Log in to the Policy Manager Admin Console.</li>
+	<li>Log in to the Akana Administration Console for the Policy Manager instance.</li>
 	<li>Click the <strong>Configuration</strong> tab.</li>
 	<li>In the <strong>Configuration Categories</strong> section on the left, choose <strong>com.soa.console</strong>.</li>
 	<li>Add the following property: <strong>email.sender</strong>.</li>
 	<li>For the property value, type the email address that should display in the <strong>From</strong> field for alert messages sent out by Policy Manager. Click <strong>Apply</strong>.</li>
 	<li>Click <strong>Apply Changes</strong>.</li>
 </ol>
-<p><span class="apidoc_note"><strong>Note</strong>: The new setting takes effect after a short delay. You do not need to restart the container. If you remove this property, the <strong>From</strong> address reverts to the default after the next restart of the Policy Manager container.</span></p>
+<p class="apidoc_note"><strong>Note</strong>: The new setting takes effect after a short delay. You do not need to restart the container.</p>
+<p>If you remove this property, the <strong>From</strong> address reverts to the default after the next restart of the Policy Manager container.</p>
 
 
 <h4 id="s02_05_03">CA Revocation Emails not Being Sent</h4>
@@ -382,7 +379,7 @@ admin.console.access.restricted=true</pre></li>
 
 <h5 id="proc_config_smtp_server_cert_exp_email">To configure the SMTP server for the certificate expiration email</h5>
 <ol>
-	<li>Log in to the Policy Manager.</li>
+	<li>Log in to Policy Manager.</li>
 	<li>Click the <strong>Configure</strong> tab.</li>
 	<li>Click <strong>Email</strong>.</li>
 	<li>Click <strong>Modify SMTP Email Host</strong>.</li>
@@ -391,11 +388,12 @@ admin.console.access.restricted=true</pre></li>
 
 
 <h4 id="s02_05_04">Alerts Not Showing Up on the Workbench</h4>
-<p>If expected alerts are not showing up on the Workbench, it might be because alerts are backlogged. By default, Policy Manager is set to process up to 20 alerts per minute.</p>
+<p>If expected alerts are not showing up on the Workbench, it might be because alerts are backlogged.</p>
+<p>By default, Policy Manager is set to process up to 20 alerts per minute.</p>
 <p>If the number of alerts being generated exceeds Policy Manager's capability to process them, the alerts will backlog in Policy Manager. This can result in important information not reaching the right individual quickly enough; it can also result in alerts being irrelevant or even misleading due to being out of date.</p>
 
 <h5>Solution:</h5>
-<p>If the alerts are backlogged because the normal volume is higher than 20 per minute, you'll need to contact the Policy Manager Admin Console Administrator, who can implement one or both of the following:</p>
+<p>If the alerts are backlogged because the normal volume is higher than 20 per minute, you'll need to contact the Administrator of the Akana Administration Console for the Policy Manager instance, who can implement one or both of the following:</p>
 <ul>
 	<li>Increase the number of alerts Policy Manager can process per minute.</li>
 	<li>Delete backlogged alerts from the database.</li>
@@ -412,7 +410,7 @@ admin.console.access.restricted=true</pre></li>
 </ul>
 <p>When adding or modifying an email group, you must specify the SMTP server used to send the emails for that group. You can verify the email setup by sending a test email to all addresses within the group. Follow the steps below.</p>
 <h5>To send a test email for an email group</h5>
-<p>Pressing verify connection under the Authenticated box will immediately send a test email to all addresses within the group.</p>
+<p>To send a test email to all addresses within the group, click <strong>Verify Connection</strong> under the Authenticated box. The test email is sent immediately.</p>
 
 <h5 id="proc_config_pm_cert_exp_notif_send">To configure Policy Manager to send certificate expiration notifications</h5>
 <ol>
@@ -430,22 +428,22 @@ admin.console.access.restricted=true</pre></li>
 	<li>Add a new email group, or modify an existing email group.</li>
 	<li>In the <strong>Email Group</strong> overlay, add, update, or verify the email group details, including host information.</li>
 	<li>Click <strong>Verify Connection</strong>. The Alert Manager sends a test email to the addresses defined for the email group.</li>
-	<li>Conditional: If there is an issue, the emails are not sent out, and you will see an error message.</li>
+	<li>Conditional: If there is an issue, the emails are not sent out, and you will see an error message. Resolve as needed, and then try again.</li>
 </ol>
-<p>Resolve as needed, and then try again.</p>
+
 <h5>To send alerts with a specific FROM: address</h5>
 <p>You can configure your alert emails to display a specific address in the <strong>From</strong> field on the email. Follow the steps below.</p>
 
 <h5 id="proc_alerts_from_address">To set up a specific &quot;From&quot; address for alert emails</h5>
 <ol>
-	<li>Log in to the Policy Manager Admin Console.</li>
+	<li>Log in to the Akana Administration Console for the Policy Manager instance.</li>
 	<li>Click the <strong>Configuration</strong> tab.</li>
 	<li>In the <strong>Configuration Categories</strong> section on the left, choose <strong>com.soa.console</strong>.</li>
 	<li>Add the following property: <strong>email.sender</strong>.</li>
 	<li>For the property value, type the email address that should display in the <strong>From</strong> field. Click <strong>Apply</strong>.</li>
 	<li>Click <strong>Apply Changes</strong>.</li>
 </ol>
-<p> <strong>Note</strong>: The new setting takes effect after a short delay. You do not need to restart the container. </p>
+<p class="apidoc_note"><strong>Note</strong>: The new setting takes effect after a short delay. You do not need to restart the container. </p>
 
 <p>If you remove this property, the <strong>From</strong> address reverts to the default, alert_notification@akana.com, after the next restart of the Policy Manager container.</p>
 <p><a href="#top">back to top</a></p>
@@ -463,7 +461,8 @@ admin.console.access.restricted=true</pre></li>
 
 <h4 id="s02_06_01">Incompatible JRE Version</h4>
 <p>If the JRE version is incompatible with the Policy Manager version, the container will not start.</p>
-<p><span class="apidoc_note"><strong>Note</strong>: Akana Container Instances created prior to Policy Manager Update 6.0.4.3 cannot run with Java 6.</span></p>
+<p class="apidoc_note"><strong>Note</strong>: Akana Container Instances created prior to Policy Manager Update 6.0.4.3 cannot run with Java 6.</p>
+
 <h5>Solution:</h5>
 <p>Verify that the JRE and update you are using are supported by the installed version of Policy Manager. Compatibility information is available in the installation documentation and on the support site.</p>
 
@@ -472,7 +471,7 @@ admin.console.access.restricted=true</pre></li>
 <p>It might be that there is an issue with binding to a virtual machine interface, and the container is not listening on the expected host/IP and port.</p>
 <p>If the container is being run on a machine with multiple interfaces, it might be necessary to bind a particular host/IP and port to a specific interface.</p>
 <h5>Solution:</h5>
-<p>To ensure the container listens on the specified interface, ensure that the <strong>bind to all interfaces</strong> option for the container listener in the Policy Manager console is not checked.</p>
+<p>To ensure the container listens on the specified interface, ensure that the <strong>bind to all interfaces</strong> option for the container listener in the Policy Manager console is <strong>not</strong> checked.</p>
 <p>To resolve this issue, follow the steps below.</p>
 
 <h5 id="proc_bind_to_all_clear_setting">To clear the &quot;Bind to All Interfaces&quot; setting</h5>
@@ -486,8 +485,8 @@ admin.console.access.restricted=true</pre></li>
 		</ul>
 		</li>
 	
-	<li>Unregister the service using /sm60/bin/unregisterservice.bat.</li>
-	<li>Re-register the service using /sm60/bin/registerservice.bat.</li>
+	<li>Unregister the service using <strong>/sm60/bin/unregisterservice.ba</strong>t.</li>
+	<li>Re-register the service using <strong>/sm60/bin/registerservice.bat</strong>.</li>
 </ol>
 
 
@@ -496,11 +495,12 @@ admin.console.access.restricted=true</pre></li>
 <h5>Solution:</h5>
 <p>To troubleshoot this problem, follow the steps below.</p>
 <ul>
-	<li><strong>Run at command line</strong>—First, try starting the containers from the command line with this command: (<strong>start.bat
-	&lt;container&gt;</strong>). Based on the results, determine the next step:
+	<li><strong>Run at command line</strong>—First, try starting the containers from the command line with this command:
+	<pre>start.bat {container}</pre>
+	<p>Based on the results, determine the next step:</p>
 	<ul>
 		<li>If it runs from the command line: the problem is an issue with the Windows service. Go on to the next step to reinstall the service.</li>
-		<li>If it does not run from the command line: the issue is with the container itself. The container might be trying to bind to a network interface that it cannot bind to. If so, because you can't start the Policy Manager, you must edit the <strong>system.properties</strong> file. Go to <a href="#proc_bind_to_all_clear_properties">To clear the Bind to all interfaces setting in the system.properties file</a> below. Use netstat to verify this.</li>
+		<li>If it does not run from the command line: the issue is with the container itself. The container might be trying to bind to a network interface that it cannot bind to. If so, because you can't start Policy Manager, you must edit the <strong>system.properties</strong> file. Go to <a href="#proc_bind_to_all_clear_properties">To clear the Bind to all interfaces setting in the system.properties file</a> below. Use <strong>netstat</strong> to verify this.</li>
 	</ul>
 	</li>
 	<li><strong>Reinstall Windows service</strong>—If the container doesn't start from the command line, you'll need to reinstall the Windows service. To do this, first unregister the service and then register it again. Using the script in the /sm60/bin folder, run the following commands:
@@ -510,7 +510,7 @@ admin.console.access.restricted=true</pre></li>
 
 <h5 id="proc_bind_to_all_clear_properties">To clear the Bind to all interfaces setting in the system.properties file</h5>
 <ol>
-	<li>Open up the system.properties file: /sm60/instances/
+	<li>Open up the <strong>system.properties</strong> file: /sm60/instances/
 		{PMcontainerName}/system.properties.</li>
 	<li>Find the following default property:
 	<pre>com.soa.http.bind.all=true</pre>
@@ -518,7 +518,7 @@ admin.console.access.restricted=true</pre></li>
 	<li>Set the value for this property to <strong>false</strong>.</li>
 	<li>Save and exit.</li>
 </ol>
-<p><span class="apidoc_note"><strong>Note</strong>: This property is typically modified if you have trouble connecting to the container listener. Another scenario where this might occur is if the machine has been assigned two different IP addresses. In this case, you must set the property to false. If you don't, the container Java process will bind to both IP addresses and be accessible on both addresses.</span></p>
+<p class="apidoc_note"><strong>Note</strong>: This property is typically modified if you have trouble connecting to the container listener. Another scenario where this might occur is if the machine has been assigned two different IP addresses. In this case, you must set the property to <strong>false</strong>. If you don't, the container Java process will bind to both IP addresses and be accessible on both addresses.</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -534,7 +534,7 @@ admin.console.access.restricted=true</pre></li>
 </ul>
 
 
-<h4 id="s02_07_01">Alert Emails Not Being Sent</h4>
+<h4 id="s02_07_05">Alert Emails Not Being Sent</h4>
 <p>If alert emails are not being sent out, it might be because of one of the following:</p>
 <ul>
 	<li>Too many alerts pending. By default, Policy Manager is configured to process 20 alerts per minute.</li>
@@ -547,7 +547,7 @@ admin.console.access.restricted=true</pre></li>
 
 <h5 id="proc_alerts_increase">To increase the number of alerts Policy Manager can process per minute</h5>
 <ol>
-	<li>Log in to the Policy Manager Admin Console.</li>
+	<li>Log in to the Akana Administration Console for the Policy Manager instance.</li>
 	<li>Click the <strong>Configuration</strong> tab.</li>
 	<li>In the <strong>Configuration Categories</strong> section on the left, choose <strong>com.soa.framework</strong>.</li>
 	<li>Add the following property:
@@ -596,7 +596,7 @@ admin.console.access.restricted=true</pre></li>
 <p>Out of memory errors in the log file for the container indicate that the container does not have enough memory reserved.</p>
 <h5>Solution:</h5>
 <p>If you find that you need more memory than the default of 1GB, you will need to convert to 64- bit JRE before increasing the memory. For instructions, see below.</p>
-<p><span class="apidoc_note"><strong>Note</strong>: Before you convert, check with Support to see which JRE update is supported with Policy Manager (see <a href="ts_pm_nd_01.htm#s01_02_01">Contacting Technical Support</a>). As of September 2013, JRE 6.0 Update 36 is supported. The latest update is update 43, which isn't yet supported. We are constantly certifying new versions. For Policy Manager 6.1.15 we added support for JRE 7.0. Again, check which update is supported.</span></p>
+<p class="apidoc_note"><strong>Note</strong>: Before you convert, check with Support to see which JRE update is supported with Policy Manager (see <a href="ts_pm_nd_01.htm#s01_02_01">Contacting Technical Support</a>). As of September 2013, JRE 6.0 Update 36 is supported. The latest update is update 43, which isn't yet supported. We are constantly certifying new versions. For Policy Manager 6.1.15 we added support for JRE 7.0. Again, check which update is supported.</p>
 
 <h5 id="proc_convert_to_64bitjre">To convert to 64-bit JRE</h5>
 <p>If Policy Manager and Network Director are installed as a Windows service, uninstall them before following the procedure below. Use the uninstall batch file: \sm60\bin\UnRegisterContainerService.bat.</p>
@@ -608,11 +608,11 @@ admin.console.access.restricted=true</pre></li>
 			</ul>
 		</li>
 	<li>Install the JRE into a separate directory on the Policy Manager or Network Director machine. It can be in any location.</li>
-	<li>Copy the bcprov-jdk15-141.jar file from the original PM ./sm60/jre/lib/ext directory to the Java 6 ./jre/lib/ext directory.</li>
+	<li>Copy the <strong>bcprov-jdk15-141.jar</strong> file from the original PM ./sm60/jre/lib/ext directory to the Java 6 ./jre/lib/ext directory.</li>
 	<li>Edit the {Java6_install_location}/jre/lib/security/java.security file to add the following security provider:
 	<pre>security.provider.9=org.bouncycastle.jce.provider.BouncyCastleProvider</pre></li>
 	<li>Rename the current ./sm60/jre directory to ./sm60/jre_15.</li>
-	<li>Copy the {Java6_install_location}/jre directory into the Policy Manager or Network Director ./sm60 directory tree (./sm60/jre).</li>
+	<li>Copy the {Java6_install_location}/jre directory into the Policy Manager or Network Director <strong>./sm60</strong> directory tree (<strong>./sm60/jre</strong>).</li>
 	<li>Edit the /sm60/bin/startup.sh or startup.bat file to make the change shown below:
 		<ul>
 			<li><strong>From</strong>: JAVA_OPTS="-Xmx1024M -XX:MaxPermSize=128M"</li>
@@ -626,16 +626,16 @@ admin.console.access.restricted=true</pre></li>
 			<li><strong>To</strong>: JAVA_OPTS=-Xmx2048M -XX:MaxPermSize=256M</li>
 			</ul>
 		</li>
-	<li>In the \sm60\bin folder, rename JavaService.exe to JavaService32.exe.</li>
-	<li>Copy JavaService64.exe (you can request it from Akana Technical Support) to \sm60\bin and rename it to JavaService.exe.</li>
-	<li>Edit the \sm60\bin\RegisterContainerService.bat file to make the change shown below:
-		<ul>
+	<li>In the \sm60\bin folder, rename <strong>JavaService.exe</strong> to <strong>JavaService32.exe</strong>.</li>
+	<li>Copy <strong>JavaService64.exe</strong> (you can request it from Akana Technical Support) to \sm60\bin and rename it to <strong>JavaService.exe</strong>.</li>
+	<li>Edit the <strong>\sm60\bin\RegisterContainerService.bat</strong> file to make the change shown below:
+<ul>
 			<li><strong>From</strong>: SET JAVA_DLL="%JAVA_HOME%\bin\client\jvm.dll"</li>
 			<li><strong>To</strong>: SET JAVA_DLL="%JAVA_HOME%\bin\server\jvm.dll"</li>
 		</ul>
 		</li>
 </ol>
-<p><span class="apidoc_note"><strong>Note</strong>: We recommend that you use 2GB of memory when using 64-bit JRE. If you have a large deployment with many concurrent requests and many hosted services in the Network Director, you might need a larger heap size.</span></p>
+<p class="apidoc_note"><strong>Note</strong>: We recommend that you use 2GB of memory when using 64-bit JRE. If you have a large deployment with many concurrent requests and many hosted services in the Network Director, you might need a larger heap size.</p>
 
 
 <h4 id="s02_08_03">Containers Not Starting After Update</h4>

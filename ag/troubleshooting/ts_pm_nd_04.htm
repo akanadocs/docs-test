@@ -185,17 +185,19 @@ AND una.ref_id = OI.organizationid</pre>
 <p>Oracle</p>
 
 <h5>Query:</h5>
-<pre>select <br />r.INTVLSTARTDTS,<br />org.BUSINESS_KEY, orgn.NAME ORGNAME, s.SERVICE_KEY, sn.NAME SVCNAME,<br />sum(USAGECOUNT) as TOTALUSAGECOUNT, sum(TOTALRESPTIME)/greatest(sum(USAGECOUNT),1) as<br />AVGRESPTIME,<br />sum(r.SUCCESSCOUNT), sum(r.TOTALSUCCESSRESPTIME)/greatest(sum(r.SUCCESSCOUNT),1) as <br />AVGSUCCESSRESPTIME, <br />sum(r.ERRORCOUNT),sum(r.TOTALERRORRESPTIME)/greatest(sum(r.ERRORCOUNT),1) as <br />AVGERRORRESPTIME, V.CONTRACTNAME<br />from<br />contracts_versions v, UDDI_BUSINESS org, UDDI_NAME orgn, UDDI_NAME sn, UDDI_SERVICE s <br />left outer join<br />mo_rollupdata r on s.BUSINES_SERVICE_ID=r.SERVICEID<br />and r.INTVLSTARTDTS &amp;gt;= to_date ('2013-03-01', 'YYYY-MM-DD') <br />and r.INTVLSTARTDTS &amp;lt; to_date ('2013-03-15', 'YYYY-MM-DD') <br />and s.BUSINES_SERVICE_ID=r.SERVICEID<br />where<br />r.contractid != '0'<br />and V.CONTRACTVERSIONID = r.contractid<br />and org.BUSINESS_ENTITY_ID=orgn.REF_ID and orgn.REF_TYPE='B' <br />and s.BUSINES_SERVICE_ID=sn.REF_ID and sn.REF_TYPE = 'S'<br />and s.BUSINESS_ENTITY_ID=org.BUSINESS_ENTITY_ID<br />and (org.business_key = '&lt;ORGANIZATION KEY&gt;' <br />or<br />org.business_key in (<br />select business_key from uddi_business where business_entity_id in<br />(select to_business_id from<br />uddi_pub_assertion where from_business_id in <br />(select business_entity_id from uddi_business <br />where business_key ='&lt;ORGANIZATION KEY&gt;'))) <br />or<br />org.business_key in (select business_key from uddi_business where business_entity_id in<br />(select to_business_id from uddi_pub_assertion where from_business_id in <br />(select business_entity_id from uddi_business where business_key in <br />(select business_key from uddi_business where business_entity_id in <br />(select to_business_id from uddi_pub_assertion where from_business_id in <br />(select business_entity_id from uddi_business<br />where business_key ='&lt;ORGANIZATION KEY&gt;'))))))<br />)</pre>
+<pre>select <br />r.INTVLSTARTDTS,<br />org.BUSINESS_KEY, orgn.NAME ORGNAME, s.SERVICE_KEY, sn.NAME SVCNAME,<br />sum(USAGECOUNT) as TOTALUSAGECOUNT, sum(TOTALRESPTIME)/greatest(sum(USAGECOUNT),1) as<br />AVGRESPTIME,<br />sum(r.SUCCESSCOUNT), sum(r.TOTALSUCCESSRESPTIME)/greatest(sum(r.SUCCESSCOUNT),1) as <br />AVGSUCCESSRESPTIME, <br />sum(r.ERRORCOUNT),sum(r.TOTALERRORRESPTIME)/greatest(sum(r.ERRORCOUNT),1) as <br />AVGERRORRESPTIME, V.CONTRACTNAME<br />from<br />contracts_versions v, UDDI_BUSINESS org, UDDI_NAME orgn, UDDI_NAME sn, UDDI_SERVICE s <br />left outer join<br />mo_rollupdata r on s.BUSINES_SERVICE_ID=r.SERVICEID<br />and r.INTVLSTARTDTS &amp;gt;= to_date ('2013-03-01', 'YYYY-MM-DD') <br />and r.INTVLSTARTDTS &amp;lt; to_date ('2013-03-15', 'YYYY-MM-DD') <br />and s.BUSINES_SERVICE_ID=r.SERVICEID<br />where<br />r.contractid != '0'<br />and V.CONTRACTVERSIONID = r.contractid<br />and org.BUSINESS_ENTITY_ID=orgn.REF_ID and orgn.REF_TYPE='B' <br />and s.BUSINES_SERVICE_ID=sn.REF_ID and sn.REF_TYPE = 'S'<br />and s.BUSINESS_ENTITY_ID=org.BUSINESS_ENTITY_ID<br />and (org.business_key = '&lt;ORGANIZATION KEY&gt;' <br />or<br />org.business_key in (<br />select business_key from uddi_business where business_entity_id in<br />(select to_business_id from<br />uddi_pub_assertion where from_business_id in <br />(select business_entity_id from uddi_business <br />where business_key ='&lt;ORGANIZATION KEY&gt;'))) <br />or<br />org.business_key in (select business_key from uddi_business where business_entity_id in<br />(select to_business_id from uddi_pub_assertion where from_business_id in <br />(select business_entity_id from uddi_business where business_key in <br />(select business_key from uddi_business where business_entity_id in <br />(select to_business_id from uddi_pub_assertion where from_business_id in <br />(select business_entity_id from uddi_business<br />where business_key ='&lt;ORGANIZATION KEY&gt;'))))))<br />)
+
+group by (
+org.BUSINESS_KEY, s.SERVICE_KEY, orgn.NAME, sn.NAME, r.INTVLSTARTDTS, v.contractname)
+order by
+r.INTVLSTARTDTS desc, s.SERVICE_KEY;</pre>
 
 <h5>Query Sample Results:</h5>
 <pre>INTVLSTARTDTS    BUSINESS_KEY ORGNAME    SERVICE_KEY SVCNAME TOTALUSAGECOUNT    AVGRESPONSETIME    SUM(R.SUCCESSCOUNT) AVGSUCCESSRESPTIME    SUM(R.ERRORCOUNT) AVGERRORRESPTIME CONTRACTNAME
-3/12/2013 2:11:45 A.M.    uddi:4aec3117-7f8f-11e2-bcd9-da0bd5f63124    A-ACherryl-2013 uddi:ccc2141d-
-8ab9-11e2-9ffb-b0c496eb5bb2    CustomerProfileService_vs0    2    266    2    266    0
+3/12/2013 2:11:45 A.M.    uddi:4aec3117-7f8f-11e2-bcd9-da0bd5f63124    A-ACherryl-2013 uddi:ccc2141d-8ab9-11e2-9ffb-b0c496eb5bb2    CustomerProfileService_vs0    2    266    2    266    0
 0    CustomerProfile
-3/12/2013 2:11:40 A.M.    uddi:4aec3117-7f8f-11e2-bcd9-da0bd5f63124    A-ACherryl-2013 uddi:ccc2141d-
-8ab9-11e2-9ffb-b0c496eb5bb2    CustomerProfileService_vs0    1    230    1    230    0
-0    CustomerProfile
-3/12/2013 2:11:35 A.M.</pre>
+3/12/2013 2:11:40 A.M.    uddi:4aec3117-7f8f-11e2-bcd9-da0bd5f63124    A-ACherryl-2013 uddi:ccc2141d-8ab9-11e2-9ffb-b0c496eb5bb2    CustomerProfileService_vs0    1    230    1    230    0
+0    CustomerProfile</pre>
 <p><a href="#top">back to top</a></p>
 
 
@@ -213,7 +215,7 @@ AND una.ref_id = OI.organizationid</pre>
 FROM UDDI_SERVICE US
   JOIN UDDI_CATEGORY_BAG UCB on US.BUSINES_SERVICE_ID = UCB.REF_ID
   JOIN UDDI_KEYED_REF UKR on UCB.CATEGORY_BAG_ID = UKR.REF_ID 
-  WHERE BUSINESS_ENTITY_ID &lt;&gt; 1003 AND 1000 AND 1001
+WHERE BUSINESS_ENTITY_ID &lt;&gt; 1003 AND 1000 AND 1001
   AND UKR.KEY_NAME = 'Virtual Service'</pre>
 
 <h5>Query Sample Results:</h5>
@@ -451,8 +453,9 @@ ZootDecision2ServiceSFDC_MSU_Sales    4ec557bc-6e57-11df-a6b5-a41ff225560f:2766<
 <pre>SELECT UN.name, UAP.access_url<br />FROM UDDI_ACCESS_POINT UAP, UDDI_BINDING UB, UDDI_NAME UN <br />WHERE UAP.binding_templat_id = UB.binding_templat_id<br />AND UB.busines_service_id = UN.ref_id<br />AND UN.ref_type = 'S'<br />AND UAP.access_url like ('%&lt;KEYWORD&gt;%')</pre>
 
 <h5>Query Sample Results:</h5>
-<pre>Using keyword "asmx" NAME    ACCESS_URL
-SetupAcctEnrollment    http://sdpfessql01.aescf.us.aexp.com/zyncSecure/SetupAcctEnrollment.asmx
+<p>Using keyword <strong>asmx</strong>.</p>
+<pre>NAME                     ACCESS_URL
+SetupAcctEnrollment      http://sdpfessql01.aescf.us.aexp.com/zyncSecure/SetupAcctEnrollment.asmx
 GetPaymentEligibility    http://sdpfessql01.aescf.us.aexp.com/bobcatAOT/GetPaymentEligibility.asmx
 GetPaymentEligibility    http://sdpfessql01.aescf.us.aexp.com/bobcatAOT/GetPaymentEligibility.asmx</pre>
 <p><a href="#top">back to top</a></p>
@@ -476,6 +479,15 @@ UDDI_CONTACT a left outer join UDDI_ADDRESS b on a.CONTACT_ID = b.CONTACT_ID
 where a.USE_TYPE = 'Primary'
 and be.business_entity_id = a.business_entity_id</pre>
 
+<h5>Query Sample Results:</h5>
+<pre>ORGANIZATION CLASS    DESCRIPTION    ADDRESS_ID    ADDRESS_LINE1    ADDRESS_LINE2    
+ADDRESS_LINE3    ADDRESS_LINE4    ADDRESS_LINE5    ADDRESS_USE_TYPE
+Digitas    Primary    2458   355 Park Avenue South   
+New York, 10291 USA    www.digitas.com     Primary
+Sample Loyalty Vendor    Primary    Lead Programmer Analyst    2513    American Express Technologies    TRCN,    
+Phoenix,    Arizona, USA, 85032    Primary
+AXESS INTERNATIONAL NETWORK INC    Primary    Tatsuya Takahashi    2655    SEA FORT SQUARE Center Bldg.    
+2-3-12 Higashishinagawa,Shinagawa-ku    Tokyo    140-8619        Primary</pre>
 <p><a href="#top">back to top</a></p>
 
 
