@@ -58,13 +58,15 @@ nav-title: Troubleshooting ND
 <h5>Solution:</h5>
 <p>Possible reasons for this issue are:</p>
 <ul>
-	<li>The service is not deployed on the Network Director. See To check whether the service is deployed to the Network Director below.</li>
+	<li>The service is not deployed on the Network Director. See <a href="#proc_check_svc_deployed">To check whether the service is deployed to the Network Director</a> below.</li>
 	<li>A 404 was returned from the physical service (physical service is down). See <a href="#s03_01_02">Virtual Service Cannot Connect to Physical Services</a> below.</li>
 </ul>
-<h5>To check whether the service is deployed to the Network Director</h5>
+
+<h5 id="proc_check_svc_deployed">To check whether the service is deployed to the Network Director</h5>
 <p>Check the contexts hosted on the Network Director.</p>
 <p>There is a URL you can use to list all the context paths hosted on the Network Director. To view the context paths, you must first enable a configuration setting as described below.</p>
-<h5>To check context paths from the Network Director</h5>
+
+<h5 id="proc_context_paths_check">To check context paths from the Network Director</h5>
 <ol>
 	<li>Log in to the Admin Console at http://{nd_host}:{nd_port}/admin/console.html.</li>
 	<li>Click the <strong>Configuration</strong> tab.</li>
@@ -104,7 +106,8 @@ com.soa.container.configuration.service.ContainerConfigPollingService.</pre>
 <p>One possible cause of this issue is that the maximum number of threads for the HTTP listener is set to 0 and must be increased.</p>
 <h5>Solution:</h5>
 <p>As a workaround, you can edit the system.properties file to create a temporary HTTPS listener entry. This will allow you to log in and increase the number of threads on the HTTP listener. You must then restore the original system.properties file.</p>
-<h5>To increase the maximum number of threads for the HTTP listener</h5>
+
+<h5 id="proc_http_listener_increase_max_threads">To increase the maximum number of threads for the HTTP listener</h5>
 <ol>
 	<li>Go to the ./sm60/instances/{pm_instance} folder on your machine and find the system.properties file. Save a backup copy of the original file.</li>
 	<li>In the file, find the <strong>org.osgi.service.http.port</strong> property and set it to <strong>9900</strong> (or your original port).</li>
@@ -135,7 +138,7 @@ com.soa.container.configuration.service.ContainerConfigPollingService.</pre>
 	<li>Depending on the results, do one of the following: 
 		<ul>
 			<li>If there is an error retrieving the WSDL, there is an issue with hosting the virtual service. Go to the <a href="#s03_02_01">Hosted Service Issues</a> section below.</li>
-			<li>If there was no error with the WSDL, the issue is at the policy/contract level. For additional troubleshooting steps, go to To check policy configuration below. If it is an issue with the policy or contract there should be an error in the alerts or the monitoring data for the service.</li>
+			<li>If there was no error with the WSDL, the issue is at the policy/contract level. For additional troubleshooting steps, go to <a href="#proc_chk_policy_config">To check policy configuration</a> below. If it is an issue with the policy or contract there should be an error in the alerts or the monitoring data for the service.</li>
 		</ul>
 	</li>
 </ol>
@@ -144,7 +147,7 @@ com.soa.container.configuration.service.ContainerConfigPollingService.</pre>
 <ol>
 	<li>Open a browser.</li>
 	<li>Enter the URL of the virtual service:
-		<pre>{nd_host}{nd_port}/{service_context_path}</pre></li>
+		<pre>{nd_host}:{nd_port}/{service_context_path}</pre></li>
 	<li>Append <strong>?wsdl</strong> to the end of the URL.
 		<p>The WSDL file for the virtual service should be displayed in the browser. Proceed depending on what you see:</p>
 		<ul>
@@ -156,13 +159,14 @@ com.soa.container.configuration.service.ContainerConfigPollingService.</pre>
 
 <h4 id="s03_02_01">Hosted Service Issues</h4>
 <p>If you cannot connect to the service, and you were not able to retrieve the WSDL file, follow the steps below.</p>
-<h4>To resolve issues with hosting the virtual service</h4>
+
+<h5 id="proc_hosting_vs_resolve">To resolve issues with hosting the virtual service</h5>
 <ol>
 	<li>Verify the access point being used. To do this:
 		<ul>
 			<li>In Policy Manager, from the organization tree, select the virtual service.</li>
 			<li>In the right pane, click the <strong>Access Points</strong> tab.</li>
-			<li>Verify that the access point is still listed for that service. If it isn't listed, go to the Network Director container, Hosted Services tab, and click <strong>Host Virtual Service</strong>. Select the virtual service to host on the Network Director container or cluster.</li>
+			<li>Verify that the access point is still listed for that service. If it isn't listed, go to the Network Director container, <strong>Hosted Services</strong> tab, and click <strong>Host Virtual Service</strong>. Select the virtual service to host on the Network Director container or cluster.</li>
 			</ul>
 		</li>
 	
@@ -177,7 +181,7 @@ com.soa.container.configuration.service.ContainerConfigPollingService.</pre>
 	<li>Take additional steps depending on the container status and settings:
 		<ul>
 			<li>If the container has not started, check that the bundles have loaded.</li>
-		<li>Stopped or Unresponsive: In Network Director, go to the Network Director Container Detail Page for the container and view the status indicator for the container. There are three statuses: Started, Stopped, and Unresponsive. The status is communicated from Network Director to Policy Manager every 15 seconds using the Policy Manager service called <strong>Container State Service</strong>. If Policy Manager doesn't receive a response from Network Director in a certain amount of time, the status is reported as <strong>Unresponsive</strong>. If there is no response for an extended period of time the status is reported as <strong>Stopped</strong>. This indicates a communication problem between Policy Manager and Network Director.</li>
+		<li>Stopped or Unresponsive: In Network Director, go to the Network Director Container Detail Page for the container and view the status indicator for the container. There are three statuses: <strong>Started</strong>, <strong>Stopped</strong>, and <strong>Unresponsive</strong>. The status is communicated from Network Director to Policy Manager every 15 seconds using the Policy Manager service called <strong>Container State Service</strong>. If Policy Manager doesn't receive a response from Network Director in a certain amount of time, the status is reported as <strong>Unresponsive</strong>. If there is no response for an extended period of time the status is reported as <strong>Stopped</strong>. This indicates a communication problem between Policy Manager and Network Director.</li>
 		<li>Check the Network Director log file and see if there are any issues connecting to the Policy Manager.</li>
 		<li>Check the Policy Manager log to see if there are any errors when the Network Director is connecting to Policy Manager to update its state.</li>
 		<li>HTTPS address listed as service access point: Verify that the HTTPS listener has PKI keys and an X.509 certificate attached.</li>
@@ -205,7 +209,8 @@ com.soa.container.configuration.service.ContainerConfigPollingService.</pre>
 <p>If an <strong>Authorization Failed</strong> message is returned when consuming a service, one possible cause is that the contract is not configured.</p>
 <h5>Solution:</h5>
 <p>To check whether the contract is configured correctly, and correct as needed, follow the steps below.</p>
-<h5>To configure a contract</h5>
+
+<h5 id="proc_contract_configure">To configure a contract</h5>
 <ol>
 	<li>Log in to the Policy Manager console.</li>
 	<li>From the organization tree, select the virtual service.</li>
@@ -215,7 +220,7 @@ com.soa.container.configuration.service.ContainerConfigPollingService.</pre>
 	<li>If the contract is listed as Deactivated, activate it:
 		<ol>
 			<li>From the Consumers portlet, select the contract.</li>
-			<li>From the actions portlet, select Activate Contract.</li>
+			<li>From the actions portlet, select <strong>Activate Contract</strong>.</li>
 			<li>Wait for approximately one minute for the contract to go into effect.</li>
 		</ol>
 	</li>
@@ -231,12 +236,12 @@ com.soa.container.configuration.service.ContainerConfigPollingService.</pre>
 <h5>Solution:</h5>
 <p>If the WS-Security headers are required by the physical endpoint, you can set a property in the Network Director Admin console so that the headers are not stripped out.</p>
 
-<h5 id="xxx">To modify configuration to keep the WS-Security headers</h5>
+<h5 id="proc_wssecurity_headers_modify">To modify configuration to keep the WS-Security headers</h5>
 <ol>
 	<li>Log in to the Network Director Admin Console (http://
 		{nd_host}:{nd_port}/admin).</li>
 	<li>Click the <strong>Configuration</strong> tab.</li>
-	<li>In the Categories portlet, select the com.soa.wssecurity category.</li>
+	<li>In the <strong>Categories</strong> portlet, select the <strong>com.soa.wssecurity</strong> category.</li>
 	<li>Set the value of the <strong>keepsecurityHeader</strong> property to <strong>true</strong>.</li>
 	<li>Click <strong>Apply Changes</strong>.</li>
 </ol>

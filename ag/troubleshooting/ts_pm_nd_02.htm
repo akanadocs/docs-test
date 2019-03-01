@@ -83,7 +83,8 @@ nav-title: Troubleshooting PM
 <p>You'll need to determine which Policy Manager instance you want the Quartz scheduler to run on, and then disable it on any other Policy Manager instances.</p>
 <h5>Solution:</h5>
 <p>Verify that the Quartz scheduler is running on only one Policy Manager instance.</p>
-<h5>To set the Quartz scheduler to run on only one Policy Manager instance</h5>
+
+<h5 id="proc_set_quartz_scheduler">To set the Quartz scheduler to run on only one Policy Manager instance</h5>
 <ol>
 	<li>Log in to the Policy Manager Admin Console for the instance of Policy Manager that you want the Quartz scheduler to run on.</li>
 	<li>Click the <strong>Configuration</strong> tab.</li>
@@ -157,7 +158,7 @@ nav-title: Troubleshooting PM
 	<li>Click <strong>Apply Changes</strong>.</li>
 </ol>
 
-<h5>To turn off automatic monitoring data deletion jobs</h5>
+<h5 id="proc_monitoring_off_deletions">To turn off automatic monitoring data deletion jobs</h5>
 <ol>
 	<li>Log in to the Policy Manager Admin Console.</li>
 	<li>Click the <strong>Configuration</strong> tab.</li>
@@ -169,10 +170,10 @@ nav-title: Troubleshooting PM
 
 <h5>To manually delete unnecessary rollup data from the database</h5>
 <p>To manually purge the rollup data from the database, run the queries below.</p>
-<p><span class="apidoc_note"><strong>Note</strong>: Modify the date in the scripts below to reflect how much data you want to delete (the to_date value). Any information older than the date you specify is deleted.</span></p>
-<p><strong>Backing up before deletion</strong>—You can also back up the data before deletion, or you can export the monitoring data before deletion. For instructions on exporting, see the Akana knowledge base article:&nbsp; {<span class="apidoc_red">PM</span>}https://support.soa.com/support/index.php?_m=knowledgebase&amp;_a=viewarticle&amp;kbarticleid=131. (see <a href="ts_pm_nd_01.htm#s01_08">Knowledge Base</a>) </p>
+<p><span class="apidoc_note"><strong>Note</strong>: Modify the date in the scripts below to reflect how much data you want to delete (the <strong>to_date</strong> value). Any information older than the date you specify is deleted.</span></p>
+<p><strong>Backing up before deletion</strong>—You can also back up the data before deletion, or you can export the monitoring data before deletion.</p>
 <p><strong>Delete rollup (chart) data script:</strong></p>
-<pre>delete from MO_ROLLUPDATA where INTVLSTARTDTS &lt; to_date ('2013-12-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')<br />delete from MO_ROLLUP15 where INTVLSTARTDTS &lt; to_date ('2013-12-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')<br />delete from MO_ROLL_ORG15 where INTVLSTARTDTS &lt; to_date ('2013-12-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')<br />delete from MO_ROLLUP_HOUR where INTVLSTARTDTS &lt; to_date ('2013-12-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')<br />delete from MO_ROLL_ORG_H where INTVLSTARTDTS &lt; to_date ('2013-12-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')<br />delete from MO_ROLLUP_DAY where INTVLSTARTDTS &lt; to_date ('2013-12-01 00:00:00', 'YYYY-MM-DD<br />HH24:MI:SS')<br />delete from MO_ROLL_ORG_D where INTVLSTARTDTS &lt; to_date ('2013-12-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')</pre>
+<pre>delete from MO_ROLLUPDATA where INTVLSTARTDTS &lt; to_date ('2013-12-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')<br />delete from MO_ROLLUP15 where INTVLSTARTDTS &lt; to_date ('2013-12-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')<br />delete from MO_ROLL_ORG15 where INTVLSTARTDTS &lt; to_date ('2013-12-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')<br />delete from MO_ROLLUP_HOUR where INTVLSTARTDTS &lt; to_date ('2013-12-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')<br />delete from MO_ROLL_ORG_H where INTVLSTARTDTS &lt; to_date ('2013-12-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')<br />delete from MO_ROLLUP_DAY where INTVLSTARTDTS &lt; to_date ('2013-12-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')<br />delete from MO_ROLL_ORG_D where INTVLSTARTDTS &lt; to_date ('2013-12-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')</pre>
 <p><a href="#top">back to top</a></p>
 
 
@@ -200,12 +201,13 @@ job_name='ms.generate.rollups.job.Trigger'</pre>
 <h4 id="s02_03_02">Historical Charts Displayed for Some Increments but Not Others</h4>
 <p><span class="apidoc_note"><strong>Note</strong>: This issue might occur in the Policy Manager 6.x environment for systems upgraded from an earlier version of Policy Manager. For new 6.x installations it will not occur.</span></p>
 <p>Issues with historical chart information display are frequently due to the time zone configuration settings in Policy Manager. For example, if you can see daily data by the hour and weekly data by the day, but cannot see monthly data by day or week, this is caused by a configuration issue.</p>
-<p>Historical chart data is stored in the ROLLUP data tables in the database. By default, this data is stored in GMT time. However, when you go to the Policy Manager Workbench, on the monitoring tab of the service, you will see that the time is shown in the timezone you configured in your Policy Manager profile.</p>
+<p>Historical chart data is stored in the ROLLUP data tables in the database. By default, this data is stored in GMT time. However, when you go to the Policy Manager Workbench, on the monitoring tab of the service, you will see that the time is shown in the time zone you configured in your Policy Manager profile.</p>
 <p>To see accurate historical information for your implementation, this data should be set to display in the same time zone as your Policy Manager profile.</p>
 
 <h5>Solution:</h5>
 <p>To configure the time zone setting for the rollup data tables, follow the steps below.</p>
-<h5>To configure the time zone setting for the rollup data tables</h5>
+
+<h5 id="proc_rollup_config_time_zone">To configure the time zone setting for the rollup data tables</h5>
 <ol>
 	<li>Log in to the Policy Manager Admin Console.</li>
 	<li>Click the <strong>Configuration</strong> tab.</li>
@@ -221,9 +223,9 @@ job_name='ms.generate.rollups.job.Trigger'</pre>
 <h4 id="s02_03_03">Historical Data Shows but Real-Time Data Does Not Show</h4>
 <p>Note: This issue might occur in the Policy Manager 6.x environment for systems upgraded from an earlier version of Policy Manager. In new 6.x installations it will not occur.</p>
 <p>If data shows in historical charts but not in real-time charts, this might be because of inconsistent time zone settings on different machines.</p>
-<p>For example, if the Network Director time is set to one hour earlier than the Service Manager machine, you will never see any data in the real-time charts, since there is only a one-hour window in which to view the data.</p>
+<p>For example, if the Network Director time is set to one hour earlier than the Policy Manager machine, you will never see any data in the real-time charts, since there is only a one-hour window in which to view the data.</p>
 <h5>Solution:</h5>
-<p>Verify that the time zones are the same on the Service Manager machine and the Network Director or embedded Agent machines.</p>
+<p>Verify that the time zones are the same on Policy Manager and Network Director.</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -246,7 +248,7 @@ job_name='ms.generate.rollups.job.Trigger'</pre>
 <h5 id="s02_04_01_01">Application Layer Persistence setting (JSESSION Cookie)</h5>
 <p>Each login session is tracked by a JSESSION cookie. The load balancer must be able to access the session cookie and pass it back to the user.</p>
 <p>Make sure the Application Layer Persistence setting is enabled on the load balancer. If the persistence on the load balancer is not turned on, the JSESSION cookie is not passed on to the user. Because the session information is not passed on, the user is redirected back to the login page.</p>
-<p>The Application Layer Persistence setting is generally enabled by default, but if you are experiencing difficulty logging in it's best to make sure it hasn't been disabled.</p>
+<p>The Application Layer Persistence setting is generally enabled by default. However, if you are experiencing difficulty logging in, it's best to make sure the setting hasn't been disabled.</p>
 <p>The proper response to the login page request from the host is shown below. Note the JSESSION cookie on the last line.</p>
 <pre>GET /ms/index.do HTTP/1.1
 Host: pm_host:9900
@@ -307,20 +309,19 @@ Cookie: JSESSIONID_pm_container=6jl7s7i4lm8qg</pre>
 
 <h5 id="proc_restrict_ac_access">To restrict access to the Admin Console so that it is accessible only from localhost</h5>
 <ol>
-	<li>Create a file in the ./sm60 directory named: com.soa.admin.console.cfg. Enter the following lines in the file:
-	<pre>admin.console.localhost.only=true
+	<li>Create a file in the ./sm60 directory named: <strong>com.soa.admin.console.cfg</strong>. Enter the following lines in the file:
+<pre>admin.console.localhost.only=true
 admin.console.access.restricted=true</pre></li>
 	<li>Copy the <strong>com.soa.admin.console.cfg</strong> file into the ./sm60/instances/
 		{instance_name}/deploy directory.</li>
-	<li>From the Admin Console, go to the Configuration tab. Verify that there is a configuration category named com.soa.admin.console and that it includes these two properties:
-		<ul>
-			<li>admin.console.localhost.only property set to true </li>
-			<li>admin.console.access.restricted property set to true</li>
-		</ul>
+	<li>From the Admin Console, go to the <strong>Configuration</strong> tab. Verify that there is a configuration category named com.soa.admin.console and that it includes these two properties:
+<ul>
+	<li><strong>admin.console.localhost.only</strong> property set to <strong>true</strong></li>
+	<li><strong>admin.console.access.restricted</strong> property set to <strong>true</strong></li>
+</ul>
 		</li>
-	
-	<li>Restart the container.</li>
-</ol>
+	<li>Restart the container. </li>
+	</ol>
 <p>Once this setting is in place, when the container is up and running, the Admin Console should only be accessible on the local machine. If an attempt is made to access it from another machine, a 404 error is returned.</p>
 <p><a href="#top">back to top</a></p>
 
@@ -343,7 +344,8 @@ admin.console.access.restricted=true</pre></li>
 
 <h5>Solution:</h5>
 <p>Configure the email alert forwarding settings.</p>
-<p>To configure email alerts</p>
+
+<h5 id="proc_config_email_alerts">To configure email alerts</h5>
 <p>Note: Before configuring email alerts you must set up the SMTP server if it isn't set up yet.</p>
 <ol>
 	<li>Log in to the Policy Manager.</li>
@@ -355,12 +357,12 @@ admin.console.access.restricted=true</pre></li>
 
 
 <h4 id="s02_05_02">Incorrect &quot;From&quot; Address On Alert Notifications</h4>
-<p>Email alert notifications are being sent using the default <strong>From</strong> email address (<span class="apidoc_red">alert_notification@soa.com</span>) if the default has not been modified.</p>
+<p>Email alert notifications are being sent using the default <strong>From</strong> email address (alert_notification@akana.com) if the default has not been modified.</p>
 
 <h5>Solution:</h5>
 <p>Configure the <strong>from</strong> address.</p>
 
-<h5>To configure the &quot;From&quot; address for alert emails</h5>
+<h5 id="proc_alerts_config_from_address">To configure the &quot;From&quot; address for alert emails</h5>
 <ol>
 	<li>Log in to the Policy Manager Admin Console.</li>
 	<li>Click the <strong>Configuration</strong> tab.</li>
@@ -377,7 +379,8 @@ admin.console.access.restricted=true</pre></li>
 
 <h5>Solution:</h5>
 <p>In Policy Manager, configure the SMTP server for the CA.</p>
-<p>To configure the SMTP server for the certificate expiration email</p>
+
+<h5 id="proc_config_smtp_server_cert_exp_email">To configure the SMTP server for the certificate expiration email</h5>
 <ol>
 	<li>Log in to the Policy Manager.</li>
 	<li>Click the <strong>Configure</strong> tab.</li>
@@ -410,7 +413,8 @@ admin.console.access.restricted=true</pre></li>
 <p>When adding or modifying an email group, you must specify the SMTP server used to send the emails for that group. You can verify the email setup by sending a test email to all addresses within the group. Follow the steps below.</p>
 <h5>To send a test email for an email group</h5>
 <p>Pressing verify connection under the Authenticated box will immediately send a test email to all addresses within the group.</p>
-<h5>To configure Policy Manager to send certificate expiration notifications</h5>
+
+<h5 id="proc_config_pm_cert_exp_notif_send">To configure Policy Manager to send certificate expiration notifications</h5>
 <ol>
 	<li>Log in to the Policy Manager console.</li>
 	<li>Click the <strong>Configure</strong> tab and then click <strong>Email</strong>.</li>
@@ -419,7 +423,7 @@ admin.console.access.restricted=true</pre></li>
 <p>Certificate expiration notifications can be configured in the Policy Manager management console under <strong>Configure</strong> > <strong>Email</strong>&nbsp; > <strong>Modify SMTP Email Host</strong>, as shown below.</p>
 <p><img src="assets/02_01.jpg" alt="Modify SMTP Email Host" /></p>
 
-<h5>To configure Policy Manager to send email alert notifications to group members</h5>
+<h5 id="proc_pm_email_alerts_group">To configure Policy Manager to send email alert notifications to group members</h5>
 <ol>
 	<li>Log in to the Policy Manager console.</li>
 	<li>Click the <strong>Alerts</strong> tab and then click <strong>Email Groups</strong>.</li>
@@ -431,7 +435,8 @@ admin.console.access.restricted=true</pre></li>
 <p>Resolve as needed, and then try again.</p>
 <h5>To send alerts with a specific FROM: address</h5>
 <p>You can configure your alert emails to display a specific address in the <strong>From</strong> field on the email. Follow the steps below.</p>
-<h5>To set up a specific &quot;From&quot; address for alert emails</h5>
+
+<h5 id="proc_alerts_from_address">To set up a specific &quot;From&quot; address for alert emails</h5>
 <ol>
 	<li>Log in to the Policy Manager Admin Console.</li>
 	<li>Click the <strong>Configuration</strong> tab.</li>
@@ -442,7 +447,7 @@ admin.console.access.restricted=true</pre></li>
 </ol>
 <p> <strong>Note</strong>: The new setting takes effect after a short delay. You do not need to restart the container. </p>
 
-<p>If you remove this property, the <strong>From</strong> address reverts to the default, alert_notification@soa.com, after the next restart of the Policy Manager container.</p>
+<p>If you remove this property, the <strong>From</strong> address reverts to the default, alert_notification@akana.com, after the next restart of the Policy Manager container.</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -469,7 +474,8 @@ admin.console.access.restricted=true</pre></li>
 <h5>Solution:</h5>
 <p>To ensure the container listens on the specified interface, ensure that the <strong>bind to all interfaces</strong> option for the container listener in the Policy Manager console is not checked.</p>
 <p>To resolve this issue, follow the steps below.</p>
-<h5>To clear the &quot;Bind to All Interfaces&quot; setting</h5>
+
+<h5 id="proc_bind_to_all_clear_setting">To clear the &quot;Bind to All Interfaces&quot; setting</h5>
 <ol>
 	<li>Log in to the Policy Manager console.</li>
 	<li>For all affected containers, do the following:
@@ -494,15 +500,15 @@ admin.console.access.restricted=true</pre></li>
 	&lt;container&gt;</strong>). Based on the results, determine the next step:
 	<ul>
 		<li>If it runs from the command line: the problem is an issue with the Windows service. Go on to the next step to reinstall the service.</li>
-		<li>If it does not run from the command line: the issue is with the container itself. The container might be trying to bind to a network interface that it cannot bind to. If so, because you can't start the Policy Manager, you must edit the <strong>system.properties</strong> file. Go to <a href="#proc_clear_bind_to_all_interfaces">To clear the Bind to all interfaces setting in the system.properties file</a> below. Use netstat to verify this.</li>
+		<li>If it does not run from the command line: the issue is with the container itself. The container might be trying to bind to a network interface that it cannot bind to. If so, because you can't start the Policy Manager, you must edit the <strong>system.properties</strong> file. Go to <a href="#proc_bind_to_all_clear_properties">To clear the Bind to all interfaces setting in the system.properties file</a> below. Use netstat to verify this.</li>
 	</ul>
 	</li>
 	<li><strong>Reinstall Windows service</strong>—If the container doesn't start from the command line, you'll need to reinstall the Windows service. To do this, first unregister the service and then register it again. Using the script in the /sm60/bin folder, run the following commands:
-	<pre>UnregisterContainerService.bat &lt;container_name&gt;</pre>
-	<pre>RegisterContainerService.bat &lt;container_name&gt;</pre></li>
+	<pre>UnregisterContainerService.bat {container_name}</pre>
+	<pre>RegisterContainerService.bat {container_name}</pre></li>
 </ul>
 
-<h5 id="proc_clear_bind_to_all_interfaces">To clear the Bind to all interfaces setting in the system.properties file</h5>
+<h5 id="proc_bind_to_all_clear_properties">To clear the Bind to all interfaces setting in the system.properties file</h5>
 <ol>
 	<li>Open up the system.properties file: /sm60/instances/
 		{PMcontainerName}/system.properties.</li>
@@ -520,10 +526,10 @@ admin.console.access.restricted=true</pre></li>
 <h3 id="s02_07">Troubleshooting Issues: Policy Manager Administrator</h3>
 <p>This section provides information about issues a Policy Manager Administrator might encounter. It includes:</p>
 <ul>
-	<li>Cannot Connect to Service {<span class="apidoc_red">PM question do we have content on these. These 4 items missing from original file.</span>}</li>
-	<li>Can't Create Service</li>
-	<li>Virtual Service Can't Connect to Physical Service</li>
-	<li>Authentication/Authorization Alerts</li>
+<!--	<li>Cannot Connect to Service</li>-->
+<!--	<li>Can't Create Service</li>-->
+<!--	<li>Virtual Service Can't Connect to Physical Service</li>-->
+<!--	<li>Authentication/Authorization Alerts</li>-->
 	<li><a href="#s02_07_05">Alert Emails Not Being Sent</a></li>
 </ul>
 
@@ -538,7 +544,8 @@ admin.console.access.restricted=true</pre></li>
 <p>To clear the backlog of pending alert emails, run the following database query:</p>
 <pre>update AM_ALERTDISPSTAT set lastalertsid = (select max(alertsid) from am_alerts)</pre>
 <p>In addition, if the issue was not caused by an abnormal spike in alerts, you'll need to increase the number of alerts Policy Manager can process per minute.</p>
-<h5>To increase the number of alerts Policy Manager can process per minute</h5>
+
+<h5 id="proc_alerts_increase">To increase the number of alerts Policy Manager can process per minute</h5>
 <ol>
 	<li>Log in to the Policy Manager Admin Console.</li>
 	<li>Click the <strong>Configuration</strong> tab.</li>
@@ -567,7 +574,8 @@ admin.console.access.restricted=true</pre></li>
 <p>All HTTPS listeners must be configured with PKI keys and X.509 certificate. If they are not, they will not work.</p>
 <h5>Solution:</h5>
 <p>Verify that the HTTPS listener is correctly configured, using the instructions below. If needed, take further troubleshooting steps as explained in the second procedure below.</p>
-<h5>To verify that an HTTPS listener is configured with PKI keys and X.509 certificate</h5>
+
+<h5 id="proc_verify_https_listener_config">To verify that an HTTPS listener is configured with PKI keys and X.509 certificate</h5>
 <ol>
 	<li>Log in to the Policy Manager console.</li>
 	<li>Under the organization tree on the left, select the container for the HTTPS listener.</li>
@@ -591,8 +599,6 @@ admin.console.access.restricted=true</pre></li>
 <p><span class="apidoc_note"><strong>Note</strong>: Before you convert, check with Support to see which JRE update is supported with Policy Manager (see <a href="ts_pm_nd_01.htm#s01_02_01">Contacting Technical Support</a>). As of September 2013, JRE 6.0 Update 36 is supported. The latest update is update 43, which isn't yet supported. We are constantly certifying new versions. For Policy Manager 6.1.15 we added support for JRE 7.0. Again, check which update is supported.</span></p>
 
 <h5 id="proc_convert_to_64bitjre">To convert to 64-bit JRE</h5>
-<p>This information is also in the SOA Support Knowledge Base:</p>
-<p>https://supp<span class="apidoc_red">ort.soa.com/support/index.php?_m=knowledgebase&amp;_a=viewarticle&amp;k</span>barticleid=343. {<span class="apidoc_red">PM/MS</span>} (see <a href="ts_pm_nd_01.htm#s01_08">Knowledge Base</a>)</p>
 <p>If Policy Manager and Network Director are installed as a Windows service, uninstall them before following the procedure below. Use the uninstall batch file: \sm60\bin\UnRegisterContainerService.bat.</p>
 <ol>
 	<li>Download the JRE 1.6 64-bit version from the Oracle website. Use one of the following:
