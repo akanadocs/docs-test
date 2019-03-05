@@ -1,0 +1,568 @@
+---
+layout: page
+title: Automation Reference Guide
+description: Learn how to use automation for tasks relating to the platform such as creating, deploying, or updating containers.
+product: sp
+category: gs
+weight: 04
+sub-nav-class: Automation
+type: page
+nav-title: Automation Reference
+---
+<h2 id="top">Automation Reference Guide</h2>
+<p>Learn how to use automation recipes to manage tasks such as creating, deploying, or updating containers.</p>
+<!--<p><a href="../admin_console/xxx.htm" class="button secondary">xxx</a></p>-->
+
+<h5 class="stamp">Supported Platforms: 2018.0.x</h5>
+<div class = "divider1"></div>
+
+
+
+<h3 style="color: gray;">Table of Contents</h3>
+<ol class="table_of_contents">
+	<li><a href="#overview">Overview</a></li>
+	<li><a href="#recipe_structure">Recipe Structure</a>
+		<ol>
+			<li><a href="#includes">Includes</a></li>
+			<li><a href="#phases_structure">Phases</a></li>
+			<li><a href="#environment">Environment</a></li>
+			<li><a href="#repositories">Repositories</a></li>
+			<li><a href="#features">Features</a></li>
+			<li><a href="#bundles">Bundles</a></li>
+			<li><a href="#configurations">Configurations</a></li>
+			<li><a href="#tasks">Tasks</a></li>
+		</ol>
+	</li>
+	<li><a href="#property_substitution">Property Substitution</a></li>
+	<li><a href="#recipes_running">Running Recipes: Configuring Containers</a>
+		<ol>
+			<li><a href="#recipe_properties">Recipe Properties</a></li>
+			<li><a href="#phases_running">Phases</a></li>
+			<li><a href="#logging">Logging</a></li>
+			<li><a href="#simple_logger">Simple Logger</a></li>
+		</ol>
+	</li>
+	<li><a href="#running_recipes_remotely">Running Recipes Remotely</a></li>
+</ol>
+
+
+
+<div class = "divider1"></div>
+
+
+
+<h3 id="overview">Overview</h3>
+<p>The availability of a full set of container administration services enables the use of declarative configuration <strong>recipes</strong>. Recipes are simply JSON documents that describe the features, bundles, configurations, and tasks that should be performed on a container. Recipes are interpreted by a script that is part of the Akana Platform installation ZIP file and can be used to create an instance from scratch, or modify an existing one. By using recipes, complex configurations can be automated without having to resort to custom scripting. Container customizations can also be captured in recipes to facilitate repeatable deployment of non-standard configurations or features.</p>
+<p>All modules necessary to process recipes are installed with the Akana Platform. For download location, see <a href="../platform_install/installing_akana_api_platform.htm#gather_zip_files">Installing the Akana API Platform 2018.0.x</a> (Step 1).</p>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h3 id="recipe_structure">Recipe Structure</h3>
+<p>A recipe is a JSON document as described by the <a href="assets/recipe-schema.json" target="_blank">recipe-schema.json</a> file. By default this file is included in the <strong>&lt;installation&gt;/recipes</strong> folder.</p>
+
+
+<h4 id="includes">Includes</h4>
+<p>To encourage reuse, and to allow configurations to be captured in a repeatable way, recipes can include other recipes. You can reference included recipes with a relative path to the originating file, or by using an absolute URL. Some recipes are simply a set of inclusions, and perform no work on their own. For example, you could use the following recipe, which references four recipes within it, to deploy a PM instance.</p>
+<pre>{
+  "name":"pm-complete",
+  "description":"Complete PM Container Recipe on MySQL",
+  "phases":[
+    "create",
+    "deploy"
+  ],
+  "includes":[
+    {
+      "location":"bootstrap.json"
+    },
+    {
+      "location":"pm.json"
+    },
+    {
+      "location":"container-identity.json"
+    },
+    {
+      "location":"mysql.json"
+    }
+  ]
+}</pre>
+<p>In this example, the <a href="assets/bootstrap.json" target="_blank">bootstrap.json</a> recipe is used to create a basic runtime instance. This would be common across almost all instances. The <a href="assets/pm.json" target="_blank">pm.json</a> recipe would deploy PM features, and any PM-specific configuration. As this example shows, recipes can be as fine-grained as necessary. The two remaining recipes perform all configuration necessary to configure a container's identity, and to deploy a MySQL configuration. Both of these would be reusable in many other deployments.</p>
+<p>Order of includes does not matter. There is a default limit of 10 on the depth of includes.</p>
+<p>The schema for the includes section is shown below.</p>
+<pre>"includes":{
+  "type":"array",
+  "description":"Included recipes",
+  "uniqueItems":true,
+  "items":{
+    "type":"object",
+    "required":[
+      "location"
+    ],
+    "properties":{
+      "name":{
+        "description":"A name for the included recipe",
+        "type":"string"
+      },
+      "location":{
+        "description":"The included recipe URL",
+        "type":"string",
+        "format":"uri"
+      },
+      "username":{
+        "description":"The optional user name to use to access the recipe URL",
+        "type":"string"
+      },
+      "password":{
+        "description":"The optional password to use to access the recipe URL",
+        "type":"string"
+      }
+    }
+  }
+}</pre>
+
+
+<h4 id="phases_structure">Phases</h4>
+<p>Certain recipes should only be executed when the instance under configuration is in a certain state. By using phases, recipes can declare when they should and should not execute, based on the runtime state or other conditions.</p>
+<p>The pre-defined phases depend on how the recipe is executed, but can include <span class="apidoc_code">create</span>, <span class="apidoc_code">deploy</span>, <span class="apidoc_code">update</span>, <span class="apidoc_code">finalize</span>, or any user-defined phases. Recipes that specify the <span class="apidoc_code">create</span> phase are executed when the instance is being created; recipes that specify the <span class="apidoc_code">deploy</span> phase execute when the container is running. These can be overridden with custom phases, and can be useful to also control order of execution if necessary. Phases are simply listed as an array of strings.</p>
+<p>If any value in the array is asterisk/star (<strong>*</strong>), the recipe is applicable to all phases.</p>
+<p>The schema for the phases section is quite simple:</p>
+<pre>"phases":{
+  "description":"The execution phases for the recipe",
+  "type":"array",
+  "items":{
+    "type":"string"
+  }
+}</pre>
+
+<h5>Create phase</h5>
+<p>Since the <span class="apidoc_code">create</span> phase must create the required filesystem structure, it can only be executed on the same system as the target instance.</p>
+<p>This phase is only supported by the <span class="apidoc_code">akana.container</span> module (see <a href="#recipes_running">Running Recipes: Configuring Containers</a> below). </p>
+
+
+<h4 id="environment">Environment</h4>
+<p>The Environment section allows execution of a recipe to be controlled based on the presence or absence of a bundle or set of bundles or features. The <strong>required</strong> section lists the bundles that are required for the recipe to execute, while the <strong>unless</strong> section lists bundles whose presence causes the recipe to be skipped. As the schema below shows, both required and unless sections can specify a bundle or feature symbolic name, and optionally a version to test for. Alternatively, a filter can be used to match against any bundle headers.</p>
+<pre>"environment":{
+  "type":"object",
+  "properties":{
+    "required":{
+      "type":"array",
+      "description":"Any bundles required to be deployed for this recipe to run.",
+      "items":{
+        "type":"object",
+        "required":[
+          "symbolicName"
+        ],
+        "properties":{
+          "symbolicName":{
+            "type":"string"
+          },
+          "version":{
+            "description":"A version or version range",
+            "type":"string"
+          },
+          "filter":{
+            "description":"A filter to use against bundle headers.  An alternative to the symbolicName and version fields.",
+            "type":"string"
+          }
+        }
+      }
+    },
+    "unless":{
+      "type":"array",
+      "description":"Any bundles required to not be deployed for this recipe to run.",
+      "items":{
+        "type":"object",
+        "required":[
+          "symbolicName"
+        ],
+        "properties":{
+          "symbolicName":{
+            "type":"string"
+          },
+          "version":{
+            "description":"A version or version range",
+            "type":"string"
+          },
+          "filter":{
+            "description":"A filter to use against bundle headers.  An alternative to the symbolicName and version fields.",
+            "type":"string"
+          }
+        }
+      }
+    }
+  }
+}</pre>
+
+
+<h4 id="repositories">Repositories</h4>
+<p>Any number of repositories can be configured for use by the recipe. Each repository is specified using a location, and an optional username and password to support basic authentication. The location is expected to point to a repository descriptor.</p>
+<p>If a recipe is being executed on the same system as the instance being configured, the repository location can point to a ZIP file (the file name ends with <strong>.zip</strong>). The recipe downloads and uncompresses the file, and searches the contents for a <strong>repository.xml</strong> file. If this file is found, the repository is added to the system for the duration of recipe execution.</p>
+<pre>"repositories":{
+  "type":"array",
+  "description":"Repositories to examine for bundles and features",
+  "uniqueItems":true,
+  "items":{
+    "type":"object",
+    "required":[
+      "location"
+    ],
+    "properties":{
+      "location":{
+        "description":"The repository URL",
+        "type":"string",
+        "format":"uri"
+      },
+      "username":{
+        "description":"The optional user name to use to access the repository",
+        "type":"string"
+      },
+      "password":{
+        "description":"The optional password to use to access the repository",
+        "type":"string"
+      }
+    }
+  }
+}</pre>
+
+
+<h4 id="features">Features</h4>
+<p>Features can be installed, uninstalled, or updated. Features are always installed from the configured repositories, and will always be resolved before they can be installed along with their dependencies. As the schema below shows, features are always referenced using simply the symbolic name.</p>
+<pre>"features":{
+  "type":"object",
+  "description":"Feature actions",
+  "properties":{
+    "install":{
+      "description":"The features to install",
+      "type":"array",
+      "uniqueItems":true,
+      "items":{
+        "type":"string"
+      }
+    },
+    "uninstall":{
+      "description":"The features to uninstall",
+      "type":"array",
+      "uniqueItems":true,
+      "items":{
+        "type":"string"
+      }
+    },
+    "update":{
+      "description":"The features to update",
+      "type":"array",
+      "uniqueItems":true,
+      "items":{
+        "type":"string"
+      }
+    }
+  }
+}</pre>
+
+
+<h4 id="bundles">Bundles</h4>
+<p>As with Features, bundles can be installed, uninstalled, or updated. Bundles can be installed from a URL, which can be a file, HTTP, HTTPS, or <a href="../../ag/glossary_pm_nd.htm#gl_pm_obrurl">OBR URL</a>. OBR URLs call out a specific bundle within the configured repositories using the format <span class="apidoc_code">obr://&lt;symbolic name&gt;[/&lt;version&gt;]</span>. If an OBR URL is used, the specified bundle will be resolved and its dependencies will also be installed. For other URL formats such as HTTP/HTTPS, the specification of the bundle to install can include a <strong>convert</strong> attribute which indicates that the target is a regular <strong>JAR</strong> file, and should be converted to an OSGi bundle before deployment. In the schema below, for uninstall and update the bundles are identified using their IDs. This is not the bundle ID number from the framework, but rather the symbolic name and an optional version in the format <span class="apidoc_code">&lt;symbolic name&gt;[/&lt;version&gt;]</span>.</p>
+<pre>"bundles":{
+  "type":"object",
+  "description":"Bundle actions",
+  "properties":{
+    "install":{
+      "description":"The bundles to install",
+      "type":"array",
+      "uniqueItems":true,
+      "items":{
+        "type":"object",
+        "required":[
+          "location"
+        ],
+        "properties":{
+          "location":{
+            "type":"string",
+            "format":"uri"
+          },
+          "username":{
+            "type":"string"
+          },
+          "password":{
+            "type":"string"
+          },
+          "convert":{
+            "type":"boolean"
+          }
+        }
+      }
+    },
+    "uninstall":{
+      "description":"The IDs of any bundles to uninstall",
+      "type":"array",
+      "uniqueItems":true,
+      "items":{
+        "type":"string"
+      }
+    },
+    "update":{
+      "description":"The IDs of any bundles to update",
+      "type":"array",
+      "uniqueItems":true,
+      "items":{
+        "type":"string"
+      }
+    }
+  }
+}</pre>
+
+
+<h4 id="configurations">Configurations</h4>
+<p>The Configurations section deals with modifications to the Configuration Admin. Configurations can be added, modified, or removed. Configurations are identified using the <strong>pid</strong> property, or in the case of a factory configuration, using the <strong>factoryPid</strong> property. To update or delete factory configurations, you can combine the factory PID with a selection filter, which is a regular OSGi (LDAP) filter that can be used to isolate a specific factory configuration.</p>
+<p>Two special PIDs are supported in recipes:</p>
+<ul>
+	<li><strong>system</strong>&#8212;Indicates that the configuration is for system properties.</li>
+	<li><strong>framework</strong>&#8212;Indicates that the configuration is for framework properties.</li>
+</ul>
+<p>A sample Configurations section is shown below.</p>
+<pre>"configurations":{
+  "type":"array",
+  "description":"Configuration actions",
+  "uniqueItems":true,
+  "items":{
+    "type":"object",
+    "properties":{
+      "pid":{
+        "description":"The configuration PID,  The special value 'system' refers to system properties.",
+        "type":"string"
+      },
+      "factoryPid":{
+        "description":"The configuration factory PID.  If specified, a selector should be used to identify the correct configuration.",
+        "type":"string"
+      },
+      "selector":{
+        "description":"A normal OSGi filter used to identify the correct configuration when a factory PID is specified.",
+        "type":"string"
+      },
+      "location":{
+        "description":"The location of a properties file that will overwrite the specified PID.",
+        "type":"string",
+        "format":"uri"
+      },
+      "add":{
+        "description":"Properties to add.  If the property already exists, no action will be taken.",
+        "type":"object"
+      },
+      "delete":{
+        "description":"Properties to remove.  If there is a value of '*' the PID will be removed.",
+        "type":"array",
+        "items":{
+          "type":"string"
+        },
+        "uniqueItems":true
+      },
+      "update":{
+        "description":"Properties to update",
+        "type":"object"
+      }
+    }
+  }
+}</pre>
+<p>Recipes support the deployment of regular Java properties files to the ConfigAdmin by specifying its location. As the example below shows, the contents of the file can also be manipulated before the configuration is deployed.</p>
+<pre>"configurations":[
+  {
+    "pid":"system",
+    "location":"${PRODUCT_HOME}/config/container-system.properties",
+    "add":{
+      "org.osgi.service.http.port":"${DEFAULT_PORT|9900}",
+      "com.soa.http.host":"${DEFAULT_HOST|0.0.0.0}",
+      "container.name":"${CONTAINER_NAME}",
+      "org.eclipse.jetty.servlet.SessionCookie":"JSESSIONID_${nospace:CONTAINER_NAME}"
+    }
+  }
+]</pre>
+
+
+<h4 id="tasks">Tasks</h4>
+<p>A recipe's Tasks Section controls the execution of workflow tasks in an autonomous way. Workflow tasks would generally be associated with a wizard-style user interface. Tasks are modeled as a series of steps, each of which is executed by providing it with a set of properties. Tasks and steps provide metadata through the {<span class="apidoc_red">Tasks Service (anything we should link to?</span>} that defines the properties required to complete each step of a task. By listing the properties to be provided to individual steps, recipes can execute any arbitrary tasks without specific knowledge of the internals of the work to be done.</p>
+<pre>"tasks":{
+  "type":"array",
+  "description":"Task workflow actions",
+  "uniqueItems":true,
+  "items":{
+    "type":"object",
+    "required":[
+      "name"
+    ],
+    "properties":{
+      "name":{
+        "description":"The task name.",
+        "type":"string"
+      },
+      "presentationName":{
+        "description":"The task name.",
+        "type":"string"
+      },
+      "condition":{
+        "description":"An optional condition to evaluate that should yield true only if the task is to be executed.",
+        "type":"string"
+      },
+      "steps":{
+        "description":"A set of step configurations.",
+        "type":"array",
+        "items":{
+          "type":"object",
+          "required":[
+            "name"
+          ],
+          "properties":{
+            "name":{
+              "description":"The step name",
+              "type":"string"
+            },
+            "presentationName":{
+              "description":"The step name",
+              "type":"string"
+            },
+            "properties":{
+              "description":"Property values for this step",
+              "type":"object"
+            }
+          }
+        }
+      }
+    }
+  }
+}</pre>
+<p>The example below illustrates how database configuration for a MySQL server might be done using a task definition. Note that the ordering of steps in the recipe is not relevant, ordering is controlled by the Task Service and by the dependencies declared by each task definition. Also, any defined defaults for property values are used, so it is valid to omit anywhere the default is sufficient, or even to specify an empty properties section if the defaults are acceptable.</p>
+<pre>"tasks":[
+  {
+    "name":"com.soa.database",
+    "steps":[
+      {
+        "name":"db.config.action",
+        "properties":{
+          "db.config.action":"create.new.database"
+        }
+      },
+      {
+        "name":"select.database",
+        "properties":{
+          "database.selected":"mysql"
+        }
+      },
+      {
+        "name":"set.database.options",
+        "properties":{
+          "admin.username":"${DB_USERNAME|root}",
+          "admin.password":"${DB_PASSWORD|password}",
+          "user":"${DB_USERNAME|user123}",
+          "password":"${DB_PASSWORD|password}",
+          "server":"${DB_SERVER|localhost}",
+          "port":"${DB_PORT|3306}",
+          "database":"${DB_NAME|mydb}"
+        }
+      }
+    ]
+  }
+]</pre>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h3 id="property_substitution">Property Substitution</h3>
+<p>As some of the examples have shown, in many places recipes can accept variables defined using an Ant-like syntax. Variables can be passed into recipes in several ways, including:</p>
+<ul>
+	<li>By using system properties</li>
+	<li>By defining environment variables</li>
+	<li>From a file, when using the platform recipe script</li>
+</ul>
+<p>Supplementary information about property substitution is below.</p>
+<dl>
+	<dt>Simple Usage</dt>
+	<dd>As with Ant, variable names are declared within the standard naming pattern, <strong>${&lt;variable name&gt;}</strong>.</dd>
+	<dt>Defaults</dt>
+	<dd>Defaults can be specified using a pipe between the variable name and the default value, as <strong>${&lt;variable name&gt;|&lt;default value&gt;}</strong>. For example <strong>${PM_PORT|9900}</strong>.</dd>
+	<dt>Directives</dt>
+	<dd>You can use directives to condition values. The currently defined directives are:</dd>
+</dl>
+<ul>
+	<li><strong>nospace</strong>&#8212;Replaces all spaces with an underscore to make the value safe in situations that cannot tolerate spaces in values.</li>
+	<li><strong>hash&#8212;</strong>From the value, generates a hash that is compatible with the general password hashing algorithm used by the platform.</li>
+	<li><strong>url</strong>&#8212;Ensures that the value is a URL. This is particularly useful to translate file names into URLs.</li>
+	<li><strong>abs</strong>&#8212;Interprets the value as a path and converts it to an absolute pathname.</li>
+</ul>
+<dl>
+	<dd>Directives <strong>precede</strong> the variable name, and are separated from the name using a colon (<span class="apidoc_code">:</span>). For example <strong>${nospace:CONTAINER_NAME}</strong>. Directives are applied after any defaults have been resolved.</dd>
+	<dt>Macros</dt>
+	<dd>Macros are used to calculate defaults rather than using a static value. The macros currently defined are:</dd>
+	</dl>
+<ul>
+	<li><strong>uuid()</strong>&#8212;Generates a UUID, for example <strong>${NODE_ID|uuid()}</strong>.</li>
+	<li><strong>uuid32()</strong>&#8212;Generates a UUID with only 32 characters. This is a constraint on key lengths imposed by PM. For example <strong>${CONTAINER_KEY|uuid32()}</strong>.</li>
+	<li><strong>now()</strong>&#8212;The current time is available using the now() macro. The value is in milliseconds since epoch form.</li>
+	<li><strong>hostname()</strong>&#8212;Returns the hostname of the machine running the recipe.</li>
+</ul>
+<dl>
+	<dd>You can also use macros on their own, without an associated property name. For example, to get the current timestamp, you can use the following:
+		<pre>${now()}</pre></dd>
+</dl>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h3 id="recipes_running">Running Recipes: Configuring Containers</h3>
+<p>The most common way to use recipes is through the new <span class="apidoc_code">akana.container</span> Python module. This is an updated version of the legacy <span class="apidoc_code">soa.container</span> module that has traditionally been used to create container instances. The new module also allows containers to be created, but all logic is encapsulated in recipes rather than embedded in Java or Python code.</p>
+<p>The platform also includes a basic set of recipes in the <strong>$INSTALL_DIR/recipes</strong> directory. These recipes allow for the creation of basic container, and are often used by higher-level recipes to establish the foundation for other product features. Generally, additional recipes are placed into $INSTALL_DIR/recipes when the deployment ZIP files for individual products are expanded.</p>
+<p>Using the <span class="apidoc_code">akana.container</span> module is quite simple. From the <strong>$INSTALL_DIR/bin</strong> directory, it is as simple as:</p>
+<pre>&gt; ./jython.sh -m akana.container --recipe &lt;recipe name&gt;</pre>
+<p>This is the most basic usage syntax. The -m option tells Jython to use the <span class="apidoc_code">akana.container</span> module. In general however, recipes require properties in order to control the configuration. These can be passed in using multiple mechanisms.</p>
+
+
+<h4 id="recipe_properties">Recipe Properties</h4>
+<p>As mentioned earlier, all properties in a recipe are identified using an Ant-like syntax: <span class="apidoc_code">${&lt;property name&gt;}</span>. Recipes can extract properties from a number of places. The system searches for a match for property definitions in these locations, in order:</p>
+<ol>
+	<li>In any configured properties files.</li>
+	<li>In system properties.</li>
+	<li>In environment variables.</li>
+</ol>
+<p>To use a properties file, use the --props command-line option:</p>
+<pre>&gt; ./jython.sh -m akana.container --recipe &lt;recipe name&gt; --props recipe.properties</pre>
+<p>Properties files are quite powerful, because any properties go through variable substitution. In other words, values in a properties file can include references to other properties from the properties file, from system properties, or from environment variables. This allows properties files to be a little more general. It also allows properties files to map system or environment variables to the property names expected by any executed recipes. For example, the following properties file could be used to create a basic container:</p>
+<pre>INSTALL_DIR=${user.dir}/..
+CONTAINER_NAME=${container.name}
+DEFAULT_PORT=${default.port}</pre>
+<p>If the recipe is executed from the installation's <span class="apidoc_code">bin</span> directory, INSTALL_DIR is the top-level installation folder. In the same way, you can define the <span class="apidoc_code">container.name</span> and <span class="apidoc_code">default.port</span> properties as system properties or environment variables. You could even hard-code the values in the recipe.</p>
+
+
+<h4 id="phases_running">Phases</h4>
+<p>By default, the <span class="apidoc_code">akana.container</span> module runs through the phases: <span class="apidoc_code">create</span>, <span class="apidoc_code">deploy</span>, <span class="apidoc_code">update</span>, and <span class="apidoc_code">finalize</span>. As mentioned earlier, the <span class="apidoc_code">create</span> phase has special meaning to the <span class="apidoc_code">akana.container</span> module. If a recipe is executed in the <span class="apidoc_code">create</span> phase and the container does not already exist, the <span class="apidoc_code">akana.container</span> module tries to create the basic file structure for the instance using the config wizard logic. It then runs the <span class="apidoc_code">create</span> recipes and tries to start the container. If the instance already exists, any <span class="apidoc_code">create</span> phase recipes are ignored.</p>
+<p>You can  control what phases execute using the <span class="apidoc_code">--phases</span> or <span class="apidoc_code">-p</span> command-line options. For example, the command below executes only the <span class="apidoc_code">deploy</span> phase.</p>
+<pre>&gt; ./jython.sh -m akana.container --recipe &lt;recipe name&gt; --props recipe.properties --phases deploy</pre>
+<p>You can also use this to create custom phases and execute them in any sequence.</p>
+
+
+<h4 id="logging"> Logging</h4>
+<p>When running a recipe, logging is very helpful to track down problems or monitor the progress of a recipe. The recipe scripts use <a href="../../ag/glossary_pm_nd.htm#gl_pm_slf4j">SLF4J</a>, and since no default implementation is shipped with the scripts, it is sometimes necessary to provide one. To deploy a logger implementation, simply drop the JAR/bundle into $INSTALL_DIR/lib/script.</p>
+
+
+<h4 id="simple_logger">Simple Logger</h4>
+<p>The simplest SLF4J logger implementation is <strong>slf4j-simple</strong>, which logs everything to <strong>stderr</strong>. The JAR for this logger implementation is <strong>slf4j-simple-1.7.19.jar</strong>, available {<span class="apidoc_red">where? It was an SVN link that didn't work for me</span>}. If this is deployed to $INSTALL_DIR/lib/script, it is usually necessary to provide the following system properties in order to control the logger behavior:</p>
+<ul>
+	<li><pre>org.slf4j.simpleLogger.logFile=System.out</pre>
+	<p>By default, all output goes to <strong>stderr</strong>, which might not be useful. This option directs all output to <strong>stdout</strong>.</p></li>
+	<li><pre>org.slf4j.simpleLogger.defaultLogLevel=info</pre>
+	<p>The default log level is <strong>info</strong>, but it can be set to the usual selection of <strong>debug</strong>, <strong>error</strong>, <strong>warning</strong> etc. using this system property.</p></li>
+</ul>
+<p>To execute a recipe using the simple logger, the command line might look like the below:</p>
+<pre>&gt; ./jython.sh -Dorg.slf4j.simpleLogger.logFile=System.out -m akana.container --recipe &lt;recipe name&gt; --props &lt;properties file&gt;</pre>
+
+
+<h4 id="running_recipes_remotely">Running Recipes Remotely</h4>
+<p>The <span class="apidoc_code">akana.container</span> module runs in the same deployment as the target container. This allows it to create and control instances. However, recipes can be executed remotely against a container using only the container URL (and the appropriate credentials). The container must already be running, since it cannot be created or started remotely. The <span class="apidoc_code">create</span> phase is ignored when executing remotely.</p>
+<p>To run a recipe against a remote instance, use the <span class="apidoc_code">akana.recipe</span> module. For example:</p>
+<pre>&gt; ./jython.sh -m akana.recipe --recipe &lt;recipe name&gt; --url http://localhost:9900 --user administrator --password password</pre>
+<p>The parameters are:</p>
+<ul>
+	<li><strong>--recipe</strong> Specifies the recipe location.</li>
+	<li><strong>--url</strong> The URL of the instance to run the recipe against. Only the scheme, host, and port are relevant.</li>
+	<li><strong>--user</strong> The username to use when running the recipe.</li>
+	<li><strong>--password</strong> The password corresponding to the user name.</li>
+	<li><strong>--props</strong> The location of a properties file to use.</li>
+	<li><strong>--phases</strong> A colon-separated list of phases to execute. By default, this is deploy:update:finalize.</li>
+</ul>
+<p><a href="#top">back to top</a></p>
