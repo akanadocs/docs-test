@@ -26,6 +26,7 @@ nav-title: Using FreeMarker
 		<ul>
 			<li><a href="#freemarker_01_01">FreeMarker templates</a></li>
 			<li><a href="#freemarker_01_02">Dot Notation</a></li>
+			<li><a href="#freemarker_01_02b">Array Notation</a></li>
 			<li><a href="#freemarker_01_03">Downloading the template-tester utilities</a></li>
 		</ul>
 		</li>
@@ -71,7 +72,14 @@ nav-title: Using FreeMarker
 <p>This is a very important point. The value that you insert <strong>must</strong> be a scalar value. If your user value was a complex object, and you tried <strong>${user}</strong> in your template, the template rendering would fail with an error something like the below:</p>
 <pre>"${...}" content: Expected a string or something automatically convertible to string (number, date or boolean), but this has evaluated to an extended_hash.</pre>
 <p>The FreeMarker process activity replaces the content of the specified message variable with the result of running a template over the data model.</p>
+<p>You can also use the special &quot;D&quot; prefix to define a default namespace so that you can use dot notation. See <a href="#ex_airportapi_01">Airport API example: Approach 1</a> below.</p>
 <p>This document provides a couple of examples showing ways that you can use this activity for some common use cases.</p>
+
+
+<h4 id="freemarker_01_02b">Array Notation</h4>
+<p>You can also address elements using array notation rather than dot notation.</p>
+<p>You can access the XML document structure by using the <strong>contentAsXml</strong> helper method, and then addressing the elements. For any XML document using namespaces, the first step is to define the namespaces using the FreeMarker <strong>ns_prefixes</strong> tag. Using that, it's possible to address elements using array notation.</p>
+<p>See <a href="#ex_notation_array">Example using array notation</a> below.</p>
 
 
 <h4 id="freemarker_01_03">Downloading the template-tester utilities</h4>
@@ -145,7 +153,7 @@ nav-title: Using FreeMarker
 &lt;/br:add&gt;</pre>
 <p>The basic idea is that we are going to access the XML document structure by using the <strong>contentAsXml</strong> helper method, and then addressing the elements. For any XML document using namespaces, the first step is to define the namespaces using the FreeMarker <strong>ns_prefixes</strong> tag. Using that, it's possible to address elements using array notation (not dot notation).</p>
 
-<h5>Example using array notation</h5>
+<h5 id="ex_notation_array">Example using array notation</h5>
 <p>Below is an example using array notation, with sample output.</p>
 <p><strong>Example:</strong></p>
 <pre>&lt;#ftl ns_prefixes={&quot;br&quot;:&quot;http://demo.akana.com/borrower&quot;}&gt;
@@ -178,14 +186,16 @@ nav-title: Using FreeMarker
 &lt;/soapenv:Envelope&gt;</pre>
 <p>For this example, there are two approaches you could use to get the value of the input parameter, airportCode, using FreeMarker. Both are shown below.</p>
 
-<h5>Approach 1</h5>
+<h5 id="ex_airportapi_01">Airport API example: Approach 1</h5>
+<p>The example below uses dot notation (see <a href="#freemarker_01_02">Dot Notation</a> above).</p>
 <pre>&lt;#ftl ns_prefixes={&quot;D&quot;:&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;,&quot;sc&quot;:&quot;https://soa.smext.abc.org/asws/schemas&quot;}&gt;
 &lt;#assign xmlmsg = message.contentAsXml&gt;
 
 { &quot;airportCode&quot;: &quot;${xmlmsg.Envelope.Body[&quot;sc:GET_getAirportStatus_InputMessage&quot;][&quot;sc:airportCode&quot;]}&quot; }
 </pre>
 
-<h5>Approach 2</h5>
+<h5 id="ex_airportapi_02">Airport API example: Approach 2</h5>
+<p>The example below uses the FreeMarker <strong>ns_prefixes</strong> tag so that elements can be addressed using array notation (see <a href="#freemarker_01_02b">Array Notation</a> above).</p>
 <pre>&lt;#ftl ns_prefixes={&quot;se&quot;:&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;,&quot;sc&quot;:&quot;https://soa.smext.abc.org/asws/schemas&quot;}&gt;
 
 { &quot;airportCode&quot; : &quot;${message.contentAsXml[&quot;se:Envelope&quot;][&quot;se:Body&quot;][&quot;sc:GET_getAirportStatus_InputMessage&quot;][&quot;sc:airportCode&quot;]}&quot; }
