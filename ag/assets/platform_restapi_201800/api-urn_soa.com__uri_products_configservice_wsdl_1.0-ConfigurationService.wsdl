@@ -7,16 +7,16 @@
 <xs:element name="configurations" type="tns:configurations"/>
 <xs:element name="factories" type="tns:factories"/>
 <xs:element name="propertyMetadata" type="tns:propertyMetadata"/>
+<xs:complexType name="factories"><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="factory" type="xs:string"/></xs:sequence></xs:complexType>
 <xs:complexType name="configurationInfo"><xs:sequence><xs:element minOccurs="0" name="pid" type="xs:string"/><xs:element minOccurs="0" name="factoryPid" type="xs:string"/><xs:element minOccurs="0" name="bundleLocation" type="xs:string"/><xs:element minOccurs="0" name="links"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="link" type="ns1:link"/></xs:sequence></xs:complexType></xs:element><xs:element minOccurs="0" name="properties"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="property" type="ns1:nameValuePair"/></xs:sequence></xs:complexType></xs:element><xs:element minOccurs="0" name="metadata"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="definition" type="tns:propertyMetadata"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType>
 <xs:complexType name="propertyMetadata"><xs:sequence><xs:element minOccurs="0" name="defaultValue" type="xs:string"/><xs:element minOccurs="0" name="description" type="xs:string"/><xs:element minOccurs="0" name="id" type="xs:string"/><xs:element minOccurs="0" name="name" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="options" nillable="true" type="xs:string"/><xs:element name="required" type="xs:boolean"/><xs:element minOccurs="0" name="type" type="xs:string"/></xs:sequence></xs:complexType>
-<xs:complexType name="factories"><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="factory" type="xs:string"/></xs:sequence></xs:complexType>
 <xs:complexType name="configurations"><xs:sequence><xs:element minOccurs="0" name="links"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="link" type="ns1:link"/></xs:sequence></xs:complexType></xs:element><xs:element minOccurs="0" name="pids"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="pid" type="tns:configurationInfo"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType>
 </xs:schema>
     <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/products/admin/console/common/1.0" version="1.0" xmlns:tns="http://soa.com/products/admin/console/common/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:element name="NameValuePair" type="tns:nameValuePair"/>
 <xs:element name="link" type="tns:link"/>
-<xs:complexType name="link"><xs:sequence><xs:element minOccurs="0" name="href" type="xs:string"/><xs:element minOccurs="0" name="rel" type="xs:string"/><xs:element minOccurs="0" name="title" type="xs:string"/><xs:element minOccurs="0" name="type" type="xs:string"/></xs:sequence></xs:complexType>
 <xs:complexType name="nameValuePair"><xs:sequence><xs:element minOccurs="0" name="name" type="xs:string"/><xs:element minOccurs="0" name="value" type="xs:string"/></xs:sequence></xs:complexType>
+<xs:complexType name="link"><xs:sequence><xs:element minOccurs="0" name="href" type="xs:string"/><xs:element minOccurs="0" name="rel" type="xs:string"/><xs:element minOccurs="0" name="title" type="xs:string"/><xs:element minOccurs="0" name="type" type="xs:string"/></xs:sequence></xs:complexType>
 </xs:schema>
   </wsdl:types>
   <wsdl:message name="getFactoriesResponseMessage">
@@ -99,18 +99,18 @@
   </wsdl:message>
   <wsdl:message name="getFactoriesRequestMessage">
   </wsdl:message>
-  <wsdl:message name="getConfigurationsRequestMessage">
-    <wsdl:part name="filter" type="xs:string">
-    </wsdl:part>
-    <wsdl:part name="brief" type="xs:boolean">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="getPropertyRequestMessage">
     <wsdl:part name="pid" type="xs:string">
     </wsdl:part>
     <wsdl:part name="name" type="xs:string">
     </wsdl:part>
     <wsdl:part name="decrypt" type="xs:boolean">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getConfigurationsRequestMessage">
+    <wsdl:part name="filter" type="xs:string">
+    </wsdl:part>
+    <wsdl:part name="brief" type="xs:boolean">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="createPropertyResponseMessage">
@@ -125,17 +125,23 @@
     <wsdl:part name="updateConfigurationResponse" element="nms2:configuration">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getPropertyResponseMessage">
+    <wsdl:part name="getPropertyResponse" element="nms1:NameValuePair">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="updateConfigurationRequestMessage">
     <wsdl:part name="pid" type="xs:string">
     </wsdl:part>
     <wsdl:part name="body" element="nms2:configuration">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getPropertyResponseMessage">
-    <wsdl:part name="getPropertyResponse" element="nms1:NameValuePair">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:portType name="ConfigurationServicePortType">
+    <wsdl:operation name="getProperty">
+      <wsdl:input message="tns:getPropertyRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getPropertyResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="createProperty">
       <wsdl:input message="tns:createPropertyRequestMessage">
     </wsdl:input>
@@ -196,15 +202,39 @@
       <wsdl:output message="tns:createFactoryConfigurationResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getProperty">
-      <wsdl:input message="tns:getPropertyRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getPropertyResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="ConfigurationServiceBinding" type="tns:ConfigurationServicePortType">
     <shttp:binding/>
+    <wsdl:operation name="getProperty">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /{pid}/{name}</sdoc:displayName><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get property]]></sdoc:summary><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Fetch a specific property.</p>
+<h4>Request:</h4>
+<pre><code>GET /admin/config/com.akana.test/prop1 HTTP/1.1
+Accept: application/json
+</code></pre>
+<h4>Responses:</h4>
+<ul>
+<li>HTTP/1.1 200 OK.  If successful.</li>
+<li>HTTP/1.1 404 Not Found. If the specified PID or property name is not found</li>
+</ul>
+<h4>Response:</h4>
+<pre><code>HTTP/1.1 200 OK
+Content-Type:application/json; charset=UTF-8
+
+{
+    "name": "prop1",
+    "value": "value1"
+}
+</code></pre>]]></sdoc:description></wsdl:documentation>
+    <shttp:operation location="/{pid}/{name}" method="GET" outputSerialization="application/json,application/xml"/>
+      <wsdl:input>
+    <shttp:input name="pid" part="pid" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The configuration PID.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+    <shttp:input name="name" part="name" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The property name.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+    <shttp:input name="decrypt" part="decrypt" type="query"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Should the value be decrypted?]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getPropertyResponse" part="getPropertyResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="createProperty">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /{pid}/{name}</sdoc:displayName><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Create property]]></sdoc:summary><sdoc:response code="201" message="Created" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[The specified property has been created.]]></sdoc:description></sdoc:response><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Create a property for an existing PID.</p>
 <h4>Request:</h4>
@@ -662,36 +692,6 @@ Location: http://localhost:9900/admin/config/com.akana.test.factory.a7df3a9e-924
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="createFactoryConfigurationResponse" part="createFactoryConfigurationResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getProperty">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /{pid}/{name}</sdoc:displayName><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get property]]></sdoc:summary><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Fetch a specific property.</p>
-<h4>Request:</h4>
-<pre><code>GET /admin/config/com.akana.test/prop1 HTTP/1.1
-Accept: application/json
-</code></pre>
-<h4>Responses:</h4>
-<ul>
-<li>HTTP/1.1 200 OK.  If successful.</li>
-<li>HTTP/1.1 404 Not Found. If the specified PID or property name is not found</li>
-</ul>
-<h4>Response:</h4>
-<pre><code>HTTP/1.1 200 OK
-Content-Type:application/json; charset=UTF-8
-
-{
-    "name": "prop1",
-    "value": "value1"
-}
-</code></pre>]]></sdoc:description></wsdl:documentation>
-    <shttp:operation location="/{pid}/{name}" method="GET" outputSerialization="application/json,application/xml"/>
-      <wsdl:input>
-    <shttp:input name="pid" part="pid" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The configuration PID.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-    <shttp:input name="name" part="name" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The property name.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-    <shttp:input name="decrypt" part="decrypt" type="query"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Should the value be decrypted?]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getPropertyResponse" part="getPropertyResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
