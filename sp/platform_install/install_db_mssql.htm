@@ -1,0 +1,151 @@
+---
+layout: page
+title: Microsoft SQL Server Database Installation and Configuration
+description: Learn how to set MySQL database properties for your installation.
+product: sp
+category: gs
+weight: 16
+sub-nav-class: Installation - Akana API Platform
+type: page
+nav-title: Microsoft SQL Server Database
+---
+<h2 id="top">Microsoft SQL Server Database Installation and Configuration</h2>
+<p>If you're using Microsoft SQL Server, the information below will help you get set up.</p>
+<p>You can also refer to the applicable section of the Install Guide: <a href="installing_akana_api_platform.htm#notes_database_ms_sql_server">Database notes: Microsoft SQL Server</a>.</p>
+<p>
+<a href="installing_akana_api_platform.htm" class="button secondary">Installing the Akana API Platform 2018.0.x</a>
+
+</p>
+<div class = "divider1"></div>
+
+
+
+<h3 style="color: gray;">Table of Contents</h3>
+<ul>
+	<li><a href="#s01">Downloading the Microsoft SQL Server Driver</a></li>
+	<li><a href="#s02">Certificate requirements</a></li>
+	<li><a href="#s03">Connection String Properties</a></li>
+	<li><a href="#s04">Changing the Akana Platform to use a MS SQL Server Driver</a></li>
+	<li><a href="#s05">MS SQL Server: Troubleshooting</a></li>
+</ul>
+<div class = "divider1"></div>
+
+
+
+<h3 id="s01">Downloading the Microsoft SQL Server Driver</h3>
+<p>You can download the driver from the following URL:</p>
+<p><a href="https://www.microsoft.com/en-us/download/details.aspx?id=57175" title="Download locatoin for MSSQL driver, JAR file" target="_blank">https://www.microsoft.com/en-us/download/details.aspx?id=57175</a></p>
+<p>File name after extracting from the .<strong>exe</strong> file:</p>
+<pre>mssql-jdbc-7.0.0.jre8.jar</pre>
+
+
+
+<h3 id="s02">Certificate requirements</h3>
+<p>The certificate requirements are:</p>
+<ul>
+	<li>Certificate must be present in the Local computer certificate store or the current user certificate store.</li>
+	<li>Certificate age must be present within the validity period.</li>
+	<li>Certificate must be meant for server authentication. (EKU should specify Server Authentication [1.3.6.1.5.5.7.3.1])</li>
+	<li>Certificate must be created using the KEY_SPEC option of AT_KEYEXCHANGE (KEY_SPEC=1)</li>
+	<li>Common name of the certificate should be the host name or the FQDN of the server computer.</li>
+</ul>
+
+
+
+<h3 id="s03">Connection String Properties</h3>
+<p>The connection strip properties are: {<span class="apidoc_red">what are connection string properties?</span>}</p>
+<ul>
+	<li>encrypt=true : will tell driver to encrypt</li>
+	<li>trustServerCertificate=true : Driver will not validate certificate and will always trust it</li>
+	<li>trustServerCertificate=false : Driver will validate SQL Server certificate against JVM default truststore or given trust material that is supplied at connection time by trustStore and</li>
+	<li>trustStorePassword connection properties.</li>
+	<li>trustStore=C:\akana\plat\akana-qa-35-sqlserver.jks : path including filename to the certificate trustStore file</li>
+	<li>trustStorePassword=password : trustStore password</li>
+	<li>hostNameInCertificate=akana-qa-35</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="s04">Changing the Akana Platform to use a MS SQL Server Driver</h3>
+<p>Follow these procedures:</p>
+<ul>
+	<li><a href="#proc_mssql_platform">Changing the Akana Platform to use the MS Driver</a>: in all cases</li>
+	<li><a href="#proc_mssql_encryption">Configuring MS SQL Driver to use SSL Encryption</a>: If you want to use encryption: complete the first procedure and then follow this one</li>
+</ul>
+
+<h5 id="proc_mssql_platform">Changing the Akana Platform to use the MS Driver</h5>
+<ol>
+	<li>Place the jre8 driver in the following directory: <strong>{install_dir}/instances/{instance}/deploy</strong>.</li>
+	<li>Log in to the Akana Administration Console and go to <strong>Configuration</strong> &gt; <strong>Settings</strong>.</li>
+	<li>In the <strong>com.soa.database.config</strong> category, change the settings as follows:
+<ol>
+		<li><strong>driver, old value</strong>: net.sourceforge.jtds.jdbc.Driver</li>
+		<li><strong>driver, new value</strong>: com.microsoft.sqlserver.jdbc.SQLServerDriver</li>
+		<li><strong>url, old value</strong>: jdbc:jtds:sqlserver://{server}:{port}/{database};user={user};password={password}</li>
+		<li><strong>url, new value</strong>: jdbc:sqlserver://{server}:{port}/{database};user={user};password={password}</li>
+	</ol>
+	</li>
+	<li>Restart the containers.</li>
+</ol>
+
+<h5 id="proc_mssql_encryption">Configuring MS SQL Driver to use SSL Encryption</h5>
+<ol>
+	<li>Set up the platform to use Microsoft SQL driver, following the procedure above.</li>
+	<li>Generate and register the server certificate with the SQL Server Configuration Manager. Follow the instructions in this link:
+		<p><a href="https://blogs.msdn.microsoft.com/sqlserverfaq/2016/09/26/creating-and-registering-ssl-certificates/" title="Link to Microsoft article "creating and registering ssl certificates"" target="_blank">https://blogs.msdn.microsoft.com/sqlserverfaq/2016/09/26/creating-and-registering-ssl-certificates/</a></p>
+	<p><strong>Note</strong>: this post has a good list of prerequisites. This example creates the certificate using the powershell option</p></li>
+	<li>Restart SQL Server.</li>
+	<li>Use one of the following two two ways to use encryption {<span class="apidoc_red">where is this set up?</span>}
+<ol>
+			<li><strong>Basic trust</strong>: encrypt=true;trustServerCertificate=true</li>
+			<li><strong>Verify Certificate</strong>: encrypt=true;trustServerCertificate=false;hostNameInCertificate=akana-qa-35</li>
+			</ol>
+	</li>
+	<li>Optional: If you chose to verify the certificate, use Keystore Explorer to import the server certificate into the platform jre <strong>cacerts</strong> file.</li>
+	<li>Start up the containers and verify that they connect.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="s05">MS SQL Server: Troubleshooting</h3>
+<p>Refer to the following troubleshooting information:</p>
+<ul>
+	<li><a href="#ts_db_mssql_01">Issues with restarting Microsoft SQL Server</a></li>
+</ul>
+
+<h5 id="ts_db_mssql_01">Issues with restarting Microsoft SQL Server</h5>
+<p>If you run into issues with restarting SQL Server, check the article below. You might need to change the user login for the SQL Server process in SQL Server Configuration Manager.</p>
+<p><a href="https://social.msdn.microsoft.com/Forums/sqlserver/en-US/db68b3bf-33a8-42d6-8dac-f7229a2f9cde/sql-server-express-2008-instance-fails-to-start?forum=sqlexpress" title="Link to article re changing user login for SQL Server process" target="_blank">https://social.msdn.microsoft.com/Forums/sqlserver/en-US/db68b3bf-33a8-42d6-8dac-f7229a2f9cde/sql-server-express-2008-instance-fails-to-start?forum=sqlexpress</a></p>
+
+<h5 id="db_mssql_powershell">Example Powershell command to create certificate</h5>
+<p>Example command:</p>
+<pre>New-SelfSignedCertificate -DnsName akana-qa-35 -CertStoreLocation cert:\LocalMachine\My -friendlyName akana-qa-35 -KeySpec KeyExchange</pre>
+<p><a href="#top">back to top</a></p>
+
+
+
+<div class = "divider1"></div>
+
+
+
+
+<h3 id="related_topics">Related Topics</h3>
+<div class="relatedlinks" id="install">
+<ul>
+	<li><a href="../upgrade/upgrading_akana_api_platform_84_2018.htm">Upgrading Akana API Platform from Version 8.4x to Version 2018.0.x</a></li>
+	<li><a href="../upgrade/upgrading_akana_api_platform_82_84.htm">Upgrading Akana API Platform from Version 8.2 to Version 8.4x</a></li>
+	<li><a href="../upgrade/upgrading_min_downtime.htm">Use Case: Upgrading with Minimum Downtime</a></li>
+	<li><a href="../upgrade/upgrading_micro.htm">Minor-Version Update Notes</a></li>
+</ul>
+<ul>
+	<li><a href="../platform_install/installing_akana_api_platform.htm">Installing the Akana API Platform 2018.0.0</a></li>
+	<li><a href="../platform_install/installing_akana_api_platform_v84.htm">Installing the Akana API Platform 8.4x</a></li>
+	<li><a href="../platform_install/installing_akana_api_platform_v82.htm">Installing the Akana API Platform 8.2x</a></li>
+	<li><a href="../platform_install/implementation_planning.htm">Planning Your Implementation</a></li>
+	<li><a href="../platform_install/install_cm_jython_script.htm">Installation Jython Script</a></li>
+	<li><a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a></li>
+	<li><a href="../platform_install/install_es_secure_tc.htm">Configuring Elasticsearch with security</a></li>
+</ul>
+</div>
