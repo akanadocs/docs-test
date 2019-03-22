@@ -1,0 +1,312 @@
+---
+layout: page
+title: Automation Reference Guide
+description: A simple end-to-end example of using automation to install the platform.
+product: sp
+category: ref
+weight: 05
+sub-nav-class: Automation
+type: page
+nav-title: Automation End to End
+---
+<h2 id="top">Automation End to End</h2>
+<p>A simple end-to-end example of using automation to install the platform.</p>
+<!--<p><a href="../admin_console/xxx.htm" class="button secondary">xxx</a></p>-->
+
+<h5 class="stamp">Supported Platforms: 2018.0.x</h5>
+<div class = "divider1"></div>
+
+
+
+<h3 style="color: gray;">Table of Contents</h3>
+
+<h5 style="color: gray;"><a href="#h_overview">Overview</a></h5>
+<ol class="table_of_contents">
+	<li><a href="#recipe_benefits">Benefits of using automation recipes</a></li>
+	<li><a href="#overview_e2e">Overview of end-to-end scenario</a></li>
+</ol>
+
+<h5 style="color: gray;"><a href="#h_container_basic">Adding a basic PM container</a></h5>
+<ol class="table_of_contents">
+	<li><a href="#download_extract">Download and extract the installation files</a></li>
+	<li><a href="#logging_file_place">Put the logging file in place to enable logging</a></li>
+	<li><a href="#properties_file_set_up">Set up the properties file</a></li>
+	<li><a href="#variables_export">Export JYTHONPATH and JAVA_HOME variables</a></li>
+	<li><a href="#recipe_run">Run the recipe using the automation script</a></li>
+	<li><a href="#run_in_browser">Run the Akana Administration Console in the browser</a></li>
+	<li><a href="#ts_automation">Running automation recipes: troubleshooting</a></li>
+<!--	<li><a href="#s01_container_basic">Creating a basic container using recipes</a></li>
+	<li><a href="#s02_container_gateway">Adding a Gateway to the basic container</a></li>
+	<li><a href="#s03_container_cm">Adding Community Manager to create a full deployment</a></li>-->
+</ol>
+
+<!--<h5 style="color: gray;"><a href="#h_container_xxx">Adding a xxx container</a></h5>
+<ol class="table_of_contents">
+	<li><a href="#xxx">xxx</a></li>
+</ol>
+-->
+
+
+
+<div class = "divider1"></div>
+<h3 id="h_overview">Overview:</h3>
+
+
+
+<h3 id="recipe_benefits">Benefits of using automation recipes</h3>
+<p>Some of the benefits of using automation recipes:</p>
+<ul>
+	<li>Automation is much faster than manual installation.</li>
+	<li>Using recipes makes it easier to eliminate human error from the installation and configuration process.</li>
+	<li>Recipes make it possible to capture custom configurations and re-use them.</li>
+</ul>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h3 id="overview_e2e">Overview of end-to-end scenario</h3>
+<p>In this end-to-end scenario we will create a basic container using automation, at the Linux command line. The scenario includes:</p>
+<ol>
+	<li>Downloading and unzipping the installation files</li>
+	<li>Setting up specific files, variables, and properties so that the script will work correctly. This includes:
+		<ul>
+			<li>Putting the logging file in place to enable logging.</li>
+			<li>Writing the properties file.</li>
+		</ul>
+		</li>
+	
+	<li>Using the automation script to run a basic recipe to create the container.</li>
+	<li>Opening the Akana Administration Console user interface for the container in the browser.</li>
+</ol>
+<p>Notes about this scenario:</p>
+<ul>
+	<li>This example shows using MobaXTerm to install remotely on a Linux machine. There are two sessions going: SSH and SFTP.</li>
+	<li>In this example, the user home directory is /user/home</li>
+	<li>In this example, the install dir is /user/home/akana</li>
+	<li>You can encrypt passwords. This example does not use encryption.</li>
+</ul>
+<p><a href="#top">back to top</a></p>
+
+
+
+<div class = "divider1"></div>
+<h3 id="h_container_basic">Adding a basic PM container:</h3>
+
+
+
+<h3 id="download_extract">Download and extract the installation files</h3>
+<p>Brief instructions are below:</p>
+<ol>
+	<li><a href="#files_download">Download files</a></li>
+	<li><a href="#files_extract">Extract files</a></li>
+</ol>
+<p>For detailed instructions on downloading and extracting the files, refer to the sections in the installation documentation:</p>
+<ul>
+	<li><a href="../platform_install/installing_akana_api_platform.htm#gather_zip_files">Step 1: Gather ZIP file or files and download to a temporary folder</a></li>
+	<li><a href="../platform_install/installing_akana_api_platform.htm#unzip_files">Step 2: Extract installation files in the correct sequence</a></li>
+</ul>
+
+<h5 id="files_download">Download files</h5>
+<p>For this example, we're going to create a 2018.0.7 basic container. As the starting point, download these four files:</p>
+<ul>
+	<li>akana-api-platform-2018.0.0.396.zip</li>
+	<li>akana-api-platform-2018.0.7.zip</li>
+	<li>akana-platform-2018.0.6.zip</li>
+	<li>akana-platform-linux-jre-2018.0.0.19.zip</li>
+</ul>
+
+<p>For this example, there is already a /home/user/akana folder with the above four ZIP files in it, as shown below.</p>
+<p><img src="assets/automation01_basic_01.jpg" alt="Setting up the files" /></p>
+
+<h5 id="files_extract">Extract files</h5>
+<p>In the /home/user/akana folder, unzip the files in this sequence, always choosing to overwrite existing files if they already exist:</p>
+<ul>
+	<li>
+		<pre>unzip -o akana-platform-linux-jre-2018.0.0.19.zip</pre>
+	</li>
+	<li>
+		<pre>unzip -o akana-platform-2018.0.6.zip</pre>
+	</li>
+	<li>
+		<pre>unzip -o akana-api-platform-2018.0.0.396.zip</pre>
+	</li>
+	<li>
+		<pre>unzip -o akana-api-platform-2018.0.7.zip</pre>
+	</li>
+</ul>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h3 id="logging_file_place">Put the logging file in place to enable logging</h3>
+<p>When running a recipe, logging is very helpful to track down problems or monitor the progress of a recipe. The recipe scripts use <a href="http://docs.akana.com/docs-test/ag/glossary_pm_nd.htm#gl_pm_slf4j">SLF4J</a>, and since no default implementation is shipped with the scripts, it is sometimes necessary to provide one. To deploy a logger implementation, simply drop the JAR/bundle into $INSTALL_DIR/lib/script.</p>
+<p>So, the next step is to copy the <strong>slf4j-simple-1.7.19.jar</strong> logger file, which is part of the installation, to the $INSTALL_DIR/lib/script folder.</p>
+<p>For this example, from the/home/akana folder, run the following:</p>
+<pre>cp lib/ext/slf4j-simple-1.7.19.jar lib/script/</pre>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h3 id="properties_file_set_up">Set up the properties file</h3>
+<p>For this example, we're going to define a few key properties via a properties file, which the automation script will reference.</p>
+<p>The filename and location don't matter as long as you reference the file correctly in the automation script. In this example we're creating a file named <strong>recipe.properties</strong> and placing it in the \bin directory.</p>
+<p>File contents for this example:</p>
+<pre>INSTALL_DIR=${user.dir}/..
+CONTAINER_NAME=akanaPM1
+DEFAULT_PORT=9900</pre>
+<p>For general information on the properties file, see <a href="automation_ref.htm#recipe_properties">Recipe Properties</a> in the automation reference guide.</p>
+<p>First, create the properties file. For example:</p>
+<pre>vi recipe.properties</pre>
+<p>Add the below contents to the file:</p>
+<pre>INSTALL_DIR=/home/user/akana
+CONTAINER_NAME=pm_auto_01
+DEFAULT_PORT=9900</pre>
+<p>Save the file.</p>
+<h5 id="sxxx_recipe_properties2">Determining values for properties used in the recipe</h5>
+<p>The recipes needs certain values, such as the name of your installation directory and the name of the container you're creating.</p>
+<p>In a manual installation, you provide these values in the installation wizard user interface. When using a recipe you can provide them:</p>
+<ol>
+	<li>In a properties file</li>
+	<li>System properties -- usually passed in at the command line using <strong>-D</strong>.</li>
+	<li>As environment variables</li>
+</ol>
+<p>In this example of creating a basic container, the values are defined in a properties file.</p>
+<p>There are two scenarios for property values:</p>
+<ul>
+	<li>Variables that have no default: if the value is not provided the recipe will fail.
+	<p>Examples: INSTALL_DIR, CONTAINER_NAME.</p></li>
+	<li>Variables that have default values defined in the recipe. If you want to use a different value you'll have to provide it. If not, the default value is used.
+	<p>Example: In the <a href="assets/bootstrap.json" target="_blank">bootstrap.json</a> recipe, the default port is defined as 9900 (line 16). In this example of creating a basic container we explicitly specify port 9900 in the properties file, but since that's the default it isn't really necessary.</p></li>
+</ul>
+<p><a href="#top">back to top</a></p>
+
+
+<h3 id="variables_export">Export JYTHONPATH and JAVA_HOME variables</h3>
+<p>You must set these variables so that the script finds the files it needs to run correctly.</p>
+<p>From the /akana/user/bin folder, run these two commands:</p>
+<pre>export JYTHONPATH=../scripts/Lib
+export JAVA_HOME=../jre</pre>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h3 id="recipe_run">Run the recipe using the automation script</h3>
+<p>In this example, the properties file is <strong>recipe.properties</strong>.</p>
+<p>therefore, the script command is (line break added for display purposes):</p>
+<pre>./jython.sh -Dorg.slf4j.simpleLogger.logFile=System.out -m akana.container 
+--recipe ../recipes/bootstrap.json --props recipe.properties</pre>
+<p>In the above:</p>
+<ul>
+	<li>./jython.sh
+	<p>Calls the jython script</p></li>
+	<li>-Dorg.slf4j.simpleLogger.defaultLogLevel=info -Dorg.slf4j.simpleLogger.logFile=System.out
+	<p>Sets the logging level</p></li>
+	<li>-m akana.container
+	<p>Specifies what the script is doing (<span class="apidoc_red">what is -m?</span>)</p></li>
+	<li>--home ..
+	<p>Sets the home directory</p></li>
+	<li>--recipe ../recipes/bootstrap.json
+	<p>Specifies the recipe to run</p></li>
+	<li>--props recipe.properties
+	<p>Tells the script to use a properties file and specifies the filename and location</p></li>
+</ul>
+<p>The result of running the last few steps at the command line is shown below.</p>
+<p><img src="assets/automation01_basic_02.jpg" alt="Running the script" /></p>
+<p>You can see from the above that the container was successfully created and started:</p>
+<pre>Waiting for container to start, status [STARTED]</pre>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h3 id="run_in_browser">Run the Akana Administration Console in the browser</h3>
+<p>You can now access the Akana Administration Console via the browser. In this example, the URL is:</p>
+<pre>ubu1664qa-17.akana.roguewave.com:9900/admin/login.html</pre>
+<!--<p>{xxx add a screen cap of the Admin Console when I can. It came up before but not not}</p>-->
+
+<p><a href="#top">back to top</a></p>
+
+
+
+<!--<div class = "divider1"></div>
+<h3 id="xxx">xxx:</h3>
+-->
+
+
+
+<!--<h3 id="s02_container_gateway">Adding a Gateway to the basic container</h3>
+<p>xxx</p>
+<p><a href="#top">back to top</a></p>-->
+
+
+
+<!--<h3 id="s03_container_cm">Adding Community Manager to create a full deployment</h3>
+<p>For later: pm-cm-all.json.</p>
+<p><a href="#top">back to top</a></p>-->
+
+
+
+<!--<h3 id="recipes_common_scenarios">Common recipe scenarios</h3>
+<p>Use the table below to determine which recipes to use for common installation and configuration scenarios.</p>
+<table class="doctable">
+	<thead>
+		<tr>
+			<th>To do this...</th>
+			<th>Use these recipes...</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>xxx</td>
+			<td>xxx</td>
+		</tr>
+		<tr>
+			<td>xxx</td>
+			<td>xxx</td>
+		</tr>
+	</tbody>
+</table>
+<p><a href="#top">back to top</a></p>-->
+
+
+
+
+<h3 id="ts_automation">Running automation recipes: troubleshooting</h3>
+<p>This section provides information about errors you might run into when running automation, and possible reasons/resolution.</p>
+<ul>
+	<li><a href="#ts_auto_typeerror">Problem: TypeError</a></li>
+</ul>
+
+<h5 id="ts_auto_typeerror">Problem: TypeError</h5>
+<p>You might encounter a TypeError such as the example shown below if you create the properties file on Windows. When running automation on Linux, it's best to create the properties file on Linux.</p>
+<pre>TypeError: cannot concatenate 'unicode' and 'NoneType' objects</pre>
+<p><a href="#top">back to top</a></p>
+
+<div class = "divider1"></div>
+
+
+
+<h3 id="related_topics">Related Topics</h3>
+<div class="relatedlinks" id="install">
+<ul>
+	<li><a href="../upgrade/upgrading_akana_api_platform_84_2018.htm">Upgrading Akana API Platform from Version 8.4x to Version 2018.0.x</a></li>
+	<li><a href="../upgrade/upgrading_akana_api_platform_82_84.htm">Upgrading Akana API Platform from Version 8.2 to Version 8.4x</a></li>
+	<li><a href="../upgrade/upgrading_min_downtime.htm">Use Case: Upgrading with Minimum Downtime</a></li>
+	<li><a href="../upgrade/upgrading_micro.htm">Minor-Version Update Notes</a></li>
+</ul>
+<ul>
+	<li><a href="../platform_install/installing_akana_api_platform.htm">Installing the Akana API Platform 2018.0.0</a></li>
+	<li><a href="../platform_install/installing_akana_api_platform_v84.htm">Installing the Akana API Platform 8.4x</a></li>
+	<li><a href="../platform_install/installing_akana_api_platform_v82.htm">Installing the Akana API Platform 8.2x</a></li>
+	<li><a href="../platform_install/implementation_planning.htm">Planning Your Implementation</a></li>
+	<li><a href="../platform_install/install_cm_jython_script.htm">Installation Jython Script</a></li>
+	<li><a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a></li>
+	<li><a href="../platform_install/install_es_secure_tc.htm">Configuring Elasticsearch with security</a></li>
+</ul>
+</div>
+
+
+
+
+</div>
+</body>
+</html>
