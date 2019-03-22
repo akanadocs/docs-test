@@ -116,7 +116,7 @@ nav-title: Automation End to End
 	<li>akana-platform-linux-jre-2018.0.0.19.zip</li>
 </ul>
 
-<p>For this example, there is already a /home/user/akana folder with the above four ZIP files in it, as shown below.</p>
+<p>The illustration below shows copying the files from another location so that the four files are in the akana directory.</p>
 <p><img src="assets/automation01_basic_01.jpg" alt="Setting up the files" /></p>
 
 <h5 id="files_extract">Extract files</h5>
@@ -140,7 +140,7 @@ nav-title: Automation End to End
 
 
 <h3 id="logging_file_place">Put the logging file in place to enable logging</h3>
-<p>When running a recipe, logging is very helpful to track down problems or monitor the progress of a recipe. The recipe scripts use <a href="http://docs.akana.com/docs-test/ag/glossary_pm_nd.htm#gl_pm_slf4j">SLF4J</a>, and since no default implementation is shipped with the scripts, it is sometimes necessary to provide one. To deploy a logger implementation, simply drop the JAR/bundle into $INSTALL_DIR/lib/script.</p>
+<p>When running a recipe, logging is very helpful to track down problems or monitor the progress of a recipe. The recipe scripts use <a href="http://docs.akana.com/docs-test/ag/glossary_pm_nd.htm#gl_pm_slf4j">SLF4J</a> logging, and since no default implementation is shipped with the scripts, it is sometimes necessary to provide one. To deploy a logger implementation, you'd need to copy the file to a location accessible to the automation script.</p>
 <p>So, the next step is to copy the <strong>slf4j-simple-1.7.19.jar</strong> logger file, which is part of the installation, to the $INSTALL_DIR/lib/script folder.</p>
 <p>For this example, from the/home/akana folder, run the following:</p>
 <pre>cp lib/ext/slf4j-simple-1.7.19.jar lib/script/</pre>
@@ -150,13 +150,8 @@ nav-title: Automation End to End
 
 <h3 id="properties_file_set_up">Set up the properties file</h3>
 <p>For this example, we're going to define a few key properties via a properties file, which the automation script will reference.</p>
-<p>The filename and location don't matter as long as you reference the file correctly in the automation script. In this example we're creating a file named <strong>recipe.properties</strong> and placing it in the \bin directory.</p>
-<p>File contents for this example:</p>
-<pre>INSTALL_DIR=${user.dir}/..
-CONTAINER_NAME=akanaPM1
-DEFAULT_PORT=9900</pre>
-<p>For general information on the properties file, see <a href="automation_ref.htm#recipe_properties">Recipe Properties</a> in the automation reference guide.</p>
-<p>First, create the properties file. For example:</p>
+<p>The filename and location don't matter as long as you reference the file correctly in the automation script. In this example, we're creating a file named <strong>recipe.properties</strong> in the \bin directory.</p>
+<p>First, in the /home/user/akana/bin folder, create the properties file. For example:</p>
 <pre>vi recipe.properties</pre>
 <p>Add the below contents to the file:</p>
 <pre>INSTALL_DIR=/home/user/akana
@@ -177,7 +172,7 @@ DEFAULT_PORT=9900</pre>
 	<li>Variables that have no default: if the value is not provided the recipe will fail.
 	<p>Examples: INSTALL_DIR, CONTAINER_NAME.</p></li>
 	<li>Variables that have default values defined in the recipe. If you want to use a different value you'll have to provide it. If not, the default value is used.
-	<p>Example: In the <a href="assets/bootstrap.json" target="_blank">bootstrap.json</a> recipe, the default port is defined as 9900 (line 16). In this example of creating a basic container we explicitly specify port 9900 in the properties file, but since that's the default it isn't really necessary.</p></li>
+	<p>Example: In the <a href="assets/bootstrap.json" target="_blank">bootstrap.json</a> recipe, the default port is defined as 9900 (line 16). In this example of creating a basic container, we explicitly specify port 9900 in the properties file; however, since port 9900 is the default, it isn't really necessary to specify a port.</p></li>
 </ul>
 <p><a href="#top">back to top</a></p>
 
@@ -185,8 +180,10 @@ DEFAULT_PORT=9900</pre>
 <h3 id="variables_export">Export JYTHONPATH and JAVA_HOME variables</h3>
 <p>You must set these variables so that the script finds the files it needs to run correctly.</p>
 <p>From the /akana/user/bin folder, run these two commands:</p>
-<pre>export JYTHONPATH=../scripts/Lib
-export JAVA_HOME=../jre</pre>
+<ul>
+	<li><pre>export JYTHONPATH=../scripts/Lib</pre></li>
+	<li><pre>export JAVA_HOME=../jre</pre></li>
+</ul>
 <p><a href="#top">back to top</a></p>
 
 
@@ -198,20 +195,20 @@ export JAVA_HOME=../jre</pre>
 --recipe ../recipes/bootstrap.json --props recipe.properties</pre>
 <p>In the above:</p>
 <ul>
-	<li>./jython.sh
-	<p>Calls the jython script</p></li>
-	<li>-Dorg.slf4j.simpleLogger.defaultLogLevel=info -Dorg.slf4j.simpleLogger.logFile=System.out
-	<p>Sets the logging level</p></li>
-	<li>-m akana.container
-	<p>Specifies what the script is doing (<span class="apidoc_red">what is -m?</span>)</p></li>
-	<li>--home ..
-	<p>Sets the home directory</p></li>
-	<li>--recipe ../recipes/bootstrap.json
-	<p>Specifies the recipe to run</p></li>
-	<li>--props recipe.properties
-	<p>Tells the script to use a properties file and specifies the filename and location</p></li>
+	<li><strong>./jython.sh</strong>
+<p>Calls the jython script</p></li>
+	<li><strong>-Dorg.slf4j.simpleLogger.defaultLogLevel=info -Dorg.slf4j.simpleLogger.logFile=System.out</strong>
+<p>Sets the logging level</p></li>
+	<li><strong>-m akana.container</strong>
+<p>Specifies what the script is doing <!--(<span class="apidoc_red">what is -m?</span>)--></p></li>
+	<li><strong>--home ..</strong>
+<p>Sets the home directory</p></li>
+	<li><strong>--recipe ../recipes/bootstrap.json</strong>
+<p>Specifies the recipe to run</p></li>
+	<li><strong>--props recipe.properties</strong>
+<p>Tells the script to use a properties file and specifies the filename and location</p></li>
 </ul>
-<p>The result of running the last few steps at the command line is shown below.</p>
+<p>The result of running the automation script is shown below.</p>
 <p><img src="assets/automation01_basic_02.jpg" alt="Running the script" /></p>
 <p>You can see from the above that the container was successfully created and started:</p>
 <pre>Waiting for container to start, status [STARTED]</pre>
