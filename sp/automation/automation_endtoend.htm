@@ -34,22 +34,21 @@ nav-title: Automation End to End
 	<li><a href="#variables_export">Export JYTHONPATH and JAVA_HOME variables</a></li>
 	<li><a href="#recipe_run">Run the recipe using the automation script</a></li>
 	<li><a href="#run_in_browser">Run the Akana Administration Console in the browser</a></li>
-	<li><a href="#ts_automation">Running automation recipes: troubleshooting</a></li>
-<!--	<li><a href="#s01_container_basic">Creating a basic container using recipes</a></li>
+	<li><a href="#s01_container_basic">Creating a basic container using recipes</a></li>
 	<li><a href="#s02_container_gateway">Adding a Gateway to the basic container</a></li>
-	<li><a href="#s03_container_cm">Adding Community Manager to create a full deployment</a></li>-->
+	<li><a href="#s03_container_cm">Adding Community Manager to create a full deployment</a></li>
 </ol>
 
-<!--<h5 style="color: gray;"><a href="#h_container_xxx">Adding a xxx container</a></h5>
+<h5 style="color: gray;"><a href="#h_resource_info">Additional Resource Information:</a></h5>
 <ol class="table_of_contents">
-	<li><a href="#xxx">xxx</a></li>
+	<li><a href="#ts_properties_commandline">Providing property values at the command line</a></li>
+	<li><a href="#ts_automation">Running automation recipes: troubleshooting</a></li>
 </ol>
--->
-
-
-
 <div class = "divider1"></div>
-<h3 id="h_overview">Overview:</h3>
+
+
+
+<h3 id="h_resource_info">Overview:</h3>
 
 
 
@@ -79,7 +78,7 @@ nav-title: Automation End to End
 
 
 <div class = "divider1"></div>
-<h3 id="h_container_basic">Adding a basic PM container:</h3>
+<h3 id="h_container_basic">Adding a basic container:</h3>
 
 
 
@@ -96,15 +95,34 @@ nav-title: Automation End to End
 </ul>
 
 <h5 id="files_download">Download files</h5>
-<p>For this example, we're going to create a 2018.0.7 basic container. As the starting point, download these four files:</p>
-<ul>
-	<li>akana-api-platform-2018.0.0.396.zip</li>
-	<li>akana-api-platform-2018.0.7.zip</li>
-	<li>akana-platform-2018.0.6.zip</li>
-	<li>akana-platform-linux-jre-2018.0.0.19.zip</li>
-</ul>
-
-<p>The illustration below shows copying the files from another location so that the four files are in the akana directory.</p>
+<p>For this example, we're going to create a 2018.0.7 basic container. As the starting point, download the four files&nbsp;listed below.</p>
+<table class="doctable">
+	<thead>
+		<tr>
+			<th>This file...</th>
+			<th>Installs...</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>akana-platform-linux-jre-2018.0.0.19.zip</td>
+			<td>The base files for the major version of the Akana Platform, the underlying infrastructure to all Akana products.<a href="site_admin_config.htm#how_do_i_enable_markdown_for_board_items"></a></td>
+		</tr>
+		<tr>
+			<td>akana-platform-update-cumulative-2018.0.6.zip</td>
+			<td>The latest update to the Akana Platform, including all previous updates since the release of the major version above.<a href="site_admin_config.htm#how_do_i_enable_markdown_for_board_items"></a></td>
+		</tr>
+		<tr>
+			<td>akana-api-platform-2018.0.0.396.zip</td>
+			<td>The base files for the major version of the Akana API Platform, the API management product, which runs on the underlying Akana Platform.<a href="site_admin_config.htm#how_do_i_enable_markdown_for_board_items"></a></td>
+			</tr>
+		<tr>
+			<td>akana-api-platform-update-cumulative-2018.0.7.zip</td>
+			<td>The latest update to the Akana API Platform, including all previous updates since the release of the major version above.<a href="site_admin_config.htm#how_do_i_enable_markdown_for_board_items"></a></td>
+			</tr>
+	</tbody>
+</table>
+<p>The illustration below shows copying the files from another location so that the four files are in the <strong>akana</strong> directory.</p>
 <p><img src="assets/automation01_basic_01.jpg" alt="Setting up the files" /></p>
 
 <h5 id="files_extract">Extract files</h5>
@@ -114,13 +132,13 @@ nav-title: Automation End to End
 		<pre>unzip -o akana-platform-linux-jre-2018.0.0.19.zip</pre>
 	</li>
 	<li>
-		<pre>unzip -o akana-platform-2018.0.6.zip</pre>
+		<pre>unzip -o akana-platform-update-cumulative-2018.0.6.zip</pre>
 	</li>
 	<li>
 		<pre>unzip -o akana-api-platform-2018.0.0.396.zip</pre>
 	</li>
 	<li>
-		<pre>unzip -o akana-api-platform-2018.0.7.zip</pre>
+		<pre>unzip -o akana-api-platform-update-cumulative-2018.0.7.zip</pre>
 	</li>
 </ul>
 <p><a href="#top">back to top</a></p>
@@ -146,6 +164,7 @@ nav-title: Automation End to End
 CONTAINER_NAME=pm01
 DEFAULT_PORT=9900</pre>
 <p>Save the file.</p>
+<p><strong>Note</strong>: For information about how you could provide these properties at the command line, see <a href="#xxx">xxx</a> below.</p>
 <h5 id="sxxx_recipe_properties2">Determining values for properties used in the recipe</h5>
 <p>The recipes needs certain values, such as the name of your installation directory and the name of the container you're creating.</p>
 <p>In a manual installation, you provide these values in the installation wizard user interface. When using a recipe you can provide them:</p>
@@ -178,7 +197,7 @@ DEFAULT_PORT=9900</pre>
 
 <h3 id="recipe_run">Run the recipe using the automation script</h3>
 <p>In this example, the properties file is <strong>recipe.properties</strong>.</p>
-<p>therefore, the script command is (line break added for display purposes):</p>
+<p>Therefore, the script command is (line break added for display purposes):</p>
 <pre>./jython.sh -Dorg.slf4j.simpleLogger.logFile=System.out -m akana.container 
 --recipe ../recipes/bootstrap.json --props recipe.properties</pre>
 <p>In the above:</p>
@@ -188,7 +207,7 @@ DEFAULT_PORT=9900</pre>
 	<li><strong>-Dorg.slf4j.simpleLogger.logFile=System.out</strong>
 		<p>Sets the logging</p></li>
 	<li><strong>-m akana.container</strong>
-<p>Specifies what the script is doing <!--(<span class="apidoc_red">what is -m?</span>)--></p></li>
+<p>Specifies the module<!--(<span class="apidoc_red">what is -m?</span>)--> being run</p></li>
 	<li><strong>--home ..</strong>
 <p>Sets the home directory</p></li>
 	<li><strong>--recipe ../recipes/bootstrap.json</strong>
@@ -214,21 +233,48 @@ DEFAULT_PORT=9900</pre>
 
 
 
-<!--<div class = "divider1"></div>
+<div class = "divider1"></div>
 <h3 id="xxx">xxx:</h3>
--->
 
 
 
-<!--<h3 id="s02_container_gateway">Adding a Gateway to the basic container</h3>
+
+<h3 id="s02_container_gateway">Adding a Gateway to the basic container</h3>
 <p>xxx</p>
-<p><a href="#top">back to top</a></p>-->
+<p>Properties file:</p>
+<pre>INSTALL_DIR=/home/user/akana
+PRODUCT_HOME=/home/user/akana
+CONTAINER_NAME=pm01
+TENANT_ID=atmosphere
+TENANT_NAME=atmosphere
+TENANT_HOST=ubu1664qa-17.akana.roguewave.com
+TENANT_CONSOLE_HOST=ubu1664qa-17.akana.roguewave.com
+TENANT_VHOSTS=ubu1664qa-17.akana.roguewave.com
+TENANT_EMAIL=administrator@atmosphere
+TENANT_PASSWORD=password
+TENANT_THEME=hermosa
+TENANT_THEME_IMPL=default
+DB_NAME=UBU1664QA17
+DB_TYPE=oracle
+DB_INSTANCE=db1
+DB_PORT=1521
+DB_ADMIN_USERNAME=SYSTEM
+DB_ADMIN_PASSWORD=rd57chv
+DB_USERNAME=UBU1664QA17
+DB_PASSWORD=password
+DB_SERVER=akanaeng-oracle12cr2-1.aws.akana.roguewave.com
+DB_DRIVER_LOCATION=file:///home/user/ojdbc8.jar
+DB_SCHEMA_TIMEOUT=3000000000</pre>
+<p>xxx (line break added for display purposes)</p>
+<pre>./jython.sh Dorg.slf4j.simpleLogger.logFile=System.out -m akana.container --recipe ../recipes/pm-cm-all.json --props recipe.properties</pre>
+<p>xxx</p>
+<p><a href="#top">back to top</a></p>
 
 
 
-<!--<h3 id="s03_container_cm">Adding Community Manager to create a full deployment</h3>
+<h3 id="s03_container_cm">Adding Community Manager to create a full deployment</h3>
 <p>For later: pm-cm-all.json.</p>
-<p><a href="#top">back to top</a></p>-->
+<p><a href="#top">back to top</a></p>
 
 
 
@@ -254,6 +300,32 @@ DEFAULT_PORT=9900</pre>
 </table>
 <p><a href="#top">back to top</a></p>-->
 
+
+
+<div class = "divider1"></div>
+<h3 id="h_overview">Additional Resource Information:</h3>
+
+
+<h3 id="ts_properties_commandline">Providing property values at the command line</h3>
+<p>We recommend providing properties in a properties file (see <a href="#properties_file_set_up">Set up the properties file</a>).</p>
+<p>However, you could also provide properties at the command line.</p>
+<p>Let's say you want to provide two basic properties, INSTALL_DIR and CONTAINER_NAME, for a basic container. Your <strong>recipe.properties</strong> file would look like this:</p>
+<pre>INSTALL_DIR=/home/user/akana
+CONTAINER_NAME=pm01</pre>
+<p>Your command line instruction for running the script would look something like this:</p>
+<pre>./jython.sh -Dorg.slf4j.simpleLogger.logFile=System.out -m akana.container 
+--recipe ../recipes/bootstrap.json --props recipe.properties</pre>
+<p>However, you could also provide the above two properties at the command line. In this example, you'd provide the following at the command line:</p>
+<pre>./jython.sh -Dorg.slf4j.simpleLogger.logFile=System.out -m akana.container
+
+
+uptohere
+--name test -home .. 
+ 
+
+
+--recipe ../recipes/bootstrap.json --props recipe.properties</pre>
+<p><a href="#top">back to top</a></p>
 
 
 
