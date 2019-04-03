@@ -15,7 +15,13 @@ nav-title: Database Maintenance
 	<li><a href="#introduction">Introduction</a></li>
 	<li><a href="#data">Types of Volatile Data</a></li>
 	<li><a href="#built-in">Using the built-in jobs</a></li>
-	<li><a href="#using-cron">Leveraging cron to delete data</a></li>
+	<li><a href="#using-cron">Leveraging cron to delete data</a>
+		<ul>
+			<li><a href="#cron_delete_mysql">Deleting/archiving data: MySQL</a></li>
+			<li><a href="#cron_delete_oracle">Deleting/archiving data: Oracle</a></li>
+			<li><a href="#cron_delete_mssqlserver">Deleting/archiving data: Microsoft SQL Server</a></li>
+		</ul>
+	</li>
 	<li><a href="#partitioning">Partitioning large data stores</a></li>
 	<li><a href="#partitioning-verylarge">Partitioning large data stores under load (MySQL Only)</a></li>
 	<li><a href="#drop-partitions">Dropping partitions</a></li>
@@ -175,6 +181,7 @@ monitoring.delete.usage.enable=false</pre>
 <ul>
 	<li><a href="#cron_delete_mysql">Deleting/archiving data: MySQL</a></li>
 	<li><a href="#cron_delete_oracle">Deleting/archiving data: Oracle</a></li>
+	<li><a href="#cron_delete_mssqlserver">Deleting/archiving data: Microsoft SQL Server</a></li>
 </ul>
 
 
@@ -229,17 +236,40 @@ delete from AM_ALERTS_SLAS s WHERE EXISTS (select a.ALERTSID from AM_ALERTS a wh
 delete from AM_ALERTS where SOURCEDTS &lt; (SYSTIMESTAMP - INTERVAL '1' MONTH);</pre>
 
 <p>For Community Manager, there are additional tables such as the Boards (Forums) that you might want to clean up:</p>
-<pre>delete from BOARD_ITEM_ASSIGNMENTS where ITEMID in (select ITEMID from BOARD_ITEMS where ARCHIVABLE='Y' and CREATED &lt; (SYSTIMESTAMP - INTERVAL '1' YEAR));
-delete from BOARD_ITEMS where ARCHIVABLE='Y' and CREATED &lt; (SYSTIMESTAMP - INTERVAL '1' YEAR);
-delete from API_CONTRACT_SLA_DATA where LASTMODIFIEDDTS &lt; (SYSTIMESTAMP - INTERVAL '1' YEAR);
-delete from API_SLA_DATA where LASTMODIFIEDDTS &lt; (SYSTIMESTAMP - INTERVAL '1' YEAR);
-</pre>
-
-<p>For sample scripts on MySQL and Oracle (other databases coming soon) download the following zip archive: <a href="assets/sample_scripts.zip">sample_scripts.zip</a>.</p>
+<pre>delete from BOARD_ITEM_ASSIGNMENTS where ITEMID in (select ITEMID from BOARD_ITEMS where ARCHIVABLE='Y' and CREATED &lt; DATEADD(YEAR, -1, GETDATE()));<br />delete from BOARD_ITEMS where ARCHIVABLE='Y' and CREATED &lt; DATEADD(YEAR, -1, GETDATE());<br />delete from API_CONTRACT_SLA_DATA where LASTMODIFIEDDTS &lt; DATEADD(YEAR, -1, GETDATE());<br />delete from API_SLA_DATA where LASTMODIFIEDDTS &lt; DATEADD(YEAR, -1, GETDATE());</pre>
 <p>Once you're satisfied with the script, you can set up a cron job to execute it each night. For example, you could configure cron to execute at 1am each morning as follows:</p>
 <pre>0 1 * * * /xxx/bin/cleanup.sh</pre>
 
 
+<h4 id="cron_delete_mssqlserver">Deleting/archiving data: Microsoft SQL Server</h4>
+<p>The example below shows database queries to run for a Microsoft SQL Server database.</p>
+<p><strong>The intervals given here are recommendations. Modify the intervals according to your needs.</strong></p>
+<p>Policy Manager cleanup:</p>
+<pre>/* Queries to clean-up the data from Usage / Rollup tables */
+delete from MO_USAGE_NEXTHOP where REQUESTDTS &lt;  DATEADD(MONTH, -1, GETDATE());
+delete from MO_USAGEMSGS where MSGCAPTUREDDTS &lt; DATEADD(MONTH, -1, GETDATE());
+delete from MO_USAGEDATA where REQUESTDTS &lt; DATEADD(MONTH, -1, GETDATE());
+delete from MO_ROLLUPDATA where ROLLUPDATAID &lt; (select min(MAX_ID) from MO_STATUS) and INTVLSTARTDTS &lt; DATEADD(MONTH, -1, GETDATE());
+delete from MO_ROLLUP15 where INTVLSTARTDTS &lt; DATEADD(MONTH, -1, GETDATE());
+delete from MO_ROLL_ORG15 where INTVLSTARTDTS &lt; DATEADD(MONTH, -1, GETDATE());
+delete from MO_ROLLUP_HOUR where INTVLSTARTDTS &lt; DATEADD(MONTH, -3, GETDATE());
+delete from MO_ROLL_ORG_H where INTVLSTARTDTS &lt; DATEADD(MONTH, -3, GETDATE());
+delete from MO_ROLLUP_DAY where INTVLSTARTDTS &lt; DATEADD(YEAR, -1, GETDATE());
+delete from MO_ROLL_ORG_D where INTVLSTARTDTS &lt; DATEADD(YEAR, -1, GETDATE());
+ 
+/* Queries to clean-up the data from ALERTS tables */ 
+delete e from AM_ALERTS a inner join AM_EMAILALERTS e on e.ALERTSID = a.ALERTSID where a.SOURCEDTS &lt; DATEADD(MONTH, -1, GETDATE());
+delete s from AM_ALERTS a inner join AM_ALERTS_SLAS s on s.ALERTSID = a.ALERTSID where a.SOURCEDTS &lt; DATEADD(MONTH, -1, GETDATE());
+delete from AM_ALERTS where SOURCEDTS &lt; DATEADD(MONTH, -1, GETDATE());</pre>
+<p>For Community Manager, there are additional tables such as the Boards (Forums) that you might want to clean up:</p>
+<pre>delete from BOARD_ITEM_ASSIGNMENTS where ITEMID in (select ITEMID from BOARD_ITEMS where ARCHIVABLE='Y' and CREATED &lt; TIMESTAMPADD(YEAR, -1, now()));
+delete from BOARD_ITEMS where ARCHIVABLE='Y' and CREATED &lt; TIMESTAMPADD(YEAR, -1, now());
+delete from API_CONTRACT_SLA_DATA where LASTMODIFIEDDTS &lt; TIMESTAMPADD(YEAR, -1, now());
+delete from API_SLA_DATA where LASTMODIFIEDDTS &lt; TIMESTAMPADD(YEAR, -1, now());</pre>
+
+
+<p>Once you're satisfied with the script, you can set up a cron job to execute it each night. For example, you could configure cron to execute at 1am each morning as follows:</p>
+<pre>0 1 * * * /xxx/bin/cleanup.sh</pre>
 <p><a href="#top">Back to top</a></p>
 
 
