@@ -40,24 +40,23 @@ nav-title: Automation Examples
 <h5 style="color: gray;"><a href="#h_container_pm_cm_all">Creating a PM/CM container:</a></h5>
 <ol class="table_of_contents">
 	<li><a href="#pm_cm_all_overview">PM/CM container: overview</a></li>
-	<li><a href="#pm_cm_properties">Properties file for PM/CM container</a></li>
 	<li><a href="#pm_cm_steps">Steps for setting up a PM/CM container</a></li>
+	<li><a href="#pm_cm_properties">Properties file for PM/CM container</a></li>
 	<li><a href="#pm_cm_results">PM/CM container: results</a></li>
 </ol>
 
 <h5 style="color: gray;"><a href="#h_container_nd_cm_all">Creating an ND container:</a></h5>
 <ol class="table_of_contents">
 	<li><a href="#nd_cm_all_overview">ND container: overview</a><a href="#nd_cm_all_overview"></a></li>
-	<li><a href="#nd_cm_properties">Properties file for ND container</a></li>
 	<li><a href="#nd_cm_steps">Steps for setting up an ND container</a></li>
-<!--	<li><a href="#nd_cm_results">ND container: results</a></li>-->
+	<li><a href="#nd_cm_properties">Properties file for ND container</a></li>
 </ol>
 
 <h5 style="color: gray;"><a href="#h_container_nd_register">Registering the ND container:</a></h5>
 <ol class="table_of_contents">
 	<li><a href="#nd_register_overview">Registering the ND container: overview</a><a href="#nd_cm_all_overview"></a></li>
-	<li><a href="#nd_register_properties">Properties file for registering the ND container</a></li>
 	<li><a href="#nd_register_steps">Steps for registering the ND container</a></li>
+	<li><a href="#nd_register_properties">Properties file for registering the ND container</a></li>
 	<li><a href="#nd_register_results">Registering the ND container: results</a></li>
 </ol>
 
@@ -194,9 +193,9 @@ nav-title: Automation Examples
 
 <h3 id="properties_file_set_up">Set up the properties file</h3>
 <p>For this example, we're going to define a few key properties via a properties file, which the automation script will reference.</p>
-<p>The filename and location don't matter as long as you reference the file correctly in the automation script. In this example, we're creating a file named <strong>recipe.properties</strong> in the \bin directory.</p>
+<p>The filename and location don't matter as long as you reference the file correctly in the automation script. In this example, we're creating a file named <strong>bootstrap.properties</strong> in the \bin directory.</p>
 <p>First, in the /home/user/akana/bin folder, create the properties file. For example:</p>
-<pre>vi recipe.properties</pre>
+<pre>vi bootstrap.properties</pre>
 <p>Add the below contents to the file:</p>
 <pre>INSTALL_DIR=/home/user/akana
 CONTAINER_NAME=pm01
@@ -225,11 +224,10 @@ DEFAULT_PORT=9900</pre>
 
 
 <h3 id="recipe_run">Run the recipe using the automation script</h3>
-<p>In this example, the properties file is <strong>recipe.properties</strong>.</p>
-<p>Therefore, the script command is (line break added for display purposes):</p>
+<p>In this example, the properties file is <strong>bootstrap.properties</strong>.</p>
+<p>Therefore, the script command is:</p>
 <pre>
-./jython.sh -Dorg.slf4j.simpleLogger.logFile=System.out -m akana.container 
---recipe ../recipes/register-container.json --props register-container.properties</pre>
+./jython.sh -Dorg.slf4j.simpleLogger.logFile=System.out -m akana.container --recipe ../recipes/bootstrap.json --props bootstrap.properties</pre>
 <p>The result of running the automation script is shown below.</p>
 <p><img src="assets/automation01_basic_02.jpg" alt="Running the script" /></p>
 <p>You can see that the container was successfully created and started, as indicated above.</p>
@@ -289,7 +287,7 @@ DEFAULT_PORT=9900</pre>
 <p>In the file, provide values for all the properties referenced by the recipe. An example is shown below.</p>
 <pre>INSTALL_DIR=/home/user/akana
 PRODUCT_HOME=/home/user/akana
-CONTAINER_NAME=pm01
+CONTAINER_NAME=pmcm01
 TENANT_ID=atmosphere
 TENANT_NAME=atmosphere
 TENANT_HOST=ubu1664qa-17.akana.roguewave.com
@@ -309,16 +307,16 @@ DB_USERNAME=UBU1664QA17
 DB_PASSWORD=password
 DB_SERVER=akanaeng-oracle12cr2-1.aws.akana.roguewave.com
 DB_DRIVER_LOCATION=file:///home/user/ojdbc8.jar
-DB_SCHEMA_TIMEOUT=3000000000</pre>
+DB_SCHEMA_TIMEOUT=4000000000</pre>
+<p><strong>Note</strong>: The example above references the location for the <strong>ojdbc8.jar</strong> file, needed for an Oracle database. If you're using Oracle, you'd have to have the driver in place and update the path appropriately. If you're using another type of database, you may or may not need to provide a driver. Refer to the <a href="../platform_install/installing_akana_api_platform.htm#database_drivers">Database drivers</a> section of the installation documentation. There might be other steps you need to have in place for your database. Check the information in the links provided in <a href="#pm_cm_all_overview">PM/CM container: overview</a> above.</p>
 <p><a href="#top">back to top</a></p>
 
 
 
 <h5 id="pm_cm_script">PM/CM container: automation script</h5>
 <p>In this example, the recipe is <strong>pm-cm-all.json</strong> and the properties file is <strong>pm-cm-all.properties</strong>.</p>
-<p>Therefore, the script command is (line break added for display purposes):</p>
-<pre>./jython.sh Dorg.slf4j.simpleLogger.logFile=System.out -m akana.container --recipe ../recipes/pm-cm-all.json --props pm-cm-all.properties
-</pre>
+<p>Therefore, the script command is:</p>
+<pre>./jython.sh -Dorg.slf4j.simpleLogger.logFile=System.out -m akana.container --recipe ../recipes/pm-cm-all.json --props pm-cm-all.properties</pre>
 <p>When the recipe has successfully completed, you'll see a message such as the below:</p>
 <p><img src="assets/automation03_pm_cm_all_script.jpg" alt="pm-cm-all.json, successful completion" /></p>
 <p><a href="#top">back to top</a></p>
@@ -326,12 +324,13 @@ DB_SCHEMA_TIMEOUT=3000000000</pre>
 
 
 <h3 id="pm_cm_results">PM/CM container: results</h3>
-<p>You can now access the Akana Administration Console for the container. You can see from the <strong>Installed Features</strong> page that Community Manager is installed and all pending tasks are complete.</p>
+<p>You can now access the Akana Administration Console for the container. In this example: <strong>ubu1664qa-17.akana.roguewave.com:9900/admin/login.html</strong>.</p>
+<p>You can see from the <strong>Installed Features</strong> page that Community Manager is installed and all pending tasks are complete.</p>
 <p><img src="assets/automation03_pm_cm_all_admin_console.jpg" alt="Running the Akana Administration Console for the pm-cm-all container" /></p>
 <p>In this example, you can also access the Policy Manager and Community Manager via the browser, as shown below.</p>
-<p>Policy Manager: <a href="http://akana-qa-4.aws.akana.roguewave.com:9900/">http://akana-qa-4.aws.akana.roguewave.com:9900</a> (default credentials, used in this example, are administrator/password).</p>
-<p><img src="assets/automation03_pm_cm_all_pm.jpg" alt="Running Policy Manager" /></p>
-<p>Community Manager: <a href="http://akana-qa-4.aws.akana.roguewave.com:9900/atmosphere/#/home/landing">http://akana-qa-4.aws.akana.roguewave.com:9900/atmosphere/#/home/landing</a> (default credentials, used in this example, are administrator@atmosphere/password).</p>
+<p>Policy Manager: <strong>http://ubu1664qa-17.akana.roguewave.com:9900</strong> (default credentials, used in this example, are administrator/password).</p>
+<p><img src="assets/automation03_pm_cm_all_pm.jpg" alt="Running Community Manager for the pm-cm-all container" /></p>
+<p>Community Manager: <strong>http://ubu1664qa-17.akana.roguewave.com:9900/atmosphere/#/home/login</strong> (default credentials, used in this example, are administrator@atmosphere/password).</p>
 <p><img src="assets/automation03_cm.jpg" alt="Running the developer portal" /></p>
 <p><a href="#top">back to top</a></p>
 
@@ -343,22 +342,11 @@ DB_SCHEMA_TIMEOUT=3000000000</pre>
 
 
 <h3 id="nd_cm_all_overview">ND container: overview</h3>
-<p>Next, we're going to create the Network Director container. We can then register the container so that it can communicate with the PM/CM container.</p>
+<p>Next, we're going to create the Network Director container. We can then register the ND container so that it can communicate with the PM/CM container.</p>
 <ul>
-	<li>Recipe: <strong>register-container.json</strong></li>
-	<li>Properties file in this example: <strong>register-container.properties</strong></li>
+	<li>Recipe: <strong>nd-cm-all.json</strong></li>
+	<li>Properties file in this example: <strong>nd-cm-all.properties</strong></li>
 </ul>
-<p><a href="#top">back to top</a></p>
-
-
-
-<h3 id="nd_cm_properties">Properties file for ND container</h3>
-<p>Properties file (<strong>register-container.properties</strong>):</p>
-<pre>INSTALL_DIR=/home/user/akana
-DEFAULT_PORT=9905
-CONTAINER_NAME=nd
-PM_PORT=9900
-PM_HOST=akana-qa-4.aws.akana.roguewave.com</pre>
 <p><a href="#top">back to top</a></p>
 
 
@@ -368,16 +356,29 @@ PM_HOST=akana-qa-4.aws.akana.roguewave.com</pre>
 <ol>
 	<li><a href="#download_extract">Download and extract the installation files</a> (once per installation).</li>
 	<li><a href="#logging_file_place">Put the logging file in place to enable logging</a> (once per installation).</li>
-	<li><a href="#properties_file_set_up">Set up the properties file</a> (per recipe). For this example, define the properties listed in <a href="#nd_cm_properties">Properties file for ND container</a> above.</li>
 	<li><a href="#variables_export">Export JYTHONPATH and JAVA_HOME variables</a> (once per installation).</li>
+	<li><a href="#properties_file_set_up">Set up the properties file</a> (per recipe). For this example, define the properties listed in <a href="#nd_cm_properties">Properties file for ND container</a> below.</li>
 	<li><a href="#recipe_run">Run the recipe using the automation script</a> (per recipe). For this example, use the script shown in <a href="#nd_cm_script">ND container: automation script</a> below.</li>
 </ol>
+<p><a href="#top">back to top</a></p>
 
-<h5 id="nd_cm_script">ND container: automation script</h5>
-<p>In this example, the recipe is <strong>pm-cm-all.json</strong> and the properties file is <strong>pm-cm-all.properties</strong>.</p>
+
+
+<h3 id="nd_cm_properties">Properties file for ND container</h3>
+<p>Properties file (<strong>nd-cm-all.properties</strong>):</p>
+<pre>INSTALL_DIR=/home/user/akana
+DEFAULT_PORT=9905
+CONTAINER_NAME=nd
+PM_PORT=9900
+PM_HOST=akana-qa-4.aws.akana.roguewave.com</pre>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h3 id="nd_cm_script">ND container: automation script</h3>
+<p>In this example, the recipe is <strong>nd-cm-all.json</strong> and the properties file is <strong>nd-cm-all.properties</strong>.</p>
 <p>Therefore, the script command is (line break added for display purposes):</p>
-<pre>./jython.sh -Dorg.slf4j.simpleLogger.defaultLogLevel=${loglevel} -Dorg.slf4j.simpleLogger.logFile=System.out 
--m akana.container --recipe ../recipes/nd-cm-all.json --props nd-cm-all.properties</pre>
+<pre>./jython.sh -Dorg.slf4j.simpleLogger.logFile=System.out -m akana.container --recipe ../recipes/nd-cm-all.json --props nd-cm-all.properties</pre>
 <p>When the recipe has successfully completed, you'll see a message such as the below:</p>
 <p><img src="assets/automation03_pm_cm_all_script.jpg" alt="pm-cm-all.json, successful completion" /></p>
 <p><a href="#top">back to top</a></p>
@@ -390,11 +391,24 @@ PM_HOST=akana-qa-4.aws.akana.roguewave.com</pre>
 
 
 <h3 id="nd_register_overview">Registering the ND container: overview</h3>
-<p>Next, we're going to run another automation recipe to register the ND container with the PM/CM container</p>
+<p>Next, we're going to run another automation recipe to register the ND container with the PM/CM container.</p>
 <ul>
 	<li>Recipe: <strong>register-container.json</strong></li>
-	<li>Properties you'd need to provide: see below.</li>
+	<li>Properties file in this example: <strong>register-container.properties</strong></li>
 </ul>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h3 id="nd_register_steps">Steps for registering the ND container</h3>
+<p>The sequence of steps is the same for running any recipe, as described in detail in <a href="#h_container_basic">Creating a basic container</a> above:</p>
+<ol>
+	<li><a href="#download_extract">Download and extract the installation files</a> (once per installation).</li>
+	<li><a href="#logging_file_place">Put the logging file in place to enable logging</a> (once per installation).</li>
+	<li><a href="#variables_export">Export JYTHONPATH and JAVA_HOME variables</a> (once per installation).</li>
+	<li><a href="#properties_file_set_up">Set up the properties file</a> (per recipe). For this example, define the properties listed in <a href="#nd_register_properties">Properties file for registering the ND container</a> below.</li>
+	<li><a href="#recipe_run">Run the recipe using the automation script</a> (per recipe). For this example, use the script shown in <a href="#nd_register_script">Registering the ND container: automation script</a> below.</li>
+</ol>
 <p><a href="#top">back to top</a></p>
 
 
@@ -411,27 +425,18 @@ INSTALL_DIR=/home/user/akana</pre>
 
 
 
-<h3 id="nd_register_steps">Steps for registering the ND container</h3>
-<p>The sequence of steps is the same for running any recipe, as described in detail in <a href="#h_container_basic">Creating a basic container</a> above:</p>
-<ol>
-	<li><a href="#download_extract">Download and extract the installation files</a> (once per installation).</li>
-	<li><a href="#logging_file_place">Put the logging file in place to enable logging</a> (once per installation).</li>
-	<li><a href="#properties_file_set_up">Set up the properties file</a> (per recipe). For this example, define the properties listed in <a href="#nd_register_properties">Properties file for registering the ND container</a> above.</li>
-	<li><a href="#variables_export">Export JYTHONPATH and JAVA_HOME variables</a> (once per installation).</li>
-	<li><a href="#recipe_run">Run the recipe using the automation script</a> (per recipe). For this example, use the script shown in <a href="#nd_register_script">Registering the ND container: automation script</a> below.</li>
-</ol>
-
-<h5 id="nd_register_script">Registering the ND container: automation script</h5>
-<pre>./jython.sh -Dorg.slf4j.simpleLogger.defaultLogLevel=${loglevel} -Dorg.slf4j.simpleLogger.logFile=System.out 
--m akana.container --recipe ../recipes/register-container.json --props registerND.properties</pre>
+<h3 id="nd_register_script">Registering the ND container: automation script</h3>
+<pre>./jython.sh -Dorg.slf4j.simpleLogger.logFile=System.out -m akana.container --recipe ../recipes/register-container.json --props register-container.properties</pre>
 <p><a href="#top">back to top</a></p>
 
 
 
 <h3 id="nd_register_results">Registering the ND container: results</h3>
-<p>Once the recipe has completed successfully, log in to Policy Manager on the PM/CM container (in this example, http://akana-qa-4.aws.akana.roguewave.com:9900).</p>
+<p>When the recipe has successfully completed, you'll see a message such as the below.</p>
+<p><img src="assets/automation03_register_container_success.jpg" alt="Register Container recipe successful" /></p>
+<p>Now, log in to Policy Manager on the PM/CM container (in this example, <strong>http://akana-qa-4.aws.akana.roguewave.com:9900</strong>).</p>
 <p>You'll see that the ND container is now registered, as shown below.</p>
-<p><img src="assets/automation03_register_container.jpg" alt="ND container is registered" /></p>
+<p><img src="assets/automation03_register_container_started.jpg" alt="ND container is registered" /></p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -477,7 +482,7 @@ INSTALL_DIR=/home/user/akana</pre>
 CONTAINER_NAME=pm01</pre>
 <p>Your command line instruction for running the script would look something like this:</p>
 <pre>./jython.sh -Dorg.slf4j.simpleLogger.logFile=System.out -m akana.container 
---recipe ../recipes/bootstrap.json --props recipe.properties</pre>
+--recipe ../recipes/bootstrap.json --props bootstrap.properties</pre>
 <p>However, you could instead provide the above two properties at the command line. In this example, from the /home/user/akana/bin folder, you'd provide the following at the command line:</p>
 <pre>./jython.sh -Dorg.slf4j.simpleLogger.logFile=System.out -DINSTALL_DIR=.. -m akana.container --name pm01 --home .. --recipe ../recipes/bootstrap.json</pre>
 <p>In the above:</p>
