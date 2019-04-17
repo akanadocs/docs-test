@@ -27,6 +27,7 @@ nav-title: Model Object Workflow
 <ol class="table_of_contents">
 	<li><a href="#model_ia_00">Model Object Workflow: Initial Actions</a></li>
 	<li><a href="#model_ra_00">Model Object Workflow: Reserved Actions</a></li>
+	<li><a href="#model_ac_00">Model Object Workflow: Actions</a></li>
 	<li><a href="#model_f_00">Model Object Workflow: Functions</a></li>
 	<li><a href="#model_c_00">Model Object Workflow: Conditions</a></li>
 	<li><a href="#model_vr_00">Model Object Workflow: Variable Resolvers</a> (none)</li>
@@ -68,6 +69,41 @@ nav-title: Model Object Workflow
 
 
 
+<h3 id="model_ac_00">Model Object Workflow: Actions</h3>
+<p>The following additional actions are defined for model object workflows:</p>
+<ul>
+	<li><a href="#model_ac_01">model.action.submit.approval</a></li>
+	<li><a href="#model_ac_02">model.action.resubmit</a></li>
+	<li><a href="#model_ac_03">model.action.approve</a></li>
+	<li><a href="#model_ac_04">model.action.reject</a></li>
+</ul>
+
+
+<h4 id="model_ac_01">model.action.submit.approval</h4>
+<p>Used to submit a new or revised model object for approval.</p>
+<p>The Business Admin for the organization can submit a model object for approval.</p>
+<p>For an example of a workflow section that includes this action, see <a href="#model_c_01">isModelInDraftState</a>.</p>
+
+
+<h4 id="model_ac_02">model.action.resubmit</h4>
+<p>Used to resubmit a new or revised model object for approval.</p>
+<p>Same as <strong>model.action.submit.approval</strong> above.</p>
+
+
+<h4 id="model_ac_03">model.action.approve</h4>
+<p>Used to approve a new or revised model object that was submitted for approval.</p>
+<p>The Business Admin for the organization, or the Schema Approver, can approve or reject a model object.</p>
+<p>For an example of a workflow section that includes this action, see <a href="#model_f_02">updateModelStatus</a>.</p>
+
+
+<h4 id="model_ac_04">model.action.reject</h4>
+<p>Used to reject a new or revised model object that was submitted for approval.</p>
+<p>The Business Admin for the organization, or the Schema Approver, can approve or reject a model object.</p>
+<p><a href="#top">Back to top</a></p>
+<!--<p>{\com.soa.atmosphere.impl\META-INF\resources\templates\default-ticket-workflow.xml}</p>-->
+
+
+
 <h3 id="model_f_00">Model Object Workflow: Functions</h3>
 <p>There is one function available for the model object workflow:</p>
 <ul>
@@ -83,12 +119,12 @@ nav-title: Model Object Workflow
 <h5>Parameters</h5>
 <p>None.</p>
 <h5>Examples/Notes/Additional Information</h5>
-<p>The example below shows the Delete action in the default Model Object workflow. Once the conditions have been satisfied, the status is updated from Draft to Deleted and <strong>markModelDeleted</strong> is implemented as a post-function&nbsp;(line 17).</p>
+<p>The example below shows the Delete action in the default Model Object workflow. Once the conditions have been satisfied, the status is updated from Draft to Deleted and <strong>markModelDeleted</strong> is implemented as a post-function (line 17).</p>
 <pre>01 &lt;action id="102" name="@Delete"&gt;
 02   &lt;restrict-to&gt;
 03     &lt;conditions type="OR"&gt;
 04       &lt;condition type="authorizeByAtmosphereRole"&gt;
-05         &lt;arg name="role"&gt;&AtmoRoleBusinessAdmin;&lt;/arg&gt;
+05         &lt;arg name="role"&gt;&amp;AtmoRoleBusinessAdmin;&lt;/arg&gt;
 06       &lt;/condition&gt;
 07       &lt;condition type="authorizeByAtmosphereAction"&gt;
 08         &lt;arg name="Action"&gt;Delete&lt;/arg&gt;
@@ -107,13 +143,6 @@ nav-title: Model Object Workflow
 
 <h4 id="model_f_02">updateModelStatus</h4>
 <p>Changes the state of a model object; for example, from <strong>Pending Approval</strong> to <strong>Active</strong>.</p>
-<p>Valid states {<span class="apidoc_red">MM: not sure if the list below are the valid state values or the list in the table below, which I pulled from the workflow doc itself. Probably the table?</span>}</p>
-<ul>
-	<li>com.akana.model.state.draft</li>
-	<li>com.akana.model.state.pending_approval</li>
-	<li>com.akana.model.state.rejected</li>
-	<li>com.akana.model.state.active</li>
-</ul>
 
 <h5>Parameters</h5>
 <table class="doctable">
@@ -126,36 +155,37 @@ nav-title: Model Object Workflow
 	<tbody>
 		<tr>
 			<td>status</td>
-			<td><p>The new status that the model object is being updated to. Valid values:</p>
+			<td><p>The new state that the model object is being updated to. Valid values:</p>
 				<ul>
-					<li>&ModelStateDraft;</li>
-					<li>&amp;ModelStatePendingApproval;</li>
-					<li>&amp;ModelStateActive;</li>
-					<li>&amp;ModelStateRejected;</li>
+					<li>com.akana.model.state.draft</li>
+					<li>com.akana.model.state.pending_approval</li>
+					<li>com.akana.model.state.rejected</li>
+					<li>com.akana.model.state.active</li>
+					<li>com.akana.model.state.deleted</li>
 				</ul>				</td>
 		</tr>
 	</tbody>
 </table>
 
 <h5>Examples/Notes/Additional Information</h5>
-<p>The example below shows the Approve action in the default Model Object workflow. Once the conditions have been satisfied, the status is updated from Pending Approval to Active and <strong>updateModelStatus</strong> is implemented as a post-function&nbsp;(line 16).</p>
+<p>The example below shows the Approve action in the default Model Object workflow. Once the conditions have been satisfied, the status is updated from Pending Approval to Active and <strong>updateModelStatus</strong> is implemented as a post-function (line 16).</p>
 <pre>01 &lt;action id="301" name="model.action.approve"&gt;
 02   &lt;restrict-to&gt;
 03     &lt;conditions type="OR"&gt;
 04       &lt;condition type="authorizeByAtmosphereRole"&gt;
-05         &lt;arg name="role"&gt;&AtmoRoleBusinessAdmin;&lt;/arg&gt;
+05         &lt;arg name="role"&gt;&amp;AtmoRoleBusinessAdmin;&lt;/arg&gt;
 06       &lt;/condition&gt;
 07       &lt;condition type="authorizeByAtmosphereRole"&gt;
-08         &lt;arg name="role"&gt;&AtmoRoleSchemaApprover;&lt;/arg&gt;
+08         &lt;arg name="role"&gt;&amp;AtmoRoleSchemaApprover;&lt;/arg&gt;
 09       &lt;/condition&gt; 
 10     &lt;/conditions&gt;
 11   &lt;/restrict-to&gt;
 12   &lt;results&gt;
 13     &lt;unconditional-result old-status="Pending Approval" status="Active" step="400"/&gt;
-14   &lt;/results&gt;             
+14   &lt;/results&gt;
 15   &lt;post-functions&gt;
 16     &lt;function type="updateModelStatus"&gt;
-17       &lt;arg name="status"&gt;&ModelStateActive;&lt;/arg&gt;
+17       &lt;arg name="status"&gt;&amp;ModelStateActive;&lt;/arg&gt;
 18     &lt;/function&gt;
 19   &lt;/post-functions&gt;
 20 &lt;/action&gt;</pre>
@@ -184,7 +214,7 @@ nav-title: Model Object Workflow
 03       &lt;condition type="isModelInDraftState" /&gt;
 04       &lt;conditions type="OR"&gt;
 05         &lt;condition type="authorizeByAtmosphereRole"&gt;
-06           &lt;arg name="role"&gt;&AtmoRoleBusinessAdmin;&lt;/arg&gt;
+06           &lt;arg name="role"&gt;&amp;AtmoRoleBusinessAdmin;&lt;/arg&gt;
 07         &lt;/condition&gt;
 08         &lt;condition type="authorizeByAtmosphereAction"&gt;
 09           &lt;arg name="Action"&gt;Modify&lt;/arg&gt;
