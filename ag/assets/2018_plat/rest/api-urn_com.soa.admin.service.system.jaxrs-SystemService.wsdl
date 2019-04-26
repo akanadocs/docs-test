@@ -37,9 +37,9 @@
     <wsdl:part name="id" type="xs:string">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getSystemInfoRequestMessage">
-  </wsdl:message>
   <wsdl:message name="getServicesRequestMessage">
+  </wsdl:message>
+  <wsdl:message name="getSystemInfoRequestMessage">
   </wsdl:message>
   <wsdl:message name="getBundlesRequestMessage">
   </wsdl:message>
@@ -110,16 +110,46 @@
       <wsdl:output message="tns:refreshResponseMessage">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getServices">
+      <wsdl:input message="tns:getServicesRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getServicesResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getSystemInfo">
       <wsdl:input message="tns:getSystemInfoRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:getSystemInfoResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getServices">
-      <wsdl:input message="tns:getServicesRequestMessage">
+    <wsdl:operation name="getSystemReport">
+      <wsdl:input message="tns:getSystemReportRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:getServicesResponseMessage">
+      <wsdl:output message="tns:getSystemReportResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getThreadDetail">
+      <wsdl:input message="tns:getThreadDetailRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getThreadDetailResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBundleServices">
+      <wsdl:input message="tns:getBundleServicesRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getBundleServicesResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="performGarbageCollection">
+      <wsdl:input message="tns:performGarbageCollectionRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:performGarbageCollectionResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="restart">
+      <wsdl:input message="tns:restartRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:restartResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getBundles">
@@ -138,36 +168,6 @@
       <wsdl:input message="tns:getBundleEventsRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:getBundleEventsResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getBundleServices">
-      <wsdl:input message="tns:getBundleServicesRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getBundleServicesResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getThreadDetail">
-      <wsdl:input message="tns:getThreadDetailRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getThreadDetailResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="performGarbageCollection">
-      <wsdl:input message="tns:performGarbageCollectionRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:performGarbageCollectionResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="restart">
-      <wsdl:input message="tns:restartRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:restartResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getSystemReport">
-      <wsdl:input message="tns:getSystemReportRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getSystemReportResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getBundleDetail">
@@ -195,6 +195,13 @@
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /refresh</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Perform a refresh packages operation.]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Refresh packages]]></sdoc:summary></wsdl:documentation>
     <shttp:operation location="/refresh" method="POST"/>
     </wsdl:operation>
+    <wsdl:operation name="getServices">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /services</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get information on the active OSGi services.]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get service info]]></sdoc:summary></wsdl:documentation>
+    <shttp:operation location="/services" method="GET" outputSerialization="application/xml,application/json"/>
+      <wsdl:output>
+    <shttp:output name="getServicesResponse" part="getServicesResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getSystemInfo">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET </sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get system information.]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get system info]]></sdoc:summary></wsdl:documentation>
     <shttp:operation location="" method="GET" outputSerialization="application/xml,application/json"/>
@@ -202,12 +209,43 @@
     <shttp:output name="getSystemInfoResponse" part="getSystemInfoResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getServices">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /services</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get information on the active OSGi services.]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get service info]]></sdoc:summary></wsdl:documentation>
-    <shttp:operation location="/services" method="GET" outputSerialization="application/xml,application/json"/>
+    <wsdl:operation name="getSystemReport">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /report</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get system report.]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get system report]]></sdoc:summary></wsdl:documentation>
+    <shttp:operation location="/report" method="GET" outputSerialization="text/html"/>
       <wsdl:output>
-    <shttp:output name="getServicesResponse" part="getServicesResponse" type="entity"/>
+    <shttp:output name="getSystemReportResponse" part="getSystemReportResponse" type="entity"/>
       </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getThreadDetail">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /threads/{name}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get detailed information on a thread.]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get thread detail]]></sdoc:summary></wsdl:documentation>
+    <shttp:operation location="/threads/{name}" method="GET" outputSerialization="application/xml,application/json"/>
+      <wsdl:input>
+    <shttp:input name="name" part="name" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The thread name.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getThreadDetailResponse" part="getThreadDetailResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBundleServices">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /bundles/{id}/services</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get the set of services provided by a bundle.]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get bundle services]]></sdoc:summary></wsdl:documentation>
+    <shttp:operation location="/bundles/{id}/services" method="GET" outputSerialization="application/xml,application/json"/>
+      <wsdl:input>
+    <shttp:input name="id" part="id" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The bundle ID.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getBundleServicesResponse" part="getBundleServicesResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="performGarbageCollection">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /gc</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Perform garbage collection.]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Perform garbage collection]]></sdoc:summary></wsdl:documentation>
+    <shttp:operation location="/gc" method="GET"/>
+      <wsdl:output>
+    <shttp:output name="performGarbageCollectionResponse" part="performGarbageCollectionResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="restart">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /restart</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Restart the system.]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Restart]]></sdoc:summary></wsdl:documentation>
+    <shttp:operation location="/restart" method="POST"/>
     </wsdl:operation>
     <wsdl:operation name="getBundles">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /bundles</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get information on the deployed bundles.]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get bundle info]]></sdoc:summary></wsdl:documentation>
@@ -231,44 +269,6 @@
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="getBundleEventsResponse" part="getBundleEventsResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getBundleServices">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /bundles/{id}/services</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get the set of services provided by a bundle.]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get bundle services]]></sdoc:summary></wsdl:documentation>
-    <shttp:operation location="/bundles/{id}/services" method="GET" outputSerialization="application/xml,application/json"/>
-      <wsdl:input>
-    <shttp:input name="id" part="id" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The bundle ID.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getBundleServicesResponse" part="getBundleServicesResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getThreadDetail">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /threads/{name}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get detailed information on a thread.]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get thread detail]]></sdoc:summary></wsdl:documentation>
-    <shttp:operation location="/threads/{name}" method="GET" outputSerialization="application/xml,application/json"/>
-      <wsdl:input>
-    <shttp:input name="name" part="name" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The thread name.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getThreadDetailResponse" part="getThreadDetailResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="performGarbageCollection">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /gc</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Perform garbage collection.]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Perform garbage collection]]></sdoc:summary></wsdl:documentation>
-    <shttp:operation location="/gc" method="GET"/>
-      <wsdl:output>
-    <shttp:output name="performGarbageCollectionResponse" part="performGarbageCollectionResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="restart">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /restart</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Restart the system.]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Restart]]></sdoc:summary></wsdl:documentation>
-    <shttp:operation location="/restart" method="POST"/>
-    </wsdl:operation>
-    <wsdl:operation name="getSystemReport">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /report</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get system report.]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get system report]]></sdoc:summary></wsdl:documentation>
-    <shttp:operation location="/report" method="GET" outputSerialization="text/html"/>
-      <wsdl:output>
-    <shttp:output name="getSystemReportResponse" part="getSystemReportResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getBundleDetail">

@@ -11,16 +11,16 @@
     <wsdl:part name="parameter0" type="nms1:Domain">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="deleteDomainRequestMessage">
-    <wsdl:part name="domainName" type="xs:string">
+  <wsdl:message name="modifyDomainResponseMessage">
+    <wsdl:part name="modifyDomainResponse" type="nms1:Domain">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="addDomainRequestMessage">
     <wsdl:part name="parameter0" type="nms1:Domain">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="modifyDomainResponseMessage">
-    <wsdl:part name="modifyDomainResponse" type="nms1:Domain">
+  <wsdl:message name="deleteDomainRequestMessage">
+    <wsdl:part name="domainName" type="xs:string">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getDomainRequestMessage">
@@ -38,10 +38,10 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="DomainMgmtRESTPortType">
-    <wsdl:operation name="deleteDomain">
-      <wsdl:input message="tns:deleteDomainRequestMessage">
+    <wsdl:operation name="modifyDomain">
+      <wsdl:input message="tns:modifyDomainRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:deleteDomainResponseMessage">
+      <wsdl:output message="tns:modifyDomainResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="addDomain">
@@ -50,10 +50,10 @@
       <wsdl:output message="tns:addDomainResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="modifyDomain">
-      <wsdl:input message="tns:modifyDomainRequestMessage">
+    <wsdl:operation name="deleteDomain">
+      <wsdl:input message="tns:deleteDomainRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:modifyDomainResponseMessage">
+      <wsdl:output message="tns:deleteDomainResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getDomain">
@@ -65,18 +65,52 @@
   </wsdl:portType>
   <wsdl:binding name="DomainMgmtRESTBinding" type="tns:DomainMgmtRESTPortType">
     <shttp:binding/>
-    <wsdl:operation name="deleteDomain">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">DELETE /domains/{domainName}</sdoc:displayName><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Delete a domain]]></sdoc:summary><sdoc:response code="200" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Success]]></sdoc:description></sdoc:response><sdoc:response code="404" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Specified domain not found (Invalid domain name)]]></sdoc:description></sdoc:response><sdoc:response code="500" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Internal error trying to delete the domain]]></sdoc:description></sdoc:response><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Delete a domain.</p>
+    <wsdl:operation name="modifyDomain">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /domains/{domainName}</sdoc:displayName><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Modify a domain]]></sdoc:summary><sdoc:response code="200" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Success]]></sdoc:description></sdoc:response><sdoc:response code="404" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Specified domain not found (Invalid domain name)]]></sdoc:description></sdoc:response><sdoc:response code="500" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Internal error retrieving the domain]]></sdoc:description></sdoc:response><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Modify a domain.</p>
 <h4>Request</h4>
-<pre><code>DELETE /rest/domains/LDAP1 HTTP/1.1
+<pre><code>POST /rest/domains/LDAP1 HTTP/1.1
+{
+    "DomainName" : "LDAP1",
+    "DomainDescription" : "My LDAP domain",
+    "IdentitySystemType" : "Directory Server",
+    "ModuleClassName" : "com.soa.security.provider.ldap.LDAPSecurityProvider",
+    "LastUpdatedDts" : "2015-12-09T02:40:25Z",
+    "ConnectorName" : "33c9d1fe-9e1e-11e5-ae49-c39bdb8021bb",
+    "ConnectorConfiguration" : "I0RvbWFpbiBwdXsZGFwLmdyb3VwLlRhcC5ihS5sZG29...",
+    "OrganizationScope" : "uddi:soa.com:registryorganization",
+    "SupportsInteractiveLogin" : true,
+    "SupportsWsLogin" : true,
+    "SupportsAuthorization" : false,
+    "SupportsIdentityBrowsing" : true,
+    "SupportsLoginProcess" : true
+}
 </code></pre>
 <h4>Response</h4>
 <pre><code>HTTP/1.1 200 OK
+{
+    "DomainName" : "LDAP1",
+    "DomainDescription" : "My LDAP domain",
+    "IdentitySystemType" : "Directory Server",
+    "ModuleClassName" : "com.soa.security.provider.ldap.LDAPSecurityProvider",
+    "LastUpdatedDts" : "2015-12-09T02:40:25Z",
+    "ConnectorName" : "33c9d1fe-9e1e-11e5-ae49-c39bdb8021bb",
+    "ConnectorConfiguration" : "I0RvbWFpbiBwdXsZGFwLmdyb3VwLlRhcC5ihS5sZG29...",
+    "OrganizationScope" : "uddi:soa.com:registryorganization",
+    "SupportsInteractiveLogin" : true,
+    "SupportsWsLogin" : true,
+    "SupportsAuthorization" : false,
+    "SupportsIdentityBrowsing" : true,
+    "SupportsLoginProcess" : true
+}
 </code></pre>]]></sdoc:description></wsdl:documentation>
-    <shttp:operation location="/domains/{domainName}" method="DELETE"/>
+    <shttp:operation inputSerialization="application/xml,application/json" location="/domains/{domainName}" method="POST" outputSerialization="application/xml,application/json"/>
       <wsdl:input>
     <shttp:input name="domainName" part="domainName" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Name of the domain.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[New domain information.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
       </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="modifyDomainResponse" part="modifyDomainResponse" type="entity"/>
+      </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="addDomain">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /domains</sdoc:displayName><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Add a domain]]></sdoc:summary><sdoc:response code="200" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Success]]></sdoc:description></sdoc:response><sdoc:response code="500" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Internal error trying to create the domain]]></sdoc:description></sdoc:response><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Add a domain.</p>
@@ -126,52 +160,18 @@ Content-Type: application/json
     <shttp:output name="addDomainResponse" part="addDomainResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="modifyDomain">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /domains/{domainName}</sdoc:displayName><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Modify a domain]]></sdoc:summary><sdoc:response code="200" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Success]]></sdoc:description></sdoc:response><sdoc:response code="404" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Specified domain not found (Invalid domain name)]]></sdoc:description></sdoc:response><sdoc:response code="500" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Internal error retrieving the domain]]></sdoc:description></sdoc:response><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Modify a domain.</p>
+    <wsdl:operation name="deleteDomain">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">DELETE /domains/{domainName}</sdoc:displayName><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Delete a domain]]></sdoc:summary><sdoc:response code="200" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Success]]></sdoc:description></sdoc:response><sdoc:response code="404" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Specified domain not found (Invalid domain name)]]></sdoc:description></sdoc:response><sdoc:response code="500" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Internal error trying to delete the domain]]></sdoc:description></sdoc:response><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Delete a domain.</p>
 <h4>Request</h4>
-<pre><code>POST /rest/domains/LDAP1 HTTP/1.1
-{
-    "DomainName" : "LDAP1",
-    "DomainDescription" : "My LDAP domain",
-    "IdentitySystemType" : "Directory Server",
-    "ModuleClassName" : "com.soa.security.provider.ldap.LDAPSecurityProvider",
-    "LastUpdatedDts" : "2015-12-09T02:40:25Z",
-    "ConnectorName" : "33c9d1fe-9e1e-11e5-ae49-c39bdb8021bb",
-    "ConnectorConfiguration" : "I0RvbWFpbiBwdXsZGFwLmdyb3VwLlRhcC5ihS5sZG29...",
-    "OrganizationScope" : "uddi:soa.com:registryorganization",
-    "SupportsInteractiveLogin" : true,
-    "SupportsWsLogin" : true,
-    "SupportsAuthorization" : false,
-    "SupportsIdentityBrowsing" : true,
-    "SupportsLoginProcess" : true
-}
+<pre><code>DELETE /rest/domains/LDAP1 HTTP/1.1
 </code></pre>
 <h4>Response</h4>
 <pre><code>HTTP/1.1 200 OK
-{
-    "DomainName" : "LDAP1",
-    "DomainDescription" : "My LDAP domain",
-    "IdentitySystemType" : "Directory Server",
-    "ModuleClassName" : "com.soa.security.provider.ldap.LDAPSecurityProvider",
-    "LastUpdatedDts" : "2015-12-09T02:40:25Z",
-    "ConnectorName" : "33c9d1fe-9e1e-11e5-ae49-c39bdb8021bb",
-    "ConnectorConfiguration" : "I0RvbWFpbiBwdXsZGFwLmdyb3VwLlRhcC5ihS5sZG29...",
-    "OrganizationScope" : "uddi:soa.com:registryorganization",
-    "SupportsInteractiveLogin" : true,
-    "SupportsWsLogin" : true,
-    "SupportsAuthorization" : false,
-    "SupportsIdentityBrowsing" : true,
-    "SupportsLoginProcess" : true
-}
 </code></pre>]]></sdoc:description></wsdl:documentation>
-    <shttp:operation inputSerialization="application/xml,application/json" location="/domains/{domainName}" method="POST" outputSerialization="application/xml,application/json"/>
+    <shttp:operation location="/domains/{domainName}" method="DELETE"/>
       <wsdl:input>
     <shttp:input name="domainName" part="domainName" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Name of the domain.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[New domain information.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
       </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="modifyDomainResponse" part="modifyDomainResponse" type="entity"/>
-      </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getDomain">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /domains/{domainName}</sdoc:displayName><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get domain details]]></sdoc:summary><sdoc:response code="200" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Success]]></sdoc:description></sdoc:response><sdoc:response code="404" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Specified domain not found (Invalid domain name)]]></sdoc:description></sdoc:response><sdoc:response code="500" xmlns:sdoc="http://soa.com/wsdl/doc"><sdoc:description><![CDATA[Internal error trying to retrieve the domain]]></sdoc:description></sdoc:response><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Retrieves a domain's configuration.</p>
