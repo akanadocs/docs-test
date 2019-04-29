@@ -13,7 +13,7 @@ nav-title: Generate CSV Response
 How to Generate CSV Responses
 -----------------------------
 
-We had a customer scenario where they wanted the product to take a complex XML repsonse and generate a simple CSV format with just a few of the response message elements.  We could have done this using XSL-T, but I didn’t like this approach because it did give me the flexibility I wanted (plus my XSL is terrible).  So I did this using scripts, with a process context variable of type String named acceptHeader.  One in front of the invoke that captures the accept header and stores in the the processContext variable, and if it’s CSV forces the addition of an options query param to ensure we get all the info we need.
+We had a customer scenario where they wanted the product to take a complex XML response and generate a simple CSV format with just a few of the response message elements.  We could have done this using XSL-T, but I didn’t like this approach because it did give me the flexibility I wanted (plus my XSL is terrible).  So I did this using scripts, with a process context variable of type String named acceptHeader.  One in front of the invoke that captures the accept header and stores in the the processContext variable, and if it’s CSV forces the addition of an options query param to ensure we get all the info we need.
 
 This is a very over-simple model that doesn't attempt to read through any returned array of "product" objects (it just assumes it's a single entry array and reads the values from the first one).  It really should write a header, and then iterate through the products array to generate a real response, but this gives the basic idea of how to make this work.
 
