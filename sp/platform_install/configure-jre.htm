@@ -1,0 +1,64 @@
+---
+layout: page
+title: Configure Java Runtime
+description: A guide to how to set up an external JRE to run the Akana Platform.
+product: sp
+category: gs
+sub-nav-class: Installation - Akana API Platform
+weight: 11
+type: page
+nav-title: Configure Java Runtime
+---
+<h2 id="top">Configure Java Runtime</h2>
+<p>A guide to how to set up an external JRE to run the Akana Platform.</p>
+<p><span class="apidoc_red"><strong>Note</strong>: from version 2019.0.0 and later, these steps are not necessary.</span></p>
+
+
+
+<h3 style="color: gray;">Table of Contents</h3>
+<ol class="table_of_contents">
+	<li><a href="#introduction">Introduction</a></li>
+	<li><a href="#finding_java">Find Your Java installation</a></li>
+	<li><a href="#copy_provider_jar">Copy the provider jar Ffile</a></li>
+	<li><a href="#update_java_security">Update the java.security file</a></li>
+</ol>
+
+
+
+<h3 id="introduction"><a name="introduction"></a>Introduction</h3>
+<p>To use an external JRE (that is, not provided by Akana), you will have to ensure that you extend the Java security providers with the Bouncy Castle provider. This provider ships with the Akana Plaform in the <strong>/jreupdate</strong> folder.</p>
+<p><span class="apidoc_red">These instructions assume that you chose an installation ZIP file that does <strong>not</strong> include a bundled JRE.</span></p>
+<p><span class="apidoc_red">If you have an existing installation and you're not sure</span> which JRE version the platform is using, you can check it in your installation. See <a href="../../ag/troubleshooting/ts_pm_nd_02.htm#s02_08_05">Checking the JRE version</a> (troubleshooting guide).</p>
+
+
+
+<h3 id="finding_java">Find your Java installation</h3>
+<p>Depending on your operating system and how you installed your JRE, there might be different ways of finding it. It's typically fairly easy to find, but if you're on a mac you may find this command useful:</p>
+<pre>/usr/libexec/java_home</pre>
+<p>This will show you the folder where Java is installed, and will also tell you what you should set in your profile for the <code><strong>JAVA_HOME</strong></code> variable. In fact, this is probably a good time to set JAVA_HOME.</p>
+<p>Once you've found your installation, you can continue with the process of adding the Bouncy Castle security provider. On a mac, it will likely look something like this:</p>
+<pre>Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home</pre>
+
+
+
+<h3 id="copy_provider_jar">Copy the provider jar file</h3>
+<p>Copy the <code>following file from your Akana Platform installation folder to the jre/lib/ext folder in your Java installation.</code></p>
+<ul>
+	<li>File: <strong>bcprov-jdkon-XXX.jar</strong></li>
+	<li>Source folder: <strong>$AKANAROOT/jreupdate/ext</strong></li>
+	<li>Target folder: <strong>jre/lib/ext</strong></li>
+	<li>Example:
+		<pre>sudo cp ~/Downloads/akana-platform-8.1.39/jreupdate/ext/bcprov-jdk15on-147.jar $JAVA_HOME/jre/lib/etc/</pre> </li>
+</ul>
+
+
+
+<h3 id="update_java_security">Update the java.security file</h3>
+<ol>
+	<li>Open the sample <strong>java.security</strong> file from your Akana Platform installation (in <strong>jreupdate/security</strong>).</li>
+	<li>Find and copy the line that references the Bouncy Castle provider, something like this:
+		<pre>security.provider.10=org.bouncycastle.jce.provider.BouncyCastleProvider</pre></li>
+	<li>Then edit the java.security file (it's normally a root owned file, so remember to use sudo) in your Java installation <strong>$JAVA_HOME/jre/lib/security/java.security</strong> and add the line you just copied to the end of the provider list.
+	<p><strong>NOTE</strong>: make sure you change the number of the provider to be one greater than the previous entry in the list. In the case of the default Apple JRE installation you will see a list ending in 10, and so will need to use <strong>security.provider.11=...</strong>.</p></li>
+</ol>
+<p>And that's it&#8212;your JRE is ready to use with the Akana Platform.</p>
