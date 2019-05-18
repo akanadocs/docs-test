@@ -4,8 +4,8 @@
     <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/products/admin/console/common/1.0" version="1.0" xmlns:tns="http://soa.com/products/admin/console/common/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:element name="NameValuePair" type="tns:nameValuePair"/>
 <xs:element name="link" type="tns:link"/>
-<xs:complexType name="nameValuePair"><xs:sequence><xs:element minOccurs="0" name="name" type="xs:string"/><xs:element minOccurs="0" name="value" type="xs:string"/></xs:sequence></xs:complexType>
 <xs:complexType name="link"><xs:sequence><xs:element minOccurs="0" name="href" type="xs:string"/><xs:element minOccurs="0" name="rel" type="xs:string"/><xs:element minOccurs="0" name="title" type="xs:string"/><xs:element minOccurs="0" name="type" type="xs:string"/></xs:sequence></xs:complexType>
+<xs:complexType name="nameValuePair"><xs:sequence><xs:element minOccurs="0" name="name" type="xs:string"/><xs:element minOccurs="0" name="value" type="xs:string"/></xs:sequence></xs:complexType>
 </xs:schema>
     <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/products/admin/console/config/1.0" version="1.0" xmlns:ns1="http://soa.com/products/admin/console/common/1.0" xmlns:tns="http://soa.com/products/admin/console/config/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:import namespace="http://soa.com/products/admin/console/common/1.0"/>
@@ -148,6 +148,12 @@
       <wsdl:output message="tns:getConfigurationResponseMessage">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getConfigurations">
+      <wsdl:input message="tns:getConfigurationsRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getConfigurationsResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="createConfiguration">
       <wsdl:input message="tns:createConfigurationRequestMessage">
     </wsdl:input>
@@ -188,12 +194,6 @@
       <wsdl:input message="tns:createFactoryConfigurationRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:createFactoryConfigurationResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getConfigurations">
-      <wsdl:input message="tns:getConfigurationsRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getConfigurationsResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getProperty">
@@ -310,6 +310,81 @@ Content-Type:application/json; charset=UTF-8
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="getConfigurationResponse" part="getConfigurationResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getConfigurations">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET </sdoc:displayName><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get configurations]]></sdoc:summary><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Get all configurations.  An optional filter may be specified to select specific configurations.</p>
+<h4>Request:</h4>
+<pre><code>GET /admin/config HTTP/1.1
+Accept: application/json
+</code></pre>
+<h4>Responses:</h4>
+<ul>
+<li>HTTP/1.1 200 OK.   If successful</li>
+</ul>
+<h4>Response</h4>
+<p>The following is an example of a response for a getConfigurations request.  The content has been truncated for brevity.</p>
+<pre><code>HTTP/1.1 200 OK
+Content-Type:application/json; charset=UTF-8
+
+{
+    "links": [
+        {
+            "href": "http://localhost:9900/admin/config/factories",
+            "rel": "factories"
+        }
+    ],
+    "pids": [
+        {
+            "pid": "com.akana.test",
+            "links": [
+                {
+                    "href": "http://localhost:9900/admin/config/com.akana.test",
+                    "rel": "self"
+                }
+            ]
+        },
+        {
+            "pid": "com.soa.framework.xpath",
+            "bundleLocation": "obr://com.soa.platform.framework/8.3.0",
+            "links": [
+                {
+                    "href": "http://localhost:9900/admin/config/com.soa.framework.xpath",
+                    "rel": "self"
+                }
+            ]
+        },
+...
+        {
+            "pid": "com.soa.platform.jetty",
+            "bundleLocation": "obr://com.soa.platform.jetty/8.3.0",
+            "links": [
+                {
+                    "href": "http://localhost:9900/admin/config/com.soa.platform.jetty",
+                    "rel": "self"
+                }
+            ]
+        },
+        {
+            "pid": "com.soa.cache.generic",
+            "bundleLocation": "obr://com.soa.framework/8.3.0",
+            "links": [
+                {
+                    "href": "http://localhost:9900/admin/config/com.soa.cache.generic",
+                    "rel": "self"
+                }
+            ]
+        }
+    ]
+}
+</code></pre>]]></sdoc:description></wsdl:documentation>
+    <shttp:operation location="" method="GET" outputSerialization="application/json,application/xml"/>
+      <wsdl:input>
+    <shttp:input name="filter" part="filter" type="query"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Only configurations that match this filter will be returned.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+    <shttp:input name="brief" part="brief" type="query"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Controls if a brief or verbose data set should be returned.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getConfigurationsResponse" part="getConfigurationsResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="createConfiguration">
@@ -587,81 +662,6 @@ Location: http://localhost:9900/admin/config/com.akana.test.factory.a7df3a9e-924
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="createFactoryConfigurationResponse" part="createFactoryConfigurationResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getConfigurations">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET </sdoc:displayName><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get configurations]]></sdoc:summary><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Get all configurations.  An optional filter may be specified to select specific configurations.</p>
-<h4>Request:</h4>
-<pre><code>GET /admin/config HTTP/1.1
-Accept: application/json
-</code></pre>
-<h4>Responses:</h4>
-<ul>
-<li>HTTP/1.1 200 OK.   If successful</li>
-</ul>
-<h4>Response</h4>
-<p>The following is an example of a response for a getConfigurations request.  The content has been truncated for brevity.</p>
-<pre><code>HTTP/1.1 200 OK
-Content-Type:application/json; charset=UTF-8
-
-{
-    "links": [
-        {
-            "href": "http://localhost:9900/admin/config/factories",
-            "rel": "factories"
-        }
-    ],
-    "pids": [
-        {
-            "pid": "com.akana.test",
-            "links": [
-                {
-                    "href": "http://localhost:9900/admin/config/com.akana.test",
-                    "rel": "self"
-                }
-            ]
-        },
-        {
-            "pid": "com.soa.framework.xpath",
-            "bundleLocation": "obr://com.soa.platform.framework/8.3.0",
-            "links": [
-                {
-                    "href": "http://localhost:9900/admin/config/com.soa.framework.xpath",
-                    "rel": "self"
-                }
-            ]
-        },
-...
-        {
-            "pid": "com.soa.platform.jetty",
-            "bundleLocation": "obr://com.soa.platform.jetty/8.3.0",
-            "links": [
-                {
-                    "href": "http://localhost:9900/admin/config/com.soa.platform.jetty",
-                    "rel": "self"
-                }
-            ]
-        },
-        {
-            "pid": "com.soa.cache.generic",
-            "bundleLocation": "obr://com.soa.framework/8.3.0",
-            "links": [
-                {
-                    "href": "http://localhost:9900/admin/config/com.soa.cache.generic",
-                    "rel": "self"
-                }
-            ]
-        }
-    ]
-}
-</code></pre>]]></sdoc:description></wsdl:documentation>
-    <shttp:operation location="" method="GET" outputSerialization="application/json,application/xml"/>
-      <wsdl:input>
-    <shttp:input name="filter" part="filter" type="query"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Only configurations that match this filter will be returned.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-    <shttp:input name="brief" part="brief" type="query"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Controls if a brief or verbose data set should be returned.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getConfigurationsResponse" part="getConfigurationsResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getProperty">
