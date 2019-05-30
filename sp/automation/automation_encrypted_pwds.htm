@@ -1,0 +1,138 @@
+---
+layout: page
+title: Including Encrypted Passwords in Automation Recipes
+description: Learn how to generated encrypted passwords and use them in recipe files.
+product: sp
+category: ref
+weight: 05
+sub-nav-class: Automation
+type: page
+nav-title: Encrypted Passwords in Recipes
+---
+<h2 id="top">Automation: Including Encrypted Passwords in Recipes</h2>
+<p>Learn how to generated encrypted passwords and use them in recipe files.</p>
+<p><a href="automation_examples.htm" class="button secondary">Automation Examples</a> 
+<a href="../platform_install/installing_akana_api_platform.htm" class="button secondary">Installing the Akana API Platform 2018.0.x</a></p>
+
+<h5 class="stamp">Supported Platforms: 8.4.x and later</h5>
+<div class = "divider1"></div>
+
+
+
+<h3 style="color: gray;">Table of Contents</h3>
+<ol class="table_of_contents">
+	<li><a href="#overview">Overview</a></li>
+	<li><a href="#automation_encryption_workflow">Using encryption in automation recipes: workflow</a></li>
+	<li><a href="#automation_encryption_create_key">Commands: create encryption key</a></li>
+	<li><a href="#automation_encryption_encrypt_value">Commands: encrypt a value</a></li>
+</ol>
+<div class = "divider1"></div>
+
+
+
+<h3 id="overview">Overview</h3>
+<p>When using automation recipes, in some cases it's important that credentials are encrypted for security reasons.</p>
+<p>In version 2019.0.0 and later, automation functionality includes an encryption feature that uses a &quot;secret&quot; directive to indicate that a value is encrypted, and can be decrypted using the key in the secrets file.</p>
+<p>For example, a recipe might include the following property:</p>
+<pre>${secret:DB_ADMIN_PASSWORD}</pre>
+<p>In the properties file passed during recipe execution, you would have the encrypted value. For example:</p>
+<pre>DB_ADMIN_PASSWORD=VdRdHt61SENlNrufQw2maonU9jZEcNMrprE5L_HDBrE</pre>
+<p>You could also embed the &quot;secret&quot; directive in the property value.</p>
+<p>For example, the recipe variable would be:</p>
+<pre>${DB_ADMIN_PASSWORD}</pre>
+<p>The property value would be:</p>
+<pre>DB_ADMIN_PASSWORD=secret:VdRdHt61SENlNrufQw2maonU9jZEcNMrprE5L_HDBrE</pre>
+<p>When a recipe is executed, the name of the secret key file can be passed to the recipe using one of the following options:</p>
+<ul>
+	<li><pre>--secrets-file</pre>
+	</li>
+	<li><pre>-s</pre>
+	</li>
+</ul>
+<p>For example:</p>
+<pre>./jython.sh -m akana.container --recipe &lt;recipe location&gt; -s secret.key ...</pre>
+<p>The argument <strong>--secrets-file</strong> is valid for all recipes relating to the module <strong>akana.container</strong>. {<span class="apidoc_red">what about the -s? Same thing?</span>}</p>
+<p><a href="#top">back to top</a></p>
+
+
+
+
+<h3 id="automation_encryption_workflow">Using encryption in automation recipes: workflow</h3>
+<p>For using encrypted passwords in automation recipes, the general workflow is as follows:</p>
+<ol>
+	<li>Create an encryption key and store it in a file. For example, the command below creates an encryption key and stores it in a file named <strong>secret.key</strong>:
+<pre>./jython.sh -m akana.secrets --keygen --secrets-file secret.key</pre>
+	</li>
+	<li>Encrypt a value, or a set of values, that will be used in executing a recipe using the generated key. For example:
+		<pre>./jython.sh -m akana.secrets --encrypt --secrets-file secret.key &quot;some value&quot;</pre>
+		<p>This prints the encrypted value into console output; for example:</p>
+		<pre>secret:some_hash</pre>
+	</li>
+</ol>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h3 id="automation_encryption_create_key">Commands: create encryption key</h3>
+<p>To create an encryption key, use the following command:</p>
+<pre>./jython.sh -m akana.secrets --keygen --secrets-file secret.key</pre>
+<p>In the above:</p>
+<ul>
+	<li>akana.secrets is the directive {<span class="apidoc_red">is this the right word here?</span>}</li>
+	<li>keygen is the command to generate the encryption key</li>
+	<li>--secrets-file introduces the user-defined name of the file where the encryption key is stored (in this case, <strong>secret.key</strong>)</li>
+</ul>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h3 id="automation_encryption_encrypt_value">Commands: encrypt a value</h3>
+<p>To encrypt a value, use the following command:</p>
+<pre>./jython.sh -m akana.secrets --encrypt --secrets-file secret.key &quot;some value&quot;</pre>
+<p>In the above:</p>
+<ul>
+	<li>akana.secrets is the directive {<span class="apidoc_red">is this the right word here?</span>}</li>
+	<li>encrypt is the command to encrypt the specified secrets file {<span class="apidoc_red">don't think this is correct</span>}</li>
+	<li>--secrets-file introduces the user-defined name of the file where the encryption key is stored (in this case, <strong>secret.key</strong>) {<span class="apidoc_red">maybe referring to an existing value in the file? Don't know.</span>}</li>
+</ul>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h3 id="xxx">Use Case</h3>
+<p>Let's say you need to configure automation recipes with encryption, and there are two passwords, one for the database administration and one for the database schema.</p>
+<p>The default recipes include the following:</p>
+<pre>"name":"set.database.options",
+"properties":{
+  "admin.username":"${DB_ADMIN_USERNAME|root}",
+  "admin.password":"${DB_ADMIN_PASSWORD|password}",
+  "user":"${DB_USERNAME|user123}",
+  "password":"${DB_PASSWORD|password}",
+</pre>
+<p>In this scenario, the DB_ADMIN_PASSWORD and DB_PASSWORD values would be encrypted separately using the same key file.</p>
+<p><a href="#top">back to to</a><a href="#top">p</a></p>
+
+
+
+<div class = "divider1"></div>
+
+
+
+<h3 id="related_topics">Related Topics</h3>
+<div class="relatedlinks" id="install">
+<ul>
+	<li><a href="../upgrade/upgrading_akana_api_platform_84_2018.htm">Upgrading Akana API Platform from Version 8.4x to Version 2018.0.x</a></li>
+	<li><a href="../upgrade/upgrading_akana_api_platform_82_84.htm">Upgrading Akana API Platform from Version 8.2 to Version 8.4x</a></li>
+	<li><a href="../upgrade/upgrading_min_downtime.htm">Use Case: Upgrading with Minimum Downtime</a></li>
+	<li><a href="../upgrade/upgrading_micro.htm">Minor-Version Update Notes</a></li>
+</ul>
+<ul>
+	<li><a href="../platform_install/installing_akana_api_platform.htm">Installing the Akana API Platform 2018.0.0</a></li>
+	<li><a href="../platform_install/installing_akana_api_platform_v84.htm">Installing the Akana API Platform 8.4x</a></li>
+	<li><a href="../platform_install/installing_akana_api_platform_v82.htm">Installing the Akana API Platform 8.2x</a></li>
+	<li><a href="../platform_install/implementation_planning.htm">Planning Your Implementation</a></li>
+	<li><a href="../platform_install/install_cm_jython_script.htm">Installation Jython Script</a></li>
+	<li><a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a></li>
+	<li><a href="../platform_install/install_es_secure_tc.htm">Configuring Elasticsearch with security</a></li>
+</ul>
+</div>
