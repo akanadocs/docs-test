@@ -10,9 +10,11 @@ type: page
 nav-title: Encrypted Passwords in Recipes
 ---
 <h2 id="top">Automation: Including Encrypted Passwords in Recipes</h2>
-<p>Learn how to generated encrypted passwords and use them in recipe files.</p>
-<p><a href="automation_examples.htm" class="button secondary">Automation Examples</a> 
-<a href="../platform_install/installing_akana_api_platform.htm" class="button secondary">Installing the Akana API Platform 2018.0.x</a></p>
+<p>Learn how to generate encrypted passwords and use them in recipe files.</p>
+<p><strong>Note</strong>: For general information about using automation recipes, and simple examples to get you started, refer to the files below.</p>
+<p><a href="automation_ref.htm" class="button secondary">Automation Reference</a> 
+<a href="automation_examples.htm" class="button secondary">Automation Examples</a> 
+</p>
 
 <h5 class="stamp">Supported Platforms: 8.4.x and later</h5>
 <div class = "divider1"></div>
@@ -25,33 +27,39 @@ nav-title: Encrypted Passwords in Recipes
 	<li><a href="#automation_encryption_workflow">Using encryption in automation recipes: workflow</a></li>
 	<li><a href="#automation_encryption_create_key">Commands: create encryption key</a></li>
 	<li><a href="#automation_encryption_encrypt_value">Commands: encrypt a value</a></li>
+	<li><a href="#automation_encryption_use_case">Use case</a></li>
 </ol>
 <div class = "divider1"></div>
 
 
 
 <h3 id="overview">Overview</h3>
-<p>When using automation recipes, in some cases it's important that credentials are encrypted for security reasons.</p>
-<p>In version 2019.0.0 and later, automation functionality includes an encryption feature that uses a &quot;secret&quot; directive to indicate that a value is encrypted, and can be decrypted using the key in the secrets file.</p>
-<p>For example, a recipe might include the following property:</p>
+<p>When using automation <a href="../../ag/glossary_pm_nd.htm#gl_pm_recipe">recipes</a>, in some cases it's important that credentials are encrypted for security reasons.</p>
+<p>In version 2019.0.0 and later, automation functionality includes an encryption feature that uses a <strong>secret</strong> directive to indicate that a value is encrypted, and can be decrypted using the key in the secrets file.</p>
+<p>For example, some recipes include the following property:</p>
 <pre>${secret:DB_ADMIN_PASSWORD}</pre>
 <p>In the properties file passed during recipe execution, you would have the encrypted value. For example:</p>
 <pre>DB_ADMIN_PASSWORD=VdRdHt61SENlNrufQw2maonU9jZEcNMrprE5L_HDBrE</pre>
-<p>You could also embed the &quot;secret&quot; directive in the property value.</p>
+<p>You could also embed the <strong>secret</strong> directive in the property value.</p>
 <p>For example, the recipe variable would be:</p>
 <pre>${DB_ADMIN_PASSWORD}</pre>
 <p>The property value would be:</p>
 <pre>DB_ADMIN_PASSWORD=secret:VdRdHt61SENlNrufQw2maonU9jZEcNMrprE5L_HDBrE</pre>
-<p>When a recipe is executed, the name of the secret key file can be passed to the recipe using one of the following options:</p>
+
+<h5>Passing the name of the key file</h5>
+<p>When executing a recipe, you can pass the name of the key file using either of the following:</p>
 <ul>
-	<li><pre>--secrets-file</pre>
+	<li>
+		<pre>--secrets-file {filename}</pre>
+	<p>Example:</p>
+	<pre>./jython.sh -m akana.container --recipe {recipe location} --secrets-file secret.key ...</pre>
 	</li>
-	<li><pre>-s</pre>
+	<li><pre>-s {filename}</pre>
+	<p>Example:</p>
+	<pre>./jython.sh -m akana.container --recipe {recipe location} -s secret.key ...</pre>
 	</li>
 </ul>
-<p>For example:</p>
-<pre>./jython.sh -m akana.container --recipe &lt;recipe location&gt; -s secret.key ...</pre>
-<p>The argument <strong>--secrets-file</strong> is valid for all recipes relating to the module <strong>akana.container</strong>. {<span class="apidoc_red">what about the -s? Same thing?</span>}</p>
+<p>These arguments are valid for all recipes relating to the <strong>akana.container</strong> <a href="../../ag/glossary_pm_nd.htm#gl_pm_module">module</a>.</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -78,9 +86,9 @@ nav-title: Encrypted Passwords in Recipes
 <pre>./jython.sh -m akana.secrets --keygen --secrets-file secret.key</pre>
 <p>In the above:</p>
 <ul>
-	<li>akana.secrets is the directive {<span class="apidoc_red">is this the right word here?</span>}</li>
-	<li>keygen is the command to generate the encryption key</li>
-	<li>--secrets-file introduces the user-defined name of the file where the encryption key is stored (in this case, <strong>secret.key</strong>)</li>
+	<li>akana.secrets is the name of the automation module that supports managing encryption in automation recipes.</li>
+	<li>--keygen is the option to generate the encryption key.</li>
+	<li>--secrets-file specifies the user-defined name of the file where the encryption key is stored (in this case, <strong>secret.key</strong>).</li>
 </ul>
 <p><a href="#top">back to top</a></p>
 
@@ -91,15 +99,16 @@ nav-title: Encrypted Passwords in Recipes
 <pre>./jython.sh -m akana.secrets --encrypt --secrets-file secret.key &quot;some value&quot;</pre>
 <p>In the above:</p>
 <ul>
-	<li>akana.secrets is the directive {<span class="apidoc_red">is this the right word here?</span>}</li>
-	<li>encrypt is the command to encrypt the specified secrets file {<span class="apidoc_red">don't think this is correct</span>}</li>
-	<li>--secrets-file introduces the user-defined name of the file where the encryption key is stored (in this case, <strong>secret.key</strong>) {<span class="apidoc_red">maybe referring to an existing value in the file? Don't know.</span>}</li>
+	<li>akana.secrets is the name of the automation module that supports managing encryption in automation recipes.</li>
+	<li>--encrypt is the option to encrypt a value.</li>
+	<li>--secrets-file specifies the user-defined name of the file where the encryption key is stored (in this case, <strong>secret.key</strong>).</li>
+	<li>&quot;some value&quot; is the value to be encrypted.</li>
 </ul>
 <p><a href="#top">back to top</a></p>
 
 
 
-<h3 id="xxx">Use Case</h3>
+<h3 id="automation_encryption_use_case">Use Case</h3>
 <p>Let's say you need to configure automation recipes with encryption, and there are two passwords, one for the database administration and one for the database schema.</p>
 <p>The default recipes include the following:</p>
 <pre>"name":"set.database.options",
@@ -110,6 +119,10 @@ nav-title: Encrypted Passwords in Recipes
   "password":"${DB_PASSWORD|password}",
 </pre>
 <p>In this scenario, the DB_ADMIN_PASSWORD and DB_PASSWORD values would be encrypted separately using the same key file.</p>
+<p>For example, the recipe variable would be:</p>
+<pre>${DB_ADMIN_PASSWORD}</pre>
+<p>The property value would be:</p>
+<pre>DB_ADMIN_PASSWORD=secret:VdRdHt61SENlNrufQw2maonU9jZEcNMrprE5L_HDBrE</pre>
 <p><a href="#top">back to to</a><a href="#top">p</a></p>
 
 
