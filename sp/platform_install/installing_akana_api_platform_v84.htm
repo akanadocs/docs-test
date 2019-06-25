@@ -11,7 +11,7 @@ nav-title: Installing Akana API Platform 8.4x
 ---
 <h2 id="top">Installing the Akana API Platform 8.4x</h2>
 <p>Learn how to download, install, and configure the Akana API Platform 8.4x, including the Akana Platform and all features previously included in Policy Manager and Community Manager.</p>
-<p><strong>Note</strong>: This document covers instructions for the combined features available in version 8.4x. For 2018.0.x, refer to <a href="installing_akana_api_platform_all.htm">Installing the Akana API Platform 2018.0.x</a>. For 8.2x, refer to  <a href="installing_akana_api_platform_v82.htm">Installing Akana API Platform 8.2x</a>.</p>
+<p><strong>Note</strong>: This document covers instructions for the combined features available in version 8.4x. For 2018.0.x, refer to <a href="installing_akana_api_platform_v2018.htm">Installing the Akana API Platform 2018.0.x</a>. For 8.2x, refer to <a href="installing_akana_api_platform_v82.htm">Installing Akana API Platform 8.2x</a>.</p>
 
 <p>
 <a href="../admin_console/using_admin_console.htm" class="button secondary">Using the Admin Console</a>
@@ -481,7 +481,7 @@ nav-title: Installing Akana API Platform 8.4x
 	<li>Paste the URL in the browser. The browser redirects to the default landing page; for example: <strong>http://localhost:9901/acmepaymentscorp/#/home/landing</strong>.</li>
 	<li>Log in, using the username and password from the Jython script.</li>
 </ol>
-<p>For information about tasks relating to the developer portal, including Site Admin tasks such as configuring platform login, setting up domains, and choosing platform settings, as well as user tasks such as adding apps and APIs, refer to the platform help: <a href="../../cm/learning.html" title="Learning about Community Manager" target="_blank">../../cm/learning.html</a>.</p>
+<p>For information about tasks relating to the developer portal, including Site Admin tasks such as configuring platform login, setting up domains, and choosing platform settings, as well as user tasks such as adding apps and APIs, refer to the platform help: <a href="../../cm/learning.html" title="../../cm/learning.html" target="_blank">Learning about Community Manager</a>.</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -591,6 +591,15 @@ ALTER DATABASE {db.instance.name}
 	<li>max_allowed_packet=1073741824; (<a href="http://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html#sysvar_max_allowed_packet" title="http://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html#sysvar_max_allowed_packet" target="_blank">http://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html#sysvar_max_allowed_packet</a>)</li>
 </ul>
 <p>For more information, refer to <a href="install_mysql_dbsettings.htm">MySQL Database Property Settings</a>.</p>
+<!--<p><strong>MySQL 5.7:</strong></p>
+<p>If you're using MySQL 5.7, there is one additional flag required in the <strong>my.ini</strong> file:</p>
+<ul>
+	<li>optimizer_switch='derived_merge=off'</li>
+</ul>
+<p>Also, the <strong>sql-mode</strong> value should not contain NO_ZERO_DATE attribute. Below is an example for <strong>sql-mode</strong>:</p>
+<pre>sql-mode="STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION</pre> {commented out 3/5 per ATMO-23415-->
+<!--<p>Above info is from EB 9/7/16</p>-->
+
 
 <h5 id="notes_database_mysql_rm">Database notes: MySQL with Lifecycle Repository</h5>
 <p>For Akana API Platform 8.4 installs using the Lifecycle Repository feature, the Lifecycle Manager database user requires specific additional grants when using MySQL. These grants are required for successful completion of the <strong>Initialize Repository Database</strong> configuration task; otherwise, the task fails.</p>
@@ -635,7 +644,7 @@ ALTER DATABASE {db.instance.name}
 <ul>
 	<li><strong>MySQL 5.6</strong>: install this file:
 		<p><strong>mysql-connector-java-5.1.40-bin.jar</strong></p>
-		<p>Downloadable from: <a href="https://mvnrepository.com/artifact/mysql/mysql-connector-java/5.1.40" title="download location for MySQL database driver" target="_blank">https://mvnrepository.com/artifact/mysql/mysql-connector-java/5.1.40</a></p>
+	<p>Downloadable from: <a href="https://mvnrepository.com/artifact/mysql/mysql-connector-java/5.1.40" title="download location for MySQL database driver" target="_blank">https://mvnrepository.com/artifact/mysql/mysql-connector-java/5.1.40</a></p>
 	</li>
 	<li><strong>Oracle 12c Release 2</strong>: install this file:
 <p><strong>Ojdbc8.jar</strong></p>
@@ -861,13 +870,14 @@ ALTER DATABASE {db.instance.name}
 <p>Before you begin, make sure you have Administrator rights on the machine you're using.</p>
 <p>A silent installation is an automatic process that installs the Akana Platform without any user interaction. Before running the silent install, you must configure the properties file that you'll use for the installation. This file will include the specific values that you'd provide in the user interface if you're doing an installation using the GUI. For example, you must specify a target installation directory, install set, and input options to be executed at the end of the installation. Once you've configured the properties file, you can deploy the platform onto multiple machines in a scripted, non-interactive way.</p>
 <p>The name of the properties file you use doesn't matter as long as you reference it correctly when running the silent install.</p>
-<p>One way to generate a &quot;starter&quot; properties file is to first create a&nbsp;container using the GUI. When you do this, the properties file for the container is automatically saved in the directory for the container (<strong>../instances/{container_name}/system.properties</strong>). For example, if you create a pm01 container via the GUI, you can then look in the /instances/pm01 folder and you'll see the <strong>system.properties</strong> file for the container. You can use the values in this file as a help in setting up the properties file for creating subsequent containers, such as <strong>pm02</strong>, using the silent install method.</p>
+<p>One way to generate a &quot;starter&quot; properties file is to first create a container using the GUI. When you do this, the properties file for the container is automatically saved in the directory for the container (<strong>../instances/{container_name}/system.properties</strong>). For example, if you create a pm01 container via the GUI, you can then look in the /instances/pm01 folder and you'll see the <strong>system.properties</strong> file for the container. You can use the values in this file as a help in setting up the properties file for creating subsequent containers, such as <strong>pm02</strong>, using the silent install method.</p>
 <p>Be sure to copy and modify the file rather than changing the original file, and update the <strong>container.key</strong> property so that it's unique. Note: <strong>container.key</strong> can only be specified at the time of container creation; you cannot change it later.</p>
 <p>You can also create the properties file from scratch. An example is shown below. For more details about the properties file, see <a href="../container_management/configure_standalone_container.htm#container_silent">Configure Container (Silent Option)</a>.</p>
 <p><strong>Note</strong>: When you create the properties file, make sure there are no trailing spaces. </p>
 
 <p><strong>Properties file with placeholders:</strong></p>
-<pre>//Required properties
+<pre>
+//Required properties
 container.instance.name={instancename}
 credential.username = {username}
 credential.password = {password}
@@ -1157,7 +1167,7 @@ container.key=AAP84</pre>
 
 
 <h3 id="related_topics">Related Topics</h3>
-<div class="relatedlinks" id="install">
+<div class="relatedlinks" id="install"><!-- #BeginLibraryItem "/Library/relatedtopics_install.lbi" -->
 <ul>
 	<li><a href="../upgrade/upgrading_akana_api_platform_84_2018.htm">Upgrading Akana API Platform from Version 8.4x to Version 2018.0.x</a></li>
 	<li><a href="../upgrade/upgrading_akana_api_platform_82_84.htm">Upgrading Akana API Platform from Version 8.2 to Version 8.4x</a></li>
@@ -1165,12 +1175,9 @@ container.key=AAP84</pre>
 	<li><a href="../upgrade/upgrading_micro.htm">Minor-Version Update Notes</a></li>
 </ul>
 <ul>
-	<li><a href="installing_akana_api_platform_all.htm">Installing the Akana API Platform 2018.0.0</a></li>
-	<li><a href="../platform_install/installing_akana_api_platform_v84.htm">Installing the Akana API Platform 8.4x</a></li>
-	<li><a href="../platform_install/installing_akana_api_platform_v82.htm">Installing the Akana API Platform 8.2x</a></li>
-	<li><a href="../platform_install/implementation_planning.htm">Planning Your Implementation</a></li>
-	<li><a href="../platform_install/install_cm_jython_script.htm">Installation Jython Script</a></li>
-	<li><a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a></li>
-	<li><a href="../platform_install/install_es_secure_tc.htm">Configuring Elasticsearch with security</a></li>
-</ul>
-</div>
+	<li><a href="installing_akana_api_platform_all.htm">Installing the Akana API Platform (all versions)</a></li>
+	<li><a href="implementation_planning.htm">Planning Your Implementation</a></li>
+	<li><a href="install_cm_jython_script.htm">Installation Jython Script</a></li>
+	<li><a href="install_es_config.htm">Installing and Configuring Elasticsearch</a></li>
+	<li><a href="install_es_secure_tc.htm">Configuring Elasticsearch with Security</a></li>
+</ul><!-- #EndLibraryItem --></div>
