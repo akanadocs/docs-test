@@ -45,6 +45,12 @@ nav-title: Automation Reference
 		</ol>
 	</li>
 	<li><a href="#running_recipes_remotely">Running Recipes Remotely</a></li>
+	<li><a href="#recipes_extracting_properties">Extracting and Analyzing Recipes</a> (2019.0.0 and later)
+	<ol>
+			<li><a href="#recipe_extract">Extracting a Recipe</a></li>
+			<li><a href="#recipe_analyze">Analyzing a Recipe</a></li>
+		</ol>
+	</li>
 </ol>
 
 
@@ -444,7 +450,7 @@ nav-title: Automation Reference
     }
   }
 }</pre>
-<p>The example below illustrates how database configuration for a MySQL server might be done using a task definition. Note that the ordering of steps in the recipe is not relevant, ordering is controlled by the Task Service and by the dependencies declared by each task definition. Also, any defined defaults for property values are used, so it is valid to omit anywhere the default is sufficient, or even to specify an empty properties section if the defaults are acceptable.</p>
+<p>The example below illustrates how database configuration for a MySQL server could be done using a task definition. Note that the ordering of steps in the recipe is not relevant, ordering is controlled by the Task Service and by the dependencies declared by each task definition. Also, any defined defaults for property values are used, so it is valid to omit anywhere the default is sufficient, or even to specify an empty properties section if the defaults are acceptable.</p>
 <pre>"tasks":[
   {
     "name":"com.soa.database",
@@ -582,6 +588,110 @@ DEFAULT_PORT=${default.port}</pre>
 	<li><strong>--phases</strong> A colon-separated list of phases to execute. By default, this is deploy:update:finalize.</li>
 </ul>
 <p><a href="#top">back to top</a></p>
+
+
+
+<h3 id="recipes_extracting_properties">Extracting and Analyzing Recipes</h3>
+<p class="stamp"><strong>API Platform Version: 2019.0.0 and later</strong></p>
+<p>Two utility functions are available to assist users in the creation of recipes:</p>
+<ol>
+	<li>The first extracts the current configuration of a running instance into a single recipe. See <a href="#recipe_extract">Extracting a Recipe</a> below.</li>
+	<li>The second analyzes a recipe and generates a synopsis of the recipe hierarchy, and all properties used by the recipe and its imports. See <a href="#recipe_analyze">Analyzing a Recipe</a> below.</li>
+</ol>
+
+
+<h4 id="recipe_extract">Extracting a Recipe</h4>
+<p>To extract the current configuration of a running instance in the form of a single recipe, the akana.recipe module supports the <strong>--extract</strong> option. An example is shown below (line breaks added for display purposes).</p>
+<pre>&gt; ./jython.sh -m akana.recipe --extract &lt;extracted recipe file&gt; --url http://localhost:9900 
+--user administrator --password password --template &lt;template recipe&gt;</pre>
+<p>The parameters are:</p>
+<ul>
+	<li><strong>--extract</strong> The extracted recipe file name must be provided as a parameter.</li>
+	<li><strong>--url</strong> The URL of the instance to run the recipe against. Only the scheme, host, and port are relevant.</li>
+	<li><strong>--user</strong> The username to use when running the recipe. Defaults to <strong>administrator</strong>.</li>
+	<li><strong>--password</strong> The password corresponding to the user name. Defaults to <strong>password</strong>.</li>
+	<li><strong>--template</strong> The location of a recipe to use as a template. There is a default template shipped with the system: <strong>recipes/extract-template.json</strong>.</li>
+</ul>
+
+<h5 id="recipe_extract_01">The Extracted Recipe</h5>
+<p>The extracted recipe contains only the configuration and features that are deployed in the source container. The recipe does not include task definitions or other information. The generated recipe will execute only in the deploy phase.</p>
+
+<h5 id="recipe_extract_02">Template Recipe</h5>
+<p>When extracting the recipe, you can provide a template to further control generation of the final recipe. Specifically:</p>
+<ul>
+	<li>Any features in the <span class="apidoc_code">install</span>, <span class="apidoc_code">uninstall</span>, or <span class="apidoc_code">update</span> portion of the template are copied to the target recipe. Any corresponding features in the source container are ignored.</li>
+	<li>Any configuration PIDs in the template are copied to the target recipe. Any corresponding configurations in the source container are ignored. Note that if the template has a PID defined but there are no <span class="apidoc_code">add</span>, <span class="apidoc_code">delete</span>, or <span class="apidoc_code">update</span> sections, the PID is effectively ignored. This provides control over configuration PIDs that should not be exported from the source container.</li>
+	<li>Any configuration tasks in the template are copied to the generated recipe.</li>
+	<li>Any repository definitions or environment constraints in the template are copied to the generated recipe.</li>
+	<li>Any included recipes in the template are flattened out and appear in the generated recipe, following the rules given above.</li>
+</ul>
+<h5 id="recipe_extract_03">Executing the Extracted Recipe</h5>
+<p>The goal of the recipe extraction function is to generate a recipe that can be used to reproduce a specific container instance configuration. Since the extracted recipe is only active during the deploy phase, it is expected that the recipe will be executed against a basic platform deployment.</p>
+<p>Alternatively, the extracted recipe could be included in another that also includes the <a href="assets/bootstrap.json" target="_blank">bootstrap.json</a> recipe to deploy a basic container. The default template, <strong>recipes/extract-template.json</strong>, does not extract container identity. Instead, it executes the default task to generate a new container identity.</p>
+
+
+<h4 id="recipe_analyze">Analyzing a Recipe</h4>
+<p>The <span class="apidoc_code">akana.recipe</span> module has an option, <span class="apidoc_code">--analyze</span>, that generates a report of the hierarchy of a specified recipe. This function also reports all properties used for all of the phases specified. Optionally, you can choose to generate a properties file that contains a list of all properties and their defaults in regular properties file format.</p>
+<pre>&gt; ./jython.sh -m akana.recipe --analyze &lt;recipe&gt; --gen-props &lt;output properties file&gt; --phases &lt;phases&gt;</pre>
+<p>The parameters are:</p>
+<ul>
+	<li><strong>--analyze</strong> The recipe to be analyzed. Required.</li>
+	<li><strong>--phases</strong> A colon-separated list of phases to execute. By default, this is <strong>deploy:update:finalize</strong>.</li>
+	<li><strong>--props </strong>The location of a properties file to use. Multiple properties files may be used, each specified with a separate <strong>--props</strong> parameter.</li>
+	<li><strong>--gen-props</strong> An optional parameter that specifies the location of a properties file that will be generated, that will include all properties defined in the recipe.</li>
+</ul>
+
+<h5 id="recipe_output">Sample Output</h5>
+<p>The following is an example of the output generated for the <strong>nd-all.jso</strong>n recipe. Note that any macros defined for the properties will appear in the output. If this file is to be used as input to recipe execution, these would need to be changed. It should not be assumed that just because a property is listed, and may not have a default, that the property is required. It might be that the property is associated with a task step that will not be executed, or that a value for the specific property is not required.</p>
+<pre>> ./jython.sh -m akana.recipe --analyze ../recipes/nd-all.json --phases create:deploy:update:finalize --gen-props test.properties
+
+Recipe:nd-complete
+
+ Phase:create
+  bootstrap-container
+
+ Phase:deploy
+  nd
+  container-identity
+
+ Phase:finalize
+  restart
+
+Properties:
+CONTAINERALIAS=alias
+CONTAINERALIASPASSWORD=
+CONTAINER_ADMIN=administrator
+CONTAINER_ADMIN_PASSWORD=password
+CONTAINER_IDENTITY_ACTION=generate.pki.keys.and.x509
+CONTAINER_KEY=uuid32()
+CONTAINER_NAME=
+DEFAULT_HOST=0.0.0.0
+DEFAULT_PORT=9900
+IDENTITY_CERT=
+IDENTITY_KEYSTORE=
+IDENTITY_KEYSTORE_PASSWORD=
+IDENTITY_KEYSTORE_TYPE=JKS
+IDENTITY_KEY_ALIAS=
+IDENTITY_KEY_PASSWORD=
+INSTALL_DIR=
+PM_HOST=localhost
+PM_PORT=9900
+PM_SCHEME=http
+ROOT_CONTEXT=
+SESSION_TIMEOUT=3600</pre>
+<p><a href="#top">back to top</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
