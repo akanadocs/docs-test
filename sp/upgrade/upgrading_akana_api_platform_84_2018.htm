@@ -81,7 +81,6 @@ nav-title: Upgrade 8.4x to 2018.0.x
 	<li><a href="#s02_09">Starting a container</a></li>
 	<li><a href="#s02_12">Refreshing the repository</a></li>
 	<li><a href="#ts_02_error_new_containers">Upgrading by creating new containers: notes</a></li>
-<!--	<li><a href="#auto_prop_xfer">Automating the transfer of container properties</a></li>-->
 	<li><a href="#tech_support_contact">Contacting Rogue Wave Technical Support</a></li>
 </ol>
 
@@ -117,25 +116,16 @@ nav-title: Upgrade 8.4x to 2018.0.x
 <h3 id="s01_02">Step 1-2: Plan the upgrade</h3>
 <p>Before you start downloading and installing, plan your upgrade. In particular, you'll need to:</p>
 <ol>
-	<li>Examine  your existing installation and make sure you've saved out the following information:
+	<li>Decide what containers you'll have, and which features will be installed in which containers. For a recommended simple configuration, see <a href="../deployment/deployment_clustered.htm">Sample Deployment Scenario</a>.</li>
+	<li>Determine where you'll install Elasticsearch, needed for the search feature. For full information on Elasticsearch, see <a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a>.</li>
+	<li>If you have a specific add-on feature installed, such as the Integration Services option pack, SiteMinder Security Provider, or SAML Web SSO Security Provider feature, it's important that you download the new release version package for the same feature.</li>
+	<li>Take all steps needed to save out container settings so that you can reproduce the configuration on the new container, where applicable. You'll need this information for <a href="#s03_03">Step 3-3: Update container properties</a>. Save:
 		<ul>
-			<li>Number of containers.</li>
-			<li>A list of the features  and add-ons installed in each container.</li>
+			<li>The context root. </li>
+			<li>All other container properties that you've customized.</li>
 		</ul>
 	</li>
-	
-	<li>Conditional: If standalone Elasticsearch is new for your implementation, determine where you'll install Elasticsearch, needed for the search feature. For full information on Elasticsearch, see <a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a>.</li>
-	<li>Take all steps needed to save out container settings so that you can reproduce the configuration on the new container, where applicable. You'll need this information for <a href="#s03_03">Step 3-3: Update container properties</a>. Do the following:
-		<ul>
-			<li>Save the context root. </li>
-			<li>Save all other container properties that you've customized.</li>
-			<li>Save out the container certificates in the Policy Manager console (<span class="apidoc_red">xxx link to doc for this</span>). You can then upload the same certificates when configuring the container.</li>
-		</ul>
-	</li>
-	<li>Update the properties file for each existing container to add a new property, <strong>container.key</strong>, that specifies the existing container IDs. For example:
-		<pre>container.key=&quot;fcd54dc8-ccd2-439f-a580-436d3ef2&quot;</pre></li>
 </ol>
-<!--<p><strong>Note</strong>: For information about how you can automate the reconfiguring of your container properties, see <a href="#auto_prop_xfer">Automating the transfer of container properties</a>.</p>-->
 <p><a href="#top">back to top</a></p>
 
 
@@ -174,14 +164,13 @@ nav-title: Upgrade 8.4x to 2018.0.x
 	<li>Create a folder for your 2018.0.x installation; for example, <strong>aap2018</strong>.</li>
 	<li>Download the ZIP file for version 2018.0.0. </li>
 </ul>
-<p>For detailed instructions on this step, refer to the installation guide, <a href="../platform_install/installing_akana_api_platform_v2018.htm#gather_zip_files">Gather ZIP file or files and download to a temporary folder</a>.</p>
-<p><strong>Note</strong>: For notes about limitations and extra steps for specific databases, see <a href="../platform_install/installing_akana_api_platform_v2018.htm#supported_databases">Supported databases</a> (installation doc). If you're using a MySQL database with API Platform and the Lifecycle Repository feature, see <a href="../platform_install/installing_akana_api_platform_v2018.htm#notes_database_mysql_rm">Database notes: MySQL with Lifecycle Repository</a>.</p>
+<p>For detailed instructions on this step, refer to the installation guide, <a href="../platform_install/installing_akana_api_platform.htm#gather_zip_files">Gather ZIP file or files and download to a temporary folder</a>.</p>
+<p><strong>Note</strong>: For notes about limitations and extra steps for specific databases, see <a href="../platform_install/installing_akana_api_platform.htm#supported_databases">Supported databases</a> (installation doc). If you're using a MySQL database with API Platform and the Lifecycle Repository feature, see <a href="../platform_install/installing_akana_api_platform.htm#notes_database_mysql_rm">Database notes: MySQL with Lifecycle Repository</a>.</p>
 <p>Depending on the scenario, you might also need one or more of the following files:</p>
 <ul>
 	<li><strong>Plug-ins</strong>: The ZIP file, and any updates, for any plug-ins you want to use in your installation.</li>
 	<li><strong>Updates</strong>: not applicable to version 2018.0.0 itself, but for future updates.</li>
 </ul>
-<p>If you have a specific add-on feature installed, such as the Integration Services option pack, SiteMinder Security Provider, or SAML Web SSO Security Provider feature, it's important that you download the new release version package for the same feature.</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -210,7 +199,7 @@ nav-title: Upgrade 8.4x to 2018.0.x
 		<p>For example:</p>
 <pre>unzip -o /akana/downloads/akana-platform-linux-jre-2018.0.0.18.zip -d /akana/aap2018
 unzip -o /akana/downloads/akana-api-platform-2018.0.0.340.zip -d /akana/aap2018</pre>
-<p>For information about the folders and folder contents for the Akana Platform, see <a href="../platform_install/installing_akana_api_platform_v2018.htm#installation_folder_structure">Installation folder structure</a>.</p></li>
+<p>For information about the folders and folder contents for the Akana Platform, see <a href="../platform_install/installing_akana_api_platform.htm#installation_folder_structure">Installation folder structure</a>.</p></li>
 <li>If applicable, unzip any add-on products, such as the SAML Web SSO Security Provider.</li>
 </ol>
 <p><a href="#top">Back to top</a></p>
@@ -235,42 +224,42 @@ ps -ef
 
 
 <h3 id="s02_05">Step 2-5: Create and configure the first container</h3>
-<p>Create the first Community Manager/Policy Manager container. For features to install, see <a href="../platform_install/installing_akana_api_platform_v2018.htm#features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</a>. Follow the linked steps in the Installation Guide.</p>
+<p>Create the first Community Manager/Policy Manager container. For features to install, see <a href="../platform_install/installing_akana_api_platform.htm#features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</a>. Follow the linked steps in the Installation Guide.</p>
 <p><strong>Note</strong>: In creating the containers, make sure that you set up at least one container running Policy Manager before you set up the Network Director container.</p>
 
 <h5 id="proc_container_first">To create and configure the first container</h5>
 <ol>
-	<li>Run Configurator to create the first container, either via the GUI or using silent install. See <a href="../platform_install/installing_akana_api_platform_v2018.htm#run_configurator_pm">Step 3: Run Configurator to create the first container</a>.</li>
-	<li>Copy the configuration properties file from the old container, which you saved out and updated with a new <strong>container.key</strong> property in <a href="#s01_02">Step 1-2: Plan the upgrade</a> (procedure step #5), to the new container. Then start the new container.</li>
-	<li>Install Policy Manager/Community Manager. See <a href="../platform_install/installing_akana_api_platform_v2018.htm#install_pm_cm">Step 4: Install Policy Manager/Community Manager features on the container</a> (installation doc).</li>
-	<li>At the <strong>Installation Complete</strong> summary, click <strong>Configure</strong> to complete pending tasks. See <a href="../platform_install/installing_akana_api_platform_v2018.htm#configure_pm">Step 6: Complete pending tasks to configure container features</a>. The pending tasks are:
+	<li>Run Configurator to create the first container, either via the GUI or using silent install. See <a href="../platform_install/installing_akana_api_platform.htm#run_configurator_pm">Step 3: Run Configurator to create the first container</a>.</li>
+	<li>Conditional: if you saved configuration properties from your old container, copy them to the new container, then start it.</li>
+	<li>Install Policy Manager/Community Manager. See <a href="../platform_install/installing_akana_api_platform.htm#install_pm_cm">Step 4: Install Policy Manager/Community Manager features on the container</a> (installation doc).</li>
+	<li>At the <strong>Installation Complete</strong> summary, click <strong>Configure</strong> to complete pending tasks. See <a href="../platform_install/installing_akana_api_platform.htm#configure_pm">Step 6: Complete pending tasks to configure container features</a>. The pending tasks are:
 		<ol>
 			<li>Manage PKI Keys wizard (<strong>Generate PKI Keys &amp; X.509 Certificate</strong> page).
-				<p>See <a href="../platform_install/installing_akana_api_platform_v2018.htm#install_tasks_manage_pki_keys">Installation wizard: Manage PKI Keys</a> (installation doc).</p>
+				<p>See <a href="../platform_install/installing_akana_api_platform.htm#install_tasks_manage_pki_keys">Installation wizard: Manage PKI Keys</a> (installation doc).</p>
 			</li>
 			<li>Configure Database Options wizard (<strong>Select Database Options</strong> page): here, choose Use Existing Database and put in the values and credentials for the database from your prior version of the Akana API Platform.
-				<p>See <a href="../platform_install/installing_akana_api_platform_v2018.htm#install_tasks_add_database">Installation wizard: Add Database</a> (installation doc).</p>
+				<p>See <a href="../platform_install/installing_akana_api_platform.htm#install_tasks_add_database">Installation wizard: Add Database</a> (installation doc).</p>
 				<p><strong>Note</strong>: Depending on the database you're using, you might need to put a database driver in place, or take some other steps.</p>
-				<p>See <a href="../platform_install/installing_akana_api_platform_v2018.htm#database_notes">Database notes</a> and <a href="../platform_install/installing_akana_api_platform_v2018.htm#database_drivers">Database drivers</a> (installation doc).</p>
+				<p>See <a href="../platform_install/installing_akana_api_platform.htm#database_notes">Database notes</a> and <a href="../platform_install/installing_akana_api_platform.htm#database_drivers">Database drivers</a> (installation doc).</p>
 			</li>
 			<li>Manage Schemas wizard (<strong>Install Schemas</strong> page): Manages the database schemas for the container.
-				<p>See <a href="../platform_install/installing_akana_api_platform_v2018.htm#install_tasks_manage_schemas">Installation wizard: Manage Schemas</a> (installation doc).</p>
+				<p>See <a href="../platform_install/installing_akana_api_platform.htm#install_tasks_manage_schemas">Installation wizard: Manage Schemas</a> (installation doc).</p>
 			</li>
 			<li>Create Policy Manager Admin User (<strong>Define Policy Manager Administrator Credentials</strong> page): Creates the top-level Policy Manager user.
-				<p>See <a href="../platform_install/installing_akana_api_platform_v2018.htm#install_tasks_create_pm_admin_user">Installation wizard: Define Policy Manager Administrator Credentials</a> (installation doc).</p>
+				<p>See <a href="../platform_install/installing_akana_api_platform.htm#install_tasks_create_pm_admin_user">Installation wizard: Define Policy Manager Administrator Credentials</a> (installation doc).</p>
 			</li>
 			<li>Provisioning: Initializes resources associated with the features installed on the container.
-				<p>See <a href="../platform_install/installing_akana_api_platform_v2018.htm#install_tasks_provisioning">Installation wizard: Provisioning</a> (installation doc).</p>
+				<p>See <a href="../platform_install/installing_akana_api_platform.htm#install_tasks_provisioning">Installation wizard: Provisioning</a> (installation doc).</p>
 			</li>
 		</ol>
 	</li>
 	<li>At the Restart prompt, to install the plug-ins before restarting, press <strong>Cancel</strong>.
 	</li>
-	<li>If applicable, install plug-ins. See <a href="../platform_install/installing_akana_api_platform_v2018.htm#install_plugins">Step 5: (as needed) Install plug-ins on the container</a>.</li>
+	<li>If applicable, install plug-ins. See <a href="../platform_install/installing_akana_api_platform.htm#install_plugins">Step 5: (as needed) Install plug-ins on the container</a>.</li>
 	<li>Restart the container. For instructions, see:
 		<ul>
-			<li><a href="../platform_install/installing_akana_api_platform_v2018.htm#starting_container">Starting a container</a></li>
-			<li><a href="../platform_install/installing_akana_api_platform_v2018.htm#stopping_container">Stopping a container</a></li>
+			<li><a href="../platform_install/installing_akana_api_platform.htm#starting_container">Starting a container</a></li>
+			<li><a href="../platform_install/installing_akana_api_platform.htm#stopping_container">Stopping a container</a></li>
 		</ul>
 	</li>
 </ol>
@@ -281,24 +270,23 @@ ps -ef
 <h3 id="s02_06">Step 2-6: Create and configure additional containers</h3>
 <p>Once you have the first container set up, it's time to create and configure additional containers. Essentially you'll follow the same set of steps as above, for these additional containers:</p>
 <ol>
-	<li>Optional: Subsequent Community Manager/Policy Manager containers. If you're following the sample deployment scenario, see <a href="../platform_install/installing_akana_api_platform_v2018.htm#features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</a>.</li>
-	<li>Network Director container. For features to install, see <a href="../platform_install/installing_akana_api_platform_v2018.htm#features_nd_oauth">API Gateway/Internal Gateway (Network Director)</a>. For Network Director, pending tasks include:
+	<li>Optional: Subsequent Community Manager/Policy Manager containers. If you're following the sample deployment scenario, see <a href="../platform_install/installing_akana_api_platform.htm#features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</a>.</li>
+	<li>Network Director container. For features to install, see <a href="../platform_install/installing_akana_api_platform.htm#features_nd_oauth">API Gateway/Internal Gateway (Network Director)</a>. For Network Director, pending tasks include:
 		<ol>
-			<li><strong>WS-Metadata Exchange Options</strong>: see <a href="../platform_install/installing_akana_api_platform_v2018.htm#install_tasks_nd_configure_wsmex">Installation wizard, ND container: Configure WS-Metadata Exchange Options</a>.</li>
-			<li>Manage PKI Keys wizard (<strong>Select Key Management Option</strong> page): see <a href="../platform_install/installing_akana_api_platform_v2018.htm#install_tasks_manage_pki_keys">Installation wizard: Manage PKI Keys</a>.</li>
+			<li><strong>WS-Metadata Exchange Options</strong>: see <a href="../platform_install/installing_akana_api_platform.htm#install_tasks_nd_configure_wsmex">Installation wizard, ND container: Configure WS-Metadata Exchange Options</a>.</li>
+			<li>Manage PKI Keys wizard (<strong>Select Key Management Option</strong> page): see <a href="../platform_install/installing_akana_api_platform.htm#install_tasks_manage_pki_keys">Installation wizard: Manage PKI Keys</a>.</li>
 		</ol>
 	</li>
-	<li>OAuth container. For features to install, see <a href="../platform_install/installing_akana_api_platform_v2018.htm#features_oauth_alone">OAuth Provider</a>.</li>
-	<li>Scheduled Jobs container. For features to install, see <a href="../platform_install/installing_akana_api_platform_v2018.htm#features_sched_jobs">Job Scheduler</a>.</li>
+	<li>OAuth container. For features to install, see <a href="../platform_install/installing_akana_api_platform.htm#features_oauth_alone">OAuth Provider</a>.</li>
+	<li>Scheduled Jobs container. For features to install, see <a href="../platform_install/installing_akana_api_platform.htm#features_sched_jobs">Job Scheduler</a>.</li>
 </ol>
-<p><strong>Note</strong>: In each case, be sure to copy the configuration properties file from the old container, which you saved out and updated with a new <strong>container.key</strong> property in <a href="#s01_02">Step 1-2: Plan the upgrade</a> (procedure step #5), to the new container.</p>
 <p>Create containers in this sequence:</p>
 <ol>
 	<li>First, create all Policy Manager/Community Manager containers.</li>
 	<li>Then, create all Network Director containers.
 	<p>You can create a Network Director container using either <a href="../admin_console/using_network_director_feature.htm#container_gui">GUI</a> or <a href="../admin_console/using_network_director_feature.htm#container_silent">Silent</a> options. For instructions on how to install a Network Director Container (<strong>ND1</strong>), install and configure the Network Director feature, and register the <strong>ND1</strong> container in Policy Manager, refer to <a href="../admin_console/using_network_director_feature.htm">Using Network Director Feature</a>.</p></li>
 </ol>
-<p>For information about the features and plug-ins to install for additional container configurations, see <a href="../platform_install/installing_akana_api_platform_v2018.htm#installation_scenarios">Sample Deployment Scenarios</a> (Install doc).</p>
+<p>For details about the features and plug-ins to install for additional container configurations, see <a href="../platform_install/installing_akana_api_platform.htm#container_features">Container features</a>.</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -388,15 +376,13 @@ ps -ef
 
 
 <h3 id="s03_03">Step 3-3: Update container properties</h3>
-<p>{<span class="apidoc_red">xxx new for ATMO-26622</span>} <span class="apidoc_red">DR said: <strong>Not sure where we should import certs (PKI keys?). Maybe here?</strong>. But, as well, these are instructions for manual update of container properties. Not needed if we switch out the properties file in <a href="#s02_05">Step 2-5</a>. I think</span>?</p>
 <p>When you've created the new container and installed the features, it's time to set the configuration properties. You'll need to transfer any customized settings that were set on the old container, to the new container.</p>
 <p>Use the setting values that you saved out in <a href="#s01_02">Step 1-2: Plan the upgrade</a>, point #4, and set them on the new container.</p>
-<!--<p><strong>Note</strong>: For information about how you can automate the reconfiguring of your container properties, see <a href="#auto_prop_xfer">Automating the transfer of container properties</a>.</p>-->
 <p>For example, if you customized the Content Root value for the developer portal, you'll need to re-set it.</p>
 <p> In the Akana Administration Console for each container with Community Manager installed:</p>
 <p><strong>Configuration</strong> &gt; <strong>com.soa.atmosphere.console</strong> &gt; atmosphere.context.root.</p>
 <p>For example, <strong>/acmepaymentscorp</strong>.</p>
-<p>For detailed instructions, see <a href="../platform_install/installing_akana_api_platform_v2018.htm#s9b_update_config">Conditional: updating configuration setting for new context root</a> (installation doc).</p>
+<p>For detailed instructions, see <a href="../platform_install/installing_akana_api_platform.htm#s9b_update_config">Conditional: updating configuration setting for new context root</a> (installation doc).</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -440,8 +426,8 @@ ps -ef
 <p>Stop and restart the container.</p>
 <p>For instructions, see:</p>
 <ul>
-	<li><a href="../platform_install/installing_akana_api_platform_v2018.htm#starting_container">Starting a container</a></li>
-	<li><a href="../platform_install/installing_akana_api_platform_v2018.htm#stopping_container">Stopping a container</a></li>
+	<li><a href="../platform_install/installing_akana_api_platform.htm#starting_container">Starting a container</a></li>
+	<li><a href="../platform_install/installing_akana_api_platform.htm#stopping_container">Stopping a container</a></li>
 </ul>
 
 <h5 id="proc_search_verify">Verify that search is working</h5>
@@ -455,15 +441,14 @@ ps -ef
 <p>After running the configuration actions on all containers, stop and restart all containers.</p>
 <p>For instructions, see:</p>
 <ul>
-	<li><a href="../platform_install/installing_akana_api_platform_v2018.htm#starting_container">Starting a container</a></li>
-	<li><a href="../platform_install/installing_akana_api_platform_v2018.htm#stopping_container">Stopping a container</a></li>
+	<li><a href="../platform_install/installing_akana_api_platform.htm#starting_container">Starting a container</a></li>
+	<li><a href="../platform_install/installing_akana_api_platform.htm#stopping_container">Stopping a container</a></li>
 </ul>
 <p><a href="#top">back to top</a></p>
 
 
 
 <h3 id="s03_07">Step 3-7: Configure API Gateway/Network Director</h3>
-<p>{<span class="apidoc_red">xxx new for ATMO-26622</span>} <span class="apidoc_red">DR said: </span>Will need to revamp this section. Cloning hosted services won't be necessary.</p>
 <p>In your new Policy Manager/Community Manager container, you'll need to move the hosted services from the old Network Director container for the previous version, over to the new Network Director container. Follow the steps below.</p>
 
 <h5 id="proc_move_hosted_svcs">To move hosted services to the new Network Director container</h5>
@@ -500,7 +485,7 @@ ps -ef
 <ol>
 	<li>Launch the Akana Administration Console for the container instance:
 <pre>http://{hostname}:{port}/admin</pre></li>
-	<li>Log in to the Akana Administration Console as an Administrator. The Akana Administration Console launches and displays the <strong>Available Features</strong> tab. See <a href="../platform_install/installing_akana_api_platform_v2018.htm#install_options">Installation Options: Full List</a> (installation doc).</li>
+	<li>Log in to the Akana Administration Console as an Administrator. The Akana Administration Console launches and displays the <strong>Available Features</strong> tab. See <a href="../platform_install/installing_akana_api_platform.htm#install_features">Installation Features</a>.</li>
 </ol>
 <p><a href="#top">back to top</a></p>
 
@@ -663,25 +648,6 @@ Binding is attached to service endpoint.</pre>
 
 
 
-<!--<h3 id="auto_prop_xfer">Automating the transfer of container properties</h3>
-<p>When upgrading by creating a new container, you'll need to transfer, or re-create, the configuration settings on the new container.</p>
-<p>The configuration settings are stored in the instances/{container_name}/cm subfolder.</p>
-<p>Because there are changes between versions, you can't just copy and paste the folder between versions. However, you can use a tool to extract the old settings and the new ones, compare the two sets of information, and arrive at a diff that you can use as a guide for setting up your new container.</p>
-
-<h5 id="proc_xfer_properties">To transfer configuration properties from an old container to a new container</h5>
-<ol>
-	<li>At the beginning of <a href="#s02_05">Step 2-5: Create and configure the first container</a>, after shutting down the old container and before creating the new one, run discovery on all of the containers in the previous installation, and save out the old configuration settings for all containers.</li>
-	<li>At the end of <a href="#s02_05">Step 2-5: Create and configure the first container</a>, Step #6, after doing the initial configuration steps, shut down the container. Rather than restarting as in Step #7, save out the new configuration settings at that point.</li>
-	<li>Compare the new settings with the old settings to arrive at the settings that will need to be configured on the new container.</li>
-	<li>If available, use automation to update the container configuration.</li>
-	<li>Now complete <a href="#s02_05">Step 2-5: Create and configure the first container</a> by restarting the container, and verify that the configuration properties are set correctly.</li>
-	<li>Follow steps 2 through 5 for additional containers until they are all configured.</li>
-	<li>Continue with the post-install steps.</li>
-</ol>
-<p><a href="#top">Back to top</a></p>-->
-
-
-
 <h3 id="tech_support_contact">Contacting Rogue Wave Technical Support</h3>
 <p>If you need to contact Technical Support, submit an email to <a href="mailto:support@akana.com">support@akana.com</a>.</p>
 <p>When sending a support query, please provide the following information:</p>
@@ -702,17 +668,20 @@ Binding is attached to service endpoint.</pre>
 
 
 <h3 id="related_topics">Related Topics</h3>
-<div class="relatedlinks" id="install"><!-- #BeginLibraryItem "/Library/relatedtopics_install.lbi" -->
+<div class="relatedlinks" id="install">
 <ul>
-	<li><a href="upgrading_akana_api_platform_84_2018.htm">Upgrading Akana API Platform from Version 8.4x to Version 2018.0.x</a></li>
-	<li><a href="upgrading_akana_api_platform_82_84.htm">Upgrading Akana API Platform from Version 8.2 to Version 8.4x</a></li>
-	<li><a href="upgrading_min_downtime.htm">Use Case: Upgrading with Minimum Downtime</a></li>
-	<li><a href="upgrading_micro.htm">Minor-Version Update Notes</a></li>
+	<li><a href="../upgrade/upgrading_akana_api_platform_84_2018.htm">Upgrading Akana API Platform from Version 8.4x to Version 2018.0.x</a></li>
+	<li><a href="../upgrade/upgrading_akana_api_platform_82_84.htm">Upgrading Akana API Platform from Version 8.2 to Version 8.4x</a></li>
+	<li><a href="../upgrade/upgrading_min_downtime.htm">Use Case: Upgrading with Minimum Downtime</a></li>
+	<li><a href="../upgrade/upgrading_micro.htm">Minor-Version Update Notes</a></li>
 </ul>
 <ul>
-	<li><a href="../platform_install/installing_akana_api_platform_all.htm">Installing the Akana API Platform (all versions)</a></li>
+	<li><a href="../platform_install/installing_akana_api_platform.htm">Installing the Akana API Platform 2018.0.0</a></li>
+	<li><a href="../platform_install/installing_akana_api_platform_v84.htm">Installing the Akana API Platform 8.4x</a></li>
+	<li><a href="../platform_install/installing_akana_api_platform_v82.htm">Installing the Akana API Platform 8.2x</a></li>
 	<li><a href="../platform_install/implementation_planning.htm">Planning Your Implementation</a></li>
 	<li><a href="../platform_install/install_cm_jython_script.htm">Installation Jython Script</a></li>
 	<li><a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a></li>
-	<li><a href="../platform_install/install_es_secure_tc.htm">Configuring Elasticsearch with Security</a></li>
-</ul><!-- #EndLibraryItem --></div>
+	<li><a href="../platform_install/install_es_secure_tc.htm">Configuring Elasticsearch with security</a></li>
+</ul>
+</div>
