@@ -18,14 +18,17 @@ nav-title: Upgrade 2018.0.x to 2019.0.x
 	<li>One container running the API Gateway (Network Director)</li>
 </ul>
 <p>The documentation includes some notes and additional information that would be applicable if you're creating other container scenarios&#8212;for example, if you have multiple PM/CM containers, or a separate Scheduled Jobs container&#8212;but the main path is to create these two containers.</p>
-<p><strong>Note</strong>: If you're upgrading Policy Manager for DataPower, follow the steps in this document that you would use for upgrading Network Director.</p>
-<p><strong>Note</strong>: This document covers instructions for upgrading from 2018.0.x to 2019.0.x. For other versions, see <a href="upgrading_akana_api_platform_all.htm">Upgrading the Akana API Platform (all versions)</a>.</p>
+<p><strong>Notes</strong>:</p>
+<p>If you're upgrading Policy Manager for DataPower, follow the steps in this document that you would use for upgrading Network Director.</p>
+<p>This document covers instructions for upgrading from 2018.0.x to 2019.0.x. For other versions, see <a href="upgrading_akana_api_platform_all.htm">Upgrading the Akana API Platform (all versions)</a>.</p>
+<p>You can also use automation to standardize the upgrade process. Automation might take a little more time to set up, but it has great benefits including standardization and reusability. For information on automation, see <a href="#../automation/automation_ref.htm">Automation Reference</a>. For information about which automation recipes to use for upgrade, see <a href="#upgrade_automation">Automating the upgrade</a>.</p>
 
 <p>
 <a href="../admin_console/using_admin_console.htm" class="button secondary">Using Admin Console</a>
 <a href="../admin_console/installing_tools.htm" class="button secondary">Installing Tools</a>
 <a href="../admin_console/installing_plugins.htm" class="button secondary">Installing Plug-ins</a> 
-<a href="../admin_console/config_actions.htm" class="button secondary">Configuration Actions</a>
+<a href="../admin_console/config_actions.htm" class="button secondary">Configuration Actions</a> 
+<a href="../automation/automation_ref.htm" class="button secondary">Automation Reference</a>
 </p>
 
 <h5 class="stamp">Supported Platforms: 2019.0.x</h5>
@@ -81,7 +84,8 @@ nav-title: Upgrade 2018.0.x to 2019.0.x
 	<li><a href="#s02_09">Starting a container</a></li>
 	<li><a href="#s02_12">Refreshing the repository</a></li>
 	<li><a href="#ts_02_error_new_containers">Upgrading by creating new containers: notes</a></li>
-<!--	<li><a href="#auto_prop_xfer">Automating the transfer of container properties</a></li>-->
+	<li><a href="#auto_prop_xfer">Automating the transfer of container properties</a></li>
+	<li><a href="#upgrade_automation">Automation recipes for upgrade</a></li>
 	<li><a href="#tech_support_contact">Contacting Technical Support</a></li>
 </ol>
 
@@ -131,8 +135,8 @@ nav-title: Upgrade 2018.0.x to 2019.0.x
 		<ul>
 			<li>Save the context root. </li>
 			<li>Save all other container properties that you've customized.</li>
-			<li>Save out the container certificates in the Policy Manager console (see <a href="../key_management/key_management.htm"> Managing Keys and Certificates</a>). You can then upload the same certificates when configuring the container.
-			<p><strong>Note</strong>: you can use an automation task to save out the configuration settings. See <a href="../automation/automation_ref.htm#recipes_extracting_properties">Extracting and Analyzing Recipes</a>.</p></li>
+			<li>Save out the container certificates in the Policy Manager console (see <a href="../key_management/key_management.htm">Managing Keys and Certificates</a>). You can then upload the same certificates when configuring the container.
+				<p><strong>Note</strong>: you can use an automation task to save out the configuration settings. See <a href="../automation/automation_ref.htm#recipes_extracting_properties">Extracting and Analyzing Recipes</a>.</p></li>
 		</ul>
 	</li>
 	<li>Update the properties file for each existing container to add a new property, <strong>container.key</strong>, that specifies the existing container IDs. For example:
@@ -673,10 +677,11 @@ Binding is attached to service endpoint.</pre>
 
 
 
-<!--<h3 id="auto_prop_xfer">Automating the transfer of container properties</h3>
+<h3 id="auto_prop_xfer">Automating the transfer of container properties</h3>
+<p>{<span class="apidoc_red">Matthew? Not sure about this section. I had it commented out from work done Sept 19 for 2018 but it might have been talking about Erik's tool. Not sure</span>}</p>
 <p>When upgrading by creating a new container, you'll need to transfer, or re-create, the configuration settings on the new container.</p>
 <p>The configuration settings are stored in the instances/{container_name}/cm subfolder.</p>
-<p>Because there are changes between versions, you can't just copy and paste the folder between versions. However, you can use a tool to extract the old settings and the new ones, compare the two sets of information, and arrive at a diff that you can use as a guide for setting up your new container.</p>
+<p>Because there are changes between versions, you can't just copy and paste the folder between versions. However, you can use an automation recipe to extract the old settings so that you can use them for the new container.</p>
 
 <h5 id="proc_xfer_properties">To transfer configuration properties from an old container to a new container</h5>
 <ol>
@@ -688,7 +693,63 @@ Binding is attached to service endpoint.</pre>
 	<li>Follow steps 2 through 5 for additional containers until they are all configured.</li>
 	<li>Continue with the post-install steps.</li>
 </ol>
-<p><a href="#top">Back to top</a></p>-->
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="upgrade_automation">Automation recipes for upgrade</h3>
+<p>The table below lists some of the automation recipes you could use to automate the upgrade process.</p>
+<p>Recipes are in the <strong>{install_dir}/recipes</strong> folder of your installation.</p>
+<table class="doctable">
+	<thead>
+		<tr>
+			<th>Use this recipe...</th>
+			<th>To...</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>cm-upgrade</td>
+			<td>Perform CM upgrade recipe.</td>
+		</tr>
+		<tr>
+			<td>pm-cm-new-upgrade </td>
+			<td>Create new PM/CM container on an existing database and perform any upgrade tasks.</td>
+		</tr>
+		<tr>
+			<td>pm-cm-upgrade</td>
+			<td>Perform PM/CM upgrade recipe.</td>
+		</tr>
+		<tr>
+			<td>pm-upgrade</td>
+			<td>Perform PM upgrade recipe.</td>
+		</tr>
+		<tr>
+			<td>register-container.json</td>
+			<td>Register the Network Director container (<a href="#s03_07">Step 3-7: Configure API Gateway/Network Director</a>).</td>
+		</tr>
+		</tbody>
+</table>
+
+<h5 id="eg_recipe_register_nd">Upgrade recipe example: registering the Network Director container</h5>
+<p>The example below shows using an automation recipe to register the Network Director container (<a href="#s03_07">Step 3-7: Configure API Gateway/Network Director</a>).</p>
+<p><strong>Command:</strong></p>
+<pre>./jython.sh -Dorg.slf4j.simpleLogger.logFile=System.out -m akana.container --recipe ../recipes/register-container.json --props register.properties</pre>
+<p><strong>Recipe:</strong></p>
+<pre>#*************************************************************
+# Register the ND
+#*************************************************************
+cd /opt/akana/ISB_2019x/bin
+
+echo "ORG_KEY=uddi:soa.com:registryorganization" > register.properties
+echo "CONTAINER_NAME=nd" >> register.properties
+echo "DEFAULT_PORT=9905" >> register.properties
+echo "PM_SCHEME=HTTP" >> register.properties
+echo "PM_PORT=9900" >> register.properties
+echo "PM_HOST=akana-qa-15.aws.akana.roguewave.com" >> register.properties
+echo "INSTALL_DIR=/opt/akana/ISB_2019x" >> register.properties
+</pre>
+<p><a href="#top">Back to top</a></p>
 
 
 
