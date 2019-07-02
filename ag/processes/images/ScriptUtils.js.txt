@@ -1,9 +1,8 @@
 /*
-Javascript utility library - contains various useful functions
-
+Akana Javascript utility library - contains various useful functions
 Author: Ken Carpenter - Rogue Wave Software, Inc. 2018
+Disclaimer: The information provided in this document is provided "AS IS" WITHOUT ANY WARRANTIES OF ANY KIND INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT OF INTELLECTUAL PROPERTY. Akana may make changes to this document at any time without notice. The content of this document may be out of date, and Akana makes no commitment to update this content.
 */
-
 
 /*
 FUNCTION: initializeContext ( msgVarName, partNames, msgVarNames )
@@ -15,21 +14,26 @@ Initializes the context of a process by:
 
 PARAMETERS:
 
-msgVarName (optional string): the name of the processContext variable containing the request message. The Message object contained in this variable will be normalized, and the normalized Message object will be saved back into the variable. 
+msgVarName (optional string): the name of the processContext variable containing the request message. 
+    The Message object contained in this variable will be normalized, and the normalized Message object 
+    will be saved back into the variable. 
     Default: "message"
 
-partNames (optional string array): an array containing the names of the message parts to retrieve and save the part values into processContext variables of the same name.
+partNames (optional string array): an array containing the names of the message parts to retrieve 
+    and save the part values into processContext variables of the same name.
     Default: ["logProcessing"]
 
-msgVarNames (optional string array): an array containing the names of normalized Message objects to create and save into processContext variables of the same name. 
-    Default: ["accountRequest","accountResponse","fault"]
+msgVarNames (optional string array): an array containing the names 
+    of normalized Message objects to create 
+    and save into processContext variables of the same name. 
+    Default: ["request", "response", "fault"]
 */
 function initializeContext ( msgVarName, partNames, msgVarNames ) {
 	// Initialize missing param values to defaults
 	if ( msgVarName == undefined )  msgVarName = "message";
 	if ( partNames == undefined ) partNames = [ "logProcessing" ];
 	if ( msgVarNames == undefined ) msgVarNames =
-		[ "accountRequest", "accountResponse", "fault" ];
+		[ "request", "response", "fault" ];
 
 	// Normalize the request Message
 	var normalizedMsg = normalizeMessage( msgVarName );  
@@ -59,11 +63,14 @@ function initializeContext ( msgVarName, partNames, msgVarNames ) {
 /*
 FUNCTION: normalizeMessage( msgVarName, toXML )
 
-Retrieves the Message object in the specified processContext variable name, normalizes the Message object, saves the normalized Message object back into the variable, and returns the normalized Message object.
+Retrieves the Message object in the specified processContext variable name, 
+normalizes the Message object, saves the normalized Message object 
+back into the variable, and returns the normalized Message object.
 
 PARAMETERS:
 
-msgVarName (required string): the processContext variable containing the Message object to be normalized. 
+msgVarName (required string): the processContext variable containing 
+    the Message object to be normalized. 
     Default: "message"
 	 
 toXML (optional boolean): If true, normalize the message to XML.
@@ -106,7 +113,10 @@ function normalizeMessage( msgVarName, toXML ) {
 /*
 FUNCTION: booleanValue( obj )
 
-Returns a "logical" boolean value from the specified variable. Several attempts are made to produce a logical boolean value from the variable. If all attempts fail, then this function will return the "truthy" or "falsey" value of obj.
+Returns a "logical" boolean value from the specified variable. 
+Several attempts are made to produce a logical boolean value. 
+If all attempts fail, then this function will return the 
+"truthy" or "falsey" value of obj.
 
 PARAMETERS:
 
@@ -148,22 +158,29 @@ function booleanValue( obj ) {
 
 /*
 FUNCTION: 
-getMessagePartValue( msgVarName, 
-					 		partName, 
-					 		partVarName,
-					 		logProcessing )
+getMessagePartValue( msgVarName, partName, partVarName, logProcessing )
 
-Gets the specified part from the message in the specified processContext variable, optionally saves the value of the part in the specified processContext variable, and optionally logs the processing.
+1. Gets the specified part from the message in the specified processContext variable, 
+
+2. optionally saves the value of the part in the specified processContext variable, 
+
+3. and optionally logs the processing.
 
 PARAMETERS:
 
-msgVarName (optional string): the processContext variable name containing the Message object containing the part.
+msgVarName (optional string): the processContext variable name 
+    containing the Message object.
     Default: "message"
 
-partName (optional string): the name of the message part to process.
+partName (optional string): the name of the message part to process 
+    from the Message object.
     Default: "entity"
 
-partVarName (optional string): the name of the processContext variable to set to the part value. If the text value of the message part is a "logical boolean" - that is, a string with a value of "true" or "false", the variable will be set to a Boolean value to reflect this logical state. 
+partVarName (optional string): the name of the processContext 
+    variable to set to the part value. 
+    If the text value of the message part is a "logical boolean" - 
+    that is, a string with a value of "true" or "false", 
+    the variable will be set to a Boolean value to reflect this. 
 
 logProcessing (optional boolean): If true, log the processing.
     Default: false
@@ -215,15 +232,17 @@ function getMessagePartValue(
 /*
 FUNCTION: setupMessages( msgVarNames, logStatus )
 
-Creates normalized Message objects and places each in the processContext variable of the same name.
+Creates normalized Message objects and places each one
+in the processContext variable of the same name.
 
 PARAMETERS:
 
-msgVarNames (optional array of strings): an array of strings containing name(s) of processContext 
-                                         variable(s) to be set to normalized Message objects.
-	Default:  ["accountRequest","accountResponse","fault"]	
+msgVarNames (optional array of strings): an array of strings 
+   containing name(s) of processContext variable(s) 
+   to be set to normalized Message objects.
+   Default:  ["request","response","fault"]	
 	
-logProcessing (optional boolean): if true, log the processing status.
+logProcessing (optional boolean): if true, log processing status.
     Default: false
 */
 function setupMessages( msgVarNames, logProcessing ) {
@@ -233,11 +252,11 @@ function setupMessages( msgVarNames, logProcessing ) {
 	// Set msgVarNames to the default variable names if not provided,
 	// or if the provided value is not an Array
 	if ( !( msgVarNames instanceof Array ) ) {
-		msgVarNames = ["accountRequest", "accountResponse", "fault"];
+		msgVarNames = ["request", "response", "fault"];
 		
 		if ( logProcessing ) 
 			auditLog.debug( "Using default message variable names: " +
-				"'accountRequest', 'accountResponse', and 'fault'" );
+				"'request', 'response', and 'fault'" );
 	}
 	
 	// Create normalized Message objects and set into processContext
@@ -249,7 +268,7 @@ function setupMessages( msgVarNames, logProcessing ) {
 			processContext.setVariable( 
 				msgVarNames[i], msgFactory.createNormalized() );
 
-			msgVarNamesStr += "\n" + msgVarNames[i]; // Build msg str
+			msgVarNamesStr += "\n" + msgVarNames[i]; // Build log str
 		}
 	}
 	
@@ -268,9 +287,11 @@ Formats and logs a message containing the XML content of the Message object cont
 
 PARAMETERS:
 
-msgVar (required string): the name of the processContext variable  containing the Message object whose XML content is to be formatted and logged. 
+msgVar (required string): the name of the processContext variable  
+    containing the Message object whose XML content is to be formatted and logged. 
 
-formatRsp (optional boolean): If true, the string content of the Message object will be set to the formatted XML string. 
+formatRsp (optional boolean): If true, the string content of the
+    Message object will be set to the formatted XML string. 
     Default: false
 
 logProcessing (optional boolean): if true, log the processing status.
@@ -281,7 +302,6 @@ RETURNS: the Message object.
 function logResponseMsg( msgVarName, formatRsp, logProcessing ) {
 	
 	// Handle missing or invalid params
-	//if ( typeof msgVarName != "string" ) return false;
 	formatRsp = booleanValue( formatRsp ); 
 	logProcessing = booleanValue( logProcessing ); 
 	
@@ -291,7 +311,7 @@ function logResponseMsg( msgVarName, formatRsp, logProcessing ) {
 	// If variable does not contain a Message, log and return false 
 	if ( !( message instanceof com.soa.message.script.Message ) ) {
 		auditLog.error( "ERROR: the variable '" + msgVarName + 
-						    "' does not contain a Message object." );
+                    "' does not contain a Message object." );
 		return false;
 	}
 	
@@ -300,8 +320,7 @@ function logResponseMsg( msgVarName, formatRsp, logProcessing ) {
 	var formattedXML = vkb.xml( xmlStr );
 
 	if ( logProcessing )
-		auditLog.debug( 
-			"Response message:\n\n" + formattedXML + "\n" );
+		auditLog.debug( "Response message:\n\n" + formattedXML + "\n" );
 	
 	// If formatting response, set into msg & save in processContext
 	if ( formatRsp ) {
@@ -322,20 +341,24 @@ PARAMETERS:
 
 xmlStr (required): the XML string to convert to a JSON string
 
-forceTopLevelObject (optional boolean): If true, the root XML element will be a named JSON object inside an outer set of {}'s. If false, the root XML element will be treated anonymously as the root JSON object represented with the outer {}'s.
-	Default: true.
+forceTopLevelObject (optional boolean): If true, the root XML
+    element will be a named JSON object inside an outer set of {}'s.
+	 If false, the root XML element will be treated anonymously and
+	 the root JSON object represented with the outer {}'s.
+	 Default: true.
 
-msgVarName (optional string): the processContext variable name that contains a Message object. If specified, the content of this variable will be retrieved. If the content of the variable is a Message object, the string content of that Message object will be set to the formatted JSON string.
+msgVarName (optional string): the processContext variable name that contains a Message object. 
 
-logProcessing (optional boolean): if true, log the processing status.
+If specified, the content of this variable will be retrieved. 
+
+If the content of the variable is a Message object, the string content of that Message object will be set to the formatted JSON string.
+
+logProcessing (optional boolean): if true, log processing status.
     Default: false
 
 RETURNS: the formatted JSON string.
 */
-function formatJSON( xmlStr, 
-						   forceTopLevelObject, 
-						   msgVarName, 
-						   logProcessing ) {
+function formatJSON( xmlStr, forceTopLevelObject, msgVarName, logProcessing ) {
 	
 	// Handle param value types and missing params
 	if ( !xmlStr ) return false;
@@ -375,26 +398,23 @@ function formatJSON( xmlStr,
 
 
 /*
-FUNCTION: convertXMLToJSON( xmlStr, 
-									 forceTopLevelObj, 
-									 logProcessing )
+FUNCTION: convertXMLToJSON( xmlStr, forceTopLevelObj, logProcessing )
 
 Converts an XML string to a JSON object, without namespaces.
 
 PARAMETERS:
 
-xmlStr (required string): the XML string to convert to a JSON object.
+xmlStr (required string): XML string to convert to a JSON object.
 
-forceTopLevelObj (optional boolean): If true, the root XML element will be a named JSON object inside an outer set of {}s.
+forceTopLevelObj (optional boolean): If true, the root XML element
+    will be a named JSON object inside an outer set of {}.
 
-logProcessing (optional boolean): if true, log the processing status.
+logProcessing (optional boolean): if true, log processing status.
     Default: false
 
 RETURNS: the JSON object.
 */
-function convertXMLToJSON( xmlStr, 
-								  	forceTopLevelObj, 
-								   logProcessing ) {
+function convertXMLToJSON( xmlStr, forceTopLevelObj, logProcessing ) {
 	
 	if ( !(xmlStr instanceof String) && (typeof xmlStr != "string") ) 
 		 return null;
@@ -422,34 +442,33 @@ function convertXMLToJSON( xmlStr,
 
 
 /*
-FUNCTION: convertJSONToXML( jsonObj, 
-									 rootElemName, 
-									 elemName )
+FUNCTION: convertJSONToXML( jsonObj, rootElemName, elemName, formatXML )
 
 Converts a JSON object to XML.
 
 PARAMETERS:
 
-jsonObj (required object): the JSON object to convert to an XML string.
+jsonObj (required object): JSON object to convert to an XML string.
 
-rootElemName (required string): the name of the root XML element to be used in the new XML string.
+rootElemName (required string): the name of the root XML element 
+     to be used in the new XML string.
 
-elemName (required string): the name of the XML element to be used for the XML element within the XML root element.
+elemName (required string): the name of the XML element 
+     to be used for the XML element within the XML root element.
 
-formatXML (optional boolean): if true, the returned XML string will be formatted for readability. If false or absent, the returned XML string will not be formatted.
+formatXML (optional boolean): if true, the returned XML string 
+    will be formatted for readability. 
+    If false or absent, returned XML string will not be formatted.
 
 RETURNS: the JSON object.
 */
-function convertJSONToXML( jsonObj, 
-                           rootElemName, 
-                           elemName,
-                           formatXML ) {
+function convertJSONToXML( jsonObj, rootElemName, elemName, formatXML ) {
 	
 	// Early returns for undefined params
 	if ( jsonObj == undefined ) return null;
 	if ( rootElemName == undefined ) return null;
 	if ( elemName == undefined ) return null;
-	formatXML = booleanValue( formatXML ); // Default to false
+	formatXML = booleanValue( formatXML ); // false if absent
 	
 	// Get a converter and set the root elem and elem names
 	var converter = com.soa.json.xml.script.JSON2XML.converter();
@@ -479,16 +498,18 @@ char for the input type.
 
 PARAMETERS:
 
-input: (required, string or number) The value to pad. If not specified, this function returns immediately. 
+input: (required, string or number) The value to pad. 
+     If not specified, this function returns immediately. 
 	 
-padLen: (optional, number) The length to which to pad the input value.
+padLen: (optional, number) length to which to pad the input value.
     Default: The length of the input value.
     
-padChar: (optional, string or number) The character(s) with which to pad.
-    Default: '0' for number or numeric string, space for non-numeric string
+padChar: (optional, string or number) character(s) to use to pad.
+    Default: '0' for number or numeric string, space otherwise
 
-padRight: (optional, boolean) Whether to pad on the right or left (true: pad on the right, false: pad on the left).
-    default: false for number or numeric string, true for non-numeric string. 
+padRight: (optional, boolean) Whether to pad on the right or left 
+     (true: pad on the right, false: pad on the left).
+     default: false for number or numeric string, else true. 
 */
 function pad( input, padLen, padChar, padRight ) {
 
@@ -512,7 +533,7 @@ function pad( input, padLen, padChar, padRight ) {
 
 
 /*
- These functions are adapted from vkBeautify - a javascript module to pretty-print or minify text in XML, JSON, CSS and SQL formats.
+ The following functions are adapted from vkBeautify - a javascript module to pretty-print or minify text in XML, JSON, CSS and SQL formats.
 */ 
 
 function createShiftArr(step) {
@@ -687,4 +708,3 @@ vkbeautify.prototype.jsonmin = function(text) {
   return JSON.stringify( JSON.parse(text), null, 0 ); 
         
 };
-
