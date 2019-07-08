@@ -13,8 +13,8 @@ nav-title: Detailed Auditing
 <p>Learn how to enable detailed auditing of message size, bindings, and contracts.</p>
 
 <p>
-	<a href="about_policies_view.htm" class="button secondary">About Policies</a>  
-	<a href="policy_management.htm" class="button secondary">Managing Policies</a>  
+	<a href="about_policies_view.htm" class="button secondary">About Policies</a> 
+	<a href="policy_management.htm" class="button secondary">Managing Policies</a> 
 	<a href="policies_operational_about.htm" class="button secondary">About Operational Policies</a>
 </p>
 <p>For information about using policies in the context of the developer portal, see <a href="../../cm/learnmore/bus_admin_organizations.htm#h_business_policies">Business Policies</a>.</p>
@@ -26,10 +26,14 @@ nav-title: Detailed Auditing
 <ol class="table_of_contents">
 	<li><a href="#introduction">Introduction</a></li>
 	<li><a href="#detailed_auditing_policy_create">Creating a Detailed Auditing Policy</a></li>
-	<li><a href="#detailed_auditing_config">Configuring a Detailed Auditing Policy</a></li>
-	<li><a href="#detailed_auditing_options">Detailed Auditing Policy options</a></li>
+	<li><a href="#detailed_auditing_config">Configuring the Detailed Auditing Policy</a></li>
 	<li><a href="#policy_attach">Attaching the Policy</a></li>
-	<li><a href="#uc_policy_op_detailed_auditing_pm">Detailed Auditing Policy: use case for Policy Manager</a></li>
+	<li><a href="#uc_policy_op_detailed_auditing_pm">Detailed Auditing Policy: use cases</a>
+		<ol>
+			<li><a href="#uc_policy_op_detailed_auditing_pm_01">Detailed Auditing: Audit Entire Message and Message Metrics</a></li>
+			<li><a href="#uc_policy_op_detail_aud_failure_basic_aud_success">Detailed Auditing on failure, Basic Auditing on success</a></li>
+		</ol>
+	</li>
 </ol>
 <div class = "divider1"></div>
 
@@ -81,86 +85,12 @@ nav-title: Detailed Auditing
 	<li>In the center pane, in the <strong>Auditing Service Policy</strong> section, click <strong>Modify</strong>. The <strong>Modify Auditing Service Policy</strong> overlay is displayed, as shown below.
 		<p><img src="images/detailed_auditing_modify_2018.jpg" alt="Modify Auditing Service Policy" /></p>
 	</li>
-	<li>Specify values for the messages you want to apply the policy to, the audit identities, and the reporting options. For details on field values, see <a href="#detailed_auditing_options">Auditing Service Policy Options</a> below.</li>
+	<li>Specify values as needed, such as specific transport headers to exclude.
+	<p><strong>Note</strong>: For explanations of the individual fields, see <a href="policy_op_auditing_service.htm#auditing_service_policy_config">Configuring an Auditing Service Policy</a>. The Basic Auditing Policy and Detailed Auditing Policy are both pre-configured out-of-the-box instances of the Auditing Service Policy that are part of the default installation.</p></li>
 	<li>Click <strong>Apply</strong>.</li>
 </ol>
 <p>Now that the policy is defined, you can activate it and start using it. On the right, under <strong>Actions</strong>, choose <strong>Activate Policy</strong>.</p>
 <p><a href="#top">back to top</a></p>
-
-
-
-<h3 id="detailed_auditing_options">Detailed Auditing Policy options</h3>
-<p>On the Auditing Service Policy Options page, you can specify:</p>
-<ul>
-	<li><a href="#detailed_aud_audit_messages">Audit Messages</a>: Which messages the policy is applied to.</li>
-	<li><a href="#detailed_aud_audit_bindings">Audit Binding</a>: Which bindings the policy is applied to.</li>
-	<li><a href="#detailed_aud_audit_ids">Audit Identities</a>: Which identities the policy is applied to.</li>
-	<li><a href="#detailed_aud_reporting_options">Reporting Options</a>: How policy exceptions are reported.</li>
-</ul>
-<p>Refer to the field descriptions below.</p>
-
-
-<h4 id="detailed_aud_audit_messages">Audit Messages</h4>
-<p>Use this section to identify which messages should be audited.</p>
-<dl>
-<dt>Audit Messages</dt>
-<dd>Ifentifies which messages should be audited. The Audit Messages section includes two main options:
-	<ul>
-<li><strong>Audit All Messages</strong>: Enables the auditing of all messages.</li>
-<li><strong>Filter Messages</strong>: Filter settings determine which messages are audited. Options:
-	<p><strong>Exchanges resulting in an error</strong>: Audits only messages with errors.</p>
-<p><strong>Percentage of exchanges</strong>: Audits a random sample of messages based on a specified percentage. If you choose this option, specify an integer percentage from 1 to 99.</p>
-<p><strong>Filter by message content</strong>: specify message content that will trigger auditing. You can define trigger content in one or more of these formats: Regular Expression, JSONPath, or XPath. The XPath option includes a table where you can define <strong>Prefix</strong> and <strong>Namespace</strong> for each XPath expression. Click <strong>Add</strong> or <strong>Delete</strong> to modify the list. You can also sort the list by clicking the table header.</p>
-<p>For more information about using regular expressions, see <a href="policy_management.htm#policies_regex">Using Regular Expressions in Policies</a>.</p>
-</li>
-</ul></dd>
-
-
-<dt>Audit Messages: additional options</dt>
-<dd>The Audit Messages section includes the following additional checkboxes:
-<ul>
-<li><strong>Audit Input Message</strong>: Enables the auditing of input messages.</li>
-<li><strong>Audit Output Message</strong>: Enables the auditing of input messages.</li>
-<li><strong>Audit Fault Message</strong>: Enables the auditing of fault messages.</li>
-<li><strong>Audit Contract</strong>: Enables the auditing of a contract governing a message.</li>
-<li><strong>Audit Message Size</strong>: Enables the auditing of the size of messages in the exchange.</li>
-</ul></dd>
-</dl>
-
-
-<h4 id="detailed_aud_audit_bindings">Audit Binding</h4>
-<h5 class="stamp">API Platform Version: 2018.0.0 and later</h5>
-<p>Use this section to identify that the message binding should be audited. By default, if you check Audit Binding, the policy settings apply to the entire message binding. If you check Audit Transport, you can specify one or more transport headers to exclude.</p>
-<p>For example, you could use this option to filter out HTTP Transport headers so that user authentication credentials are not recorded in the logs.</p>
-<p>The <strong>Transport Header</strong> table stores a list of transport headers to be audited. Click <strong>Add</strong> or <strong>Delete</strong> to modify the list. You can also sort the list by clicking the table header.</p>
-
-
-<h4 id="detailed_aud_audit_ids">Audit Identities</h4>
-<p>Checking this box enables the auditing of specified identities included in a request message. Options:</p>
-<dl>
-<dt>Consumer</dt>
-<dd>Audits the consumer identity sent with a request message.</dd>
-
-
-<dt>End-User</dt>
-<dd>Audits the end-user identity sent with a request message.</dd>
-
-<dt>Additional Subject Categories</dt>
-<dd>Audits the identity associated with one or more specified Subject Categories sent with a request message. If you choose this option, you can create one or more user-defined subject categories that you want to use. You can also add or delete from the table.</dd>
-</dl>
-
-
-<h4 id="detailed_aud_reporting_options">Reporting Options</h4>
-<p>The following reporting options are available:</p>
-<dl>
-<dt>Log</dt>
-<dd>Indicates that audit information should be logged.</dd>
-
-
-<dt>Alert</dt>
-<dd>Indicates that audit information should be delivered in an alert event.</dd>
-</dl>
-<p><a href="#top">Back to top</a></p>
 
 
 
@@ -170,14 +100,15 @@ nav-title: Detailed Auditing
 
 
 
-<h3 id="uc_policy_op_detailed_auditing_pm">Detailed Auditing Policy: use case for Policy Manager</h3>
+<h3 id="uc_policy_op_detailed_auditing_pm">Detailed Auditing Policy: use cases</h3>
 <p>This section includes the following usage scenario for the Detailed Auditing Policy:</p>
 <ul>
-	<li><a href="#uc_policy_op_detailed_auditing_pm_01">Audit Entire Message and Message Metrics</a></li>
+	<li><a href="#uc_policy_op_detailed_auditing_pm_01">Detailed Auditing: Audit Entire Message and Message Metrics</a></li>
+	<li><a href="#uc_policy_op_detail_aud_failure_basic_aud_success">Detailed Auditing on failure, Basic Auditing on success</a></li>
 </ul>
 
 
-<h4 id="uc_policy_op_detailed_auditing_pm_01">Audit Entire Message and Message Metrics</h4>
+<h4 id="uc_policy_op_detailed_auditing_pm_01">Detailed Auditing: Audit Entire Message and Message Metrics</h4>
 <p>Audit entire message and message metrics of each exchange in usage logs of Monitoring tab.</p>
 <ol>
 	<li>Create a physical service in the <strong>Policy Manager Management Console</strong> using <strong>Create Physical Service</strong>.</li>
@@ -199,8 +130,23 @@ nav-title: Detailed Auditing
 			<li>Identities: Consumer/End-User</li>
 		</ol>
 		<p><img src="images/detailed_auditing_uc_pm_02.jpg" alt="Detailed Auditing policy use case: Usage Detail tab" /></p>
-		<p><img src="images/detailed_auditing_uc_pm_03.jpg" alt="Detailed Auditing policy use case: Recorded Messages tab" /></p></li>
+</li>
 </ol>
+<p><a href="#top">Back to top</a></p>
+
+
+<h4 id="uc_policy_op_detail_aud_failure_basic_aud_success">Detailed Auditing on failure, Basic Auditing on success</h4>
+<h5 class="stamp">API Platform Version: 2019.0.0 and later</h5>
+<p>In versions prior to 2019.0.0, the platform did not support attaching multiple auditing policies to a service or API; for example, <a href="policy_op_basic_auditing.htm">Basic Auditing</a> policy or <a href="policy_op_detailed_auditing.htm">Detailed Auditing</a> policy. In 2019.0.0 and later you can set up Basic Auditing for successful messages and Detailed Auditing for error conditions, as shown below.</p>
+<h5>Basic Auditing:</h5>
+<p><img src="images/basic_auditing_uc_02_01.jpg" alt="Basic Auditing on Success" /></p>
+<h5>Detailed Auditing:</h5>
+<p><img src="images/detailed_auditing_uc_02_02.jpg" alt="Detailed Auditing on Failure" /></p>
+<p>With this 
+
+
+
+configuration, you'll have minimal log entries for successful messages. However, any unsuccessful messages will have all message details (subject to configuration settings).</p>
 <p><a href="#top">Back to top</a></p>
 
 
