@@ -40,7 +40,13 @@ nav-title: Process Best Practices
 	<li>Declare all of the other variables, regardless of type, that you’re going to use in the process. This ensures that they appear in dialogs in the user interface. </li>
 	<li>Use short, meaningful variable names, so that their usage is easy to remember and understand, by yourself or by others, later.</li>
 	<li>Do not simply overwrite the default incoming request message variable <strong>message</strong> with a response message. You might need to refer back to the incoming message later.</li>
-	<li>To make sure you always get the normalized Message object back, use <span class="apidoc_code">var normMsg = msg.normalize();</span> and don’t continue to use msg later. Use <span class="apidoc_code">var</span> so that the variable is local to the script, not a global variable. the <span class="apidoc_code">msg.normalize()</span> method produces a new normalized Message object, but does not change the msg object itself. However, even so, assigning the output to another variable in your script ensures that you are working with the normalized message.</li>
+	<li><strong>Normalization</strong>:
+		<ul>
+			<li>To make sure you always get the normalized message object back, use <span class="apidoc_code">var normMsg = msg.normalize();</span> and don’t continue to use msg later. Use <span class="apidoc_code">var</span> so that the variable is local to the script, not a global variable.The <span class="apidoc_code">msg.normalize()</span> method produces a new normalized Message object, but does not change the msg object itself. However, even so, assigning the output to another variable in your script ensures that you are working with the normalized message.</li>
+			<li>Do not rely on the Transformation Activity for normalizing your message. If a script activity is used in your process, it's a good idea to use the <span class="apidoc_code">isNormalized()</span> function for the message object, to verify whether or not normalization is needed and take steps accordingly. For example:
+			<p><span class="apidoc_code">if(!isNormalized()){ msg.normalize();}</span></p></li>
+		</ul>
+		</li>
 	<li>If you are going to be making many changes to the message content in a script, it's a good idea to transform XML to a JSON object using the XML2JSON methods. It's easy to work with JSON in JavaScript, but not so easy to work with XML. In addition, it’s easy to access JSON properties in a JSON JavaScript object by name, but more difficult using the XML DOM.
 		<p>Some examples:</p>
 		<ul>
@@ -48,19 +54,19 @@ nav-title: Process Best Practices
 			<li><span class="apidoc_code">jsonObj[ variablePropName ]</span></li>
 			<li><span class="apidoc_code">jsonObj.fixedPropName.fixedSubPropName</span></li>
 			<li><span class="apidoc_code">jsonObj[ variablePropName][variableSubPropName]</span></li>
-		</ul>
-		</li>
+			</ul>
+	</li>
 	<li>The Transform activity using FreeMarker produces debug-level messages in the auditLog for every Message object declared in the Process that has a null value when the Transform step is executed. This can clutter the debug log; instead, you can use the following Javascript function, which performs the process initialization steps:
 		<pre>initializeProcess( reqMsgVarName, partNamesArray, msgVarNamesToInitializeArray ) </pre>
 		<p>To implement this function, call it in a script step at the beginning of each process. It does the following:</p>
-			<ol>
-				<li>First, normalizes the incoming request message in the reqMsgVarName variable (default is <strong>message</strong>), and then sets this normalized Message object back into the processContext with the same name. Result: the message is normalized.</li>
-				<li>Gets each message Part specified in the <span class="apidoc_code">partNamesArray</span> from the <span class="apidoc_code">reqMsgVarName</span> variable, and saves each part value in a <span class="apidoc_code">processContext</span> variable of type <span class="apidoc_code">String</span> with that part name. Later in the process, you can easily access these part values from anywhere. You can also declare each of these part name variables in the process.</li>
-				<li>Finally, initializes each variable specified in <span class="apidoc_code">msgVarNamesToInitializeArray</span> to a new normalized <span class="apidoc_code">Message</span> object, and saves it into the processContext with that name.
+		<ol>
+			<li>First, normalizes the incoming request message in the reqMsgVarName variable (default is <strong>message</strong>), and then sets this normalized Message object back into the processContext with the same name. Result: the message is normalized.</li>
+			<li>Gets each message Part specified in the <span class="apidoc_code">partNamesArray</span> from the <span class="apidoc_code">reqMsgVarName</span> variable, and saves each part value in a <span class="apidoc_code">processContext</span> variable of type <span class="apidoc_code">String</span> with that part name. Later in the process, you can easily access these part values from anywhere. You can also declare each of these part name variables in the process.</li>
+			<li>Finally, initializes each variable specified in <span class="apidoc_code">msgVarNamesToInitializeArray</span> to a new normalized <span class="apidoc_code">Message</span> object, and saves it into the processContext with that name.
 				<p>It's a good idea to also declare each of the Message name variables in the process, so that they show up in the selection combo fields in the user interface.</p>
 			</ol>
-				<p>The result is that there are no debug messages from Transform activities for null Message variables, the parts from the incoming message are all in the processContext by name, and everything runs smoothly because each downstream invoke has its own request and response Message object to work with.</p></li>
-		</li>
+		<p>The result is that there are no debug messages from Transform activities for null Message variables, the parts from the incoming message are all in the processContext by name, and everything runs smoothly because each downstream invoke has its own request and response Message object to work with.</p></li>
+	</li>
 </ol>
 <p><a href="#top">Back to top</a></p>
 
