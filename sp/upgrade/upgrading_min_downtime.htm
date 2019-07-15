@@ -17,12 +17,12 @@ nav-title: Use Case - Minimum Downtime Upgrade
 <p><strong>Note</strong>: This use case provides an approach for manual upgrade across multiple data centers. However, the best, and recommended, approach for upgrade in a production environment is via automation, which is available as a service from the Akana Professional Services department. For details about automation options, contact your Akana representative.</p>
 <p>Some points to bear in mind when considering a minimum-downtime upgrade:</p>
 <ul>
-  <li>The Network Director uses caching, which is very important during any upgrade.</li>
-  <li>If authorizations for policies have been approved within the last four hours, these will be used during the upgrade of the Policy Manager containers.</li>
-  <li>Analytics are cached during the small time that Policy Manager containers are being upgraded. This is only important if writes are being done remotely via Policy Manager.</li>
-  <li>The approach of taking data centers offline and upgrading them one at a time, or doing the same with nodes in a cluster, makes it possible to complete an upgrade with zero or minimum downtime.</li>
-  <li>Version 8.2 Network Director containers can communicate with upgraded version 8.4 Policy Manager containers.</li>
-  <li>In the approach taken in this use case, the first Policy Manager upgrade is responsible for upgrading the database. While Policy Manager is down for this upgrade, the Network Director instances are using cache for any runtime calls.</li>
+	<li>The Network Director uses caching, which is very important during any upgrade.</li>
+	<li>If authorizations for policies have been approved within the last four hours, these will be used during the upgrade of the Policy Manager containers.</li>
+	<li>Analytics are cached during the small time that Policy Manager containers are being upgraded. This is only important if writes are being done remotely via Policy Manager.</li>
+	<li>The approach of taking data centers offline and upgrading them one at a time, or doing the same with nodes in a cluster, makes it possible to complete an upgrade with zero or minimum downtime.</li>
+	<li>A previous-version Network Director container can communicate with an upgraded Policy Manager container. For example, Version 8.2 Network Director containers can communicate with upgraded version 8.4 Policy Manager containers.</li>
+	<li>In the approach taken in this use case, the first Policy Manager upgrade is responsible for upgrading the database. While Policy Manager is down for this upgrade, the Network Director instances are using cache for any runtime calls.</li>
 </ul>
 <p><a href="upgrading_akana_api_platform_82_84.htm" class="button secondary">Upgrading Akana API Platform from Version 8.2 to Version 8.4x</a></p>
 
@@ -33,15 +33,15 @@ nav-title: Use Case - Minimum Downtime Upgrade
 
 
 <ol class="table_of_contents">
-  <li><a href="#mindowntime_01">Multiple data center scenario</a>
-    <ul>
-      <li><a href="#mindowntime_01_00">Initial (Pre-Upgrade) State</a></li>
-      <li><a href="#mindowntime_01_01">Step 1: Upgrade Data Center B</a></li>
-      <li><a href="#mindowntime_01_02">Step 2: Upgrade Data Center A</a></li>
-      <li><a href="#mindowntime_01_04">Final state after upgrade</a></li>
-    </ul>
-  </li>
-  <li><a href="#mindowntime_02">Single data center scenario</a></li>
+	<li><a href="#mindowntime_01">Multiple data center scenario</a>
+		<ul>
+			<li><a href="#mindowntime_01_00">Initial (Pre-Upgrade) State</a></li>
+			<li><a href="#mindowntime_01_01">Step 1: Upgrade Data Center B</a></li>
+			<li><a href="#mindowntime_01_02">Step 2: Upgrade Data Center A</a></li>
+			<li><a href="#mindowntime_01_04">Final state after upgrade</a></li>
+		</ul>
+	</li>
+	<li><a href="#mindowntime_02">Single data center scenario</a></li>
 </ol>
 <div class = "divider1"></div>
 
@@ -64,8 +64,7 @@ nav-title: Use Case - Minimum Downtime Upgrade
 <p>In this step, we first move all traffic to data center A, so that traffic is uninterrupted while data center B is being upgraded. We then perform the upgrade.</p>
 <h5>High-level summary of steps</h5>
 <p>For this scenario, you'll need to complete these steps:</p>
-<p>Change the databases: define the writable database and change the direction of the replication.
-  </p>
+<p>Change the databases: define the writable database and change the direction of the replication.</p>
 <p>We flip the databases and make data center B the writable database, and change the direction of the replication. This allows you to move the <strong>Master</strong> data center back and forth. If you prefer a different sequence, you can start with upgrading data center A, and its database will always stay active.</p>
 <p>Update the scheduled jobs.
 </p>
@@ -112,11 +111,11 @@ nav-title: Use Case - Minimum Downtime Upgrade
 <p>You don't have to worry about using a <strong>Master</strong> Policy Manager instance, since there will never be a read-only database in the model.</p>
 <p>The connections that are important in this model are the links into the Policy Manager cluster first. The steps are:</p>
 <ol>
-  <li>First, remove 1 and direct all traffic to a single Policy Manager.</li>
-  <li>Upgrade the Policy Manager that is out of the cluster.</li>
-  <li>Once you've upgraded that Policy Manager, add it back into the cluster.</li>
-  <li>Now upgrade the other node.</li>
-  <li>Follow the same steps for upgrading one or more Network Director containers, one at a time.</li>
+	<li>First, remove 1 and direct all traffic to a single Policy Manager.</li>
+	<li>Upgrade the Policy Manager that is out of the cluster.</li>
+	<li>Once you've upgraded that Policy Manager, add it back into the cluster.</li>
+	<li>Now upgrade the other node.</li>
+	<li>Follow the same steps for upgrading one or more Network Director containers, one at a time.</li>
 </ol>
 <p>Note that this is only viable for data centers that have multiple nodes deployed; at minimum, the gateways must have multiple nodes. Minimum-downtime upgrades can still be achieved with single Policy Manager node clusters.</p>
 <p>The diagram below shows minimum-downtime upgrade for a single data center.</p>
