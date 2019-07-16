@@ -11,8 +11,8 @@ nav-title: Open ID Connect Support
 ---
 <h2 id="top">OpenID Connect Support</h2>
 <p>Configure an OpenID Connect Relying Party domain that you can use for platform login or to support an OAuth/OIDC Provider domain using OpenID Connect for authentication.</p>
-<h5 class="stamp">API Platform Version: 8.1 and later</h5>
 <div class = "divider1"></div>
+
 
 
 <h3 style="color: gray;">Table of Contents</h3>
@@ -25,7 +25,7 @@ nav-title: Open ID Connect Support
 	<li><a href="#openid_connect_provider_configure_multiple">Can I configure multiple OpenID Connect Providers?</a></li>
 	<li><a href="#diff_openid_connect_providerand_oauth_provider">How is an OpenID Connect provider different from an OAuth provider?</a></li>
 	<li><a href="#domain_setup_openid_connect_relying_party">How do I set up the platform to log in with an OpenID Connect Relying Party domain?</a></li>
-	<li><a href="#openid_connect_relying_party_redirect_uri">What value should I use for the Redirect URI for my OpenID Connect Relying Party domain?</a></li>
+	<li><a href="#openid_connect_relying_party_redirect_uri">What value should I use for the Redirection URI for my OpenID Connect Relying Party domain?</a></li>
 	<li><a href="#oauth_provider_configured_what_benefits">I already have an OAuth/OIDC Provider domain configured. How can I benefit from the platform's OpenID Connect support?</a></li>
 	<li><a href="#can_i_integrate">Can I integrate some other OpenID Connect provider in the platform? If so, how? Which features of the platform can support an external OpenID Connect provider?</a></li>
 	<li><a href="#openid_connect_oauth_urls">What are the OpenID Connect OAuth URLs for the platform?</a></li>
@@ -34,6 +34,8 @@ nav-title: Open ID Connect Support
 	<li><a href="#domain_openid_connect_relying_party_config">How do I configure an OpenID Connect Relying Party domain?</a></li>
 	<li><a href="#how_do_i_choose_which_response_type_to_use">How do I choose which response type to use?</a></li>
 	<li><a href="#scopes_in_id_token">How do I send the scopes in the ID token instead of in the authorization request?</a></li>
+	<li><a href="#ts_3p_user_values_not_populated">Troubleshooting: Values not populated for a third-party user logging in for the first time</a></li>
+	<li><a href="#ts_loading_config_failed">Troubleshooting: "Loading configuration failed" message</a></li>
 </ol>
 
 
@@ -77,7 +79,7 @@ nav-title: Open ID Connect Support
 <p>Reasons you might choose OpenID Connect rather than SAML for your implementation:</p>
 <ul>
 	<li>An existing OpenID Connect Relying Party implementation.</li>
-	<li>The OpenID Connect Provider returns  tokens rather than SAML tokens. The  token can then be exchanged to get an access token for API consumption and to get more details of the user.</li>
+	<li>The OpenID Connect Provider returns tokens rather than SAML tokens. The token can then be exchanged to get an access token for API consumption and to get more details of the user.</li>
 </ul>
 <p><a href="#top">Back to top</a></p>
 
@@ -120,49 +122,49 @@ nav-title: Open ID Connect Support
 <ul>
 	<li><strong>Discovery Configuration</strong>: OpenID Connect provider defines a <a href="basics_glossary.htm#gl_wellknownconfigurationurl">well-known configuration URL</a> that can be used for relying party applications to learn all the details about the OpenID Connect provider. This includes:
 <ul>
-      <li>URLs for Authorization Endpoint, Token Endpoint, JWKS Endpoint, and UserInfo Endpoint</li>
-      <li>Supported scope names</li>
-      <li>Other security-related configuration needed to interact with the OpenID Connect provider</li>
-    </ul>
-  </li>
+			<li>URLs for Authorization Endpoint, Token Endpoint, JWKS Endpoint, and UserInfo Endpoint</li>
+			<li>Supported scope names</li>
+			<li>Other security-related configuration needed to interact with the OpenID Connect provider</li>
+		</ul>
+	</li>
 	<li><strong>UserInfo Endpoint</strong>: OAuth 2.0 defines an Authorization Endpoint that is used for the resource owner (end user) to give consent to the app's request for access to the user's resources, and a Token Endpoint for the relying party (app) to obtain an access token for use when invoking APIs. This access token invokes the request with the security context of the end-user.
-    <p>However, there was no standard way for the relying party app to collect information about the end user (resource owner). The OpenID Connect specification includes two ways for the app to learn information about the end user:</p>
-    <ul>
-      <li>The  OpenID Connect Provider can issue an ID Token (token) from either the Authorization Endpoint or the Token Endpoint.</li>
-      <li>The OpenID Connect Provider can publish a UserInfo endpoint. The relying party  app can then use the UserInfo endpoint to learn information about the end-user (who gave consent to the relying party).</li>
-    </ul>
-  </li>
-	<li><strong>JWKS Endpoint</strong>: <a href="basics_glossary.htm#gl_jwt_token"> tokens</a> are signed, and optionally encrypted, using the JWK specification with rolling keys. The OpenID Connect provider publishes the JWKS endpoint with JSON Web Key Set for all valid  tokens issued by the provider.</li>
+		<p>However, there was no standard way for the relying party app to collect information about the end user (resource owner). The OpenID Connect specification includes two ways for the app to learn information about the end user:</p>
+		<ul>
+			<li>The OpenID Connect Provider can issue an ID Token (token) from either the Authorization Endpoint or the Token Endpoint.</li>
+			<li>The OpenID Connect Provider can publish a UserInfo endpoint. The relying party app can then use the UserInfo endpoint to learn information about the end-user (who gave consent to the relying party).</li>
+		</ul>
+	</li>
+	<li><strong>JWKS Endpoint</strong>: <a href="basics_glossary.htm#gl_jwt_token"> tokens</a> are signed, and optionally encrypted, using the JWK specification with rolling keys. The OpenID Connect provider publishes the JWKS endpoint with JSON Web Key Set for all valid tokens issued by the provider.</li>
 	<li><strong>Session Management</strong>: OpenID Connect supports logging the end user out from the OpenID Connect provider in two ways:
-  <ul>
-      <li>By initiating logout from the Relying Party app</li>
-      <li>Logging out from the Relying Party app by initiating logout from the OpenID Connect Provider</li>
-    </ul>
-  <p>It also provides an option to include a Provider iFrame in a Relying Party web app that can help manage the end-user session with the relying party app if the OpenID Connect provider decides to end the end-user's session with the relying party.</p>
-  <p><strong>Note</strong>: The developer portal's OpenID Connect Provider does not support OpenID Connect's Session Management features.</p></li>
+	<ul>
+			<li>By initiating logout from the Relying Party app</li>
+			<li>Logging out from the Relying Party app by initiating logout from the OpenID Connect Provider</li>
+		</ul>
+	<p>It also provides an option to include a Provider iFrame in a Relying Party web app that can help manage the end-user session with the relying party app if the OpenID Connect provider decides to end the end-user's session with the relying party.</p>
+	<p><strong>Note</strong>: The developer portal's OpenID Connect Provider does not support OpenID Connect's Session Management features.</p></li>
 	<li><strong>Dynamic Client Registration</strong>: OpenID Connect Provider supports an endpoint with standard interface to register Relying Party applications.
-    <p><strong>Note</strong>: The platform does not support the standard OpenID Connect Provider Dynamic <a href="basics_glossary.htm#gl_client_registration_endpoint">Client Registration endpoint</a>. Instead, the platform has the proprietary API to register relying party applications.</p>
-  </li>
+		<p><strong>Note</strong>: The platform does not support the standard OpenID Connect Provider Dynamic <a href="basics_glossary.htm#gl_client_registration_endpoint">Client Registration endpoint</a>. Instead, the platform has the proprietary API to register relying party applications.</p>
+	</li>
 </ul>
 <p>The following specific OAuth Provider features are from the OpenID Connect specification:</p>
 <ul>
 	<li>The Relying Party must use one of the following OAuth grant types from the OAuth Provider to get the consent of the end-user for the relying party to use the end-user's security context:
-    <ul>
-      <li>Authorization Grant</li>
-      <li>Implicit Grant</li>
-    </ul>
-  </li>
+		<ul>
+			<li>Authorization Grant</li>
+			<li>Implicit Grant</li>
+		</ul>
+	</li>
 	<li>The OpenID Connect protocol does not use either of these two OAuth grant types:
-    <ul>
-      <li>Client Credentials</li>
-      <li>Resource Owner Password Credentials</li>
-      </ul>
-  </li>
+		<ul>
+			<li>Client Credentials</li>
+			<li>Resource Owner Password Credentials</li>
+			</ul>
+	</li>
 	<li>When using an Authorization Grant, OAuth issues an authorization code from the Authorization Endpoint. The Relying Party application should use the Token Endpoint to retrieve the access token. However, the OpenID Connect provider allows the relying party to obtain both the Authorization Code and the access token from the Authorization Endpoint.</li>
-	<li>The OpenID Connect protocol extends the Authorization Endpoint to issue a  Token (id_token) from the Authorization Endpoint to the Relying Party. In this case, the Relying Party does not use the Token Endpoint or the UserInfo Endpoint.</li>
+	<li>The OpenID Connect protocol extends the Authorization Endpoint to issue a Token (id_token) from the Authorization Endpoint to the Relying Party. In this case, the Relying Party does not use the Token Endpoint or the UserInfo Endpoint.</li>
 	<li>When using OpenID Connect, the OAuth Provider should issue a Bearer token only. Issuing a MAC token from the Authorization/Token Endpoint will limit the Relying Party from using the UserInfo Endpoint.</li>
 	<li>POST response from Authorization Endpoint: The OpenID Connect provider functionality supports a query parameter to the Authorization Endpoint that requires the Authorization Endpoint to return the response parameters to an HTTP POST request at the redirect URL, instead of using a HTTP GET.
-    <p><strong>Note</strong>: The platform's OpenID Connect provider does not support this option.</p></li>
+		<p><strong>Note</strong>: The platform's OpenID Connect provider does not support this option.</p></li>
 </ul>
 <p><a href="#top">Back to top</a></p>
 
@@ -177,28 +179,29 @@ nav-title: Open ID Connect Support
 	<li>In the platform, set up an OpenID Connect Relying Party domain: see <a href="#domain_openid_connect_relying_party_config">How do I configure an OpenID Connect Relying Party domain?</a></li>
 	<li>In the platform, enable the domain for login on the <strong>Administration</strong> &gt; <strong>Config</strong> &gt; <strong>Logins</strong> page. See <a href="bus_admin_domains.htm#domain_login_enable">How do I enable a domain for login?</a></li>
 </ul>
+<p><strong>Note</strong>: If an OpenID Connect Relying Party domain is enabled as a login domain, you cannot delete it. If you need to delete a domain, first make sure it isn't enabled for login.</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
-<h3 id="openid_connect_relying_party_redirect_uri">What value should I use for the Redirect URI for my OpenID Connect Relying Party domain?</h3>
+<h3 id="openid_connect_relying_party_redirect_uri">What value should I use for the Redirection URI for my OpenID Connect Relying Party domain?</h3>
 <p>Depending on how you will be using the OpenID Connect Relying Party domain, there are two possible redirect URI values that you could use on your OpenID Connect provider site when registering your platform as an app with your provider. Choose the applicable value from the table below.</p>
 <table class="doctable">
 <thead>
-  <tr>
-    <th>Environment Scenario</th>
-    <th>Redirect URL</th>
-  </tr>
+	<tr>
+		<th>Environment Scenario</th>
+		<th>Redirect URL</th>
+	</tr>
 </thead>
 <tbody>
-  <tr>
-    <td>Akana API Platform Login</td>
-    <td>{CMConsoleAddress}/api/login/ssoLogin</td>
-  </tr>
-  <tr>
-    <td>OAuth Provider Resource Owner domain</td>
-    <td>{OAuthProviderAuthorizationServer}/oauth/auz/grants/provider/authcomplete</td>
-  </tr>
+	<tr>
+		<td>Akana API Platform Login</td>
+		<td>{CMConsoleAddress}/api/login/ssoLogin</td>
+	</tr>
+	<tr>
+		<td>OAuth Provider Resource Owner domain</td>
+		<td>{OAuthProviderAuthorizationServer}/oauth/auz/grants/provider/authcomplete</td>
+	</tr>
 </tbody>
 </table>
 <p><a href="#top">Back to top</a></p>
@@ -214,7 +217,7 @@ nav-title: Open ID Connect Support
 <h3 id="can_i_integrate">Can I integrate some other OpenID Connect provider in the platform? If so, how? Which features of the platform can support an external OpenID Connect provider?</h3>
 <p>Yes. You can integrate any OpenID Connect provider by setting up an OpenID Connect Relying Party domain: Administrator &gt; Domains &gt; Add Domain &gt; OpenID Connect Relying Party.</p>
 <p>For instructions, see <a href="#domain_openid_connect_relying_party_config">How do I configure an OpenID Connect Relying Party domain?</a></p>
-<p>You can choose this domain  if you want the platform's OAuth or OpenID Connect provider to use an external OpenID Connect Provider for resource owner authentication or for login.</p>
+<p>You can choose this domain if you want the platform's OAuth or OpenID Connect provider to use an external OpenID Connect Provider for resource owner authentication or for login.</p>
 <p>You can dynamically reference the provider's discovery URL (well-known configuration URL), you can read the metadata from that URL as a starting point and then modify the values, or you can configure the domain manually.</p>
 <p><a href="#top">Back to top</a></p>
 
@@ -239,27 +242,27 @@ nav-title: Open ID Connect Support
 <p>The developer portal's OpenID Connect provider supports the following digital signature/MAC algorithms to sign ID tokens as defined in the <a href="https://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-34" title="IETF specification" target="_blank">IETF JSON Web Algorithms specification</a>:</p>
 <ul>
 	<li>Symmetric Signature Algorithms:
-    <ul>
-      <li>HS256: HMAC using  <a href="basics_glossary.htm#gl_sha256">SHA-256</a></li>
-      <li>HS384: <a href="basics_glossary.htm#gl_hmac">HMAC</a> using SHA-384</li>
-      <li>HS512: HMAC using SHA-512</li>
-    </ul>
-  </li>
+		<ul>
+			<li>HS256: HMAC using <a href="basics_glossary.htm#gl_sha256">SHA-256</a></li>
+			<li>HS384: <a href="basics_glossary.htm#gl_hmac">HMAC</a> using SHA-384</li>
+			<li>HS512: HMAC using SHA-512</li>
+		</ul>
+	</li>
 	<li>Asymmetric Signature Algorithms:
-    <ul>
-      <li>RS256: <a href="basics_glossary.htm#gl_rsa">RSA</a>SSA-PKCS-v1_5 using <a href="basics_glossary.htm#gl_sha256">SHA-256</a></li>
-      <li>RS384: RSASSA-PKCS-v1_5 using SHA-384</li>
-      <li>RS512: RSASSA-PKCS-v1_5 using SHA-512</li>
-      <li>ES256: <a href="basics_glossary.htm#gl_ecdsa">ECDSA</a> using P-256 and SHA-256</li>
-      <li>ES384: ECDSA using P-384 and SHA-384</li>
-      <li>ES512: ECDSA using P-521 and SHA-512</li>
-      <li>PS256: <a href="basics_glossary.htm#gl_rsa">RSA</a>SSA-PSS using SHA-256 and <a href="basics_glossary.htm#gl_mgf1">MGF1</a> with SHA-256</li>
-      <li>PS384: RSASSA-PSS using SHA-384 and MGF1 with SHA-384</li>
-      <li>PS512: RSASSA-PSS using SHA-512 and MGF1 with SHA-512</li>
-    </ul>
-  </li>
-  </ul>
-<p>The OpenID Connect Provider requires a default signature algorithm from the above list of algorithms to be used to  sign ID tokens it issues to relying party applications.</p>
+		<ul>
+			<li>RS256: <a href="basics_glossary.htm#gl_rsa">RSA</a>SSA-PKCS-v1_5 using <a href="basics_glossary.htm#gl_sha256">SHA-256</a></li>
+			<li>RS384: RSASSA-PKCS-v1_5 using SHA-384</li>
+			<li>RS512: RSASSA-PKCS-v1_5 using SHA-512</li>
+			<li>ES256: <a href="basics_glossary.htm#gl_ecdsa">ECDSA</a> using P-256 and SHA-256</li>
+			<li>ES384: ECDSA using P-384 and SHA-384</li>
+			<li>ES512: ECDSA using P-521 and SHA-512</li>
+			<li>PS256: <a href="basics_glossary.htm#gl_rsa">RSA</a>SSA-PSS using SHA-256 and <a href="basics_glossary.htm#gl_mgf1">MGF1</a> with SHA-256</li>
+			<li>PS384: RSASSA-PSS using SHA-384 and MGF1 with SHA-384</li>
+			<li>PS512: RSASSA-PSS using SHA-512 and MGF1 with SHA-512</li>
+		</ul>
+	</li>
+	</ul>
+<p>The OpenID Connect Provider requires a default signature algorithm from the above list of algorithms to be used to sign ID tokens it issues to relying party applications.</p>
 <p>In the platform, the default signature algorithm is set up in <strong>Administration</strong> &gt; <strong>Domains</strong> &gt; <strong>Add Domain</strong> &gt; <strong>OAuth/OIDC Provider</strong>, on the OpenID Connect page of the Add/Edit OAuth/OIDC Provider wizard.</p>
 <p>There are some limitations when HS256/HS384/HS512 algorithms are configured to sign ID tokens. The OpenID Connect specification recommends using relying party/application/client secrets when using symmetric signature algorithms (HS256/HS384/HS512) to sign ID tokens. For this reason, apps/clients must make sure that the app or client secret has sufficient entropy to be used as a cryptographic key with these algorithms.</p>
 <p>When asymmetric signature algorithms are used to sign ID tokens, the public keys to verify the signature of the ID token are published at the JWKS endpoint. This is according to the <a href="https://tools.ietf.org/html/draft-ietf-jose-json-web-key-34#page-10" target="_blank">JSON Web Key specification, page 10</a>.</p>
@@ -288,16 +291,16 @@ nav-title: Open ID Connect Support
 	<li>On the right, click <strong>Add Domain</strong>.</li>
 	<li>Choose <strong>OpenID Connect Relying Party</strong>. The wizard opens at the first tab.</li>
 	<li>Follow the instructions for each tab. The information you'll provide depends on your OpenID Connect Provider and on how you are using the domain. For details on specific fields and options, if needed, refer to the additional information in <a href="#field_values_openid_connect_relying_party">OpenID Connect Relying Party Domain: Configuration Values</a> below. The wizard includes the following tabs:
-    <ol>
-      <li><strong>Tab 1: Details</strong>: the name and description you want to assign to the domain.</li>
-      <li><strong><a href="#oidcrp_domain_tab2">Tab 2: Configuration Method</a></strong>: the approach you want to use for setting up your domain. You can dynamically reference the provider metadata, read in the provider metadata and then modify it as needed, or do a completely manual configuration.</li>
-      <li><strong><a href="#oidcrp_domain_tab3">Tab 3: Provider</a></strong>: basic information about your OpenID Connect identity provider. The platform uses this to connect to the provider.</li>
-      <li><strong><a href="#oidcrp_domain_tab4">Tab 4: Authentication</a></strong>: values associated with user authentication and how user information is returned to you.</li>
-      <li><strong><a href="#oidcrp_domain_tab5">Tab 5: App</a></strong>: the two values, App ID and Shared Secret, that uniquely identify your app with your OpenID Connect identity provider.</li>
-      <li><strong><a href="#oidcrp_domain_tab6">Tab 6: Token</a></strong>: If you want claims to be returned from the token endpoint, you must configure values relating to the token.</li>
-      <li><strong><a href="#oidcrp_domain_tab7">Tab 7: User</a></strong>: If you want claims to be returned from the UserInfo endpoint, you must configure URI and HTTP method; if the claim names you're using are not the defaults, you can also set up the claim names on this page.</li>
-    </ol>
-  </li>
+		<ol>
+			<li><strong>Tab 1: Details</strong>: the name and description you want to assign to the domain.</li>
+			<li><strong><a href="#oidcrp_domain_tab2">Tab 2: Configuration Method</a></strong>: the approach you want to use for setting up your domain. You can dynamically reference the provider metadata, read in the provider metadata and then modify it as needed, or do a completely manual configuration.</li>
+			<li><strong><a href="#oidcrp_domain_tab3">Tab 3: Provider</a></strong>: basic information about your OpenID Connect identity provider. The platform uses this to connect to the provider.</li>
+			<li><strong><a href="#oidcrp_domain_tab4">Tab 4: Authentication</a></strong>: values associated with user authentication and how user information is returned to you.</li>
+			<li><strong><a href="#oidcrp_domain_tab5">Tab 5: App</a></strong>: the two values, App ID and Shared Secret, that uniquely identify your app with your OpenID Connect identity provider.</li>
+			<li><strong><a href="#oidcrp_domain_tab6">Tab 6: Token</a></strong>: If you want claims to be returned from the token endpoint, you must configure values relating to the token.</li>
+			<li><strong><a href="#oidcrp_domain_tab7">Tab 7: User</a></strong>: If you want claims to be returned from the UserInfo endpoint, you must configure URI and HTTP method; if the claim names you're using are not the defaults, you can also set up the claim names on this page.</li>
+		</ol>
+	</li>
 	<li>Click <strong>Save</strong>.</li>
 </ol>
 
@@ -309,24 +312,24 @@ nav-title: Open ID Connect Support
 <p><strong>Select Configuration Method</strong></p>
 <table class="doctable">
 <thead>
-  <tr>
-    <th>Option...</th>
-    <th>Meaning...</th>
-  </tr>
+	<tr>
+		<th>Option...</th>
+		<th>Meaning...</th>
+	</tr>
 </thead>
 <tbody>
-  <tr>
-    <td>Discover Provider Metadata</td>
-    <td>Choose this option if you want the platform to read the configuration information dynamically from your provider's well-known configuration URL (discovery endpoint). Then provide the URL, and the platform populates the fields in the wizard. When you choose this option, the platform always references the configuration endpoint for the information; it is not stored locally. Values from the configuration file are displayed and cannot be changed.</td>
-  </tr>
-  <tr>
-    <td>Read Provider Metadata &amp; Edit Configuration</td>
-    <td>Choose this option if you want the platform to read the configuration information from your provider's well-known configuration URL (discovery endpoint) and store it locally. Once the information is read in, you will be able to edit it. It is stored locally and is not updated from the configuration endpoint. Values from the configuration file are displayed, but can be changed.</td>
-  </tr>
-  <tr>
-    <td>Manual Configuration</td>
-    <td>Choose this option if you want to set up your domain by providing all the values yourself, without reference to any external configuration information.</td>
-  </tr>
+	<tr>
+		<td>Discover Provider Metadata</td>
+		<td>Choose this option if you want the platform to read the configuration information dynamically from your provider's well-known configuration URL (discovery endpoint). Then provide the URL, and the platform populates the fields in the wizard. When you choose this option, the platform always references the configuration endpoint for the information; it is not stored locally. Values from the configuration file are displayed and cannot be changed.</td>
+	</tr>
+	<tr>
+		<td>Read Provider Metadata &amp; Edit Configuration</td>
+		<td>Choose this option if you want the platform to read the configuration information from your provider's well-known configuration URL (discovery endpoint) and store it locally. Once the information is read in, you will be able to edit it. It is stored locally and is not updated from the configuration endpoint. Values from the configuration file are displayed, but can be changed.</td>
+	</tr>
+	<tr>
+		<td>Manual Configuration</td>
+		<td>Choose this option if you want to set up your domain by providing all the values yourself, without reference to any external configuration information.</td>
+	</tr>
 </tbody>
 </table>
 <dl>
@@ -349,29 +352,29 @@ nav-title: Open ID Connect Support
 <p><strong>End-User Claims Available in</strong></p>
 <table class="doctable">
 <thead>
-  <tr>
-    <th>Option...</th>
-    <th>Meaning...</th>
-  </tr>
+	<tr>
+		<th>Option...</th>
+		<th>Meaning...</th>
+	</tr>
 </thead>
 <tbody>
-  <tr>
-    <td>ID Token from Authorization Endpoint</td>
-    <td><p>Choose this option if you want claims to be returned in the ID Token from the authorization endpoint. This is the most efficient option, but can be more complex because of the need to secure the ID token.</p>
-      <p>If you choose this option, you only need to complete the first five tabs of the wizard. Tabs 6 and 7 are not necessary.</p>
-      <p><strong>Note</strong>: with this option, the application communicates directly to the authorization endpoint via the user-agent; this means that the user can see the ID token. Because of this, TLS security cannot be used.</p></td>
-  </tr>
-  <tr>
-    <td>ID Token from Token Endpoint</td>
-    <td><p>Choose this option if you want claims to be returned in the ID Token from the token endpoint. This option is a compromise between efficiency and security; it introduces a second step, but allows you to use transport-level security for securing the ID token.</p>
-      <p>If you choose this option, you only need to complete the first six tabs of the wizard. Tab 7 is not necessary.</p>
-      <p><strong>Note</strong>: with this option, the application communicates directly with the token endpoint. The user and user-agent do not have access to the information that's shared, which is an added security.</p></td>
-  </tr>
-  <tr>
-    <td>UserInfo from UserInfo Endpoint</td>
-    <td><p>Choose this option if you want claims to be returned in the UserInfo response from the UserInfo endpoint, and/or for backwards compatibility with an earlier version of the developer portal. This option introduces a third step. An ID token is not involved; plain text JSON is used for claims. This option is the least efficient and least secure. It is the only option supported in earlier versions of the platform.</p>
-      <p>If you choose this option, you must complete all seven tabs of the wizard.</p></td>
-  </tr>
+	<tr>
+		<td>ID Token from Authorization Endpoint</td>
+		<td><p>Choose this option if you want claims to be returned in the ID Token from the authorization endpoint. This is the most efficient option, but can be more complex because of the need to secure the ID token.</p>
+			<p>If you choose this option, you only need to complete the first five tabs of the wizard. Tabs 6 and 7 are not necessary.</p>
+			<p><strong>Note</strong>: with this option, the application communicates directly to the authorization endpoint via the user-agent; this means that the user can see the ID token. Because of this, TLS security cannot be used.</p></td>
+	</tr>
+	<tr>
+		<td>ID Token from Token Endpoint</td>
+		<td><p>Choose this option if you want claims to be returned in the ID Token from the token endpoint. This option is a compromise between efficiency and security; it introduces a second step, but allows you to use transport-level security for securing the ID token.</p>
+			<p>If you choose this option, you only need to complete the first six tabs of the wizard. Tab 7 is not necessary.</p>
+			<p><strong>Note</strong>: with this option, the application communicates directly with the token endpoint. The user and user-agent do not have access to the information that's shared, which is an added security.</p></td>
+	</tr>
+	<tr>
+		<td>UserInfo from UserInfo Endpoint</td>
+		<td><p>Choose this option if you want claims to be returned in the UserInfo response from the UserInfo endpoint, and/or for backwards compatibility with an earlier version of the developer portal. This option introduces a third step. An ID token is not involved; plain text JSON is used for claims. This option is the least efficient and least secure. It is the only option supported in earlier versions of the platform.</p>
+			<p>If you choose this option, you must complete all seven tabs of the wizard.</p></td>
+	</tr>
 </tbody>
 </table>
 
@@ -401,7 +404,7 @@ nav-title: Open ID Connect Support
 <dd>Check this box if the domain will be used from the OAuth/OIDC provider and you want to use the app ID of the application that is requesting the token, from the inbound request. The app ID of this domain will also be sent in the authorization request via this parameter: <strong>X_proxy_azp_client_id</strong>.</dd>
 
 <dt>Transfer Inbound OAuth Client Redirect URI</dt>
-<dd>Check this box if the domain will be used from the OAuth/OIDC provider and you want to relay the Redirect URI of the application that is requesting the token, from the inbound request. The Redirect URI of this domain will also be sent in the authorization request via this parameter: <strong>X_proxy_redirect_uri</strong>.</dd>
+<dd>Check this box if the domain will be used from the OAuth/OIDC provider and you want to relay the Redirection URI of the application that is requesting the token, from the inbound request. The Redirection URI of this domain will also be sent in the authorization request via this parameter: <strong>X_proxy_redirect_uri</strong>.</dd>
 
 <dt>Transfer OAuth Grant ID</dt>
 <dd>Check this box if the domain will be used from the OAuth/OIDC provider and you want to relay the Grant ID corresponding to the inbound authorization request. The Grant ID will be sent in the authorization request via this parameter: <strong>GrantID</strong>.</dd>
@@ -414,32 +417,32 @@ nav-title: Open ID Connect Support
 <p>Specify what prompt, if any, the Authorization Server should offer to the user. For additional information, refer to the table below.</p>
 <table class="doctable">
 <thead>
-  <tr>
-    <th>Option...</th>
-    <th>Meaning...</th>
-  </tr>
+	<tr>
+		<th>Option...</th>
+		<th>Meaning...</th>
+	</tr>
 </thead>
 <tbody>
-  <tr>
-    <td>None</td>
-    <td>The authentication server must not display any authentication or consent pages to the user. The user must already be authenticated.</td>
-  </tr>
-  <tr>
-    <td>Login</td>
-    <td>The Authorization Server must prompt the user to log in and authenticate.</td>
-  </tr>
-  <tr>
-    <td>Consent</td>
-    <td>The Authorization Server must prompt the user to give explicit consent for access.</td>
-  </tr>
-  <tr>
-    <td>Select_account</td>
-    <td>The Authorization Server will prompt the user to select an account (for scenarios where users might have multiple accounts).</td>
-  </tr>
-  <tr>
-    <td>Delegate</td>
-    <td>The domain will be used from the OAuth/OIDC Provider and the prompt value received in the inbound request, from the application that is requesting the token, will be relayed.</td>
-  </tr>
+	<tr>
+		<td>None</td>
+		<td>The authentication server must not display any authentication or consent pages to the user. The user must already be authenticated.</td>
+	</tr>
+	<tr>
+		<td>Login</td>
+		<td>The Authorization Server must prompt the user to log in and authenticate.</td>
+	</tr>
+	<tr>
+		<td>Consent</td>
+		<td>The Authorization Server must prompt the user to give explicit consent for access.</td>
+	</tr>
+	<tr>
+		<td>Select_account</td>
+		<td>The Authorization Server will prompt the user to select an account (for scenarios where users might have multiple accounts).</td>
+	</tr>
+	<tr>
+		<td>Delegate</td>
+		<td>The domain will be used from the OAuth/OIDC Provider and the prompt value received in the inbound request, from the application that is requesting the token, will be relayed.</td>
+	</tr>
 </tbody>
 </table>
 
@@ -506,35 +509,35 @@ nav-title: Open ID Connect Support
 <ul>
 	<li>ID Token from Authorization Endpoint (platform required <strong>id_token</strong>):
 <ul>
-      <li>id_token</li>
-      <li>id_token token</li>
-      <li>code id_token</li>
-      <li>code id_token token</li>
-    </ul>
-  </li>
+			<li>id_token</li>
+			<li>id_token token</li>
+			<li>code id_token</li>
+			<li>code id_token token</li>
+		</ul>
+	</li>
 	<li>ID Token from Token Endpoint (platform requires <strong>code</strong>):
 <ul>
-      <li>code</li>
-      <li>code id_token</li>
-      <li>code token</li>
-      <li>code id_token token</li>
-    </ul>
-  </li>
+			<li>code</li>
+			<li>code id_token</li>
+			<li>code token</li>
+			<li>code id_token token</li>
+		</ul>
+	</li>
 	<li>UserInfo from UserInfo Endpoint (platform requires either <strong>code</strong> or <strong>token</strong>):
 <ul>
-      <li>code</li>
-      <li>id_token token</li>
-      <li>code id_token</li>
-      <li>code token</li>
-      <li>code id_token token</li>
-    </ul>
-  </li>
-  </ul>
+			<li>code</li>
+			<li>id_token token</li>
+			<li>code id_token</li>
+			<li>code token</li>
+			<li>code id_token token</li>
+		</ul>
+	</li>
+	</ul>
 <p>The response type determines what gets returned in the response. From the perspective of the platform as an OpenID Relying Party, any available option is valid. The platform&rsquo;s minimum requirements for each of the choices are as follows:</p>
 <ul>
 	<li><strong>ID Token from Authorization Endpoint</strong>: The ID token (JWK token) is all that the platform requires, so the minimum requirement is <strong>id_token</strong>. The platform doesn't require code or token in the response_type. However, you might choose to include either or both of these values if your Identity Provider uses them.</li>
 	<li><strong>ID Token from Token Endpoint</strong>: The platform gets the JWK token from the Token Endpoint. In order to send the response from the token endpoint, the OpenID Connect provider requires an authorization code as proof that the user has authorized the client to obtain the user profile. A response_type value of code returns the authorization code, which the app can then provide to the Token Endpoint to obtain the ID token. The Token Endpoint response also includes access_token; this can be ignored, since the id_token value includes the user profile information.
-  <p>In this case, the platform's  minimum requirement for the response_type parameter is <strong>code</strong>. The token and id_token are not required. However, you might choose to include either or both of these values if your Identity Provider uses them.</p></li>
+	<p>In this case, the platform's minimum requirement for the response_type parameter is <strong>code</strong>. The token and id_token are not required. However, you might choose to include either or both of these values if your Identity Provider uses them.</p></li>
 	<li><strong>UserInfo from UserInfo Endpoint</strong>: The platform gets the userinfo from the UserInfo Endpoint. To do that, the platform needs to get the access token, either from the Authorization Endpoint or from the Token Endpoint. To get the access token from the Authorization Endpoint, it must get the token. To get the access token from the token endpoint, it needs the code. So either <strong>code</strong> or <strong>token</strong> should be there in the response type.
 <p>If you select <strong>code</strong>, there are three steps to the process flow: go to the Authorization Endpoint, then the Token Endpoint, and then the UserInfo Endpoint.</p>
 <p>If you select <strong>token</strong>, there are two steps to the process flow: go to the Authorization Endpoint and then the UserInfo Endpoint. In this scenario, it&rsquo;s not necessary to go to the Token Endpoint, because the platform gets the access token directly from the Authorization Endpoint.</p>
@@ -557,7 +560,7 @@ nav-title: Open ID Connect Support
 <ul>
 	<li><strong>In the usual case</strong>: information about the scopes being requested is sent in the request to the Authorization Endpoint, in the <strong>scope</strong> parameter. The user is asked to authenticate and then, after authentication, is asked to grant access to the requested scopes.</li>
 	<li><strong>In this modified case</strong>: Information about the scopes being requested is not sent in the request to the Authorization Endpoint. The other values that identify the end-user and the client are included in the normal way. The user is asked to authenticate. Once the user authenticates, the Authentication Provider specified the scopes and returns this information in the ID token. The user is then asked to grant access to the requested scopes.
-  <p>A Single-Page Application (SPA) might have some limitations sending scopes in the initial /authorize call in the OAuth 2.0 flow. This modified configuration approach has been designed to overcome that limitation.</p></li>
+	<p>A Single-Page Application (SPA) might have some limitations sending scopes in the initial /authorize call in the OAuth 2.0 flow. This modified configuration approach has been designed to overcome that limitation.</p></li>
 </ul>
 <p>This difference in the OAuth process flow is seamless to the user, but enables you to use OAuth in a scenario where the scope information isn't available until after authentication is complete.</p>
 <p>In the user interface, the additional properties are set up in the OpenID Connect Domain wizard, Tab 4, <strong>Authentication</strong>. The fields are <strong>Use Identity Token Claims as Scopes</strong> and <strong>Scopes Claim</strong>. For information about setting up these fields, see <a href="#oidcrp_domain_tab4">Tab 4: Authentication</a>. For the overall process, see <a href="#domain_openid_connect_relying_party_config">How do I configure an OpenID Connect Relying Party domain?</a></p>
@@ -570,38 +573,82 @@ nav-title: Open ID Connect Support
 
 
 
+<h3 id="ts_3p_user_values_not_populated">Troubleshooting: Values not populated for a third-party user logging in for the first time</h3>
+<p>If the OpenID Connect Relying Party domain is set up correctly, and a user is logging in to the developer portal via a third-party provider such as Google, Okta, or Facebook, the values supported by the third-party provider are sent in the API response from the third-party provider to the developer portal over as part of the registration process. However, if the scopes are not set up correctly in the domain setup, the values are not returned. If this happens, the user will need to provide the values, in the <strong>Activation</strong> page (see <a href="basics_signup.htm#signup_social_media">How do I sign up using a social media account?</a>).</p>
+<p>If you find that users logging in with a third-party provider have to provide these values, check your domain setup and make sure the scopes are set up correctly.</p>
+<p>The examples below show how the scope setup affects the user experience. This is a Google example. The behavior might be a little different with a different identity provider, but the same principles apply.</p>
+
+<h5>Example #1: Scopes not set up</h5>
+<p><strong>Domain setup:</strong></p>
+<p>In this example, no scopes are set up. The default user input helper text is displayed in the <strong>Scopes</strong> field.</p>
+<p><img src="assets/domain_oidc_scopes_01.jpg" alt="OpenID Connect Relying Party domain: scopes missing" /></p>
+<p><strong>User experience:</strong></p>
+<p>When the user logs in for the first time with Google, the fields are not populated. The user has to enter the exact values to complete the login, including the email address that the user just signed in on. This is not the best user experience.</p>
+<p><img src="assets/domain_oidc_3pp_login_01.jpg" alt="OpenID Connect Relying Party domain: setting up the scopes" /></p>
+
+<h5>Example #2: Scopes partially set up</h5>
+<p><strong>Domain setup:</strong></p>
+<p>In this example, only the <strong>profile</strong> scope is set up.</p>
+<p><img src="assets/domain_oidc_scopes_02.jpg" alt="OpenID Connect Relying Party domain: scopes missing" /></p>
+<p><strong>User experience:</strong></p>
+<p>Because the <strong>profile</strong> scope is set up, the First Name and Last Name are pre-populated. However, the user still has to enter the email address, even after authenticating with Google.</p>
+<p><img src="assets/domain_oidc_3pp_login_02.jpg" alt="OpenID Connect Relying Party domain: setting up the scopes" /></p>
+
+<h5>Example #3: Scopes set up correctly</h5>
+<p><strong>Domain setup:</strong></p>
+<p>In this example, <strong>email</strong> and <strong>profile</strong> scopes are set up.</p>
+<p><img src="assets/domain_oidc_scopes_03.jpg" alt="OpenID Connect Relying Party domain: setting up the scopes" /></p>
+<p><strong>User experience:</strong></p>
+<p>In this example, when the user logs in via Google, the <strong>First Name</strong>, <strong>Last Name</strong>, and <strong>Email</strong> fields are pre-filled and are display-only. The user only needs to accept pending agreements and click <strong>Finish</strong>. This is the ideal user experience.</p>
+<p><img src="assets/domain_oidc_3pp_login_03.jpg" alt="OpenID Connect Relying Party domain: setting up the scopes" /></p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="ts_loading_config_failed">Troubleshooting: "Loading configuration failed" message</h3>
+<p>In some cases, you might get the following error when loading the well-known configuration file for the provider metadata:</p>
+<pre>Loading configuration failed.</pre>
+<p> The example below is for the Google well-known configuration URL.</p>
+<p><img src="assets/domain_oidc_error_loadconfigfailed.jpg" alt="OpenID Connect Relying Party domain: error in loading configuration file" /></p>
+<p>If this happens, it means that the third-party URL is not trusted by the platform.</p>
+<p>Before you can set up this provider, you must get the System Administrator for the underlying infrastructure (Policy Manager) to load the certificate for the provider into the Trust Store. Instructions for this activity are in the Policy Manager help: <a href="../../ag/security_config/trusted_ca_certificates.html#trusted_ca_certificate_add">Add Trusted CA Certificates</a>.</p>
+<p>Once the certificate is known and trusted, you'll be able to load the configuration file and finish setting up the domain.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
 <div class = "divider1"></div>
 
 
 
 <h3 id="related_topics">Related Topics</h3>
-<div class="relatedlinks" id="cmhelp_busadmin">
+<div class="relatedlinks" id="cmhelp_bus_admin"><!-- #BeginLibraryItem "/Library/relatedtopics_bus_admin.lbi" -->
 <ul>
 	<li><a href="bus_admin_.htm">Business Admin Summary Page</a></li>
 	<li><a href="bus_admin_overview.htm">Business Admin Responsibilities</a></li>
-	<li><a href="bus_admin_organizations.htm">Organizations</a></li>
-	<li><a href="bus_admin_export_import.htm">Export/Import</a></li>
-	<li><a href="bus_admin_bus_admin.htm">Business Admins</a></li>
-</ul>
-<ul>
-	<li><a href="bus_admin_org_apis.htm">Organization APIs</a></li>
-	<li><a href="bus_admin_org_apps.htm">Organization Apps</a></li>
-	<li><a href="bus_admin_org_processes.htm">Organization Processes</a></li>
-	<li><a href="bus_admin_org_scripts.htm">Organization Scripts</a></li>
-	<li><a href="bus_admin_dzs.htm">Managing Deployment Zones</a></li>
-	<li><a href="bus_api_admin_forum.htm">Forum Moderation</a></li>
 	<li><a href="bus_admin_gateways.htm">Managing Gateways</a></li>
-	<li><a href="bus_admin_licenses.htm">Licenses</a></li>
-	<li><a href="bus_admin_scopes.htm">Scopes</a></li>
+	<li><a href="bus_admin_bus_admin.htm">Business Admins</a></li>
+	<li><a href="basics_glossary.htm">Glossary of Terms</a></li>
 </ul>
 <ul>
+	<li><a href="bus_admin_dzs.htm">Managing Deployment Zones</a></li>
 	<li><a href="bus_admin_domains.htm">Domains</a></li>
 	<li><a href="bus_admin_domains_eoap.htm">External OAuth Provider Domain</a></li>
 	<li><a href="bus_admin_domains_oidc.htm">OpenID Connect Support</a></li>
 	<li><a href="bus_admin_ov_pf_endtoend.htm">PingFederate Setup</a></li>
-	<li><a href="basics_glossary.htm">Glossary of Terms</a></li>
+	<li><a href="bus_api_admin_forum.htm">Forum Moderation</a></li>
+	<li><a href="bus_admin_licenses.htm">Licenses</a></li>
+	<li><a href="bus_admin_categories.htm">Categories</a></li>
+	<li><a href="bus_admin_scopes.htm">Scopes</a></li>
 </ul>
+<ul>
+	<li><a href="bus_admin_organizations.htm">Organizations</a></li>
+	<li><a href="bus_admin_org_apis.htm">Organization APIs</a></li>
+	<li><a href="bus_admin_org_apps.htm">Organization Apps</a></li>
+	<li><a href="bus_admin_org_policies.htm">Organization Policies</a></li>
+	<li><a href="bus_admin_org_processes.htm">Organization Processes</a></li>
+	<li><a href="bus_admin_org_models.htm">Organization Models</a></li>
+	<li><a href="bus_admin_org_scripts.htm">Organization Scripts</a></li>
+	<li><a href="bus_admin_export_import.htm">Export/Import</a></li>
+</ul><!-- #EndLibraryItem -->
 </div>
-
-
-
