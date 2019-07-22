@@ -84,14 +84,14 @@
     <wsdl:part name="parameter0" element="nms1:PolicySpec">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="deletePolicyResponseMessage">
-    <wsdl:part element="xs:any">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="addPolicyChildRequestMessage">
     <wsdl:part name="key" type="xs:string">
     </wsdl:part>
     <wsdl:part name="parameter0" element="nms1:PolicySpec">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deletePolicyResponseMessage">
+    <wsdl:part element="xs:any">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getPoliciesResponseMessage">
@@ -142,12 +142,12 @@
     <wsdl:part name="getPolicyChildrenResponse" type="tns:List">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="addPolicyVersionResponseMessage">
-    <wsdl:part name="addPolicyVersionResponse" type="nms1:">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="changePolicyResponseMessage">
     <wsdl:part name="changePolicyResponse" element="nms1:PolicySpec">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addPolicyVersionResponseMessage">
+    <wsdl:part name="addPolicyVersionResponse" type="nms1:">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="addPolicyRequestMessage">
@@ -185,16 +185,16 @@
       <wsdl:output message="tns:performWorkflowActionResponseMessage">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="changePolicy">
+      <wsdl:input message="tns:changePolicyRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:changePolicyResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="changePolicyVersion">
       <wsdl:input message="tns:changePolicyVersionRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:changePolicyVersionResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="deletePolicy">
-      <wsdl:input message="tns:deletePolicyRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:deletePolicyResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="deletePolicyVersion">
@@ -269,10 +269,10 @@
       <wsdl:output message="tns:addPolicyVersionResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="changePolicy">
-      <wsdl:input message="tns:changePolicyRequestMessage">
+    <wsdl:operation name="deletePolicy">
+      <wsdl:input message="tns:deletePolicyRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:changePolicyResponseMessage">
+      <wsdl:output message="tns:deletePolicyResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getPolicies">
@@ -311,6 +311,17 @@
     <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The action to perform.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
       </wsdl:input>
     </wsdl:operation>
+    <wsdl:operation name="changePolicy">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /policies/{key}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Update a policy based on given policy specification. A usage example is as follows:</p><p>Request:<BR>PUT /rest/policies/threatpolicy HTTP/1.1<BR>		&lt;PolicySpec xmlns="http://soa.com/uri/products/restapi/xsd/1.0"&gt; <BR>			&lt;Name&gt;Test Name Change Simultaneous1&lt;/Name&gt;<BR>			&lt;Description&gt;Test Description Change Simultaneous1&lt;/Description&gt;<BR>			&lt;PolicyConfigurationSpec&gt;<BR>				&lt;wsp:Policy visibility="public" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;<BR>					&lt;ns2:MessageThreat xmlns:ns2="http://federatedgovernance.org/policy/messagethreat"&gt;<BR>					&lt;ns2:MaxNestedElementDepth&gt;100&lt;/ns2:MaxNestedElementDepth&gt;<BR>					&lt;ns2:MaxAttributesPerElement&gt;100&lt;/ns2:MaxAttributesPerElement&gt;<BR>					&lt;ns2:MaxNodeSize&gt;600&lt;/ns2:MaxNodeSize&gt;<BR>					&lt;ns2:MaxNSPrefixes&gt;1&lt;/ns2:MaxNSPrefixes&gt;<BR>					&lt;ns2:MaxNSDefinitions&gt;kk&lt;/ns2:MaxNSDefinitions&gt;<BR>					&lt;ns2:MaxEntitySize&gt;10&lt;/ns2:MaxEntitySize&gt;<BR>					&lt;ns2:MaxEntities&gt;0&lt;/ns2:MaxEntities&gt;<BR>					&lt;ns2:MaxEntityRecursiveDepth&gt;0&lt;/ns2:MaxEntityRecursiveDepth&gt;<BR>					&lt;ns2:MaxEntityExternalRef&gt;0&lt;/ns2:MaxEntityExternalRef&gt;<BR>					&lt;ns2:MaxEntityExternalRefDepth&gt;0&lt;/ns2:MaxEntityExternalRefDepth&gt;<BR>					&lt;/ns2:MessageThreat&gt;<BR>				&lt;/wsp:Policy&gt;<BR>			&lt;/PolicyConfigurationSpec&gt;<BR>		&lt;/PolicySpec&gt;</p><p>Response:HTTP/1.1 200<BR>		&lt;PolicySpec xmlns="http://soa.com/uri/products/restapi/xsd/1.0"&gt; <BR>			&lt;Name&gt;Test Name Change Simultaneous1&lt;/Name&gt;<BR>			&lt;Description&gt;Test Description Change Simultaneous1&lt;/Description&gt;<BR>			&lt;PolicyConfigurationSpec&gt;<BR>				&lt;wsp:Policy visibility="public" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;<BR>					&lt;ns2:MessageThreat xmlns:ns2="http://federatedgovernance.org/policy/messagethreat"&gt;<BR>					&lt;ns2:MaxNestedElementDepth&gt;100&lt;/ns2:MaxNestedElementDepth&gt;<BR>					&lt;ns2:MaxAttributesPerElement&gt;100&lt;/ns2:MaxAttributesPerElement&gt;<BR>					&lt;ns2:MaxNodeSize&gt;600&lt;/ns2:MaxNodeSize&gt;<BR>					&lt;ns2:MaxNSPrefixes&gt;1&lt;/ns2:MaxNSPrefixes&gt;<BR>					&lt;ns2:MaxNSDefinitions&gt;kk&lt;/ns2:MaxNSDefinitions&gt;<BR>					&lt;ns2:MaxEntitySize&gt;10&lt;/ns2:MaxEntitySize&gt;<BR>					&lt;ns2:MaxEntities&gt;0&lt;/ns2:MaxEntities&gt;<BR>					&lt;ns2:MaxEntityRecursiveDepth&gt;0&lt;/ns2:MaxEntityRecursiveDepth&gt;<BR>					&lt;ns2:MaxEntityExternalRef&gt;0&lt;/ns2:MaxEntityExternalRef&gt;<BR>					&lt;ns2:MaxEntityExternalRefDepth&gt;0&lt;/ns2:MaxEntityExternalRefDepth&gt;<BR>					&lt;/ns2:MessageThreat&gt;<BR>				&lt;/wsp:Policy&gt;<BR>			&lt;/PolicyConfigurationSpec&gt;<BR>		&lt;/PolicySpec&gt;</p>]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Update a policy..]]></sdoc:summary></wsdl:documentation>
+    <shttp:operation inputSerialization="application/xml,text/xml,application/json" location="/policies/{key}" method="PUT" outputSerialization="application/json,application/xml,text/xml"/>
+      <wsdl:input>
+    <shttp:input name="key" part="key" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The policy key.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The changed policy]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="changePolicyResponse" part="changePolicyResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="changePolicyVersion">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /policies/{key}/versions/{version}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Update a policy version based on given policy specification. A usage example is as follows:</p><p>Request:<BR>PUT /rest/policies/threatpolicy/versions/2.0 HTTP/1.1<BR>		&lt;PolicySpec xmlns="http://soa.com/uri/products/restapi/xsd/1.0"&gt; <BR>			&lt;Name&gt;Test Name Change Simultaneous1&lt;/Name&gt;<BR>			&lt;Description&gt;Test Description Change Simultaneous1&lt;/Description&gt;<BR>			&lt;PolicyConfigurationSpec&gt;<BR>				&lt;wsp:Policy visibility="public" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;<BR>					&lt;ns2:MessageThreat xmlns:ns2="http://federatedgovernance.org/policy/messagethreat"&gt;<BR>					&lt;ns2:MaxNestedElementDepth&gt;100&lt;/ns2:MaxNestedElementDepth&gt;<BR>					&lt;ns2:MaxAttributesPerElement&gt;100&lt;/ns2:MaxAttributesPerElement&gt;<BR>					&lt;ns2:MaxNodeSize&gt;600&lt;/ns2:MaxNodeSize&gt;<BR>					&lt;ns2:MaxNSPrefixes&gt;1&lt;/ns2:MaxNSPrefixes&gt;<BR>					&lt;ns2:MaxNSDefinitions&gt;kk&lt;/ns2:MaxNSDefinitions&gt;<BR>					&lt;ns2:MaxEntitySize&gt;10&lt;/ns2:MaxEntitySize&gt;<BR>					&lt;ns2:MaxEntities&gt;0&lt;/ns2:MaxEntities&gt;<BR>					&lt;ns2:MaxEntityRecursiveDepth&gt;0&lt;/ns2:MaxEntityRecursiveDepth&gt;<BR>					&lt;ns2:MaxEntityExternalRef&gt;0&lt;/ns2:MaxEntityExternalRef&gt;<BR>					&lt;ns2:MaxEntityExternalRefDepth&gt;0&lt;/ns2:MaxEntityExternalRefDepth&gt;<BR>					&lt;/ns2:MessageThreat&gt;<BR>				&lt;/wsp:Policy&gt;<BR>			&lt;/PolicyConfigurationSpec&gt;<BR>		&lt;/PolicySpec&gt;</p><p>Response:HTTP/1.1 200<BR>		&lt;PolicySpec xmlns="http://soa.com/uri/products/restapi/xsd/1.0"&gt; <BR>			&lt;Name&gt;Test Name Change Simultaneous1&lt;/Name&gt;<BR>			&lt;Description&gt;Test Description Change Simultaneous1&lt;/Description&gt;<BR>			&lt;PolicyConfigurationSpec&gt;<BR>				&lt;wsp:Policy visibility="public" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;<BR>					&lt;ns2:MessageThreat xmlns:ns2="http://federatedgovernance.org/policy/messagethreat"&gt;<BR>					&lt;ns2:MaxNestedElementDepth&gt;100&lt;/ns2:MaxNestedElementDepth&gt;<BR>					&lt;ns2:MaxAttributesPerElement&gt;100&lt;/ns2:MaxAttributesPerElement&gt;<BR>					&lt;ns2:MaxNodeSize&gt;600&lt;/ns2:MaxNodeSize&gt;<BR>					&lt;ns2:MaxNSPrefixes&gt;1&lt;/ns2:MaxNSPrefixes&gt;<BR>					&lt;ns2:MaxNSDefinitions&gt;kk&lt;/ns2:MaxNSDefinitions&gt;<BR>					&lt;ns2:MaxEntitySize&gt;10&lt;/ns2:MaxEntitySize&gt;<BR>					&lt;ns2:MaxEntities&gt;0&lt;/ns2:MaxEntities&gt;<BR>					&lt;ns2:MaxEntityRecursiveDepth&gt;0&lt;/ns2:MaxEntityRecursiveDepth&gt;<BR>					&lt;ns2:MaxEntityExternalRef&gt;0&lt;/ns2:MaxEntityExternalRef&gt;<BR>					&lt;ns2:MaxEntityExternalRefDepth&gt;0&lt;/ns2:MaxEntityExternalRefDepth&gt;<BR>					&lt;/ns2:MessageThreat&gt;<BR>				&lt;/wsp:Policy&gt;<BR>			&lt;/PolicyConfigurationSpec&gt;<BR>		&lt;/PolicySpec&gt;</p>]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Update a policy version]]></sdoc:summary></wsdl:documentation>
     <shttp:operation inputSerialization="application/xml,text/xml,application/json" location="/policies/{key}/versions/{version}" method="PUT" outputSerialization="application/json,application/xml,text/xml"/>
@@ -321,22 +332,6 @@
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="changePolicyVersionResponse" part="changePolicyVersionResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="deletePolicy">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">DELETE /policies/{key}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Deletes the policy with the specified key.</p>
-<h4>Request:</h4>
-<pre><code>DELETE /rest/policies/urn:uuid:b7f45df7-a864-11e6-9425-9d4da1227f85 HTTP/1.1
-</code></pre>
-<h4>Response:</h4>
-<pre><code>HTTP/1.1 200 OK
-</code></pre>]]></sdoc:description></wsdl:documentation>
-    <shttp:operation location="/policies/{key}" method="DELETE" outputSerialization="application/json,application/xml,text/xml"/>
-      <wsdl:input>
-    <shttp:input name="key" part="key" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The policy key]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="" part="" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="deletePolicyVersion">
@@ -587,15 +582,20 @@ Content-Type: application/json
     <shttp:output name="addPolicyVersionResponse" part="addPolicyVersionResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="changePolicy">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /policies/{key}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Update a policy based on given policy specification. A usage example is as follows:</p><p>Request:<BR>PUT /rest/policies/threatpolicy HTTP/1.1<BR>		&lt;PolicySpec xmlns="http://soa.com/uri/products/restapi/xsd/1.0"&gt; <BR>			&lt;Name&gt;Test Name Change Simultaneous1&lt;/Name&gt;<BR>			&lt;Description&gt;Test Description Change Simultaneous1&lt;/Description&gt;<BR>			&lt;PolicyConfigurationSpec&gt;<BR>				&lt;wsp:Policy visibility="public" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;<BR>					&lt;ns2:MessageThreat xmlns:ns2="http://federatedgovernance.org/policy/messagethreat"&gt;<BR>					&lt;ns2:MaxNestedElementDepth&gt;100&lt;/ns2:MaxNestedElementDepth&gt;<BR>					&lt;ns2:MaxAttributesPerElement&gt;100&lt;/ns2:MaxAttributesPerElement&gt;<BR>					&lt;ns2:MaxNodeSize&gt;600&lt;/ns2:MaxNodeSize&gt;<BR>					&lt;ns2:MaxNSPrefixes&gt;1&lt;/ns2:MaxNSPrefixes&gt;<BR>					&lt;ns2:MaxNSDefinitions&gt;kk&lt;/ns2:MaxNSDefinitions&gt;<BR>					&lt;ns2:MaxEntitySize&gt;10&lt;/ns2:MaxEntitySize&gt;<BR>					&lt;ns2:MaxEntities&gt;0&lt;/ns2:MaxEntities&gt;<BR>					&lt;ns2:MaxEntityRecursiveDepth&gt;0&lt;/ns2:MaxEntityRecursiveDepth&gt;<BR>					&lt;ns2:MaxEntityExternalRef&gt;0&lt;/ns2:MaxEntityExternalRef&gt;<BR>					&lt;ns2:MaxEntityExternalRefDepth&gt;0&lt;/ns2:MaxEntityExternalRefDepth&gt;<BR>					&lt;/ns2:MessageThreat&gt;<BR>				&lt;/wsp:Policy&gt;<BR>			&lt;/PolicyConfigurationSpec&gt;<BR>		&lt;/PolicySpec&gt;</p><p>Response:HTTP/1.1 200<BR>		&lt;PolicySpec xmlns="http://soa.com/uri/products/restapi/xsd/1.0"&gt; <BR>			&lt;Name&gt;Test Name Change Simultaneous1&lt;/Name&gt;<BR>			&lt;Description&gt;Test Description Change Simultaneous1&lt;/Description&gt;<BR>			&lt;PolicyConfigurationSpec&gt;<BR>				&lt;wsp:Policy visibility="public" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;<BR>					&lt;ns2:MessageThreat xmlns:ns2="http://federatedgovernance.org/policy/messagethreat"&gt;<BR>					&lt;ns2:MaxNestedElementDepth&gt;100&lt;/ns2:MaxNestedElementDepth&gt;<BR>					&lt;ns2:MaxAttributesPerElement&gt;100&lt;/ns2:MaxAttributesPerElement&gt;<BR>					&lt;ns2:MaxNodeSize&gt;600&lt;/ns2:MaxNodeSize&gt;<BR>					&lt;ns2:MaxNSPrefixes&gt;1&lt;/ns2:MaxNSPrefixes&gt;<BR>					&lt;ns2:MaxNSDefinitions&gt;kk&lt;/ns2:MaxNSDefinitions&gt;<BR>					&lt;ns2:MaxEntitySize&gt;10&lt;/ns2:MaxEntitySize&gt;<BR>					&lt;ns2:MaxEntities&gt;0&lt;/ns2:MaxEntities&gt;<BR>					&lt;ns2:MaxEntityRecursiveDepth&gt;0&lt;/ns2:MaxEntityRecursiveDepth&gt;<BR>					&lt;ns2:MaxEntityExternalRef&gt;0&lt;/ns2:MaxEntityExternalRef&gt;<BR>					&lt;ns2:MaxEntityExternalRefDepth&gt;0&lt;/ns2:MaxEntityExternalRefDepth&gt;<BR>					&lt;/ns2:MessageThreat&gt;<BR>				&lt;/wsp:Policy&gt;<BR>			&lt;/PolicyConfigurationSpec&gt;<BR>		&lt;/PolicySpec&gt;</p>]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Update a policy..]]></sdoc:summary></wsdl:documentation>
-    <shttp:operation inputSerialization="application/xml,text/xml,application/json" location="/policies/{key}" method="PUT" outputSerialization="application/json,application/xml,text/xml"/>
+    <wsdl:operation name="deletePolicy">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">DELETE /policies/{key}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Deletes the policy with the specified key.</p>
+<h4>Request:</h4>
+<pre><code>DELETE /rest/policies/urn:uuid:b7f45df7-a864-11e6-9425-9d4da1227f85 HTTP/1.1
+</code></pre>
+<h4>Response:</h4>
+<pre><code>HTTP/1.1 200 OK
+</code></pre>]]></sdoc:description></wsdl:documentation>
+    <shttp:operation location="/policies/{key}" method="DELETE" outputSerialization="application/json,application/xml,text/xml"/>
       <wsdl:input>
-    <shttp:input name="key" part="key" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The policy key.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The changed policy]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+    <shttp:input name="key" part="key" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The policy key]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
       </wsdl:input>
       <wsdl:output>
-    <shttp:output name="changePolicyResponse" part="changePolicyResponse" type="entity"/>
+    <shttp:output name="" part="" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getPolicies">
