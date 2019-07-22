@@ -1,0 +1,254 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>Akana API Platform</title>
+<link href="../../style/reset.css" rel="stylesheet" type="text/css" />
+<link href="../../style/base.css" rel="stylesheet" type="text/css" />
+<link href="../../style/document.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="documentation">
+<!-----
+layout: page
+title: Configuring Akamai with Akana's API Platform
+description: detailed steps on how to configure an Akamai property
+product: cm
+category: ref	
+sub-nav-class: Configuring Akamai
+weight: 4
+type: page
+nav-title: Akamai
+----->
+<h2 id="top">Configuring Akamai with Akana's API Platform </h2>
+<p>This document will walk you through setting up all the rules, and the fields within each rule for configuring Akamai with Akana's Enterprise API Platform. Fields which deviate from the default input will be in <strong>Bold type.</strong></p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3>Prerequisite</h3>
+<p>This document assumes that you have an Akamai account and know how to use their system. </p>
+<h3>Creating new Properties</h3>
+<p>You need to create two properties:</p>
+<p>•	One for the portal - (typically with an origin in the *.eap.soa.com or *.apiportal.akana.com domains)</p>
+<p>•	One for the APIs - (typically with an origin in the *.broker.soa.com or *.gateway.akana.com domains)</p>
+<p>Note: Do not use the Luna Property  Manager Assistant.</p>
+<h3>Creating a new Property for Portal</h3>
+
+
+<h4>Default Rule Settings</h4>
+<p>In the &quot;Property Version Information&quot; section, check the Security Options: <strong>Secure (Customer Certificate)</strong></p>
+<p>Origin Server | Input
+------------- | -------------
+Origin Type  | Your Origin
+Origin Server Hostname  | [Your issued domain here] 
+Forward Host Header | Incoming Host Header
+Cache Key Hostname | <strong>Incoming Host Header</strong>
+Supports Gzip Compression | Yes
+Send True Client IP Header | <strong>Yes</strong>
+True Client IP Header Name | True-Client-IP
+Allow clients To Set True Client IP Header | Yes</p>
+<p>Origin SSL Certificate Verification | Input
+------------- | -------------
+Verification Settings | <strong>Choose Your Own (Recommended)</strong>
+Match CN/SAN To | {{Forward Host Header}}; <strong>*.eap.soa.com;</strong> {{Origin Hostname}} 
+Trust | Akamai-managed Certificate Authorities Sets
+Akamai-managed Certificate Authority Sets | Akamai Certificate Store</p>
+<p>Ports | Input
+------------- | -------------
+HTTP Port | 80
+HTTPS Port | 443</p>
+<p>Caching  | Input
+------------- | -------------
+Caching option | No Store</p>
+<p>SureRoute | Input
+------------- | -------------
+Enable | On
+Optimization Type | Performance
+SureRoute Test Object | <strong>sureroute/sureroute-test-object.html</strong>
+Forward HOST Header | Same as incoming Host header
+Cache Life for Race Results | 30 minutes
+Force SSL Protocol for Races | Off
+Race Result Key | Race Destination (default) </p>
+<p>Tiered Distribution | Input
+------------- | -------------
+Enable | On</p>
+<p>Prefetch Objects | Input
+------------- | -------------
+Enable | On</p>
+<p>Allow POST | Input
+------------- | -------------
+Behavior | Allow
+Allow without Content-Length | <strong>Allow</strong></p>
+<p>Allow DELETE | Input
+------------- | -------------
+ | Allow</p>
+<p>Allow PUT | Input
+------------- | -------------
+ | Allow</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h4>Content Compression Settings</h4>
+<p>On the left side click on <strong>Content Compression</strong> and input the following:</p>
+<p>Content Compression | Input
+------------- | -------------
+Criteria | Match All
+IF | Content Type
+is one of | <strong>text/html*;  text/css*; 	application/x-javascript*; 	application/json; text/javascript</strong></p>
+<p>Behaviors | Input
+------------- | ------------- 
+Last Mile Acceleration (GZIP Compression) | 
+Compress Response | Always</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h4>Static Content Settings</h4>
+<p>On the side side click <strong>Static Content</strong> and enter the following: </p>
+<p>Static Content  | Input
+------------- | -------------
+Criteria   | <strong>Match Any</strong>
+IF   | File Extension 
+Is one of | <strong>aif; aiff; au; avi; bin; bmp; cab; carb; cct; cdf; class; css; doc; dcr; dtd; exe; flv; gcf; gff; gif; grv; hdml; hqx; ico; ini; jpeg; jpg; js; mov; mp3; nc; pct; pdf; png; ppc; pws; swa; swf; txt; vbs; w32; wav; wbmp; wml; wmlc; wmls; wmlsc; xsd; zip; properties; html; htm; json</strong></p>
+<p>OR </p>
+<p>Path matches one of | <strong>/*/avatar; /*/metadata</strong></p>
+<h4>Behaviors</h4>
+<p>Caching | Input
+------------- | -------------
+Caching Option | <strong>Honor Origin Cache Control and Expires</strong>
+Force Revalidation of Stale Objects | Serve stale if unable to validate
+Default Max-age | <strong>7 Days</strong>
+Prefetch Objects Enable | Off</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h4>Dynamic Content settings</h4>
+<p>Dynamic Content | Input
+------------- | -------------
+Criteria | Match All
+IF | &quot;Response cacheability&quot; &quot;is not&quot; &quot;cacheable&quot;</p>
+<h4>Behaviors</h4>
+<p>Downstream Cacheability | Input
+------------- | -------------
+Caching option | Pass cacheability headers from origin</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h4>Add rule to Redirect to HTTPS</h4>
+<p>Click the <strong>Add Rule</strong> button and choose <strong>Redirect to HTTPS</strong> to enter the parameters for this rule.</p>
+<p>Redirect to the same URL on HTTPS protocol, issuing a 301 response code (Moved Permanently). You may change the response code to 302 if needed. </p>
+<p>Redirect to HTTPS | Input
+------------- | -------------
+Criteria | Match All
+IF | Request Protocol - HTTP</p>
+<h4>Behaviors</h4>
+<p>Redirect | Input
+------------- | -------------
+Redirect Type | Default
+Destination Protocol | HTTPS
+Destination Hostname | Same as request
+Destination Path | Same as request
+Include Query String | Yes
+Redirect Status Code | 301 Moved Permanently</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h4>Add rule for Advanced Metadata</h4>
+<p>Advanced Metadata | Input
+------------- | -------------
+Criteria | Match All</p>
+<h4>Behaviors</h4>
+<p>Advanced | Input
+------------- | -------------
+Advanced XML | &lt;edgeservices:enable-chunked-post&gt; on &lt;/edgeservices:enable-chunked-post&gt;</p>
+<h2>Creating a new Property for API</h2>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h4>Default Rule Settings</h4>
+<p>Origin Server | Input
+------------- | -------------
+Origin Type  | Your Origin
+Origin Server Hostname  | [Your issued domain here]
+Forward Host Header | Incoming Host Header
+Cache Key Hostname | <strong>Incoming Host Header</strong>
+Supports Gzip Compression | Yes
+Send True Client IP Header | <strong>Yes</strong>
+True Client IP Header Name | True-Client-IP
+Allow clients To Set True Client IP Header | Yes</p>
+<p>Origin SSL Certificate Verification | Input
+------------- | -------------
+Verification Settings | <strong>Choose Your Own (Recommended)</strong>
+Match CN/SAN To | {{Forward Host Header}}; <strong>*.broker.soa.com;</strong> {{Origin Hostname}} 
+Trust | Specific Certificates (pinning)</p>
+<p>Specific Certificates (pinning) | Input | Input
+------------- | ------------- | -------------
+Common Name | Exp. Date | SHA-1 Fingerprint
+*.broker.soa.com | August 1 2016 | dba2e24c8a3742ecdeccb3dfae65667db8ae5b4c</p>
+<p>Ports | Input
+------------- | -------------
+HTTP Port | 80
+HTTPS Port | 443</p>
+<p>Caching  | Input
+------------- | -------------
+Caching option | Bypass Cache</p>
+<p>SureRoute | Input
+------------- | -------------
+Enable | On
+Optimization Type | Performance
+SureRoute Test Object | <strong>sureroute/sureroute-test-object.html</strong>
+Forward HOST Header | Same as incoming Host header
+Cache Life for Race Results | 30 minutes
+Force SSL Protocol for Races | Off
+Race Result Key | Race Destination (default) </p>
+<p>Allow POST | Input
+------------- | -------------
+Behavior | Allow
+Allow without Content-Length | <strong>Allow</strong></p>
+<p>Allow DELETE | Input
+------------- | -------------
+ | Allow</p>
+<p>Allow PUT | Input
+------------- | -------------
+ | Allow</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h4>Content Compression Settings</h4>
+<p>Content Compression | Input
+------------- | -------------
+Criteria | Match All
+IF | Content Type
+is one of | **text/html*;  text/css*; 	application/x-javascript*; </p>
+<p>Behaviors | Input
+------------- | ------------- 
+Last Mile Acceleration (GZIP Compression) | 
+Compress Response | Always</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3>Add rule for Advanced Metadata</h3>
+<p>Advanced Metadata | Input
+------------- | -------------
+Criteria | Match All</p>
+<h4>Behaviors</h4>
+<p>Advanced | Input
+------------- | -------------
+Description | To enable chunked POST
+Advanced XML | &lt;edgeservices:enable-chunked-post&gt; on &lt;/edgeservices:enable-chunked-post&gt;</p>
+
+
+
+
+</div>
+</body>
+</html>
