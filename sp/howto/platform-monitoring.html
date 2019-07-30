@@ -125,12 +125,11 @@ fi</pre>
 <h4 id="db_msg_queue">Message queue</h4>
 <p><strong>Scope</strong>: Community Manager</p>
 <p>If email cannot be sent for some reason, the MSG_QUEUE table will fill up. This script will send an alert if the table contains more than 10 entries:</p>
-<pre>query="select max(DELIVERYATTEMPTS) from MSG_QUEUE"
+<pre>sqlcmd="mysql -u $DB_USER -p${DB_PASS} -D $db -BNe"
+query="select count(*) from MSG_QUEUE"
 result=`$sqlcmd "$query"`
-[ $? -ne 0 ] &amp;&amp; { echo "Cannot connect to database"; exit 1; }
-if [ "$result" != "NULL" ];then
-   [ $result -gt 10 ] &amp;&amp; ERROR_MSG=${ERROR_MSG}"There are more than 10 retries in $db database DELIVERYATTEMPTS: ${result}${NL}"
-fi</pre>
+[ $? -ne 0 ] && { echo "Cannot connect to database"; exit 1; }
+[ "$result" -a $result -gt 10 ] && ERROR_MSG=${ERROR_MSG}"MSG_QUEUE is more than 10 in $db database: ${result}${NL}"</pre>
 <p><strong>Resolution</strong>: Inspect the container logs to see why emails are failing</p>
 <p>If an email continually fails delivery for some reason, this can be detected by inspecting the DELIVERYATTEMPTS field in the MSG_QUEUE table. This script will send an alert if more than 10 delivery attempts have been made:</p>
 <pre>query="select max(DELIVERYATTEMPTS) from MSG_QUEUE"
@@ -218,7 +217,7 @@ result=`$sqlcmd "$query" | grep $DB_NAME | wc -l`
 		 'ERROR [DBStatementAndResultSetTracker] PreparedStatementTracker' ]
 });</pre>
 <p>This table explains what each of these log phrases mean:</p>
-<table>
+<table class="doctable">
 <thead>
 	<tr>
 		<th>Phrase/Pattern</th>
