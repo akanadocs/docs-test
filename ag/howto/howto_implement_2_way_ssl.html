@@ -17,7 +17,7 @@ nav-title: Implement 2-Way SSL using Policy Manager
 
 <h3 style="color: gray;">Table of Contents</h3>
 <ol class="table_of_contents">
-	<li><a href="#identity_certificates">Identity Certificates</a></li>
+	<li><a href="#ssl_overview">SSL Overview</a></li>
 	<li><a href="#two_way_ssl_prerequisites">2-Way SSL Prerequisites</a></li>
 	<li><a href="#assumptions">Assumptions</a></li>
 	<li><a href="#create_http_security_policy">Create HTTP Security Policy</a></li>
@@ -26,15 +26,22 @@ nav-title: Implement 2-Way SSL using Policy Manager
 	<li><a href="#configure_inbound_https_support">Configure Inbound HTTPS Support</a></li>
 	<li><a href="#add_trusted_client_certificates_to_policy_manager">Add Trusted Client Certificates to Policy Manager</a></li>
 	<li><a href="#test">Test</a></li>
-
 </ol>
 <div class = "divider1"></div>
 
 
 
+<h3 id="ssl_overview">SSL Overview</h3>
+<p>In this section:</p>
+<ul>
+	<li><a href="#identity_certificates">Identity Certificates</a></li>
+	<li><a href="#ssl_cert_fully_authenticated">Fully-Authenticated SSL Certificates</a></li>
+	<li><a href="#ssl_cert_domain_authenticated">Domain-Authenticated SSL Certificates</a></li>
+</ul>
 
-<h3 id="identity_certificates">Identity Certificates</h3>
-<p>When a user visits your secure site, your web server will send a copy of your SSL (Secure Socket Layer) certificate to the user's web browser. The information in the certificate will always include your web site's domain name, such as <em>www.yourdomain.com</em> and the name of the <strong>certificate authority (CA)</strong> that issued the certificate; <em>sometimes</em> it will also include your company's information. This lets the browser know that the web site it's connecting to is the correct web site, and not an impostor or phishing site. This is <strong>authentication.</strong></p>
+
+<h4 id="identity_certificates">Identity Certificates</h4>
+<p>When a user visits your secure site, your web server will send a copy of your SSL (Secure Socket Layer) certificate to the user's web browser. The information in the certificate will always include your web site's domain name, such as <strong>www.yourdomain.com</strong> and the name of the <strong>certificate authority (CA)</strong> that issued the certificate; <strong>sometimes</strong> it will also include your company's information. This lets the browser know that the web site it's connecting to is the correct web site, and not an impostor or phishing site. This is <strong>authentication.</strong></p>
 <p>There are two types of SSL Authentication: <strong>full-authentication</strong> and <strong>domain-authentication</strong>.</p>
 
 
@@ -53,10 +60,10 @@ nav-title: Implement 2-Way SSL using Policy Manager
 <h3 id="two_way_ssl_prerequisites">2-Way SSL Prerequisites</h3>
 <p>In order for Policy Manager to properly implement mutual authentication, the following requirements must be met inside Policy Manager:</p>
 <ol>
-	<li>You must have an <em>HTTP Security Policy</em> with the <em>Require Client Certificate Authentication</em> option enabled and attached to the service you want.</li>
-	<li>You must have an <em>Authentication Policy</em> that will check that the correct certificate is presented</li>
-	<li>You must set your <em>HTTPS Inbound Listener</em> on your Network Director to <em>Accept Client Certificates</em>.</li>
-	<li>Your <em>HTTPS Inbound Listener</em> must have a set of PKI Keys and an X.509 Certificate.</li>
+	<li>You must have an <strong>HTTP Security Policy</strong> with the <strong>Require Client Certificate Authentication</strong> option enabled and attached to the service you want.</li>
+	<li>You must have an <strong>Authentication Policy</strong> that will check that the correct certificate is presented</li>
+	<li>You must set your <strong>HTTPS Inbound Listener</strong> on your Network Director to <strong>Accept Client Certificates</strong>.</li>
+	<li>Your <strong>HTTPS Inbound Listener</strong> must have a set of PKI Keys and an X.509 Certificate.</li>
 </ol>
 <p><a href="#top">back to top</a></p>
 
@@ -71,17 +78,17 @@ nav-title: Implement 2-Way SSL using Policy Manager
 <h3 id="create_http_security_policy">Create HTTP Security Policy</h3>
 <p>The purpose of the HTTP Security Policy is to require a certain credential from the client. In this case we want to require the client to send a certificate as their credentials, which will be validated by the authentication policy in the next step. The HTTP Security Policy must be attached to the virtual service of any service you want to implement mutual authentication on.</p>
 <ol>
-	<li>Go to <em>[Organization Containing Service] &gt; Polices &gt; Operational Policies</em>.</li>
-	<li>On the <em>Policies Summary</em>, click <strong>Add Policy</strong> and create an <em>HTTP Security Policy</em>.</li>
-	<li>On the <em>HTTP Security Policy Details</em> portlet, click <strong>Modify</strong>. </li>
-	<li>Click <strong>Next</strong> on the <em>Specify HTTP Authentication Options</em> screen.</li>
-	<li>On the <em>Specify Client Certificate Authentication</em> screen, click the <strong>Require Client Certification Authentication</strong> checkbox and select the <strong>Use clients X.509 certificate from the SSL context</strong> radio button.</li>
-	<li>Under <em>Subject Category</em>, select <strong>End-User</strong> and click <strong>Finish</strong>
-		<img src="images/imp_2way_ssl_1.jpg" alt="" /></li>
-	<li>In the <em>Policy Workflow</em> actions portlet, click <strong>Activate Policy</strong>.</li>
+	<li>Go to <strong>[Organization Containing Service] &gt; Polices &gt; Operational Policies</strong>.</li>
+	<li>On the <strong>Policies Summary</strong>, click <strong>Add Policy</strong> and create an <strong>HTTP Security Policy</strong>.</li>
+	<li>On the <strong>HTTP Security Policy Details</strong> portlet, click <strong>Modify</strong>. </li>
+	<li>Click <strong>Next</strong> on the <strong>Specify HTTP Authentication Options</strong> screen.</li>
+	<li>On the <strong>Specify Client Certificate Authentication</strong> screen, click the <strong>Require Client Certification Authentication</strong> checkbox and select the <strong>Use clients X.509 certificate from the SSL context</strong> radio button.</li>
+	<li>Under <strong>Subject Category</strong>, select <strong>End-User</strong> and click <strong>Finish</strong>
+		<p><img src="images/imp_2way_ssl_1.jpg" alt="" /></p></li>
+	<li>In the <strong>Policy Workflow</strong> actions portlet, click <strong>Activate Policy</strong>.</li>
 	<li>Attach this policy to the service you want to implement mutual authentication on.</li>
-	<li>Navigate to [<em>Your Virtual Service</em>].</li>
-	<li>In the <em>Policy Attachments</em> portlet, click <strong>Manage</strong> in the <em>Operational</em> section.</li>
+	<li>Navigate to [<strong>Your Virtual Service</strong>].</li>
+	<li>In the <strong>Policy Attachments</strong> portlet, click <strong>Manage</strong> in the <strong>Operational</strong> section.</li>
 	<li>Navigate the Policy Hierarchy, select the newly created HTTP Security Policy and click <strong>Apply</strong>.</li>
 </ol>
 <p><a href="#top">back to top</a></p>
@@ -89,19 +96,19 @@ nav-title: Implement 2-Way SSL using Policy Manager
 
 
 <h3 id="create_authentication_policy">Create Authentication Policy</h3>
-<p>The purpose of the authentication policy is to ensure that the correct certificate is received. The <em>HTTP Security Policy</em> only requires that a certificate be sent by the client, but that could be any certificate. This policy must also be attached to the service you want to implement mutual authentication on.</p>
+<p>The purpose of the authentication policy is to ensure that the correct certificate is received. The <strong>HTTP Security Policy</strong> only requires that a certificate be sent by the client, but that could be any certificate. This policy must also be attached to the service you want to implement mutual authentication on.</p>
 <ol>
-	<li>Go to <em>[Organization Containing Service] &gt; Polices &gt; Operational Policies</em>.</li>
-	<li>On the <em>Policies Summary</em>, click <strong>Add Policy</strong> and create an <em>Authentication Policy</em>.</li>
-	<li>On the <em>Authentication Policy</em> portlet, click <strong>Modify</strong>. </li>
-	<li>On the <em>Modify Authentication Policy</em> pop-up, select the <strong>End User</strong> radio button.</li>
-	<li>In the <em>Domains</em> section, select any domains you wish to have access to, use <strong>&gt;&gt;</strong> to move them to the right panel, and then click <strong>Apply</strong>.
-		<img src="images/imp_2way_ssl_2.jpg" alt="" /></li>
-	<li>In the <em>Policy Workflow</em> actions portlet, click <strong>Activate Policy</strong>.</li>
+	<li>Go to <strong>[Organization Containing Service] &gt; Polices &gt; Operational Policies</strong>.</li>
+	<li>On the <strong>Policies Summary</strong>, click <strong>Add Policy</strong> and create an <strong>Authentication Policy</strong>.</li>
+	<li>On the <strong>Authentication Policy</strong> portlet, click <strong>Modify</strong>. </li>
+	<li>On the <strong>Modify Authentication Policy</strong> pop-up, select the <strong>End User</strong> radio button.</li>
+	<li>In the <strong>Domains</strong> section, select any domains you wish to have access to, use <strong>&gt;&gt;</strong> to move them to the right panel, and then click <strong>Apply</strong>.
+		<p><img src="images/imp_2way_ssl_2.jpg" alt="" /></p></li>
+	<li>In the <strong>Policy Workflow</strong> actions portlet, click <strong>Activate Policy</strong>.</li>
 	<li>Attach this policy to the service you want to implement mutual authentication on.</li>
-	<li>Navigate to [<em>Your Virtual Service</em>].</li>
-	<li>In the <em>Policy Attachments</em> portlet, click <strong>Manage</strong> in the <em>Operational</em> section.</li>
-	<li>Navigate the Policy Hierarchy, select the newly created <em>Authentication Policy</em>, and click <strong>Apply</strong></li>
+	<li>Navigate to [<strong>Your Virtual Service</strong>].</li>
+	<li>In the <strong>Policy Attachments</strong> portlet, click <strong>Manage</strong> in the <strong>Operational</strong> section.</li>
+	<li>Navigate the Policy Hierarchy, select the newly created <strong>Authentication Policy</strong>, and click <strong>Apply</strong></li>
 </ol>
 <p><a href="#top">back to top</a></p>
 
@@ -118,32 +125,32 @@ nav-title: Implement 2-Way SSL using Policy Manager
 <p><img src="images/imp_2way_ssl_3.jpg" alt="" /></p>
 <p>On the <strong>Manage Outbound Identities</strong> page, check the <strong>Use Incoming Identities as Outbound Identities</strong> box, as shown above. When you check this box, the platform uses the HTTP client's mutual SSL certificate. This allows using different client certificates for each service. If the box isn't checked, the listener certificate is used.</p>
 <ol>
-	<li>In <em>Policy Manager Workbench</em>, select the virtual service you want to attach an Outbound Certificate to.</li>
-	<li>On the <em>Service Details</em> screen, click <strong>Manage PKI Keys</strong> from the <em>Actions</em> portlet. </li>
-	<li>On the <em>Select Key Management Option</em> screen. Two options can be used.</li>
-	<li><strong>Option 1: Generate Your Own PKI keys and an X.509 certificate.</strong> Use this option if you do not have your own certificate and PKI keys. Policy Manager will create them for you and display the information after. <em>Note that Policy Manager must be configured as a Certificate Authority in order to complete the following steps.</em></li>
+	<li>In <strong>Policy Manager Workbench</strong>, select the virtual service you want to attach an Outbound Certificate to.</li>
+	<li>On the <strong>Service Details</strong> screen, click <strong>Manage PKI Keys</strong> from the <strong>Actions</strong> portlet. </li>
+	<li>On the <strong>Select Key Management Option</strong> screen. Two options can be used.</li>
+	<li><strong>Option 1: Generate Your Own PKI keys and an X.509 certificate.</strong> Use this option if you do not have your own certificate and PKI keys. Policy Manager will create them for you and display the information after. <strong>Note that Policy Manager must be configured as a Certificate Authority in order to complete the following steps.</strong></li>
 	<li>Select <strong>Generate PKI Keys and X.509 Certificate</strong>, and click <strong>Next</strong>.</li>
 	<li>Select the key length value (2048 is recommended).</li>
-	<li>Fill out <em>Certificate Details</em> and click <strong>Finish</strong>.</li>
+	<li>Fill out <strong>Certificate Details</strong> and click <strong>Finish</strong>.</li>
 	<li><strong>Option 2: Import your already existing certificate and keys</strong>. Use this option if you have purchased a certificate from a CA and want to use it.</li>
 	<li>Select <strong>Import PKI Keys and X.509 Certificate</strong> and click <strong>Next</strong>.</li>
-	<li>Specify the <em>Keystore Type</em>.</li>
-	<li>Specify the <em>Keystore Path</em>.</li>
+	<li>Specify the <strong>Keystore Type</strong>.</li>
+	<li>Specify the <strong>Keystore Path</strong>.</li>
 	<li>Enter the password for the selected keystore.</li>
 	<li>Click <strong>Load Aliases</strong>.</li>
-	<li>Select the <em>Key Alias</em> you want to import and click <strong>Finish</strong>.
+	<li>Select the <strong>Key Alias</strong> you want to import and click <strong>Finish</strong>.
 		<p><img src="images/imp_2way_ssl_4.jpg" alt="" /></p></li>
-	<li>From the <strong>Details</strong> page for the service, from the <em>Actions</em> portlet, click <strong>Manage Outbound Identities</strong>. Check the <strong>Use Service Identity for Outbound HTTPS</strong> box, as shown in the diagram at the beginning of this procedure. Click <strong>Finish</strong>.</li>
+	<li>From the <strong>Details</strong> page for the service, from the <strong>Actions</strong> portlet, click <strong>Manage Outbound Identities</strong>. Check the <strong>Use Service Identity for Outbound HTTPS</strong> box, as shown in the diagram at the beginning of this procedure. Click <strong>Finish</strong>.</li>
 </ol>
 
 
 
 <h3 id="outbound_https_on_nd">Outbound HTTPS Certificate Configured on the Network Director Container</h3>
-<p>This optional method can be thought of as a “default” certificate that is sent with every request made by services hosted on the Network Director. It is configured in the <em>Details</em> tab in the <em>Outbound Configuration</em> portlet.</p>
+<p>This optional method can be thought of as a “default” certificate that is sent with every request made by services hosted on the Network Director. It is configured in the <strong>Details</strong> tab in the <strong>Outbound Configuration</strong> portlet.</p>
 <p><img src="images/imp_2way_ssl_5.jpg" alt="" /></p>
 <ol>
-	<li>In <em>Policy Manager</em> Workbench, go to <em>Organization Tree &gt; Containers</em> and select the Network Director container instance the service is hosted on.</li>
-	<li>In the <em>Outbound Configurations</em> portlet, click <strong>Manage PKI Keys</strong>.
+	<li>In <strong>Policy Manager</strong> Workbench, go to <strong>Organization Tree &gt; Containers</strong> and select the Network Director container instance the service is hosted on.</li>
+	<li>In the <strong>Outbound Configurations</strong> portlet, click <strong>Manage PKI Keys</strong>.
 		<p><img src="images/imp_2way_ssl_6.jpg" alt="" /></p></li>
 	<li>On the <strong>Select Key Management Option</strong> screen, select from two options:</li>
 	<li><strong>Option 1: Generate Your Own PKI keys and an X.509 certificate</strong>. Use this option if you do not have your own certificate and PKI keys. Policy Manager will create them for you and display the information after.
@@ -181,7 +188,7 @@ nav-title: Implement 2-Way SSL using Policy Manager
 <h5 id="create_inbound_listener_https">To create an HTTPS inbound listener</h5>
 <p><strong>Note</strong>: If you have an existing HTTPS listener you want to use, you can just modify it under Actions &gt; Modify Container Listener and change its client certificate requirements.</p>
 <ol>
-	<li>In the <em>Inbound Listeners</em> portlet, select the <em>Network Director</em> container instance you plan to host the service on.</li>
+	<li>In the <strong>Inbound Listeners</strong> portlet, select the <strong>Network Director</strong> container instance you plan to host the service on.</li>
 	<li>Click <strong>Add Container Listener</strong>.
 		<p><img src="images/imp_2way_ssl_7.jpg" alt="" /></p></li>
 	<li>From the drop-down, select <strong>HTTPS</strong> and click <strong>Next</strong>.</li>
@@ -191,18 +198,18 @@ nav-title: Implement 2-Way SSL using Policy Manager
 	<li>Go to <strong>Actions &gt; Manage PKI Keys</strong>.</li>
 	<li>Create or import PKI Keys and certificate for HTTPS Inbound Listener.
 		<p><img src="images/imp_2way_ssl_9.jpg" alt="" /></p></li>
-	<li>On the <em>Select Key Management Option</em> screen, select from two options.</li>
-	<li><strong>Option 1: Generate Your Own PKI keys and an X.509 certificate</strong>. Use this option if you do not have your own certificate and PKI keys. Policy Manager will create them for you and display the information after. <em>Note that Policy Manager must be configured as a Certificate Authority in order to complete the following steps.</em></li>
+	<li>On the <strong>Select Key Management Option</strong> screen, select from two options.</li>
+	<li><strong>Option 1: Generate Your Own PKI keys and an X.509 certificate</strong>. Use this option if you do not have your own certificate and PKI keys. Policy Manager will create them for you and display the information after. <strong>Note that Policy Manager must be configured as a Certificate Authority in order to complete the following steps.</strong></li>
 	<li>Select <strong>Generate PKI Keys and X.509 Certificate</strong> and click <strong>Next</strong>.</li>
 	<li>Select the key length value (2048 is recommended).</li>
-	<li>Fill out the <em>Certificate Details</em> and click <strong>Finish</strong>.</li>
+	<li>Fill out the <strong>Certificate Details</strong> and click <strong>Finish</strong>.</li>
 	<li><strong>Option 2: Import your already existing certificate and keys</strong>. Use this option if you have purchased a certificate from a CA and want to use it.</li>
 	<li>Select <strong>Import PKI Keys and X.509 Certificate</strong> and click <strong>Next</strong>.</li>
-	<li>Specify the <em>Keystore Type</em>.</li>
-	<li>Specify the <em>Keystore Path</em>.</li>
+	<li>Specify the <strong>Keystore Type</strong>.</li>
+	<li>Specify the <strong>Keystore Path</strong>.</li>
 	<li>Enter the password for the selected keystore.</li>
 	<li>Click <strong>Load Aliases</strong>.</li>
-	<li>Select the <em>Key Alias</em> you want to import and click <strong>Finish</strong>.</li>
+	<li>Select the <strong>Key Alias</strong> you want to import and click <strong>Finish</strong>.</li>
 </ol>
 <p><a href="#top">back to top</a></p>
 
@@ -227,8 +234,8 @@ nav-title: Implement 2-Way SSL using Policy Manager
 <h3 id="test">Test</h3>
 <p>You can test to be sure that mutual authentication is working properly by testing it with SOAPUI. You just need to export the Private Key and X.509 Certificate from the HTTPS Inbound Listener and add them to your SOAPUI.</p>
 <ol>
-	<li>Navigate to [<em>Your Network Director</em>].</li>
-	<li>Locate your <a href="#configure_inbound_https_support">HTTPS Listener created earlier in this guide</a> under <em>Inbound Listeners</em> portlet.</li>
+	<li>Navigate to [<strong>Your Network Director</strong>].</li>
+	<li>Locate your <a href="#configure_inbound_https_support">HTTPS Listener created earlier in this guide</a> under <strong>Inbound Listeners</strong> portlet.</li>
 	<li>From the <strong>Actions</strong> drop-down, select <strong>Manage PKI Keys</strong>.</li>
 	<li>Under <strong>Key Management Options</strong>, select <strong>Export Private Key and X.509 Certificate</strong> and click <strong>Next</strong>.</li>
 	<li>Confirm that Keystore Type is set to <strong>Java</strong>.</li>
