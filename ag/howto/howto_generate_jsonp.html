@@ -10,21 +10,21 @@ type: page
 nav-title: Generate JSONP Response
 ---
 <h2 id="top">How to Generate a JSONP Response</h2>
-<p>This article provides a script policy that will generate a JSONP response on demand. It is driven by 2 things:</p>
+<p>This article provides a script policy that will generate a JSONP response on demand. It is driven by two things:</p>
 <ol>
-	<li>The Accept Header - if Accept is set to <strong>application/javascript</strong> then this will generate JSONP</li>
-	<li>The jsonp query param - if there is a <strong>jsonp</strong> query param present, then this script will use the param value as the wrapping function name. If not, then it will just default to <strong>jsonFunction</strong>.</li>
+	<li>The Accept Header&#8212;if Accept is set to <strong>application/javascript</strong>, this will generate JSONP.</li>
+	<li>The JSONP query param&#8212;if there is a <strong>JSONP</strong> query param present, this script uses the param value as the wrapping function name. If not, it defaults to <strong>jsonFunction</strong>.</li>
 </ol>
 <p>There are a few subtleties in this script.</p>
 <ol>
 	<li>
-<p>It has to use information that is only available on the request, in the response processing, so it extracts these things (the accept header and the jsonp param) during request message processing and stores them in the exchange.</p>
+<p>It has to use information that is only available on the request, in the response processing, so it extracts these things (the accept header and the JSONP param) during request message processing and stores them in the exchange.</p>
 </li>
 	<li>
-<p>If the returned content isn't already JSON, then it will mediate it to JSON by normalizing it to XML and then serializing it.</p>
+<p>If the returned content isn't already JSON, it mediates it to JSON by normalizing it to XML and then serializing it.</p>
 </li>
 	<li>
-<p>If the returned content is already application/javascript then the script won't do anything.</p>
+<p>If the returned content is already application/javascript the script doesn't do anything.</p>
 </li>
 </ol>
 <p>To make this work, you simply need to create an operational script policy using the following self-contained script, and then attach this policy to your virtual service.</p>
@@ -42,13 +42,13 @@ switch(messageContext.getParameterType())
     var accept = String(msg.getTransportHeaders().get("Accept").getValue());
     exg.setProperty("accept.header", accept);
 
-    // See if there is a jsonp query param
+    // See if there is a JSONP query param
     var queryString = String(msg.getProperty("com.soa.message.TRANSPORT_QUERY"));
     var jsonpFunction = queryString.match(/jsonp=([^\&amp;]*)/im);
     if (! jsonpFunction) {
       jsonpFunction = ["empty", "jsonpFunction"];
     }
-    // store the jsonp function name in the exchange
+    // store the JSONP function name in the exchange
     exg.setProperty("jsonp.function", jsonpFunction[1]);
 
     break;
@@ -68,7 +68,7 @@ switch(messageContext.getParameterType())
           var jsonContent = serializer.read(content.getContentAsString());
           msg.setStringContent(jsonContent);
         }
-        // Wrap the JSON result in the jsonp function name
+        // Wrap the JSON result in the JSONP function name
         var jsonpContent = exg.getProperty("jsonp.function") + "(" + msg.getContentAsString() + ");";
         msg.setStringContent(jsonpContent);
         msg.setContentType("application/javascript");
