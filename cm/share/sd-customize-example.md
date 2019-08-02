@@ -180,7 +180,7 @@ The basic process includes:
 	
 	To apply these new styles selectively on the welcome page I can embed `{% raw %}<%= can.route.attr("page") === "welcome" ? "soa-ui-cm-header-container-welcome": "" %>{% endraw %}` in my class definintions for the appropriate elements.
 	
-2. The header.ejs file doesn't include it's own outer wrapping definition, so to change the style of the full width header we actually need to change a style definition in the master layout view (layout.ejs).
+2. The header.ejs file doesn't include its own outer wrapping definition, so to change the style of the full width header we actually need to change a style definition in the master layout view (layout.ejs).
 
 	In my case I only want these styles to apply when I'm on the welcome page, so I'm going to use the above class override so that my final layout.ejs ends up looking like this:
 	
