@@ -125,10 +125,10 @@ In my case I actually need to do something a little different with my header tha
 
 
 <h3><a name="footer"></a>Replacing the Footer</h3>
-<p>Replacing the footer involves replacing the footer.ejs file. The process for finding and replacing this file is the same as for the header, as described in <a href="header">Homepage Header</a> above. In this case you will add your customized file to your local file structure in SOA/Dev/footer/views/footer.ejs.</p>
+<p>Replacing the footer involves replacing the <strong>footer.ejs</strong> file. The process for finding and replacing this file is the same as for the header, as described in <a href="header">Homepage Header</a> above. In this case you will add your customized file to your local file structure in SOA/Dev/footer/views/footer.ejs.</p>
 <p>In most cases replacing the footer will likely be a bit more complex because you will probably also need to drag some styles along with the new footer. In my case I took the complete footer html structures from our corporate site (www.akana.com), this meant bringing along the css sprite image for the social icons, and grabbing all the CSS that drove that. The steps here were:</p>
 <ol>
-	<li>Find the footer.ejs file and copy it to the right place in my local file structure so that it would be included in my next zip update.</li>
+	<li>Find the <strong>footer.ejs</strong> file and copy it to the right place in my local file structure so that it would be included in my next zip update.</li>
 	<li>This file provides the content of the footer, using the html footer element. In our out of the box SimpleDev theme this will be placed in an unstyled div at the bottom of the page. The default footer is styled by a css class of &quot;soa-ui-cm-footer&quot;. I chose to keep this class and its associated styles and drop my content into the middle of this. Essentially I just replaced everything between the opening and closing divs with my content:
 	<pre>&lt;div class="soa-ui-cm-footer"&gt;
 ...
@@ -136,7 +136,7 @@ My content in here
 ...
 &lt;/div&gt;</pre></li>
 	<li>My content made a bunch of references to its own defined css classes, so I had to copy the appropriate section of the www.soa.com CSS into the end of my <strong>custom.less</strong> file (see Customizing <a href="#styles">Styles</a> above).
-		<p>NOTE: because my original footer was in an HTML div using a id of footer instead of using the html footer element I had to change all my CSS elements from applying to an id of footer to applying to the element (remove the #). For example:</p>
+		<p>s: because my original footer was in an HTML div using a id of footer instead of using the html footer element, I had to change all my CSS elements from applying to an id of footer to applying to the element (remove the #). For example:</p>
 <pre>#footer .credits .social {
   margin-top: 30px;
   text-align: center;
@@ -146,146 +146,113 @@ My content in here
   margin-top: 30px;
   text-align: center;
 }</pre></li>
-	<li>Having made the css changes and uploaded the new <strong>custom.less</strong>, all you need to do is save your new footer.ejs file, package up your zip archive and upload it as described in <a href="header">Homepage Header</a> above.</li>
+	<li>Having made the css changes and uploaded the new <strong>custom.less</strong>, all you need to do is save your new <strong>footer.ejs</strong> file, package up your zip archive and upload it as described in <a href="header">Homepage Header</a> above.</li>
 </ol>
 <p>Now clear your browser cache and enjoy your elegant custom footer.</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
-
-### <a name="headercss"></a>Homepage Header with CSS Modifications
-
-I don't like to make things easy for myself, and so simply replacing the content of the header really wasn't enough for me.  What I really wanted to do was replace the header with a blank space with just a login button on the top right.  I wanted to use the existing login control which meant I couldn't just go into layout.ejs (more on this in a bit) and remove the header, I needed to change the styles of the header, remove all the things I didn't want in the header, and change the style of the LOGIN control to a button, and make sure all this only happened on the homepage.  This is actually quite a bit easier than you might think.
-
-The basic process includes:
-
-1.	Changing style means adding some new classes to our custom.less file that override specific style instructions and then applying these classes only when we are on a particular page.
-	
-	For example to override the header background and border we add this to custom.less:
-	
-	```css
-	.soa-ui-cm-header-container-welcome {
-    	background: none;
-    	border-bottom: none;
-	}
-	```
-	Which contains instructions from:
-	
-	```css
-	.soa-ui-cm-header-container {
-  		background: #f8f8f8;
-  		border-bottom: 1px solid #d2d2d2;
-	}
-	```
-	
-	Because these styles are in custom.less they will appear towards the very bottom of the generated styles and so will if applied to an element will override the default styles. 
-	
-	To apply these new styles selectively on the welcome page I can embed `{% raw %}<%= can.route.attr("page") === "welcome" ? "soa-ui-cm-header-container-welcome": "" %>{% endraw %}` in my class definintions for the appropriate elements.
-	
-2. The header.ejs file doesn't include it's own outer wrapping definition, so to change the style of the full width header we actually need to change a style definition in the master layout view (layout.ejs).
-
-	In my case I only want these styles to apply when I'm on the welcome page, so I'm going to use the above class override so that my final layout.ejs ends up looking like this:
-	
-	```html+erb
-	{% raw %}
-	<header id="soa-control-cm-header-container" aria-live="polite" role="banner" class=" <%= can.route.attr("page") === "welcome" ? "soa-ui-cm-header-container-welcome": "" %>soa-ui-cm-header-container" <%= soa.framework.control("SOA.Dev.Header", this) %> >
-	</header>
-	<% if(SOA.Framework.Common.PageContext.getInstance().attr("pageLoading")){ %>
-		<div class="soa-ui-cm-loading-overlay">
-			<p class="soa-ui-cm-loading-icon">
-				<%= soa.framework.globalize("messages.loading") %>
-	   		</p>
-		</div>
-	<% } %>
-	<div id="soa-control-cm-page-container" class="soa-ui-cm-page-container" aria-live="assertive">
-		<!-- page content goes here -->
-	</div>
-	<footer id="soa-control-cm-footer-container" class="soa-ui-cm-footer-container" role="contentinfo" <%= soa.framework.control("SOA.Dev.Footer", this) %> >
-	</footer>
-	<div id="soa-control-cm-notifications-container" class="soa-ui-cm-notifications-container container" <%= soa.framework.control("SOA.Framework.Common.Notifier", this) %> >
-	</div>
-	{% endraw %}
-	```
-
-3.	Removing all the menus from the header, except for the usertools (the login link or profile dropdown is matter of tweaking the header.ejs a little.  I'm going to use the same `{% raw %}<% if(can.route.attr("page") !== "welcome"){%>....<% }%>{% endraw %}` construct I use in layout, but this time I'm not using an inline form because I'm using it to change more significant pieces of the html structure.  There are 3 occurances of this in this file; one that takes out the logo, one that takes out the nav links, and one that removes the search bar.  I also have an inline instance that overrides the styles of the whole navbar, this adds the following css override which is defined in custom.less:
-
-	```css
-	.navbar-default-welcome {
-	    background: none;
-	    border: none;
-	}
-	```
-	
-	The result of all this is a new header.ejs file that looks like:
-	
-	```html+erb
-	{% raw %}
-	<div class="soa-ui-cm-main container navbar <%= can.route.attr("page") === "welcome" ? "navbar-default-welcome": "" %> navbar-default" role="navigation">
-		<div class="soa-ui-cm-container-top row">
-			<div class="navbar-header soa-ui-cm-logo-container">
-				<% if(can.route.attr("page") !== "welcome"){%>
-					<div class="navbar-header">
-						<h2 class="soa-ui-cm-logo"><a href="#!welcome" class="navbar-brand soa-ui-cm-logo-link soa-ui-cm-imgtxt"> <%= soa.framework.globalize("messages.logo") %></a></h2>
-					</div>
-				<% }%>
-			</div>
-			<div class="soa-ui-cm-nav-container navbar-collapse">
-				<% if(can.route.attr("page") !== "welcome"){%>
-					<div <%= soa.framework.control("SOA.Dev.Nav", this) %>>
-						<!-- nav -->
-					</div>
-				<% }%>
-				<div>
-					<ul class="soa-ui-cm-site-tools nav navbar-nav navbar-right hidden-xs hidden-sm">
-						<% if(can.route.attr("page") !== "welcome"){%>
-							<li class="soa-ui-cm-site-tools-item" <%= soa.framework.control("SOA.Dev.SearchFilter", {"view": "searchBox"}) %> >
-								<!-- search box -->
-							</li>
-							<li class="soa-ui-cm-site-tools-item" <%= soa.framework.control("SOA.Dev.Refresh", this) %> >
-								<!-- refresh -->
-							</li>
-						<% }%>
-						<li class="soa-ui-cm-site-tools-item soa-ui-cm-profile-container" <%= soa.framework.control("SOA.Dev.UserTools", this) %>>
-							<!-- user tools -->
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
-	{% endraw %}
-	```
-	
-4.	The last step is to replace the text "Login" link with a nice shiny button.  I cheated a bit and browsed through the UI looking for some buttons I liked.  I liked the Style of the Login button from the login page, so I just used that.  Then I opened up the usertools.ejs file and had at it.  While I was at it I decided to remove the element where the product welcomed me, that was annoying.  See if you can spot the changes:
-
-	```html+erb
-	{% raw %}
-	<% var user = SOA.Console.Models.User.me(); %>
-	<% if(user.isLoggedIn()){ %>
-		<p class="soa-ui-cm-profile">
-			<span role="button" class="soa-ui-cm-profile-button soa-ui-cm-button-borderless soa-control-cm-profile-link" id="soa-control-cm-profile-link">
-				<img src="<%= user.getAvatarUrl() %>" alt="<%= user.getName() %>" class="soa-ui-cm-profile-img">
-				<span class="soa-ui-cm-icon-imgtxt soa-ui-cm-icon-imgtxt-down soa-ui-cm-profile-trigger"><%= soa.framework.globalize("labels.userTools") %></span> 
-			</span>
-		</p>
-		<div id="soa-control-cm-quick-links-container" class="soa-control-menu-container" <%= soa.framework.control("SOA.Dev.QuickLinks", this) %>>
-			<!-- quick links -->
-		</div>
-	<% }else if(can.route.attr("page") !== "login") {
-			if(can.route.attr("page") === "welcome") {%>
-				<p class="soa-ui-cm-profile">
-					<div>
-						<a id="ig-homepage-login-button" href="#!login"><span>Login</span></a>
-					</div>
-				</p>
-			<% } else {%>
-				<p class="soa-ui-cm-profile">
-					<a class="soa-control-cm-signin soa-ui-cm-profile-signin" href="#!login"><%= soa.framework.globalize("labels.login") %></a>
-				</p>
-			<% } %>
-	<% } %>
-	{% endraw %}
-	```
-	
-And that's it for now.  I'll be back to describe the process of uploading and customizing my docs when I get some content I like.
+<h3><a name="headercss"></a>Homepage Header with CSS Modifications</h3>
+<p>I don't like to make things easy for myself, and so simply replacing the content of the header really wasn't enough for me. What I really wanted to do was replace the header with a blank space with just a login button on the top right. I wanted to use the existing login control which meant I couldn't just go into <strong>layout.ejs</strong> (more on this in a bit) and remove the header, I needed to change the styles of the header, remove all the things I didn't want in the header, and change the style of the LOGIN control to a button, and make sure all this only happened on the homepage. This is actually quite a bit easier than you might think.</p>
+<p>The basic process includes:</p>
+<ol>
+	<li>Changing style means adding some new classes to our <strong>custom.less</strong> file that override specific style instructions and then applying these classes only when we are on a particular page.
+		<p>For example, to override the header background and border we add this to custom.less:</p>
+		<pre>.soa-ui-cm-header-container-welcome {
+  background: none;
+  border-bottom: none;
+}</pre>
+		<p>Which contains instructions from:</p>
+		<pre>.soa-ui-cm-header-container {
+  background: #f8f8f8;
+  border-bottom: 1px solid #d2d2d2;
+}</pre>
+		<p>Because these styles are in <strong>custom.less</strong> they will appear towards the very bottom of the generated styles and so, if applied to an element, they will override the default styles.</p>
+		<p>To apply these new styles selectively on the welcome page I can embed <code>{% raw %}&lt;%= can.route.attr(&quot;page&quot;) === &quot;welcome&quot; ? &quot;soa-ui-cm-header-container-welcome&quot;: &quot;&quot; %&gt;{% endraw %}</code> in my class definitions for the appropriate elements.</p></li>
+	<li>The <strong>header.ejs</strong> file doesn't include its own outer wrapping definition; therefore, to change the style of the full width header, we actually need to change a style definition in the master layout view (<strong>layout.ejs</strong>).
+		<p>In my case I only want these styles to apply when I'm on the welcome page, so I'm going to use the above class override so that my final <strong>layout.ejs</strong> ends up looking like this:</p>
+		<pre>&lt;header id="soa-control-cm-header-container" aria-live="polite" role="banner" class=" &lt;%= can.route.attr("page") === "welcome" ? "soa-ui-cm-header-container-welcome": "" %&gt;soa-ui-cm-header-container" &lt;%= soa.framework.control("SOA.Dev.Header", this) %&gt; &gt;
+  &lt;/header&gt;
+  &lt;% if(SOA.Framework.Common.PageContext.getInstance().attr("pageLoading")){ %&gt;
+    &lt;div class="soa-ui-cm-loading-overlay"&gt;
+      &lt;p class="soa-ui-cm-loading-icon"&gt;
+        &lt;%= soa.framework.globalize("messages.loading") %&gt;
+      &lt;/p&gt;
+    &lt;/div&gt;
+  &lt;% } %&gt;
+  &lt;div id="soa-control-cm-page-container" class="soa-ui-cm-page-container" aria-live="assertive"&gt;
+    &lt;!-- page content goes here --&gt;
+  &lt;/div&gt;
+  &lt;footer id="soa-control-cm-footer-container" class="soa-ui-cm-footer-container" role="contentinfo" &lt;%= soa.framework.control("SOA.Dev.Footer", this) %&gt; &gt;
+  &lt;/footer&gt;
+  &lt;div id="soa-control-cm-notifications-container" class="soa-ui-cm-notifications-container container" &lt;%= soa.framework.control("SOA.Framework.Common.Notifier", this) %&gt; &gt;
+  &lt;/div&gt;
+</pre></li>
+	<li>Removing all the menus from the header, except for the usertools (the login link or profile dropdown is matter of tweaking the <strong>header.ejs</strong> a little. I'm going to use the same<code> </code>construct I use in layout (<code>{% raw %}&lt;% if(can.route.attr(&quot;page&quot;) !== &quot;welcome&quot;){%&gt;....&lt;% }%&gt;{% endraw %}</code>), but this time I'm not using an inline form because I'm using it to change more significant pieces of the html structure. There are three occurrences of this in this file; one that takes out the logo, one that takes out the nav links, and one that removes the search bar. I also have an inline instance that overrides the styles of the whole navbar, this adds the following css override which is defined in <strong>custom.less</strong>:
+		<pre>.navbar-default-welcome {
+  background: none;
+  border: none;
+}</pre>
+		<p>The result of all this is a new <strong>header.ejs</strong> file that looks like this:</p>
+		<pre>&lt;div class="soa-ui-cm-main container navbar &lt;%= can.route.attr("page") === "welcome" ? "navbar-default-welcome": "" %&gt; navbar-default" role="navigation"&gt;
+  &lt;div class="soa-ui-cm-container-top row"&gt;
+    &lt;div class="navbar-header soa-ui-cm-logo-container"&gt;
+      &lt;% if(can.route.attr("page") !== "welcome"){%&gt;
+        &lt;div class="navbar-header"&gt;
+          &lt;h2 class="soa-ui-cm-logo"&gt;&lt;a href="#!welcome" class="navbar-brand soa-ui-cm-logo-link soa-ui-cm-imgtxt"&gt; &lt;%= soa.framework.globalize("messages.logo") %&gt;&lt;/a&gt;&lt;/h2&gt;
+        &lt;/div&gt;
+      &lt;% }%&gt;
+    &lt;/div&gt;
+    &lt;div class="soa-ui-cm-nav-container navbar-collapse"&gt;
+      &lt;% if(can.route.attr("page") !== "welcome"){%&gt;
+        &lt;div &lt;%= soa.framework.control("SOA.Dev.Nav", this) %&gt;&gt;
+          &lt;!-- nav --&gt;
+        &lt;/div&gt;
+      &lt;% }%&gt;
+      &lt;div&gt;
+        &lt;ul class="soa-ui-cm-site-tools nav navbar-nav navbar-right hidden-xs hidden-sm"&gt;
+          &lt;% if(can.route.attr("page") !== "welcome"){%&gt;
+            &lt;li class="soa-ui-cm-site-tools-item" &lt;%= soa.framework.control("SOA.Dev.SearchFilter", {"view": "searchBox"}) %&gt; &gt;
+              &lt;!-- search box --&gt;
+            &lt;/li&gt;
+            &lt;li class="soa-ui-cm-site-tools-item" &lt;%= soa.framework.control("SOA.Dev.Refresh", this) %&gt; &gt;
+              &lt;!-- refresh --&gt;
+            &lt;/li&gt;
+          &lt;% }%&gt;
+          &lt;li class="soa-ui-cm-site-tools-item soa-ui-cm-profile-container" &lt;%= soa.framework.control("SOA.Dev.UserTools", this) %&gt;&gt;
+            &lt;!-- user tools --&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre></li>
+	<li>The last step is to replace the text <strong>Login</strong> link with a nice shiny button. I cheated a bit and browsed through the UI looking for some buttons I liked. I liked the style of the <strong>Login</strong> button from the login page, so I just used that. Then I opened up the <strong>usertools.ejs</strong> file and had at it. While I was at it I decided to remove the element where the product welcomed me. See if you can spot the changes:
+		<pre>&lt;% var user = SOA.Console.Models.User.me(); %&gt;
+&lt;% if(user.isLoggedIn()){ %&gt;
+  &lt;p class="soa-ui-cm-profile"&gt;
+    &lt;span role="button" class="soa-ui-cm-profile-button soa-ui-cm-button-borderless soa-control-cm-profile-link" id="soa-control-cm-profile-link"&gt;
+      &lt;img src="&lt;%= user.getAvatarUrl() %&gt;" alt="&lt;%= user.getName() %&gt;" class="soa-ui-cm-profile-img"&gt;
+      &lt;span class="soa-ui-cm-icon-imgtxt soa-ui-cm-icon-imgtxt-down soa-ui-cm-profile-trigger"&gt;&lt;%= soa.framework.globalize("labels.userTools") %&gt;&lt;/span&gt; 
+    &lt;/span&gt;
+  &lt;/p&gt;
+  &lt;div id="soa-control-cm-quick-links-container" class="soa-control-menu-container" &lt;%= soa.framework.control("SOA.Dev.QuickLinks", this) %&gt;&gt;
+    &lt;!-- quick links --&gt;
+  &lt;/div&gt;
+&lt;% }else if(can.route.attr("page") !== "login") {
+    if(can.route.attr("page") === "welcome") {%&gt;
+      &lt;p class="soa-ui-cm-profile"&gt;
+        &lt;div&gt;
+          &lt;a id="ig-homepage-login-button" href="#!login"&gt;&lt;span&gt;Login&lt;/span&gt;&lt;/a&gt;
+        &lt;/div&gt;
+      &lt;/p&gt;
+    &lt;% } else {%&gt;
+      &lt;p class="soa-ui-cm-profile"&gt;
+        &lt;a class="soa-control-cm-signin soa-ui-cm-profile-signin" href="#!login"&gt;&lt;%= soa.framework.globalize("labels.login") %&gt;&lt;/a&gt;
+      &lt;/p&gt;
+    &lt;% } %&gt;
+&lt;% } %&gt;</pre></li>
+</ol>
+<p>And that's it for now. I'll be back to describe the process of uploading and customizing my docs when I get some content I like.</p>
+<p><a href="#top">Back to top</a></p>
