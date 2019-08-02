@@ -122,44 +122,41 @@ The premise is easy.  We'll do this:
 
 In my case I actually need to do something a little different with my header that invloves messing with the CSS, for details on how to do this see [below](#headercss).
 
-### <a name="footer"></a>Replacing the Footer
 
-Replacing the footer involves replacing the footer.ejs file.  The process for finding and replacing this file is the same as for the header, as described in [Homepage Header](header) above.  In this case you will add your customized file to your local file structure in SOA/Dev/footer/views/footer.ejs.
 
-In most cases replacing the footer will likely be a bit more complex because you will probably also need to drag some styles along with the new footer.  In my case I took the complete footer html structures from our corporate site (www.soa.com), this meant bringing along the css sprite image for the social icons, and grabbing all the CSS that drove that.  The steps here were:
+<h3><a name="footer"></a>Replacing the Footer TEST</h3>
+<p>Replacing the footer involves replacing the footer.ejs file. The process for finding and replacing this file is the same as for the header, as described in <a href="header">Homepage Header</a> above. In this case you will add your customized file to your local file structure in SOA/Dev/footer/views/footer.ejs.</p>
+<p>In most cases replacing the footer will likely be a bit more complex because you will probably also need to drag some styles along with the new footer. In my case I took the complete footer html structures from our corporate site (www.akana.com), this meant bringing along the css sprite image for the social icons, and grabbing all the CSS that drove that. The steps here were:</p>
+<ol>
+	<li>Find the footer.ejs file and copy it to the right place in my local file structure so that it would be included in my next zip update.</li>
+	<li>This file provides the content of the footer, using the html footer element. In our out of the box SimpleDev theme this will be placed in an unstyled div at the bottom of the page. The default footer is styled by a css class of &quot;soa-ui-cm-footer&quot;. I chose to keep this class and its associated styles and drop my content into the middle of this. Essentially I just replaced everything between the opening and closing divs with my content:
+	<pre>&lt;div class="soa-ui-cm-footer"&gt;
+...
+My content in here
+...
+&lt;/div&gt;</pre></li>
+	<li>My content made a bunch of references to its own defined css classes, so I had to copy the appropriate section of the www.soa.com CSS into the end of my <strong>custom.less</strong> file (see Customizing <a href="#styles">Styles</a> above).
+		<ul>
+			<li>NOTE: because my original footer was in an HTML div using a id of footer instead of using the html footer element I had to change all my CSS elements from applying to an id of footer to applying to the element (remove the #). For example:
+<pre>#footer .credits .social {
+  margin-top: 30px;
+  text-align: center;
+}</pre>
+<p>to:</p>
+<pre>footer .credits .social {
+  margin-top: 30px;
+  text-align: center;
+}</pre></li>
+		</ul></li>
+	<li>>Having made the css changes and uploaded the new <strong>custom.less</strong>, all you need to do is save your new footer.ejs file, package up your zip archive and upload it as described in <a href="header">Homepage Header</a> above.</li>
+</ol>
+<p>Now clear your browser cache and enjoy your elegant custom footer.</p>
+<p><a href="#top">Back to top</a></p>
 
-1.	Find the footer.ejs file and copy it to the right place in my local file structure so that it would be included in my next zip update.
-2.	This file provides the content of the footer, using the html footer element.  In our out of the box SimpleDev theme this will be placed in an unstyled div at the bottom of the page.  The default footer is styled by a css class of "soa-ui-cm-footer".  I chose to keep this class and its associated styles and drop my content into the middle of this.  Essentially I just replaced everything between the opening and closing divs with my content:
-	
-	```html+erb
-	<div class="soa-ui-cm-footer">
-	...
-	My content in here
-	...
-	</div>
-	```
-3.	My content made a bunch of references to its own defined css classes, so I had to copy the appropriate section of the www.soa.com CSS into the end of my custom.less file (see Customizing [Styles](#styles) above).
-	*	NOTE: because my original footer was in an HTML div using a id of footer instead of using the html footer element I had to change all my CSS elements from applying to an id of footer to applying to the element (remove the #).  For example:
 
-		```css
-		#footer .credits .social {
-			margin-top: 30px;
-			text-align: center;
-		}
-		```
 
-		to:
 
-		```css
-		footer .credits .social {
-			margin-top: 30px;
-			text-align: center;
-		}
-		```
 
-4.	Having made the css changes and uploaded the new custom.less, all you need to do is save your new footer.ejs file, package up your zip archive and upload it as described in [Homepage Header](header) above.
-
-Now clear your browser cache and enjoy your elegant custom footer.
 
 ### <a name="headercss"></a>Homepage Header with CSS Modifications
 
