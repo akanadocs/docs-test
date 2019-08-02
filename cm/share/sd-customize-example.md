@@ -25,26 +25,17 @@ sub-nav-class: Customization
 <h3><a name="styles"></a>Customizing Styles</h3>
 <p>We use a compiled CSS model called Less to manage styles in the product. There are three easy steps for changing styles:</p>
 <ol>
-<li>
-Download the style template (or a prior customized version of it):
-<ul>
-<li>
-As a site administrator go to Config-&gt;Custom Styles
-<ul>
-<li>IMPORTANT: you MUST make sure you select the tenant for which you want to change the styles before you take any of the actions on this page. Far and away the most common reason for your style changes to taking effect is that you applied them to the wrong theme (and all sort of other badness can happen to your other theme style if you're not careful). Trust me on this, I know.</li>
-</ul>
-</li>
-<li>If you have not yet performed any customizations then you need to download the template, rename it to <strong>custom.less</strong> and edit it (basically follow the instructions in the custom styles configuration screens). The template is a very useful document, it explains what all the options are and what they do.</li>
-<li>If you have already applied some customizations then you will need to download the current <strong>custom.less</strong> file and apply your changes directly to this.</li>
-</ul>
-</li>
-<li>
-Edit the <strong>custom.less</strong> file changing colors, fonts, logo, etc. You can add your own CSS directly to the end of the file and can even override specific styles from the UI if you  want to, more on this later (in the section <a href="#headercss">Style of the homepage header</a>, including a treatise on why it's not the best idea and why you should only do it if you really have to.
-<ul>
-<li>NOTE: you have to uncomment any of the parameters in this file in order for your changes to take effect.</li>
-</ul>
-</li>
-<li>Upload your edited <strong>custom.less</strong> file. Make sure you have read and followed the IMPORTANT note above. Uploading a new <strong>custom.less</strong> file will automatically trigger a style rebuild. There is also an option to manually trigger a new rebuild in case you've done something foolish with your actual style.css file (which you should never touch directly, so I'm not going to tell you where it is, although the curious amongst you will find it really easily).</li>
+	<li>Download the style template (or a prior customized version of it):
+		<ul>
+			<li>As a Site Admin, go to <strong>Config</strong> &gt; <strong>Custom Styles</strong>.
+				<p>IMPORTANT: you MUST make sure you select the tenant for which you want to change the styles before you take any of the actions on this page. By far the most common reason for your style changes not taking effect is that you applied them to the wrong theme (and all sort of other badness can happen to your other theme style if you're not careful). Trust me on this, I know.</p></li>
+			<li>If you have not yet performed any customizations then you need to download the template, rename it to <strong>custom.less</strong> and edit it (basically follow the instructions in the custom styles configuration screens). The template is a very useful document, it explains what all the options are and what they do.</li>
+			<li>If you have already applied some customizations then you will need to download the current <strong>custom.less</strong> file and apply your changes directly to this.</li>
+		</ul>
+	</li>
+	<li>Edit the <strong>custom.less</strong> file changing colors, fonts, logo, etc. You can add your own CSS directly to the end of the file and can even override specific styles from the UI if you  want to, more on this later (in the section <a href="#headercss">Style of the homepage header</a>, including a treatise on why it's not the best idea and why you should only do it if you really have to.
+		<p>NOTE: you have to uncomment any of the parameters in this file in order for your changes to take effect.</p></li>
+	<li>Upload your edited <strong>custom.less</strong> file. Make sure you have read and followed the IMPORTANT note above. Uploading a new <strong>custom.less</strong> file will automatically trigger a style rebuild. There is also an option to manually trigger a new rebuild in case you've done something foolish with your actual style.css file (which you should never touch directly, so I'm not going to tell you where it is, although the curious amongst you will find it really easily).</li>
 </ol>
 <p>As usual, to see the results of your change you will need to clear your browser cache and then go and check your site again.</p>
 <p><a href="#top">Back to top</a></p>
@@ -52,36 +43,18 @@ Edit the <strong>custom.less</strong> file changing colors, fonts, logo, etc. Yo
 
 
 <h3><a name="logo"></a>Changing the Logo</h3>
-<p>Changing the logo is pretty easy, it involves two steps:</p>
-<ol>
-<li>
-Upload the new logo file
-<ul>
-<li>Get an appropriately sized logo. Optimally, a logo for a SimpleDev-based theme would be 228x60px.</li>
-<li>Use the Resources File Manager under <strong>Config</strong> &gt; <strong>Resources</strong> (make sure you use the <strong>Resources</strong> File Manager, not the <strong>Content</strong> File Manager), browse to Style/images (you may need to create the images folder), and upload your new logo file into images. Remember the name you have chosen for this new file.</li>
-</ul>
-</li>
-<li>Change your custom.less to point to the new logo file - see above for instructions on how to customize styles.</li>
-</ol>
-<p>As ever, to see the results of your change you will need to clear your browser cache and then go and check your site again.</p>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<h3><a name="logo"></a>Changing the Logo</h3>
 <p>Changing the logo is pretty easy. It involves two steps:</p>
 <ol>
-<li>
-Upload the new logo file
-<ul>
-<li>Get an appropriately sized logo. Optimally, a logo for a SimpleDev-based theme would be 228x60px.</li>
-<li>Use the Resources File Manager under <strong>Config</strong> &gt; <strong>Resources</strong> (make sure you use the <strong>Resources</strong> File Manager, not the <strong>Content</strong> File Manager), browse to Style/images (you may need to create the images folder), and upload your new logo file into images. Remember the name you have chosen for this new file.</li>
-</ul>
-</li>
-<li>Change your custom.less to point to the new logo file - see above for instructions on how to customize styles.</li>
+	<li>Upload the new logo file. Notes:
+		<ul>
+			<li>Get an appropriately sized logo. Optimally, a logo for a SimpleDev-based theme would be 228x60px.</li>
+			<li>Use the Resources File Manager under <strong>Config</strong> &gt; <strong>Resources</strong> (make sure you use the <strong>Resources</strong> File Manager, not the <strong>Content</strong> File Manager), browse to Style/images (you may need to create the images folder), and upload your new logo file into images. Remember the name you have chosen for this new file.</li>
+		</ul></li>
+	<li>Change your custom.less to point to the new logo file - see above for instructions on how to customize styles.</li>
 </ol>
 <p>As ever, to see the results of your change you will need to clear your browser cache and then go and check your site again.</p>
 <p><a href="#top">Back to top</a></p>
+
 
 
 
