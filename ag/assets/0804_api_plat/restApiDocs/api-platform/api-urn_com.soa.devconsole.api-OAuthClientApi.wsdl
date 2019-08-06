@@ -54,10 +54,6 @@
     <wsdl:part name="state" type="xs:string">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getEffectiveAuthPolicyResponseMessage">
-    <wsdl:part name="getEffectiveAuthPolicyResponse" element="nms1:AuthPolicies">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="getRequestTokenRequestMessage">
     <wsdl:part name="apiVersionDN" type="tns:FDNRequestParam">
     </wsdl:part>
@@ -80,6 +76,10 @@
     <wsdl:part name="sessionKey" type="xs:string">
     </wsdl:part>
     <wsdl:part name="appIdentityToken" type="xs:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getEffectiveAuthPolicyResponseMessage">
+    <wsdl:part name="getEffectiveAuthPolicyResponse" element="nms1:AuthPolicies">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getRequestTokenResponseMessage">
@@ -129,28 +129,16 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="OAuthClientApiPortType">
-    <wsdl:operation name="createSessionKey">
-      <wsdl:input message="tns:createSessionKeyRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:createSessionKeyResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getEffectiveAuthPolicy">
-      <wsdl:input message="tns:getEffectiveAuthPolicyRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getEffectiveAuthPolicyResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getAccessTokenPOST">
       <wsdl:input message="tns:getAccessTokenPOSTRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:getAccessTokenPOSTResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="renewAccessTokenPOST">
-      <wsdl:input message="tns:renewAccessTokenPOSTRequestMessage">
+    <wsdl:operation name="getRequestToken">
+      <wsdl:input message="tns:getRequestTokenRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:renewAccessTokenPOSTResponseMessage">
+      <wsdl:output message="tns:getRequestTokenResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="createSessionKeyWithAppSecret">
@@ -159,10 +147,22 @@
       <wsdl:output message="tns:createSessionKeyWithAppSecretResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getRequestToken">
-      <wsdl:input message="tns:getRequestTokenRequestMessage">
+    <wsdl:operation name="renewAccessTokenPOST">
+      <wsdl:input message="tns:renewAccessTokenPOSTRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:getRequestTokenResponseMessage">
+      <wsdl:output message="tns:renewAccessTokenPOSTResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getEffectiveAuthPolicy">
+      <wsdl:input message="tns:getEffectiveAuthPolicyRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getEffectiveAuthPolicyResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createSessionKey">
+      <wsdl:input message="tns:createSessionKeyRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:createSessionKeyResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getAccessToken">
@@ -180,28 +180,6 @@
   </wsdl:portType>
   <wsdl:binding name="OAuthClientApiBinding" type="tns:OAuthClientApiPortType">
     <shttp:binding/>
-    <wsdl:operation name="createSessionKey">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /devconsole/sessions</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="multipart/form-data" location="/devconsole/sessions" method="POST" outputSerialization="text/plain"/>
-      <wsdl:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="" part="" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getEffectiveAuthPolicy">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /devconsole/authpolicy</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="*/*" location="/devconsole/authpolicy" method="GET" outputSerialization="text/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+json,application/vnd.soa.v81+xml"/>
-      <wsdl:input>
-    <shttp:input name="apiVersionDN" part="apiVersionDN" type="query"/>
-    <shttp:input name="environment" part="environment" type="query"/>
-    <shttp:input name="ImplementationCode" part="ImplementationCode" type="query"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getEffectiveAuthPolicyResponse" part="getEffectiveAuthPolicyResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getAccessTokenPOST">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /devconsole/oauth/accesstoken</sdoc:displayName></wsdl:documentation>
     <shttp:operation inputSerialization="application/x-www-form-urlencoded" location="/devconsole/oauth/accesstoken" method="POST" outputSerialization="application/json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
@@ -213,25 +191,6 @@
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="getAccessTokenPOSTResponse" part="getAccessTokenPOSTResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="renewAccessTokenPOST">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /devconsole/oauth/renewtoken</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="application/x-www-form-urlencoded" location="/devconsole/oauth/renewtoken" method="POST" outputSerialization="application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/json,application/vnd.soa.v81+json"/>
-      <wsdl:input>
-    <shttp:input name="appIdentityToken" part="appIdentityToken" type="form"/>
-    <shttp:input name="sessionKey" part="sessionKey" type="form"/>
-    <shttp:input name="session_key" part="session_key" type="form"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="renewAccessTokenPOSTResponse" part="renewAccessTokenPOSTResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="createSessionKeyWithAppSecret">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /devconsole/sessions</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="application/x-www-form-urlencoded" location="/devconsole/sessions" method="POST" outputSerialization="text/plain"/>
-      <wsdl:output>
-    <shttp:output name="" part="" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getRequestToken">
@@ -252,6 +211,47 @@
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="getRequestTokenResponse" part="getRequestTokenResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createSessionKeyWithAppSecret">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /devconsole/sessions</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="application/x-www-form-urlencoded" location="/devconsole/sessions" method="POST" outputSerialization="text/plain"/>
+      <wsdl:output>
+    <shttp:output name="" part="" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="renewAccessTokenPOST">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /devconsole/oauth/renewtoken</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="application/x-www-form-urlencoded" location="/devconsole/oauth/renewtoken" method="POST" outputSerialization="application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/json,application/vnd.soa.v81+json"/>
+      <wsdl:input>
+    <shttp:input name="appIdentityToken" part="appIdentityToken" type="form"/>
+    <shttp:input name="sessionKey" part="sessionKey" type="form"/>
+    <shttp:input name="session_key" part="session_key" type="form"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="renewAccessTokenPOSTResponse" part="renewAccessTokenPOSTResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getEffectiveAuthPolicy">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /devconsole/authpolicy</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="*/*" location="/devconsole/authpolicy" method="GET" outputSerialization="text/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+json,application/vnd.soa.v81+xml"/>
+      <wsdl:input>
+    <shttp:input name="apiVersionDN" part="apiVersionDN" type="query"/>
+    <shttp:input name="environment" part="environment" type="query"/>
+    <shttp:input name="ImplementationCode" part="ImplementationCode" type="query"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getEffectiveAuthPolicyResponse" part="getEffectiveAuthPolicyResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createSessionKey">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /devconsole/sessions</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="multipart/form-data" location="/devconsole/sessions" method="POST" outputSerialization="text/plain"/>
+      <wsdl:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="" part="" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getAccessToken">
