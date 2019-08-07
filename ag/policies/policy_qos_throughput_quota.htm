@@ -82,7 +82,8 @@ nav-title: Throughput Quota
 	<dd>Specify two values: first, the number of messages allowed; second, the time period (seconds or minutes). Example: 10000 messages per minute.</dd>
 	<dt>Queue Size</dt>
 	<dd>Optional (not recommended, see below): defines the concurrent threads that are queued before access is denied. This delays the consumer requests in an effort to manage a brief spike in traffic without denying access.</dd>
-	<dd><strong>Note</strong>: Akana recommends that you do <strong>not</strong> use this setting. If there is a steady throughput increase (as opposed to a short spike in traffic), the queue can get very large and even cause out of memory issues. If container restart becomes necessary, messages in a large message queue might be lost.</dd>
+	<dd><strong>Note</strong>: Akana recommends that you do <strong>not</strong> use this setting. The container holds the entire content of each message in memory. There could potentially be a large number of messages held in memory, and if the messages themselves are also large, the memory and resources consumed could overwhelm the container, causing out-of-memory issues. If container restart becomes necessary, messages might be lost. In addition, a possible side-effect of slow processing is that the consumer might re-send the message. For example, if the message content includes a very large PDF file, and the message ends up in the queue, the consumer might re-send the message, which creates another instance in the queue.</dd>
+	<dd>If you need this functionality, you could consider implementing a Rule in combination with a queue to help ensure the queue does not get too large. For information about rules, see <a href="../pm_rules/pm_service_rules.htm">Policy Manager Service Rules</a>.</dd>
 	<dt>Fault Message</dt>
 	<dd>The message that is returned if a message is rejected because the throughput limit is exceeded.</dd>
 	<dt>Fault Element Name</dt>
