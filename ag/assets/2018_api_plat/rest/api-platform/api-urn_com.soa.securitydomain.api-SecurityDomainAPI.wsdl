@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wsdl:definitions targetNamespace="urn:com.soa.securitydomain.api" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:com.soa.securitydomain.api" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nms2="http://soa.com/xsd/securitydomain/1.0" xmlns:nms1="urn:org.apache.wink.common.model.rss" xmlns:shttp="http://soa.com/wsdl/http">
   <wsdl:types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/securitydomain/1.0" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:complexType name="SecurityDomain"><xs:sequence><xs:element name="Name" type="xs:string"/><xs:element minOccurs="0" name="Description" type="xs:string"/><xs:element name="IdentitySystemType" type="xs:string"/><xs:element name="DomainConfiguration" type="xs:string"/></xs:sequence></xs:complexType>
+</xs:schema>
     <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:element name="category" nillable="true" type="rssCategory"/>
 <xs:element name="channel" nillable="true" type="rssChannel"/>
@@ -22,12 +25,9 @@
 <xs:complexType name="rssSkipHours"><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="hour" nillable="true" type="xs:string"/></xs:sequence></xs:complexType>
 <xs:complexType name="rssSkipDays"><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="day" nillable="true" type="xs:string"/></xs:sequence></xs:complexType>
 <xs:complexType name="rssSource"><xs:simpleContent><xs:extension base="xs:string"><xs:attribute name="url" type="xs:string" use="required"/></xs:extension></xs:simpleContent></xs:complexType>
+<xs:complexType name="rssEnclosure"><xs:sequence/><xs:attribute name="url" type="xs:string" use="required"/><xs:attribute name="length" type="xs:string" use="required"/><xs:attribute name="type" type="xs:string" use="required"/></xs:complexType>
 <xs:complexType name="rssGuid"><xs:simpleContent><xs:extension base="xs:string"><xs:attribute name="isPermaLink" type="xs:boolean"/></xs:extension></xs:simpleContent></xs:complexType>
 <xs:complexType name="rssItem"><xs:all><xs:element minOccurs="0" name="title" type="xs:string"/><xs:element minOccurs="0" name="link" type="xs:anyURI"/><xs:element minOccurs="0" name="description" type="xs:string"/><xs:element minOccurs="0" name="author" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="category" nillable="true" type="rssCategory"/><xs:element minOccurs="0" name="comments" type="xs:anyURI"/><xs:element minOccurs="0" name="enclosure" type="rssEnclosure"/><xs:element minOccurs="0" name="guid" type="rssGuid"/><xs:element name="pubDate" type="xs:string"/><xs:element minOccurs="0" name="source" type="rssSource"/><xs:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/></xs:all></xs:complexType>
-<xs:complexType name="rssEnclosure"><xs:sequence/><xs:attribute name="url" type="xs:string" use="required"/><xs:attribute name="length" type="xs:string" use="required"/><xs:attribute name="type" type="xs:string" use="required"/></xs:complexType>
-</xs:schema>
-    <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/securitydomain/1.0" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-<xs:complexType name="SecurityDomain"><xs:sequence><xs:element name="Name" type="xs:string"/><xs:element minOccurs="0" name="Description" type="xs:string"/><xs:element name="IdentitySystemType" type="xs:string"/><xs:element name="DomainConfiguration" type="xs:string"/></xs:sequence></xs:complexType>
 </xs:schema>
   </wsdl:types>
   <wsdl:message name="getSecurityDomainRequestMessage">
@@ -38,12 +38,12 @@
     <wsdl:part name="updateSecurityDomainResponse" type="xs:string">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getSecurityDomainOAuthProviderConfigRequestMessage">
-    <wsdl:part name="DomainID" type="xs:string">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="deleteSecurityDomainResponseMessage">
     <wsdl:part name="deleteSecurityDomainResponse" type="xs:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSecurityDomainOAuthProviderConfigRequestMessage">
+    <wsdl:part name="DomainID" type="xs:string">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="addSecurityDomainRequestMessage">
@@ -60,12 +60,12 @@
     <wsdl:part name="DomainID" type="xs:string">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getSecurityDomainOAuthProviderConfigResponseMessage">
-    <wsdl:part element="xs:any">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="saveDomainResourceResponseMessage">
     <wsdl:part name="saveDomainResourceResponse" type="xs:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSecurityDomainOAuthProviderConfigResponseMessage">
+    <wsdl:part element="xs:any">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="addSecurityDomainResponseMessage">
@@ -119,24 +119,6 @@
       <wsdl:output message="tns:getSecurityDomainsResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="addSecurityDomain">
-      <wsdl:input message="tns:addSecurityDomainRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:addSecurityDomainResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getSecurityDomain">
-      <wsdl:input message="tns:getSecurityDomainRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getSecurityDomainResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getSecurityDomainOAuthProviderConfig">
-      <wsdl:input message="tns:getSecurityDomainOAuthProviderConfigRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getSecurityDomainOAuthProviderConfigResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="updateSecurityDomain">
       <wsdl:input message="tns:updateSecurityDomainRequestMessage">
     </wsdl:input>
@@ -161,6 +143,24 @@
       <wsdl:output message="tns:deleteSecurityDomainResponseMessage">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getSecurityDomainOAuthProviderConfig">
+      <wsdl:input message="tns:getSecurityDomainOAuthProviderConfigRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getSecurityDomainOAuthProviderConfigResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addSecurityDomain">
+      <wsdl:input message="tns:addSecurityDomainRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:addSecurityDomainResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSecurityDomain">
+      <wsdl:input message="tns:getSecurityDomainRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getSecurityDomainResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="SecurityDomainAPIBinding" type="tns:SecurityDomainAPIPortType">
     <shttp:binding/>
@@ -178,36 +178,6 @@
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="getSecurityDomainsResponse" part="getSecurityDomainsResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="addSecurityDomain">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /securitydomains</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json" location="/securitydomains" method="POST" outputSerialization="text/plain"/>
-      <wsdl:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="addSecurityDomainResponse" part="addSecurityDomainResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getSecurityDomain">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /securitydomains/{DomainID}</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/securitydomains/{DomainID}" method="GET" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
-      <wsdl:input>
-    <shttp:input name="DomainID" part="DomainID" type="path"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="" part="" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getSecurityDomainOAuthProviderConfig">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /securitydomains/{DomainID}/oauthproviderconfig</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/securitydomains/{DomainID}/oauthproviderconfig" method="GET" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
-      <wsdl:input>
-    <shttp:input name="DomainID" part="DomainID" type="path"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="" part="" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateSecurityDomain">
@@ -249,6 +219,36 @@
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="deleteSecurityDomainResponse" part="deleteSecurityDomainResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSecurityDomainOAuthProviderConfig">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /securitydomains/{DomainID}/oauthproviderconfig</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/securitydomains/{DomainID}/oauthproviderconfig" method="GET" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
+      <wsdl:input>
+    <shttp:input name="DomainID" part="DomainID" type="path"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="" part="" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addSecurityDomain">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /securitydomains</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json" location="/securitydomains" method="POST" outputSerialization="text/plain"/>
+      <wsdl:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="addSecurityDomainResponse" part="addSecurityDomainResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSecurityDomain">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /securitydomains/{DomainID}</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/securitydomains/{DomainID}" method="GET" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
+      <wsdl:input>
+    <shttp:input name="DomainID" part="DomainID" type="path"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="" part="" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
