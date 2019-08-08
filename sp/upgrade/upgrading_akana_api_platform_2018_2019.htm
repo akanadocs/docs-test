@@ -84,6 +84,7 @@ nav-title: Upgrade 2018.0.x to 2019.0.x
 	<li><a href="#s02_09">Starting a container</a></li>
 	<li><a href="#s02_12">Refreshing the repository</a></li>
 	<li><a href="#ts_02_error_new_containers">Upgrading by creating new containers: notes</a></li>
+	<li><a href="#auto_prop_xfer">Automating the transfer of container properties</a></li>
 	<li><a href="#upgrade_automation">Automation recipes for upgrade</a></li>
 	<li><a href="#tech_support_contact">Contacting Technical Support</a></li>
 </ol>
@@ -141,6 +142,7 @@ nav-title: Upgrade 2018.0.x to 2019.0.x
 	<li>Update the properties file for each existing container to add a new property, <strong>container.key</strong>, that specifies the existing container IDs. For example:
 		<pre>container.key=&quot;fcd54dc8-ccd2-439f-a580-436d3ef2&quot;</pre></li>
 </ol>
+<!--<p><strong>Note</strong>: For information about how you can automate the reconfiguring of your container properties, see <a href="#auto_prop_xfer">Automating the transfer of container properties</a>.</p>-->
 <p><a href="#top">back to top</a></p>
 
 
@@ -213,10 +215,11 @@ nav-title: Upgrade 2018.0.x to 2019.0.x
 	
 	<li>When the previous step is complete, unzip the Akana API Platform 2019.0.0 file to the folder for your installation.
 		<p>For example:</p>
-<pre>unzip -o /akana/downloads/akana-platform-linux-jre-2019.0.0.18.zip -d /akana/aap201900
-unzip -o /akana/downloads/akana-api-platform-2019.0.0.340.zip -d /akana/aap201900</pre>
+<pre>unzip -o /akana/downloads/akana-platform-linux-jre-2019.0.0.5.zip -d /akana/aap201900
+unzip -o /akana/downloads/api-platform-2019.0.0.153.zip -d /akana/aap201900</pre>
 <p>For information about the folders and folder contents for the Akana Platform, see <a href="../platform_install/installing_akana_api_platform_v2019.htm#installation_folder_structure">Installation folder structure (Akana Platform)</a>.</p></li>
 <li>If applicable, unzip any add-on products, such as the SAML Web SSO Security Provider.</li>
+<li>If applicable, unzip and install any updates to the Akana Platform and then the Akana API Platform. Follow the instructions in the installation documentation: <a href="../platform_install/installing_akana_api_platform_v2019.htm#unzip_files">Step 2-2: Extract installation files in the correct sequence</a>.</li>
 </ol>
 <p><a href="#top">Back to top</a></p>
 
@@ -403,6 +406,7 @@ ps -ef
 <h3 id="s03_03">Step 3-3: Update container properties</h3>
 <p>When you've created the new container and installed the features, it's time to set the configuration properties. You'll need to transfer any customized settings that were set on the old container, to the new container.</p>
 <p>Use the setting values that you saved out in <a href="#s01_02">Step 1-2: Plan the upgrade</a>, procedure step #4, and set them on the new container.</p>
+<!--<p><strong>Note</strong>: For information about how you can automate the reconfiguring of your container properties, see <a href="#auto_prop_xfer">Automating the transfer of container properties</a>.</p>-->
 <p>For example, if you customized the Content Root value for the developer portal, you'll need to re-set it.</p>
 <p> In the Akana Administration Console for each container with Community Manager installed:</p>
 <p><strong>Configuration</strong> &gt; <strong>com.soa.atmosphere.console</strong> &gt; atmosphere.context.root.</p>
@@ -670,6 +674,26 @@ ps -ef
 cannot be disassociated from service [uddi:soa.com:metadataattachment-servicekey]. 
 Binding is attached to service endpoint.</pre>
 <p>If you encounter this message, delete the old container, and then retry the provisioning.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="auto_prop_xfer">Automating the transfer of container properties</h3>
+<!--<p>{<span class="apidoc_red">ML? Not sure about this section. I had it commented out from work done Sept 19 for 2018 but it might have been talking about Erik's tool. Not sure. / ML 6/28/19: I think taking it out is the easy solution for now, but I think at some point it would be good to try./It’s part of the script that runs the recipe.</span>}</p>-->
+<p>When upgrading by creating a new container, you'll need to transfer, or re-create, the configuration settings on the new container.</p>
+<p>The configuration settings are stored in the instances/{container_name}/cm subfolder.</p>
+<p>Because there are changes between versions, you can't just copy and paste the folder between versions. However, you can use an automation recipe to extract the old settings so that you can use them for the new container.</p>
+
+<h5 id="proc_xfer_properties">To transfer configuration properties from an old container to a new container</h5>
+<ol>
+	<li>At the beginning of <a href="#s02_05">Step 2-5: Create and configure the first container</a>, after shutting down the old container and before creating the new one, run discovery on all of the containers in the previous installation, and save out the old configuration settings for all containers.</li>
+	<li>At the end of <a href="#s02_05">Step 2-5: Create and configure the first container</a>, Step #6, after doing the initial configuration steps, shut down the container. Rather than restarting as in Step #7, save out the new configuration settings at that point.</li>
+	<li>Compare the new settings with the old settings to arrive at the settings that will need to be configured on the new container.</li>
+	<li>If available, use automation to update the container configuration.</li>
+	<li>Now complete <a href="#s02_05">Step 2-5: Create and configure the first container</a> by restarting the container, and verify that the configuration properties are set correctly.</li>
+	<li>Follow steps 2 through 5 for additional containers until they are all configured.</li>
+	<li>Continue with the post-install steps.</li>
+</ol>
 <p><a href="#top">Back to top</a></p>
 
 
