@@ -11,7 +11,7 @@ nav-title: Upgrade 2018.0.x to 2019.0.x
 ---
 <h2 id="top">Upgrading Akana API Platform from Version 2018.0.x to Version 2019.0.x</h2>
 <p>Learn how to upgrade from Akana API Platform 2018.0.x to 2019.0.x.</p>
-<p>These upgrade instructions cover the process for a manual upgrade, creating new containers. Automation options are also available.</p>
+<p>These upgrade instructions cover the process for a manual upgrade, creating new containers. Automation options are also available (Linux only).</p>
 <p>This upgrade addresses a simple container scenario of:</p>
 <ul>
 	<li>One container with Policy Manager and Community Manager installed</li>
@@ -21,7 +21,7 @@ nav-title: Upgrade 2018.0.x to 2019.0.x
 <p><strong>Notes</strong>:</p>
 <p>If you're upgrading Policy Manager for DataPower, follow the steps in this document that you would use for upgrading Network Director.</p>
 <p>This document covers instructions for upgrading from 2018.0.x to 2019.0.x. For other versions, see <a href="upgrading_akana_api_platform_all.htm">Upgrading the Akana API Platform (all versions)</a>.</p>
-<p>You can also use automation to standardize the upgrade process. Automation might take a little more time to set up, but it has great benefits including standardization and reusability. For information on automation, see <a href="../automation/automation_ref.htm">Automation Reference</a>. For information about which automation recipes to use for upgrade, see <a href="#upgrade_automation">Automating the upgrade</a>.</p>
+<p>You can also use automation to standardize the upgrade process (Linux only). Automation might take a little more time to set up, but it has great benefits including standardization and reusability. For information on automation, see <a href="../automation/automation_ref.htm">Automation Reference</a>. For information about which automation recipes to use for upgrade, see <a href="#upgrade_automation">Automating the upgrade</a>.</p>
 
 <p>
 <a href="../admin_console/using_admin_console.htm" class="button secondary">Using Admin Console</a>
@@ -136,13 +136,12 @@ nav-title: Upgrade 2018.0.x to 2019.0.x
 			<li>Save the context root. </li>
 			<li>Save all other container properties that you've customized.</li>
 			<li>Save out the container certificates in the Policy Manager console (see <a href="../key_management/key_management.htm">Managing Keys and Certificates</a>). You can then upload the same certificates when configuring the container.
-				<p><strong>Note</strong>: you can use an automation task to save out the configuration settings. See <a href="../automation/automation_ref.htm#recipes_extracting_properties">Extracting and Analyzing Recipes</a>.</p></li>
+				<p><strong>Note</strong>: you can use an automation task to save out the configuration settings (Linux only). See <a href="../automation/automation_ref.htm#recipes_extracting_properties">Extracting and Analyzing Recipes</a>.</p></li>
 		</ul>
 	</li>
 	<li>Update the properties file for each existing container to add a new property, <strong>container.key</strong>, that specifies the existing container IDs. For example:
 		<pre>container.key=&quot;fcd54dc8-ccd2-439f-a580-436d3ef2&quot;</pre></li>
 </ol>
-<!--<p><strong>Note</strong>: For information about how you can automate the reconfiguring of your container properties, see <a href="#auto_prop_xfer">Automating the transfer of container properties</a>.</p>-->
 <p><a href="#top">back to top</a></p>
 
 
@@ -406,7 +405,6 @@ ps -ef
 <h3 id="s03_03">Step 3-3: Update container properties</h3>
 <p>When you've created the new container and installed the features, it's time to set the configuration properties. You'll need to transfer any customized settings that were set on the old container, to the new container.</p>
 <p>Use the setting values that you saved out in <a href="#s01_02">Step 1-2: Plan the upgrade</a>, procedure step #4, and set them on the new container.</p>
-<!--<p><strong>Note</strong>: For information about how you can automate the reconfiguring of your container properties, see <a href="#auto_prop_xfer">Automating the transfer of container properties</a>.</p>-->
 <p>For example, if you customized the Content Root value for the developer portal, you'll need to re-set it.</p>
 <p> In the Akana Administration Console for each container with Community Manager installed:</p>
 <p><strong>Configuration</strong> &gt; <strong>com.soa.atmosphere.console</strong> &gt; atmosphere.context.root.</p>
@@ -679,10 +677,9 @@ Binding is attached to service endpoint.</pre>
 
 
 <h3 id="auto_prop_xfer">Automating the transfer of container properties</h3>
-<!--<p>{<span class="apidoc_red">ML? Not sure about this section. I had it commented out from work done Sept 19 for 2018 but it might have been talking about Erik's tool. Not sure. / ML 6/28/19: I think taking it out is the easy solution for now, but I think at some point it would be good to try./It’s part of the script that runs the recipe.</span>}</p>-->
 <p>When upgrading by creating a new container, you'll need to transfer, or re-create, the configuration settings on the new container.</p>
 <p>The configuration settings are stored in the instances/{container_name}/cm subfolder.</p>
-<p>Because there are changes between versions, you can't just copy and paste the folder between versions. However, you can use an automation recipe to extract the old settings so that you can use them for the new container.</p>
+<p>Because there are changes between versions, you can't just copy and paste the folder between versions. However, you can use an automation recipe to extract the old settings so that you can use them for the new container (Linux only).</p>
 
 <h5 id="proc_xfer_properties">To transfer configuration properties from an old container to a new container</h5>
 <ol>
@@ -701,6 +698,7 @@ Binding is attached to service endpoint.</pre>
 <h3 id="upgrade_automation">Automation recipes for upgrade</h3>
 <p>The table below lists some of the automation recipes you could use to automate the upgrade process.</p>
 <p>Recipes are in the <strong>{install_dir}/recipes</strong> folder of your installation.</p>
+<p><strong>Note</strong>: Automation is valid for Linux only&nbsp;(not for Windows).</p>
 <table class="doctable">
 	<thead>
 		<tr>
