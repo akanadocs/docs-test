@@ -58,7 +58,7 @@ nav-title: Installing Akana API Platform 8.4x
 			<li><a href="#notes_database_oracle">Database notes: Oracle</a></li>
 			<li><a href="#notes_database_ms_sql_server">Database notes: Microsoft SQL Server</a></li>
 			<li><a href="#notes_database_mysql_settings">MySQL: database settings for the API Platform</a></li>
-			<li><a href="#notes_database_mysql_rm">Database notes: MySQL with Lifecycle Repository</a></li>
+			<li><a href="#notes_database_mysql_rm_all">Database notes: MySQL with Lifecycle Repository</a></li>
 		</ul>
 		</li>
 	
@@ -266,7 +266,7 @@ nav-title: Installing Akana API Platform 8.4x
 			<li>You'll need to have your database driver in place, in the <strong>{installation}\instances\{containername}\deploy</strong> folder, before running this wizard. See <a href="#database_drivers">Database drivers</a>.</li>
 			<li><strong>Oracle</strong>: If you're using a new Oracle database, see <a href="#notes_database_oracle">Database notes: Oracle</a> for additional Oracle-specific information about DBA permissions, password configuration, and database table updates.</li>
 			<li><strong>Microsoft SQL Server</strong>: For additional notes, refer to <a href="#notes_database_ms_sql_server">Database notes: Microsoft SQL Server</a> below.</li>
-			<li><strong>MySQL</strong>: If your installation will include Lifecycle Manager, you'll need to add the required grants to the DB user before continuing to Step 4. For details, see <a href="#notes_database_mysql_rm">Database notes: MySQL with Lifecycle Repository</a>.</li>
+			<li><strong>MySQL</strong>: If your installation will include Lifecycle Manager, you'll need to add the required grants to the DB user before continuing to Step 4. For details, see <a href="#notes_database_mysql_rm_all">Database notes: MySQL with Lifecycle Repository</a>.</li>
 		</ul>
 	<p>For more information on this wizard, see <a href="#install_tasks_add_database">Installation wizard: Add Database</a> below.</p>
 </li>
@@ -509,7 +509,7 @@ nav-title: Installing Akana API Platform 8.4x
 	<li>MySQL 5.6. <strong>Note</strong>:
 		<ul>
 			<li>If you're using MySQL, there are specific configuration requirements for certain MySQL properties. See <a href="#notes_database_mysql_settings">MySQL: database settings for the API Platform</a> below.</li>
-			<li>If you're running MySQL and are using the Lifecycle Repository feature, see <a href="#notes_database_mysql_rm">Database notes: MySQL with Lifecycle Repository</a> below.</li>
+			<li>If you're running MySQL and are using the Lifecycle Repository feature, see <a href="#notes_database_mysql_rm_all">Database notes: MySQL with Lifecycle Repository</a> below.</li>
 		</ul>
 	</li>
 	<li>Microsoft SQL Server 2012, 2014 (supported in version 8.4.2 and later), and 2016 (supported in version 8.4.15 and later). Note that you'll need to modify a specific property in the Akana Administration Console; see <a href="#notes_database_ms_sql_server">Database notes: Microsoft SQL Server</a> below.</li>
@@ -524,7 +524,7 @@ nav-title: Installing Akana API Platform 8.4x
 	<li><a href="#notes_database_oracle">Database notes: Oracle</a></li>
 	<li><a href="#notes_database_ms_sql_server">Database notes: Microsoft SQL Server</a></li>
 	<li><a href="#notes_database_mysql_settings">MySQL: database settings for the API Platform</a></li>
-	<li><a href="#notes_database_mysql_rm">Database notes: MySQL with Lifecycle Repository</a></li>
+	<li><a href="#notes_database_mysql_rm_all">Database notes: MySQL with Lifecycle Repository</a></li>
 </ul>
 
 
@@ -596,19 +596,20 @@ ALTER DATABASE {db.instance.name}
 </ul>
 <p>For more information, refer to <a href="install_mysql_dbsettings.htm">MySQL Database Property Settings</a>.</p>
 
-<h5 id="notes_database_mysql_rm">Database notes: MySQL with Lifecycle Coordinator/Lifecycle Repository</h5>
+<h5 id="notes_database_mysql_rm_all">Database notes: MySQL with Lifecycle Coordinator/Lifecycle Repository</h5>
 <p>For Akana API Platform installs using the Lifecycle Coordinator or Lifecycle Repository features, there are some constraints. Review the following information:</p>
 <ul>
 	<li><a href="#notes_database_mysql_rm_01">LC/LR: Additional database privileges required for installation</a></li>
 	<li><a href="#notes_database_mysql_rm_02">LC/LR: Adding the correct database permissions</a></li>
-	<li><a href="#notes_database_mysql_rm_03">LC/LR: Setting the log_bin_trust_function_creators variable</a></li>
+	<li><a href="#notes_database_mysql_rm_03">LC/LR: Setting the log_bin_trust_function_creators system variable</a></li>
 	<li><a href="#notes_database_mysql_rm_04">LC/LR: Create libraries before enabling extended properties in developer portal</a></li>
 </ul>
 
 <p id="notes_database_mysql_rm_01"><strong>LC/LR: Additional database privileges required for installation</strong></p>
 <p>When installing on MySQL, you'll need to do one of the following:</p>
 <ul>
-	<li>Disable MySQL  binary logging.</li>
+	<li>Disable MySQL  binary logging.
+	<p>For more information on binary logging, see <a href="https://dev.mysql.com/doc/refman/5.7/en/stored-programs-logging.html" title="Link to MySQL documentation re binary logging" target="_blank">https://dev.mysql.com/doc/refman/5.7/en/stored-programs-logging.html</a> (MySQL documentation).</p></li>
 	<li>Grant the <strong>super</strong> privilege to the database user for the Akana API Platform for the duration of the time that Lifecycle Coordinator/Lifecycle Repository features are being installed and libraries (either tenant libraries or topology libraries) are being created.</li>
 </ul>
 <p id="notes_database_mysql_rm_02"><strong>LC/LR: Adding the correct database permissions</strong></p>
@@ -645,16 +646,17 @@ ALTER DATABASE {db.instance.name}
  2 rows in set (0.00 sec)</pre>
 <p><strong>Note</strong>: Lifecycle Coordinator and/or Lifecycle Repository on MySQL imposes limitations on such things as Advanced Queries using custom XPathCriteria, and only a limited number of fixed XPathCriteria are support in the default searches.</p>
 
-<p id="notes_database_mysql_rm_03"><strong>LC/LR: Setting the log_bin_trust_function_creators variable</strong></p>
+<p id="notes_database_mysql_rm_03"><strong>LC/LR: Setting the log_bin_trust_function_creators system variable</strong></p>
 <p>Additional user privileges are needed to successfully initialize the repository database. If the privileges are not in place, the <strong>Initialize Repository Database</strong> task might fail, with the following error message:</p>
 <pre>exception:java.sql.SQLException: You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)</pre>
-<p>In some cases, it might not be feasible to grant the <strong>super</strong> privilege to the database user or to disable binary logging. An alternative approach is to set <strong>log_bin_trust_function_creators</strong> to a value of 1, as shown below:</p>
+<p>In some cases, it might not be feasible to grant the <strong>super</strong> privilege to the database user or to disable binary logging. An alternative approach is to set the <strong>log_bin_trust_function_creators</strong> system variable to a value of 1, as shown below:</p>
 <pre>mysql> set global log_bin_trust_function_creators=1;
 Query OK, 0 rows affected (0.00 sec)</pre>
 <p>However, this is only an in-memory variable. For persistence, you could add the following to the <strong>/etc/my.cnf</strong> file:</p>
 <pre>log-bin-trust-function-creators=1</pre>
 
 <p id="notes_database_mysql_rm_04"><strong>LC/LR: Create libraries before enabling extended properties in developer portal</strong></p>
+<p>For more information on using the <strong>log_bin_trust_function_creators </strong> system variable, see <a href="https://dev.mysql.com/doc/refman/5.7/en/faqs-stored-procs.html" title="Link to MySQL FAQ re stored procedures" target="_blank">https://dev.mysql.com/doc/refman/5.7/en/faqs-stored-procs.html</a>, sections A.4.25 and A.4.26 (MySQL documentation).</p>
 <p>When the Akana API Platform is installed on MSSQL, tenant (repository) libraries should initially be created using the <strong>Synchronize Lifecycle Manager Data</strong> admin task, <strong>before</strong> enabling the the <strong>Extended Properties and Workflow</strong> flag in the developer portal settings (<strong>Admin</strong> &gt; <strong>Site</strong>). </p>
 <p><a href="#top">back to top</a></p>
 
