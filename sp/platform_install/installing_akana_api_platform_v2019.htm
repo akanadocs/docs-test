@@ -332,7 +332,7 @@ nav-title: Installing Akana API Platform 2019.0.x
 			<li>You'll need to have your database driver in place, in the <strong>{installation}\instances\{containername}\deploy</strong> folder, before running this wizard. See <a href="#database_drivers">Database drivers</a>.</li>
 			<li><strong>Oracle</strong>: If you're using a new Oracle database, see <a href="#notes_database_oracle">Database notes: Oracle</a> for additional Oracle-specific information about DBA permissions, password configuration, and database table updates.</li>
 			<li><strong>Microsoft SQL Server</strong>: For additional notes, refer to <a href="#notes_database_ms_sql_server">Database notes: Microsoft SQL Server</a> below.</li>
-			<li><strong>MySQL</strong>: If your installation will include Lifecycle Coordinator and/or Lifecycle Repository, you'll need to add the required grants to the DB user before continuing to Step 4. For details, see <a href="#notes_database_mysql_rm_all">Database notes: MySQL with Lifecycle Coordinator/Lifecycle Repository</a>.</li>
+			<li><strong>MySQL</strong>: If your installation will include Lifecycle Coordinator and/or Lifecycle Repository, you'll need to add the required grants to the DB user before continuing to Step 4. For details, see <a href="#notes_database_mysql_rm">Database notes: MySQL with Lifecycle Coordinator/Lifecycle Repository</a>.</li>
 		</ul>
 	<p>For more information on this wizard, see <a href="#install_tasks_add_database">Installation wizard: Add Database</a> below.</p>
 </li>
@@ -694,9 +694,10 @@ ALTER DATABASE {db.instance.name}
 <p id="notes_database_mysql_rm_01"><strong>LC/LR: Additional database privileges required for installation</strong></p>
 <p>When installing on MySQL, you'll need to do one of the following:</p>
 <ul>
-	<li>Disable MySQL  binary logging.
-	<p>For more information on binary logging, see <a href="https://dev.mysql.com/doc/refman/5.7/en/stored-programs-logging.html" title="Link to MySQL documentation re binary logging" target="_blank">https://dev.mysql.com/doc/refman/5.7/en/stored-programs-logging.html</a> (MySQL documentation).</p></li>
-	<li>Grant the <strong>super</strong> privilege to the database user for the Akana API Platform for the duration of the time that Lifecycle Coordinator/Lifecycle Repository features are being installed and libraries (either tenant libraries or topology libraries) are being created.</li>
+	<li>Disable MySQL  binary logging. Note that this might not be feasible in some cases because binary logging is a hard requirement for replication. In addition, if you're using AWS RDS with a Multi-AZ deployment, the replication used for Multi-AZ implicitly enables binary logging.
+		<p>For more information on binary logging, see <a href="https://dev.mysql.com/doc/refman/5.7/en/stored-programs-logging.html" title="Link to MySQL documentation re binary logging" target="_blank">https://dev.mysql.com/doc/refman/5.7/en/stored-programs-logging.html</a> (MySQL documentation).</p></li>
+	<li>Grant the <strong>super</strong> privilege to the database user for the Akana API Platform for the duration of the time that Lifecycle Coordinator/Lifecycle Repository features are being installed and libraries (either tenant libraries or topology libraries) are being created.
+	<p>An alternative to granting the <strong>super</strong> privilege is to toggle the <strong>log_bin_trust_function_creators</strong> variable off, and then on.</p></li>
 </ul>
 <p id="notes_database_mysql_rm_02"><strong>LC/LR: Adding the correct database permissions</strong></p>
 <p>With the Lifecycle Coordinator or Lifecycle Repository features, the database user requires specific additional grants when using MySQL. These grants are required for successful completion of the <strong>Initialize Repository Database</strong> configuration task; otherwise, the task fails.</p>
