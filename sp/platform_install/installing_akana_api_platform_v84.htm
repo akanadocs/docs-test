@@ -608,9 +608,10 @@ ALTER DATABASE {db.instance.name}
 <p id="notes_database_mysql_rm_01"><strong>LC/LR: Additional database privileges required for installation</strong></p>
 <p>When installing on MySQL, you'll need to do one of the following:</p>
 <ul>
-	<li>Disable MySQL  binary logging.
-	<p>For more information on binary logging, see <a href="https://dev.mysql.com/doc/refman/5.7/en/stored-programs-logging.html" title="Link to MySQL documentation re binary logging" target="_blank">https://dev.mysql.com/doc/refman/5.7/en/stored-programs-logging.html</a> (MySQL documentation).</p></li>
-	<li>Grant the <strong>super</strong> privilege to the database user for the Akana API Platform for the duration of the time that Lifecycle Coordinator/Lifecycle Repository features are being installed and libraries (either tenant libraries or topology libraries) are being created.</li>
+	<li>Disable MySQL  binary logging. Note that this might not be feasible in some cases because binary logging is a hard requirement for replication. In addition, if you're using AWS RDS with a Multi-AZ deployment, the replication used for Multi-AZ implicitly enables binary logging.
+		<p>For more information on binary logging, see <a href="https://dev.mysql.com/doc/refman/5.7/en/stored-programs-logging.html" title="Link to MySQL documentation re binary logging" target="_blank">https://dev.mysql.com/doc/refman/5.7/en/stored-programs-logging.html</a> (MySQL documentation).</p></li>
+	<li>Grant the <strong>super</strong> privilege to the database user for the Akana API Platform for the duration of the time that Lifecycle Coordinator/Lifecycle Repository features are being installed and libraries (either tenant libraries or topology libraries) are being created.
+	<p>An alternative to granting the <strong>super</strong> privilege is to modify the <strong>log_bin_trust_function_creators</strong> variable. See <a href="#notes_database_mysql_rm_03">LC/LR: Setting the log_bin_trust_function_creators system variable</a> below.</p></li>
 </ul>
 <p id="notes_database_mysql_rm_02"><strong>LC/LR: Adding the correct database permissions</strong></p>
 <p>With the Lifecycle Coordinator or Lifecycle Repository features, the database user requires specific additional grants when using MySQL. These grants are required for successful completion of the <strong>Initialize Repository Database</strong> configuration task; otherwise, the task fails.</p>
