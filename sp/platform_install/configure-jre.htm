@@ -23,7 +23,7 @@ nav-title: Configure Java Runtime
 			<li><a href="#finding_java">Find your Java installation</a></li>
 			<li><a href="#copy_provider_jar">Copy the provider jar file</a></li>
 			<li><a href="#update_java_security">Update the java.security file</a></li>
-			<li><a href="#update_setdemsenv">Update the setDEMSenv.sh/setDEMSenv.exe file</a></li>
+			<li><a href="#update_setdemsenv">Update the setDEMSenv.sh/setDEMSenv.bat file</a></li>
 		</ol>
 	</li>
 	<li><a href="#config_jre_embed_update">Configuring the Akana Platform to use a different embedded JRE version</a></li>
@@ -49,7 +49,7 @@ nav-title: Configure Java Runtime
 	<li><a href="#finding_java">Find your Java installation</a></li>
 	<li><a href="#copy_provider_jar">Copy the provider jar file</a></li>
 	<li><a href="#update_java_security">Update the java.security file</a></li>
-	<li><a href="#update_setdemsenv">Update the setDEMSenv.sh/setDEMSenv.exe file</a></li>
+	<li><a href="#update_setdemsenv">Update the setDEMSenv.sh/setDEMSenv.bat file</a></li>
 </ol>
 
 
@@ -63,13 +63,13 @@ nav-title: Configure Java Runtime
 
 
 <h4 id="copy_provider_jar">Copy the provider jar file</h4>
-<p>Copy the following file from your Akana Platform installation folder to the <strong>jre/lib/ext</strong> folder in your Java installation.</p>
+<p>Copy the following file from your Akana Platform installation folder to the <strong>$JAVA_HOME/lib/ext</strong> folder in your Java installation.</p>
 <ul>
 	<li>File: <strong>bcprov-jdkon-XXX.jar</strong></li>
-	<li>Source folder: <strong>$AKANAROOT/jreupdate/ext</strong></li>
-	<li>Target folder: <strong>jre/lib/ext</strong></li>
+	<li>Source folder: <strong>{install_folder}/jreupdate/ext</strong></li>
+	<li>Target folder: <strong>$JAVA_HOME/lib/ext</strong></li>
 	<li>Example:
-		<pre>sudo cp ~/Downloads/akana-platform-8.1.39/jreupdate/ext/bcprov-jdk15on-147.jar $JAVA_HOME/jre/lib/ext/</pre> </li>
+		<pre>sudo cp ~/Downloads/akana-platform-8.1.39/jreupdate/ext/bcprov-jdk15on-147.jar $JAVA_HOME/lib/ext/</pre> </li>
 </ul>
 
 
@@ -83,8 +83,7 @@ nav-title: Configure Java Runtime
 </ol>
 
 
-<h4 id="update_setdemsenv">Update the setDEMSenv.sh/setDEMSenv.exe file</h4>
-<!--<p>{<span class="apidoc_red">HK ATMO-29790</span>}</p>-->
+<h4 id="update_setdemsenv">Update the setDEMSenv.sh/setDEMSenv.bat file</h4>
 <p>In an environment where you're using the default packaged JRE version and then want to switch to using your own JRE at an external path, there is one other file in the Akana install directory that you'll need to change, so that it will not override your JAVA_HOME path when the container is started using the startup script.</p>
 <p>In Akana, the <strong><strong>startup</strong></strong> script used to start the Akana container executes the <strong>setDEMSEnv</strong> file as a part of the startup process, and this <strong>setDEMSEnv</strong> file sets the <strong>JAVA_HOME</strong> variable to use the JRE version installed with the product. This resets/overrides the JAVA_HOME value set at the operating system level.</p>
 <p>To avoid that and to use the JAVA_HOME path (pointing to an external JRE) already set at the operating system level, you'll need to comment a few lines of code in the <strong>setDEMSEnv</strong> file.</p>
@@ -92,7 +91,7 @@ nav-title: Configure Java Runtime
 
 <h5>For containers on Linux</h5>
 <ol>
-	<li>From your install directory, open the <strong>setDEMSenv.sh</strong> file with any text editor(<strong>/{install_folder/bin/setDEMSenv.sh</strong>).</li>
+	<li>From your install directory, open the <strong>setDEMSenv.sh</strong> file with any text editor(<strong>/{install_folder}/bin/setDEMSenv.sh</strong>).</li>
 	<li>Edit the file to comment out the following lines:
 		<pre>if [ -d $RELEASE_ROOT/jre ] ; then
 JAVA_HOME=$RELEASE_ROOT/jre
@@ -105,7 +104,7 @@ fi</pre>
 
 <h5>For containers on Windows</h5>
 <ol>
-	<li>From your install directory, open the <strong>setDEMSEnv.bat</strong> file with any text editor (<strong>\{install_folder\bin\setDEMSenv.bat</strong>).</li>
+	<li>From your install directory, open the <strong>setDEMSEnv.bat</strong> file with any text editor (<strong>\{install_folder}\bin\setDEMSenv.bat</strong>).</li>
 	<li>Edit the file to comment out the following lines:
 		<pre>IF EXIST &quot;%RELEASE_ROOT%/jre&quot; (
 	set JAVA_HOME=%RELEASE_ROOT%/jre
