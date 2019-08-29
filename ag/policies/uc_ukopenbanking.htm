@@ -10,7 +10,8 @@ type: page
 nav-title: Use Case - Open Banking
 ---
 <h2 id="top">Use Case: Open Banking</h2>
-<p>An end-to-end example of using the JOSE Policy v2 to successfully implement the Open Banking standard.</p>
+<p>An end-to-end example of successfully implementing the UK Open Banking standards via the Akana API Platform, using the JOSE Policy v2.</p>
+<p>This example could also be applied to alternative standards, such as the ones being created by the Berlin Group and STET for PSD2.</p>
 <p>
 <a href="about_policies_view.htm" class="button secondary">About Policies</a> 
 <a href="policy_management.htm" class="button secondary">Managing Policies</a> 
@@ -36,13 +37,19 @@ nav-title: Use Case - Open Banking
 
 
 <h3 id="introduction">Introduction</h3>
-<p>Open Banking allows you to implement security with a layered approach. Security is implemented in three layers:</p>
+<p>The UK Open Banking security profile is based on a layered architecture. Security is implemented:</p>
 <ol>
 	<li>At the transport layer.</li>
 	<li>At the client authorization layer.</li>
 	<li>At the message level, with the JOSE policy which ensures the integrity of the message.</li>
-	</ol>
-<p>{<span class="apidoc_red">OvG: I wonder would it make sense to do the use case in three parts, to demo first #1, then #2, then add JOSE for #3. I'm not sure honestly which setup actions add which layers of security. It's just a possible approach. Let me know what you think.</span>}</p>
+</ol>
+<!--<p>{OvG 8/27/19: <span class="apidoc_red">For a comprehensive use case, it would be best to include all three aspects. Essentially: 1. Mutual TLS (certificate-based client authentication), 2. OAuth2.0 / OpenID Connect (client authorization based on resource owner authentication and consent) and 3. JOSE security (message security )</span>.}</p>-->
+<p>This example shows all three layers:</p>
+<ol>
+	<li>Mutual TLS via certificate-based client authentication.</li>
+	<li>Client authorization based on resource owner authentication and consent using OAuth 2.0/OpenID Connect.</li>
+	<li>Message security using the JOSE policy, with all the security requirements specific to the UK Open Banking standard in place.</li>
+</ol>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -55,10 +62,13 @@ nav-title: Use Case - Open Banking
 <p>Once you have the use case set up and running successfully, you can also use negative testing to see how the JOSE policy protects the message, so that it fails if any of the values are tampered with.</p>
 
 <h5 id="uc_ob_prerequisites">Prerequisites</h5>
-<p>To run this use case you'll need:</p>
+<p>To run this use case you'll need the following:</p>
 <ul>
 	<li>A working installation of the Akana API Platform, either on-prem or a SaaS account.</li>
-	<li>A digital certificate xxx {<span class="apidoc_red">clarify</span>}</li>
+	<li>A keystore, in&nbsp;.p12 or&nbsp;.jks format. The keystore contains the cryptographic primary key and corresponding certificate chain.
+		<p>These are required for setting up the mutual TLS connection and also for signing the message (JWT) as required by the JOSE Security policy.</p></li>
+	<li>The API Gateway must be configured to have an HTTPS listener that accepts (or requires) client certificates.
+	<p><strong>Note</strong>: If you are using the SaaS platform, this is already configured for you.</p></li>
 </ul>
 <p><a href="#top">Back to top</a></p>
 
@@ -67,23 +77,23 @@ nav-title: Use Case - Open Banking
 <h3 id="setup">Setting up the use case</h3>
 <p>To get this use case working in the Akana API platform you'll need to:</p>
 <ul>
-	<li><a href="#s01">Set up the OAuth Provider domain</a></li>
-	<li><a href="#s02">Create the API</a></li>
-	<li><a href="#s03">Modify the API implementation so that there is only a Sandbox implementation</a></li>
-	<li><a href="#s04">{<span class="apidoc_red">create mock API?</span>}</a></li>
-	<li><a href="#s05">{<span class="apidoc_red">create process that references the mock API?</span>}</a></li>
-	<li><a href="#s06">Set up the API OAuth Details</a></li>
-	<li><a href="#s07">Set up the policies</a>:
+	<li><a href="#s01">Set up the OAuth Provider domain</a> {<span class="apidoc_red">To comply with the spec, a scope called &ldquo;accounts&rdquo; must be configured with the Domain. So perhaps this calls for a distinct domain….One tricky bit here: the Authorization Server URL has to be unique. If a domain is already present that uses the &lsquo;default&rsquo; tenant hostname for its Authorization Server, then an additional virtual host must be configured (domain configuration will reject duplicate use of a hostname).</span>}</li>
+	<li>Create and configure the API:
 		<ul>
-			<li>OAuth Policy</li>
-			<li>JOSE Policy</li>
-			<li>Detailed Auditing Policy (optional, allows viewing transaction info)</li>
-			<li>{<span class="apidoc_red">OvG: you have HTTP Security and also don't have AtmoApplicationSecurityPolicy... not needed?</span>}</li>
+			<li><a href="#s02">Create the API</a></li>
+			<li><a href="#s03">Modify the API implementation so that there is only a Sandbox implementation</a></li>
+			<li><a href="#s04">Create a mock response</a></li>
 		</ul>
 	</li>
-	<li><a href="#s08">Attach the policies to the API</a></li>
-	<li><a href="#s09">Create the app</a></li>
-	<li><a href="#s10">Request, and approve, a contract between the app and the API</a></li>
+	<li>Secure the API:
+		<ul>
+			<li><a href="#s05">Set up the API OAuth Details</a></li>
+			<li><a href="#s06">Set up the policies</a></li>
+			<li><a href="#s07">Attach the policies to the API</a></li>
+			</ul>
+	</li>
+	<li><a href="#s08">Create the app</a></li>
+	<li><a href="#s09">Request, and approve, a contract between the app and the API</a></li>
 	</ul>
 <p>Once all the above is set up, you're ready to test the API in Test Client: see <a href="#run">Running the use case</a>.</p>
 
@@ -92,17 +102,21 @@ nav-title: Use Case - Open Banking
 <p>You'll need to have Site Admin permissions to set up the OAuth provider domain.</p>
 <ol>
 	<li>Go to <strong>Admin</strong> &gt; <strong>Domains</strong> and click <strong>Add Domain</strong>.</li>
-	<li>Choose OAuth/OIDC Provider {<span class="apidoc_red">And, do we also need to set up an authentication domain first?</span>}.</li>
+	<li>Choose OAuth/OIDC Provider {<span class="apidoc_red">And, do we also need to set up an authentication domain first?</span>}. Note that this example uses the Client Credentials grant type. The scenario could easily be extended to support additional grant types, such as Authorization Code, which would require a Resource Owner Authentication Domain.</li>
 	<li>On Tab 2, <strong>Grant Types</strong>, choose <strong>Authorization Code</strong> and <strong>Client Credentials</strong>.</li>
-	<li>On Tab 3, <strong>Token</strong>, choose <strong>Referenced Bearer</strong> {<span class="apidoc_red">Ov</span><span class="apidoc_red">G finding out if JWT Bearer Token is required by OB, or can we just use Referenced Bearer</span>}.</li>
+	<li>On Tab 3, <strong>Token</strong>, choose <strong>Referenced Bearer</strong>. {<span class="apidoc_red">OvG can we say something about our choice here, bit of info?</span>}</li>
 	<li>Set up the values listed below and save your domain.</li>
 </ol>
 <p><strong>Values:</strong></p>
+<ul>
+	<li>Grant type: Client Credentials</li>
+	<li>To comply with the spec, a scope called <strong>accounts</strong> must be configured with the domain. </li>
+</ul>
 <p>xxx</p>
 
 
 <h4 id="s02">Create the API</h4>
-<p>This example uses the Swagger for the Account and Transaction API. {<span class="apidoc_red">available from where? Is it actually an Open Banking API?</span>}</p>
+<p>This example uses the Swagger for the Account and Transaction API, one of the xxx one of the APIs published by the UK Open Banking Implementation Entity.</p>
 <p><a href="assets/account-info-swagger-3.0-x.json">Account and Transaction API Swagger file</a></p>
 <p>Create the API by uploading the Swagger file, and save.</p>
 
@@ -110,42 +124,42 @@ nav-title: Use Case - Open Banking
 <h4 id="s03">Modify the API implementation so that there is only a Sandbox implementation</h4>
 <p>Go to <strong>API</strong> &gt; <strong>Implementations</strong> and do the following:</p>
 <ol>
-	<li>Add a Sandbox implementation, with URL xxx</li>
+	<li>Add a Sandbox implementation, with URL xxx {<span class="apidoc_red">OvG comment: &quot;In order to apply mTLS, the (ND) container listener must be configured as such.&quot; Not sure what I need to do with this anyway.</span>}</li>
 	<li>Delete the Live implementation.</li>
 	</ol>
 <p>{<span class="apidoc_red">OvG I had trouble even creating the Sandbox implementation with only Mutual HTTPS.</span>}</p>
 
 
-<h4 id="s04">{<span class="apidoc_red">create mock API?</span>}</h4>
-<p>{<span class="apidoc_red">OvG: I don't think I'm going to have multiple instances or variables, so, perhaps we could skip the mock API and just add the process on the main API, that calls the mock response? I think that would be simpler.</span>}</p>
-<p>xxx</p>
+<h4 id="s04">Create a mock response</h4>
+<p>The next step is to modify the first resource in this API, <strong>CreateAccountAccessConsent</strong>, which allows the third-party provider (TPP) to request access consents in order to provide a service to the consumer.</p>
+<p>In the Process Editor for the CreateAccountAccessConsent operation, create a mock response</p>
+<p>Go to <strong>API</strong> &gt; <strong>Implementations</strong> and do the following:</p>
+<ol>
+	<li>Go to the xxx</li>
+</ol>
 
 
-<h4 id="s04b">{<span class="apidoc_red">create mock response</span>}</h4>
-<p>For the mock API, create a mock response for the first resource in this API, CreateAccountAccessConsents, which allows the third-party provider (TPP) to request access consents in order to provide a service to the consumer. If the API is called successfully, the response is returned.</p>
-
-
-<h4 id="s05">{<span class="apidoc_red">create process that references the mock API?</span>}</h4>
-<p>The next step is to create a mock response for the first resource in this API, CreateAccountAccessConsents, which allows the third-party provider (TPP) to request access consents in order to provide a service to the consumer.</p>
-<p>xxx</p>
-
-
-<h4 id="s06">Set up the API OAuth Details</h4>
+<h4 id="s05">Set up the API OAuth Details</h4>
 <ol>
 	<li>Go to <strong>API</strong> &gt; <strong>Details</strong>. From the drop-down on the right, choose <strong>OAuth Details</strong>.</li>
 	<li>Set up the following:
 		<ol>
 			<li>Page 1, Sandbox endpoint: xxx</li>
-			<li>Page 2, Scope Mapping, choose xxx</li>
+			<li>Page 2, Scope Mapping, choose the <strong>accounts</strong> scope.</li>
 		</ol>
 	</li>
 	<li>Save.</li>
 </ol>
-<h4 id="s07">Set up the policies</h4>
+
+
+<h4 id="s06">Set up the policies</h4>
+<p>{<span class="apidoc_red">OvG: you have HTTP Security and also don't have AtmoApplicationSecurityPolicy... not needed?</span>}</p>
 <p>This use case includes the following policies attached to the API:</p>
+<p>{<span class="apidoc_red">OvG not sure what you mean re your comment, what changes to make: &quot;<strong>I think it would be good to have a bit of a “policy sale” here. Though it may look pretty tedious at first, I think it’s pretty powerful that the entire Open Banking security profile is covered through three out-of-the-box configurable policies, that can be reused across APIs once configured (and that can easily be updated, should that be necessary – after which they will immediately be effective on the APIs they have been associated with).</strong>&quot;</span>}</p>
 <dl>
 <dt>HTTP Security Policy</dt>
 <dd>This policy validate the identity as it is presented through a certificate with the internal client identity store. It’s an authentication step. When this policy is attached to an API, and the user invokes the API in Test Client, the user must present a valid keystore, that is then validated by the Gateway. Test Client extracts the details from the TLS context, from the transport layer, to validate the certificate.</dd>
+<!--<dd>{<span class="apidoc_red">OvG edit 8/27/19, stashing for now: "An INTERNAL note here: strictly speaking, this policy is not necessary, as the mutual TLS connection will have been set up irrespective of the policy being there or not (in fact, a successful mTLS connection is a precondition for the policy to work – otherwise, there would be no client certificate to lift from the connection, right). But it does show our capability of associating a keystore with a distinct client (App) and validate that at runtime. As an ADDITIONAL note: in a PSD2 context, we would have to extract some distinct values from the certificate (the Third Party Provider roles – account provider and/or payment initiator – and the TPP unique identifier). Or at least, I think this is something that the API Gateway may be expected to do. Currently, we do not offer that capability out-of-the-box, but I’d expect that to be covered through an extension of the policy."</span>}-->
 
 
 <dt>OAuth Policy</dt>
@@ -197,7 +211,9 @@ nav-title: Use Case - Open Banking
 	<li>Save the JOSE policy v2.</li>
 	<li>xxx</li>
 </ol>
-<h4 id="s08">Attach the policies to the API</h4>
+
+
+<h4 id="s07">Attach the policies to the API</h4>
 <ol>
 	<li>Go to <strong>API</strong> &gt; <strong>Implementations</strong> and choose the Sandbox implementation.</li>
 	<li>In the <strong>Policies</strong> section, click <strong>Edit</strong>.</li>
@@ -213,11 +229,11 @@ nav-title: Use Case - Open Banking
 	<li>Click <strong>Save</strong> to save the policy selections.</li>
 	<li>On the API Details page, click <strong>Save</strong> again to confirm your changes.</li>
 </ol>
-<h4 id="s09">Create the app</h4>
+<h4 id="s08">Create the app</h4>
 <p>Create an app. For this example, the app name is <strong>AccountsApp</strong>.</p>
 
 
-<h4 id="s10">Request, and approve, a contract between the app and the API</h4>
+<h4 id="s09">Request, and approve, a contract between the app and the API</h4>
 <p>xxx</p>
 
 
@@ -315,17 +331,16 @@ nav-title: Use Case - Open Banking
 
 
 <h4 id="ob_uc_resources_01">Input Swagger file</h4>
-<p>This example uses the Open Banking Account and Transaction API, available at <a href="https://www.programmableweb.com/api/open-banking-account-and-transaction" title="Link to Open Banking Account and Transaction API" target="_blank">https://www.programmableweb.com/api/open-banking-account-and-transaction</a>.</p>
+<p>This example uses the Open Banking Account and Transaction API, available at&nbsp;the following URLs:</p>
+<ul>
+	<li><strong>Version 3.1.1</strong>: <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/999622968/Account+and+Transaction+API+Specification+-+v3.1.1#AccountandTransactionAPISpecification-v3.1.1-SwaggerSpecification" title="Link to Atlassian site for 3.1.1 Swagger" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/999622968/Account+and+Transaction+API+Specification+-+v3.1.1#AccountandTransactionAPISpecification-v3.1.1-SwaggerSpecification</a></li>
+	<li><strong>Version 3.1.2</strong>: <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/1077805296/Account+and+Transaction+API+Specification+-+v3.1.2#AccountandTransactionAPISpecification-v3.1.2-SwaggerSpecification" title="Link to Atlassian site for 3.1.2 Swagger" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/1077805296/Account+and+Transaction+API+Specification+-+v3.1.2#AccountandTransactionAPISpecification-v3.1.2-SwaggerSpecification</a></li>
+</ul>
 <p>However, the default Swagger file for this API, in the default values for <strong>Consumes</strong> and <strong>Produces</strong>, includes a charset parameter: <strong>application/json; charset=utf-f</strong>.</p>
 <p>Both versions of the UK Open Banking Specification state that the media type must be <strong>application/json</strong> (apart from specific exceptions), and the Akana JOSE v2 policy expects these values exactly. With the charset parameter, the messages fail.</p>
 <p>Therefore, for this use case, the Swagger has been slightly modified; the default media type values have been replaced with <strong>application/json</strong>:</p>
 <ul>
 	<li><a href="assets/account-info-swagger-3.0-x.json">Modified Swagger file</a></li>
-</ul>
-<p>Specifications:</p>
-<ul>
-	<li><a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/127009221/Read+Write+Data+API+Specification+-+v2.0.0" title="UK Open Banking specification version 2.0.0" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/127009221/Read+Write+Data+API+Specification+-+v2.0.0</a></li>
-	<li><a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1" title="UK Open Banking specification version 3.1" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1</a></li>
 </ul>
 
 
@@ -366,12 +381,6 @@ nav-title: Use Case - Open Banking
 <p>For this example, you'll need to be able to generate a keystore for the xxx.</p>
 <p>You could use a tool such as Keystore Explorer.</p>
 <p><a href="#top">Back to top</a></p>
-
-
-
-<!--<h3 id="xxx">xxx</h3>
-<p>xxx</p>
-<p><a href="#top">Back to top</a></p>-->
 
 
 
