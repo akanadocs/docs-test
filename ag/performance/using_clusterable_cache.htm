@@ -8,7 +8,6 @@ weight: 05
 sub-nav-class: Operations
 type: page
 nav-title: Using a Clusterable Cache
-
 ---
 <h2 id="top">Using a Clusterable Cache</h2>
 <p>Learn how to increase performance on a multiple Network Director deployment using a clusterable cache.</p>
@@ -25,10 +24,9 @@ nav-title: Using a Clusterable Cache
 
 
 
-<a name="introduction"></a><h3>Introduction</h3>
-<p>In previous Policy Manager versions, a cluster of Network Director (ND) instances worked independently. This means if the policy only allowed 10 requests per minute each node (instance) in an ND cluster would allow 10 requests per minute. Data was not synchronized across clusters (for example, ND1 processed 2 requests, so there are 8 counts left).</p>
-<p>Beginning with Policy Manager version 7.2, the processing of requests can now be synchronized across a cluster of multiple ND instances within a single deployment by creating a <strong>clusterable cache</strong>. A clusterable cache is memory that different processes can share. </p>
-<p>For example, if you want the entire cluster to collectively only allow 10 requests per minute you can configure the NDs to share memory (i.e., a clusterable cache) which will hold information using counters. Then when one node receives a message and increments a counter, it's the same counter the other nodes are using.</p>
+<h3 id="introduction">Introduction</h3>
+<p>The processing of requests can be synchronized across a cluster of multiple ND instances within a single deployment by creating a <strong>clusterable cache</strong>. A clusterable cache is memory that different processes can share.</p>
+<p>For example, if you want the entire cluster to collectively only allow 10 requests per minute you can configure the NDs to share memory (a clusterable cache) which will hold information using counters. Then, when one node receives a message and increments a counter, it's the same counter that the other nodes are using.</p>
 <p>A clusterable cache can be used with the following policies:</p>
 <ul>
 	<li><strong>Throughput Quota Policy</strong> - Allows you to monitor a policy by specifying a throughput limit (quota) and queue size.</li>
@@ -40,8 +38,7 @@ nav-title: Using a Clusterable Cache
 
 
 
-<a name="create"></a>
-<h3>How do I create a clusterable cache and use it in a policy?</h3>
+<h3 id="create">How do I create a clusterable cache and use it in a policy?</h3>
 <p>Perform the following steps for each Network Director instance:</p>
 <ol>
 	<li><a href="#step1">Step 1: Create Clusterable Cache</a></li>
@@ -51,8 +48,9 @@ nav-title: Using a Clusterable Cache
 </ol>
 <p>Refer to: <a href="#step5">Step 5: Test Policy Enforcement (Example)</a></p>
 
-<a name="step1"></a><h4>Step 1: Create Clusterable Cache</h4>
-<ol class="usingOrderedList">
+
+<h4 id="step1">Step 1: Create Clusterable Cache</h4>
+<ol>
 	<li>Select <strong>com.soa.grid</strong>.</li>
 	<li>Modify/verify the following settings, as shown below. Note that the Multicast option (grid.network.config.enableMulticast) is currently not supported:
 		<ul>
@@ -77,8 +75,9 @@ nav-title: Using a Clusterable Cache
 	<li>Click <strong>Apply Changes</strong>.</li>
 </ol>
 
-<a name="step2"></a><h4>Step 2: Use Clustered Cache in Throughput Quota, Bandwidth Quota, and WS-Security <strong>Asymmetric Binding</strong> Policies</h4>
-<ol class="usingOrderedList">
+
+<h4 id="step2">Step 2: Use Clustered Cache in Throughput Quota, Bandwidth Quota, and WS-Security <strong>Asymmetric Binding</strong> Policies</h4>
+<ol>
 	<li>Launch the Akana Administration Console and navigate to the <strong>Configuration</strong> tab. </li>
 	<li>In the <strong>Configuration Categories</strong> section, select properties for the <strong>Throughput Quota Policy</strong> (<strong>com.soa.policyhandle.quota.throughput</strong>) or <strong>Bandwidth Quota Policy</strong> (<strong>com.soa.policy.handle.quota.bandwidth</strong>).</li>
 	<li>Change <strong>use.clustered.cache</strong> to <strong>True</strong> and click <strong>Apply Changes</strong>.
@@ -92,19 +91,22 @@ nav-title: Using a Clusterable Cache
 </ol>
 
 
-<a name="step3"></a><h4>Step 3: Restart Network Director Instances</h4>
-<ol class="usingOrderedList">
+<h4 id="step3">Step 3: Restart Network Director Instances</h4>
+<ol>
 	<li>Before you can successfully use the clusterable cache, you must restart all Network Director instances after completing the configuration category changes outlined in the previous steps. </li>
 </ol>
 
-<a name="step4"></a><h4>Step 4: Synchronize Clocks </h4>
-<ol class="usingOrderedList">
+
+<h4 id="step4">Step 4: Synchronize Clocks </h4>
+<ol>
 	<li>The Policy Manager clusterable caching logic is based on the system clock. To ensure there is not a lag in one of the Network Director instances while processing requests, you must synchronize all system clocks so they match (i.e., by milliseconds and seconds).</li>
 </ol>
 
-<a name="step5"></a><h4>Step 5: Test Policy Enforcement (Example)</h4>
+
+<h4 id="step5">Step 5: Test Policy Enforcement (Example)</h4>
+
 <h5>Throughput Quota Policy</h5>
-<ol class="usingOrderedList">
+<ol>
 	<li>Configure a Throughput Quota Policy to process 10 requests per minute.</li>
 	<li>Virtualize a service.</li>
 	<li>Attach the policy to the virtual service.</li>
@@ -115,7 +117,7 @@ nav-title: Using a Clusterable Cache
 </ol>
 
 <h5>Bandwidth Quota Policy</h5>
-<ol class="usingOrderedList">
+<ol>
 	<li>Configure a Bandwidth Quota Policy with 10 kbps for the request.</li>
 	<li>Virtualize a service.</li>
 	<li>Attach the policy to the virtual service.</li>
@@ -126,6 +128,7 @@ nav-title: Using a Clusterable Cache
 	<li>So let's assume that the net count is 606. Total number of bytes allowed by ND in 60 seconds-&gt; 606*1129= 684174.</li>
 	<li>Total number of bytes allowed per second 684174/60= 11402.9 bytes ~ 10kbps.</li>
 </ol>
+
 <h5>WS-Security Asymmetric Binding Policy</h5>
 <p>For an example illustration of how to use clusterable caching with this WS-Security policy type, refer to <a href="../policies/policy_op_ws_security_asymmetric_binding.htm#uc_policy_op_ws_security_asymmetric_binding" target="_blank">Use Case: Using a Clusterable Cache with WS-Security Asymmetric Binding Policy</a>.</p>
 <p><a href="#top">Back to top</a></p>
