@@ -115,6 +115,7 @@ nav-title: API Testing
 	<li><a href="#tc_configsettings_oauthpolicy_multiple_oap">Test Client security settings: OAuth Policy: Multiple OAuth Providers</a> (2019.1.0 and later)</li>
 	<li><a href="#tc_configsettings_sameoriginpolicy">Test Client security settings: SameOriginPolicy</a></li>
 	<li><a href="#tc_configsettings_httpsecuritypolicy">Test Client security settings: HTTP Security Policy</a></li>
+	<li>Aggregate Policy uptohere xxx</li>
 </ul>
 
 <h5 id="tc_configsettings_atmoappsecuritypolicy">Test Client security settings: AtmosphereApplicationSecurityPolicy</h5>
@@ -277,6 +278,18 @@ nav-title: API Testing
 
 <h5 id="tc_configsettings_httpsecuritypolicy">Test Client settings: HTTP Security Policy</h5>
 <p>If the API has the HTTP Security Policy attached, the Test Client user must upload a certificate, in the Authentication Settings, in order to test the API. For details and instructions, see <a href="app_testing_tc.htm#tc_settings_security">Test Client: Setup (Authentication Settings)</a> (app developer help).</p>
+
+<h5 id="tc_configsettings_aggregatepolicy">Test Client settings: Aggregate Policy</h5>
+<p>The Aggregate Policy offers a lot of flexibility. Adding an&nbsp;Aggregate Policy to an API allows the API Admin to set up a scenario where the API request must meet the requirements of two or more separate policies included in the Aggregate Policy&#8212;or must meet the requirements of only one of the policies, depending on whether the Aggregate Policy configuration is set to <strong>AND</strong> (must meet requirements of all policies in the aggregate) or set to <strong>OR</strong> (must meet the requirements of one of the policies in the aggregate).</p>
+<p>For example, the&nbsp;API Admin might set up a scenario where an Aggregate Policy includes the AtmosphereApplicationSecurityPolicy and also the OAuth Policy, with AND configured. In this scenario, adding only one policy to the API provides the security features of both policies.</p>
+<p>Test Client supports the Aggregate Policy if it's configured with one or more of the following:</p>
+<ul>
+	<li>AtmosphereApplicationSecurityPolicy</li>
+	<li>HTTP Security Policy</li>
+	<li>OAuth Security Policy</li>
+</ul>
+<p><strong>Note</strong>: The&nbsp;developer portal itself supports many additional policies on APIs. However, Test Client supports only the policies listed in this section, and the Aggregate Policy can only include the policies listed above.</p>
+<p>{<span class="apidoc_red">Check with MM because in the meeting he said we can't put this in the doc yet...? MM said I think that we only support the policies we already support in Test Client. Samir said add the requisite cautionary comments because they can hurt themselves...</span>}</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -375,7 +388,7 @@ nav-title: API Testing
 			<td>The media type specified for the Accept header isn't supported by the operation. For example, the operation returns application/json only, but the Accept header field specifies a media type of application/xml.</td>
 		</tr>
 		<tr>
-			<td>Missing domain. The service may not have been assigned a provider.</td>
+			<td>&quot;Missing domain. The service may not have been assigned a provider.&quot;</td>
 			<td>The API definition includes the <strong>OAuthSecurity</strong> policy, but the API's OAuth setup was not complete (<strong>API</strong> &gt; <strong>Details</strong> &gt; from the drop-down on the right, <strong>OAuth Details</strong>).</td>
 		</tr>
 		<tr>
@@ -387,12 +400,24 @@ nav-title: API Testing
 			<td>The API has a security policy assigned: either the <strong>AtmosphereApplicationSecurityPolicy</strong> policy or the <strong>OAuthSecurity</strong> policy. Both these policies require credentials; so even if you specified that the API allows anonymous access, the security policies will reject anonymous calls to the API.</td>
 		</tr>
 		<tr>
-			<td>1010714-Invalid consumer key. The value [APIRuntimeID] in the oauth_consumer_key field is invalid or missing.</td>
+			<td>&quot;1010714-Invalid consumer key. The value [APIRuntimeID] in the oauth_consumer_key field is invalid or missing.&quot;</td>
 			<td>An invalid value was provided for oauth_consumer_key.</td>
 		</tr>
 		<tr>
 			<td>OAuth token generation fails</td>
 			<td>The platform includes a security setting, <a href="site_admin_site.htm#limit_forward_proxy">Limit forward proxy feature to allow only these hosts</a> (Site Admin help). If only specific hosts are listed, OAuth requests to&nbsp;a host that is not on the trusted list will fail.</td>
+		</tr>
+		<tr>
+			<td>Security button does not appear in Test Client</td>
+			<td>The implementation for the API is not correctly set up with a valid Deployment Zone enabled. See <a href="apiadmin_implementations.htm">Managing API Implementations</a>.</td>
+		</tr>
+		<tr>
+			<td>Operations do not appear for the API</td>
+			<td>The implementation for the API is not correctly set up with a valid Deployment Zone enabled. See <a href="apiadmin_implementations.htm">Managing API Implementations</a>.</td>
+		</tr>
+		<tr>
+			<td>&quot;Error encountered executing {service/operation}. Cause: Cannot establish connection to {API_endpoint} because it cannot be trusted.&quot;</td>
+			<td>The OAuth token is missing or invalid. In Test Client, be sure to click the <strong>Security</strong> button, and then click the <strong>Setup</strong> button. On the page for the OAuth Security policy, make sure the values are correct, and click<strong> Get Token</strong>. The token is required&nbsp;for a successful call to the API endpoint.</td>
 		</tr>
 	</tbody>
 </table>
