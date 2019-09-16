@@ -53,7 +53,7 @@ nav-title: Upgrade 8.4x to 2018.0.x
 <ol class="table_of_contents">
 	<li><a href="#s02_00">Overview</a></li>
 	<li><a href="#s02_01">Step 2-1: Gather ZIP file or files and download to a temporary folder</a></li>
-	<li><a href="#s02_02">Step 2-2: Shut down, back up, and delete the previous version</a></li>
+	<li><a href="#s02_02">Step 2-2: Shut down, and back up the previous version</a></li>
 	<li><a href="#s02_03">Step 2-3: Extract installation files in the correct sequence</a></li>
 	<li><a href="#s02_04">Step 2-4: Verify that Elasticsearch is running</a></li>
 	<li><a href="#s02_05">Step 2-5: Create and configure the first container</a></li>
@@ -82,10 +82,9 @@ nav-title: Upgrade 8.4x to 2018.0.x
 	<li><a href="#sched_jobs_off">Turning the scheduled jobs off</a></li>
 	<li><a href="#sched_jobs_on">Turning the scheduled jobs back on</a></li>
 	<li><a href="#unreg-rereg_win">Unregistering and re-registering the Windows service</a></li>
-	<li><a href="#clear_cache">Clearing Configurator cache</a></li>
 	<li><a href="#s02_09">Starting a container</a></li>
 	<li><a href="#s02_12">Refreshing the repository</a></li>
-	<li><a href="#ts_02_error_new_containers">Upgrading by creating new containers: notes</a></li>
+	<li><a href="#ts_02_error_new_containers">Upgrading by creating a new container and re-using the old container identity: note</a></li>
 <!--	<li><a href="#auto_prop_xfer">Automating the transfer of container properties</a></li>-->
 	<li><a href="#tech_support_contact">Contacting Technical Support</a></li>
 </ol>
@@ -166,7 +165,7 @@ nav-title: Upgrade 8.4x to 2018.0.x
 <p><strong>Note</strong>: The instructions in this document are for upgrade from Akana API Platform 8.4x to Akana API Platform 2018.x. If you're upgrading from an earlier version, you'll need to perform additional steps first, to upgrade to version 8.4. See <a href="upgrading_akana_api_platform_82_84.htm">Upgrading Akana API Platform from Version 8.2 to Version 8.4x</a>.</p>
 <p>At a high level, to perform the upgrade, you'll complete the following actions:</p>
 <ol>
-	<li>Shut down the previous version, make a complete backup, and then delete the contents of the original installation folder.</li>
+	<li>Shut down the previous version and make a complete backup of the installation folder, and store it in a safe place</li>
 	<li>Extract installation files in the correct sequence.</li>
 	<li>Verify that Elasticsearch is running.</li>
 	<li>Create containers.</li>
@@ -195,13 +194,12 @@ nav-title: Upgrade 8.4x to 2018.0.x
 
 
 
-<h3 id="s02_02">Step 2-2: Shut down, back up, and delete the previous version</h3>
+<h3 id="s02_02">Step 2-2: Shut down, and back up the previous version</h3>
 <ol>
 	<li>Shut down all containers in your installation.</li>
 	<li>Copy the entire installation folder structure to a secure backup location.</li>
 	<li>Make sure you have a backup of your database also.</li>
-	<li>When you're completely sure that the backup is complete, successful, and secure, delete the contents of your original installation folder.</li>
-	<li>Create a new folder for your new installation, or use the existing, empty folder.</li>
+	<li>Create a new folder for your new installation.</li>
 </ol>
 <p><a href="#top">Back to top</a></p>
 
@@ -599,18 +597,6 @@ ps -ef
 
 
 
-<h3 id="clear_cache">Clearing Configurator cache</h3>
-<p>Before performing the upgrade, make sure the configurator cache is clear. At this point, there won't be any cache unless you launched the Configurator at the end of <a href="#s02_03">Step 2-3</a>. To be sure, follow the steps below.</p>
-<h5>To clear configurator cache</h5>
-<ol>
-	<li>Locate the configurator cache folder: \instances\configurator\cache, as shown below.
-<p><img src="images/02_05_configurator_cache.jpg" alt="Configurator cache folder" /></p></li>
-	<li>Delete the folder if it exists (if there is no cache, the folder will not be there).</li>
-</ol>
-<p><a href="#top">back to top</a></p>
-
-
-
 <h3 id="s02_09">Starting a container</h3>
 <p>There are several ways you can start a container: Windows, as Windows service, or Unix. Follow the applicable procedure:</p>
 <ul>
@@ -668,13 +654,14 @@ ps -ef
 
 
 
-<h3 id="ts_02_error_new_containers">Upgrading by creating new containers: notes</h3>
-<p>When you're upgrading by creating new containers, it's important that you delete the existing container from the Policy Manager workbench before creating the new container.</p>
+<h3 id="ts_02_error_new_containers">Upgrading by creating a new container and re-using the old container identity: note</h3>
+<p>When you're upgrading by creating new containers, and then&nbsp;using the same identity as the old container, it's important that you delete the existing container from the Policy Manager workbench before creating the new container.</p>
 <p>If you don't delete the old container before creating the new one, you might encounter an error on the provisioning step, similar to the one shown below (<strong>WSDL binding cannot be disassociated from service</strong>):</p>
 <pre>[425] com.digev.fw.exception.GException: Wsdl binding [uddi:4b0aba1c-8ca7-e61c-5575-25361578c179] 
 cannot be disassociated from service [uddi:soa.com:metadataattachment-servicekey]. 
 Binding is attached to service endpoint.</pre>
 <p>If you encounter this message, delete the old container, and then retry the provisioning.</p>
+<p>If you're upgrading by creating completely new containers, with a new container identity, this is of course not&nbsp;a problem.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -687,10 +674,10 @@ Binding is attached to service endpoint.</pre>
 <h5 id="proc_xfer_properties">To transfer configuration properties from an old container to a new container</h5>
 <ol>
 	<li>At the beginning of <a href="#s02_05">Step 2-5: Create and configure the first container</a>, after shutting down the old container and before creating the new one, run discovery on all of the containers in the previous installation, and save out the old configuration settings for all containers.</li>
-	<li>At the end of <a href="#s02_05">Step 2-5: Create and configure the first container</a>, Step #6, after doing the initial configuration steps, shut down the container. Rather than restarting as in Step #7, save out the new configuration settings at that point.</li>
+	<li>At the end of <a href="#s02_04">Step 2-4: aaa</a>, {one step was removed here} Step #6, after doing the initial configuration steps, shut down the container. Rather than restarting as in Step #7, save out the new configuration settings at that point.</li>
 	<li>Compare the new settings with the old settings to arrive at the settings that will need to be configured on the new container.</li>
 	<li>If available, use automation to update the container configuration.</li>
-	<li>Now complete <a href="#s02_05">Step 2-5: Create and configure the first container</a> by restarting the container, and verify that the configuration properties are set correctly.</li>
+	<li>Now restart the container, and verify that the configuration properties are set correctly.</li>
 	<li>Follow steps 2 through 5 for additional containers until they are all configured.</li>
 	<li>Continue with the post-install steps.</li>
 </ol>

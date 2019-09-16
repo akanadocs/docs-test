@@ -28,11 +28,11 @@ nav-title: Upgrade 2018.0.x to 2019.0.x
 <p>You can also use automation to standardize the upgrade process (Linux only). Automation might take a little more time to set up, but it has great benefits including standardization and reusability. For information on automation, see <a href="../automation/automation_ref.htm">Automation Reference</a>. For information about which automation recipes to use for upgrade, see <a href="#upgrade_automation">Automating the upgrade</a>.</p>
 
 <p>
-	<a href="../admin_console/using_admin_console.htm" class="button secondary">Using Admin Console</a>
-	<a href="../admin_console/installing_tools.htm" class="button secondary">Installing Tools</a>
-	<a href="../admin_console/installing_plugins.htm" class="button secondary">Installing Plug-ins</a> 
-	<a href="../admin_console/config_actions.htm" class="button secondary">Configuration Actions</a> 
-	<a href="../automation/automation_ref.htm" class="button secondary">Automation Reference</a>
+<a href="../admin_console/using_admin_console.htm" class="button secondary">Using Admin Console</a>
+<a href="../admin_console/installing_tools.htm" class="button secondary">Installing Tools</a>
+<a href="../admin_console/installing_plugins.htm" class="button secondary">Installing Plug-ins</a> 
+<a href="../admin_console/config_actions.htm" class="button secondary">Configuration Actions</a> 
+<a href="../automation/automation_ref.htm" class="button secondary">Automation Reference</a>
 </p>
 
 <h5 class="stamp">Supported Platforms: 2019.0.x</h5>
@@ -55,7 +55,7 @@ nav-title: Upgrade 2018.0.x to 2019.0.x
 <ol class="table_of_contents">
 	<li><a href="#s02_00">Overview</a></li>
 	<li><a href="#s02_01">Step 2-1: Gather ZIP file or files and download to a temporary folder</a></li>
-	<li><a href="#s02_02">Step 2-2: Shut down, back up, and delete the previous version</a></li>
+	<li><a href="#s02_02">Step 2-2: Shut down, and back up the previous version</a></li>
 	<li><a href="#s02_03">Step 2-3: Extract installation files in the correct sequence</a></li>
 	<li><a href="#s02_04">Step 2-4: Verify that Elasticsearch is running</a></li>
 	<li><a href="#s02_05">Step 2-5: Create and configure the first container</a></li>
@@ -84,10 +84,9 @@ nav-title: Upgrade 2018.0.x to 2019.0.x
 	<li><a href="#sched_jobs_off">Turning the scheduled jobs off</a></li>
 	<li><a href="#sched_jobs_on">Turning the scheduled jobs back on</a></li>
 	<li><a href="#unreg-rereg_win">Unregistering and re-registering the Windows service</a></li>
-	<li><a href="#clear_cache">Clearing Configurator cache</a></li>
 	<li><a href="#s02_09">Starting a container</a></li>
 	<li><a href="#s02_12">Refreshing the repository</a></li>
-	<li><a href="#ts_02_error_new_containers">Upgrading by creating new containers: notes</a></li>
+	<li><a href="#ts_02_error_new_containers">Upgrading by creating a new container and re-using the old container identity: note</a></li>
 	<li><a href="#auto_prop_xfer">Automating the transfer of container properties</a></li>
 	<li><a href="#upgrade_automation">Automation recipes for upgrade</a></li>
 	<li><a href="#tech_support_contact">Contacting Technical Support</a></li>
@@ -146,6 +145,7 @@ nav-title: Upgrade 2018.0.x to 2019.0.x
 	<li>Update the properties file for each existing container to add a new property, <strong>container.key</strong>, that specifies the existing container IDs. For example:
 		<pre>container.key=&quot;fcd54dc8-ccd2-439f-a580-436d3ef2&quot;</pre></li>
 </ol>
+<!--<p><strong>Note</strong>: For information about how you can automate the reconfiguring of your container properties, see <a href="#auto_prop_xfer">Automating the transfer of container properties</a>.</p>-->
 <p><a href="#top">back to top</a></p>
 
 
@@ -167,7 +167,7 @@ nav-title: Upgrade 2018.0.x to 2019.0.x
 <p><strong>Note</strong>: The instructions in this document are for upgrade from Akana API Platform 2018.0.x to Akana API Platform 2019.0.x. If you're upgrading from an earlier version, you'll need to perform additional steps first, to upgrade to version 2018. See <a href="upgrading_akana_api_platform_all.htm">Upgrading the Akana API Platform (all versions)</a>.</p>
 <p>At a high level, to perform the upgrade, you'll complete the following actions:</p>
 <ol>
-	<li>Shut down the previous version, make a complete backup, and then delete the contents of the original installation folder.</li>
+	<li>Shut down the previous version and make a complete backup of the installation folder, and store it in a safe place</li>
 	<li>Extract installation files in the correct sequence.</li>
 	<li>Verify that Elasticsearch is running.</li>
 	<li>Create containers.</li>
@@ -196,13 +196,12 @@ nav-title: Upgrade 2018.0.x to 2019.0.x
 
 
 
-<h3 id="s02_02">Step 2-2: Shut down, back up, and delete the previous version</h3>
+<h3 id="s02_02">Step 2-2: Shut down, and back up the previous version</h3>
 <ol>
 	<li>Shut down all containers in your installation.</li>
 	<li>Copy the entire installation folder structure to a secure backup location.</li>
 	<li>Make sure you have a backup of your database also.</li>
-	<li>When you're completely sure that the backup is complete, successful, and secure, delete the contents of your original installation folder.</li>
-	<li>Create a new folder for your new installation, or use the existing, empty folder.</li>
+	<li>Create a new folder for your new installation.</li>
 </ol>
 <p><a href="#top">Back to top</a></p>
 
@@ -409,6 +408,7 @@ ps -ef
 <h3 id="s03_03">Step 3-3: Update container properties</h3>
 <p>When you've created the new container and installed the features, it's time to set the configuration properties. You'll need to transfer any customized settings that were set on the old container, to the new container.</p>
 <p>Use the setting values that you saved out in <a href="#s01_02">Step 1-2: Plan the upgrade</a>, procedure step #4, and set them on the new container.</p>
+<!--<p><strong>Note</strong>: For information about how you can automate the reconfiguring of your container properties, see <a href="#auto_prop_xfer">Automating the transfer of container properties</a>.</p>-->
 <p>For example, if you customized the Content Root value for the developer portal, you'll need to re-set it.</p>
 <p> In the Akana Administration Console for each container with Community Manager installed:</p>
 <p><strong>Configuration</strong> &gt; <strong>com.soa.atmosphere.console</strong> &gt; atmosphere.context.root.</p>
@@ -600,18 +600,6 @@ ps -ef
 
 
 
-<h3 id="clear_cache">Clearing Configurator cache</h3>
-<p>Before performing the upgrade, make sure the configurator cache is clear. At this point, there won't be any cache unless you launched the Configurator at the end of <a href="#s02_03">Step 2-3</a>. To be sure, follow the steps below.</p>
-<h5>To clear configurator cache</h5>
-<ol>
-	<li>Locate the configurator cache folder: \instances\configurator\cache, as shown below.
-<p><img src="images_2019_all/02_05_configurator_cache.jpg" alt="Configurator cache folder" /></p></li>
-	<li>Delete the folder if it exists (if there is no cache, the folder will not be there).</li>
-</ol>
-<p><a href="#top">back to top</a></p>
-
-
-
 <h3 id="s02_09">Starting a container</h3>
 <p>There are several ways you can start a container: Windows, as Windows service, or Unix. Follow the applicable procedure:</p>
 <ul>
@@ -669,13 +657,14 @@ ps -ef
 
 
 
-<h3 id="ts_02_error_new_containers">Upgrading by creating new containers: notes</h3>
-<p>When you're upgrading by creating new containers, it's important that you delete the existing container from the Policy Manager workbench before creating the new container.</p>
+<h3 id="ts_02_error_new_containers">Upgrading by creating a new container and re-using the old container identity: note</h3>
+<p>When you're upgrading by creating new containers, and then using the same identity as the old container, it's important that you delete the existing container from the Policy Manager workbench before creating the new container.</p>
 <p>If you don't delete the old container before creating the new one, you might encounter an error on the provisioning step, similar to the one shown below (<strong>WSDL binding cannot be disassociated from service</strong>):</p>
 <pre>[425] com.digev.fw.exception.GException: Wsdl binding [uddi:4b0aba1c-8ca7-e61c-5575-25361578c179] 
 cannot be disassociated from service [uddi:soa.com:metadataattachment-servicekey]. 
 Binding is attached to service endpoint.</pre>
 <p>If you encounter this message, delete the old container, and then retry the provisioning.</p>
+<p>If you're upgrading by creating completely new containers, with a new container identity, this is of course not a problem.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -702,7 +691,7 @@ Binding is attached to service endpoint.</pre>
 <h3 id="upgrade_automation">Automation recipes for upgrade</h3>
 <p>The table below lists some of the automation recipes you could use to automate the upgrade process.</p>
 <p>Recipes are in the <strong>{install_dir}/recipes</strong> folder of your installation.</p>
-<p><strong>Note</strong>: Automation is valid for Linux only&nbsp;(not for Windows).</p>
+<p><strong>Note</strong>: Automation is valid for Linux only (not for Windows).</p>
 <table class="doctable">
 	<thead>
 		<tr>
@@ -778,8 +767,7 @@ echo "INSTALL_DIR=/opt/akana/AAP_2019x" >> register.properties
 <h3 id="related_topics">Related Topics</h3>
 <div class="relatedlinks" id="install"><!-- #BeginLibraryItem "/Library/relatedtopics_install.lbi" -->
 <ul>
-	<li><a href="upgrading_akana_api_platform_84_2018.htm">Upgrading Akana API Platform from Version 8.4x to Version 2018.0.x</a></li>
-	<li><a href="upgrading_akana_api_platform_82_84.htm">Upgrading Akana API Platform from Version 8.2 to Version 8.4x</a></li>
+	<li><a href="upgrading_akana_api_platform_all.htm">Upgrading the Akana API Platform (all versions)</a></li>
 	<li><a href="upgrading_min_downtime.htm">Use Case: Upgrading with Minimum Downtime</a></li>
 	<li><a href="upgrading_micro.htm">Minor-Version Update Notes</a></li>
 </ul>
