@@ -26,12 +26,11 @@ nav-title: LC Installation
 	<li><a href="#lc_install_feature">Installing the Lifecycle Coordinator feature</a></li>
 	<li><a href="#lc_install_db_notes">Checking for database-specific requirements</a></li>
 	<li><a href="#lc_install_secure_api">Securing the Topology REST API</a></li>
-	<li><a href="#com_soa_promotion">Remote container address (com.soa.promotion)</a></li>
+	<li><a href="#com_soa_promotion_remote_promotor_address">Remote container address (com.soa.promotion)</a></li>
 	<li><a href="#com_akana_lifecycle_coordinator">Properties to secure the Topology REST API (com.akana.lifecycle.coordinator)</a> (8.4.15 and later)</li>
 	<li><a href="#config_preserveKeys">Unique ID Mapping behavior</a></li>
 	<li><a href="#config_defaultFromEmail">Default "From Email" setting</a></li>
-	<li><a href="#config_tenant_synch_interval">Tenant Synchronization Interval</a> (8.4.16 and later)</li>
-	<li><a href="#config_parms_lc">Configuration parameters for the Promotion feature</a> (2019.1.0 and later)</li>
+	<li><a href="#config_parms_lc">Configuration properties for the Promotion feature</a></li>
 </ol>
 <div class = "divider1"></div>
 
@@ -83,7 +82,7 @@ nav-title: LC Installation
 
 
 
-<h3 id="com_soa_promotion">Remote container address (com.soa.promotion)</h3>
+<h3 id="com_soa_promotion_remote_promotor_address">Remote container address (com.soa.promotion)</h3>
 <p>If the Lifecycle Coordinator is installed remotely, a URL to the remote container hosting the Lifecycle Coordinator instance must be configured for each container hosting tenants from which promotion can be requested.</p>
 <p>To set this up:</p>
 <ol>
@@ -191,50 +190,51 @@ nav-title: LC Installation
 
 
 
-<h3 id="config_tenant_synch_interval">Tenant Synchronization Interval</h3>
+<h3 id="config_parms_lc">Configuration properties for the Promotion feature</h3>
+<p>There are specific configuration properties, configured in the Akana Administration Console for the container, that allow you to configure aspects of the Lifecycle Coordinator promotion feature.</p>
+<p>These include:</p>
+<ul>
+	<li><a href="#com_soa_repository">com.soa.repository</a> (8.4.16 and later)</li>
+	<li><a href="#com_soa_promotion">com.soa.promotion</a> (2019.1.0 and later)</li>
+	<li><a href="#com_akana_lifecyclemanager_apiplatform_remote">com.akana.lifecyclemanager.apiplatform.remote</a> (2019.1.0 and later)</li>
+</ul>
+
+<h5 id="com_soa_repository">Configuration category: com.soa.repository</h5>
 <p class="stamp"><strong>API Platform Version: 8.4.16 and later</strong></p>
-<p>Lifecycle Coordinator periodically updates cached policy and organization information for tenants referenced in a topology. The specific interval for this update is controlled by the property below.</p>
-
-<h5>Configuration category: com.soa.repository</h5>
+<p>Used to configure the tenant synchronization interval. Lifecycle Coordinator periodically updates cached policy and organization information for tenants referenced in a topology. The specific interval for this update is controlled by the property below.</p>
 <dl>
-<dt>Configuration property</dt>
-<dd>repository.config.tenantSyncInterval</dd>
-
-
-<dt>Explanation:</dt>
-<dd>Sets the interval between updates to cached policy and organizational information. The value is set in milliseconds.</dd>
-
-
-<dt>Default:</dt>
-<dd>300000 (5 minutes)</dd>
+<dt>repository.config.tenantSyncInterval</dt>
+<dd>Sets the interval, in milliseconds, between updates to cached policy and organizational information.</dd>
+<dd>Default: 300000 milliseconds (5 minutes)</dd>
 </dl>
-<p><a href="#top">Back to top</a></p>
 
-
-
-<h3 id="config_parms_lc">Configuration parameters for the Promotion feature</h3>
+<h5 id="com_soa_promotion">Configuration category: com.soa.promotion</h5>
 <p class="stamp"><strong>API Platform Version: 2019.1.0 and later</strong></p>
-<p>Lifecycle Coordinator periodically updates cached policy and organization information for tenants referenced in a topology. The specific interval for this update is controlled by the following property: xxxxx</p>
-
-<h5>Configuration category: com.soa.promotion</h5>
+<p>Used to control how often Lifecycle Coordinator updates cached policy and organization information for tenants referenced in a topology.</p>
+<p><strong>Note</strong>: These properties are available in the Akana Administration Console for the developer portal.</p>
 <dl>
 <dt>tenant.api.maxAsyncExecutorThreads</dt>
 <dd>Determines how many concurrent asynchronous promotion requests the developer portal will allow. If requests are submitted that exceed this number, an HTTP error 503 (Unavailable) is returned.</dd>
 <dd>Default: 8.</dd>
-<dd>If you want to change this setting, consider system performance (mainly the number of available CPU cores).</dd>
-<dd>{<span class="apidoc_red">TB: What about the number of CPU cores? Why is 8 a good default? If they want more do they need to add more CPUs? What is the impact of increasing? Maybe a good use case?</span>}.</dd>
+<dd>If you find you need to increase this setting, make sure enough CPU cores are available, and consider possible impact on system performance.</dd>
 
 
 <dt>tenant.api.maxAsyncPromotionCacheMinutes</dt>
-<dd>determines the period of time, in minutes, before an asynchronous promotion result will be available to be retrieved. After this time period, the result is dropped from the cache. This should be set to the same value as the <strong>maxAsyncPromotionRequestMinutes</strong> setting below.</dd>
+<dd>Determines the period of time, in minutes, before an asynchronous promotion result will be available to be retrieved. After this time period, the result is dropped from the cache.</dd>
+<dd>This should be set to the same value as the <strong>maxAsyncPromotionRequestMinutes</strong> setting below.</dd>
+<dd>The <strong>apiplatform.remote.maxAsyncPromotionRequestMinutes</strong> setting determines the cache time period for Lifecycle Coordinator, the sender of the promotion-related messages; the <strong>tenant.api.maxAsyncPromotionCacheMinutes</strong> setting determines the corresponding period for the developer portal, the receiver of the messages.</dd>
 <dd>Default: 60 minutes.</dd>
 </dl>
 
-<h5>Configuration category: com.akana.lifecyclemanager.apiplatform.remote</h5>
+<h5 id="com_akana_lifecyclemanager_apiplatform_remote">Configuration category: com.akana.lifecyclemanager.apiplatform.remote</h5>
+<p class="stamp"><strong>API Platform Version: 2019.1.0 and later</strong></p>
+<p>Used to control how often Lifecycle Coordinator updates cached policy and organization information for tenants referenced in a topology.</p>
+<p><strong>Note</strong>: These properties are available in the Akana Administration Console for the Lifecycle Coordinator container.</p>
 <dl>
 <dt>apiplatform.remote.maxAsyncPromotionRequestMinutes</dt>
 <dd>Determines the period of time, in minutes, for which an asynchronous Lifecycle Coordinator promotion request to the Akana API Platform should be kept alive while waiting for a result.</dd>
-<dd>This should be set to the same value as the <strong>maxAsyncPromotionCacheMinutes</strong> setting above.</dd>
+<dd>This should be set to the same value as the <strong>maxAsyncPromotionCacheMinutes</strong> setting above. </dd>
+<dd> The <strong>apiplatform.remote.maxAsyncPromotionRequestMinutes</strong> setting determines the cache time period for Lifecycle Coordinator, the sender of the promotion-related messages; the <strong>tenant.api.maxAsyncPromotionCacheMinutes</strong> setting determines the corresponding period for the developer portal, the receiver of the messages.</dd>
 <dd>Default: 60 minutes.</dd>
 </dl>
 <p><a href="#top">Back to top</a></p>
