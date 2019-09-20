@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Using the Open Banking Client Validation Policy
-description: Learn how to use the Open Banking Client Validation policy to specify header names for certificate values that will be used by the back end for client authentication. This supports Mutual TLS per the requirements of the UK Open Banking specification.
+description: Learn how to use the Open Banking Client Validation policy to specify header names for certificate values that will be used by the back end for client authentication. This supports the client validation part of Mutual TLS per the requirements of the UK Open Banking specification.
 product: ag
 category: learn
 sub-nav-class: Policies - Operational
@@ -10,8 +10,8 @@ type: page
 nav-title: Open Banking Client Validation
 ---
 <h2 id="top">Using the Open Banking Client Validation Policy</h2>
-<p>Learn how to use the Open Banking Client Validation policy to specify header names for certificate values that will be used by the back end for client authentication. This supports Mutual TLS per the requirements of the UK Open Banking specification.</p>
-<p><strong>Note</strong>: This policy requires that there is also an authentication policy attached to the API, such as the <a href="policy_op_oauth_client.htm">OAuth Client Policy</a>, that sets the consumer (app) subject. {<span class="apidoc_red">MM is this the correct OAuth Policy?</span>}</p>
+<p>Learn how to use the Open Banking Client Validation policy to specify header names for certificate values that will be used by the back end for client authentication. This supports the client validation part of Mutual TLS per the requirements of the UK Open Banking specification.</p>
+<p><strong>Note</strong>: This policy requires that there is also an authentication policy attached to the API, such as the <a href="policy_op_oauth_security.htm">OAuth Security Policy</a>, that sets the consumer (app) subject.</p>
 <p>
 	<a href="about_policies_view.htm" class="button secondary">About Policies</a> 
 	<a href="policy_management.htm" class="button secondary">Managing Policies</a> 
@@ -38,14 +38,8 @@ nav-title: Open Banking Client Validation
 
 
 <h3 id="ob_client_validation_introduction">Introduction</h3>
-<p>The Open Banking Client Validation Policy allows you to specify the custom HTTP headers that will be used to specify the client's certificate as well as the Subject DN and Serial Number extracted  from the certificate. These headers are commonly set by the network  device that is terminating the SSL session (in many cases, the load balancer). The specified header values are then used for authentication of the client's X.509 certificate, to support Mutual TLS&nbsp;per the requirements of the <a href="../../cm/learnmore/basics_glossary.htm#gl_openbanking">UK Open Banking specification</a>.</p>
-<p>You can attach this policy to any API. However, there must also be an authentication policy attached to the API, that sets the consumer (app) subject; for example:</p>
-<ul>
-	<li> AtmosphereApplicationSecurityPolicy</li>
-	<li>OAuth policy {<span class="apidoc_red">which one exactly? OAuth Client, OAuth Security?</span>}</li>
-</ul>
-<p>You can also attach this policy to the platform API's <strong>AuthorizationServerTokenAPI</strong> Service. The token endpoint always has the client_id in the parameters for both GET and POST requests.</p>
-<p>The  client will be identified either from the Consumer &quot;Subject Category&quot;  or from the client_id parameter from the request parameters (query or  form). The selected options will be validated against the client's JWKS  URL configured with keys having <strong>&quot;use&quot;:&quot;tls&quot;</strong>.</p>
+<p>The Open Banking Client Validation Policy allows you to specify the custom HTTP headers that will be used to specify the client's certificate as well as the Subject DN and Serial Number extracted from the certificate. These headers are commonly set by the network device that is terminating the SSL session (in many cases, the load balancer). The specified header values are then used for authentication of the client's X.509 certificate, to support the client validation part of Mutual TLS&nbsp;per the requirements of the <a href="../../cm/learnmore/basics_glossary.htm#gl_openbanking">UK Open Banking specification</a>.</p>
+<p>The selected options will be validated against the client's JWKS URL configured with keys having <strong>&quot;use&quot;:&quot;tls&quot;</strong>.</p>
 <p>The example shown below, from a sample JWKS URL at <a href="https://keystore.openbanking.org.uk/0015800000jfAW1AAM/2SPmPNUU6KrtcgutPlkfBd.jwks" title="Link to UK Open Banking example JWKS URL" target="_blank">https://keystore.openbanking.org.uk/0015800000jfAW1AAM/2SPmPNUU6KrtcgutPlkfBd.jwks</a>, shows a JWKS URL configured with <strong>"use":"tls"</strong> (line 6):</p>
 <pre>{
   "e":"AQAB",
@@ -60,7 +54,30 @@ nav-title: Open Banking Client Validation
   "x5u":"https://keystore.openbanking.org.uk/0015800000jfAW1AAM/1uJmnEmIzSK6ecq_1pGFJmUVLD0.pem",
   "x5t#S256":"3hJVyverB5ZZcMrPpiTpaAQmJ4rak1Cs3gH-XLS2rr4="
 }</pre>
-<p>The platform checks that the certificate is a valid certificate configured with <strong>"use":"tls"</strong> at the JWKS URL specified in the OAuth Profile for the app (see <a href="../../cm/learnmore/app_create_app_oauth_profile.htm#settings_authentication">App OAuth Profile: Authentication Settings</a> in the developer portal help).</p>
+<p>&nbsp;</p>
+<p>When the message comes in, the platform:</p>
+<ul>
+	<li>Identifies the client, in either of two ways:
+		<ul>
+			<li>From the Consumer &quot;Subject Category&quot; required by the Authentication Policy associated with the API (see <a href="#auto_policy_req">Authentication Policy Requirement</a> below)</li>
+			<li>From the <strong>client_id</strong> parameter from the request parameters (query or form).</li>
+		</ul>
+	</li>
+	<li> Looks for the headers specified in this policy, and checks that the certificate values provided in these headers match a valid certificate configured with <strong>"use":"tls"</strong> at the JWKS URL specified in the OAuth Profile for the app (see <a href="../../cm/learnmore/app_create_app_oauth_profile.htm#settings_authentication">App OAuth Profile: Authentication Settings</a> in the developer portal help). If there is any mismatch (for example, headers are missing, header values don't match, JWKS URL is not provided), an error is returned.</li>
+</ul>
+<p>The example below shows the headers that would&nbsp;need to be present in the message, using the sample header names used in <a href="#ob_client_validation_policy_options">Open Banking Client Validation Policy options</a> below:</p>
+<p>{<span class="apidoc_red">New example requested from SP</span>}</p>
+<pre>X-SSLClientCert : MIIFxTCCBK2gAwIBAgIEWf9PwTANBgkqhkiG9w0BAQsFADBEMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxHzAdBgNVBAMTFk9wZW5CYW5raW5nIElzc3VpbmcgQ0EwHhcNMTkwMTE0MTIyOTUwWhcNMjEwMTE0MTI1OTUwWjBhMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxGzAZBgNVBAsTEjAwMTU4MDAwMDBqZkFXMUFBTTEfMB0GA1UEAxMWMlNQbVBOVVU2S3J0Y2d1dFBsa2ZCZDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAPMYdYkIGWAAiyhGSaU7fDL8VhoZCruX82BpxwqrnoNiXfrOdthQafXV5tPoznyGBSZBJNNVjCZ6RmEwTR32Qjn4mzrtVpHfBXK+fcRdjz2HJO3KOFapRMuBel36bGltL9wFYLrrh3iL0vgD9cU8EW1GULO8gNysufi7wHCNRxarbGyt+Jaoz0kndBzHlDvXDLkX2T5YSBpjGU/zkrlRauS5/tq4Ki3Eg4qTID4mJ/999WcKRw0Ziurp6G9Kved+K5I4oPuLrEmzOlbQgjjeJdszOn/HbyOKFHj+XXcMFoCDCWK9CualxijLq+Hpzo+mLUPb3GYcN3eBOLhTjZ7Bi4UCAwEAAaOCAqAwggKcMB0GA1UdEQQWMBSCEmNhcm1lLmFwaS5iYXJjbGF5czAOBgNVHQ8BAf8EBAMCB4AwIAYDVR0lAQH/BBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMIIBUgYDVR0gBIIBSTCCAUUwggFBBgsrBgEEAah1gQYBATCCATAwNQYIKwYBBQUHAgEWKWh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL3BvbGljaWVzMIH2BggrBgEFBQcCAjCB6QyB5lRoaXMgQ2VydGlmaWNhdGUgaXMgc29sZWx5IGZvciB1c2Ugd2l0aCBPcGVuIEJhbmtpbmcgTGltaXRlZCBhbmQgYXNzb2NpYXRlZCBPcGVuIEJhbmtpbmcgU2VydmljZXMuIEl0cyByZWNlaXB0LCBwb3NzZXNzaW9uIG9yIHVzZSBjb25zdGl0dXRlcyBhY2NlcHRhbmNlIG9mIHRoZSBPcGVuIEJhbmtpbmcgTGltaXRlZCBDZXJ0aWZpY2F0ZSBQb2xpY3kgYW5kIHJlbGF0ZWQgZG9jdW1lbnRzIHRoZXJlaW4uMHIGCCsGAQUFBwEBBGYwZDAmBggrBgEFBQcwAYYaaHR0cDovL29iLnRydXN0aXMuY29tL29jc3AwOgYIKwYBBQUHMAKGLmh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL2lzc3VpbmdjYS5jcnQwPwYDVR0fBDgwNjA0oDKgMIYuaHR0cDovL29iLnRydXN0aXMuY29tL3Byb2R1Y3Rpb24vaXNzdWluZ2NhLmNybDAfBgNVHSMEGDAWgBSfSb9ONqesww8ryEf0HykbwHkLBTAdBgNVHQ4EFgQUlsyuIasI4NOaMUDsUDcZj8unei4wDQYJKoZIhvcNAQELBQADggEBAHmbK4XGuvBZ8HUS7NAeKsNN/9FqPF8ekcbPV4DWQGVrHXkn3cxohr++L9wq19CnwvZ6YyXFFMb15VbRynsW0xuOPcR85g5pGzT5Z2Wud/+CcI7GKr7KNE0HugnG8YqiEv08Er4v+9eHdpJMUYxYDeHoxeQXYY7fr2gG3mVUqrYvtaU2LNZ6hO2LH4vgL0lj6uhio2e8iK4RHsPdpTM73+2SQK4GI3aSPwcR9pbNy3Ijlo7qiJaPyXCpxiG1l+NjYefA/HaKavITECyynaCa4gNJC0upjzVUvQBtktw81gFCAN+8lfea9Bt40Qs1/xhpgRYm96ScDgqsAAIXHY7IOOs
+X-SSLClientCertDN : CN = 2SPmPNUU6KrtcgutPlkfBd,OU = 0015800000jfAW1AAM,O = OpenBanking,C = GB
+X-SSLClientCertSN : 1404704331</pre>
+
+<h5 id="auto_policy_req">Authentication Policy Requirement</h5>
+<p>You can attach this policy to any API. However, there must also be an authentication policy attached to the API, that sets the consumer (app) subject; for example:</p>
+<ul>
+	<li><a href="../../cm/learnmore/basics_glossary.htm#gl_pl_AtmosphereApplicationSecurityPolicy"> AtmosphereApplicationSecurityPolicy</a></li>
+	<li><a href="policy_op_oauth_security.htm">OAuth Security Policy</a></li>
+</ul>
+<p>You can also attach this policy to the platform API's <strong>AuthorizationServerTokenAPI</strong> Service. The token endpoint always has the client_id in the parameters for both GET and POST requests.</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -90,7 +107,7 @@ nav-title: Open Banking Client Validation
 	<li>In the second panel, click <strong>Modify</strong> to access the <strong>Specify Open Banking Client Validation Policy Options</strong> page.</li>
 	<li>Choose one or more validation options. For each option you choose, specify the name of the custom header containing the information to be validated by the policy. For details, see <a href="#ob_client_validation_policy_options">Open Banking Client Validation Policy options</a> below.
 		<p><strong>Note</strong>: To conform with the UK Open Banking standard, all three headers are required.</p></li>
-	<li>Click <strong>Next</strong> to specify security audit options. See <a href="#http_sec_config_audit_options">Configuring Security Audit Options</a> below.</li>
+	<li>Click <strong>Next</strong> to specify security audit options. See <a href="#ob_client_validation_policy_audit_options">Configuring Security Audit Options</a> below.</li>
 	<li>Click <strong>Finish</strong>.</li>
 </ol>
 <p>After you've configured your policy, you can attach it to a web service, operation, or binding.</p>
