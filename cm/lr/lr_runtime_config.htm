@@ -9,7 +9,7 @@ weight: 07
 type: page
 nav-title: Runtime Configuration
 ---
-<h2 id="top">Defaulting API Settings using Runtime Configurations </h2>
+<h2 id="top">Defaulting API Settings using Runtime Configurations</h2>
 <p>Learn how to use the Runtime Configurations feature to establish <strong>templates</strong> so that API implementation properties can be established and selectively applied based on custom property filters.</p>
 <p><strong>Note</strong>: As of the 2018.0.0 release, the behavior in this document can now be defined as part of the Promotion feature within the topology directly, using the <strong>Environment Configuration</strong> element. See <a href="../promotion/promotion_users_guide.htm#s08_03_environment_config">Environment Configuration</a> (Promotion Guide).</p>
 <p><a href="../../sp/install_lc/install_promotion.htm" class="button secondary">Lifecycle Coordinator Installation</a> 
@@ -21,6 +21,8 @@ nav-title: Runtime Configuration
 
 <h3 style="color: gray;">Table of Contents</h3>
 <ol class="table_of_contents">
+	<li><a href="#overview">Overview</a></li>
+	<li><a href="#lr_filters">Filters</a></li>
 	<li><a href="#s08_01_create_asset">Creating a Runtime Configuration Asset</a>
 		<ul>
 			<li><a href="#s08_01_01_owning_group">Owning Group</a></li>
@@ -59,8 +61,36 @@ nav-title: Runtime Configuration
 
 <h3 id="overview">Overview</h3>
 <p>The behavior described in this document is not part of Lifecycle Coordinator, but can be used to augment the capabilities of Lifecycle Coordinator to further tailor the configuration of APIs within each environment of a topology.</p>
-<p>The intent of the Runtime Configurations feature is to allow <strong>templates</strong> for API implementation properties to be established and selectively applied based on custom property filters. This is accomplished through customization of the Lifecycle Manager library in which custom properties for a tenant are configured. This configuration requires a working knowledge of the Lifecycle Manager application and the Configuration Designer Tool.</p>
+<p>The intent of the <a href="../learnmore/basics_glossary.htm#gl_runtimeconfiguration">Runtime Configuration</a> feature is to allow <strong>templates</strong> for API implementation properties to be established and selectively applied based on custom property filters. This is accomplished through customization of the Lifecycle Manager library in which custom properties for a tenant are configured. This configuration requires a working knowledge of the Lifecycle Manager application and the Configuration Designer Tool.</p>
 <p>As with the topology definition, it's best if Runtime Configuration assets are set up during the initial configuration of the environment. Changes to a Runtime Configuration do not retroactively affect pre-existing APIs unless those APIs are updated through the API Platform UI or subsequent promotions.</p>
+<p>There are two ways to define runtime configuration:</p>
+<ul>
+	<li>Through the Lifecycle Repository user interface, as shown in <a href="#s08_01_create_asset">Creating a Runtime Configuration Asset</a> below.</li>
+	<li>From 2018.0.0 onwards: As part of the Promotion feature within the topology directly, using the <strong>Environment Configuration</strong> element in the topology JSON file. See <a href="../promotion/promotion_users_guide.htm#s08_03_environment_config">Environment Configuration</a> (Promotion Guide). For an example see <a href="#s08_03_rc_example">Runtime Configuration: Example</a> below.</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="lr_filters">Filters</h3>
+<p>In the Repository Client user interface, you can define custom asset filters using predefined criteria from the <strong>Filter Criteria</strong> drop-down list, shown below.</p>
+<p>{<span class="apidoc_red">TBD image to come ATMO--30132</span>}</p>
+<p>For example, you could define a separate filter for each authentication type your API users will be using, so that when the user specifies the authentication type at runtime, the API is created with the correct settings and policies for that authentication type.</p>
+<p>The following new filter was added in Version 2019.1.0:</p>
+<dl>
+<dt>api-type</dt>
+<dd>Value must be one of the below:
+	<ul>
+	<li>REST</li>
+	<li>SOAP</li>
+</ul></dd>
+</dl>
+<p><strong>Note</strong>: BY default, if you install a new version, you'll get the latest filters. If you have an earlier version, but want to get one or more filters that were added in a later version, you'd need to update the following files:</p>
+<ul>
+	<li><strong>lpc.lpc</strong>: The workflow definition file for the Configuration Designer.</li>
+	<li><strong>gdt.xml</strong>: the global definition capture template.</li>
+	<li><strong> Runtime Configuration.ctxml </strong>: The capture template for Runtime Configuration.</li>
+</ul>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -331,23 +361,6 @@ nav-title: Runtime Configuration
   ]
 }</pre>
 <p>Values that do not match a group are ignored.</p>
-
-
-<h4 id="s08_01_12_api_type">API Type (REST or SOAP)</h4>
-<p class="stamp"><strong>API Platform Version: 2019.1.0 and later</strong></p>
-<p class="stamp">{<span class="apidoc_red">TBD ATMO-30132</span>}</p>
-<p>This classifier allows you to filter your selection by API type. Valid values: </p>
-<ul>
-	<li>REST</li>
-	<li>SOAP</li>
-</ul>
-<p>To implement this filter you'll need to modify these files:</p>
-<ul>
-	<li><strong>lpc.lpc</strong>: The workflow definition file for the Configuration Designer.</li>
-	<li><strong>gdt.xml</strong> </li>
-	<li><strong> Runtime Configuration.ctxml </strong>: the capture template for Runtime Configuration</li>
-</ul>
-<p>xxx</p>
 <p><a href="#top">Back to top</a></p>
 
 
