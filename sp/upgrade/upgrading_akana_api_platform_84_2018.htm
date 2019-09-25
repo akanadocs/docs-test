@@ -66,6 +66,7 @@ nav-title: Upgrade to 2018.0.x
 
 <h5 style="color: gray;"><a href="#h_post_upgrade_tasks">Post-Upgrade Tasks</a></h5>
 <ol class="table_of_contents">
+	<li><a href="#s03_000">Step 3-0: Upload container certificate</a></li>
 	<li><a href="#s03_01">Step 3-1: Check for pending installation tasks</a></li>
 	<li><a href="#s03_02">Step 3-2: Perform configuration actions</a></li>
 	<li><a href="#s03_03">Step 3-3: Update container properties</a></li>
@@ -103,11 +104,12 @@ nav-title: Upgrade to 2018.0.x
 <h3 id="s01_strategy">Upgrade strategy</h3>
 <p>There are several approaches you can take to upgrading:</p>
 <ol>
-	<li>Manual upgrade, creating new containers, and then configuring the new containers to suit your requirements.</li>
+	
+	<li>Manual upgrade, creating new containers, and then configuring the new containers to suit your requirements. This is essentially a fresh install.</li>
 	<li>Manual upgrade, creating new containers and then transferring the identity, services, and settings from an existing container in your previous installation, to the new container. This documentation steps through that approach. Essentially you are creating a new container and then using it to replicate an old one.</li>
 	<li>Automated upgrade, using automation recipes to help make your upgrade faster, more standardized, and more error-free. For information on automation, see <a href="../automation/automation_ref.htm">Automation Reference</a>. For information about which automation recipes to use for upgrade, see <a href="upgrading_akana_api_platform_2018_2019.htm#upgrade_automation">Automating the upgrade</a> in the 2019.0.0 upgrade doc.</li>
 </ol>
-<p>This documentation takes you through the steps to create new containers and then transfer existing settings to the new container (#2 above). For example, Step <a href="#s03_000">Step 3-0: Upload container certificate</a> uploads the certificate from the old container to the new container. </p>
+<p>This documentation takes you through the steps to create new containers and then transfer existing settings to the new container (#2 above). For example, in <a href="#s03_000">Step 3-0: Upload container certificate</a> you'll upload the certificate that you used for the old container, from your secure external storage location to the new container. </p>
 <p>Some of the steps are the same for all approaches.</p>
 <p><a href="#top">back to top</a></p>
 
@@ -150,11 +152,11 @@ nav-title: Upgrade to 2018.0.x
 		<ul>
 			<li>Save the context root. </li>
 			<li>Save all other container properties that you've customized.</li>
-			<li>Save out the container certificates in the Policy Manager console (see <a href="../key_management/key_management.htm"> Managing Keys and Certificates</a>). You can then upload the same certificates when configuring the container.</li>
 		</ul>
 	</li>
 	<li>Update the properties file for each existing container to add a new property, <strong>container.key</strong>, that specifies the existing container IDs. For example:
 		<pre>container.key=&quot;fcd54dc8-ccd2-439f-a580-436d3ef2&quot;</pre></li>
+		<li>Make sure you have the certificate that you used to create the original container. You can then upload the certificate when configuring the new container. See <a href="#s03_000">Step 3-0: Upload container certificate</a>.</li>
 </ol>
 <!--<p><strong>Note</strong>: For information about how you can automate the reconfiguring of your container properties, see <a href="#auto_prop_xfer">Automating the transfer of container properties</a>.</p>-->
 <p><a href="#top">back to top</a></p>
@@ -346,8 +348,12 @@ ps -ef
 
 
 <h3 id="s03_000">Step 3-0: Upload container certificate</h3>
-<p>Upload the container certificate that you exported in <a href="#s01_02">Step 1-2: Plan the upgrade, #3</a>.</p>
-<p>For detailed instructions, see <a href="../key_management/key_management.htm">Managing Keys and Certificates</a>.</p>
+<p>Upload the container certificate. You'll need to upload a&nbsp;.JKS or&nbsp;.P12 file.</p>
+<p>Refer to these docs:</p>
+<ul>
+	<li>General information about container identity in the context of upgrading: <a href="upgrade_managing_container_identity.htm">Managing Container Identity Across Upgrades</a>.</li>
+	<li>Detailed instructions for uploading the container certificate: <a href="../key_management/key_management.htm#importpkix509">Import PKI Keys and X.509 Certificate</a> (Policy Manager help).</li>
+</ul>
 <p><a href="#top">back to top</a></p>
 
 
@@ -667,33 +673,14 @@ ps -ef
 
 
 <h3 id="ts_02_error_new_containers">Upgrading by creating a new container and re-using the old container identity: note</h3>
-<p>When you're upgrading by creating new containers, and then&nbsp;using the same identity as the old container, it's important that you delete the existing container from the Policy Manager workbench before creating the new container.</p>
+<p>When you're upgrading by creating new containers, and then using the same identity as the old container, it's important that you delete the existing container from the Policy Manager workbench before creating the new container.</p>
 <p>If you don't delete the old container before creating the new one, you might encounter an error on the provisioning step, similar to the one shown below (<strong>WSDL binding cannot be disassociated from service</strong>):</p>
 <pre>[425] com.digev.fw.exception.GException: Wsdl binding [uddi:4b0aba1c-8ca7-e61c-5575-25361578c179] 
 cannot be disassociated from service [uddi:soa.com:metadataattachment-servicekey]. 
 Binding is attached to service endpoint.</pre>
 <p>If you encounter this message, delete the old container, and then retry the provisioning.</p>
-<p>If you're upgrading by creating completely new containers, with a new container identity, this is of course not&nbsp;a problem.</p>
+<p>If you're upgrading by creating completely new containers, with a new container identity, this is of course not a problem.</p>
 <p><a href="#top">Back to top</a></p>
-
-
-
-<!--<h3 id="auto_prop_xfer">Automating the transfer of container properties</h3>
-<p>When upgrading by creating a new container, you'll need to transfer, or re-create, the configuration settings on the new container.</p>
-<p>The configuration settings are stored in the instances/{container_name}/cm subfolder.</p>
-<p>Because there are changes between versions, you can't just copy and paste the folder between versions. However, you can use a tool to extract the old settings and the new ones, compare the two sets of information, and arrive at a diff that you can use as a guide for setting up your new container.</p>
-
-<h5 id="proc_xfer_properties">To transfer configuration properties from an old container to a new container</h5>
-<ol>
-	<li>At the beginning of <a href="#s02_05">Step 2-5: Create and configure the first container</a>, after shutting down the old container and before creating the new one, run discovery on all of the containers in the previous installation, and save out the old configuration settings for all containers.</li>
-	<li>At the end of <a href="#s02_05">Step 2-5: Create and configure the first container</a>, Step #6, after doing the initial configuration steps, shut down the container. Rather than restarting as in Step #7, save out the new configuration settings at that point.</li>
-	<li>Compare the new settings with the old settings to arrive at the settings that will need to be configured on the new container.</li>
-	<li>If available, use automation to update the container configuration.</li>
-	<li>Now complete <a href="#s02_05">Step 2-5: Create and configure the first container</a> by restarting the container, and verify that the configuration properties are set correctly.</li>
-	<li>Follow steps 2 through 5 for additional containers until they are all configured.</li>
-	<li>Continue with the post-install steps.</li>
-</ol>
-<p><a href="#top">Back to top</a></p>-->
 
 
 

@@ -67,6 +67,7 @@ nav-title: Upgrade to 2019.0.x
 
 <h5 style="color: gray;"><a href="#h_post_upgrade_tasks">Post-Upgrade Tasks</a></h5>
 <ol class="table_of_contents">
+	<li><a href="#s03_000">Step 3-0: Upload container certificate</a></li>
 	<li><a href="#s03_01">Step 3-1: Check for pending installation tasks</a></li>
 	<li><a href="#s03_02">Step 3-2: Perform configuration actions</a></li>
 	<li><a href="#s03_03">Step 3-3: Update container properties</a></li>
@@ -105,11 +106,11 @@ nav-title: Upgrade to 2019.0.x
 <h3 id="s01_strategy">Upgrade strategy</h3>
 <p>There are several approaches you can take to upgrading:</p>
 <ol>
-	<li>Manual upgrade, creating new containers, and then configuring the new containers to suit your requirements.</li>
+	<li>Manual upgrade, creating new containers, and then configuring the new containers to suit your requirements. This is essentially a fresh install.</li>
 	<li>Manual upgrade, creating new containers and then transferring the identity, services, and settings from an existing container in your previous installation, to the new container. This documentation steps through that approach. Essentially you are creating a new container and then using it to replicate an old one.</li>
 	<li>Automated upgrade, using automation recipes to help make your upgrade faster, more standardized, and more error-free. For information on automation, see <a href="../automation/automation_ref.htm">Automation Reference</a>. For information about which automation recipes to use for upgrade, see <a href="#upgrade_automation">Automating the upgrade</a>.</li>
 </ol>
-<p>This documentation takes you through the steps to create new containers and then transfer existing settings to the new container (#2 above). For example, Step <a href="#s03_000">Step 3-0: Upload container certificate</a> uploads the certificate from the old container to the new container. </p>
+<p>This documentation takes you through the steps to create new containers and then transfer existing settings to the new container (#2 above). For example, in <a href="#s03_000">Step 3-0: Upload container certificate</a> you'll upload the certificate that you used for the old container, from your secure external storage location to the new container. </p>
 <p>Some of the steps are the same for all approaches.</p>
 <p><a href="#top">back to top</a></p>
 
@@ -151,13 +152,13 @@ nav-title: Upgrade to 2019.0.x
 	<li>Take all steps needed to save out container settings so that you can reproduce the configuration on the new container, where applicable. You'll need this information for <a href="#s03_03">Step 3-3: Update container properties</a>. Do the following:
 		<ul>
 			<li>Save the context root. </li>
-			<li>Save all other container properties that you've customized.</li>
-			<li>Save out the container certificates in the Policy Manager console (see <a href="../key_management/key_management.htm">Managing Keys and Certificates</a>). You can then upload the same certificates when configuring the container.
+			<li>Save all other container properties that you've customized.
 				<p><strong>Note</strong>: you can use an automation task to save out the configuration settings (Linux only). See <a href="../automation/automation_ref.htm#recipes_extracting_properties">Extracting and Analyzing Recipes</a>.</p></li>
 		</ul>
 	</li>
 	<li>Update the properties file for each existing container to add a new property, <strong>container.key</strong>, that specifies the existing container IDs. For example:
 		<pre>container.key=&quot;fcd54dc8-ccd2-439f-a580-436d3ef2&quot;</pre></li>
+		<li>Make sure you have the certificate that you used to create the original container. You can then upload the certificate when configuring the new container. See <a href="#s03_000">Step 3-0: Upload container certificate</a>.</li>
 </ol>
 <!--<p><strong>Note</strong>: For information about how you can automate the reconfiguring of your container properties, see <a href="#auto_prop_xfer">Automating the transfer of container properties</a>.</p>-->
 <p><a href="#top">back to top</a></p>
@@ -351,8 +352,12 @@ ps -ef
 
 
 <h3 id="s03_000">Step 3-0: Upload container certificate</h3>
-<p>Upload the container certificate that you exported in <a href="#s01_02">Step 1-2: Plan the upgrade, #3</a>.</p>
-<p>For detailed instructions, see <a href="../key_management/key_management.htm">Managing Keys and Certificates</a>.</p>
+<p>Upload the container certificate. You'll need to upload a&nbsp;.JKS or&nbsp;.P12 file.</p>
+<p>Refer to these docs:</p>
+<ul>
+	<li>General information about container identity in the context of upgrading: <a href="upgrade_managing_container_identity.htm">Managing Container Identity Across Upgrades</a>.</li>
+	<li>Detailed instructions for uploading the container certificate: <a href="../key_management/key_management.htm#importpkix509">Import PKI Keys and X.509 Certificate</a> (Policy Manager help).</li>
+</ul>
 <p><a href="#top">back to top</a></p>
 
 
