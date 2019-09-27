@@ -30,28 +30,24 @@ nav-title: Managing Container Identity Across Upgrades
 	<li>Installing the latest version of the product and creating new containers, but connecting to the existing database.</li>
 	<li>Moving over the properties and settings from a container in your installation of the earlier version, to a new container.</li>
 </ol>
-<p>When you configure a new container to replicate an existing container, as in #2 above, you must set up the container identity to match the existing container. Then, the new container will perform the same role in your new installation as the previous container did in the earlier installation, and the identity is recognized.</p>
+<p>When you configure a new container to replicate an existing container, as in #2 above, you must set up the identity of the new container to match the identity of the previous container. Then, the new container will perform the same role in your new installation as the previous container did in the earlier installation, and the identity is recognized.</p>
 <p>The container identity is represented by the container certificate.</p>
-<p>You can use the platform's certificate generation capabilities to generate a self-signed certificate: see <a href="../key_management/key_management.htm">Managing Keys and Certificates</a>. However, in a production environment you'll need to have a certificate signed by a <a href="../../cm/learnmore/basics_glossary.htm#gl_certificate_authority">Certificate Authority</a> with a recognized chain of trust, such as <a href="https://www.verisign.com/" title="Link to Verisign site" target="_blank">Verisign</a>, <a href="https://www.comodo.com/" title="Link to Comodo site" target="_blank">Comodo</a>, <a href="https://www.godaddy.com/" title="Link to GoDaddy site" target="_blank">GoDaddy</a>, or <a href="http://www.digi-sign.com/" title="Link to DigiSign site" target="_blank">DigiSign</a>.</p>
+<p>You can use the platform's certificate generation capabilities to generate a self-signed certificate. However, it's best to use an external certificate, for these reasons:</p>
+<ul>
+	<li>In a production environment you'll need to have a certificate signed by a <a href="../../cm/learnmore/basics_glossary.htm#gl_certificate_authority">Certificate Authority</a> with a recognized chain of trust, such as <a href="https://www.verisign.com/" title="Link to Verisign site" target="_blank">Verisign</a>, <a href="https://www.comodo.com/" title="Link to Comodo site" target="_blank">Comodo</a>, <a href="https://www.godaddy.com/" title="Link to GoDaddy site" target="_blank">GoDaddy</a>, or <a href="http://www.digi-sign.com/" title="Link to DigiSign site" target="_blank">DigiSign</a>.</li>
+	<li>You cannot export the private key and certificate from the container, to import to a new container.</li>
+</ul>
 
 
 
 <h3 id="container_identity_update">Updating the container identity as part of the upgrade process</h3>
 <p>It's best to:</p>
 <ol>
-	<li>Generate keys and certificates outside the platform using an external tool such as <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/keytool.html" title="Link to Java keytool doc" target="_blank">Java keytool</a>, with a recognized Certificate Authority and chain of trust, so that your certificate will be broadly trusted. You will be uploading a&nbsp;.JKS or&nbsp;.P12 file.</li>
+	<li>Generate keys and certificates outside the platform using an external tool such as <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/keytool.html" title="Link to Java keytool doc" target="_blank">Java keytool</a>, with a recognized Certificate Authority and chain of trust. You will be uploading a&nbsp;.JKS or&nbsp;.P12 file.</li>
 	<li>Store your keys and certificates in a secure location.</li>
-	<li>After creating your container, upload your keys and certificates to the new container. This is covered in the upgrade instructions: <a href="upgrading_akana_api_platform_2018_2019.htm#s03_000">Step 3-0: Upload PKI keys and certificate</a>. For instructions to upload keys and certificates, see <a href="../key_management/key_management.htm#importpkix509">Import PKI Keys and X.509 Certificate</a> (Policy Manager help).</li>
+	<li>After creating your container, upload your keys and certificate (JKS or P12 file) to the new container. In the Akana Administration Console for the container, go to <strong>Configuration</strong> &gt; <strong>Manage PKI Keys</strong> and choose <strong>Import Private Key &amp; X.509 Certificate</strong>. See <a href="../admin_console/config_actions.htm#aac_ca_managepkikeys">Manage PKI Keys</a>. This is covered in the upgrade instructions: <a href="upgrading_akana_api_platform_2018_2019.htm#s03_000">Step 3-0: Upload PKI keys and certificate</a>.</li>
 </ol>
 <p>When it's time to upgrade, create the new container and upload the same keys and certificates.</p>
-
-
-<h4>Questions</h4>
-<ol>
-	<li>{<span class="apidoc_red">The instructions to upload keys and certificates are for PM. Is that fine? What if it's a different kind of container? Or do they only need to upload once to a PM container... what if there are multiple PM containers...</span>}</li>
-	<li>{<span class="apidoc_red">Any review comments welcome! </span>}</li>
-	<li>{<span class="apidoc_red">Say the user has an external keystore with a number of keys/certificates. Is it a no-brainer to figure out which one they used for the container? If not, is there any guidance we should give? No idea whether &quot;use the same certificate you used last time&quot; is easy to identify, or not.</span>}</li>
-</ol>
 <div class = "divider1"></div>
 
 
