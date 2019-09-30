@@ -337,11 +337,11 @@
 			<div class="soa-ui-dc-container-main-content"><!-- main content starts here -->
 					<div class="apidocContent">
 <!-- InstanceBeginEditable name="Heading" -->
-<h2 id="top">POST&nbsp;/api/login/ssoLogin</h2>
+<h2 id="top">POST&nbsp;/api/login/ssoLogin </h2>
 <!-- InstanceEndEditable -->
 
 <!-- InstanceBeginEditable name="Intro_AuthRoles" -->
-<p><!-- #BeginLibraryItem "/Library/desc_ssoLoginPost.lbi" -->Logs the user in to an external identity system such as Facebook, for a login domain set up on the platform.<!-- #EndLibraryItem --></p>
+<p><!-- #BeginLibraryItem "/Library/desc_ssoLoginPost.lbi" -->Logs the user in to an external identity system such as Google or Facebook, for a login domain set up on the platform.<!-- #EndLibraryItem --></p>
 <p class="apidoc_note"><strong>Note</strong>: Login domains might support SSO login via POST or GET. For example, an OpenID Connect Relying Party domain might support a response mode of query, fragment, or form_post. If the domain supports form_post, <span class="apidoc_code">POST&nbsp;/api/login/ssoLogin</span> is used. If the domain supports query or fragment, <span class="apidoc_code">GET&nbsp;/api/login/ssoLogin</span> is used.</p>
 <p>The specific processing that occurs with this operation depends on the login domain being used, as specified in the <strong>domain</strong> parameter in the request message. For example:</p>
 <ul>
@@ -404,6 +404,17 @@ Cookie: JSESSIONID_pm60=1gsjqvxu1cgnj1th05legkdfvo</pre>
 
 <p><strong>Sample request body #2 (LDAP)</strong></p>
 <pre>identity_username=MaryMartinson&amp;secret_password=MyPassword11</pre>
+
+<p><strong>Sample request #3: Login with Google</strong></p>
+<p>The example below shows login via Google. In this scenario, the Site Admin must first set up an External xxx, and then enable the domain for login.</p>
+<p>Then, users can log in by using their Google credentials. The platform sends a message to Google, and Google either collects the user's credentials and then returns the token, or else returns the token immediately if the user is already logged in. This call then&nbsp;logs the user in to the developer portal using the token from Google, as shown below.</p>
+<p><strong>Sample request headers: login with Google</strong></p>
+<p>The example below shows the request headers in Postman.</p>
+<p><img src="../assets/login_ssoLoginPost_postman_req_headers.png" alt="login_ssoLoginPost: request headers" /></p>
+<p><strong>Sample request body: login with Google</strong></p>
+<p>The example below shows the request body in Postman.</p>
+<p>The domain is the name of the domain that the Site Admin set up in the developer portal. The ID token is returned by your provider after authenticating the user.</p>
+<p><img src="../assets/login_ssoLoginPost_postman_req_body.png" alt="login_ssoLoginPost: request body" /></p>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 <!-- InstanceEndEditable -->
 
@@ -505,6 +516,10 @@ DDLTPi4id31yKJ6CDFPCEK7OSycu3fpuvYCCwDv_pfKE5kFrOtW1mFN2whcUNhboAyT9KioLrKREdBr7
   &quot;signupCode&quot; : &quot;Fbnw5YUYLtPVfzTCxtriPKVdB9m7xO7ALwGyt8_f2MiZg1393OGQISkdqSwAtm-1nakXzGLmC_uw3ipUj-
 ZlHY5NhVjuykWvri5pKVNJhJPyKs2gLN_40SkKGJ7DcDDLTPi4id31yKJ6CDFPCEK7OSycu3fpuvYCCwDv_pfKE5kFrOtW1mFN2whcUNhboAyT9KioLrKREdBr7kc8c&quot;
 }</pre>
+<p><strong>Sample response #3: Login with Google</strong></p>
+<p>The example below shown an HTTP 200 response code returned,&nbsp;with the <a href="../aaref/Ref_CookiesOnThePlatform.htm#cookie_atmoauthtoken">AtmoAuthToken_{fedmemberid}</a> platform cookie and <a href="../aaref/Ref_HTTPHeaders.htm#csrf_token_request">X-Csrf-Token_{fedmemberID}</a> CSRF cookie, which which are needed for further API calls.</p>
+<p><img src="../assets/login_ssoLoginPost_postman_response.png" alt="login_ssoLoginPost: response" /></p>
+<p><strong>Note</strong>: As well as the login cookie and&nbsp; CSRF cookie, certain operations require specific roles. For example, to create an API, a user who logs in via an external domain would need an additional role, such as being invited to the API Admin group and accepting the invitation. This scenario would use the <span class="apidoc_code"><a href="../groups/m_groups_inviteMemberToGroup.htm">POST&nbsp;/api/groups/{GroupID}/members</a></span> and <span class="apidoc_code"><a href="../groups/m_groups_executeWorkflowAction.htm">POST&nbsp;/api/groups/requests/{MembershipRequestID}/actions</a></span> operations. After that, the user could add an API using the <span class="apidoc_code"><a href="../apis/m_apis_createAPI.htm">POST&nbsp;/api/apis</a></span> operation.</p>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 
 <!-- InstanceEndEditable -->
@@ -533,7 +548,7 @@ ZlHY5NhVjuykWvri5pKVNJhJPyKs2gLN_40SkKGJ7DcDDLTPi4id31yKJ6CDFPCEK7OSycu3fpuvYCCw
 
 <!-- InstanceBeginEditable name="Response Body" -->
 <h3 id="responsebody">Response Body</h3>
-<p>The response body depends on the domain used. Some possible val</p>
+<p>The response body depends on the domain used.</p>
 <table class="tableparmsresponse">
 	<thead>
 		<tr>
