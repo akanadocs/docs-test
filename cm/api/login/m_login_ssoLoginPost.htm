@@ -345,9 +345,10 @@
 <p class="apidoc_note"><strong>Note</strong>: Login domains might support SSO login via POST or GET. For example, an OpenID Connect Relying Party domain might support a response mode of query, fragment, or form_post. If the domain supports form_post, <span class="apidoc_code">POST&nbsp;/api/login/ssoLogin</span> is used. If the domain supports query or fragment, <span class="apidoc_code">GET&nbsp;/api/login/ssoLogin</span> is used.</p>
 <p>The specific processing that occurs with this operation depends on the login domain being used, as specified in the <strong>domain</strong> parameter in the request message. For example:</p>
 <ul>
+	<li>OpenID Connect Relying Party domain (includes Google and Facebook connectors in the platform): the platform references the domain setup, applying the OpenID Connect specification to see what should be used for the SSO token; for example, id_token. For an example, see <a href="#id_samplerequest_03">Sample request #3: Login with Google</a> and <a href="#id_sampleresponse_03">Sample response #3: Login with Google</a>.</li>
+	
 	<li>CA Siteminder domain: the operation looks for the <a href="../Ref_Glossary_CommunityPlatform.htm#gl_smsession_cookie">SMSESSION</a> cookie header.</li>
 	<li>SAML Web SSO domain: it looks for the SAML assertion in query or form parameters.</li>
-	<li>OpenID Connect Relying Party domain (includes Google and Facebook connectors in the platform): the platform references the domain setup, applying the OpenID Connect specification to see what should be used for the SSO token; for example, id_token.</li>
 </ul>
 <p>  With SSO Login, depending on the domain being used, and the protocol that it implements, the requirements of the request message are different.</p>
 <p id="id_roles"><strong>Authorization Roles/Permissions</strong>: Anyone can run this operation.</p>
@@ -405,7 +406,7 @@ Cookie: JSESSIONID_pm60=1gsjqvxu1cgnj1th05legkdfvo</pre>
 <p><strong>Sample request body #2 (LDAP)</strong></p>
 <pre>identity_username=MaryMartinson&amp;secret_password=MyPassword11</pre>
 
-<p><strong>Sample request #3: Login with Google</strong></p>
+<p id="id_samplerequest_03"><strong>Sample request #3: Login with Google</strong></p>
 <p>The example below shows login via Google. In this scenario, the Site Admin must first set up an  OpenID Connect Relying Party domain, and then enable the domain for login.</p>
 <p>Then, users can log in by using their Google credentials. The platform sends a message to Google, and Google either collects the user's credentials and then returns the token, or else returns the token immediately if the user is already logged in. This call then&nbsp;logs the user in to the developer portal using the token from Google, as shown below.</p>
 <p><strong>Sample request headers: login with Google</strong></p>
@@ -516,7 +517,7 @@ DDLTPi4id31yKJ6CDFPCEK7OSycu3fpuvYCCwDv_pfKE5kFrOtW1mFN2whcUNhboAyT9KioLrKREdBr7
   &quot;signupCode&quot; : &quot;Fbnw5YUYLtPVfzTCxtriPKVdB9m7xO7ALwGyt8_f2MiZg1393OGQISkdqSwAtm-1nakXzGLmC_uw3ipUj-
 ZlHY5NhVjuykWvri5pKVNJhJPyKs2gLN_40SkKGJ7DcDDLTPi4id31yKJ6CDFPCEK7OSycu3fpuvYCCwDv_pfKE5kFrOtW1mFN2whcUNhboAyT9KioLrKREdBr7kc8c&quot;
 }</pre>
-<p><strong>Sample response #3: Login with Google</strong></p>
+<p id="id_sampleresponse_03"><strong>Sample response #3: Login with Google</strong></p>
 <p>The example below shown an HTTP 200 response code returned,&nbsp;with the <a href="../aaref/Ref_CookiesOnThePlatform.htm#cookie_atmoauthtoken">AtmoAuthToken_{fedmemberid}</a> platform cookie and <a href="../aaref/Ref_HTTPHeaders.htm#csrf_token_request">X-Csrf-Token_{fedmemberID}</a> CSRF cookie, which which are needed for further API calls.</p>
 <p>Body:</p>
 <p><img src="../assets/login_ssoLoginPost_postman_responsebody.png" alt="login_ssoLoginPost: response body" /></p>
