@@ -741,18 +741,7 @@ vsep.listenerName = "https"</td>
 
 <h4 id="properties_element">Properties</h4>
 <p class="stamp"><strong>API Platform Version: 8.4.17 and later</strong></p>
-<p>A PromotionProfile can optionally specify properties to further refine export/import behavior. These are defined in an optional <strong>properties</strong> element, as in the following example:</p>
-<pre>{
-  "name":"Default Production Promotion",
-  "description":"Dev to production default profile",
-  "targetEnvironment":"production",
-  "properties":[
-    {
-      "name":"export-pki",
-      "value":"true"
-    }
-  ]
-}</pre>
+<p>A PromotionProfile can optionally specify properties to further refine export/import behavior. These are defined in an optional <strong>properties</strong> element, as shown in the examples below.</p>
 <p>You can set the following properties on a PromotionProfile:</p>
 <ul>
 	<li><strong>export-pki</strong>
@@ -764,10 +753,81 @@ vsep.listenerName = "https"</td>
 	</li>
 	<li><strong>preserve-outbound-identities</strong>
 		<p><strong>API Platform Version: 2019.1.0 and later</strong></p>
+<!--		<p>{ATMO-30197}</p>-->
 		<p>Setting this property to a value of <strong>true</strong> indicates that the outbound identities of an existing service are not changed as a result of the promotion process.</p>
-		<p>For example, without this property present, the target API identity mapping is overwritten with the values set in the source API. With the property set to <strong>true</strong>, the identities in the target API are not affected by promoting the API. The original values are preserved in the target API.</p>
+<p>For example, without this property present, the target API identity mapping is overwritten with the values set in the source API. With the property set to <strong>true</strong>, the identities in the target API are not affected by promoting the API. The original values are preserved in the target API.</p>
 	</li>
 </ul>
+
+<p>Example #1: sets the <strong>export-pki</strong> value.</p>
+<pre>{
+  "name":"Default Production Promotion",
+  "description":"Dev to production default profile",
+  "targetEnvironment":"production",
+  "properties":[
+    {
+      "name":"export-pki",
+      "value":"true"
+    }
+  ]
+}</pre>
+<p>Example #2: Sets <strong>match-policies-by-name</strong> and <strong>preserve-outbound-identities</strong>.</p>
+<pre>{
+  "name":"Topology",
+  "environments":[
+    {
+      "name":"dev1",
+      "displayName":"dev1",
+      "description":"Development environment",
+      "tenant":"dev1",
+      "initialEnvironment":true,
+      "promotionProfiles":[
+        {
+          "name":"Default Testing Promotion",
+          "description":"Dev to Testing default profile",
+          "targetEnvironment":"test1",
+          "properties":[
+            {
+              "name":"match-policies-by-name",
+              "value":"true"
+            },
+            {
+              "name":"preserve-outbound-identities",
+              "value":"true"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name":"test1",
+      "displayName":"test1",
+      "description":"Testing environment",
+      "tenant":"test1"
+    }
+  ],
+  "tenants":[
+    {
+      "name":"dev1",
+      "userAuthenticationSource":true,
+      "id":"dev1",
+      "credentials":{
+        "email":"administrator@open.akana.com",
+        "password":"password"
+      }
+    },
+    {
+      "name":"test1",
+      "id":"test1",
+      "address":"http://open.akana.com:9910",
+      "consoleAddress":"http://open.akana.com:9910/atmosphere",
+      "credentials":{
+        "email":"administrator@open.akana.com",
+        "password":"password"
+      }
+    }
+  ]
+}</pre>
 
 
 <h3 id="dz_configurations">Deployment Zone Configurations</h3>
