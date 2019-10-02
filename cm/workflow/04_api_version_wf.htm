@@ -1,7 +1,7 @@
 ---
 layout: page
 title: API Version Workflow | Customizing Workflows in the API Platform
-description: Information about initial actions, reserved actions, functions, conditions, and variables for the API Version workflow.
+description: Information about initial actions, reserved actions, functions, conditions, and variable resolvers for the API Version workflow.
 product: cm
 category: ref
 sub-nav-class: Workflows
@@ -19,10 +19,11 @@ nav-title: API Version Workflow
 <h3 style="color: gray;">Table of Contents</h3>
 <ol class="table_of_contents">
 	<li><a href="#apiv_ia_00">API Version Workflow: Initial Actions</a></li>
-	<li><a href="#apiv_ra_00">API Version Workflow: Reserved Actions</a> (none)</li>
+	<li><a href="#apiv_ra_00">API Version Workflow: Reserved Actions</a></li>
 	<li><a href="#apiv_f_00">API Version Workflow: Functions</a></li>
-	<li><a href="#apiv_c_00">API Version Workflow: Conditions</a> (none)</li>
+	<li><a href="#apiv_c_00">API Version Workflow: Conditions</a></li>
 	<li><a href="#apiv_vr_00">API Version Workflow: Variable Resolvers</a></li>
+	<li><a href="#apiv_eg_01">API Version Workflow: Customization Example</a></li>
 </ol>
 <div class = "divider1"></div>
 
@@ -44,7 +45,145 @@ nav-title: API Version Workflow
 
 
 <h3 id="apiv_ra_00">API Version Workflow: Reserved Actions</h3>
-<p>There are no reserved actions currently defined for API version workflows.</p>
+<p>The following reserved actions are valid for API version workflows:</p>
+<ul>
+	<li><a href="#apiv_ra_01">@Delete</a></li>
+	<li><a href="#apiv_ra_02">@Modify</a></li>
+	<li><a href="#apiv_ra_03">@ModifyPolicies</a> (Valid in version: 2019.1.0 and later) {<span class="apidoc_red">new</span>} 269</li>
+	<li><a href="#apiv_ra_04">@ModifyDeployments</a> (Valid in version: 2019.1.0 and later) {<span class="apidoc_red">new</span>} 288</li>
+	<li><a href="#apiv_ra_05">@ModifyDebugOptions</a> (Valid in version: 2019.1.0 and later) {<span class="apidoc_red">new</span>} 307</li>
+	<li><a href="#apiv_ra_16">@ModifyOutboundIdentities</a> (Valid in version: 2019.1.0 and later) {<span class="apidoc_red">new</span>} 326</li>
+	<li><a href="#apiv_ra_07">@ModifyExtensionProperties</a> (Valid in version: 2019.1.0 and later) {<span class="apidoc_red">new</span>} 345</li>
+	<li><a href="#apiv_ra_08">@DeleteAPIImplementation</a> (Valid in version: 2019.1.0 and later) {<span class="apidoc_red">new</span>} 364</li>
+	<li><a href="#apiv_ra_09">@ModifyLegals</a> (Valid in version: 2019.1.0 and later) {<span class="apidoc_red">new</span>} 383</li>
+	<li><a href="#apiv_ra_10">apiversion.action.submit.approval</a></li>
+	<li><a href="#apiv_ra_11">apiversion.action.approve</a></li>
+	<li><a href="#apiv_ra_12">apiversion.action.reject</a></li>
+	<li><a href="#apiv_ra_13">apiversion.action.resubmit</a></li>
+</ul>
+
+
+<h4 id="apiv_ra_01">@Delete</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>Indicates that the API version can be deleted at this point in the workflow, using the user interface or the platform API.</p>
+
+
+<h4 id="apiv_ra_02">@Modify</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>Used to determine whether an API version can be modified or should be read-only. If @Modify is not a valid action, the user interface disables the buttons/links leading to modifying anything about the API version.</p>
+<p><strong>Note</strong>: @Modify controls permission to modify the entire API version. A user with this permission is authorized to perform all edit activities for the API version, such as adding or changing operations in the API design or modifying other API information such as deployment zones, policy assignments, and endpoints. If @Modify is not present in the workflow, the platform checks for additional workflow actions that give more granular permission to perform a specific action, such as <a href="#apiv_ra_03">@ModifyPolicies</a> or <a href="#apiv_ra_04">@ModifyDeployments</a>.</p>
+
+
+<h4 id="apiv_ra_03">@ModifyPolicies</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>If you want to give users with one or more roles permission to modify the policies for an API version, even when the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p>The platform only looks for this workflow action if the @Modify action, which gives broad permission to modify all aspects of the API version, is not present in the custom workflow.</p>
+
+
+<h4 id="apiv_ra_04">@ModifyDeployments</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>If you want to give users with one or more roles permission to add, modify, or delete deployments for an API version, even when the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p>The platform only looks for this workflow action if the @Modify action, which gives broad permission to modify all aspects of the API version, is not present in the custom workflow.</p>
+
+
+<h4 id="apiv_ra_05">@ModifyDebugOptions</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>If you want to give users with one or more roles permission to modify the debug setting for an API version, even when the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p>The platform only looks for this workflow action if the @Modify action, which gives broad permission to modify all aspects of the API version, is not present in the custom workflow.</p>
+
+<h4 id="apiv_ra_06">@ModifyOutboundIdentities</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>If you want to give users with one or more roles permission to modify the outbound identities for an API version, even when the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p>The platform only looks for this workflow action if the @Modify action, which gives broad permission to modify all aspects of the API version, is not present in the custom workflow.</p>
+
+
+<h4 id="apiv_ra_07">@ModifyExtensionProperties</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>If you want to give users with one or more roles permission to modify the extension properties for an API version (when extension properties are in place), even when the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p>The platform only looks for this workflow action if the @Modify action, which gives broad permission to modify all aspects of the API version, is not present in the custom workflow.</p>
+
+
+<h4 id="apiv_ra_08">@DeleteAPIImplementation</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>If you want to give users with one or more roles permission to delete an implementation for an API version, even when the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p>The platform only looks for this workflow action if the @Modify action, which gives broad permission to modify all aspects of the API version, is not present in the custom workflow.</p>
+
+
+<h4 id="apiv_ra_09">@ModifyLegals</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>If you want to give users with one or more roles permission to modify the legal agreement for an API version, even when the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p>The platform only looks for this workflow action if the @Modify action, which gives broad permission to modify all aspects of the API version, is not present in the custom workflow.</p>
+
+
+<h4 id="apiv_ra_10">apiversion.action.submit.approval</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>Used to submit a new or revised API version for approval.</p>
+<p>The Business Admin for the organization can submit an API version for approval.</p>
+<p>For an example of a workflow section that includes this action, see <a href="#apiv_f_05">updateApiVersionStatus</a>.</p>
+
+
+<h4 id="apiv_ra_11">apiversion.action.approve</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>Used to approve a new or revised API version that was submitted for approval.</p>
+<p>The Business Admin for the organization, or the API Approver, can approve or reject an API version.</p>
+<p>The example below shows a section of the template workflow showing steps and actions when an API version is pending approval. Valid actions are Approve (<strong>apiversion.action.approve</strong>) or Reject (<strong>apiversion.action.reject</strong>).  When the action is <strong>apiversion.action.approve</strong> (line 3), the applicable conditions are applied as shown below.</p>
+<pre>&lt;step id="300" name="Pending Approval!"&gt;
+  &lt;actions&gt;
+    &lt;action id="301" name="apiversion.action.approve"&gt;
+      &lt;restrict-to&gt;
+        &lt;conditions type="OR"&gt;
+          &lt;condition type="authorizeByAtmosphereRole"&gt;
+            &lt;arg name="role"&gt;&amp;AtmoRoleBusinessAdmin;&lt;/arg&gt;
+          &lt;/condition&gt;
+          &lt;condition type="authorizeByAtmosphereRole"&gt;
+            &lt;arg name="role"&gt;&amp;AtmoRoleAPIApprover;&lt;/arg&gt;
+          &lt;/condition&gt; 
+        &lt;/conditions&gt;
+      &lt;/restrict-to&gt;
+      &lt;results&gt;
+        &lt;unconditional-result old-status="Pending Approval" status="Active" step="400"/&gt;
+      &lt;/results&gt;
+      &lt;post-functions&gt;
+        &lt;function type="updateApiVersionStatus"&gt;
+          &lt;arg name="status"&gt;&amp;StateActive;&lt;/arg&gt;
+        &lt;/function&gt;
+      &lt;/post-functions&gt;
+    &lt;/action&gt;
+    &lt;action id="302" name="apiversion.action.reject"&gt;
+      &lt;restrict-to&gt;
+        &lt;conditions type="OR"&gt;
+          &lt;condition type="authorizeByAtmosphereRole"&gt;
+            &lt;arg name="role"&gt;&amp;AtmoRoleBusinessAdmin;&lt;/arg&gt;
+          &lt;/condition&gt;
+          &lt;condition type="authorizeByAtmosphereRole"&gt;
+            &lt;arg name="role"&gt;&amp;AtmoRoleAPIApprover;&lt;/arg&gt;
+          &lt;/condition&gt; 
+        &lt;/conditions&gt;
+      &lt;/restrict-to&gt;
+      &lt;results&gt;
+        &lt;unconditional-result old-status="Pending Approval" status="Rejected" step="350" owner="${caller}"/&gt;
+      &lt;/results&gt;
+      &lt;post-functions&gt;
+        &lt;function type="updateApiVersionStatus"&gt;
+          &lt;arg name="status"&gt;&amp;StateRejected;&lt;/arg&gt;
+        &lt;/function&gt;
+      &lt;/post-functions&gt;
+    &lt;/action&gt;
+  &lt;/actions&gt;
+&lt;/step&gt;</pre>
+
+
+<h4 id="apiv_ra_12">apiversion.action.reject</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>Used to reject a new or revised API version that was submitted for approval.</p>
+<p>The Business Admin for the organization, or the API Approver, can approve or reject an API version.</p>
+<p>For an example of a workflow section that includes this action, see <a href="#apiv_ra_11">apiversion.action.approve</a> above.</p>
+
+
+<h4 id="apiv_ra_13">apiversion.action.resubmit</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>Used to resubmit a new or revised API version for approval.</p>
+<p>Same as <strong>apiversion.action.submit.approval</strong> above.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -54,6 +193,9 @@ nav-title: API Version Workflow
 <ul>
 	<li><a href="#apiv_f_01">exportAPIVersion</a></li>
 	<li><a href="#apiv_f_02">exportAPIAllVersions</a></li>
+	<li><a href="#apiv_f_03">markApiVersionDeleted</a> (Valid in version: 2019.1.0 and later){<span class="apidoc_red">new</span>}</li>
+	<li><a href="#apiv_f_04">updateApiVersionState</a> (Valid in version: 2019.1.0 and later){<span class="apidoc_red">new</span>} {<span class="apidoc_red">MM: State isn't used in the sample workflow. Is it valid? Should I document it?</span>}</li>
+	<li><a href="#apiv_f_05">updateApiVersionStatus</a> (Valid in version: 2019.1.0 and later){<span class="apidoc_red">new</span>}</li>
 </ul>
 <!--<p>{\com.soa.atmosphere.impl\src\com\soa\api\workflow\impl\APIVersionWorkflowFunctions.java}</p>-->
 
@@ -105,12 +247,193 @@ nav-title: API Version Workflow
     &lt;function type="exportAPIAllVersions"/&gt;
   &lt;/post-functions&gt;
 &lt;/action&gt;</pre>
+
+
+<h4 id="apiv_f_03">markApiVersionDeleted</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>Marks an API version as deleted.</p>
+
+<h5>Parameters</h5>
+<p>None.</p>
+<h5>Examples/Notes/Additional Information</h5>
+<p>The example below shows the Delete action in the template custom workflow. Once the conditions have been satisfied, the status is updated from Draft to Deleted and <strong>markApiVersionDeleted</strong> is implemented as a post-function.</p>
+<pre>&lt;action id="102" name="@Delete"&gt;
+  &lt;restrict-to&gt;
+    &lt;conditions type="AND"&gt;
+        &lt;condition type="isApiVersionInDraftState" /&gt;
+        &lt;conditions type="OR"&gt;
+          &lt;condition type="authorizeByAtmosphereRole"&gt;
+            &lt;arg name="role"&gt;&amp;AtmoRoleBusinessAdmin;&lt;/arg&gt;
+          &lt;/condition&gt;
+          &lt;condition type="authorizeByAtmosphereAction"&gt;
+            &lt;arg name="Action"&gt;Delete&lt;/arg&gt;
+            &lt;arg name="ResourceType"&gt;apiversion&lt;/arg&gt;
+          &lt;/condition&gt;
+          &lt;condition type="authorizeByAtmosphereRole"&gt;
+            &lt;arg name="role"&gt;&amp;AtmoRoleApiAdmin;&lt;/arg&gt;
+          &lt;/condition&gt; 
+        &lt;/conditions&gt;
+    &lt;/conditions&gt;
+  &lt;/restrict-to&gt;
+  &lt;results&gt;
+    &lt;unconditional-result old-status="Draft" status="Deleted" step="500" /&gt;
+  &lt;/results&gt;
+  &lt;post-functions&gt;
+    &lt;function type="markApiVersionDeleted"/&gt;
+  &lt;/post-functions&gt;
+&lt;/action&gt;</pre>
+
+
+<h4 id="apiv_f_04">updateApiVersionState</h4>
+<p>{<span class="apidoc_red">MM: State isn't used in the sample workflow. Is it valid? Should I document it?</span>}</p>
+<!--<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>Changes the state of an API version; for example, from <strong>Pending Approval</strong> to <strong>Active</strong>.</p>
+<h5>Parameters</h5>
+<table class="doctable">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Description/Values</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>status</td>
+			<td><p>The new state that the API version is being updated to. Valid values:</p>
+				<ul>
+					<li>com.akana.model.state.draft</li>
+					<li>com.akana.model.state.pending_approval</li>
+					<li>com.akana.model.state.rejected</li>
+					<li>com.akana.model.state.active</li>
+					<li>com.akana.model.state.deleted</li>
+				</ul></td>
+		</tr>
+	</tbody>
+</table>
+<h5>Examples/Notes/Additional Information</h5>
+<p>The example below shows the Approve action in the default Model Object workflow. Once the conditions have been satisfied, the status is updated from Pending Approval to Active and <strong>updateModelStatus</strong> is implemented as a post-function (line 16).</p>
+<pre>01 &lt;action id=&quot;301&quot; name=&quot;model.action.approve&quot;&gt;
+02   &lt;restrict-to&gt;
+03     &lt;conditions type=&quot;OR&quot;&gt;
+04       &lt;condition type=&quot;authorizeByAtmosphereRole&quot;&gt;
+05         &lt;arg name=&quot;role&quot;&gt;&amp;AtmoRoleBusinessAdmin;&lt;/arg&gt;
+06       &lt;/condition&gt;
+07       &lt;condition type=&quot;authorizeByAtmosphereRole&quot;&gt;
+08         &lt;arg name=&quot;role&quot;&gt;&amp;AtmoRoleSchemaApprover;&lt;/arg&gt;
+09       &lt;/condition&gt; 
+10     &lt;/conditions&gt;
+11   &lt;/restrict-to&gt;
+12   &lt;results&gt;
+13     &lt;unconditional-result old-status=&quot;Pending Approval&quot; status=&quot;Active&quot; step=&quot;400&quot;/&gt;
+14   &lt;/results&gt;
+15   &lt;post-functions&gt;
+16     &lt;function type=&quot;updateModelStatus&quot;&gt;
+17       &lt;arg name=&quot;status&quot;&gt;&amp;ModelStateActive;&lt;/arg&gt;
+18     &lt;/function&gt;
+19   &lt;/post-functions&gt;
+20 &lt;/action&gt;</pre>
+<p><a href="#top">Back to top</a></p>-->
+
+
+<h4 id="apiv_f_05">updateApiVersionStatus</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>Updates the status of an API version, to the value provided in the argument. The new status must be a valid transition from the current status; for example, from <strong>Pending Approval</strong> to <strong>Active</strong>.</p>
+<p>{<span class="apidoc_red">MM: Not sure if I got confused between values for state and status. From what I see, values for status have &quot;state&quot; in the name. Let me know if I have it wrong.</span>}</p>
+<h5>Parameters</h5>
+<table class="doctable">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Description/Values</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>status</td>
+			<td><p>The new status that the API version is being updated to. Valid values for change of status, depending on the previous status:</p>
+				<ul><li>StateDraft</li>
+					<li>StatePendingApproval</li>
+					<li>StateRejected</li>
+					<li>StateActive</li>
+				</ul></td>
+		</tr>
+	</tbody>
+</table>
+
+<h5>Examples/Notes/Additional Information</h5>
+<p>The example below shows the API version workflow when an API version is submitted for approval. The previous status is <strong>Draft</strong>, and the new status is <strong>Pending Approval</strong>.</p>
+<pre>&lt;action id="103" name="apiversion.action.submit.approval"&gt;
+  &lt;restrict-to&gt;
+    &lt;conditions type="AND"&gt;
+      &lt;condition type="isApiVersionInDraftState" /&gt;
+      &lt;conditions type="OR"&gt;
+        &lt;condition type="authorizeByAtmosphereRole"&gt;
+          &lt;arg name="role"&gt;&amp;AtmoRoleBusinessAdmin;&lt;/arg&gt;
+        &lt;/condition&gt;
+        &lt;condition type="authorizeByAtmosphereAction"&gt;
+          &lt;arg name="Action"&gt;Modify&lt;/arg&gt;
+          &lt;arg name="ResourceType"&gt;apiversion&lt;/arg&gt;
+        &lt;/condition&gt;
+        &lt;condition type="authorizeByAtmosphereRole"&gt;
+          &lt;arg name="role"&gt;&amp;AtmoRoleApiAdmin;&lt;/arg&gt;
+        &lt;/condition&gt; 
+      &lt;/conditions&gt;
+    &lt;/conditions&gt;
+  &lt;/restrict-to&gt;
+  &lt;results&gt;
+    &lt;unconditional-result old-status="Draft" status="Pending Approval" step="300" /&gt;
+  &lt;/results&gt;
+  &lt;post-functions&gt;
+    &lt;function type="updateApiVersionStatus"&gt;
+      &lt;arg name="status"&gt;&amp;StatePendingApproval;&lt;/arg&gt;
+    &lt;/function&gt;
+  &lt;/post-functions&gt;
+&lt;/action&gt;
+</pre>
 <p><a href="#top">Back to top</a></p>
 
 
 
 <h3 id="apiv_c_00">API Version Workflow: Conditions</h3>
-<p>There are no conditions for the API version workflow.</p>
+<p>The following condition applies to the API version workflow:</p>
+<ul>
+	<li><a href="#apiv_c_01">isApiVersionInDraftState</a> (Valid in version: 2019.1.0 and later) {<span class="apidoc_red">new</span>}</li>
+</ul>
+<h4 id="disc_c_01">isApiVersionInDraftState</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>Tests to see if the API Version is in Draft state; returns Boolean true or false.</p>
+<h5>Arguments</h5>
+<p>None.</p>
+
+<h5>Examples/Notes/Additional Information</h5>
+<p>In the example below, an API version is submitted for approval. The workflow firsts checks that the API version is in Draft state.</p>
+<pre>&lt;action id="103" name="apiversion.action.submit.approval"&gt;
+  &lt;restrict-to&gt;
+    &lt;conditions type="AND"&gt;
+      &lt;condition type="isApiVersionInDraftState" /&gt;
+      &lt;conditions type="OR"&gt;
+        &lt;condition type="authorizeByAtmosphereRole"&gt;
+          &lt;arg name="role"&gt;&amp;AtmoRoleBusinessAdmin;&lt;/arg&gt;
+        &lt;/condition&gt;
+        &lt;condition type="authorizeByAtmosphereAction"&gt;
+          &lt;arg name="Action"&gt;Modify&lt;/arg&gt;
+          &lt;arg name="ResourceType"&gt;apiversion&lt;/arg&gt;
+        &lt;/condition&gt;
+        &lt;condition type="authorizeByAtmosphereRole"&gt;
+          &lt;arg name="role"&gt;&amp;AtmoRoleApiAdmin;&lt;/arg&gt;
+        &lt;/condition&gt; 
+      &lt;/conditions&gt;
+    &lt;/conditions&gt;
+  &lt;/restrict-to&gt;
+  &lt;results&gt;
+    &lt;unconditional-result old-status="Draft" status="Pending Approval" step="300" /&gt;
+  &lt;/results&gt;
+  &lt;post-functions&gt;
+    &lt;function type="updateApiVersionStatus"&gt;
+      &lt;arg name="status"&gt;&amp;StatePendingApproval;&lt;/arg&gt;
+    &lt;/function&gt;
+  &lt;/post-functions&gt;
+&lt;/action&gt;</pre>
 <!--<p>{\com.soa.atmosphere.impl\src\com\soa\api\workflow\impl\APIVersionWorkflowConditions.java}</p>-->
 <p><a href="#top">Back to top</a></p>
 
@@ -127,6 +450,17 @@ nav-title: API Version Workflow
 
 <h4 id="apiv_vr_01">${api.dn}</h4>
 <p>The unique ID for the API that the API version is associated with (APIID).</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="apiv_eg_01">API Version Workflow: Customization Example</h3>
+<p>This section describes a scenario where you might want to use custom workflow to implement custom behavior, and includes a template that you could use to implement this specific behavior.</p>
+<h4>Behavior</h4>
+<p>xxx</p>
+<h4>Workflow</h4>
+<!--<p>{\akana\trunk\products\api-portal\com.soa.atmosphere.impl\META-INF\resources\templates\apiversion-workflow-template.xml</p>-->
+<p><a href="assets/apiversion-workflow-template.xml">Template workflow for the above behavior</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
