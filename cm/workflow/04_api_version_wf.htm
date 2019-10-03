@@ -50,13 +50,13 @@ nav-title: API Version Workflow
 <ul>
 	<li><a href="#apiv_ra_01">@Delete</a></li>
 	<li><a href="#apiv_ra_02">@Modify</a></li>
-	<li><a href="#apiv_ra_03">@ModifyPolicies</a> (Valid in version: 2019.1.0 and later) {<span class="apidoc_red">new</span>} 269</li>
-	<li><a href="#apiv_ra_04">@ModifyDeployments</a> (Valid in version: 2019.1.0 and later) {<span class="apidoc_red">new</span>} 288</li>
-	<li><a href="#apiv_ra_05">@ModifyDebugOptions</a> (Valid in version: 2019.1.0 and later) {<span class="apidoc_red">new</span>} 307</li>
-	<li><a href="#apiv_ra_06">@ModifyOutboundIdentities</a> (Valid in version: 2019.1.0 and later) {<span class="apidoc_red">new</span>} 326</li>
-	<li><a href="#apiv_ra_07">@ModifyExtensionProperties</a> (Valid in version: 2019.1.0 and later) {<span class="apidoc_red">new</span>} 345</li>
-	<li><a href="#apiv_ra_08">@DeleteAPIImplementation</a> (Valid in version: 2019.1.0 and later) {<span class="apidoc_red">new</span>} 364</li>
-	<li><a href="#apiv_ra_09">@ModifyLegals</a> (Valid in version: 2019.1.0 and later) {<span class="apidoc_red">new</span>} 383</li>
+	<li><a href="#apiv_ra_03">@ModifyPolicies</a> (Valid in version: 2019.1.0 and later) {<span class="apidoc_red">new</span>}</li>
+	<li><a href="#apiv_ra_04">@ModifyDeployments</a> (Valid in version: 2019.1.0 and later) {<span class="apidoc_red">new</span>}</li>
+	<li><a href="#apiv_ra_05">@ModifyDebugOptions</a> (Valid in version: 2019.1.0 and later) {<span class="apidoc_red">new</span>}</li>
+	<li><a href="#apiv_ra_06">@ModifyOutboundIdentities</a> (Valid in version: 2019.1.0 and later) {<span class="apidoc_red">new</span>}</li>
+	<li><a href="#apiv_ra_07">@ModifyExtensionProperties</a> (Valid in version: 2019.1.0 and later) {<span class="apidoc_red">new</span>}</li>
+	<li><a href="#apiv_ra_08">@DeleteAPIImplementation</a> (Valid in version: 2019.1.0 and later) {<span class="apidoc_red">new</span>}</li>
+	<li><a href="#apiv_ra_09">@ModifyLegals</a> (Valid in version: 2019.1.0 and later) {<span class="apidoc_red">new</span>}</li>
 	<li><a href="#apiv_ra_10">apiversion.action.submit.approval</a></li>
 	<li><a href="#apiv_ra_11">apiversion.action.approve</a></li>
 	<li><a href="#apiv_ra_12">apiversion.action.reject</a></li>
@@ -79,6 +79,27 @@ nav-title: API Version Workflow
 <p><strong>Valid in version: 2019.1.0 and later</strong></p>
 <p>If you want to give users with one or more roles permission to modify the policies for an API version, even when the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
 <p>The platform only looks for this workflow action if the @Modify action, which gives broad permission to modify all aspects of the API version, is not present in the custom workflow.</p>
+<p>The example below, from the sample custom workflow template at <a href="#apiv_eg_01">API Version Workflow: Customization Example</a> later in this document, shows use of the @ModifyPolicies reserved action to assign this ability to an API version in Active state.</p>
+<pre>&lt;action id="402" name="@ModifyPolicies"&gt;
+  &lt;restrict-to&gt;
+    &lt;conditions type="OR"&gt;
+      &lt;condition type="authorizeByAtmosphereRole"&gt;
+        &lt;arg name="role"&gt;&amp;AtmoRoleBusinessAdmin;&lt;/arg&gt;
+      &lt;/condition&gt;
+      &lt;condition type="authorizeByAtmosphereRole"&gt;
+        &lt;arg name="role"&gt;&amp;AtmoRoleApiAdmin;&lt;/arg&gt;
+      &lt;/condition&gt;
+      &lt;condition type="authorizeByAtmosphereAction"&gt;
+        &lt;arg name="Action"&gt;Modify&lt;/arg&gt;
+        &lt;arg name="ResourceType"&gt;apiversion&lt;/arg&gt;
+      &lt;/condition&gt; 
+    &lt;/conditions&gt;
+  &lt;/restrict-to&gt;
+  &lt;results&gt;
+    &lt;unconditional-result old-status="Active" status="Active" step="400" /&gt;
+  &lt;/results&gt;
+&lt;/action&gt;
+</pre>
 
 
 <h4 id="apiv_ra_04">@ModifyDeployments</h4>
@@ -421,7 +442,7 @@ nav-title: API Version Workflow
           &lt;arg name="ResourceType"&gt;apiversion&lt;/arg&gt;
         &lt;/condition&gt;
         &lt;condition type="authorizeByAtmosphereRole"&gt;
-          &lt;arg name="role"&gt;&amp;AtmoRoleApiAdmin;&lt;/arg&gt;
+          &lt;arg name="role"&gt;&amp;&amp;AtmoRoleApiAdmin;&lt;/arg&gt;
         &lt;/condition&gt; 
       &lt;/conditions&gt;
     &lt;/conditions&gt;
@@ -456,12 +477,43 @@ nav-title: API Version Workflow
 
 
 <h3 id="apiv_eg_01">API Version Workflow: Customization Example</h3>
-<p>This section describes a scenario where you might want to use custom workflow to implement custom behavior, and includes a template that you could use to implement this specific behavior.</p>
-<h4>Behavior</h4>
-<p>xxx</p>
-<h4>Workflow</h4>
+<p>This section:</p>
+<ul>
+	<li>Describes a scenario where you might want to use custom workflow to implement custom behavior that includes an API version approval process, so that the API version is in a Draft state until approval is requested.</li>
+	<li>Includes a template that you could use to implement this specific behavior.</li>
+</ul>
+<h4>Default behavior</h4>
+<p>Without a custom workflow in place, when a user creates an API in the developer portal, it is activated immediately. It becomes searchable (unless marked as Private, and even then, it is marked as Searchable to those who have visibility). Users who can see the API can connect to that API version automatically. By default, there is no approval process for the API; it becomes active immediately.</p>
+
+<h4>Custom behavior</h4>
+<p>Instead of the default behavior, you might want to implement a scenario where when an API is still being designed it is in Draft state, and remains in Draft state until you submit it for approval. In Draft state, you can save the API and go back tomorrow to add more operations or more model objects, or to add or modify other data associated with the API such as policies and deployment zones.</p>
+<p>When the API is ready, you can submit it for approval. At that point, the API is in Pending Approval state.</p>
+<p>Then, specific users can approve the API. For this template, users with the role of API Approver or Business Admin can approve the API. If the API is approved it is in Activated state. Alternatively, if the API is rejected, it goes back to Draft state.</p>
+
+
+<h4>Activated state: default behavior</h4>
+<p>Without custom workflow in place, an API version can be changed at any point by any user with API Admin right for the API, or by a Business Admin.</p>
+
+
+<h4>Activated state: custom template behavior</h4>
+<p>With this custom workflow template in place, once an API version is in Activated state it cannot be changed. This helps maintain reliability and consistency in a scenario where many apps might be connected to an API version.</p>
+<p>However, you might want to implement a scenario where certain actions are allowed. For example, when an API is in Approved state and in production, you would not want to change the API design, but you might want to add a Detailed Auditing policy for monitoring purposes, or add a deployment zone, or add new endpoints. To allow these actions with this custom template workflow, you'd need to add one or more of the reserved actions shown below, and then give users with one or more roles permission to perform that action. For an example, see <a href="#apiv_ra_03">@ModifyPolicies</a> above.</p>
+<p>The actions you can allow even when the API version is in Activated state, with the custom template workflow, are:</p>
+<ul>
+	<li>Modify policies: <a href="#apiv_ra_03">@ModifyPolicies</a></li>
+	<li>Modify deployment zones: <a href="#apiv_ra_04">@ModifyDeployments</a></li>
+	<li>Change the debug setting: <a href="#apiv_ra_05">@ModifyDebugOptions</a></li>
+	<li>Modify the Outbound Identity values: <a href="#apiv_ra_06">@ModifyOutboundIdentities</a></li>
+	<li>Modify extension properties associated with the API version: <a href="#apiv_ra_07">@ModifyExtensionProperties</a></li>
+	<li>Delete an API implementation: <a href="#apiv_ra_08">@DeleteAPIImplementation</a></li>
+	<li>Change the legal agreement associated with the API version: <a href="#apiv_ra_09">@ModifyLegals</a></li>
+</ul>
+<p>The custom workflow template has the built-in flexibility for you to control any of the above actions to a fine level of granularity.</p>
+<h4>Custom Workflow Template</h4>
 <!--<p>{\akana\trunk\products\api-portal\com.soa.atmosphere.impl\META-INF\resources\templates\apiversion-workflow-template.xml</p>-->
-<p><a href="assets/apiversion-workflow-template.xml">Template workflow for the above behavior</a>.</p>
+<p>As a starting point, download and review the linked <a href="assets/apiversion-workflow-template.xml">template workflow for the above behavior</a> provided here.</p>
+<p>Then, you can modify actions and roles as needed to achieve the results you want.</p>
+<p>When you have your custom workload ready, upload it to the developer portal and assign it as your default workflow for API versions. For instructions, see <a href="../learnmore/apiadmin_workflow_custom.htm#proc_workflow_custom">To implement a custom API version workflow</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
