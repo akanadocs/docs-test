@@ -80,7 +80,15 @@ nav-title: Upgrade to 2019.x.x
 <ol class="table_of_contents">
 	<li><a href="#launch_console">Launching the Akana Administration Console</a></li>
 	<li><a href="#running_upgrade_tools">Running upgrade tools</a></li>
-	<li><a href="#post_upgrade_tasks_running">Running post-upgrade tasks</a></li>
+	<li><a href="#post_upgrade_tasks_running">Running post-upgrade tasks</a>
+		<ul>
+			<li><a href="#post_upgrade_01">Manage PKI Keys</a></li>
+			<li><a href="#post_upgrade_02">Configure Database Options</a></li>
+			<li><a href="#post_upgrade_03">Manage Schemas</a></li>
+			<li><a href="#post_upgrade_04">Create Policy Manager Admin User</a></li>
+			<li><a href="#post_upgrade_05">Provisioning</a></li>
+		</ul>
+	</li>
 	<li><a href="#check_features_installed">Checking that features were installed correctly</a></li>
 	<li><a href="#sched_jobs_off">Turning the scheduled jobs off</a></li>
 	<li><a href="#sched_jobs_on">Turning the scheduled jobs back on</a></li>
@@ -90,10 +98,6 @@ nav-title: Upgrade to 2019.x.x
 	<li><a href="#upgrade_automation">Automation recipes for upgrade</a></li>
 	<li><a href="#tech_support_contact">Contacting Technical Support</a></li>
 </ol>
-
-
-
-
 <div class = "divider1"></div>
 <h3 id="h_upgrade_planning">Planning the Upgrade</h3>
 
@@ -146,7 +150,7 @@ nav-title: Upgrade to 2019.x.x
 	<li>In the Akana Administration Console for each container, take all steps needed to save out container settings so that you can reproduce the configuration on the new container, where applicable. You'll need this information for <a href="#s03_03_update_props">Step 3-3: Update container properties</a>. Save all other container properties that you've customized.
 		<p><strong>Note</strong>: you can use an automation task to save out the configuration settings. See <a href="../automation/automation_ref.htm#recipes_extracting_properties">Extracting and Analyzing Recipes</a>.</p>
 	</li>
-	<li>Make a note of the container key value. This is needed for replicating the existing container in your new container. You can get the container key from the Akana Administration Console for the container {<span class="apidoc_red">add location</span>}. When you're setting up the new container, you'll use this key (<a href="#s02_05_container_01">Step 2-5: Create and configure the first container</a> below).</li>
+	<li>Make a note of the container key value. This is needed for replicating the existing container in your new container. You can get the container key from the Akana Administration Console for the container {<span class="apidoc_red">location?</span>}. When you're setting up the new container, you'll use this key (<a href="#s02_05_container_01">Step 2-5: Create and configure the first container</a> below).</li>
 		<li>Make sure you have the certificate that you used to create the original container. You can then upload the certificate when configuring the new container in. See <a href="#s03_01_pki">Step 3-1: Upload PKI keys and certificate</a>.</li>
 	<li>Conditional: If standalone Elasticsearch is new for your implementation, determine where you'll install Elasticsearch, needed for the search feature. For full information on Elasticsearch, see <a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a>.</li>
 </ol>
@@ -250,7 +254,7 @@ ps -ef
 	</li>
 	<li>In the Akana Administration Console for the container, install Policy Manager/Community Manager. See <a href="../platform_install/installing_akana_api_platform_v2019.htm#install_pm_cm">Step 2-4: Install Policy Manager/Community Manager features on the container</a> (installation doc).</li>
 	<li>At the <strong>Installation Complete</strong> summary, do not click Configure yet. Instead, click <strong>Cancel</strong>; you'll need to turn off the scheduled jobs before running the post-upgrade tasks.</li>
-	<li>{<span class="apidoc_red">GW: do they install plug-ins and tools before turning off scheduled jobs? I'm thinking yes so did it that way but please confirm/correct. Also do they restart the container before installing plug-ins and tools? That was in the sequence before, to do that after the post-upgrade tasks that we've now moved to later.</span>}</li>
+	<li>{<span class="apidoc_red">GW: please confirm these sequences: 1) install plug-ins and tools before turning off scheduled jobs 2) make sure at what point they need to restart the container. I have it below #4.</span>}</li>
 	<li>If applicable, install plug-ins. See <a href="../platform_install/installing_akana_api_platform_v2019.htm#install_plugins">Step 2-5: (as needed) Install plug-ins on the container</a>.</li>
 	<li>Conditional: if you're upgrading from an older version, such as 8.2, you'll need to install one or more upgrade tools, in the Akana Administration Console for the container. For more information, see <a href="#running_upgrade_tools">Running upgrade tools</a>.</li>
 	<li>Turn off the scheduled jobs. For instructions, see <a href="#sched_jobs_off">Turning the scheduled jobs off</a>.</li>
@@ -263,6 +267,7 @@ ps -ef
 	<li>Run any tasks that are pending. The specific list depends on the version you're upgrading from and the features you're installing. Complete all tasks. For information about specific tasks, see <a href="#post_upgrade_tasks_running">Running post-upgrade tasks</a>.
 	<p><strong>Note</strong>: When you're configuring the database, choose <strong>Use Existing Database</strong> and put in the values and credentials for the database from your prior version of the Akana API Platform. Depending on the database you're using, you might need to put a database driver in place, or take some other steps.</p>
 			<p>See <a href="../platform_install/installing_akana_api_platform_v2019.htm#database_notes">Database notes</a> and <a href="../platform_install/installing_akana_api_platform_v2019.htm#database_drivers">Database drivers</a> (installation doc).</p></li>
+		<li>If you didn't already do it, at the Manage PKI Keys wizard (<strong>Generate PKI Keys &amp; X.509 Certificate</strong> page), upload the container certificate from your secure external location. See <a href="#post_upgrade_01">Manage PKI Keys</a>.</li>
 		<li>When pending installation tasks are all complete, restart the container. For instructions, see <a href="../platform_install/installing_akana_api_platform_v2019.htm#starting_container">Starting a container</a>.</li>
 		<li> Turn the scheduled jobs back on. For instructions, see <a href="#sched_jobs_on">Turning the scheduled jobs back on</a>.</li>
 </ol>
@@ -271,7 +276,7 @@ ps -ef
 
 
 <h3 id="s03_03_update_props">Step 3-3: Update container properties</h3>
-<p> {<span class="apidoc_red">GW I think this is where this step goes. Please confirm/correct. I will fix numbering. But I had it later, after checking system health and Elasticsearch and other stuff. Think it needs to go earlier, after container config, before going on to the next container? Please advise.</span>}</p>
+<p> {<span class="apidoc_red">GW I think this is where this step goes. Please confirm/correct. I will fix numbering. But I had it later, after checking system health and Elasticsearch and other stuff. Think it needs to go earlier, after container config, before going on to the next container? Please advise. 2) Also maybe update container key and certificate here, before going on to the next container?</span>}</p>
 <p>When you've created the new container and installed the features, it's time to set the configuration properties. You'll need to transfer any customized settings that were set on the old container, to the new container.</p>
 <p>Use the setting values that you saved out in <a href="#s01_02_plan">Step 1-2: Plan the upgrade</a>, procedure step #4, and set them on the new container.</p>
 <p>If you're using automation, run the extracted recipe that you created in <a href="#s02_03_save_props">Step 2-3: Save properties from old container</a>, to set the properties so they are the same as the old container.</p>
@@ -323,9 +328,7 @@ ps -ef
 
 
 <h3 id="s03_01_pki">Step 3-1: Upload PKI keys and certificate</h3>
-<p>At the Manage PKI Keys wizard (<strong>Generate PKI Keys &amp; X.509 Certificate</strong> page), upload the container certificate from your secure external location. You'll need to upload a&nbsp;.JKS or&nbsp;.P12 file.</p>
-<p>In the Akana Administration Console for the container, go to <strong>Configuration</strong> &gt; <strong>Manage PKI Keys</strong> and choose <strong>Import Private Key &amp; X.509 Certificate</strong>. See <a href="../admin_console/config_actions.htm#aac_ca_managepkikeys">Installation wizard: Manage PKI Keys</a> (Akana Administration Console doc).</p>
-<p>For general information about container identity in the context of upgrading, see <a href="upgrade_managing_container_identity.htm">Managing Container Identity Across Upgrades</a>.</p>
+<p>At the Manage PKI Keys wizard (<strong>Generate PKI Keys &amp; X.509 Certificate</strong> page), upload the container certificate from your secure external location. See <a href="#post_upgrade_01">Manage PKI Keys</a>.</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -471,25 +474,38 @@ ps -ef
 <p>This section contains information about tasks you're likely to run into when upgrading using the simple scenario described in this document.</p>
 <p>Common post-upgrade tasks are:</p>
 <ul>
-	<li>Manage PKI Keys wizard (<strong>Generate PKI Keys &amp; X.509 Certificate</strong> page).
-		<p>See <a href="../admin_console/config_actions.htm#aac_ca_managepkikeys">Installation wizard: Manage PKI Keys</a> (Akana Administration Console doc).</p>
-	</li>
-	<li>Configure Database Options wizard (<strong>Select Database Options</strong> page): here, choose <strong>Use Existing Database</strong> and put in the values and credentials for the database from your prior version of the Akana API Platform.
-		<p>See <a href="../platform_install/installing_akana_api_platform_v2019.htm#install_tasks_add_database">Installation wizard: Add Database</a> (installation doc).</p>
-		<p><strong>Note</strong>: Depending on the database you're using, you might need to put a database driver in place, or take some other steps.</p>
-		<p>See <a href="../platform_install/installing_akana_api_platform_v2019.htm#database_notes">Database notes</a> and <a href="../platform_install/installing_akana_api_platform_v2019.htm#database_drivers">Database drivers</a> (installation doc).</p>
-	</li>
-	<li>Manage Schemas wizard (<strong>Install Schemas</strong> page): Manages the database schemas for the container.
-		<p>See <a href="../platform_install/installing_akana_api_platform_v2019.htm#install_tasks_manage_schemas">Installation wizard: Manage Schemas</a> (installation doc).</p>
-	</li>
-	<li>Create Policy Manager Admin User (<strong>Define Policy Manager Administrator Credentials</strong> page): Creates the top-level Policy Manager user.
-		<p>See <a href="../platform_install/installing_akana_api_platform_v2019.htm#install_tasks_create_pm_admin_user">Installation wizard: Define Policy Manager Administrator Credentials</a> (installation doc).</p>
-	</li>
-	<li>Provisioning: Initializes resources associated with the features installed on the container.
-		<p>See <a href="../platform_install/installing_akana_api_platform_v2019.htm#install_tasks_provisioning">Installation wizard: Provisioning</a> (installation doc).</p>
-	</li>
+	<li><a href="#post_upgrade_01">Manage PKI Keys</a></li>
+	<li><a href="#post_upgrade_02">Configure Database Options</a></li>
+	<li><a href="#post_upgrade_03">Manage Schemas</a></li>
+	<li><a href="#post_upgrade_04">Create Policy Manager Admin User</a></li>
+	<li><a href="#post_upgrade_05">Provisioning</a></li>
 </ul>
 <p>For a full list of possible tasks, see <a href="../admin_console/config_actions.htm#config_actions_all">Configuration Actions: full list</a> (Akana Administration Console doc).</p>
+
+
+<h4 id="post_upgrade_01">Manage PKI keys</h4>
+<p>At the Manage PKI Keys wizard (<strong>Generate PKI Keys &amp; X.509 Certificate</strong> page), upload the container certificate from your secure external location. You'll need to upload a&nbsp;.JKS or&nbsp;.P12 file.</p>
+<p>In the Akana Administration Console for the container, go to <strong>Configuration</strong> &gt; <strong>Manage PKI Keys</strong> and choose <strong>Import Private Key &amp; X.509 Certificate</strong>. See <a href="../admin_console/config_actions.htm#aac_ca_managepkikeys">Installation wizard: Manage PKI Keys</a> (Akana Administration Console doc).</p>
+<p>For general information about container identity in the context of upgrading, see <a href="upgrade_managing_container_identity.htm">Managing Container Identity Across Upgrades</a>.</p>
+<p>See <a href="../admin_console/config_actions.htm#aac_ca_managepkikeys">Installation wizard: Manage PKI Keys</a> (Akana Administration Console doc).</p>
+<p>--------------------------</p>
+<h4 id="post_upgrade_02">Configure Database Options</h4>
+<p>Configure Database Options wizard (<strong>Select Database Options</strong> page): here, choose <strong>Use Existing Database</strong> and put in the values and credentials for the database from your prior version of the Akana API Platform. </p>
+<p>See <a href="../platform_install/installing_akana_api_platform_v2019.htm#install_tasks_add_database">Installation wizard: Add Database</a> (installation doc).</p>
+<p><strong>Note</strong>: Depending on the database you're using, you might need to put a database driver in place, or take some other steps.</p>
+<p>See <a href="../platform_install/installing_akana_api_platform_v2019.htm#database_notes">Database notes</a> and <a href="../platform_install/installing_akana_api_platform_v2019.htm#database_drivers">Database drivers</a> (installation doc).</p>
+
+<h4 id="post_upgrade_03">Manage Schemas</h4>
+<p>Manage Schemas wizard (<strong>Install Schemas</strong> page): Manages the database schemas for the container. </p>
+<p>See <a href="../platform_install/installing_akana_api_platform_v2019.htm#install_tasks_manage_schemas">Installation wizard: Manage Schemas</a> (installation doc).</p>
+
+<h4 id="post_upgrade_04">Create Policy Manager Admin User</h4>
+<p>Create Policy Manager Admin User (<strong>Define Policy Manager Administrator Credentials</strong> page): Creates the top-level Policy Manager user. </p>
+<p>See <a href="../platform_install/installing_akana_api_platform_v2019.htm#install_tasks_create_pm_admin_user">Installation wizard: Define Policy Manager Administrator Credentials</a> (installation doc).</p>
+
+<h4 id="post_upgrade_05">Provisioning</h4>
+<p>Provisioning: Initializes resources associated with the features installed on the container.</p>
+<p>See <a href="../platform_install/installing_akana_api_platform_v2019.htm#install_tasks_provisioning">Installation wizard: Provisioning</a> (installation doc).</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -615,8 +631,8 @@ ps -ef
 <p>When upgrading by creating a new container, you'll need to transfer, or re-create, the configuration settings on the new container. There are two ways to do this:</p>
 <ul>
 	<li><strong>Manual configuration</strong>: Create the new container, install the features into it, then manually replicate any custom settings from the old container, to the new container.</li>
-	<li><strong>Automated configuration (recommended)</strong>: With the old container running, use automation to extract the custom configuration properties, into a recipe. Next, create the new container and install the features into it. Finally, use automation to run the recipe you created, to replicate the configuration of the old container.</li>
-	<li>For instructions to run the recipe, see <a href="../automation/automation_ref.htm#recipe_extract_03">Executing the Extracted Recipe</a>. An example is shown below.
+	<li><strong>Automated configuration (recommended)</strong>: With the old container running, use automation to extract the custom configuration properties, into a recipe. Next, create the new container and install the features into it. Finally, use automation to run the recipe you created, to replicate the configuration of the old container.
+	<p>For instructions to run the recipe, see <a href="../automation/automation_ref.htm#running_recipes_remotely">Running Recipes Remotely</a>. An example is shown below. Use the name of the recipe that you used when you extracted the properties<a href="#s02_03_save_props"></a>.</p>
 <pre>&gt; ./jython.sh -m akana.recipe --recipe &lt;name of extracted recipe&gt; --url http://localhost:9900 --user administrator --password password</pre></li>
 </ul>
 
@@ -701,4 +717,4 @@ ps -ef
 	<li><a href="../platform_install/install_cm_jython_script.htm">Installation Jython Script</a></li>
 	<li><a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a></li>
 	<li><a href="../platform_install/install_es_secure_tc.htm">Configuring Elasticsearch with Security</a></li>
-</ul><!-- #EndLibraryItem -->
+</ul><!-- #EndLibraryItem --></div>
