@@ -66,12 +66,11 @@ nav-title: Upgrade to 2019.x.x
 
 <h5 style="color: gray;"><a href="#h_post_upgrade_tasks">Additional Tasks</a></h5>
 <ol class="table_of_contents">
-	<li><a href="#s03_01_pki">Step 3-1: Upload PKI keys and certificate</a></li>
-	<li><a href="#s03_02_config_actions">Step 3-2: Perform configuration actions</a></li>
-	<li><a href="#s03_03_update_props">Step 3-3: Update container properties</a></li>
-	<li><a href="#s03_04_system_health">Step 3-4: Check system health</a></li>
-	<li><a href="#s03_05_es_config">Step 3-5: Configure Elasticsearch</a></li>
-	<li><a href="#s03_06_restart">Step 3-6: Restart all containers</a></li>
+
+	<li><a href="#perform_config_actions">Perform configuration actions</a></li>
+	<li><a href="#check_system_health">Check system health</a></li>
+	<li><a href="#es_config">Configure Elasticsearch</a></li>
+	<li><a href="#restart_all">Restart all containers</a></li>
 </ol>
 
 
@@ -79,7 +78,7 @@ nav-title: Upgrade to 2019.x.x
 <h5 style="color: gray;"><a href="#h_upgrade_tasks_reference">Upgrade Procedures/Reference:</a></h5>
 <ol class="table_of_contents">
 	<li><a href="#launch_console">Launching the Akana Administration Console</a></li>
-	<li><a href="#running_upgrade_tools">Running upgrade tools</a></li>
+	<li><a href="#running_upgrade_tools">Installing and running upgrade tools</a></li>
 	<li><a href="#post_upgrade_tasks_running">Running post-upgrade tasks</a>
 		<ul>
 			<li><a href="#post_upgrade_01">Manage PKI Keys</a></li>
@@ -90,6 +89,7 @@ nav-title: Upgrade to 2019.x.x
 		</ul>
 	</li>
 	<li><a href="#check_features_installed">Checking that features were installed correctly</a></li>
+	<li><a href="#find_container_key">Saving the container key</a></li>
 	<li><a href="#sched_jobs_off">Turning the scheduled jobs off</a></li>
 	<li><a href="#sched_jobs_on">Turning the scheduled jobs back on</a></li>
 	<li><a href="#unreg-rereg_win">Unregistering and re-registering the Windows service</a></li>
@@ -112,7 +112,7 @@ nav-title: Upgrade to 2019.x.x
 <p><strong>Note</strong>: We highly recommend that you use automation to transfer the container properties.</p></li>
 	<li>Manual upgrade, creating new containers, and then configuring the new containers to suit your requirements. This is essentially a fresh install.</li>
 </ol>
-<p>This documentation takes you through the steps to create new containers and then transfer existing settings, including container key, certificate, and configuration settings, to the new container (#3 above). For example, in <a href="#s03_01_pki">Step 3-1: Upload PKI keys and certificate</a> you'll upload the same certificate that you used for the old container, from your secure external storage location to the new container. </p>
+<p>This documentation takes you through the steps to create new containers and then transfer existing settings, including container key, certificate, and configuration settings, to the new container (#3 above). For example, as part of <a href="#s02_05_container_01">Step 2-5: Create and configure the first container</a> you'll upload the same certificate that you used for the old container, from your secure external storage location to the new container. </p>
 <p>Some of the steps are the same for all approaches.</p>
 <p><a href="#top">back to top</a></p>
 
@@ -147,11 +147,10 @@ nav-title: Upgrade to 2019.x.x
 <ol>
 	<li>In your existing installation, in the Akana Administration Console for each container, note the features and add-ons that are installed in each container, so that you can replicate this in the new containers.	When you're following the steps of the procedures below, install the features for your own containers.</li>
 	
-	<li>In the Akana Administration Console for each container, take all steps needed to save out container settings so that you can reproduce the configuration on the new container, where applicable. You'll need this information for <a href="#s03_03_update_props">Step 3-3: Update container properties</a>. Save all other container properties that you've customized.
-		<p><strong>Note</strong>: you can use an automation task to save out the configuration settings. See <a href="../automation/automation_ref.htm#recipes_extracting_properties">Extracting and Analyzing Recipes</a>.</p>
-	</li>
-	<li>Make a note of the container key value. This is needed for replicating the existing container in your new container. You can get the container key from the Akana Administration Console for the container {<span class="apidoc_red">location?</span>}. When you're setting up the new container, you'll use this key (<a href="#s02_05_container_01">Step 2-5: Create and configure the first container</a> below).</li>
-		<li>Make sure you have the certificate that you used to create the original container. You can then upload the certificate when configuring the new container in. See <a href="#s03_01_pki">Step 3-1: Upload PKI keys and certificate</a>.</li>
+	<li>In the Akana Administration Console for each container, take all steps needed to save out container settings so that you can reproduce the configuration on the new container, where applicable. You'll need this information when you're setting up the new container. Save all other container properties that you've customized.
+	<p><strong>Note</strong>: you can use an automation task to save out the configuration settings.</p></li>
+	<li>Make a note of the container key value. This is needed for replicating the existing container in your new container. You can get the container key from the Akana Administration Console for the container. For instructions, see <a href="#find_container_key">Finding the container key</a>. When you're setting up the new container, you'll use this key (<a href="#s02_05_container_01">Step 2-5: Create and configure the first container</a> below).</li>
+		<li>Make sure you have the certificate that you used to create the original container. You can then upload the certificate when configuring the new container.</li>
 	<li>Conditional: If standalone Elasticsearch is new for your implementation, determine where you'll install Elasticsearch, needed for the search feature. For full information on Elasticsearch, see <a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a>.</li>
 </ol>
 <p><a href="#top">back to top</a></p>
@@ -168,6 +167,15 @@ nav-title: Upgrade to 2019.x.x
 <div class = "divider1"></div>
 <h3 id="h_upgrade_performing">Performing the Upgrade</h3>
 
+
+
+<h3 id="s02_01_shutdown">Step 2-1: Shut down and back up the previous version</h3>
+<ol>
+	<li>Shut down all containers in your installation. See <a href="../platform_install/installing_akana_api_platform_v2019.htm#stopping_container">Stopping a container</a> (installation doc).</li>
+	<li>Copy the entire installation folder structure to a secure backup location.</li>
+	<li>Back up your database.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
 
 
 
@@ -192,16 +200,6 @@ nav-title: Upgrade to 2019.x.x
 	<li>Any add-ons</li>
 </ul>
 <p><a href="#top">back to top</a></p>
-
-
-
-<h3 id="s02_01_shutdown">Step 2-1: Shut down and back up the previous version</h3>
-<ol>
-	<li>Shut down all containers in your installation. See <a href="../platform_install/installing_akana_api_platform_v2019.htm#stopping_container">Stopping a container</a> (installation doc).</li>
-	<li>Copy the entire installation folder structure to a secure backup location.</li>
-	<li>Back up your database.</li>
-</ol>
-<p><a href="#top">Back to top</a></p>
 
 
 
@@ -235,51 +233,58 @@ ps -ef
 
 
 <h3 id="s02_05_container_01">Step 2-5: Create and configure the first container</h3>
-<p>Create the first Community Manager/Policy Manager container. For features to install, see <a href="../platform_install/installing_akana_api_platform_v2019.htm#features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</a>. Follow the linked steps in the Installation Guide.</p>
+<p>Create the first Community Manager/Policy Manager container. For features to install, see <a href="../platform_install/installing_akana_api_platform_v2019.htm#features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</a>. Follow these three main groups of steps:</p>
+<ul>
+	<li><a href="#proc_container_first">To create the first container and install features and plug-ins</a></li>
+	
+	<li><a href="#proc_post_upgrade_tasks_01">To perform the post-upgrade tasks for the first container </a></li>
+	
+	<li><a href="#proc_update_container_props">To update container properties</a></li>
+</ul>
 <p><strong>Notes</strong>:</p>
 <ul>
 	<li>In creating the containers, make sure that you set up at least one container running Policy Manager before you set up the Network Director container.</li>
-	<li>Depending on the version that you're upgrading from, you might have to install one or more upgrade tools, in the Akana Administration Console for the container. For more information, see <a href="#running_upgrade_tools">Running upgrade tools</a>.</li>
+	<li>Depending on the version that you're upgrading from, you might have to install one or more upgrade tools, in the Akana Administration Console for the container. For more information, see <a href="#running_upgrade_tools">Installing and running upgrade tools</a>.</li>
 	<li>If you're using automation to replicate the container property settings, follow the sequence of steps in <a href="#auto_prop_xfer">Automating the transfer of container properties</a> below.</li>
 </ul>
 
-<h5 id="proc_container_first">To create and configure the first container</h5>
+<h5 id="proc_container_first">To create the first container and install features and plug-ins</h5>
 <ol>
 	<li>Run Configurator to create the first container, either via the GUI or using silent install. See <a href="../platform_install/installing_akana_api_platform_v2019.htm#run_configurator_pm">Step 2-3: Run Configurator to create the first container</a>.
 		<p><strong>Note</strong>: Rather than letting a new container key be assigned, you'll need to use the container key from the old container, which you saved in <a href="#s01_02_plan">Step 1-2: Plan the upgrade</a> above.</p>
 		<ul>
-			<li>Windows install: <a href="../platform_install/installing_akana_api_platform_v2019.htm#creating_container_gui">Creating a container via the GUI</a> (Step 4, Instance Name). {<span class="apidoc_red">GW please verify Instance Name in the wizard is Container Key</span>}</li>
+			<li>Windows install: <a href="../platform_install/installing_akana_api_platform_v2019.htm#creating_container_gui">Creating a container via the GUI</a> (second page, Container Key).</li>
 			<li>Linux install: <a href="../platform_install/installing_akana_api_platform_v2019.htm#creating_container_silent">Creating a container using silent install (Linux)</a>. Add the container key value to the properties file, as shown in the example.</li>
 		</ul>
 	</li>
 	<li>In the Akana Administration Console for the container, install Policy Manager/Community Manager. See <a href="../platform_install/installing_akana_api_platform_v2019.htm#install_pm_cm">Step 2-4: Install Policy Manager/Community Manager features on the container</a> (installation doc).</li>
-	<li>At the <strong>Installation Complete</strong> summary, do not click Configure yet. Instead, click <strong>Cancel</strong>; you'll need to turn off the scheduled jobs before running the post-upgrade tasks.</li>
-	<li>{<span class="apidoc_red">GW: please confirm these sequences: 1) install plug-ins and tools before turning off scheduled jobs 2) make sure at what point they need to restart the container. I have it below #4.</span>}</li>
-	<li>If applicable, install plug-ins. See <a href="../platform_install/installing_akana_api_platform_v2019.htm#install_plugins">Step 2-5: (as needed) Install plug-ins on the container</a>.</li>
-	<li>Conditional: if you're upgrading from an older version, such as 8.2, you'll need to install one or more upgrade tools, in the Akana Administration Console for the container. For more information, see <a href="#running_upgrade_tools">Running upgrade tools</a>.</li>
+	<li>At the <strong>Installation Complete</strong> summary, do not click <strong>Configure</strong> yet. Instead, click <strong>Cancel</strong>; you'll need to install plug-ins and upgrade tools and then turn off the scheduled jobs before running the post-upgrade tasks.</li>
+	<li>Install&nbsp;any plug-ins that you want to install. See <a href="../platform_install/installing_akana_api_platform_v2019.htm#install_plugins">Step 2-5: (as needed) Install plug-ins on the container</a>.&nbsp; At the end, click <strong>Cancel</strong>.</li>
+	<li>If you're upgrading from an older version such as 8.2, you'll need to install one or more upgrade tools, in the Akana Administration Console for the container. Choose all that are applicable for the earliest version you're upgrading from, up to the current version. For more information, see <a href="#running_upgrade_tools">Running upgrade tools</a>. At the end, click <strong>Cancel</strong>.
+	<p><strong>Note</strong>: Upgrade tools only need to be run once per installation. You only need to install upgrade tools on the first container and run the resulting post-upgrade tasks once.</p></li>
 	<li>Turn off the scheduled jobs. For instructions, see <a href="#sched_jobs_off">Turning the scheduled jobs off</a>.</li>
-	<li>Perform the post-upgrade tasks for the container. See below.</li>
+	<li>Go to the next procedure below.</li>
 	</ol>
-	
+
 <h5 id="proc_post_upgrade_tasks_01">To perform the post-upgrade tasks for the first container </h5>
 <ol>
 	<li>In the Akana Administration Console for the container, under <strong>Installed Features</strong>, check at the bottom of the page under <strong>Pending Installation Tasks</strong>.</li>
-	<li>Run any tasks that are pending. The specific list depends on the version you're upgrading from and the features you're installing. Complete all tasks. For information about specific tasks, see <a href="#post_upgrade_tasks_running">Running post-upgrade tasks</a>.
-	<p><strong>Note</strong>: When you're configuring the database, choose <strong>Use Existing Database</strong> and put in the values and credentials for the database from your prior version of the Akana API Platform. Depending on the database you're using, you might need to put a database driver in place, or take some other steps.</p>
-			<p>See <a href="../platform_install/installing_akana_api_platform_v2019.htm#database_notes">Database notes</a> and <a href="../platform_install/installing_akana_api_platform_v2019.htm#database_drivers">Database drivers</a> (installation doc).</p></li>
-		<li>If you didn't already do it, at the Manage PKI Keys wizard (<strong>Generate PKI Keys &amp; X.509 Certificate</strong> page), upload the container certificate from your secure external location. See <a href="#post_upgrade_01">Manage PKI Keys</a>.</li>
-		<li>When pending installation tasks are all complete, restart the container. For instructions, see <a href="../platform_install/installing_akana_api_platform_v2019.htm#starting_container">Starting a container</a>.</li>
+	<li>Run any tasks that are pending. The specific list depends on the version you're upgrading from and the features you're installing. Complete all tasks. For information about specific tasks, see <a href="#post_upgrade_tasks_running">Running post-upgrade tasks</a>. Some tasks are run once per installation, some are once per container. Key tasks include:
+		<ul>
+			<li><strong>Setting up the certificate for the container</strong>. At the Manage PKI Keys wizard (<strong>Generate PKI Keys &amp; X.509 Certificate</strong> page), upload the container certificate from your secure external location. See <a href="#post_upgrade_01">Manage PKI Keys</a>.</li>
+			<li><strong>Configuring the database</strong> (once per installation). See <a href="#post_upgrade_02">Configure Database Options</a>.
+			<p><strong>Note</strong>: When you're configuring the database, choose <strong>Use Existing Database</strong> and put in the values and credentials for the database from your prior version of the Akana API Platform. Depending on the database you're using, you might need to put a database driver in place, or take some other steps. See <a href="../platform_install/installing_akana_api_platform_v2019.htm#database_notes">Database notes</a> and <a href="../platform_install/installing_akana_api_platform_v2019.htm#database_drivers">Database drivers</a> (installation doc).</p></li>
+		</ul>
+	</li>
+	<li>When pending installation tasks are all complete, restart the container. For instructions, see <a href="../platform_install/installing_akana_api_platform_v2019.htm#starting_container">Starting a container</a>.</li>
 		<li> Turn the scheduled jobs back on. For instructions, see <a href="#sched_jobs_on">Turning the scheduled jobs back on</a>.</li>
+		<li>Go to the next procedure below.</li>
 </ol>
-<p><a href="#top">back to top</a></p>
 
-
-
-<h3 id="s03_03_update_props">Step 3-3: Update container properties</h3>
-<p> {<span class="apidoc_red">GW I think this is where this step goes. Please confirm/correct. I will fix numbering. But I had it later, after checking system health and Elasticsearch and other stuff. Think it needs to go earlier, after container config, before going on to the next container? Please advise. 2) Also maybe update container key and certificate here, before going on to the next container?</span>}</p>
+<h5 id="proc_update_container_props">To update container properties</h5>
 <p>When you've created the new container and installed the features, it's time to set the configuration properties. You'll need to transfer any customized settings that were set on the old container, to the new container.</p>
-<p>Use the setting values that you saved out in <a href="#s01_02_plan">Step 1-2: Plan the upgrade</a>, procedure step #4, and set them on the new container.</p>
-<p>If you're using automation, run the extracted recipe that you created in <a href="#s02_03_save_props">Step 2-3: Save properties from old container</a>, to set the properties so they are the same as the old container.</p>
+<p>Use the setting values that you saved out in <a href="#s02_03_save_props">Step 2-3: Save properties from old container</a>, and set them on the new container.</p>
+<p>If you used automation to extract the properties, run the extracted recipe that you created, to set the properties so they are the same as the old container. For instructions, see <a href="#auto_prop_xfer">Automating the transfer of container properties</a>.</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -298,10 +303,9 @@ ps -ef
 	<li>OAuth container. For features to install, see <a href="../platform_install/installing_akana_api_platform_v2019.htm#features_oauth_alone">OAuth Provider</a>.</li>
 	<li>Scheduled Jobs container. For features to install, see <a href="../platform_install/installing_akana_api_platform_v2019.htm#features_sched_jobs">Job Scheduler</a>.</li>
 </ol>
-<p><strong>Note</strong>: In each case:</p>
+<p>For each container:</p>
 <ul>
-	<li>Be sure to copy the configuration properties file from the old container, which you saved out and updated with a new <strong>container.key</strong> property in <a href="#s01_02_plan">Step 1-2: Plan the upgrade</a> (procedure step #5), to the new container.</li>
-	<li>Install the features, then turn off scheduled jobs, perform the post-upgrade tasks, and turn scheduled jobs back on.</li>
+	<li>Install the features, then turn off scheduled jobs, perform all post-upgrade tasks, turn scheduled jobs back on, and update the container properties, as covered in <a href="#s02_05_container_01">Step 2-5: Create and configure the first container</a> above.</li>
 </ul>
 <p>Create containers in this sequence:</p>
 <ol>
@@ -322,64 +326,29 @@ ps -ef
 
 
 <h3 id="s03_00">Additional tasks: overview</h3>
-<p>Once you've completed the product version update, and performed the post-upgrade tasks for each container, there are a few additional steps to complete the upgrade. You might have completed some of the steps below. Just make sure all steps are done.</p>
+<p>Once you've completed the product version update, and performed the post-upgrade tasks for each container, there are a few additional steps to complete the upgrade. You might have completed some of the steps below.</p>
 <p><a href="#top">back to top</a></p>
 
 
 
-<h3 id="s03_01_pki">Step 3-1: Upload PKI keys and certificate</h3>
-<p>At the Manage PKI Keys wizard (<strong>Generate PKI Keys &amp; X.509 Certificate</strong> page), upload the container certificate from your secure external location. See <a href="#post_upgrade_01">Manage PKI Keys</a>.</p>
-<p><a href="#top">back to top</a></p>
-
-
-
-<h3 id="s03_02_config_actions">Step 3-2: Perform configuration actions</h3>
+<h3 id="perform_config_actions">Perform configuration actions</h3>
+<p>Optional, recommended.</p>
 <p>If you're upgrading from a previous version, it's a good idea to run the following configuration actions, even if they were not listed under Pending Installation Tasks:</p>
 <ul>
-	<li><a href="#proc_provisioning">Provisioning</a> (must be completed for each container running PM/CM)</li>
+	<li><a href="#proc_provisioning">Provisioning</a> (once per container running PM/CM)</li>
 	<li><a href="#proc_upgrade_cm_models">Upgrade CM Models</a> (once per installation)</li>
 	<li><a href="#proc_rebuild_cm_styles">Rebuild CM Styles</a> (once per installation)</li>
 </ul>
 
-
-<h5 id="proc_provisioning">To perform provisioning</h5>
-<ol>
-	<li>In the Akana Administration Console, click the <strong>Configuration</strong> tab.</li>
-	<li>In the <strong>Configuration Actions</strong> section, choose the <strong>Provisioning</strong> configuration action, as shown below.
-	<p><img src="images_2019_all/03_01_Manual_Provisioning.jpg" alt="Running Provisioning manually" /></p></li>
-	<li>On the <strong>Provisioning</strong> page, make sure <strong>Perform Provisioning</strong> is checked, as shown below, and then click <strong>Finish</strong>.
-		<p><strong>Note</strong>: Make sure the Provisioning task is 100% complete before moving to the next task.</p>
-	<p><img src="images_2019_all/03_02_provisioning.jpg" alt="Provisioning Summary" /></p>
-	</li>
-	<li>When provisioning is 100% complete, click <strong>Close</strong>.</li>
-</ol>
-
-<h5 id="proc_upgrade_cm_models">To complete the Upgrade CM Models configuration action</h5>
-<ol>
-	<li>In the Akana Administration Console, click the <strong>Configuration</strong> tab.</li>
-	<li>In the <strong>Configuration Actions</strong> section, choose <strong>Upgrade CM Models</strong>.</li>
-	<li>When done, click <strong>Close</strong>.</li>
-</ol>
-
-<p>The <strong>Rebuild CM Styles</strong> task makes sure that you have the latest style updates, for all themes and tenants.</p>
-
-<h5 id="proc_rebuild_cm_styles">To rebuild CM styles</h5>
-<ol>
-	<li>In the Akana Administration Console, click the <strong>Configuration</strong> tab.</li>
-	<li>In the <strong>Configuration Actions</strong> section, choose <strong>Rebuild CM Styles</strong>.</li>
-	<li>When done, click <strong>Finish</strong>.</li>
-</ol>
+<h3 id="check_system_health">Check system health</h3>
+<p>Optional, recommended.</p>
+<p>After installation, it's a good idea to check the system health.</p>
+<p>Log into the Akana Administration Console for the PM/CM container and check the system health (<strong>Health</strong> tab).</p>
 <p><a href="#top">back to top</a></p>
 
 
 
-<h3 id="s03_04_system_health">Step 3-4: Check system health</h3>
-<p>Log into the Akana Administration Console for the PM/CM container and check the system health (Health tab).</p>
-<p><a href="#top">back to top</a></p>
-
-
-
-<h3 id="s03_05_es_config">Step 3-5: Configure Elasticsearch</h3>
+<h3 id="es_config">Configure Elasticsearch</h3>
 <p>The developer portal is now available, but search will not work until you configure Elasticsearch.</p>
 <p><strong>Note</strong>: These steps assume that Elasticsearch is already installed and configured. See <a href="#s01_03_es_install_config">Step 1-3: Install and configure Elasticsearch (if not already done)</a>.</p>
 <p>Steps:</p>
@@ -427,7 +396,7 @@ ps -ef
 
 
 
-<h3 id="s03_06_restart">Step 3-6: Restart all containers</h3>
+<h3 id="restart_all">Restart all containers</h3>
 <p>After running the configuration actions on all containers, stop and restart all containers.</p>
 <p>For instructions, see:</p>
 <ul>
@@ -456,7 +425,7 @@ ps -ef
 
 
 
-<h3 id="running_upgrade_tools">Running upgrade tools</h3>
+<h3 id="running_upgrade_tools">Installing and running upgrade tools</h3>
 <p>Sometimes, if there are significant changes to the database between versions, upgrade includes a specific upgrade tool that performs certain actions on the database to bring it up to date.</p>
 <p>Depending on the version that you're upgrading from, you might have to install one or more of these upgrade tools, in the Akana Administration Console for the container, and run the tools. For example:</p>
 <ul>
@@ -464,7 +433,9 @@ ps -ef
 	<li>Akana PM 8.0 Upgrade</li>
 </ul>
 <p>For a list of all the tools, see <a href="../platform_install/installing_akana_api_platform_v2019.htm#installation_tools">Installation Tools</a> (installation doc).</p>
-<p>Install and run all tools that are applicable to the version you're upgrading from/to. {<span class="apidoc_red">GW: 1) At what point, exactly, do they run the tools? Not sure if it should be before or after the pending installation tasks. Or, maybe, do they have to install the tools, and then the relevant pending installation tasks are added? Need help fitting this part in. 2) Also, should I add installing these tools, in the feature install steps earlier? </span>]</p>
+<p>When you install an upgrade tool, it creates a post-upgrade task that makes changes to the database to upgrade it.</p>
+<p>Post-upgrade tasks relating&nbsp;to upgrade tools are  once per installation, not per container.</p>
+<p>Install and run all tools that are applicable to the version you're upgrading from/to.</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -474,11 +445,13 @@ ps -ef
 <p>This section contains information about tasks you're likely to run into when upgrading using the simple scenario described in this document.</p>
 <p>Common post-upgrade tasks are:</p>
 <ul>
-	<li><a href="#post_upgrade_01">Manage PKI Keys</a></li>
-	<li><a href="#post_upgrade_02">Configure Database Options</a></li>
-	<li><a href="#post_upgrade_03">Manage Schemas</a></li>
-	<li><a href="#post_upgrade_04">Create Policy Manager Admin User</a></li>
-	<li><a href="#post_upgrade_05">Provisioning</a></li>
+	<li><a href="#post_upgrade_01">Manage PKI Keys</a> (once per container)</li>
+	<li><a href="#post_upgrade_02">Configure Database Options</a> (once per installation)</li>
+	<li><a href="#post_upgrade_03">Manage Schemas</a> (once per installation)</li>
+	<li><a href="#post_upgrade_04">Create Policy Manager Admin User</a> (once per installation)</li>
+	<li><a href="#post_upgrade_05">Provisioning</a> (once per installation)</li>
+	<li><a href="#proc_upgrade_cm_models">Upgrade CM Models</a> (once per installation)</li>
+	<li><a href="#proc_rebuild_cm_styles">Rebuild CM Styles</a> (once per installation)</li>
 </ul>
 <p>For a full list of possible tasks, see <a href="../admin_console/config_actions.htm#config_actions_all">Configuration Actions: full list</a> (Akana Administration Console doc).</p>
 
@@ -488,7 +461,8 @@ ps -ef
 <p>In the Akana Administration Console for the container, go to <strong>Configuration</strong> &gt; <strong>Manage PKI Keys</strong> and choose <strong>Import Private Key &amp; X.509 Certificate</strong>. See <a href="../admin_console/config_actions.htm#aac_ca_managepkikeys">Installation wizard: Manage PKI Keys</a> (Akana Administration Console doc).</p>
 <p>For general information about container identity in the context of upgrading, see <a href="upgrade_managing_container_identity.htm">Managing Container Identity Across Upgrades</a>.</p>
 <p>See <a href="../admin_console/config_actions.htm#aac_ca_managepkikeys">Installation wizard: Manage PKI Keys</a> (Akana Administration Console doc).</p>
-<p>--------------------------</p>
+
+
 <h4 id="post_upgrade_02">Configure Database Options</h4>
 <p>Configure Database Options wizard (<strong>Select Database Options</strong> page): here, choose <strong>Use Existing Database</strong> and put in the values and credentials for the database from your prior version of the Akana API Platform. </p>
 <p>See <a href="../platform_install/installing_akana_api_platform_v2019.htm#install_tasks_add_database">Installation wizard: Add Database</a> (installation doc).</p>
@@ -505,7 +479,40 @@ ps -ef
 
 <h4 id="post_upgrade_05">Provisioning</h4>
 <p>Provisioning: Initializes resources associated with the features installed on the container.</p>
+<p>Must be completed for each container running PM/CM.</p>
 <p>See <a href="../platform_install/installing_akana_api_platform_v2019.htm#install_tasks_provisioning">Installation wizard: Provisioning</a> (installation doc).</p>
+<h5 id="proc_provisioning">To perform provisioning</h5>
+<ol>
+	<li>In the Akana Administration Console, click the <strong>Configuration</strong> tab.</li>
+	<li>In the <strong>Configuration Actions</strong> section, choose the <strong>Provisioning</strong> configuration action, as shown below.
+	<p><img src="images_2019_all/03_01_Manual_Provisioning.jpg" alt="Running Provisioning manually" /></p></li>
+	<li>On the <strong>Provisioning</strong> page, make sure <strong>Perform Provisioning</strong> is checked, as shown below, and then click <strong>Finish</strong>.
+		<p><strong>Note</strong>: Make sure the Provisioning task is 100% complete before moving to the next task.</p>
+	<p><img src="images_2019_all/03_02_provisioning.jpg" alt="Provisioning Summary" /></p>
+	</li>
+	<li>When provisioning is 100% complete, click <strong>Close</strong>.</li>
+</ol>
+
+<h5 id="proc_upgrade_cm_models">To complete the Upgrade CM Models configuration action</h5>
+<ol>
+	<li>In the Akana Administration Console, click the <strong>Configuration</strong> tab.</li>
+	<li>In the <strong>Configuration Actions</strong> section, choose <strong>Upgrade CM Models</strong>.</li>
+	<li>When done, click <strong>Close</strong>.</li>
+</ol>
+
+<p>The <strong>Rebuild CM Styles</strong> task makes sure that you have the latest style updates, for all themes and tenants.</p>
+
+<h5 id="proc_rebuild_cm_styles">To rebuild CM styles</h5>
+<ol>
+	<li>In the Akana Administration Console, click the <strong>Configuration</strong> tab.</li>
+	<li>In the <strong>Configuration Actions</strong> section, choose <strong>Rebuild CM Styles</strong>.</li>
+	<li>When done, click <strong>Finish</strong>.</li>
+</ol>
+
+<p><a href="#top">back to top</a></p>
+
+
+
 <p><a href="#top">back to top</a></p>
 
 
@@ -521,6 +528,22 @@ ps -ef
 <p>If there are any issues, check that you followed all steps correctly.</p>
 <p>If needed, <a href="#tech_support_contact">contact Technical Support</a>.</p>
 <p><a href="#top">back to top</a></p>
+
+
+
+<h3 id="find_container_key">Finding the container key</h3>
+<p>To find the container key for your old container in the Akana Administration Console for the container, follow the steps below.</p>
+
+<h5 id="proc_find_container_key">To find the container key</h5>
+<ol>
+	<li>Log in to the Akana Administration Console using Administrator credentials.</li>
+	<li>Click the <strong>Configuration</strong> tab.</li>
+	<li>In the <strong>Configuration Categories</strong> section, find <strong>com.soa.config</strong>. An example is shown below.
+	<p><img src="images_2019_all/ac_config_com_soa_config_container_key.png" alt="Finding the container key" /></p></li>
+	<li>Locate the <strong>container.key</strong> property and note the value.</li>
+</ol>
+<p><a href="#top">back to top</a></p>
+
 
 
 
@@ -638,7 +661,8 @@ ps -ef
 
 <h5 id="proc_xfer_properties">To transfer configuration properties from an old container to a new container via automation</h5>
 <ol>
-	<li>Before creating the new container, and with the old container running, extract the custom properties. For instructions, see <a href="../automation/automation_ref.htm#recipe_extract">Extracting a Recipe</a> (Automation doc). See <a href="#s02_05_container_01">Step 2-5: Create and configure the first container</a>.</li>
+	<li>Before creating the new container, and with the old container running, extract the custom properties. See <a href="#s02_03_save_props">Step 2-3: Save properties from old container</a>.
+	<p>For instructions, see <a href="../automation/automation_ref.htm#recipe_extract">Extracting a Recipe</a> (Automation doc).</p></li>
 	<li>Create the new container. See <a href="#s02_05_container_01">Step 2-5: Create and configure the first container</a>, Step #6, after doing the initial configuration steps, shut down the container. Rather than restarting as in Step #7, save out the new configuration settings at that point.</li>
 	<li>Compare the new settings with the old settings to arrive at the settings that will need to be configured on the new container.</li>
 	<li>If available, use automation to update the container configuration.</li>
