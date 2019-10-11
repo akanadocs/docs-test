@@ -11,7 +11,7 @@ nav-title: Open Banking Client Validation
 ---
 <h2 id="top">Using the Open Banking Client Validation Policy</h2>
 <p>Learn how to use the Open Banking Client Validation policy to specify header names for certificate values that will be used by the back end for client authentication. This supports the client validation part of Mutual TLS per the requirements of the UK Open Banking specification.</p>
-<p><strong>Note</strong>: This policy requires that there is also an authentication policy attached to the API, such as the <a href="policy_op_oauth_security.htm">OAuth Security Policy</a>, that sets the consumer (app) subject.</p>
+<p><strong>Note</strong>: This policy requires that there is also an authentication policy attached to the API, such as the <a href="policy_op_oauth_security.htm">OAuth Security Policy</a>.</p>
 <p>
 	<a href="about_policies_view.htm" class="button secondary">About Policies</a> 
 	<a href="policy_management.htm" class="button secondary">Managing Policies</a> 
@@ -38,32 +38,34 @@ nav-title: Open Banking Client Validation
 
 
 <h3 id="ob_client_validation_introduction">Introduction</h3>
-<p>The Open Banking Client Validation Policy allows you to specify the custom HTTP headers that will be used to specify the client's certificate as well as the Subject DN and Serial Number extracted from the certificate. These headers are commonly set by the network device that is terminating the SSL session (in many cases, the load balancer). The specified header values are then used for authentication of the client's X.509 certificate, to support the client validation part of Mutual TLS per the requirements of the <a href="../../cm/learnmore/basics_glossary.htm#gl_openbanking">UK Open Banking specification</a>.</p>
-<p>The selected options will be validated against the client's JWKS URL configured with keys having <strong>&quot;use&quot;:&quot;tls&quot;</strong>.</p>
-<p>The example shown below, from a sample JWKS URL at <a href="https://keystore.openbanking.org.uk/0015800000jfAW1AAM/2SPmPNUU6KrtcgutPlkfBd.jwks" title="Link to UK Open Banking example JWKS URL" target="_blank">https://keystore.openbanking.org.uk/0015800000jfAW1AAM/2SPmPNUU6KrtcgutPlkfBd.jwks</a>, shows a JWKS URL configured with <strong>"use":"tls"</strong> (line 6):</p>
-<pre>{
-  "e":"AQAB",
-  "kid":"1uJmnEmIzSK6ecq_1pGFJmUVLD0",
-  "kty":"RSA",
-  "n":"8xh1iQgZYACLKEZJpTt8MvxWGhkKu5fzYGnHCqueg2Jd-s522FBp9dXm0-jOfIYFJkEk01WMJnpGYTBNHfZCOfibOu1Wkd8Fcr59xF2PPYck7co4VqlEy4F6XfpsaW0v3AVguuuHeIvS-AP1xTwRbUZQs7yA3Ky5-LvAcI1HFqtsbK34lqjPSSd0HMeUO9cMuRfZPlhIGmMZT_OSuVFq5Ln-2rgqLcSDipMgPiYn_331ZwpHDRmK6unob0q9534rkjig-4usSbM6VtCCON4l2zM6f8dvI4oUeP5ddwwWgIMJYr0K5qXGKMur4enOj6YtQ9vcZhw3d4E4uFONnsGLhQ",
-  "use":"tls",
-  "x5c":[
-    "MIIFxTCCBK2gAwIBAgIEWf9PwTANBgkqhkiG9w0BAQsFADBEMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxHzAdBgNVBAMTFk9wZW5CYW5raW5nIElzc3VpbmcgQ0EwHhcNMTkwMTE0MTIyOTUwWhcNMjEwMTE0MTI1OTUwWjBhMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxGzAZBgNVBAsTEjAwMTU4MDAwMDBqZkFXMUFBTTEfMB0GA1UEAxMWMlNQbVBOVVU2S3J0Y2d1dFBsa2ZCZDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAPMYdYkIGWAAiyhGSaU7fDL8VhoZCruX82BpxwqrnoNiXfrOdthQafXV5tPoznyGBSZBJNNVjCZ6RmEwTR32Qjn4mzrtVpHfBXK+fcRdjz2HJO3KOFapRMuBel36bGltL9wFYLrrh3iL0vgD9cU8EW1GULO8gNysufi7wHCNRxarbGyt+Jaoz0kndBzHlDvXDLkX2T5YSBpjGU/zkrlRauS5/tq4Ki3Eg4qTID4mJ/999WcKRw0Ziurp6G9Kved+K5I4oPuLrEmzOlbQgjjeJdszOn/HbyOKFHj+XXcMFoCDCWK9CualxijLq+Hpzo+mLUPb3GYcN3eBOLhTjZ7Bi4UCAwEAAaOCAqAwggKcMB0GA1UdEQQWMBSCEmNhcm1lLmFwaS5iYXJjbGF5czAOBgNVHQ8BAf8EBAMCB4AwIAYDVR0lAQH/BBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMIIBUgYDVR0gBIIBSTCCAUUwggFBBgsrBgEEAah1gQYBATCCATAwNQYIKwYBBQUHAgEWKWh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL3BvbGljaWVzMIH2BggrBgEFBQcCAjCB6QyB5lRoaXMgQ2VydGlmaWNhdGUgaXMgc29sZWx5IGZvciB1c2Ugd2l0aCBPcGVuIEJhbmtpbmcgTGltaXRlZCBhbmQgYXNzb2NpYXRlZCBPcGVuIEJhbmtpbmcgU2VydmljZXMuIEl0cyByZWNlaXB0LCBwb3NzZXNzaW9uIG9yIHVzZSBjb25zdGl0dXRlcyBhY2NlcHRhbmNlIG9mIHRoZSBPcGVuIEJhbmtpbmcgTGltaXRlZCBDZXJ0aWZpY2F0ZSBQb2xpY3kgYW5kIHJlbGF0ZWQgZG9jdW1lbnRzIHRoZXJlaW4uMHIGCCsGAQUFBwEBBGYwZDAmBggrBgEFBQcwAYYaaHR0cDovL29iLnRydXN0aXMuY29tL29jc3AwOgYIKwYBBQUHMAKGLmh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL2lzc3VpbmdjYS5jcnQwPwYDVR0fBDgwNjA0oDKgMIYuaHR0cDovL29iLnRydXN0aXMuY29tL3Byb2R1Y3Rpb24vaXNzdWluZ2NhLmNybDAfBgNVHSMEGDAWgBSfSb9ONqesww8ryEf0HykbwHkLBTAdBgNVHQ4EFgQUlsyuIasI4NOaMUDsUDcZj8unei4wDQYJKoZIhvcNAQELBQADggEBAHmbK4XGuvBZ8HUS7NAeKsNN/9FqPF8ekcbPV4DWQGVrHXkn3cxohr++L9wq19CnwvZ6YyXFFMb15VbRynsW0xuOPcR85g5pGzT5Z2Wud/+CcI7GKr7KNE0HugnG8YqiEv08Er4v+9eHdpJMUYxYDeHoxeQXYY7fr2gG3mVUqrYvtaU2LNZ6hO2LH4vgL0lj6uhio2e8iK4RHsPdpTM73+2SQK4GI3aSPwcR9pbNy3Ijlo7qiJaPyXCpxiG1l+NjYefA/HaKavITECyynaCa4gNJC0upjzVUvQBtktw81gFCAN+8lfea9Bt40Qs1/xhpgRYm96ScDgqsAAIXHY7IOOs="
-  ],
-  "x5t":"cW4GMQV_tnEuf26KrCqsAuO6hqk=",
-  "x5u":"https://keystore.openbanking.org.uk/0015800000jfAW1AAM/1uJmnEmIzSK6ecq_1pGFJmUVLD0.pem",
-  "x5t#S256":"3hJVyverB5ZZcMrPpiTpaAQmJ4rak1Cs3gH-XLS2rr4="
-}</pre>
+<p>The Open Banking Client Validation Policy allows you to specify the custom HTTP headers that will be used to pass the client's certificate, Subject DN, and Serial Number. These headers are commonly set by the network device that is terminating the SSL session (in many cases, the load balancer). The specified header values are used for authentication of the client's X.509 certificate, to support the client validation part of Mutual TLS per the requirements of the <a href="../../cm/learnmore/basics_glossary.htm#gl_openbanking">UK Open Banking specification</a>.</p>
+<p>The certificate, SubjectDN and Serial number sent in the HTTP headers will be validated against the JWKS URL configured for the respective client application. The JWKS <strong>&quot;use&quot;:&quot;tls&quot;</strong> claim in the key will be read to determine if the certificate is valid.</p>
+<p>The example shown below, from a sample JWKS URL at <a href="https://keystore.openbanking.org.uk/0015800000jfAW1AAM/2SPmPNUU6KrtcgutPlkfBd.jwks" title="Link to UK Open Banking example JWKS URL" target="_blank">https://keystore.openbanking.org.uk/0015800000jfAW1AAM/2SPmPNUU6KrtcgutPlkfBd.jwks</a>, shows key configured with <strong>&quot;use&quot;:&quot;tls&quot;</strong> claim (line 6):</p>
+<pre>01  {
+02    "e":"AQAB",
+03    "kid":"1uJmnEmIzSK6ecq_1pGFJmUVLD0",
+04    "kty":"RSA",
+05    "n":"8xh1iQgZYACLKEZJpTt8MvxWGhkKu5fzYGnHCqueg2Jd-s522FBp9dXm0-jOfIYFJkEk01WMJnpGYTBNHfZCOfibOu1Wkd8Fcr59xF2PPYck7co4VqlEy4F6XfpsaW0v3AVguuuHeIvS-AP1xTwRbUZQs7yA3Ky5-LvAcI1HFqtsbK34lqjPSSd0HMeUO9cMuRfZPlhIGmMZT_OSuVFq5Ln-2rgqLcSDipMgPiYn_331ZwpHDRmK6unob0q9534rkjig-4usSbM6VtCCON4l2zM6f8dvI4oUeP5ddwwWgIMJYr0K5qXGKMur4enOj6YtQ9vcZhw3d4E4uFONnsGLhQ",
+06    <strong>"use":"tls"</strong>,
+07    "x5c":[
+08      "MIIFxTCCBK2gAwIBAgIEWf9PwTANBgkqhkiG9w0BAQsFADBEMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxHzAdBgNVBAMTFk9wZW5CYW5raW5nIElzc3VpbmcgQ0EwHhcNMTkwMTE0MTIyOTUwWhcNMjEwMTE0MTI1OTUwWjBhMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxGzAZBgNVBAsTEjAwMTU4MDAwMDBqZkFXMUFBTTEfMB0GA1UEAxMWMlNQbVBOVVU2S3J0Y2d1dFBsa2ZCZDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAPMYdYkIGWAAiyhGSaU7fDL8VhoZCruX82BpxwqrnoNiXfrOdthQafXV5tPoznyGBSZBJNNVjCZ6RmEwTR32Qjn4mzrtVpHfBXK+fcRdjz2HJO3KOFapRMuBel36bGltL9wFYLrrh3iL0vgD9cU8EW1GULO8gNysufi7wHCNRxarbGyt+Jaoz0kndBzHlDvXDLkX2T5YSBpjGU/zkrlRauS5/tq4Ki3Eg4qTID4mJ/999WcKRw0Ziurp6G9Kved+K5I4oPuLrEmzOlbQgjjeJdszOn/HbyOKFHj+XXcMFoCDCWK9CualxijLq+Hpzo+mLUPb3GYcN3eBOLhTjZ7Bi4UCAwEAAaOCAqAwggKcMB0GA1UdEQQWMBSCEmNhcm1lLmFwaS5iYXJjbGF5czAOBgNVHQ8BAf8EBAMCB4AwIAYDVR0lAQH/BBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMIIBUgYDVR0gBIIBSTCCAUUwggFBBgsrBgEEAah1gQYBATCCATAwNQYIKwYBBQUHAgEWKWh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL3BvbGljaWVzMIH2BggrBgEFBQcCAjCB6QyB5lRoaXMgQ2VydGlmaWNhdGUgaXMgc29sZWx5IGZvciB1c2Ugd2l0aCBPcGVuIEJhbmtpbmcgTGltaXRlZCBhbmQgYXNzb2NpYXRlZCBPcGVuIEJhbmtpbmcgU2VydmljZXMuIEl0cyByZWNlaXB0LCBwb3NzZXNzaW9uIG9yIHVzZSBjb25zdGl0dXRlcyBhY2NlcHRhbmNlIG9mIHRoZSBPcGVuIEJhbmtpbmcgTGltaXRlZCBDZXJ0aWZpY2F0ZSBQb2xpY3kgYW5kIHJlbGF0ZWQgZG9jdW1lbnRzIHRoZXJlaW4uMHIGCCsGAQUFBwEBBGYwZDAmBggrBgEFBQcwAYYaaHR0cDovL29iLnRydXN0aXMuY29tL29jc3AwOgYIKwYBBQUHMAKGLmh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL2lzc3VpbmdjYS5jcnQwPwYDVR0fBDgwNjA0oDKgMIYuaHR0cDovL29iLnRydXN0aXMuY29tL3Byb2R1Y3Rpb24vaXNzdWluZ2NhLmNybDAfBgNVHSMEGDAWgBSfSb9ONqesww8ryEf0HykbwHkLBTAdBgNVHQ4EFgQUlsyuIasI4NOaMUDsUDcZj8unei4wDQYJKoZIhvcNAQELBQADggEBAHmbK4XGuvBZ8HUS7NAeKsNN/9FqPF8ekcbPV4DWQGVrHXkn3cxohr++L9wq19CnwvZ6YyXFFMb15VbRynsW0xuOPcR85g5pGzT5Z2Wud/+CcI7GKr7KNE0HugnG8YqiEv08Er4v+9eHdpJMUYxYDeHoxeQXYY7fr2gG3mVUqrYvtaU2LNZ6hO2LH4vgL0lj6uhio2e8iK4RHsPdpTM73+2SQK4GI3aSPwcR9pbNy3Ijlo7qiJaPyXCpxiG1l+NjYefA/HaKavITECyynaCa4gNJC0upjzVUvQBtktw81gFCAN+8lfea9Bt40Qs1/xhpgRYm96ScDgqsAAIXHY7IOOs="
+09    ],
+10    "x5t":"cW4GMQV_tnEuf26KrCqsAuO6hqk=",
+11    "x5u":"https://keystore.openbanking.org.uk/0015800000jfAW1AAM/1uJmnEmIzSK6ecq_1pGFJmUVLD0.pem",
+12    "x5t#S256":"3hJVyverB5ZZcMrPpiTpaAQmJ4rak1Cs3gH-XLS2rr4="
+13  }</pre>
 <p>&nbsp;</p>
-<p>When the message comes in, the platform:</p>
+<p>When the platform receives the request message, it:</p>
 <ul>
 	<li>Identifies the client. See <a href="#ob_client_validation_dependency">Dependency for identifying the client</a> below.</li>
-	<li> Looks for the headers specified in this policy, and checks that the certificate values provided in these headers match a valid certificate configured with <strong>"use":"tls"</strong> at the JWKS URL specified in the OAuth Profile for the client, which in the platform is represented by an app (see <a href="../../cm/learnmore/app_create_app_oauth_profile.htm#settings_authentication">App OAuth Profile: Authentication Settings</a> in the developer portal help). If there is any mismatch (for example, headers are missing, header values don't match, JWKS URL is not provided), an error is returned.</li>
+	<li> Looks for the headers specified in this policy, and checks that the certificate values provided in these headers match a valid key configured with the <strong>"use":"tls"</strong> claim in the JWKS specified in the OAuth Profile for the client/application, which in the platform is represented by an app (see <a href="../../cm/learnmore/app_create_app_oauth_profile.htm#settings_authentication">App OAuth Profile: Authentication Settings</a> in the developer portal help). If there is any mismatch (for example, headers are missing, header values don't match, JWKS URL is not provided), an error is returned.</li>
 </ul>
 <p>The example below shows the headers that would need to be present in the message, using the sample header names used in <a href="#ob_client_validation_policy_options">Open Banking Client Validation Policy options</a> below:</p>
-<pre>X-SSLClientCert: MIIFxTCCBK2gAwIBAgIEWf9PwTANBgkqhkiG9w0BAQsFADBEMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxHzAdBgNVBAMTFk9wZW5CYW5raW5nIElzc3VpbmcgQ0EwHhcNMTkwMTE0MTIyOTUwWhcNMjEwMTE0MTI1OTUwWjBhMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxGzAZBgNVBAsTEjAwMTU4MDAwMDBqZkFXMUFBTTEfMB0GA1UEAxMWMlNQbVBOVVU2S3J0Y2d1dFBsa2ZCZDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAPMYdYkIGWAAiyhGSaU7fDL8VhoZCruX82BpxwqrnoNiXfrOdthQafXV5tPoznyGBSZBJNNVjCZ6RmEwTR32Qjn4mzrtVpHfBXK+fcRdjz2HJO3KOFapRMuBel36bGltL9wFYLrrh3iL0vgD9cU8EW1GULO8gNysufi7wHCNRxarbGyt+Jaoz0kndBzHlDvXDLkX2T5YSBpjGU/zkrlRauS5/tq4Ki3Eg4qTID4mJ/999WcKRw0Ziurp6G9Kved+K5I4oPuLrEmzOlbQgjjeJdszOn/HbyOKFHj+XXcMFoCDCWK9CualxijLq+Hpzo+mLUPb3GYcN3eBOLhTjZ7Bi4UCAwEAAaOCAqAwggKcMB0GA1UdEQQWMBSCEmNhcm1lLmFwaS5iYXJjbGF5czAOBgNVHQ8BAf8EBAMCB4AwIAYDVR0lAQH/BBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMIIBUgYDVR0gBIIBSTCCAUUwggFBBgsrBgEEAah1gQYBATCCATAwNQYIKwYBBQUHAgEWKWh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL3BvbGljaWVzMIH2BggrBgEFBQcCAjCB6QyB5lRoaXMgQ2VydGlmaWNhdGUgaXMgc29sZWx5IGZvciB1c2Ugd2l0aCBPcGVuIEJhbmtpbmcgTGltaXRlZCBhbmQgYXNzb2NpYXRlZCBPcGVuIEJhbmtpbmcgU2VydmljZXMuIEl0cyByZWNlaXB0LCBwb3NzZXNzaW9uIG9yIHVzZSBjb25zdGl0dXRlcyBhY2NlcHRhbmNlIG9mIHRoZSBPcGVuIEJhbmtpbmcgTGltaXRlZCBDZXJ0aWZpY2F0ZSBQb2xpY3kgYW5kIHJlbGF0ZWQgZG9jdW1lbnRzIHRoZXJlaW4uMHIGCCsGAQUFBwEBBGYwZDAmBggrBgEFBQcwAYYaaHR0cDovL29iLnRydXN0aXMuY29tL29jc3AwOgYIKwYBBQUHMAKGLmh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL2lzc3VpbmdjYS5jcnQwPwYDVR0fBDgwNjA0oDKgMIYuaHR0cDovL29iLnRydXN0aXMuY29tL3Byb2R1Y3Rpb24vaXNzdWluZ2NhLmNybDAfBgNVHSMEGDAWgBSfSb9ONqesww8ryEf0HykbwHkLBTAdBgNVHQ4EFgQUlsyuIasI4NOaMUDsUDcZj8unei4wDQYJKoZIhvcNAQELBQADggEBAHmbK4XGuvBZ8HUS7NAeKsNN/9FqPF8ekcbPV4DWQGVrHXkn3cxohr++L9wq19CnwvZ6YyXFFMb15VbRynsW0xuOPcR85g5pGzT5Z2Wud/+CcI7GKr7KNE0HugnG8YqiEv08Er4v+9eHdpJMUYxYDeHoxeQXYY7fr2gG3mVUqrYvtaU2LNZ6hO2LH4vgL0lj6uhio2e8iK4RHsPdpTM73+2SQK4GI3aSPwcR9pbNy3Ijlo7qiJaPyXCpxiG1l+NjYefA/HaKavITECyynaCa4gNJC0upjzVUvQBtktw81gFCAN+8lfea9Bt40Qs1/xhpgRYm96ScDgqsAAIXHY7IOOs=
+<pre>X-SSLClientCert: -----BEGIN CERTIFICATE-----
+MIIFxTCCBK2gAwIBAgIEWf9PwTANBgkqhkiG9w0BAQsFADBEMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxHzAdBgNVBAMTFk9wZW5CYW5raW5nIElzc3VpbmcgQ0EwHhcNMTkwMTE0MTIyOTUwWhcNMjEwMTE0MTI1OTUwWjBhMQswCQYDVQQGEwJHQjEUMBIGA1UEChMLT3BlbkJhbmtpbmcxGzAZBgNVBAsTEjAwMTU4MDAwMDBqZkFXMUFBTTEfMB0GA1UEAxMWMlNQbVBOVVU2S3J0Y2d1dFBsa2ZCZDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAPMYdYkIGWAAiyhGSaU7fDL8VhoZCruX82BpxwqrnoNiXfrOdthQafXV5tPoznyGBSZBJNNVjCZ6RmEwTR32Qjn4mzrtVpHfBXK+fcRdjz2HJO3KOFapRMuBel36bGltL9wFYLrrh3iL0vgD9cU8EW1GULO8gNysufi7wHCNRxarbGyt+Jaoz0kndBzHlDvXDLkX2T5YSBpjGU/zkrlRauS5/tq4Ki3Eg4qTID4mJ/999WcKRw0Ziurp6G9Kved+K5I4oPuLrEmzOlbQgjjeJdszOn/HbyOKFHj+XXcMFoCDCWK9CualxijLq+Hpzo+mLUPb3GYcN3eBOLhTjZ7Bi4UCAwEAAaOCAqAwggKcMB0GA1UdEQQWMBSCEmNhcm1lLmFwaS5iYXJjbGF5czAOBgNVHQ8BAf8EBAMCB4AwIAYDVR0lAQH/BBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMIIBUgYDVR0gBIIBSTCCAUUwggFBBgsrBgEEAah1gQYBATCCATAwNQYIKwYBBQUHAgEWKWh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL3BvbGljaWVzMIH2BggrBgEFBQcCAjCB6QyB5lRoaXMgQ2VydGlmaWNhdGUgaXMgc29sZWx5IGZvciB1c2Ugd2l0aCBPcGVuIEJhbmtpbmcgTGltaXRlZCBhbmQgYXNzb2NpYXRlZCBPcGVuIEJhbmtpbmcgU2VydmljZXMuIEl0cyByZWNlaXB0LCBwb3NzZXNzaW9uIG9yIHVzZSBjb25zdGl0dXRlcyBhY2NlcHRhbmNlIG9mIHRoZSBPcGVuIEJhbmtpbmcgTGltaXRlZCBDZXJ0aWZpY2F0ZSBQb2xpY3kgYW5kIHJlbGF0ZWQgZG9jdW1lbnRzIHRoZXJlaW4uMHIGCCsGAQUFBwEBBGYwZDAmBggrBgEFBQcwAYYaaHR0cDovL29iLnRydXN0aXMuY29tL29jc3AwOgYIKwYBBQUHMAKGLmh0dHA6Ly9vYi50cnVzdGlzLmNvbS9wcm9kdWN0aW9uL2lzc3VpbmdjYS5jcnQwPwYDVR0fBDgwNjA0oDKgMIYuaHR0cDovL29iLnRydXN0aXMuY29tL3Byb2R1Y3Rpb24vaXNzdWluZ2NhLmNybDAfBgNVHSMEGDAWgBSfSb9ONqesww8ryEf0HykbwHkLBTAdBgNVHQ4EFgQUlsyuIasI4NOaMUDsUDcZj8unei4wDQYJKoZIhvcNAQELBQADggEBAHmbK4XGuvBZ8HUS7NAeKsNN/9FqPF8ekcbPV4DWQGVrHXkn3cxohr++L9wq19CnwvZ6YyXFFMb15VbRynsW0xuOPcR85g5pGzT5Z2Wud/+CcI7GKr7KNE0HugnG8YqiEv08Er4v+9eHdpJMUYxYDeHoxeQXYY7fr2gG3mVUqrYvtaU2LNZ6hO2LH4vgL0lj6uhio2e8iK4RHsPdpTM73+2SQK4GI3aSPwcR9pbNy3Ijlo7qiJaPyXCpxiG1l+NjYefA/HaKavITECyynaCa4gNJC0upjzVUvQBtktw81gFCAN+8lfea9Bt40Qs1/xhpgRYm96ScDgqsAAIXHY7IOOs=
+-----END CERTIFICATE-----
 X-SSLClientCertDN: CN=2SPmPNUU6KrtcgutPlkfBd, OU=0015800000jfAW1AAM, O=OpenBanking, C=GB
-X-SSLClientCertSN: 1509904321</pre>
+X-SSLClientCertSN: 5c:da:9f:e6</pre>
 <p><a href="#top">back to top</a></p>
 
 
@@ -80,13 +82,14 @@ X-SSLClientCertSN: 1509904321</pre>
 	</li>
 	<li>From the <strong>client_id</strong> parameter from the request parameters (query or form).</li>
 	</ul>
-<p>You can also attach this policy to the platform API's <strong>AuthorizationServerTokenAPI</strong> Service. The token endpoint always has the client_id in the parameters for both GET and POST requests.</p>
+<p>You can also attach this policy to the platform API's <strong>AuthorizationServerTokenAPI</strong> Service. The requests sent to this endpoint always have the client_id in the parameters either the GET or POST request.</p>
 <p><a href="#top">back to top</a></p>
 
 
 
 <h3 id="ob_client_validation_policy_create">Creating an Open Banking Client Validation Policy</h3>
 <p>The first step in creating a policy is to define the basic policy information.</p>
+<p><strong>Note</strong>: When creating this policy for the Authorization Endpoint, the policy must be created in the Policies folder of the Akana Policy Manager Organization.</p>
 
 <h5>To add an Open Banking Client Validation Policy</h5>
 <ol>
@@ -154,7 +157,7 @@ X-SSLClientCertSN: 1509904321</pre>
 
 
 <h3 id="policy_attach">Attaching the Policy</h3>
-<p>To use the Open Banking Client Validation Policy, go to the <strong>Policies</strong> folder in the Root Organization and attach the policy to a web service, binding, or binding operation.</p>
+<p>To use the Open Banking Client Validation Policy, go to the <strong>Policies</strong> folder in the respective organization and attach the policy to a web service, binding, or binding operation.</p>
 <p><a href="#top">Back to top</a></p>
 
 
