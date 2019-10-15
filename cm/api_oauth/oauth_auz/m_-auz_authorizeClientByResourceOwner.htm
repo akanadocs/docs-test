@@ -1,28 +1,25 @@
 ---
 layout: oauthapipage
-title: Get Authenticated User Info (POST) | OAuth Authorization Server UserInfo Service | Akana OAuth API
-description:  Returns information about the authenticated user. Uses HTTP POST.
+title: Authorize Client Resource Woner | Authorization Server Authorization Service | Akana OAuth API
+description: Authorizes the grant. The resource owner authorizes the client app based on the <a href="../Ref_Glossary_CommunityPlatform.htm#gl_oauth_scope">OAuth scopes</a> that have been configured. As a result of this operation, the grant status changes from Pending to Active.
 product: cm
 category: ref
-nav-title: Get Authenticated User Info (POST) 
+nav-title: Authorize Client Resource Woner 
 no-nav: api
 sub-nav: true
-sub-nav-class: oauth_userinfo
+sub-nav-class: oauth_auz
 no-catalog: true
 ---
 
 <div class="apidocContent">
 <!-- InstanceBeginEditable name="Heading" -->
-<h2 id="top">POST&nbsp;/oauth/userinfo</h2>
+<h2 id="top">POST&nbsp;/oauth/auz/grants</h2>
 <!-- InstanceEndEditable -->
 
 <!-- InstanceBeginEditable name="Intro_AuthRoles" -->
-<p><!-- #BeginLibraryItem "/Library/desc_oauth_getAuthenticatedUserInfoPOST.lbi" -->
-Returns information about the authenticated user. Uses HTTP POST.<!-- #EndLibraryItem --></p>
-<p>The platform's OAuth Provider supports retrieval of claims about the end-user via its UserInfo endpoint. This API is an OAuth 2.0-protected resource. To obtain the requested claims about an end-user, the Client should make a request to the UserInfo API using an Access Token obtained through OpenID Connect Authentication. These Claims are normally represented by a JSON object that contains a collection of name and value pairs for the Claims.</p>
-<p>The Client can include the access token in the request parameters, query, or post, depending on the HTTP method used to invoke the UserInfo API or as an Authorization header with <strong>Bearer</strong> scheme.</p>
-<p class="apidoc_note"><strong>Note</strong>: We recommend that the request use the HTTP GET method (<span class="apidoc_code"><a href="m-userinfo_getAuthenticatedUserInfoGET.htm">GET&nbsp;/oauth/userinfo</a></span>), with access token sent in the Authorization header. For information on why you might choose one or the other, see <a href="../aaref/Ref_OAuthGETorPOST.htm">OAuth Operations: GET or POST?</a></p>
-<p id="id_roles"><strong>Authorization Roles/Permissions: </strong>Anyone can run this operation.</p>
+<p><!-- #BeginLibraryItem "/Library/desc_oauth_auz_authorizeClientByResourceOwner.lbi" -->Authorizes the grant. The resource owner authorizes the client app based on the <a href="../Ref_Glossary_CommunityPlatform.htm#gl_oauth_scope">OAuth scopes</a> that have been configured. As a result of this operation, the grant status changes from Pending to Active.<!-- #EndLibraryItem --></p>
+<p>In the developer console, this operation is used by <a href="../Ref_Glossary_CommunityPlatform.htm#gl_testclient">Test Client</a> in the OAuth authorization page. When the user clicks the <strong>Authorize</strong> button, this operation is called. By clicking the button, the user is authorizing the client to invoke APIs on his/her behalf with the specified scopes.</p>
+<p id="id_roles"><strong>Authorization Roles/Permissions: </strong>Must be the <a href="../Ref_Glossary_CommunityPlatform.htm#gl_oauth_resourceowner">resource owner</a>.</p>
 <!-- InstanceEndEditable --><!-- #BeginLibraryItem "/Library/_whatdoyouwanttoreadabout.lbi" -->
 <p>This topic includes the following sections:</p>
 <div class="relatedlinks">
@@ -48,23 +45,32 @@ Returns information about the authenticated user. Uses HTTP POST.<!-- #EndLibrar
 
 <h3 id="endpoint">URL</h3>
 <!-- InstanceBeginEditable name="URL" -->
-<pre class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/Library/_endpointbase_oauth.lbi" -->https://{oauth-provider-url}/oauth/<!-- #EndLibraryItem -->userinfo</pre>
+<pre class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/Library/_endpointbase_oauth.lbi" -->https://{oauth-provider-url}/oauth/<!-- #EndLibraryItem -->auz/grants</pre>
 <!-- InstanceEndEditable -->
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 
 
 <!-- InstanceBeginEditable name="Sample Request" -->
 <h3 id="samplerequest">Sample Request</h3>
-<p>The access token can be sent in the query parameters, as an Authorization header, or as POST body.</p>
-<p id="id_samplerequest">The example below shows a request for the user info, with an access token sent in the request URL, in the case of the GET operation.</p>
+<p id="id_samplerequest">The example below shows...</p>
 <p><strong>Request URL</strong></p>
-<pre class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/Library/_endpointbase_oauth.lbi" -->https://{oauth-provider-url}/oauth/<!-- #EndLibraryItem -->userinfo?access_token=SlAV32hkKG</pre>
+<pre class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/Library/_endpointbase_oauth.lbi" -->https://{oauth-provider-url}/oauth/<!-- #EndLibraryItem -->grants</pre>
 <p><strong>Sample request headers</strong></p>
-<p>The example below shows the access token sent in the Authorization header (for either GET or POST).</p>
-<pre>Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW</pre>
+<pre>Content-Type: application/json
+Accept: application/json</pre>
 <p><strong>Sample request body</strong></p>
-<p>The example below shows the access token sent in the request body, in the case of the POST operation.</p>
-<pre>access_token=SlAV32hkKG</pre>
+<pre>
+{
+  "GrantID":"oo7pkm3eqlsf",
+  "GrantProperties":{
+    "GrantProperty":[
+      {
+        "Name":"OAuthPropertyId",
+        "Value":"listDiscussions"
+      }
+    ]
+  }
+}</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 <!-- InstanceEndEditable -->
 
@@ -86,9 +92,9 @@ Returns information about the authenticated user. Uses HTTP POST.<!-- #EndLibrar
     </tr>
     <tr>
       <td><a href="../aaref/Ref_HTTPHeaders.htm#contenttype_request">Content-Type</a></td>
-      <td><!-- #BeginLibraryItem "/Library/hdrval_form-urlencoded.lbi" --><strong>application/x-www-form-urlencoded</strong><!-- #EndLibraryItem --></td>
+      <td><!-- #BeginLibraryItem "/Library/hdrval_appjson.lbi" --><strong>application/json</strong><!-- #EndLibraryItem --></td>
     </tr>
-    </tbody>
+  </tbody>
 </table>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 <!-- InstanceEndEditable -->
@@ -108,11 +114,11 @@ Returns information about the authenticated user. Uses HTTP POST.<!-- #EndLibrar
   </thead>
   <tbody>
     <tr>
-      <td>access_token</td>
-      <td>query or body</td>
-      <td>string</td>
-      <td>Optional</td>
-      <td>The access token that was received from the authorization server after the user was authenticated.</td>
+      <td>grantRequest</td>
+      <td>Body</td>
+      <td><a href="../obj/o_oauth_GrantRequest.htm">GrantRequest</a></td>
+      <td>Required</td>
+      <td><!-- #BeginLibraryItem "/Library/o_oauth_GrantRequest.lbi" -->Contains information about an OAuth grant request.<!-- #EndLibraryItem --></td>
     </tr>
   </tbody>
 </table>
@@ -122,7 +128,7 @@ Returns information about the authenticated user. Uses HTTP POST.<!-- #EndLibrar
 
 <!-- InstanceBeginEditable name="Response Description" -->
 <h3 id="response">Response</h3>
-<p id="id_successstatement">If successful, this operation returns HTTP status code 200, with the user info.</p>
+<p id="id_successstatement">If successful, this operation returns HTTP status code 200, with the authorization grant.</p>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 <!-- InstanceEndEditable -->
 
@@ -131,14 +137,14 @@ Returns information about the authenticated user. Uses HTTP POST.<!-- #EndLibrar
 <h3 id="sampleresponse">Sample Response</h3>
 <p id="id_sampleresponse">The sample response below shows successful completion of this operation.</p>
 <p><strong>Sample response headers: application/json</strong></p>
-<pre>Content-Type: application/json</pre>
+<pre>xxsample_rsp_hdr_jxx
+oauthRedirectInfoCookie: {cookievalue}</pre>
 <p><strong>Sample response body: application/json</strong></p>
 <pre>{
-  "sub": "jdoe",
-  "name": "Jane Doe",
-  "given_name": "Jane",
-  "family_name": "Doe",
-  "email": "janedoe@example.com"
+  "GrantID": "d1et7mvku36h",
+  "GrantProvider": "OAuth_acmepaymentscorp",
+  "GrantStatus": "Active",
+  "ResourceOwner": "user2"
 }</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 <!-- InstanceEndEditable -->
@@ -167,12 +173,22 @@ Returns information about the authenticated user. Uses HTTP POST.<!-- #EndLibrar
 
 <!-- InstanceBeginEditable name="Response Body" -->
 <h3 id="responsebody">Response Body</h3>
-<p>The response body includes the UserInfo claims, returned in a JSON object. The UserInfo claims include:</p>
-<ul>
-  <li>Standard claims as defined in the OpenID Connect specification.</li>
-  <li>Possibly, custom claims returned from specific identity providers.</li>
-</ul>
-<p>The <strong>sub</strong> (subject) claim is always included in the UserInfo response. Other claims may be present depending on the authentication response from the specific identity provider.</p>
+<table class="tableparmsresponse">
+  <thead>
+    <tr bgcolor="#DDDDDD">
+      <th style="width:20%">Name</th>
+      <th style="width:15%">Type</th>
+      <th style="width:65%">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>GrantResponse</td>
+      <td><a href="../obj/o_oauth_GrantResponse.htm">GrantResponse</a></td>
+      <td><!-- #BeginLibraryItem "/Library/o_oauth_GrantResponse.lbi" -->Contains information about the response to an OAuth grant request, including grant status.<!-- #EndLibraryItem --></td>
+    </tr>
+  </tbody>
+</table>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 <!-- InstanceEndEditable -->
 
@@ -189,22 +205,12 @@ Returns information about the authenticated user. Uses HTTP POST.<!-- #EndLibrar
   </thead>
   <tbody>
     <tr>
-      <td><a href="../aaref/Ref_HTTPStatusCodes.htm#http401">401</a></td>
-      <td><p>This operation might return a 401 for any of the following reasons:</p>
-        <ul class="apidoctable_ul">
-          <li>The request does not contain an access token (query/form parameter or Authorization header)</li>
-          <li>The access token is invalid</li>
-          <li>The access token is valid but was not obtained through OpenID Connect Authentication (<strong>openid</strong> scope was not part of the end-user authorization)</li>
-        </ul></td>
+      <td><a href="../aaref/Ref_HTTPStatusCodes.htm#http500">500</a></td>
+      <td>Invalid GrantID.</td>
     </tr>
     <tr>
-      <td><a href="../aaref/Ref_HTTPStatusCodes.htm#http404">404</a></td>
-      <td><p>This operation might return a 404 for any of the following reasons:</p>
-        <ul class="apidoctable_ul">
-          <li>OpenID Connect is not enabled in the OAuth provider</li>
-          <li>The host name is not mapped to the OAuth provider correctly</li>
-          <li>The URL is accessed over HTTP but the provider is configured to accept only HTTPS requests </li>
-        </ul></td>
+      <td><a href="../aaref/Ref_HTTPStatusCodes.htm#http500">500</a></td>
+      <td>Invalid grant property.</td>
     </tr>
     <tr>
       <td><a href="../aaref/Ref_HTTPStatusCodes.htm#http500">500</a></td>
