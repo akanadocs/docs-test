@@ -57,6 +57,7 @@ nav-title: Platform Hardening
 		<li><a href="#configuring_account_login_rules">Configuring Account Login Rules</a></li>
 		<li><a href="#configuring_password_complexity_rules">Configuring Password Complexity Rules</a></li>
 		<li><a href="#malicious_pattern_policy_on_apis">Adding the Malicious Pattern Detection policy to upload APIs</a></li>
+		<li><a href="#comments_limit_file_type">Limiting file type for upload in comments</a></li>
 	</ol></li>
 </ol>
 
@@ -181,7 +182,7 @@ container.name={container_name}</pre>
 
 
 <h4 id="jre_unlimited_strength">Add the unlimited strength policy to the JDK</h4>
-<p>To support long passwords when importing PKI from Java Keystores, you will need to install the Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files. This is dependent on the JRE version being used and is available from Oracle. To install, copy the <strong>US_export_policy.jar</strong> and <strong>local_policy.jar</strong> files to the /lib/security directory for the JRE.</p>
+<p>To support long passwords when importing PKI from a Java keystore, you will need to install the Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files. This is dependent on the JRE version being used and is available from Oracle. To install, copy the <strong>US_export_policy.jar</strong> and <strong>local_policy.jar</strong> files to the /lib/security directory for the JRE.</p>
 <p><strong>Scope</strong>: All Containers</p>
 <p><a href="#top">back to top</a></p>
 
@@ -360,10 +361,14 @@ com.soa.api.security.cache.refreshTime=300000</pre>
 <h4 id="enabling_csrf_protection">Enabling CSRF Protection</h4>
 <p>You can enable and disable CSRF protection in the Policy Manager and Community Manager User Interfaces.</p>
 <p><strong>Scope</strong>: All Community Manager and Policy Manager Containers</p>
-<p>Due to the fact that Policy Manager is not Internet-facing, this setting is disabled by default. You can enable CSRF protection in the Policy Manager in the Akana Administration Console:</p>
+<p>Due to the fact that Policy Manager is not Internet-facing, this setting is disabled by default. You can enable CSRF protection for Policy Manager in the Akana Administration Console for the Policy Manager container:</p>
 <pre>com.soa.console.csrf -&gt;
 org.owasp.csrfguard.Enabled=true</pre>
-<p>In Community Manager, CSRF configuration is under <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong>:</p>
+<p>In the developer portal, this setting is configured by the Site Admin. Choose:</p>
+<ul>
+	<li><strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong> &gt; <strong>CSRF Support for Read Requests</strong></li>
+	<li><strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong> &gt; <strong>CSRF Support for Write Requests</strong></li>
+</ul>
 <p><img src="images/ph_84_enable-csrf-support.png" alt="Enable CSRF Support" title="Enable CSRF Support" /></p>
 <p><a href="#top">back to top</a></p>
 
@@ -452,7 +457,7 @@ java.extension.enabled=false</pre>
 <h4 id="turning_off_user_account_enumeration">Turning off User Account Enumeration</h4>
 <p>User Account Enumeration occurs when the Community Manager user interface provides direct feedback to a user during the signup and registration processes to the effect that a user account already exists or is already registered. If this is turned off, no useful feedback is provided to the user, minimizing the security risk, but decreasing usability.</p>
 <p><strong>Scope</strong>: All Community Manager Containers</p>
-<p>In Community Manager, User Account Enumeration configuration can be found under <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong>:</p>
+<p>In Community Manager, choose <strong>Admin</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong> &gt; <strong>Allow User Enum</strong>:</p>
 <p><img src="images/ph_84_allow-user-enum.png" alt="Allow User Enumeration" title="Allow User Enumeration" /></p>
 <p><a href="#top">back to top</a></p>
 
@@ -461,7 +466,7 @@ java.extension.enabled=false</pre>
 <h4 id="configuring_challenge_questions_and_answers">Enforcing Challenge Questions and Answers</h4>
 <p>Challenge Questions/Answers are often required to increase security around password reset. When signing up to the platform, the user must provide the answer to one or more security questions, if the platform is set up to require them. The user's answers are stored in the database, and the user must answer one or more security questions on demand to perform certain functions such as resetting a password or changing the user profile.</p>
 <p>
-In Community Manager, the Challenge Questions/Answers configuration can be found under <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Users</strong>:</p>
+In Community Manager, choose <strong>Admin</strong> &gt; <strong>Settings</strong> &gt; <strong>Users</strong> &gt; <strong>Enforce Challenge Questions on Login</strong>:</p>
 <p><img src="images/ph_84_user-settings.jpg" alt="User Settings" /></p>
 <p>Set <strong>Enforce Challenge Questions on Login</strong> to <strong>Enabled</strong>.</p>
 <p>Additional settings can be found under <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong>:</p>
@@ -528,7 +533,7 @@ In Community Manager, the Challenge Questions/Answers configuration can be found
 		<li>BusinessAPI (Businesses service) (certificate upload)</li>
 		<li>ClientServicesAPI (Client Services service) (keystore upload from Test Client)</li>
 		<li>ConsoleResourceAPI (Console Resources service) (file upload)</li>
-		<li>OAuthClientApi (keystore upload from TestClient)</li>
+		<li>OAuthClientApi (keystore upload from Test Client)</li>
 		<li>ContentAPI (Content service) (file upload, API docs and UI customization files)</li>
 		<li>GroupAPI (Groups service)</li>
 		<li>WorkflowAPI (Workflow service)</li>
@@ -549,4 +554,13 @@ In Community Manager, the Challenge Questions/Answers configuration can be found
 	<li>Click through to the applicable service. In the <strong>Policy Attachments</strong>, <strong>Operational</strong> section, click <strong>Manage</strong>.</li>
 	<li>Add the policy and save your changes.</li>
 </ol>
+<p><a href="#top">back to top</a></p>
+
+
+<h4 id="comments_limit_file_type">Limiting file type for upload in comments</h4>
+<h5 class="stamp">API Platform Version: 2019.1.0 and later</h5>
+<p> In the developer portal, you can restrict the media types allowed for uploading to comments, discussions, tickets, alerts, or reviews. The default allows any media type.</p>
+<p>This setting is configured by the Site Admin. Choose <strong>More</strong> &gt; <strong>Admin</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong> &gt; <strong>Limit file types allowed for upload to comments</strong>:</p>
+<p><img src="images/ph_201910_limit_file_types.png" alt="Limiting file types for upload in comments" /></p>
+<p>For more information, see <a href="../cm/learnmore/site_admin_settings.htm#settings_config_security_business">How do I configure settings for business security?</a></p>
 <p><a href="#top">back to top</a></p>
