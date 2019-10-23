@@ -24,7 +24,7 @@ nav-title: Upgrade to 2019.x.x
 	<li>Upgrading from any 2019.x.x version to a later 2019.x.x version (minor-version upgrade). For additional notes, see <a href="upgrading_micro.htm">Minor-Version Update Notes</a>.</li>
 </ul>
 <p>You can also use automation to standardize the upgrade process. Automation might take a little more time to set up, but it has great benefits including standardization and reusability. For information on automation, see <a href="../automation/automation_ref.htm">Automation Reference</a>. For information about which automation recipes to use for upgrade, see <a href="#upgrade_automation">Automating the upgrade</a>.</p>
-<p>Previous versions of this document recommended an incremental approach, upgrading from one major version to the next and then to the next. Incremental upgrade is not necessary. You can upgrade from an earlier version to the latest version in one upgrade process. This documentation takes you through the steps to create new containers and then transfer existing settings, including container key, certificate, and configuration settings, to the new container.</p>
+<p>Previous versions of this document recommended an incremental approach, upgrading from one major version to the next and then to the next. Incremental upgrade is not necessary. You can upgrade from an earlier version to the latest version in one upgrade process. This documentation takes you through the steps to create new containers and then transfer existing settings, including container key, keys and certificate from an external keystore, and configuration settings, to the new container.</p>
 
 <p>
 <a href="../admin_console/using_admin_console.htm" class="button secondary">Using Admin Console</a>
@@ -106,12 +106,13 @@ nav-title: Upgrade to 2019.x.x
 <h3 id="s01_strategy">Upgrade strategy</h3>
 <p>There are several approaches you can take to upgrading:</p>
 <ol>
-	<li>Automated upgrade, using automation recipes to help make your upgrade faster, more standardized, and more error-free. For information on automation, see <a href="../automation/automation_ref.htm">Automation Reference</a>. For information about which automation recipes to use for upgrade, see <a href="#upgrade_automation">Automating the upgrade</a>.</li>
 	<li>Manual upgrade, creating a new container and then using it to replicate an old one. This documentation steps through that approach.
-<p><strong>Note</strong>: We highly recommend that you use automation to transfer the container properties.</p></li>
+		<p><strong>Note</strong>: If you have custom container configuration settings, we highly recommend that you use automation to replicate those properties in the new container.</p>
+	</li>
 	<li>Manual upgrade, creating new containers, and then configuring the new containers to suit your requirements. This is essentially a fresh install.</li>
+	<li>Automated upgrade, using automation recipes to help make your upgrade faster, more standardized, and more error-free. For information on automation, see <a href="../automation/automation_ref.htm">Automation Reference</a>. For information about which automation recipes to use for upgrade, see <a href="#upgrade_automation">Automating the upgrade</a>.</li>
 </ol>
-<p>This documentation takes you through the steps to create new containers and then transfer existing settings, including container key, certificate, and configuration settings, to the new container (#3 above). For example, as part of <a href="#s02_05_container_01">Step 2-5: Create and configure the first container</a> you'll upload the same certificate that you used for the old container, from your secure external storage location to the new container. </p>
+<p>This documentation takes you through the steps to create new containers and then transfer existing settings to the new container (#1 above). For example, as part of <a href="#s02_05_container_01">Step 2-5: Create and configure the first container</a> you'll upload the same keys and certificate, which you used for the old container, from your secure external keystore to the new container.</p>
 <p>Some of the steps are the same for all approaches.</p>
 <p><a href="#top">back to top</a></p>
 
@@ -149,7 +150,7 @@ nav-title: Upgrade to 2019.x.x
 	<li>In the Akana Administration Console for each container, take all steps needed to save out container settings so that you can reproduce the configuration on the new container, where applicable. You'll need this information when you're setting up the new container. Save all other container properties that you've customized.
 	<p><strong>Note</strong>: you can use an automation task to save out the configuration settings.</p></li>
 	<li>Make a note of the container key value. This is needed for replicating the existing container in your new container. You can get the container key from the Akana Administration Console for the container. For instructions, see <a href="#find_container_key">Finding the container key</a>. When you're setting up the new container, you'll use this key (<a href="#s02_05_container_01">Step 2-5: Create and configure the first container</a> below).</li>
-		<li>Make sure you have the certificate that you used to create the original container. You can then upload the certificate when configuring the new container.</li>
+		<li>Make sure you have the same keys and certificate, from your external keystore, which you used to create the original container. You can then upload the certificate when configuring the new container.</li>
 	<li>Conditional: If standalone Elasticsearch is new for your implementation, determine where you'll install Elasticsearch, needed for the search feature. For full information on Elasticsearch, see <a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a>.</li>
 </ol>
 <p><a href="#top">back to top</a></p>
@@ -190,8 +191,8 @@ nav-title: Upgrade to 2019.x.x
 <p>If you have a specific add-on feature installed, such as the Integration Services option pack, SiteMinder Security Provider, or SAML Web SSO Security Provider feature, it's important that you also download the corresponding version of the same feature.</p>
 <p><strong>Extract:</strong></p>
 <p>The next step is to extract the files.</p>
-<p>For detailed instructions on this step, refer to the installation guide, <a href="../platform_install/installing_akana_api_platform_v2019.htm#unzip_files">Step 2-2: Extract installation files<</a>.</p>
-<p><strong>Note</strong>: You'll need a password to unzip the files. If you don't know the password, contact your Akana representative.</p>
+<p>For detailed instructions on this step, refer to the installation guide, <a href="../platform_install/installing_akana_api_platform_v2019.htm#unzip_files">Step 2-2: Extract installation files</a>.</p>
+<p><strong>Note</strong>: You'll need passwords to unzip the files. If you don't know the passwords, contact your Akana representative.</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -237,7 +238,7 @@ ps -ef
 <p><strong>Notes</strong>:</p>
 <ul>
 	<li>In creating the containers, make sure that you set up at least one container running Policy Manager before you set up the Network Director container.</li>
-	<li>Depending on the version that you're upgrading from, you might need to install one or more upgrade tools, in the Akana Administration Console for the container. For more information, see <a href="#running_upgrade_tools">Installing and running upgrade tools</a>.</li>
+	<li>Depending on the version that you're upgrading from, you might need to install one or more upgrade tools, in the Akana Administration Console for the container. Install and run the upgrade tools one at a time, from the version you're upgrading from, up to the newest version. For more information, see <a href="#running_upgrade_tools">Installing and running upgrade tools</a>.</li>
 	<li>If you're using automation to replicate the container property settings, follow the sequence of steps in <a href="#auto_prop_xfer">Automating the transfer of container properties</a> below.</li>
 </ul>
 
@@ -252,8 +253,8 @@ ps -ef
 	</li>
 	<li>In the Akana Administration Console for the container, install Policy Manager/Community Manager. See <a href="../platform_install/installing_akana_api_platform_v2019.htm#install_pm_cm">Step 2-4: Install Policy Manager/Community Manager features on the container</a> (installation doc).</li>
 	<li>At the <strong>Installation Complete</strong> summary, do not click <strong>Configure</strong> yet. Instead, click <strong>Close</strong>; you'll need to install plug-ins and upgrade tools and then turn off the scheduled jobs before running the post-upgrade tasks.</li>
-	<li>Install&nbsp;any plug-ins that you want to install. See <a href="../platform_install/installing_akana_api_platform_v2019.htm#install_plugins">Step 2-5: (as needed) Install plug-ins on the container</a>.&nbsp; At the end, click <strong>Cancel</strong>.</li>
-	<li>If you're upgrading from an older version, such as 8.0, you'll need to install one or more upgrade tools, in the Akana Administration Console for the container. Choose all that are applicable for the earliest version you're upgrading from, up to the current version. For more information, see <a href="#running_upgrade_tools">Running upgrade tools</a>. At the end, click <strong>Cancel</strong>.
+	<li>Install any plug-ins that you want to install. See <a href="../platform_install/installing_akana_api_platform_v2019.htm#install_plugins">Step 2-5: (as needed) Install plug-ins on the container</a>. At the end, click <strong>Cancel</strong>.</li>
+	<li>If you're upgrading from an older version, such as 8.0, you'll need to install one or more upgrade tools, in the Akana Administration Console for the container. Install and run the upgrade tools one at a time, from the version you're upgrading from, up to the newest version. For more information, see <a href="#running_upgrade_tools">Running upgrade tools</a>. At the end, click <strong>Cancel</strong>.
 		<p><strong>Note</strong>: Upgrade tools update the database, so they only need to be run once per installation. Install upgrade tools on the first container and run the resulting post-upgrade tasks once.</p></li>
 	<li>Turn off the scheduled jobs. For instructions, see <a href="#sched_jobs_off">Turning the scheduled jobs off</a>.</li>
 	<li>Go to the next procedure below.</li>
@@ -264,7 +265,8 @@ ps -ef
 	<li>In the Akana Administration Console for the container, under <strong>Installed Features</strong>, check at the bottom of the page under <strong>Pending Installation Tasks</strong>.</li>
 	<li>Run any tasks that are pending. The specific list depends on the version you're upgrading from and the features you're installing. Complete all tasks. For information about specific tasks, see <a href="#post_upgrade_tasks_running">Running post-upgrade tasks</a>. Some tasks are run once per installation, some are once per container. Examples of key tasks:
 		<ul>
-			<li><strong>Setting up the certificate for the container</strong>. At the Manage PKI Keys wizard (<strong>Generate PKI Keys &amp; X.509 Certificate</strong> page), upload the container certificate from your secure external location. See <a href="#post_upgrade_01">Manage PKI Keys</a>.</li>
+			<li><strong>Setting up the certificate for the container</strong>. At the Manage PKI Keys wizard (<strong>Generate PKI Keys &amp; X.509 Certificate</strong> page), upload the container certificate from your secure external keystore. See <a href="#post_upgrade_01">Manage PKI Keys</a>.
+			<p>For more information about using an external keystore to manage your container identity, see <a href="upgrade_managing_container_identity.htm">Managing Container Identity Across Upgrades</a>.</p></li>
 			<li><strong>Configuring the database</strong> (once per installation). See <a href="#post_upgrade_02">Configure Database Options</a>.
 			<p><strong>Note</strong>: When you're configuring the database, choose <strong>Use Existing Database</strong> and put in the values and credentials for the database from your prior version of the Akana API Platform. Depending on the database you're using, you might need to put a database driver in place, or take some other steps. See <a href="../platform_install/installing_akana_api_platform_v2019.htm#database_notes">Database notes</a> and <a href="../platform_install/installing_akana_api_platform_v2019.htm#database_drivers">Database drivers</a> (installation doc).</p></li>
 			<li><strong>Provisioning</strong>. For instructions, see <a href="#proc_provisioning">To perform provisioning</a>.</li>
@@ -287,11 +289,13 @@ ps -ef
 <p>Once you have the first container set up, it's time to create and configure additional containers. Essentially you'll follow the same set of steps as above for each container, including creating the container, installing features, performing post-upgrade tasks, and updating container properties. Follow all steps for these additional containers:</p>
 <ol>
 	<li>Optional: Subsequent Community Manager/Policy Manager containers. If you're following the sample deployment scenario, see <a href="../platform_install/installing_akana_api_platform_v2019.htm#features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</a>.</li>
-	<li>Network Director container. For features to install, see <a href="../platform_install/installing_akana_api_platform_v2019.htm#features_nd_oauth">API Gateway/Internal Gateway (Network Director)</a>. For Network Director, pending tasks might include the pending tasks below, and/or others:
-		<ol>
-			<li><strong>WS-Metadata Exchange Options</strong>: see <a href="../platform_install/installing_akana_api_platform_v2019.htm#install_tasks_nd_configure_wsmex">Installation wizard, ND container: Configure WS-Metadata Exchange Options</a>.</li>
-			<li>Manage PKI Keys wizard (<strong>Select Key Management Option</strong> page): see <a href="../platform_install/installing_akana_api_platform_v2019.htm#install_tasks_manage_pki_keys">Installation wizard: Manage PKI Keys</a>.</li>
-		</ol>
+	<li>Network Director container. For features to install, see <a href="../platform_install/installing_akana_api_platform_v2019.htm#features_nd_oauth">API Gateway/Internal Gateway (Network Director)</a>.
+	<p><strong>Note</strong>: In a version prior to 2019.1.0, you might have installed the <strong>Akana OAuth Provider Agent</strong> or <strong>Akana Community Manager OAuth Provider Agent</strong> features in your Network Director container. In version 2019.1.x, do <strong>not</strong> install these features. If you do, your Network Director container will not work correctly. These features will be removed in a later version.</p>
+	<p>For Network Director, pending tasks might include the pending tasks below, and/or others:
+	<ol>
+		<li><strong>WS-Metadata Exchange Options</strong>: see <a href="../platform_install/installing_akana_api_platform_v2019.htm#install_tasks_nd_configure_wsmex">Installation wizard, ND container: Configure WS-Metadata Exchange Options</a>.</li>
+		<li>Manage PKI Keys wizard (<strong>Select Key Management Option</strong> page): see <a href="../platform_install/installing_akana_api_platform_v2019.htm#install_tasks_manage_pki_keys">Installation wizard: Manage PKI Keys</a>.</li>
+	</ol></p>
 		<p>For a full list of possible tasks, see <a href="../admin_console/config_actions.htm#config_actions_all">Configuration Actions</a>.</p>
 	</li>
 	<li>OAuth container. For features to install, see <a href="../platform_install/installing_akana_api_platform_v2019.htm#features_oauth_alone">OAuth Provider</a>.</li>
@@ -429,7 +433,7 @@ ps -ef
 <p><strong>Note</strong>: Install and run the upgrade tools and their associated post-upgrade tasks manually, one at a time, running the oldest one first and finishing up with the most recent version.</p>
 <p>For information on tools, see <a href="../platform_install/installing_akana_api_platform_v2019.htm#installation_tools">Installation Tools</a> (installation doc).</p>
 <p>When you install an upgrade tool, it creates a post-upgrade task that makes changes to the database to upgrade it.</p>
-<p>Post-upgrade tasks relating&nbsp;to upgrade tools are  once per installation, not per container.</p>
+<p>Post-upgrade tasks relating to upgrade tools are  once per installation, not per container.</p>
 <p>Install all tools that are applicable to the version you're upgrading from.</p>
 <p><a href="#top">back to top</a></p>
 
@@ -452,7 +456,7 @@ ps -ef
 
 
 <h4 id="post_upgrade_01">Manage PKI keys</h4>
-<p>At the Manage PKI Keys wizard (<strong>Generate PKI Keys &amp; X.509 Certificate</strong> page), upload the container certificate from your secure external location. You'll need to upload a&nbsp;.JKS or&nbsp;.P12 file.</p>
+<p>At the Manage PKI Keys wizard (<strong>Generate PKI Keys &amp; X.509 Certificate</strong> page), upload the container certificate from your secure external location. You'll need to upload a&nbsp;.<a href="../../cm/learnmore/basics_glossary.htm#gl_jks">JKS</a> or&nbsp;.<a href="../../cm/learnmore/basics_glossary.htm#gl_p12">P12</a> file.</p>
 <p>In the Akana Administration Console for the container, go to <strong>Configuration</strong> &gt; <strong>Manage PKI Keys</strong> and choose <strong>Import Private Key &amp; X.509 Certificate</strong>. See <a href="../admin_console/config_actions.htm#aac_ca_managepkikeys">Installation wizard: Manage PKI Keys</a> (Akana Administration Console doc).</p>
 <p>For general information about container identity in the context of upgrading, see <a href="upgrade_managing_container_identity.htm">Managing Container Identity Across Upgrades</a>.</p>
 <p>See <a href="../admin_console/config_actions.htm#aac_ca_managepkikeys">Installation wizard: Manage PKI Keys</a> (Akana Administration Console doc).</p>
@@ -646,6 +650,7 @@ ps -ef
 
 
 <h3 id="auto_prop_xfer">Automating the transfer of container properties</h3>
+<p>In many cases, you might have set customized values for one or more of the containers in your installation, or even have added new properties.</p>
 <p>When upgrading by creating a new container, you'll need to transfer, or re-create, the configuration settings on the new container. There are two ways to do this:</p>
 <ul>
 	<li><strong>Manual configuration</strong>: Create the new container, install the features into it, then manually replicate any custom settings from the old container, to the new container.</li>
