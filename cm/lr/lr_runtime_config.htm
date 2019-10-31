@@ -55,6 +55,7 @@ nav-title: Runtime Configuration
 		</li>
 	<li><a href="#s08_02_publishing">Publishing a Runtime Configuration Asset</a></li>
 	<li><a href="#s08_03_rc_example">Runtime Configuration: Example</a></li>
+	<li><a href="#lc_version_update">Updating an existing library to a newer version</a></li>
 </ol>
 <div class = "divider1"></div>
 
@@ -439,6 +440,75 @@ nav-title: Runtime Configuration
 42      ]
 43    }
 44  }</pre>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="lc_version_update">Updating an existing library to a newer version</h3>
+<p>If you are using Runtime Configuration, and you are upgrading from an earlier version,&nbsp;you will need to make some manual changes in certain files so that you can take advantage of the latest Runtime Configuration features.</p>
+<p>The examples below include the entries you'll need to upgrade to 2019.1.2.</p>
+<p>{<span class="apidoc_red">ML TJ KC: request input re whether I should tag specific lines below, or otherwise how to highlight specific new features that are only available in specific versions. For example, if a user is upgrading to 2018.0.7 they won't have run-on-updates, and if they add that line in their files, per ML they will get errors. New features are tagged with the version in the doc above, but not, currently, in these sections below. Want to keep it simple but comprehensive. Any input welcome. Thanks!</span>)</p>
+<p>You will need to update the following files, along the lines of the examples in the sections below:</p>
+<ul>
+	<li><a href="#update_runtime_configuration_ctxml">Runime Configuration.ctxml</a></li>
+	<li><a href="#update_gdt_xml">gdt.xml</a></li>
+	<li><a href="#update_lpc_lpc">lpc.lpc</a></li>
+</ul>
+
+
+<h4 id="update_runtime_configuration_ctxml">Runime Configuration.ctxml</h4>
+<p>Add the following lines to the <strong>Runime Configuration.ctxml</strong> file:</p>
+<pre>&lt;use-classifier appear-on-edit="true" name="oauth-domain" /&gt;
+&lt;use-classifier appear-on-edit="true" name="api-visibility" /&gt;
+&lt;use-classifier appear-on-edit="true" name="group-visibility" /&gt;
+&lt;use-classifier appear-on-edit="true" name="run-on-updates" /&gt;
+&lt;use-classifier appear-on-edit="true" name="oauth-version"/&gt;</pre>
+
+
+<h4 id="update_gdt_xml">gdt.xml</h4>
+<p>Add the following lines to the <strong>gdt.xml</strong> file:</p>
+<pre>&lt;define-classifier display-name="OAuth Domain" help-text="Set the OAuth Domain of an API with default scopes" include-in-search-filter="true" max-occurs="1" name="oauth-domain" open="false" type="string" value-ordering="GDT" value-source="OAuthDomain" /&gt;
+  &lt;define-classifier display-name="API Visibility" help-text="Sets the visibility of an API created" include-in-search-filter="false" max-occurs="1" name="api-visibility" open="false" type="string"&gt;
+    &lt;add-value value="Public" /&gt;
+    &lt;add-value value="Private" /&gt;
+    &lt;add-value value="Registered Users" /&gt;
+  &lt;/define-classifier&gt;
+&lt;define-classifier display-name="Group Visibility" help-text="Groups that can view the API, if it is private" include-in-search-filter="true" name="group-visibility" open="false" type="string" value-ordering="GDT" value-source="GroupVisibility" /&gt;
+  &lt;define-classifier display-name="Run On Updates" help-text="Runtime Configuration Runs On Updates" include-in-search-filter="false" max-occurs="1" name="run-on-updates" open="false" type="string"&gt;
+    &lt;add-value value="true" /&gt;
+    &lt;add-value value="false" /&gt;
+  &lt;/define-classifier&gt;
+      &lt;define-classifier display-name="OAuth Version" help-text="If Oauth domain is set, This allows the user to set oauth version" include-in-search-filter="false" max-occurs="1" name="oauth-version" open="false" type="string"&gt;
+    &lt;add-value value="Oauth 1.0"/&gt;
+    &lt;add-value value="Oauth 2.0"/&gt;
+    &lt;add-value value="Oauth 1.0|Oauth 2.0"/&gt;
+  &lt;/define-classifier&gt;</pre>
+
+
+<h4 id="update_lpc_lpc">lpc.lpc</h4>
+<p>Add the following lines to the <strong>lpc.lpc</strong> file, in the sections indicated:</p>
+<ul>
+	<li>&lt;metadata-group name=&quot;Common Information&quot;&gt;</li>
+	<li>&lt;asset-validator class=&quot;com.logiclibrary.registry.ScriptValidator&quot; name=&quot;InitializeAPI&quot;&gt;</li>
+</ul>
+<p><strong>Under &lt;metadata-group name=&quot;Common Information&quot;&gt;</strong></p>
+<pre>  &lt;value-source name="GroupVisibility" class="com.soa.repository.platformintegration.GroupVisibilityValueSource" /&gt;
+  &lt;value-source name="OAuthDomain" class="com.soa.repository.platformintegration.OauthDomainValueSource" /&gt;</pre>
+<p><strong>Under &lt;asset-validator class=&quot;com.logiclibrary.registry.ScriptValidator&quot; name=&quot;InitializeAPI&quot;&gt;</strong></p>
+<pre>  &lt;asset-filter name="api-type:REST" description="API Type REST"&gt;
+    &lt;classifier-criteria classifier-category="api-type"&gt;
+      &lt;value-set&gt;
+        &lt;value&gt;REST&lt;/value&gt;
+      &lt;/value-set&gt;
+    &lt;/classifier-criteria&gt;
+  &lt;/asset-filter&gt;
+  &lt;asset-filter name="api-type:SOAP" description="API Type SOAP"&gt;
+    &lt;classifier-criteria classifier-category="api-type"&gt;
+      &lt;value-set&gt;
+        &lt;value&gt;SOAP&lt;/value&gt;
+      &lt;/value-set&gt;
+    &lt;/classifier-criteria&gt;
+  &lt;/asset-filter&gt;</pre>
 <p><a href="#top">Back to top</a></p>
 
 
