@@ -196,7 +196,7 @@ nav-title: Runtime Configuration
 <p>The following parameters are available to be used for the <strong>path</strong> classifier:</p>
 <ul>
 	<li><strong>{catalog_asset.id}</strong>
-<p>Indicates that the path should include  the asset ID (APIID, App ID, or UserID, depending on the asset that the Runtime Configuration is applied to).</p></li>
+<p>Indicates that the path should include the asset ID (APIID, App ID, or UserID, depending on the asset that the Runtime Configuration is applied to).</p></li>
 	<li><strong>{catalog_asset.name}</strong>
 <p>Indicates that the path should include the asset name (for example, App03). If you're not sure what the asset name is, check in the Lifecycle Coordinator, as shown below. In this example, the asset name is <strong>Training-1</strong>.</p>
 <p><img src="images_rc/promotion_pathclassifier_01_01.jpg" alt="Path classifier example -- input" /></p>
@@ -375,7 +375,7 @@ nav-title: Runtime Configuration
 <p>If the OAuth Domain classifier is included and the OAuth Version classifier is not set, the default is OAuth 1.0a|OAuth 2.0.</p>
 <p>An example is shown below.</p>
 <p><img src="images_rc/promotion_classifier_oauthversion.png" alt="OAuth Version classifier" /></p>
-<p><strong>Note</strong>: The  OAuth Version classifier can only be specified in the Lifecycle Manager portal or Lifecycle Repository client user interface.</p>
+<p><strong>Note</strong>: The OAuth Version classifier can only be specified in the Lifecycle Manager portal or Lifecycle Repository client user interface.</p>
 
 
 <h4 id="s08_01_13_api_type">API Type (REST or SOAP)</h4>
@@ -464,26 +464,46 @@ nav-title: Runtime Configuration
 <h3 id="lc_version_update">Updating an existing library to a newer version</h3>
 <p>If you are using Runtime Configuration, and you are upgrading from an earlier version, you will need to make some manual changes in certain files so that you can take advantage of the latest Runtime Configuration features.</p>
 <p>The examples below include the entries you'll need to upgrade to 2019.1.2.</p>
-<p>{<span class="apidoc_red">ML TJ KC: request input re whether I should tag specific lines below, or otherwise how to highlight specific new features that are only available in specific versions. For example, if a user is upgrading to 2018.0.7 they won't have run-on-updates, and if they add that line in their files, per ML they will get errors. New features are tagged with the version in the doc above, but not, currently, in these sections below. Want to keep it simple but comprehensive. Any input welcome. Thanks!</span>)</p>
 <p>You will need to update the following files, along the lines of the examples in the sections below:</p>
 <ul>
-	<li><a href="#update_runtime_configuration_ctxml">Runime Configuration.ctxml</a></li>
+	<li><a href="#update_runtime_configuration_ctxml">Runtime Configuration.ctxml</a></li>
 	<li><a href="#update_gdt_xml">gdt.xml</a></li>
 	<li><a href="#update_lpc_lpc">lpc.lpc</a></li>
 </ul>
 
 
-<h4 id="update_runtime_configuration_ctxml">Runime Configuration.ctxml</h4>
-<p>Add the following lines to the <strong>Runime Configuration.ctxml</strong> file:</p>
-<pre>&lt;use-classifier appear-on-edit="true" name="oauth-domain" /&gt;
-&lt;use-classifier appear-on-edit="true" name="api-visibility" /&gt;
+<h4 id="update_runtime_configuration_ctxml">Runtime Configuration.ctxml</h4>
+<p>In the <strong>Runtime Configuration.ctxml</strong> file, add the section below that applies to the version you're upgrading to.</p>
+<p><strong>Note</strong>: If you include properties that are not valid for the version you're using you'll get an error. Only include properties that are valid for your version.</p>
+
+<p id="ctxml_update_20190102"><strong>Add these lines if you're updating to 2019.1.2 or later</strong>:</p>
+<pre>&lt;use-classifier appear-on-edit="true" name="oauth-version"/&gt;
+&lt;use-classifier appear-on-edit="true" name="oauth-domain" /&gt;
 &lt;use-classifier appear-on-edit="true" name="group-visibility" /&gt;
 &lt;use-classifier appear-on-edit="true" name="run-on-updates" /&gt;
-&lt;use-classifier appear-on-edit="true" name="oauth-version"/&gt;</pre>
+&lt;use-classifier appear-on-edit="true" name="api-visibility" /&gt;</pre>
 
 
+<p id="ctxml_update_20190100"><strong>Add these lines if you're updating to 2019.1.0 or later</strong>:</p>
+<pre>&lt;use-classifier appear-on-edit="true" name="oauth-domain" /&gt;
+&lt;use-classifier appear-on-edit="true" name="group-visibility" /&gt;
+&lt;use-classifier appear-on-edit="true" name="run-on-updates" /&gt;
+&lt;use-classifier appear-on-edit="true" name="api-visibility" /&gt;</pre>
+
+
+<p id="ctxml_update_20180011"><strong>Add these lines iff you're updating to 2018.0.11 or later</strong>:</p>
+<pre>&lt;use-classifier appear-on-edit="true" name="api-visibility" /&gt;</pre>
+<p>For more information on the settings above, refer to the applicable section earlier in this document:</p>
+<ul>
+	<li><a href="#s08_01_12_oauth_provider">oauth-domain</a></li>
+	<li><a href="#s08_01_10_api_visibility">api-visibility</a></li>
+	<li><a href="#s08_01_11_api_groups">group-visibility</a></li>
+	<li><a href="#s08_01_14_run_on_updates">run-on-updates</a></li>
+	<li><a href="#s08_01_12b_oauth_version">oauth-version</a></li>
+</ul>
 <h4 id="update_gdt_xml">gdt.xml</h4>
 <p>Add the following lines to the <strong>gdt.xml</strong> file:</p>
+<p>{<span class="apidoc_red">ML do we need to do a similar treatment here also? Are errors generated if inapplicable values are included here?</span>}</p>
 <pre>&lt;define-classifier display-name="OAuth Domain" help-text="Set the OAuth Domain of an API with default scopes" include-in-search-filter="true" max-occurs="1" name="oauth-domain" open="false" type="string" value-ordering="GDT" value-source="OAuthDomain" /&gt;
   &lt;define-classifier display-name="API Visibility" help-text="Sets the visibility of an API created" include-in-search-filter="false" max-occurs="1" name="api-visibility" open="false" type="string"&gt;
     &lt;add-value value="Public" /&gt;
@@ -503,6 +523,7 @@ nav-title: Runtime Configuration
 
 
 <h4 id="update_lpc_lpc">lpc.lpc</h4>
+<p>{<span class="apidoc_red">ML do we need to do a similar treatment here also? Are errors generated if inapplicable values are included here?</span>}</p>
 <p>Add the following lines to the <strong>lpc.lpc</strong> file, in the sections indicated:</p>
 <ul>
 	<li>&lt;metadata-group name=&quot;Common Information&quot;&gt;</li>
