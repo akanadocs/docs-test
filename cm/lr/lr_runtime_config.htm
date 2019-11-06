@@ -46,12 +46,12 @@ nav-title: Runtime Configuration
 			<li><a href="#s08_01_07_anon_access">Allow Anonymous Access</a></li>
 			<li><a href="#s08_01_08_approval_req">Approval Required</a></li>
 			<li><a href="#s08_01_09_debug_mode">Debug Mode Enabled</a></li>
-			<li><a href="#s08_01_10_api_visibility">API Visibility</a></li>
-			<li><a href="#s08_01_11_api_groups">API Group Visibility</a></li>
+			<li><a href="#s08_01_10_api_visibility">API Visibility</a> (2018.0.11 and later)</li>
+			<li><a href="#s08_01_11_api_groups">API Group Visibility</a> (2019.1.0 and later)</li>
 			<li><a href="#s08_01_12_oauth_provider">OAuth Provider Domain</a> (2019.1.0 and later)</li>
 			<li><a href="#s08_01_12b_oauth_version">OAuth Version</a> (2019.1.2 and later)</li>
 			<li><a href="#s08_01_13_api_type">API Type (REST or SOAP)</a> (2019.1.0 and later)</li>
-			<li><a href="#s08_01_14_run_on_updates">run-on-updates Classifier</a></li>
+			<li><a href="#s08_01_14_run_on_updates">run-on-updates Classifier</a> (2019.1.2 and later)</li>
 		</ul>
 		</li>
 	<li><a href="#s08_02_publishing">Publishing a Runtime Configuration Asset</a></li>
@@ -365,7 +365,7 @@ nav-title: Runtime Configuration
 
 <h4 id="s08_01_12b_oauth_version">OAuth Version</h4>
 <p><strong>API Platform Version: 2019.1.2 and later</strong></p>
-<p>This classifier allows you to specify one or more OAuth versions supported by the OAuth Provider domain. It works with the OAuth Domain classifier (see <a href="#s08_01_12_oauth_provider">OAuth Provider Domain</a> above). If the OAuth Domain classsifier is not set, the OAuth Version classifier is ignored.</p>
+<p>This classifier allows you to specify one or more OAuth versions supported by the OAuth Provider domain. It works with the OAuth Domain classifier (see <a href="#s08_01_12_oauth_provider">OAuth Provider Domain</a> above). If the OAuth Domain classifier is not set, the OAuth Version classifier is ignored.</p>
 <p>Valid values:</p>
 <ul>
 	<li> OAuth 2.0</li>
@@ -478,58 +478,79 @@ nav-title: Runtime Configuration
 
 <p id="ctxml_update_20190102"><strong>Add these lines if you're updating to 2019.1.2 or later</strong>:</p>
 <pre>&lt;use-classifier appear-on-edit="true" name="oauth-version"/&gt;
+&lt;use-classifier appear-on-edit=&quot;true&quot; name=&quot;run-on-updates&quot; /&gt;
 &lt;use-classifier appear-on-edit="true" name="oauth-domain" /&gt;
 &lt;use-classifier appear-on-edit="true" name="group-visibility" /&gt;
-&lt;use-classifier appear-on-edit="true" name="run-on-updates" /&gt;
 &lt;use-classifier appear-on-edit="true" name="api-visibility" /&gt;</pre>
 
 
 <p id="ctxml_update_20190100"><strong>Add these lines if you're updating to 2019.1.0 or later</strong>:</p>
 <pre>&lt;use-classifier appear-on-edit="true" name="oauth-domain" /&gt;
 &lt;use-classifier appear-on-edit="true" name="group-visibility" /&gt;
-&lt;use-classifier appear-on-edit="true" name="run-on-updates" /&gt;
 &lt;use-classifier appear-on-edit="true" name="api-visibility" /&gt;</pre>
 
 
-<p id="ctxml_update_20180011"><strong>Add these lines iff you're updating to 2018.0.11 or later</strong>:</p>
+<p id="ctxml_update_20180011"><strong>Add these lines if you're updating to 2018.0.11 or later</strong>:</p>
 <pre>&lt;use-classifier appear-on-edit="true" name="api-visibility" /&gt;</pre>
 <p>For more information on the settings above, refer to the applicable section earlier in this document:</p>
 <ul>
-	<li><a href="#s08_01_12_oauth_provider">oauth-domain</a></li>
-	<li><a href="#s08_01_10_api_visibility">api-visibility</a></li>
-	<li><a href="#s08_01_11_api_groups">group-visibility</a></li>
-	<li><a href="#s08_01_14_run_on_updates">run-on-updates</a></li>
-	<li><a href="#s08_01_12b_oauth_version">oauth-version</a></li>
+	<li><a href="#s08_01_12b_oauth_version">oauth-version</a> (2019.1.2 and later)</li>
+	<li><a href="#s08_01_14_run_on_updates">run-on-updates</a> (2019.1.2 and later)</li>
+	<li><a href="#s08_01_12_oauth_provider">oauth-domain</a> (2019.1.0 and later)</li>
+	<li><a href="#s08_01_11_api_groups">group-visibility</a> (2019.1.0 and later)</li>
+	<li><a href="#s08_01_10_api_visibility">api-visibility</a> (2018.0.11 and later)</li>
 </ul>
 <h4 id="update_gdt_xml">gdt.xml</h4>
-<p>Add the following lines to the <strong>gdt.xml</strong> file:</p>
-<p>{<span class="apidoc_red">ML do we need to do a similar treatment here also? Are errors generated if inapplicable values are included here?</span>}</p>
-<pre>&lt;define-classifier display-name="OAuth Domain" help-text="Set the OAuth Domain of an API with default scopes" include-in-search-filter="true" max-occurs="1" name="oauth-domain" open="false" type="string" value-ordering="GDT" value-source="OAuthDomain" /&gt;
-  &lt;define-classifier display-name="API Visibility" help-text="Sets the visibility of an API created" include-in-search-filter="false" max-occurs="1" name="api-visibility" open="false" type="string"&gt;
-    &lt;add-value value="Public" /&gt;
-    &lt;add-value value="Private" /&gt;
-    &lt;add-value value="Registered Users" /&gt;
-  &lt;/define-classifier&gt;
-&lt;define-classifier display-name="Group Visibility" help-text="Groups that can view the API, if it is private" include-in-search-filter="true" name="group-visibility" open="false" type="string" value-ordering="GDT" value-source="GroupVisibility" /&gt;
-  &lt;define-classifier display-name="Run On Updates" help-text="Runtime Configuration Runs On Updates" include-in-search-filter="false" max-occurs="1" name="run-on-updates" open="false" type="string"&gt;
-    &lt;add-value value="true" /&gt;
-    &lt;add-value value="false" /&gt;
-  &lt;/define-classifier&gt;
-&lt;define-classifier display-name="OAuth Version" help-text="If OAuth domain is set, This allows the user to set OAuth version" include-in-search-filter="false" max-occurs="1" name="oauth-version" open="false" type="string"&gt;
-    &lt;add-value value="OAuth 1.0a"/&gt;
-    &lt;add-value value="OAuth 2.0"/&gt;
-    &lt;add-value value="OAuth 1.0a|OAuth 2.0"/&gt;
-  &lt;/define-classifier&gt;</pre>
+<p>In the <strong>gdt.xml</strong> file, add the section below that applies to the version you're upgrading to.</p>
 
+<p id="gdtxml_update_20190102"><strong>Add these lines if you're updating to 2019.1.2 or later</strong>:</p>
+<pre>
+&lt;define-classifier display-name=&quot;OAuth Version&quot; help-text=&quot;If OAuth domain is set, This allows the user to set OAuth version&quot; include-in-search-filter=&quot;false&quot; max-occurs=&quot;1&quot; name=&quot;oauth-version&quot; open=&quot;false&quot; type=&quot;string&quot;&gt;
+  &lt;add-value value=&quot;OAuth 1.0a&quot;/&gt;
+  &lt;add-value value=&quot;OAuth 2.0&quot;/&gt;
+  &lt;add-value value=&quot;OAuth 1.0a|OAuth 2.0&quot;/&gt;
+&lt;/define-classifier&gt;
+&lt;define-classifier display-name="Run On Updates" help-text="Runtime Configuration Runs On Updates" include-in-search-filter="false" max-occurs="1" name="run-on-updates" open="false" type="string"&gt;
+  &lt;add-value value="true" /&gt;
+  &lt;add-value value="false" /&gt;
+&lt;/define-classifier&gt;
+&lt;define-classifier display-name=&quot;OAuth Domain&quot; help-text=&quot;Set the OAuth Domain of an API with default scopes&quot; include-in-search-filter=&quot;true&quot; max-occurs=&quot;1&quot; name=&quot;oauth-domain&quot; open=&quot;false&quot; type=&quot;string&quot; value-ordering=&quot;GDT&quot; value-source=&quot;OAuthDomain&quot; /&gt;
+&lt;define-classifier display-name=&quot;Group Visibility&quot; help-text=&quot;Groups that can view the API, if it is private&quot; include-in-search-filter=&quot;true&quot; name=&quot;group-visibility&quot; open=&quot;false&quot; type=&quot;string&quot; value-ordering=&quot;GDT&quot; value-source=&quot;GroupVisibility&quot; /&gt;
+&lt;define-classifier display-name=&quot;API Visibility&quot; help-text=&quot;Sets the visibility of an API created&quot; include-in-search-filter=&quot;false&quot; max-occurs=&quot;1&quot; name=&quot;api-visibility&quot; open=&quot;false&quot; type=&quot;string&quot;&gt;
+  &lt;add-value value=&quot;Public&quot; /&gt;
+  &lt;add-value value=&quot;Private&quot; /&gt;
+  &lt;add-value value=&quot;Registered Users&quot; /&gt;
+&lt;/define-classifier&gt;
+</pre>
+
+<p id="gdtxml_update_20190100"><strong>Add these lines if you're updating to 2019.1.0 or later</strong>:</p>
+<pre>
+&lt;define-classifier display-name=&quot;OAuth Domain&quot; help-text=&quot;Set the OAuth Domain of an API with default scopes&quot; include-in-search-filter=&quot;true&quot; max-occurs=&quot;1&quot; name=&quot;oauth-domain&quot; open=&quot;false&quot; type=&quot;string&quot; value-ordering=&quot;GDT&quot; value-source=&quot;OAuthDomain&quot; /&gt;
+&lt;define-classifier display-name=&quot;Group Visibility&quot; help-text=&quot;Groups that can view the API, if it is private&quot; include-in-search-filter=&quot;true&quot; name=&quot;group-visibility&quot; open=&quot;false&quot; type=&quot;string&quot; value-ordering=&quot;GDT&quot; value-source=&quot;GroupVisibility&quot; /&gt;
+&lt;define-classifier display-name=&quot;API Visibility&quot; help-text=&quot;Sets the visibility of an API created&quot; include-in-search-filter=&quot;false&quot; max-occurs=&quot;1&quot; name=&quot;api-visibility&quot; open=&quot;false&quot; type=&quot;string&quot;&gt;
+  &lt;add-value value=&quot;Public&quot; /&gt;
+  &lt;add-value value=&quot;Private&quot; /&gt;
+  &lt;add-value value=&quot;Registered Users&quot; /&gt;
+&lt;/define-classifier&gt;
+</pre>
+
+<p id="gdtxml_update_20180011"><strong>Add these lines if you're updating to 2018.0.11 or later</strong>:</p>
+<pre>
+&lt;define-classifier display-name=&quot;API Visibility&quot; help-text=&quot;Sets the visibility of an API created&quot; include-in-search-filter=&quot;false&quot; max-occurs=&quot;1&quot; name=&quot;api-visibility&quot; open=&quot;false&quot; type=&quot;string&quot;&gt;
+  &lt;add-value value=&quot;Public&quot; /&gt;
+  &lt;add-value value=&quot;Private&quot; /&gt;
+  &lt;add-value value=&quot;Registered Users&quot; /&gt;
+&lt;/define-classifier&gt;
+</pre>
 
 <h4 id="update_lpc_lpc">lpc.lpc</h4>
-<p>{<span class="apidoc_red">ML do we need to do a similar treatment here also? Are errors generated if inapplicable values are included here?</span>}</p>
 <p>Add the following lines to the <strong>lpc.lpc</strong> file, in the sections indicated:</p>
 <ul>
 	<li>&lt;metadata-group name=&quot;Common Information&quot;&gt;</li>
 	<li>&lt;asset-validator class=&quot;com.logiclibrary.registry.ScriptValidator&quot; name=&quot;InitializeAPI&quot;&gt;</li>
 </ul>
-<p><strong>Under &lt;metadata-group name=&quot;Common Information&quot;&gt;</strong></p>
+<p><strong>Note</strong>: The same modifications to this file apply for all version upgrades. Whether you're upgrading to 2018.0.11, to 2019.1.0, or to 2019.1.2 or later, make the changes shown below.</p>
+<p><strong>Under &lt;metadata-group name=&quot;Common Information&quot;&gt;</strong>W</p>
 <pre>  &lt;value-source name="GroupVisibility" class="com.soa.repository.platformintegration.GroupVisibilityValueSource" /&gt;
   &lt;value-source name="OAuthDomain" class="com.soa.repository.platformintegration.OauthDomainValueSource" /&gt;</pre>
 <p><strong>Under &lt;asset-validator class=&quot;com.logiclibrary.registry.ScriptValidator&quot; name=&quot;InitializeAPI&quot;&gt;</strong></p>
