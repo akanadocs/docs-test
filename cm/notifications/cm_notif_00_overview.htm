@@ -1,0 +1,331 @@
+---
+layout: page
+title: CM Notifications
+description: Contains overview information about email and Dashboard notifications in the developer portal.
+product: cm
+category: ref
+sub-nav-class: Notifications
+weight: 05
+type: page
+nav-title: Overview
+---
+<h2 id="top">Community Manager Notifications: Overview</h2>
+<p>Contains information about email and Dashboard notifications for the developer portal.</p>
+<div class = "divider1"></div>
+<h3 style="color: gray;">Table of Contents</h3>
+<ol class="table_of_contents">
+	<li><a href="#notif_ov_01">Customizing Notification Emails</a></li>
+	<li><a href="#notif_ov_02">Adding CSS and assets to a notification email</a></li>
+	<li><a href="#notif_ov_03">Notifications Variables</a></li>
+	<li><a href="#notif_list">Full list of notifications</a></li>
+</ol>
+<div class = "divider1"></div>
+
+
+
+<h3 id="notif_ov_01">Customizing Notification Emails</h3>
+<p>You can customize notification email templates by adding common elements of message format into separate variables and then reference them with a variable. One example of how we use this is to add the copyright notice in the email for a specific customer. This is done using the RESOURCES database table. Everything added to this table is available as variables that could be used in email templates.</p>
+<p>For example, you could use the following as part of the email body for each email template:</p>
+<pre>{system.email.prefix}...body...content{system.email.suffix}</pre>
+<p>In this example:</p>
+<ul>
+	<li><strong>system.email.prefix</strong> could have the &lt;html&gt;&lt;body&gt;&lt;head&gt;...everything in head...&lt;/head&gt;&lt;body&gt;...anything in the body before the actual text.</li>
+	<li><strong>System.email.suffix</strong> could have the closing tags from the prefix, along with any other footer-related parts, then close &lt;body&gt; and &lt;html&gt; elements.</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+
+<h3 id="notif_ov_02">Adding CSS and assets to a notification email</h3>
+<p>To add CSS and assets to notification emails, load them in the developer platform to console resources using File Manager (<strong>Administration</strong> > <strong>Config</strong> > <strong>Resources</strong>) and then reference those URLs in the notification templates. You can use the resource version key in the URL so that browsers can cache them as well.</p>
+<p><strong>Note</strong>: If the assets are changed later, you'll need to modify the system.email.prefix in the RESOURCES table.</p>
+<p>The modifications to the email templates must be done with database scripts. Below is an example.</p>
+<p>In the below, replace the following values with values applicable to your installation: <strong>fedmemberid</strong>, <strong>company name</strong>, and <strong>company URL</strong>.</p>
+<p>Note: In order for HTML markup to work, the parameter names (NAME column) must end with .html.</p>
+
+<h5>Prefix:</h5>
+<pre>insert into RESOURCES (TENANTID, LOCALE, NAME, VALUE, LASTUPDDTS) values ((select TENANTID from TENANTS where FEDMEMBERID=<strong>fedmemberid</strong>), 'en_US', 'system.email.prefix.html', 
+'&lt;html&gt;&lt;head&gt;&lt;meta http-equiv="Content-Type" content="text/html;charset=utf-8" /&gt;&lt;/head&gt;
+&lt;body class=""&gt;
+&lt;div&gt;   Body content: &lt;strong&gt;&lt;a href="<strong>http://companyurl.com</strong>"&gt;<strong>Company Name</strong>&lt;/a&gt;&lt;/strong&gt; 
+ &lt;/div&gt;', UTC_TIMESTAMP());</pre>
+
+<h5>Suffix:</h5>
+<pre>insert into RESOURCES (TENANTID, LOCALE, NAME, VALUE, LASTUPDDTS) values ((select TENANTID from TENANTS where FEDMEMBERID=<strong>fedmemberid</strong>), 'en_US', 'system.email.suffix.html', 
+'&lt;div&gt;   Additional content in footer?: &lt;strong&gt;&lt;a href="<strong>http://companyurl.com"</strong>&gt;<strong>Company Name</strong>&lt;/a&gt;&lt;/strong&gt; 
+ &lt;/div&gt;
+&lt;/body&gt;
+    &lt;/html&gt;', UTC_TIMESTAMP());</pre>
+<p><strong>Notes:</strong></p>
+<ul>
+	<li>Unless you have custom UI in place that displays the tenant name, the Name field in the TENANTS table is used only in email templates.</li>
+	<li>In versions 8.3 and later, the Site Admin can change the tenant name and other details of the tenant, in the developer portal: <strong>Administration</strong> > <strong>Settings</strong> > <strong>Site</strong>.</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="notif_ov_03">Notifications Variables</h3>
+<p>Below is a list of the variables used in notifications.</p>
+<p>Note that just because a variable exists, it doesn't necessarily mean that it is available in a specific notification. Adding new variables to a notification might require product modification.</p>
+<div class="relatedlinks" id="notification_variables">
+<ul>
+	<li>{alert.text}</li>
+	<li>{alert.title}</li>
+	<li>{api.name}</li>
+	<li>{api.version}</li>
+	<li>{app.name}</li>
+	<li>{app.version}</li>
+	<li>{author.email}</li>
+	<li>{author.name}</li>
+	<li>{author.username}</li>
+	<li>{business.name}</li>
+	<li>{comment.author}</li>
+	<li>{comment.text}</li>
+	<li>{contract.environment}</li>
+	<li>{contract.licenses} * (added recently)</li>
+	<li>{contract.oldstate}</li>
+	<li>{contract.policies}* (added recently)</li>
+	<li>{contract.state}</li>
+	<li>{end.date}</li>
+</ul>
+<ul>
+	<li>{expression.value}</li>
+	<li>{expression}</li>
+	<li>{group.name}</li>
+	<li>{groupmembership.oldrole}</li>
+	<li>{groupmembership.role}</li>
+	<li>{interval}</li>
+	<li>{invitation.code}</li>
+	<li>{invitation.text}</li>
+	<li>{invitedmember.email}</li>
+	<li>{invitedmember.name}</li>
+	<li>{invitedmember.username}</li>
+	<li>{modifier.username}</li>
+	<li>{password.resetcode}</li>
+	<li>{policy.name}</li>
+	<li>{post.text}</li>
+	<li>{post.title}</li>
+	<li>{review.text}</li>
+	<li>{review.title}</li>
+</ul>
+<ul>
+	<li>{signup.code}</li>
+	<li>{start.date}</li>
+	<li>{support.question}</li>
+	<li>{support.subject}</li>
+	<li>{system.email.footer.html}</li>
+	<li>{tenant.theme.console.address}</li>
+	<li>{tenant.contact.email}</li>
+	<li>{tenant.name}</li>
+	<li>{ticket.oldpriority}</li>
+	<li>{ticket.oldstate}</li>
+	<li>{ticket.priority}</li>
+	<li>{ticket.state}</li>
+	<li>{ticket.text}</li>
+	<li>{ticket.title}</li>
+	<li>{user.firstname}</li>
+	<li>{user.lastname}</li>
+	<li>{user.name}</li>
+	<li>{user.username}</li>
+</ul>
+</div>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="notif_list">Full list of notifications</h3>
+<p>Notifications for the developer portal are grouped into categories. A full list of notifications is below, with links to the files for more information.</p>
+<ul>
+	<li><a href="cm_notif_01_signup.htm">Community Manager Notifications: Signup</a>
+		<ul>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_00">Signup Notifications</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_00">Sign Up (New Member Invite)</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_000">Welcome: to new registered user</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_01">Welcome: to new user invited to be an Administrator, when a new tenant is created</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_03">Password Reset</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_03">Password Reset (User never logged in)</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_04">Invitation to Sign Up: Password Reset Request: User Never Signed In</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_05">Invitation to Sign Up: Password Reset Request: User Account Disabled</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_06">Invitation to Sign Up: Password Reset Request by Unregistered User</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_07">Invitation to Sign Up: Password Reset Request by Non-Local User</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_08">Signup Attempt: Account Already Exists (Local Account)</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_09">Contact Support</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_10">Create Post (API)</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_11">Invitation to Sign Up</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_12">Invitation to Sign Up When User Already Exists</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_13">Signup Attempt When User Already Exists</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_14">User Deleted by Site Admin: To User: Signup State = Registered</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_15">User Deleted by Site Admin: To User: Signup State = pending_validation</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_16">User Deleted by Site Admin: To User: Signup State = inviteduser</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_17">User Added by Site Admin: To User</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_18">User Added by Site Admin: First Login: to Site Admin</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_19">User Account Status Change: User Enabled</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_20">User Account Status Change: User Disabled</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_21">User Account Status Change: User Locked</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_22">User Account Status Change: User Unlocked</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_23">User Account Status Change (for Admins)</a></li>
+			<li><a href="cm_notif_01_signup.htm#notif_signup_24">Email Notification with 2FA authentication code</a></li>
+			</ul>
+	</li>
+	<li><a href="cm_notif_02_apps.htm">Community Manager Notifications: Applications</a>
+		<ul>
+			<li><a href="cm_notif_02_apps.htm#notif_app_alert_01">App Alert Created</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_post_01">Post Created (App)</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_team_01">App Team Member Invited, to Invited Member</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_team_02">App Team Member Invited (to App Team)</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_team_03">App Team: Invitation Resent, to Invited Member</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_team_04">App Team Membership Invitation Accepted</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_team_05">App Team Membership Invitation Rejected</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_team_06">App Team Member Removed (to Removed Team Member)</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_team_07">App Team Member Removed (to Remaining Team Members)</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_lifecycle_01">App Deleted</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_lifecycle_02">App Marked for Deletion: to App Team Members</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_lifecycle_03">App Deletion Request Rejected: to App Team Members</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_lifecycle_04">App Marked for Deletion: to Business Admins</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_lifecycle_05">App Deletion Request Rejected: to Business Admins</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_lifecycle_06">App Marked for Deletion: to API Admins</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_lifecycle_07">App Deletion Request Rejected: to API Admins</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_lifecycle_08">App Deletion Request Approved: to API Admins</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_lifecycle_09">App Deletion Request Approved: to App Team Members</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_lifecycle_10">App Deletion Request Approved: to Business Admins</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_lifecycle_11">App Version Deleted</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_lifecycle_12">App Version Deleted (with comments)</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_lifecycle_13">Production Approval Requested</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_lifecycle_14">Production Approval Request Cancelled</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_lifecycle_15">Production Approval: App Is Live</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_lifecycle_16">App Certificate Added or Modified: To App Team Member</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_lifecycle_17">App Certificate Added or Modified: To API Admin</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_lifecycle_18">App Certificate Removed: To App Team Member</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_lifecycle_19">App Certificate Removed: To API Admin</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_lifecycle_20">App Shared Secret Regenerated: To App Team Member</a></li>
+			<li><a href="cm_notif_02_apps.htm#notif_app_lifecycle_21">App Shared Secret Regenerated: To API Admin</a></li>
+			</ul>
+	</li>
+	<li><a href="cm_notif_03_apis.htm">Community Manager Notifications: APIs</a>
+		<ul>
+			<li><a href="cm_notif_03_apis.htm#notif_api_admin_01">API Admin Invited (to Invited Person)</a></li>
+			<li><a href="cm_notif_03_apis.htm#notif_api_admin_02">API Admin Invited (to Existing API Admins)</a></li>
+			<li><a href="cm_notif_03_apis.htm#notif_api_admin_03">API Admin: Invitation Resent (to Invited API Admin)</a></li>
+			<li><a href="cm_notif_03_apis.htm#notif_api_admin_04">API Admin Invitation Accepted</a></li>
+			<li><a href="cm_notif_03_apis.htm#notif_api_admin_05">API Admin Invitation Rejected</a></li>
+			<li><a href="cm_notif_03_apis.htm#notif_api_admin_06">API Admin Removed (to Removed API Admin)</a></li>
+			<li><a href="cm_notif_03_apis.htm#notif_api_admin_07">API Admin Removed (to Remaining API Admins)</a></li>
+			<li><a href="cm_notif_03_apis.htm#notif_api_admin_08">API Access Cancelled, API Deleted</a></li>
+			<li><a href="cm_notif_03_apis.htm#notif_api_group_01">API Group: Group Member Invited, to Invited Member</a></li>
+			<li><a href="cm_notif_03_apis.htm#notif_api_group_02">API Group Member Invited (API) (to Group)</a></li>
+			<li><a href="cm_notif_03_apis.htm#notif_api_group_03">API Group: Invitation Resent, to Invited Member</a></li>
+			<li><a href="cm_notif_03_apis.htm#notif_api_group_04">API Group Membership Invitation Accepted (API)</a></li>
+			<li><a href="cm_notif_03_apis.htm#notif_api_group_05">API Group Membership Invitation Rejected (API Group)</a></li>
+			<li><a href="cm_notif_03_apis.htm#notif_api_group_06">API Group Member Removed (API) (to Removed Group Member)</a></li>
+			<li><a href="cm_notif_03_apis.htm#notif_api_group_07">API Group Member Removed (API) (to Remaining Group)</a></li>
+			<li><a href="cm_notif_03_apis.htm#notif_api_group_08">API Group Membership Role Changed (API)</a></li>
+			<li><a href="cm_notif_03_apis.htm#notif_api_group_09">API Group: Group Deleted</a></li>
+			</ul>
+	</li>
+	<li><a href="cm_notif_04_contracts.htm">Community Manager Notifications: Contracts</a>
+		<ul>
+			<li><a href="cm_notif_04_contracts.htm#notif_contract_01">API Contract Requested (Access Request), Both Environments, to API Admins</a></li>
+			<li><a href="cm_notif_04_contracts.htm#notif_contract_02">API Contract Requested (Access Request), Sandbox Environment, to App Team Members</a></li>
+			<li><a href="cm_notif_04_contracts.htm#notif_contract_03">API Contract Requested (Access Request), Production Environment, to App Team Members</a></li>
+			<li><a href="cm_notif_04_contracts.htm#notif_contract_04">API Contract Created (Access Request), Sandbox Environment, to App Team Members</a></li>
+			<li><a href="cm_notif_04_contracts.htm#notif_contract_05">API Access Activated by Auto-Connect, in Sandbox environment: to app team members</a></li>
+			<li><a href="cm_notif_04_contracts.htm#notif_contract_06">API Access Activated by Auto-Connect: to App Team Members</a></li>
+			<li><a href="cm_notif_04_contracts.htm#notif_contract_07">API Access Approved, Production Environment, to App Team Members</a></li>
+			<li><a href="cm_notif_04_contracts.htm#notif_contract_08">API Access Activated, Production Environment, to App Team Members</a></li>
+			<li><a href="cm_notif_04_contracts.htm#notif_contract_change_01">API Access State Change, Both Environments, to API Admins</a></li>
+			<li><a href="cm_notif_04_contracts.htm#notif_contract_change_02">API Access Cancelled (At Request), Both Environments, to API Admins</a></li>
+			<li><a href="cm_notif_04_contracts.htm#notif_contract_change_03">API Access Cancelled (App Deleted), Both Environments, to API Admins</a></li>
+			<li><a href="cm_notif_04_contracts.htm#notif_contract_change_04">API Access Cancelled (App Live), Sandbox Environment, to API Admins</a></li>
+			<li><a href="cm_notif_04_contracts.htm#notif_contract_change_05">API Access Suspended, Both Environments, to App Team Members</a></li>
+			<li><a href="cm_notif_04_contracts.htm#notif_contract_change_06">API Access Resumed, Both Environments, to App Team Members</a></li>
+			<li><a href="cm_notif_04_contracts.htm#notif_contract_change_07">API Access Resubmitted, Both Environments, to App Team Members</a></li>
+			<li><a href="cm_notif_04_contracts.htm#notif_contract_change_08">API Access Rejected, Production Environment, to App Team Members</a></li>
+			<li><a href="cm_notif_04_contracts.htm#notif_contract_change_09">API Access Cancelled (At Request), Both Environments, to App Team Members</a></li>
+			<li><a href="cm_notif_04_contracts.htm#notif_contract_change_10">API Access Cancelled, API Deleted (to app team)</a></li>
+			<li><a href="cm_notif_04_contracts.htm#notif_contract_change_11">API Deleted (to API Admin and Business Admin</a>)</li>
+			<li><a href="cm_notif_04_contracts.htm#notif_contract_change_12">API Version Deleted (to API Admin and Business Admin</a>)</li>
+			</ul>
+	</li>
+	<li><a href="cm_notif_05_groups_independent.htm">Community Manager Notifications: Groups</a>
+		<ul>
+			<li><a href="cm_notif_05_groups_independent.htm#notif_group_indep_01">Independent Group: Group Member Invited, to Invited Member</a></li>
+			<li><a href="cm_notif_05_groups_independent.htm#notif_group_indep_02">Independent Group: Group Member Invited, to Other Members</a></li>
+			<li><a href="cm_notif_05_groups_independent.htm#notif_group_indep_03">Independent Group: Invitation Resent, to Invited Member</a></li>
+			<li><a href="cm_notif_05_groups_independent.htm#notif_group_indep_04">Independent Group: Group Membership Invitation Accepted</a></li>
+			<li><a href="cm_notif_05_groups_independent.htm#notif_group_indep_05">Independent Group: Group Membership Invitation Rejected</a></li>
+			<li><a href="cm_notif_05_groups_independent.htm#notif_group_indep_06">Independent Group: Group Member Removed (to Removed Group Member)</a></li>
+			<li><a href="cm_notif_05_groups_independent.htm#notif_group_indep_07">Independent Group: Group Member Removed (to Remaining Group)</a></li>
+			<li><a href="cm_notif_05_groups_independent.htm#notif_group_indep_08">Independent Group: Group Membership Role Changed</a></li>
+			<li><a href="cm_notif_05_groups_independent.htm#notif_group_indep_09">Independent Group: Group Deleted</a></li>
+		</ul>
+	</li>
+	<li><a href="cm_notif_06_review_tickets_comments.htm">Community Manager Notifications: Reviews, Tickets, and Comments</a>
+		<ul>
+			<li><a href="cm_notif_06_review_tickets_comments.htm#notif_review_01">API Review Created</a></li>
+			<li><a href="cm_notif_06_review_tickets_comments.htm#notif_review_02">App Review Created</a></li>
+			<li><a href="cm_notif_06_review_tickets_comments.htm#notif_review_03">Review Comment</a></li>
+			<li><a href="cm_notif_06_review_tickets_comments.htm#notif_ticket_01">Ticket Created (to API Administrator)</a></li>
+			<li><a href="cm_notif_06_review_tickets_comments.htm#notif_ticket_02">Ticket Created (to App Team members using the API)</a></li>
+			<li><a href="cm_notif_06_review_tickets_comments.htm#notif_ticket_03">Ticket Priority Changed</a></li>
+			<li><a href="cm_notif_06_review_tickets_comments.htm#notif_ticket_04">Ticket State Changed</a></li>
+			<li><a href="cm_notif_06_review_tickets_comments.htm#notif_comment_01">Post Comment</a></li>
+		</ul>
+	</li>
+	<li><a href="cm_notif_07_siteadmin.htm">Community Manager Notifications: Site Admin</a>
+		<ul>
+			<li><a href="cm_notif_07_siteadmin.htm#notif_siteadmin_01">Site Admin Invited (to Invited Person)</a></li>
+			<li><a href="cm_notif_07_siteadmin.htm#notif_siteadmin_02">Site Admin Invited (to Existing Site Admins)</a></li>
+			<li><a href="cm_notif_07_siteadmin.htm#notif_siteadmin_03">Site Admin Invited: Invitation Resent (to Invited Site Admin)</a></li>
+			<li><a href="cm_notif_07_siteadmin.htm#notif_siteadmin_04">Site Admin Invitation Accepted</a></li>
+			<li><a href="cm_notif_07_siteadmin.htm#notif_siteadmin_05">Site Admin Invitation Rejected</a></li>
+			<li><a href="cm_notif_07_siteadmin.htm#notif_siteadmin_08">User Deleted: To Site Admins</a></li>
+		</ul>
+	</li>
+	<li><a href="cm_notif_08_busadmin.htm">Community Manager Notifications: Business Admin</a>
+		<ul>
+			<li><a href="cm_notif_08_busadmin.htm#notif_busadmin_01">Business Administrator Invited, to Invited Member</a></li>
+			<li><a href="cm_notif_08_busadmin.htm#notif_busadmin_02">Business Administrator Invited, to Business Team</a></li>
+			<li><a href="cm_notif_08_busadmin.htm#notif_busadmin_03">Business Team: Invitation Resent, to Invited Member</a></li>
+			<li><a href="cm_notif_08_busadmin.htm#notif_busadmin_04">Business Administrator Invitation Accepted</a></li>
+			<li><a href="cm_notif_08_busadmin.htm#notif_busadmin_05">Business Administrator Invitation Rejected</a></li>
+			<li><a href="cm_notif_08_busadmin.htm#notif_busadmin_06">Business Administrator Removed (to Removed Administrator)</a></li>
+			<li><a href="cm_notif_08_busadmin.htm#notif_busadmin_07">Business Administrator Removed (to Remaining Administrators)</a></li>
+			<li><a href="cm_notif_08_busadmin.htm#notif_busadmin_08">User Deleted: To Business Admins</a></li>
+		</ul>
+	</li>
+	<li><a href="cm_notif_09_other.htm">Community Manager Notifications: Policy Violations</a>
+		<ul>
+			<li><a href="cm_notif_09_other.htm#notif_policy_01">SLA Policy Violation Notification: contract violation</a></li>
+			<li><a href="cm_notif_09_other.htm#notif_policy_02">SLA Policy Violation Notification: policy is attached to a service</a></li>
+		</ul>
+	</li>
+	</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+
+<div class = "divider1"></div>
+
+
+
+
+<h3 id="related_topics">Related Topics</h3>
+<div class="relatedlinks" id="cm_notifications">
+<ul>
+	<li><a href="cm_notif_00_overview.htm">Community Manager Notifications: Overview</a></li>
+	<li><a href="cm_notif_01_signup.htm">Community Manager Notifications: Signup</a></li>
+	<li><a href="cm_notif_02_apps.htm">Community Manager Notifications: Applications</a></li>
+	<li><a href="cm_notif_03_apis.htm">Community Manager Notifications: APIs</a></li>
+	<li><a href="cm_notif_04_contracts.htm">Community Manager Notifications: Contracts</a></li>
+</ul>
+<ul>
+	<li><a href="cm_notif_05_groups_independent.htm">Community Manager Notifications: Groups</a></li>
+	<li><a href="cm_notif_06_review_tickets_comments.htm">Community Manager Notifications: Reviews, Tickets, and Comments</a></li>
+	<li><a href="cm_notif_07_siteadmin.htm">Community Manager Notifications: Site Admin</a></li>
+	<li><a href="cm_notif_08_busadmin.htm">Community Manager Notifications: Business Admin</a></li>
+	<li><a href="cm_notif_09_other.htm">Community Manager Notifications: Policy Violations</a></li>
+</ul>
+</div>
