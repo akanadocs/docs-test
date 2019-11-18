@@ -14,8 +14,8 @@ nav-title: Database Maintenance
 <ol class="table_of_contents">
 	<li><a href="#introduction">Introduction</a></li>
 	<li><a href="#data">Types of Volatile Data</a></li>
-	<li><a href="#built-in">Using the built-in jobs</a></li>
-	<li><a href="#using-cron">Leveraging cron to delete data</a>
+	<li><a href="#built_in">Using the built-in jobs</a></li>
+	<li><a href="#using_cron">Leveraging cron to delete data</a>
 		<ul>
 			<li><a href="#cron_delete_mysql">Deleting/archiving data: MySQL</a></li>
 			<li><a href="#cron_delete_oracle">Deleting/archiving data: Oracle</a></li>
@@ -23,21 +23,28 @@ nav-title: Database Maintenance
 		</ul>
 	</li>
 	<li><a href="#partitioning">Partitioning large data stores</a></li>
-	<li><a href="#partitioning-verylarge">Partitioning large data stores under load (MySQL Only)</a></li>
-	<li><a href="#drop-partitions">Dropping partitions</a></li>
+	<li><a href="#partitioning_verylarge">Partitioning large data stores under load (MySQL Only)</a></li>
+	<li><a href="#drop_partitions">Dropping partitions</a></li>
+	<li><a href="#mongodb_maintenance">MongoDB maintenance</a></li>
 </ol>
 
 
 
 <h3 id="introduction">Introduction</h3>
 <p>This document describes the types of data that require regular archiving and ways to implement it.</p>
-<p><strong>Note:</strong> This document only applies to Policy Manager and Community Manager version 8.x and later.</p>
+<p><strong>Note:</strong> This document applies to Policy Manager and Community Manager version 8.x and later.</p>
 
 
 
 <h3 id="data">Types of Volatile Data</h3>
-<p>There are several key tables that require regular maintenance.</p>
-<h4>Policy Manager Tables:</h4>
+<p>There are several key tables that require regular maintenance:</p>
+<ul>
+	<li><a href="#tables_maintain_pm">Policy Manager Tables</a></li>
+	<li><a href="#tables_maintain_cm">Community Manager Tables</a></li>
+</ul>
+
+
+<h4 id="tables_maintain_pm">Policy Manager Tables:</h4>
 <table class="doctable">
 	<thead>
 		<tr>
@@ -106,7 +113,7 @@ nav-title: Database Maintenance
 <p><strong>**Note:</strong> these tables can potentially contain VERY large quantities of data and will require special handling such as partitioning.</p>
 
 
-<h4>Community Manager Tables:</h4>
+<h4 id="tables_maintain_cm">Community Manager Tables:</h4>
 <table class="doctable">
 	<thead>
 		<tr>
@@ -133,7 +140,7 @@ nav-title: Database Maintenance
 
 
 
-<h3 id="built-in">Using the built-in jobs</h3>
+<h3 id="built_in">Using the built-in jobs</h3>
 <p>Policy Manager has a built-in capability to delete/archive data in the MO_USAGE* and MO_ROLL* tables. These jobs run every hour and can add significant overhead to the Policy Manager container, so are best suited to low-throughput environments with limited retained data. </p>
 <p>To configure the built-in jobs, go to the Policy Manager Administration Console &gt; <strong>Configuration</strong> tab &gt; <strong>com.soa.rollup.delete.old</strong>. The settings in this screen can be summarized as follows:</p>
 <ul>
@@ -161,7 +168,7 @@ monitoring.delete.usage.enable=false</pre>
 
 
 
-<h3 id="using-cron">Leveraging cron to delete data</h3>
+<h3 id="using_cron">Leveraging cron to delete data</h3>
 <p>For higher throughput environments, it's better to offload the task to delete/archive data by simply executing scripts directly against the database using a cron job. The following scripts will delete all:</p>
 <ul>
 <li>next-hop data in MO_USAGE_NEXTHOP older than 1 month</li>
@@ -282,9 +289,14 @@ delete from API_SLA_DATA where LASTMODIFIEDDTS &lt; DATEADD(YEAR, -1, GETDATE())
 <p>When the amount of data in the MO_USAGE_DATA, MO_USAGEMSGS and MO_USAGE_NEXTHOP tables climbs over 100 GB of data, the deletion of data takes too long and locks up the tables for concurrent write operations. To overcome this, it is highly recommended that you implement a partitioning strategy that allows you to simply drop an entire partition without incurring any performance overhead. </p>
 <p>Partitioning is fairly complex. As a result, we recommend that you test this thoroughly before attempting it on a production system.</p>
 <p><strong>Note:</strong> If the tables contain a large amount of data, the process of partitioning will be extremely time and resource intensive and will be virtually impossible to perform under load. Refer to the next section for the correct approach in these circumstances.</p>
+<p>This section includes partitioning information for:</p>
+<ul>
+	<li><a href="#partitioning_mysql">MySQL</a></li>
+	<li><a href="#partitioning_oracle">Oracle</a></li>
+</ul>
 
 
-<h4>MySQL</h4>
+<h4 id="partitioning_mysql">MySQL</h4>
 
 <h5>Drop existing foreign keys, modify, and add new indexes</h5>
 <p>Partitioning in MySQL does not support foreign key relationships. In addition, the partition key must be added to the primary key index:</p>
@@ -347,7 +359,7 @@ PARTITION BY RANGE (TO_DAYS(REQUESTDTS)) (
 );</pre>
 
 
-<h4>Oracle</h4>
+<h4 id="partitioning_oracle">Oracle</h4>
 <p>Oracle does not permit the ALTER-ing of tables to add partitions. This means that new tables need to be created and the data migrated over. The steps are:</p>
 <ul>
   <li><a href="#oracle_01">Step 1: Create new tables</a></li>
@@ -457,7 +469,7 @@ INSERT INTO MO_USAGEMSGS SELECT * FROM MO_USAGEMSGS_BAK;</pre>
 
 
 
-<h3 id="partitioning-verylarge">Partitioning large data stores under load (MySQL Only)</h3>
+<h3 id="partitioning_verylarge">Partitioning large data stores under load (MySQL Only)</h3>
 <p>If the usage tables contain a large amount of data you will need to rename, rotate and transfer data from the existing tables to a new set of partitioned tables. For Oracle, the steps are exactly the same as shown in the previous section. For MySQL, it is quicker to partition the tables with an ALTER statement and merge a much smaller dataset. This is shown below. The steps are:</p>
 <ul>
   <li><a href="#mysql_01">Step 1: Create new tables (MySQL only)</a></li>
@@ -645,13 +657,128 @@ INSERT INTO MO_USAGEMSGS
 
 
 
-<h3 id="drop-partitions">Dropping partitions</h3>
-<p>The benefit of partitioning your data is that you can delete old data by simply dropping a partition. The next sections will describe how to drop partitions for different databases</p>
-<h4>Oracle</h4>
-<p>For Oracle, the tables will automatically create new partitions each week. </p>
-<p>For sample procedures to drop the partitions, download the following zip archive: <a href="../assets/sample_scripts.zip">sample_scripts.zip</a></p>
-<h4>MySQL</h4>
+<h3 id="drop_partitions">Dropping partitions</h3>
+<p>The benefit of partitioning your data is that you can delete old data by simply dropping a partition. This section describes how to drop partitions for:</p>
+<ul>
+	<li><a href="#partition_drop_mysql">MySQL</a></li>
+	<li><a href="#partition_drop_oracle">Oracle</a></li>
+</ul>
+
+
+<h4 id="partition_drop_mysql">MySQL</h4>
 <p>For MySQL, you will need to create new partitions and drop old partitions each week. For sample scripts on MySQL, download the following zip archive: <a href="../assets/sample_scripts.zip">sample_scripts.zip</a>.</p>
 <p>Once satisfied with the scripts, you can set up a cron job to execute it each night. For example, you could configure cron to execute on Sunday morning at 1am as follows:</p>
 <pre>0 1 * * 0 /xxx/bin/partition.sh</pre>
+
+
+<h4 id="partition_drop_oracle">Oracle</h4>
+<p>For Oracle, the tables will automatically create new partitions each week. </p>
+<p>For sample procedures to drop the partitions, download the following zip archive: <a href="../assets/sample_scripts.zip">sample_scripts.zip</a></p>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h3 id="mongodb_maintenance">MongoDB maintenance</h3>
+<p>OAuth grants and tokens are cleaned up by the scheduled jobs. No maintenance is needed for them, unless you choose to disable them and run external database maintenance instead. All other Mongo collections depend on the <a href="../../ag/glossary_pm_nd.htm#gl_pm_ttl_index">TTL indexes</a>.</p>
+<p>This section includes information, suggestions, and/or examples for cleaning up the following:</p>
+<ul>
+	<li><a href="#mongodb_maint_oauth">OAuth grants and tokens</a></li>
+	<li><a href="#mongodb_maint_pm">Policy Manager database</a></li>
+	<li><a href="#mongodb_maint_pm_audit">PM_AUDIT database</a></li>
+	<li><a href="#mongodb_maint_metric_rollup_data">METRIC_ROLLUP_DATA</a></li>
+</ul>
+
+
+<h4 id="mongodb_maint_oauth">OAuth grants and tokens</h4>
+<p>OAuth grants and tokens are cleaned up by the scheduled Quartz jobs; no maintenance is needed for them.</p>
+<p>The jobs clean up both MongoDB and RDBMS, depending on the value for OAuth in this setting:</p>
+<ul>
+	<li><strong>Akana Administration Console</strong> &gt; <strong>com.soa.oauth.provider.server</strong> &gt; <strong>com.soa.oauth.provider.server.config.datasource</strong></li>
+</ul>
+<p> If you choose, you can disable these jobs from the Akana Administration Console and run one or more scripts directly on the RDBMS from outside, in place of the built-in scheduled jobs to clean up ROLLUPs etc. An example is shown below.</p>
+<p>The script below is run against the MySQL database via shell scripts via cronjobs.</p>
+<p><strong>Note</strong>: This is just an example. This script is not part of the product and is not supported.</p>
+<p>{<span class="apidoc_red">QUESTION. JW commented that the below is done against the MySQL DB because SaaS uses MySQL for OAuth grants. Should we even include it, and in this section? Putting it in for now.</span>}</p>
+<pre>
+$ cat saas_db_cleanup.sh
+DB_HOST="somemysql.host.com"
+
+cur_time='mysql -u somemysqluser  -h $DB_HOST -D open -NB -e "select TIMESTAMPADD(MONTH, -1, now())"'
+max_id='mysql -u somemysqluser -h $DB_HOST -D open -NB -e "select min(MAX_ID) from MO_STATUS"'
+rows='mysql -u somemysqluser -h $DB_HOST -D open -NB -e "select count(*) from MO_ROLLUPDATA where ROLLUPDATAID &lt; $max_id and INTVLSTARTDTS &lt; '${cur_time}'"'
+
+while [ $rows -gt 0 ]
+do
+  date
+  mysql -u somemysqluser -h $DB_HOST -D open -e "delete from MO_ROLLUPDATA where ROLLUPDATAID &lt; $max_id and INTVLSTARTDTS &lt; '${cur_time}' LIMIT 1000000"
+  rows='mysql -u somemysqluser -h $DB_HOST -D open -NB -e "select count(*) from MO_ROLLUPDATA where ROLLUPDATAID &lt; $max_id and INTVLSTARTDTS &lt; '${cur_time}'"'
+done
+
+date
+mysql -u somemysqluser -h $DB_HOST -D open -e "delete from MO_ROLLUP15 where INTVLSTARTDTS &lt; TIMESTAMPADD(MONTH, -1, now());"
+
+date
+mysql -u somemysqluser -h $DB_HOST -D open -e "delete from MO_ROLL_ORG15 where INTVLSTARTDTS &lt; TIMESTAMPADD(MONTH, -1, now());"
+
+date
+mysql -u somemysqluser -h $DB_HOST -D open -e "delete from MO_ROLLUP_HOUR where INTVLSTARTDTS &lt; TIMESTAMPADD(MONTH, -3, now());"
+
+date
+mysql -u somemysqluser -h $DB_HOST -D open -e "delete from MO_ROLL_ORG_H where INTVLSTARTDTS &lt; TIMESTAMPADD(MONTH, -3, now());"
+
+date
+mysql -u somemysqluser -h $DB_HOST -D open -e "delete from MO_ROLLUP_DAY where INTVLSTARTDTS &lt; TIMESTAMPADD(YEAR, -1, now());"
+
+date
+mysql -u somemysqluser -h $DB_HOST -D open -e "delete from MO_ROLL_ORG_D where INTVLSTARTDTS &lt; TIMESTAMPADD(YEAR, -1, now());"
+
+date
+mysql -u somemysqluser -h $DB_HOST -D open -e "delete s from AM_ALERTS a inner join AM_ALERTS_SLAS s on s.ALERTSID = a.ALERTSID where a.SOURCEDTS &lt; TIMESTAMPADD(MONTH, -1, now());"
+
+date
+mysql -u somemysqluser -h $DB_HOST -D open -e "delete from AM_ALERTS where SOURCEDTS &lt; TIMESTAMPADD(MONTH, -1, now());"
+
+date
+mysql -u somemysqluser -h $DB_HOST -D open -e "delete from AM_AUDITTRAIL where CREATEDTS &lt; TIMESTAMPADD(YEAR, -1, now());"
+
+date
+mysql -u somemysqluser -h $DB_HOST -D open -e "delete from PM_AUDITTRAIL where DTSCREATE &lt; TIMESTAMPADD(YEAR, -1, now());"
+
+date
+mysql -u somemysqluser -h $DB_HOST -D open -e "delete from API_CONTRACT_SLA_DATA where INTVLSTARTDTS &lt; TIMESTAMPADD(YEAR, -1, now());"
+
+date</pre>
+
+
+<h5 id="mongodb_maint_pm">Policy Manager database</h5>
+<p>The example below creates a TTL index in MongoDB for the Policy Manager database.</p>
+<pre>db.ALERTS.createIndex({ "generatedAt": 1 },{ expireAfterSeconds: 31536000, "name" : "ALERTS_Clnp", background: true})
+
+db.ALERT_AUDIT_TRAIL.createIndex({ "createDate": 1 },{ expireAfterSeconds: 31536000, "name" : "ALERT_AUDIT_TRAIL_Clnp", background: true})
+
+db.SECURITY_AUDIT_TRAIL.createIndex({ "createDate": 1 },{ expireAfterSeconds: 31536000, "name" : "SECURITY_AUDIT_TRAIL_Clnp", background: true})
+</pre>
+
+<h5 id="mongodb_maint_pm_audit">PM_AUDIT database</h5>
+<p>You can set up the Audit logs to have a <a href="../../ag/glossary_pm_nd.htm#gl_pm_ttl_index">TTL index</a> that controls how long the data is kept. The example below sets the logs to expire after 30 days.</p>
+<pre>{
+"v" : 1,
+"key" :
+{ "requestDtsCal" : 1 }
+
+,
+"name" : "AUDIT_Clnp",
+"ns" : "PM_AUDIT.AUDIT",
+"expireAfterSeconds" : 2592000,
+"background" : true
+}</pre>
+<p>The example below creates a TTL index in MongoDB for the Policy Manager database.</p>
+<pre>db.AUDIT.createIndex({ "requestDtsCal": 1 },{ expireAfterSeconds: 4838400, "name" : "AUDIT_Clnp", background: true })
+
+db.TRANSACTION_METRIC.createIndex({ "createdDate": 1 },{ expireAfterSeconds: 4838400, "name" : "TRANSACTION_METRIC", background: true })
+</pre>
+
+<h5 id="mongodb_maint_metric_rollup_data">METRIC_ROLLUP_DATA</h5>
+<p>The example below creates a TTL index on METRIC_ROLLUP_DATA. </p>
+<pre>db.OPERATIONAL_METRIC.createIndex({ "value.timestamp": 1 },{ expireAfterSeconds: 31536000, "name" : "OPERATIONAL_METRIC_Clnp", background: true })</pre>
 <p><a href="#top">back to top</a></p>
