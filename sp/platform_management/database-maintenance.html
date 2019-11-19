@@ -10,6 +10,9 @@ type: page
 nav-title: Database Maintenance
 ---
 <h2 id="top">Akana Platform Database Maintenance</h2>
+
+
+
 <h3 style="color: gray;">Table of Contents</h3>
 <ol class="table_of_contents">
 	<li><a href="#introduction">Introduction</a></li>
@@ -690,15 +693,14 @@ INSERT INTO MO_USAGEMSGS
 
 
 <h4 id="mongodb_maint_oauth">OAuth grants and tokens</h4>
-<p>OAuth grants and tokens are cleaned up by the scheduled Quartz jobs; no maintenance is needed for them.</p>
-<p>The jobs clean up both MongoDB and RDBMS, depending on the value for OAuth in this setting:</p>
+<p>OAuth grants and tokens are cleaned up by the scheduled Quartz jobs, so no external maintenance is necessary. The jobs clean up both MongoDB and RDBMS, depending on the value for OAuth in this setting:</p>
 <ul>
 	<li><strong>Akana Administration Console</strong> &gt; <strong>com.soa.oauth.provider.server</strong> &gt; <strong>com.soa.oauth.provider.server.config.datasource</strong></li>
 </ul>
-<p> If you choose, you can disable these jobs from the Akana Administration Console and run one or more scripts directly on the RDBMS from outside, in place of the built-in scheduled jobs to clean up ROLLUPs etc. An example is shown below.</p>
-<p>The script below is run against the MySQL database via shell scripts via cronjobs.</p>
+
+<h5 id="mongodb_maint_oauth_external"> Cleaning up OAuth grants and tokens externally</h5>
+<p>If you choose, you can disable these jobs from the Akana Administration Console and run one or more scripts directly on the RDBMS from outside, in place of the built-in scheduled jobs to clean up ROLLUPs etc. An example is shown below. The script below is run against the MySQL database via shell scripts via cronjobs.</p>
 <p><strong>Note</strong>: This is just an example. This script is not part of the product and is not supported.</p>
-<p>{<span class="apidoc_red">QUESTION. JW commented that the below is done against the MySQL DB because SaaS uses MySQL for OAuth grants. Should we even include it, and in this section? Putting it in for now.</span>}</p>
 <pre>
 $ cat saas_db_cleanup.sh
 DB_HOST="somemysql.host.com"
@@ -751,7 +753,7 @@ date</pre>
 
 
 <h5 id="mongodb_maint_pm">Policy Manager database</h5>
-<p>The example below creates a TTL index in MongoDB for the Policy Manager database.</p>
+<p>The example below creates a <a href="../../ag/glossary_pm_nd.htm#gl_pm_ttl_index">TTL index</a> in MongoDB for the Policy Manager database.</p>
 <pre>db.ALERTS.createIndex({ "generatedAt": 1 },{ expireAfterSeconds: 31536000, "name" : "ALERTS_Clnp", background: true})
 
 db.ALERT_AUDIT_TRAIL.createIndex({ "createDate": 1 },{ expireAfterSeconds: 31536000, "name" : "ALERT_AUDIT_TRAIL_Clnp", background: true})
@@ -772,7 +774,7 @@ db.SECURITY_AUDIT_TRAIL.createIndex({ "createDate": 1 },{ expireAfterSeconds: 31
 "expireAfterSeconds" : 2592000,
 "background" : true
 }</pre>
-<p>The example below creates a TTL index in MongoDB for the Policy Manager database.</p>
+<p>The example below creates a TTL index in MongoDB for the PM_AUDIT database.</p>
 <pre>db.AUDIT.createIndex({ "requestDtsCal": 1 },{ expireAfterSeconds: 4838400, "name" : "AUDIT_Clnp", background: true })
 
 db.TRANSACTION_METRIC.createIndex({ "createdDate": 1 },{ expireAfterSeconds: 4838400, "name" : "TRANSACTION_METRIC", background: true })
