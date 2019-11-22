@@ -9,24 +9,24 @@ weight: 05
 type: page
 nav-title: Create Response Msg
 ---
-<h2 id="top">How to Create a Response Message</h2>
+<h1 id="top">How to Create a Response Message</h1>
 <p>This article describes how to create a virtual service process that creates a response message using input from the request message and returns this response to the consumer. This is useful for creating sandbox services. In this case I am adding a protocol header that is specific to SOAP, this header would only be returned via a SOAP binding, but the process generates a normalized XML message that can be returned via any of the bindings, including being mediated to JSON if that is required.</p>
 <p><strong>Note</strong>: this article doesn't cover configuring the bindings, all it does is tell you how to create the response message and wire that into your process.</p>
 
 
 
-<h3>Step 1 - Define a Variable</h3>
+<h2>Step 1 - Define a Variable</h2>
 <p>Use the <strong>A</strong> button on the Process Editor palette to define a new variable name of type message. To match the script below, we'll call this new message variable <strong>newMsg</strong>.</p>
 <p><strong>Note</strong>: all adding a variable here does is to make the variable name available to other activities in the Process Editor.</p>
 
 
 
-<h3>Step 2 - Set the Reply to use the new Variable</h3>
+<h2>Step 2 - Set the Reply to use the new Variable</h2>
 <p>Edit the reply activity and pick your new message variable as the response message (the field labelled variable).</p>
 
 
 
-<h3>Step 3 - Add a Script Activity between the receive and the reply</h3>
+<h2>Step 3 - Add a Script Activity between the receive and the reply</h2>
 <p>Add a script activity between the receive and the reply, and use the script below. This script performs a few operations:</p>
 <ul>
 	<li>Creates a new normalized message.</li>
@@ -56,7 +56,7 @@ newMsg.setProtocolHeader("{http://demo.akana.com/}DemoHead", "&lt;demo:Demohead 
 
 
 
-<h3>Step 4 - Preserve Binding Headers - Optional</h3>
+<h2>Step 4 - Preserve Binding Headers - Optional</h2>
 <p>Edit the operation, select <strong>Header Propagation</strong>, and set <strong>Preserved Binding Headers</strong> to <strong>all</strong>, or add the specific header you want to pass through the downstream binding in this list.</p>
 <p>This is only needed if you want to pass specific headers back to the consumer. For REST consumers you would typically enable <strong>Preserve Transport Headers</strong> and would use the <span class="apidoc_code">setTransportHeaders()</span> function, as shown below.</p>
 <pre>headers = processContext.getVariable("newMsg").getTransportHeaders();

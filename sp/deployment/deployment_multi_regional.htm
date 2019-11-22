@@ -9,7 +9,7 @@ sub-nav-class: Deployment
 type: page
 nav-title: Multi-Regional Deployment
 ---
-<h2 id="top">Akana API Gateway Multi-Regional Deployment</h2>
+<h1 id="top">Akana API Gateway Multi-Regional Deployment</h1>
 <p>Find out how to configure a multi-regional deployment with MongoDB.</p>
 <p>
 <a href="../platform_install/installing_akana_api_platform_all.htm" class="button secondary">Installing the Akana API Platform (all versions)</a> 
@@ -17,7 +17,7 @@ nav-title: Multi-Regional Deployment
 </p>
 
 <div class = "divider1"></div>
-<h3 style="color: gray;">Table of Contents</h3>
+<h2 style="color: gray;">Table of Contents</h2>
 <ul>
 	<li><a href="#overview">Overview</a></li>
 	<li><a href="#multi_regional_architecture">Multi-Regional Architecture</a>
@@ -51,7 +51,7 @@ nav-title: Multi-Regional Deployment
 
 
 
-<h3 id="overview">Overview</h3>
+<h2 id="overview">Overview</h2>
 <p>A single API Gateway deployment can span multiple regions around the globe to improve regional performance as well as provide a more seamless disaster recovery. To achieve better performance, all messages from a specific region should be brokered by a Network Director in the same region. For disaster recovery, it must be possible to access both the Network Director and Policy Manager in a different region if the local region has suffered a disaster.</p>
 <p>The API Gateway does not support a full multi-master deployment across regions. Instead, it supports:</p>
 <ul>
@@ -66,7 +66,7 @@ nav-title: Multi-Regional Deployment
 
 
 
-<h3 id="multi_regional_architecture">Multi-Regional Architecture</h3>
+<h2 id="multi_regional_architecture">Multi-Regional Architecture</h2>
 <p>The key to a multi-regional software deployment is the speed of access to, and integrity of, persisted data. The API Gateway has traditionally persisted its data in a relational database. Although some relational database vendors claim multi-master capabilities, these solutions have not proven to be 100% reliable. Instead, a more traditional master/slave deployment has proven to be the best option. For this reason, the multi-regional architecture includes a single master Policy Manager.</p>
 <p>This section includes:</p>
 <ul>
@@ -77,7 +77,7 @@ nav-title: Multi-Regional Deployment
 </ul>
 
 
-<h4 id="master_slave_deploy">Master/Slave Deployment</h4>
+<h3 id="master_slave_deploy">Master/Slave Deployment</h3>
 <ul>
 	<li>One data center will host the master RDBMS that the cohosted Policy Manager processes will read and write to.</li>
 	<li>The RDBMS will utilize replication to propagate changes made through the master Policy Manager to the slave databases in the other data centers.</li>
@@ -95,7 +95,7 @@ nav-title: Multi-Regional Deployment
 </ul>
 
 
-<h4 id="incorp_nosql">Incorporation of NoSQL Databases that use Sharding</h4>
+<h3 id="incorp_nosql">Incorporation of NoSQL Databases that use Sharding</h3>
 <p>Using the master/slave RDBMS architecture for writing data would require the Network Directors in all data centers to communicate directly with the single master Policy Manager/RDBMS. This would lead to obvious problems with performance, compounded by the volume of data needing to be written during heavy client traffic periods.</p>
 <p>To avoid this limitation the multi-regional architecture introduces a second persistence system, a NoSQL database, for the storage of the data that the Network Directors write. A NoSQL database provides more flexibility than an RDBMS in that it can support sharding.</p>
 <ul>
@@ -110,12 +110,12 @@ nav-title: Multi-Regional Deployment
 <p>The use of the NoSQL database is very well suited for the data the Network Director needs to write because the data tends to be historical data that does not have relationships to other data in the Policy Manager data model that must be kept in sync. The data does reference the Policy Manager data model to reference containers, services, and operations, but there aren't relational queries that Policy Manager needs to perform that would join with the historical data that the Network Director is writing.</p>
 
 
-<h4 id="propagating_nd_config">Propagating Network Director Configuration Information</h4>
+<h3 id="propagating_nd_config">Propagating Network Director Configuration Information</h3>
 <p>There is still a need for a relational stateful model for Policy Manager, which is why the RDBMS is still an important part of the architecture. The Network Director configuration information, such as listener and virtual service configuration, is persisted in the RDBMS. Therefore, the Network Directors still query their configuration indirectly through the Policy Manager to the RDBMS. When changes need to be made to the Network Director configuration, they must be made using another Policy Manager. The changes are then replicated to the slave database servers so that Network Directors needing that information in different data centers can read it from their local slave database server.</p>
 <p><img src="assets/mrd_02_03.jpg" alt="" /></p>
 
 
-<h4 id="pm_read_access">How Policy Managers Gain Read Access to Network Director Data Written to Local NoSQL Shards</h4>
+<h3 id="pm_read_access">How Policy Managers Gain Read Access to Network Director Data Written to Local NoSQL Shards</h3>
 <p>Although each ND is the master for the records it writes to its local master NoSQL shard, it is necessary for Policy Managers in different data centers to at least gain read access to that data. There are two options for how this can be achieved.</p>
 <ul>
 	<li><strong>Query Router</strong>: Having a query router in each data center ensures that any query made by a local Policy Manager for ND-written information is directed to the shards in the other data centers. The data is queried, possibly from multiple data centers, on the fly. This option requires no duplication of data through replication. The data is always assured to be current. However, read performance may suffer due to having to route to different data centers. Furthermore, if a data center is down the data will not be accessible at all.</li>
@@ -126,7 +126,7 @@ nav-title: Multi-Regional Deployment
 
 
 
-<h3 id="data_stores_setup">Setting up the Data Stores</h3>
+<h2 id="data_stores_setup">Setting up the Data Stores</h2>
 <p>Both a relational database and a NoSQL database must be installed and configured. The relational database is configured with a single master and replication to the slave data centers. Because the relational database vendor is a customer choice, the setup of the relational database master and slaves is out of scope for this guide. Please refer to the documentation from your vendor of choice.</p>
 <p>The only NoSQL database vendor currently supported by the API Gateway is MongoDB. This section outlines the steps for setting up MongoDB instances in different data centers using sharding and replication. To download and install the latest supported MongoDB version, please visit <a href="https://www.mongodb.com/akana" title="Link to MongoDB version for Akana Platform" target="_blank">https://www.mongodb.com/akana</a>. We highly recommend that you use MongoDB Enterprise Advanced, especially if you're running the API Gateway to support production or mission-critical applications. MongoDB Enterprise Advanced offers enterprise-grade security, operational automation, proactive support, and disaster recovery to run the API Gateway in a secure and reliable way.</p>
 <p>For system requirements, see <a href="../system_requirements/system_requirements_akana_platform_2018x.htm#versions_mongodb">System Requirements for Akana Platform 2018.0.0</a>.</p>
@@ -142,7 +142,7 @@ nav-title: Multi-Regional Deployment
 </ul>
 
 
-<h4 id="config_servers">Configuration Servers</h4>
+<h3 id="config_servers">Configuration Servers</h3>
 <p>A cluster of sharded MongoDB instances requires a set of three config servers. In order to make sharding configuration changes, all three config servers must be available.</p>
 <p><strong>Note</strong>:</p>
 <ul>
@@ -172,7 +172,7 @@ nav-title: Multi-Regional Deployment
 <p>Repeat these steps for each of the config servers in the different data centers.</p>
 
 
-<h4 id="query_routers">Query Routers</h4>
+<h3 id="query_routers">Query Routers</h3>
 <p>A query router must be configured in each data center that will route inserts and queries to the correct database servers in the MongoDB cluster. The query routers must all use the same set of config servers, so that queries and inserts work on consistent data across the data centers. The following are the steps to configure a query router:</p>
 <p>Step 1 - Create a configuration file that the query router will read on startup. The configuration file will include the addresses of the config servers and the network address of the server. An example file is shown below.</p>
 <pre>01) sharding:
@@ -196,7 +196,7 @@ nav-title: Multi-Regional Deployment
 <p>Repeat these steps for each of the query routers in the different data centers.</p>
 
 
-<h4 id="database_servers">Database Servers</h4>
+<h3 id="database_servers">Database Servers</h3>
 <p>The server instances that hold the application data are called database servers. A set of multiple database servers that are reachable from a single query router make up a cluster. Database servers in a cluster can act as shards, or partitions of the application data, that can be used for horizontal scaling. Database servers in a cluster can also act as backups, or replicas, to either provide fault tolerance or read performance improvements.</p>
 <ul>
 	<li>For fault tolerance, for each master, the database should replicate its data to a slave database in the same data center. This slave database will become the master should the original master server go down.</li>
@@ -285,7 +285,7 @@ nav-title: Multi-Regional Deployment
 <pre>> rs.reconfig(cfg)</pre>
 
 
-<h4 id="arbiters">Arbiters</h4>
+<h3 id="arbiters">Arbiters</h3>
 <p>If there is an even number of replica servers in a replica set, you must create an arbiter. An arbiter is another mongod process, but it does not hold data. It must be run on a machine that is not already running a replica. To add an arbiter, perform the following steps.</p>
 <p>Step 1 - Create a directory where the arbiter server will store its data.</p>
 <p>Step 2 - Create a configuration file that the arbiter server will read on startup. The configuration file will include:</p>
@@ -321,7 +321,7 @@ nav-title: Multi-Regional Deployment
 <p>In the above, the only parameter is the host and port the arbiter was deployed on.</p>
 
 
-<h4 id="shards">Shards</h4>
+<h3 id="shards">Shards</h3>
 <ul>
 	<li>Each data center will have at least one master MongoDB database server instance.</li>
 	<li>Each master server is a shard.</li>
@@ -384,7 +384,7 @@ nav-title: Multi-Regional Deployment
 <p>Perform the shard configuration steps for each replica set. Each replica set represents one shard cluster.</p>
 
 
-<h4 id="db_driver_settings">Database Driver Settings</h4>
+<h3 id="db_driver_settings">Database Driver Settings</h3>
 <p>When a read is performed through a query router, the default settings would have the query router route the query to each of the master shards in the cluster. This would not be ideal, because it would cause the queries to span data centers. To avoid this, you can configure the database driver with a read preference.</p>
 <p>The read preference is configured as a query parameter of the URI of the MongoDB connection used by a database client. Creating the URI is part of the configuration steps in the next section; see <a href="#proc_install_nd">Installing Network Director</a>. The database URI and the possible settings are described in detail in the MongoDB documentation: <a href="https://docs.mongodb.org/manual/reference/connection-string/" title="Link to MongoDB documentation" target="_blank">https://docs.mongodb.org/manual/reference/connection-string/</a>.</p>
 <p>The readPreference setting supports a variety of options. The option we are using is the <strong>nearest</strong> option. This tells the query router to direct all reads to the closest member of a replica set, regardless of whether the member is a master or slave shard. For more information on the <strong>nearest</strong> read preference, see <a href="https://docs.mongodb.org/manual/reference/read-preference/#nearest" title="https://docs.mongodb.org/manual/reference/read-preference/#nearest" target="_blank">https://docs.mongodb.org/manual/reference/read-preference/#nearest</a>.</p>
@@ -406,7 +406,7 @@ nav-title: Multi-Regional Deployment
 <pre>monogdb://routerHost1:27017/AKANA?connectTimeoutMS=15000&amp;socketTimeoutMS=1500000&amp;maxPoolSize=100&amp;waitQueueMultiple=5&amp;waitQueueTimeoutMS=10000</pre>
 
 
-<h4 id="troubleshooting">Troubleshooting</h4>
+<h3 id="troubleshooting">Troubleshooting</h3>
 <p>The following sections outline steps to help diagnose problems with the data store configuration:</p>
 
 <ul>
@@ -418,7 +418,7 @@ nav-title: Multi-Regional Deployment
 </ul>
 
 
-<h5 id="verify_shard_config">Verify Shard Configuration</h5>
+<h4 id="verify_shard_config">Verify Shard Configuration</h4>
 <p>Step 1: Connect to the admin shell of the local query router, as shown in the example below.</p>
 <pre>mongo hostA:27018/admin</pre>
 <p>Step 2: From the shell, change the current database to the config database, as shown in the example below.</p>
@@ -432,7 +432,7 @@ nav-title: Multi-Regional Deployment
 <p>Step 7: Verify the shard key is correct.</p>
 <p>Step 8: Verify that the tags are split amongst the shards correctly.</p>
 
-<h5 id="verify_data_distrib">Verify Proper Data Distribution across Shards</h5>
+<h4 id="verify_data_distrib">Verify Proper Data Distribution across Shards</h4>
 <p>Step 1: Connect to the admin shell of the local query router, as shown in the example below.</p>
 <pre>mongo hostA:27018/admin</pre>
 <p>Step 2: From the shell, change the current database to the database that you want to verify, as shown in the example below.</p>
@@ -443,7 +443,7 @@ nav-title: Multi-Regional Deployment
 <p>Step 4: Verify that the statistics for each of the shards match with your expectations based on the data being stored.</p>
 
 
-<h5 id="check_mongodb_logs">Check MongoDB Process Logs</h5>
+<h4 id="check_mongodb_logs">Check MongoDB Process Logs</h4>
 <p>By default, each MongoDB process (query router, configuration server, database server, and arbiter) writes diagnostic and error information to the shell it was started from. Each process can be configured to write this information to a log file instead.</p>
 <p>To instruct a process to write to a log, add a <strong>systemLog</strong> section in its configuration file, as shown in the example below.</p>
 <pre>01) systemLog:
@@ -454,14 +454,14 @@ nav-title: Multi-Regional Deployment
 	<li>Line 02 provides a location to which log files will be written. There are several other options for logging, described in detail at <a href="https://docs.mongodb.org/manual/reference/configuration-options/" title="https://docs.mongodb.org/manual/reference/configuration-options/" target="_blank">https://docs.mongodb.org/manual/reference/configuration-options/</a>.</li>
 </ul>
 
-<h5 id="flush_query_router_config">Flush a Query Router's Configuration</h5>
+<h4 id="flush_query_router_config">Flush a Query Router's Configuration</h4>
 <p>If there is a concern that a query router is using stale information because its cache is out of date, you can flush the cache and force the query router to re-read the config database. To flush a query router's cache, perform the following steps.</p>
 <p>Step 1: Connect to the admin shell of the query router, as shown in the example below.</p>
 <pre>mongo hostA:27018/admin</pre>
 <p>Step 2: From the shell, flush the cache, as shown in the example below.</p>
 <pre>> db.adminCommand("flushRouterConfig")</pre>
 
-<h5 id="error_local_voted_doc">Error: Did not find local voted for document at startup</h5>
+<h4 id="error_local_voted_doc">Error: Did not find local voted for document at startup</h4>
 <p>In certain instances, on starting up the configuration server you might encounter the following error:</p>
 <p><img src="assets/deploy_error_local_voted_doc.jpg" width="978" height="40" alt="Configuration server startup error" /></p>
 <pre>Did not find local voted for document at startup.
@@ -484,7 +484,7 @@ Did not find local replica set cofiguration document at startup. Did not find re
 
 
 
-<h3 id="install_config">API Gateway Installation and Configuration</h3>
+<h2 id="install_config">API Gateway Installation and Configuration</h2>
 <p>This section covers:</p>
 <ul>
 	<li>A walk through of the steps for installing and configuring the Policy Manager and Network Director processes in two different data centers.</li>
@@ -502,7 +502,7 @@ Did not find local replica set cofiguration document at startup. Did not find re
 		</ul>
 
 
-<h4 id="dc_master">Master Data Center</h4>
+<h3 id="dc_master">Master Data Center</h3>
 <p>The master data center is home to the master relational database. This is the only database instance that can support writes. The following subsections outline the steps for setting up the Master Data Center. The processes include:</p>
 <ul>
 	<li><a href="#proc_pm_install">Installing Policy Manager</a></li>
@@ -513,7 +513,7 @@ Did not find local replica set cofiguration document at startup. Did not find re
 	<li><a href="#proc_install_nd">Installing Network Director</a></li>
 </ul>
 
-<h5 id="proc_pm_install">Installing Policy Manager</h5>
+<h4 id="proc_pm_install">Installing Policy Manager</h4>
 <p>First, as in a typical installation, we will install a container with the Policy Manager Console and Subsystems features. Because we are going to use MongoDB for reading and writing data generated by the Network Director, we must perform an additional step of configuring this container to use MongoDB.</p>
 <p>To configure any Akana container to communicate with MongoDB, you must install the Akana MongoDB Support plugin. You can find the plugin on the Available Features page of the Akana Administration Console using the Plug-in filter.</p>
 <p><img src="assets/mrd_04_01.jpg" alt="" /></p>
@@ -521,7 +521,7 @@ Did not find local replica set cofiguration document at startup. Did not find re
 <p><img src="assets/mrd_04_02.jpg" alt="" /></p>
 <p>In this deployment, we will use the URI to the MongoDB query router installed in the local data center as outlined in <a href="#db_driver_settings">Database Driver Settings</a>. At the conclusion of this configuration, after restarting, we will have a Policy Manager process that can write to the master relational database and read/write from the local MongoDB server farm through the query router.</p>
 
-<h5 id="proc_pm_cluster_create">Creating a Policy Manager cluster</h5>
+<h4 id="proc_pm_cluster_create">Creating a Policy Manager cluster</h4>
 <p>Ultimately we will have Network Directors in different data centers that communicate only with locally installed Policy Manager containers. As part of setting this up, we need to create Policy Manager clusters in each data center so that the Policy Manager containers can be separated from the perspective of the Network Directors.</p>
 <ol>
 	<li>From the Policy Manager Management Console, navigate to the <strong>Akana Policy Manager</strong> organization.</li>
@@ -538,7 +538,7 @@ Did not find local replica set cofiguration document at startup. Did not find re
 		<p><img src="assets/mrd_04_07.jpg" alt="" /></p></li>
 </ol>
 
-<h5 id="proc_listener_create">Creating a listener for the cluster container</h5>
+<h4 id="proc_listener_create">Creating a listener for the cluster container</h4>
 <p>The next step is to create a listener for the cluster container. This listener is the address that the local Network Directors will use to access the Policy Manager containers. There are two scenarios:</p>
 <ul>
 	<li>If only one Policy Manager container is installed in the data center, you can just copy the listener information for the Policy Manager container.</li>
@@ -553,7 +553,7 @@ Did not find local replica set cofiguration document at startup. Did not find re
 		</ul>
 		</li>
 </ol>
-<h5 id="proc_pm_services_host">Hosting Policy Manager services on the cluster</h5>
+<h4 id="proc_pm_services_host">Hosting Policy Manager services on the cluster</h4>
 <p>The next step is to host all the Policy Manager services on the cluster.</p>
 <ol>
 	<li>Select the original Policy Manager container in the tree. Then, on the right, click <strong>Clone Hosted Services</strong>. The <strong>Clone Hosted Services</strong> wizard starts.
@@ -570,7 +570,7 @@ Did not find local replica set cofiguration document at startup. Did not find re
 	<p><img src="assets/mrd_04_12.jpg" alt="" /></p>
 </blockquote>
 
-<h5 id="proc_pm_add_to_cluster">Adding Policy Manager container to the cluster</h5>
+<h4 id="proc_pm_add_to_cluster">Adding Policy Manager container to the cluster</h4>
 <p>The last step in creating the cluster is to place the original Policy Manager container in the cluster.</p>
 <ol>
 	<li>Select the original container and, on the right, click <strong>Add Container to Cluster</strong>, as shown below.
@@ -584,7 +584,7 @@ Did not find local replica set cofiguration document at startup. Did not find re
 <p><img src="assets/mrd_04_15.jpg" alt="" /></p>
 <p>Follow the previous steps for additional Policy Manager containers to provide increased scale or fault tolerance.</p>
 
-<h5 id="proc_install_nd">Installing Network Director</h5>
+<h4 id="proc_install_nd">Installing Network Director</h4>
 <p>The next step is to install and configure a Network Director.</p>
 <ol>
 	<li>Follow all the typical steps for installing and configuring a Network Director process. On the page for providing the WS-MetadataExchange Options, enter the URL of the Policy Manager cluster set up in the previous section, as shown in the example below.
@@ -600,7 +600,7 @@ Did not find local replica set cofiguration document at startup. Did not find re
 </ol>
 
 
-<h4 id="dc_slave">Slave Data Center</h4>
+<h3 id="dc_slave">Slave Data Center</h3>
 <p>The installation and configuration of the containers in the slave data center is very similar to the master data center. All of the steps in the Master Data Center section apply, with two differences:</p>
 <ul>
 	<li>The connection is to the local slave RDBMS and local MongoDB query router.</li>
@@ -613,11 +613,11 @@ Did not find local replica set cofiguration document at startup. Did not find re
 	<li><a href="#proc_slave_cluster_create">Creating a cluster for the slave database</a></li>
 </ul>
 
-<h5 id="proc_pm_provisioning">Policy Manager Provisioning</h5>
+<h4 id="proc_pm_provisioning">Policy Manager Provisioning</h4>
 <p>When configuring the Policy Manager Services feature in the Akana Administration Console, do not configure an administrator name and password or select the option to Provision Services. Both of these actions require writing to the relational database, and since this container is configured to use a slave database the actions will not work. The administrator name and password have already been set up when configuring the master data center. Service provisioning is done a different way, as described below. When the configuration wizard is complete, restart the container.</p>
 <p>Register the slave Policy Manager container with the system as we would for a Network Director.</p>
 
-<h5 id="proc_slave_pm_register">To register the slave Policy Manager</h5>
+<h4 id="proc_slave_pm_register">To register the slave Policy Manager</h4>
 <ol>
 	<li>Log in to the master data center's Policy Manager Management Console and navigate to the Akana Policy Manager organization.</li>
 	<li>Click <strong>Add Container</strong>, as shown below. The <strong>Add Container</strong> wizard opens.
@@ -631,7 +631,7 @@ Did not find local replica set cofiguration document at startup. Did not find re
 </ol>
 <p>At this point, we now have the new Policy Manager container in the organization tree.</p>
 
-<h5 id="proc_slave_cluster_create">Creating a cluster for the slave database</h5>
+<h4 id="proc_slave_cluster_create">Creating a cluster for the slave database</h4>
 <ol>
 	<li>Next we will create a cluster for the slave database following procedures similar to those used in the master data center. When choosing a container whose capabilities we want to model in the cluster, choose the slave PM container.
 		<ul>
@@ -654,7 +654,7 @@ Did not find local replica set cofiguration document at startup. Did not find re
 <p><a href="#top">Back to top</a></p>
 
 
-<h3 id="config_sample">Sample Configuration File</h3>
+<h2 id="config_sample">Sample Configuration File</h2>
 <p>The sample file below is the sample sharding script for all the collections that are sharded, in a working installation with two data centers. In this example, sharding is based on the container keys. The container keys are assigned as numbers instead of UUID and are then used as tag ranges.</p>
 <pre>use PM
 

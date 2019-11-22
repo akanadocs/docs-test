@@ -9,13 +9,13 @@ weight: 14
 type: page
 nav-title: Platform Monitoring
 ---
-<h2 id="top">Akana Platform Monitoring Guide</h2>
+<h1 id="top">Akana Platform Monitoring Guide</h1>
 <p>A guide on how to monitor the platform using shell scripts and Nagios.</p>
 <div class = "divider1"></div>
 
 
 
-<h3 style="color: gray;">Table of Contents</h3>
+<h2 style="color: gray;">Table of Contents</h2>
 <ol class="table_of_contents">
 	<li><a href="#introduction">Introduction</a></li>
 	<li><a href="#operational_gen">General Operational Monitoring</a></li>
@@ -33,12 +33,12 @@ nav-title: Platform Monitoring
 
 
 
-<h3 id="introduction">Introduction</h3>
+<h2 id="introduction">Introduction</h2>
 <p>This document describes ways to monitor the platform - specifically log analysis and database monitoring. It is currently a work in progress.</p>
 
 
 
-<h3 id="operational_gen">General Operational Monitoring</h3>
+<h2 id="operational_gen">General Operational Monitoring</h2>
 <p>There are several key operational metrics to monitor on all servers:</p>
 <ul>
 	<li>CPU utilization</li>
@@ -56,7 +56,7 @@ command[check_swap]=/usr/local/nagios/libexec/check_swap -w 20 -c 10</pre>
 
 
 
-<h3 id="db_mon">Database Monitoring</h3>
+<h2 id="db_mon">Database Monitoring</h2>
 <p>There are several key operational / application metrics and conditions to monitor for on the platform database server. The example script below demonstrates how the most common monitors can be aggregated together and applied to a MySQL database server. Each one will be explained in more detail in the next section:</p>
 <pre>#!/bin/bash
 
@@ -128,7 +128,7 @@ fi</pre>
 <p>The next sections will explain each of the metrics or conditions that are determined in the above script.</p>
 
 
-<h4 id="db_msg_queue">Message queue</h4>
+<h3 id="db_msg_queue">Message queue</h3>
 <p><strong>Scope</strong>: Community Manager</p>
 <p>If email cannot be sent for some reason, the MSG_QUEUE table will fill up. This script will send an alert if the table contains more than 10 entries:</p>
 <pre>sqlcmd="mysql -u $DB_USER -p${DB_PASS} -D $db -BNe"
@@ -146,7 +146,7 @@ if [ "$result" != "NULL" ];then
 fi</pre>
 
 
-<h4 id="db_idx_queue">Index queue</h4>
+<h3 id="db_idx_queue">Index queue</h3>
 <p><strong>Scope</strong>: Community Manager</p>
 <p>If the indexing of the Community Manager site fails for some reason, the INDEX_QUEUE table will fill up. This script will send an alert if the table contains more than 20 entries:</p>
 <pre>sqlcmd="mysql -u $DB_USER -p${DB_PASS} -D $db -BNe"
@@ -157,7 +157,7 @@ result=`$sqlcmd "$query"`
 <p><strong>Resolution</strong>: First check to see if the indexing job is stuck (next section). If not, inspect the logs to see if there is an error processing the object on the queue. Occasionally an error is caused when updating an index related to a deleted object. The only option is to delete the offending row from the table and send the logs to support@akana.com.</p>
 
 
-<h4 id="db_scheduler">Scheduler</h4>
+<h3 id="db_scheduler">Scheduler</h3>
 <p><strong>Scope</strong>: Community Manager and Policy Manager</p>
 <p>Occasionally the scheduled jobs can get stuck in a state where they are blocked or thought to be running, but are not. These scripts will send an alert if these occur:</p>
 <pre> sqlcmd="mysql -u $DB_USER -p${DB_PASS} -D $db -BNe"
@@ -179,7 +179,7 @@ result=`$sqlcmd "$query"`
 <p><strong>Resolution</strong>: Inspect the thread dump to see if the Quartz job is running. If it is not, delete the row from the SOA_QRTZ_FIRED_TRIGGERS table and reset the relevant TRIGGER_STATE to 'WAITING' in the SOA_QRTZ_TRIGGERS table.</p>
 
 
-<h4 id="db_fed">Federation Synchronization</h4>
+<h3 id="db_fed">Federation Synchronization</h3>
 <p><strong>Scope</strong>: Community Manager</p>
 <p>If you have implemented a federation between Community Manager tenants, the synchronization of events between the members of the federation can fail and the EVENT_QUEUE table will start filling up. This query examines this table for federation events in a bad state:</p>
 <pre>query="select EVENTID, EVENTTYPE, SOURCEFEDMEMBERID, TARGETFEDMEMBERID, CREATEDDTS, LASTPOSTEDDTS, STATUS, NUMTRIES, EVENTCTXDATAID from EVENT_QUEUE
@@ -192,7 +192,7 @@ fi</pre>
 <p><strong>Resolution</strong>: Contact Akana support at support@akana.com.</p>
 
 
-<h4 id="db_connection_pool">Connection pool</h4>
+<h3 id="db_connection_pool">Connection pool</h3>
 <p><strong>Scope</strong>: All products</p>
 <p>It is important to monitoring the number of database connections the platform is consuming and warn when then number climbs above a threshold of 80%. The following script snippet illustrates how this can be done:</p>
 <pre>sqlcmd="mysql -u $DB_USER -p${DB_PASS} -D mysql -BNe"
@@ -205,7 +205,7 @@ result=`$sqlcmd "$query" | grep $DB_NAME | wc -l`
 
 
 
-<h3 id="log_mon">Log Monitoring</h3>
+<h2 id="log_mon">Log Monitoring</h2>
 <p>There are several key phrases to search for within the platform logs. The following example script demonstrates how Nagios can be configured with a set of critical errors that can occur in the log:</p>
 <pre>@searches = ({
   logfile => '/root/sm70/instances/@HNAME@/log/@HNAME@.log',

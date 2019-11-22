@@ -9,7 +9,7 @@ weight: 07
 type: page
 nav-title: Rewrite HREFs
 ---
-<h2 id="top">How to Rewrite HREFs in content</h2>
+<h1 id="top">How to Rewrite HREFs in content</h1>
 <p>This article provides a couple of policy scripts and a script snippet that combine to deliver a nice solution to the question of how to rewrite URLs in REST response content through a virtual service (a very common issue with HATEOAS). It uses script policies, rather than in-process activity scripts, because it is likely to apply to an entire service, and not just one or more operations.</p>
 <p>On the surface, the problem is simple. The virtual service listens on a URL, the physical service listens on a different one, the physical service returns content that contains href elements that are based on its URL and we need to mediate them so they look like the virtual service URL. For example, consider a service on http://localhost:9901/rest/staff that calls a downstream service on http://127.0.0.1:3000/people.</p>
 <p>For a GET on /, the downstream service returns results like the below:</p>
@@ -66,7 +66,7 @@ nav-title: Rewrite HREFs
 	<li><a href="#script_02">mediate-urls-policy.js</a></li>
 </ul>
 
-<h5 id="script_01">collect-listener-policy.js</h5>
+<h4 id="script_01">collect-listener-policy.js</h4>
 <p>collect-listener-policy.js is a policy to attach to the VS. It simply grabs the listener_url (http.req.att.listener.uri), and stores it in the msg context for the PS to use</p>
 <pre>// Get the message and the exchange
 var msg = messageContext.getMessage();
@@ -92,7 +92,7 @@ switch(messageContext.getParameterType())
 }
 </pre>
 
-<h5 id="script_02">mediate-urls-policy.js</h5>
+<h4 id="script_02">mediate-urls-policy.js</h4>
 <p><strong>mediate-urls-policy.js</strong> is a policy to attach to the PS. It reads the stored listener url from the msg context, gets the requested url, local_url and binding target, and does a bit of gymnastics to determine what the base of the requested url and the base of the target url are and then uses a little bit of JS string handling magic to replace all instances of the target base url with the requested base url</p>
 <pre>// Get the message and the exchange
 var msg = messageContext.getMessage();
@@ -161,7 +161,7 @@ switch(messageContext.getParameterType())
 
 
 
-<h5 id="script_util_01">empty-policy.js</h5>
+<h4 id="script_util_01">empty-policy.js</h4>
 <p>empty-policy.js is what it sounds like, a framework to use for writing your own JavaScript policies.</p>
 <pre>// Get the message and the exchange
 var msg = messageContext.getMessage();
@@ -183,7 +183,7 @@ switch(messageContext.getParameterType())
     
 }</pre>
 
-<h5 id="script_util_02">audit-properties.js</h5>
+<h4 id="script_util_02">audit-properties.js</h4>
 <p><strong>audit-properties.js</strong> is a code snippet that you can put in any of the request or response handler segments in one of these policies. It spits out 2 debug log entries, one that contains all the message properties and their values, another that contains all the exchange properties and their values. This is incredibly useful for debugging these policies.</p>
 <pre>// Audit the msg properties
 var msgPropNames = msg.getPropertyNames();

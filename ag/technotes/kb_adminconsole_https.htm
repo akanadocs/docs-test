@@ -10,13 +10,13 @@ subcategory: Technical Note
 type: page
 nav-title: Enable HTTPS Access to the Administration Console
 ---
-<h2 id="top">Enable HTTPS access to the Akana Administration Console for Policy Manager</h2>
+<h1 id="top">Enable HTTPS access to the Akana Administration Console for Policy Manager</h1>
 <p>Configure the container <strong>system.properties</strong> file to enable HTTPS access to the Akana Administration Console.</p>
 <div class = "divider1"></div>
 
 
 
-<h3 style="color: gray;">Table of Contents</h3>
+<h2 style="color: gray;">Table of Contents</h2>
 <ol class="table_of_contents">
 <li><a href="#introduction">Introduction</a></li>
 <li><a href="#configuration">Configuration</a></li>
@@ -26,7 +26,7 @@ nav-title: Enable HTTPS Access to the Administration Console
 
 
 
-<h3 id="introduction">Introduction</h3>
+<h2 id="introduction">Introduction</h2>
 <p>If you would like to facilitate your own role-based access to the Akana Administration Console, you can do so by enabling an HTTPS port.</p>
 <p>This process involves:</p>
 <ul>
@@ -34,7 +34,7 @@ nav-title: Enable HTTPS Access to the Administration Console
 	<li><strong>Adding a new configuration category to the Akana Administration Console to control whether you want \admin access for both HTTP and HTTPS, or HTTPS only:</strong> This can be done by manually adding a .cfg file to the \deploy folder of the {release_directory}\instances\{container name}\deploy folder. </li>
 </ul>
 
-<h5>Notes on Configuring an HTTPS Listener</h5>
+<h4>Notes on Configuring an HTTPS Listener</h4>
 <p>Several important points to note on configuring an HTTPS listener:</p>
 <ul>
 	<li>If you add an HTTPS listener to the <strong>system.properties</strong> file (as described in the following scenarios) <em>before</em> you install the Policy Manager features, the HTTPS listener will be registered automatically in the database when you install the Policy Manager features and the listener will be present in the <strong>Containers</strong> section of the Policy Manager Management Console. </li>
@@ -47,14 +47,14 @@ nav-title: Enable HTTPS Access to the Administration Console
 
 
 
-<h3 id="configuration">Configuration</h3>
+<h2 id="configuration">Configuration</h2>
 <p>Let's take a quick walkthrough of the HTTPS configuration process to get you started.</p>
 
-<h5>Step 1: Add HTTPS Listener (Options)</h5>
+<h4>Step 1: Add HTTPS Listener (Options)</h4>
 <p>To enable an HTTPS listener you must update the <strong>system.properties</strong> file in the \{release_directory}\instances  folder. Load the <strong>system.properties</strong> file into an editor and configure it based on the following Akana Administration Console access scenarios. We use port 9446 in these examples.</p>
 <p><img src="images/kb_adminconsole_https_system_properties_folder.jpg" alt="" /></p>
 
-<h5>Option 1: HTTPS Access / UI Browsing Only</h5>
+<h4>Option 1: HTTPS Access / UI Browsing Only</h4>
 <p>This option restricts access to the Akana Administration Console to the specified HTTPS listener.</p>
 <p><strong>Note:</strong> You must also delete the HTTP listener defined in the Policy Manager Management Console.</p>
 <p>Settings:</p>
@@ -65,13 +65,13 @@ nav-title: Enable HTTPS Access to the Administration Console
 	<li><strong>org.osgi.service.http.port=9000</strong> (Remove for HTTPS access only)</li>
 	<li><strong>org.osgi.service.http.port.secure=9446</strong> (Add to enable HTTPS access)</li>
 </ul>
-<h5>Option 2: HTTPS and HTTP Access</h5>
+<h4>Option 2: HTTPS and HTTP Access</h4>
 <p>This option restricts access to the Akana Administration Console to the specified HTTPS listener and the default HTTP listener defined in the Policy Manager Management Console. You can have a UI browsing only HTTPS listener (i.e., listener is not configured in Policy Manager), or a listener that can host services (i.e., listener must be configured in Policy Manager ).</p>
 <p><strong>Note</strong>: If you would like your HTTPS listener to host services, you must manually add it to the Policy Manager Management Console. You must also configure keys for this listener using the Manage PKI Keys function.</p>
 <p><strong>com.soa.http.bind.all.secure=true (Add to enable HTTPS access)</strong></p>
 <p><strong>org.osgi.service.http.port.secure=9446 (Add to enable HTTPS access)</strong></p>
 
-<h5>Option 3: Multiple HTTPS Listeners</h5>
+<h4>Option 3: Multiple HTTPS Listeners</h4>
 <p>If you would like to have multiple HTTPS listeners, you can add one UI browsing only HTTPS listener, and one HTTPS listener to the Policy Manager Management Console and specify both listeners in the <strong>system.properties</strong> file.</p>
 <p><strong>Note</strong>: You must add a certificate to the listener in Policy Manager using the <strong>Manage PKI Keys</strong> function.</p>
 <p>Settings:</p>
@@ -81,10 +81,10 @@ nav-title: Enable HTTPS Access to the Administration Console
 	<li><strong>org.osgi.service.http.port.secure=9448</strong> (Add to enable HTTPS access - For Hosting Services - Listener configured in Policy Manager)</li>
 </ul>
 	
-<h5>Step 2: Configure HTTPS Access to Akana Administration Console</h5>
+<h4>Step 2: Configure HTTPS Access to Akana Administration Console</h4>
 <p>If you want access to the Akana Administration Console via HTTPS, you must add a new configuration category. You can do this manually by adding a .cfg file to the \{release_directory}\instances\{container name}\deploy folder.</p>
 
-<h5>Add Configuration Category File</h5>
+<h4>Add Configuration Category File</h4>
 <ol>
 	<li>Create a new file in the \{release_directory} directory and call it:
 		<p><strong>com.soa.admin.console.cfg</strong></p></li>
@@ -96,16 +96,16 @@ nav-title: Enable HTTPS Access to the Administration Console
 	<li>Restart the container.</li>
 </ol>
 
-<h5>Step 3: Test HTTPS Access to Akana Administration Console</h5>
+<h4>Step 3: Test HTTPS Access to Akana Administration Console</h4>
 <p>When the container is up and running launch the Akana Administration Console (https://localhost:{port}/admin/). It should only accessible on the port defined in Step 1, and comply with the rules for the configuration category you selected as follows:</p>
 
-<h5>com.soa.admin.console.cfg enabled (True)</h5>
+<h4>com.soa.admin.console.cfg enabled (True)</h4>
 <ul>
 	<li>You can access the Akana Administration Console through HTTPS port only. </li>
 	<li>If you try to access Akana Administration Console using the default HTTP port you will receive a 404 error.</li>
 </ul>
 
-<h5>com.soa.admin.console.cfg enabled (False)</h5>
+<h4>com.soa.admin.console.cfg enabled (False)</h4>
 <ul>
 	<li>You can access the Akana Administration Console through the HTTP port and through the HTTPS port:
 	<p><img src="images/kb_adminconsole_https_admin_config_category.jpg" alt="" /></p></li>
@@ -114,10 +114,10 @@ nav-title: Enable HTTPS Access to the Administration Console
 
 
 
-<h3 id="troubleshooting">Troubleshooting</h3>
+<h2 id="troubleshooting">Troubleshooting</h2>
 <p>If everything appears to be configured correctly and you are still seeing 404 errors when you try to launch Policy Manager or Network Director, review the following steps to attempt to troubleshoot the problem.</p>
 
-<h5>Step 1: Inspect Log</h5>
+<h4>Step 1: Inspect Log</h4>
 <p>Inspect the container logs in {release_directory}\instances\{instance name}\logs and search for the following errors which occur near the startup:</p>
 <pre>Caused by: java.net.BindException: Address already in use
   at java.net.PlainSocketImpl.socketBind(Native Method)
@@ -126,7 +126,7 @@ nav-title: Enable HTTPS Access to the Administration Console
   at java.net.ServerSocket.&lt;init&gt;(Unknown Source)</pre>
 <p>These errors mean that the container is trying to start its listener, but something is already listening.</p>
 
-<h5>Step 2: Resolve</h5>
+<h4>Step 2: Resolve</h4>
 <ol>
 	<li>Stop the container and check to make sure that nothing is running on the port that the container is configured to run on. <strong>If nothing is running</strong>, it means that the container is trying to start <strong>TWO</strong> listeners on the same port. </li>
 	<li>Check <strong>system.properties</strong> in the container directory. It will have the listeners specified that the container uses on initial startup. For example:

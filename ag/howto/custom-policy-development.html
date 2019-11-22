@@ -9,13 +9,13 @@ weight: 05
 type: page
 nav-title: Custom Policy Development
 ---
-<h2 id="top">Custom Policy Development</h2>
+<h1 id="top">Custom Policy Development</h1>
 <p>Learn how to develop a custom policy component.</p>
 <div class = "divider1"></div>
 
 
 
-<h3 style="color: gray;">Table of Contents</h3>
+<h2 style="color: gray;">Table of Contents</h2>
 <ol class="table_of_contents">
 	<li><a href="#introduction">Overview</a></li>
 	<li><a href="#handler_design">Policy Handler Design</a></li>
@@ -28,7 +28,7 @@ nav-title: Custom Policy Development
 
 
 
-<h3 id="introduction">Overview</h3>
+<h2 id="introduction">Overview</h2>
 <p>This document contains the information required to:</p>
 <ol>
 	<li>Develop</li>
@@ -39,7 +39,7 @@ nav-title: Custom Policy Development
 <p>It will begin with the design of the Custom Policy Handler Framework, then work through the required steps to guide a customer in creating a working custom Policy.</p>
 
 
-<h4 id="data">Prerequisites</h4>
+<h3 id="data">Prerequisites</h3>
 <ul>
 	<li>This configuration guide assumes that you’ve already installed the platform. If you need help installing the platform, please refer to the applicable version of the Installation Guide. See <a href="../../sp/platform_install/installing_akana_api_platform_all.htm">Installing the Akana API Platform (all versions)</a>.</li>
 	<li>If you're writing policy components for the API Gateway, you'll have to create and configure a Policy Manager (PM) and Network Directory (ND) container. This is described in the document <a href="../../sp/howto/simple-api.html">Getting Started: Managing a Simple API</a>.</li>
@@ -49,7 +49,7 @@ nav-title: Custom Policy Development
 
 
 
-<h3 id="handler_design">Policy Handler Design</h3>
+<h2 id="handler_design">Policy Handler Design</h2>
 <p>All Policy Handlers utilize the Policy Handler Framework provided by Akana. The Policy Handler Framework is a specialization of the Message Handler Framework that is also provided by Akana.
 The difference being that a policy handler is activated when a policy for that handler is attached to a service, whereas a message handler is activated for all services in and ND as soon as deployed.
 Given that the Policy Handler Framework is a specialization of the Message Handler Framework, there are many classes reused between the two:</p>
@@ -73,7 +73,7 @@ How a Handler determines which Policy it will act on is determined by the associ
 
 
 
-<h3 id="develop">Developing the Policy Handler</h3>
+<h2 id="develop">Developing the Policy Handler</h2>
 <p>The Policy Handler is developed as an OSGi Plug-in. Please refer to the <a href="osgi-plugin-development.html">OSGi Plug-in Development</a> document which describes how to set up an Eclipse workspace and create a basic plugin project.</p>
 <p><strong>Note:</strong> Sample policy handlers can be found in the /samples directory that is distributed with the product.</p>
 <p>A typical policy handler plug-in will also have these additional folders:</p>
@@ -90,7 +90,7 @@ META-INF/resources: contains any resource files for the bundle such as:
 </ul>
 
 
-<h4>Create the Assertion Model</h4>
+<h3>Create the Assertion Model</h3>
 <p>All policies are defined using an XML schema which forms the basis for the model object generation using JAXB v2.</p>
 <ol>
 	<li>Create the XML Schema definition file:
@@ -111,7 +111,7 @@ META-INF/resources: contains any resource files for the bundle such as:
 
 
 
-<h4>Spring Wiring</h4>
+<h3>Spring Wiring</h3>
 <p>Several Spring beans need to be published by the policy handler by editing the /META-INF/sping/*.xml files:</p>
 <ul>
 	<li>Handler Factories</li>
@@ -119,7 +119,7 @@ META-INF/resources: contains any resource files for the bundle such as:
 	<li>Assertion Marshaller</li>
 </ul>
 
-<h5>To set up the Spring beans</h5>
+<h4>To set up the Spring beans</h4>
 <ol>
 	<li>Define the Spring bean for the Policy Handler Factory and publish the OSGi services for the Policy Handler Factory. There should be one service definition per binding per role:
 <pre>&lt;!-- The WS-Policy handler factory --&gt;
@@ -179,7 +179,7 @@ service definition per binding per role:
 </ol>
 
 
-<h4>Package Descriptions</h4>
+<h3>Package Descriptions</h3>
 <p>There are several packages that typically make up the solution for the Policy Handler:</p>
 <ol>
 	<li><a href="#package_01">xxx.xxx.akana.policy.xxxx.handler</a></li>
@@ -188,7 +188,7 @@ service definition per binding per role:
 	<li><a href="#package_04">xxx.xxx.akana.policy.xxxx.assertion.model</a></li>
 </ol>
 
-<h5 id="package_01">xxx.xxx.akana.policy.xxxx.handler</h5>
+<h4 id="package_01">xxx.xxx.akana.policy.xxxx.handler</h4>
 <p>This package contains the implementation of the Policy Handler.</p>
 <ul>
 	<li>
@@ -206,7 +206,7 @@ This is where all the functionality of the policy is supposed is implemented, an
 </li>
 </ul>
 
-<h5 id="package_02">xxx.xxx.akana.policy.xxxx.assertion</h5>
+<h4 id="package_02">xxx.xxx.akana.policy.xxxx.assertion</h4>
 <ul>
 	<li>
 <strong>xxxxAssertion</strong>&#8212;This is an implementation of the <code>com.soa.policy.wspolicy.JavaAssertion</code> interface. 
@@ -214,20 +214,20 @@ An Assertion is the un-marshalled XML policy that was attached to the Service in
 </li>
 </ul>
 
-<h5 id="package_03">xxx.xxx.akana.policy.xxxx.assertion.marshaller</h5>
+<h4 id="package_03">xxx.xxx.akana.policy.xxxx.assertion.marshaller</h4>
 <ul>
 	<li><strong>xxxxAssertionMarshaller</strong>&#8212;This is the implementation of the <code>com.soa.policy.wspolicy.AssertionMarshaller</code> interface.
 An assertion marshaller is deployed separately from a handler. During the reading of a service’s policy by the framework, the marshaller is called upon to construct assertion Java objects from the assertions encoded in XML and WS-Policy. The constructed assertion objects are then passed down to handler factories to determine if handlers are to be created.</li>
 </ul>
 
-<h5 id="package_04">xxx.xxx.akana.policy.xxxx.assertion.model</h5>
+<h4 id="package_04">xxx.xxx.akana.policy.xxxx.assertion.model</h4>
 <p>This package contains Java model generated by the JAXB framework; typically using the JAXB xjc utility and Ant to generate these classes.</p>
 <p>In the com.soa.examples.policy.handler.complex policy plug-in, the build/build.xml file contains an <strong>assertions</strong> target that is responsible for the generation of the model objects.</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
-<h3 id="console">Developing the Policy Handler Console Plug-in</h3>
+<h2 id="console">Developing the Policy Handler Console Plug-in</h2>
 <p>Policies are configured in the Policy Manager console via one of two different mechanisms:</p>
 <ol>
 	<li><strong>XML Policy</strong>&#8212;the XML Policy is used when no Console Plug-in can be found for a policy. Users can simply type the XML assertion into a dialog box with the appropriate XML structure (namespace, localname, and so on) and it will be passed into the Policy Handler as an assertion. This is the approached leveraged by the <strong>com.soa.examples.policy.handler.simple</strong> example.</li>
@@ -246,14 +246,14 @@ An assertion marshaller is deployed separately from a handler. During the readin
 </ul>
 
 
-<h4>Spring Wiring</h4>
+<h3>Spring Wiring</h3>
 <p>Two Spring beans need to be published by the policy handler by editing the /META-INF/sping/*.xml files:</p>
 <ul>
 	<li>Policy Renderer</li>
 	<li>Faces Config</li>
 	</ul>
 
-<h5>To set up the Spring beans</h5>
+<h4>To set up the Spring beans</h4>
 <ol>
 	<li>Define the Spring bean for the Policy Renderer and publish the OSGi service:
 <pre>&lt;bean id="complex.policy.renderer" class="com.soa.examples.console.policy.complex.ComplexPolicyRenderer" /&gt;
@@ -271,27 +271,27 @@ An assertion marshaller is deployed separately from a handler. During the readin
 </ol>
 
 
-<h4>Package Descriptions</h4>
+<h3>Package Descriptions</h3>
 <p>There are several packages that typically make up the solution for the Policy Handler:</p>
 <ol>
 	<li><a href="#console_policy_01">xxx.xxx.akana.console.policy.xxxx</a></li>
 	<li><a href="#console_policy_02">xxx.xxx.akana.console.policy.xxxx.bean</a></li>
 </ol>
 
-<h5 id="console_policy_01">xxx.xxx.akana.console.policy.xxxx</h5>
+<h4 id="console_policy_01">xxx.xxx.akana.console.policy.xxxx</h4>
 <p>This package contains the renderer for the Policy Handler.</p>
 <ul>
 	<li><strong>xxxxPolicyRenderer</strong>&#8212;Extends the <code>com.soa.console.policy.renderer.impl.OperationalPolicyRendererBase</code> abstract class.</li>
 </ul>
 
-<h5 id="console_policy_02">xxx.xxx.akana.console.policy.xxxx.bean</h5>
+<h4 id="console_policy_02">xxx.xxx.akana.console.policy.xxxx.bean</h4>
 <p>This package contains the form bean for Policy which include the getters and setters for the form fields and the logic for converting between the form and the policy assertion.</p>
 <ul>
 	<li><strong>xxxxPolicyBean</strong>&#8212;Extends the <code>com.digev.ms.console.struts.forms.MSActionForm</code> abstract class.</li>
 </ul>
 
 
-<h4>Localization</h4>
+<h3>Localization</h3>
 <p>All localization is supported by message bundles in the OSGI-INF/l10n directory. Al labels in the entire product need to be specified with a unique name so its wise to prefix all labels with the java package name.</p>
 <p>The policy.xxxx.name is a special property and should always match the id from the PolicyRenderer, with a '.name' suffix:</p>
 <pre>policy.complexexample.name=Complex Example Policy
@@ -302,7 +302,7 @@ com.soa.examples.console.policy.complex.optional.label=Optional</pre>
 <pre>&lt;workbench:message key=&quot;com.soa.examples.console.policy.complex.headername.label&quot;/&gt;</pre>
 
 
-<h4>Web Content</h4>
+<h3>Web Content</h3>
 <p>The WebContent/xxxpolicy directory contains the files required to render the user interface. The entry point is defined in the <code>PolicyRender.getContentLocation(String policyKey)</code> method, as shown in the example below.</p>
 <pre>public class ComplexPolicyRenderer extends OperationalPolicyRendererBase {
 
@@ -333,7 +333,7 @@ com.soa.examples.console.policy.complex.optional.label=Optional</pre>
 
 
 
-<h3 id="deploy">Building and Deploying the Policy Handler Plug-ins</h3>
+<h2 id="deploy">Building and Deploying the Policy Handler Plug-ins</h2>
 <p>The steps are:</p>
 <ul>
 	<li><a href="#deploy_01">Build the Policy Handler</a></li>
@@ -342,7 +342,7 @@ com.soa.examples.console.policy.complex.optional.label=Optional</pre>
 </ul>
 
 
-<h4 id="deploy_01">Build the Policy Handler</h4>
+<h3 id="deploy_01">Build the Policy Handler</h3>
 <ol>
 	<li>Ensure the Java packages containing the HandlerFactory implementation (and any other classes referenced in the Spring wiring) are included in the Export-Package list in MANIFEST.MF</li>
 	<li>Ensure all Java packages imported from outside the new Handler bundle are included in the Import-Package list in MANIFEST.MF
@@ -353,12 +353,12 @@ com.soa.examples.console.policy.complex.optional.label=Optional</pre>
 </ol>
 
 
-<h4 id="deploy_02">Set up Felix console</h4>
+<h3 id="deploy_02">Set up Felix console</h3>
 <p>This is not necessary for anytime but the first time you deploy the Policy Handler. Its function is to simply to make sure that you know what is happening. Once you are comfortable with loading the Policy Handler you can disable this console.
 To start the TUI (Textual User Interface) console simply copy the lib/ext/org.apache.felix.shell.tui-x.x.x.jar file into the instances/[container name]/deploy directory. Immediately the “-&gt;” prompt should appear in your SSH session.</p>
 
 
-<h4 id="deploy_03">Deploy the Policy Handler Bundles</h4>
+<h3 id="deploy_03">Deploy the Policy Handler Bundles</h3>
 <p>The simplest way to deploy the policy handler is to copy the jar files into the 'instances/[CONTAINER NAME]/deploy' directory.</p>
 <p>The Policy Manager requires both the 'policy handler' and 'policy handler console' bundles, whereas the Network Director only requires the 'policy handler' bundle.</p>
 <p>To check that the new bundles are active, simply type “ps” (without the quotes) into the TUI (see previous section) and look for the new bundles at the end of the list. You can also see the installed bundles from the <strong>Installed Features</strong> tab in the Admin console. Select 'Bundle' from the <strong>Filter</strong> drop-down list.</p>
@@ -366,7 +366,7 @@ To start the TUI (Textual User Interface) console simply copy the lib/ext/org.ap
 
 
 
-<h3 id="testing">Testing the Policy Handler</h3>
+<h2 id="testing">Testing the Policy Handler</h2>
 <p>The best way to test the Policy Handler is to use the remote debug features of Eclipse and the Felix Container. Steps:</p>
 <ol>
 	<li>Restart the container specifying the –debug option. For example, from [install_dir]/pm2018/bin):
@@ -376,7 +376,7 @@ To start the TUI (Textual User Interface) console simply copy the lib/ext/org.ap
 </ol>
 
 
-<h4>Define and attach the Policy in Policy Manager</h4>
+<h3>Define and attach the Policy in Policy Manager</h3>
 <p>Once deployment is completed the policy handler will be loaded and invoked once a service with the correct policy attached is detected by the Network Director.
 For this to happen, you must attach the policy to a service in Policy Manager. However, before this can happen, you must define the Policy in Policy Manager and attach it to a Service.</p>
 <ol>

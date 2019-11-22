@@ -9,7 +9,7 @@ sub-nav-class: Deployment
 type: page
 nav-title: Sample Deployment Scenario
 ---
-<h2 id="top">Sample Deployment Scenario</h2>
+<h1 id="top">Sample Deployment Scenario</h1>
 <p>Illustration and overview for a sample deployment scenario.</p>
 
 
@@ -22,7 +22,7 @@ nav-title: Sample Deployment Scenario
 </p>
 
 <div class = "divider1"></div>
-<h3 style="color: gray;">Table of Contents</h3>
+<h2 style="color: gray;">Table of Contents</h2>
 <ul>
 	<li><a href="#overview">Introduction</a></li>
 	<li><a href="#deployment_secure">Sample deployment: clustered environment</a></li>
@@ -51,7 +51,7 @@ nav-title: Sample Deployment Scenario
 
 
 
-<h3 id="overview">Introduction</h3>
+<h2 id="overview">Introduction</h2>
 <p>There are many ways you can deploy the Akana API Platform. This document provides an illustration of a clustered environment with high availability. Your deployment might vary depending on many factors, including:</p>
 <ul>
 	<li>Database connectivity from the containers</li>
@@ -62,11 +62,11 @@ nav-title: Sample Deployment Scenario
 
 
 
-<h3 id="deployment_secure">Sample deployment: clustered environment</h3>
+<h2 id="deployment_secure">Sample deployment: clustered environment</h2>
 <p>The reference diagram below illustrates an example of the architecture for a typical customer deployment with a single geographical data center (one physical location).</p>
 <p><img src="assets/deploy_clustered.png" alt="Sample deployment: clustered environment" /></p>
 
-<h4 id="legend">Legend</h4>
+<h3 id="legend">Legend</h3>
 <p>The numbers in the architectural reference diagram above correspond to the sequence of actions below:</p>
 <ol>
 	<li>The consuming app invokes the OAuth server to receive the access token. See <a href="#components_oauth">OAuth</a> below.</li>
@@ -89,7 +89,7 @@ nav-title: Sample Deployment Scenario
 
 
 
-<h3 id="components">Features</h3>
+<h2 id="components">Features</h2>
 <p>The example deployment above includes the following:</p>
 <ul>
 	<li><a href="#components_pm_cm">Policy Manager and Community Manager running in the same container</a></li>
@@ -103,13 +103,13 @@ nav-title: Sample Deployment Scenario
 </ul>
 
 
-<h4 id="components_pm_cm">Policy Manager and Community Manager running in the same container</h4>
+<h3 id="components_pm_cm">Policy Manager and Community Manager running in the same container</h3>
 <p>This sample clustered deployment environment includes two containers that each have Policy Manager and Community Manager installed on them. Each container should be on a different machine.</p>
 <p>Two containers are the minimum for a clustered environment, providing some redundancy.</p>
 <p>For information on the features you'll need to install on the combined Community Manager/Policy Manager containers in this sample deployment scenario, see <a href="#features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</a>.</p>
 
 
-<h4 id="components_scheduler">Job Scheduler</h4>
+<h3 id="components_scheduler">Job Scheduler</h3>
 <p>This sample clustered deployment environment includes a dedicated container for the background job scheduler (Quartz scheduler). This container can run all of the Policy Manager and Community Manager scheduled jobs.</p>
 <p>The job scheduler cannot be clustered; it runs on only one container.</p>
 <p>It's not necessary to have the job scheduler in its own container, completely separate from other features. However, by separating it out, you can help ensure that the scheduled jobs, which can include a lot of data processing, can run without affecting other containers.</p>
@@ -118,14 +118,14 @@ nav-title: Sample Deployment Scenario
 <p><strong>Note</strong>: There are other scheduled jobs that are run on each container. For example, Network Director has a job scheduler that is responsible for reaching out to Policy Manager to get updated information on which APIs to load. These scheduled jobs are not separate installation features, they are built in to each container.</p>
 
 
-<h4 id="components_oauth">OAuth Provider</h4>
+<h3 id="components_oauth">OAuth Provider</h3>
 <p>OAuth provides the framework for authentication and authorization, whether you use the Akana API Platform's OAuth Provider or an external OAuth Provider.</p>
 <p><strong>Note</strong>: If you're using PingFederate or the platform's inbuilt OAuth Provider, you can use referenced bearer tokens or JWT bearer access tokens. All other OAuth Providers require JWT.</p>
 <p>If the platform's inbuilt OAuth Provider is used, it connects directly to the database.</p>
 <p>For information on the features you'll need to install on the standalone OAuth container, or the container where you want the OAuth feature to reside, see <a href="#features_oauth_alone">Standalone OAuth container features</a>.</p>
 
 
-<h4 id="components_reverseproxy">Reverse Proxies</h4>
+<h3 id="components_reverseproxy">Reverse Proxies</h3>
 <p>The reverse proxies provide a way for users to access the containers that are behind the firewall. In this example, the reverse proxies perform two functions:</p>
 <ul>
 	<li>Allowing apps and external consumers external access into the CM containers.</li>
@@ -134,7 +134,7 @@ nav-title: Sample Deployment Scenario
 <p>The platform doesn't provide reverse proxy functionality. You can use a third-party product such as HAProxy, F5, or NGINX.</p>
 
 
-<h4 id="components_nd">API Gateway/Internal Gateway (Network Director)</h4>
+<h3 id="components_nd">API Gateway/Internal Gateway (Network Director)</h3>
 <p>This sample clustered deployment environment includes four Network Director containers:</p>
 <ul>
 	<li>External Gateways: an external cluster of two, outside the firewall</li>
@@ -145,17 +145,17 @@ nav-title: Sample Deployment Scenario
 <p>For information on the features you'll need to install on Network Director containers, see <a href="#features_nd_oauth">Standalone API Gateway (Network Director)</a>.</p>
 
 
-<h4 id="components_app_dev">External App Developer</h4>
+<h3 id="components_app_dev">External App Developer</h3>
 <p>The external app developer accesses the Community Manager developer portal via the reverse proxy. Community Manager offers design-time features to allow the app developer to define and manage apps and request access to APIs.</p>
 
 
-<h4 id="components_es">Elasticsearch</h4>
+<h3 id="components_es">Elasticsearch</h3>
 <p>This sample clustered deployment environment includes two Elasticsearch nodes, the minimum for redundancy.</p>
 <p>The two Elasticsearch nodes should be on separate machines, for failsafe purposes; however, they needn't be dedicated machines. For example, you could run Elasticsearch along with each of your Community Manager/Policy Manager containers.</p>
 <p>Install Elasticsearch as described in <a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a>.</p>
 
 
-<h4 id="components_mongodb">MongoDB</h4>
+<h3 id="components_mongodb">MongoDB</h3>
 <p>This sample clustered deployment environment includes three MongoDB instances, the minimum for sharding. It's a good idea to do sharding if you have multiple data centers. For more information, see <a href="deployment_multi_regional.htm">API Gateway Multi-Regional Deployment</a>.</p>
 <p>To run MongoDB, you'll need to install:</p>
 <ul>
@@ -170,7 +170,7 @@ nav-title: Sample Deployment Scenario
 
 
 
-<h3 id="container_features">Container features for this sample deployment</h3>
+<h2 id="container_features">Container features for this sample deployment</h2>
 <p>To create the above deployment, you'd need to install the features below in the various containers.</p>
 <ul>
 	<li><a href="#features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</a></li>
@@ -180,7 +180,7 @@ nav-title: Sample Deployment Scenario
 </ul>
 
 
-<h4 id="features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</h4>
+<h3 id="features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</h3>
 <p>In each CM/PM combo container shown in this sample deployment, install the following features:</p>
 <ul>
 	<li>Akana Policy Manager Console <!--(policy.manager.console)--></li>
@@ -203,7 +203,7 @@ nav-title: Sample Deployment Scenario
 </ul>
 
 
-<h4 id="features_nd_oauth">Standalone API Gateway (Network Director)</h4>
+<h3 id="features_nd_oauth">Standalone API Gateway (Network Director)</h3>
 <p>Install the following feature on each container running Network Director:</p>
 <ul>
 	<li>Akana Network Director <!--(network.director)--><!--(community.manager.oauth.provider.agent)--></li>
@@ -215,7 +215,7 @@ nav-title: Sample Deployment Scenario
 
 
 
-<h4 id="features_oauth_alone">Standalone OAuth container features</h4>
+<h3 id="features_oauth_alone">Standalone OAuth container features</h3>
 <p>If you are using the Akana API Platform as your OAuth Provider, install the following features on the standalone OAuth container, or the container where you want the OAuth feature to reside. These are not required if you're using an external OAuth provider.</p>
 <ul>
 	<li>Akana OAuth Provider <!--(oauth.provider)--></li>
@@ -228,7 +228,7 @@ nav-title: Sample Deployment Scenario
 <p><strong>Note</strong>: If you install OAuth on a separate container from Community Manager, make sure the <strong>Akana OAuth Plug-In</strong> is installed on the Community Manager container. This is needed so that you can configure OAuth via the Community Manager portal.</p>
 
 
-<h4 id="features_sched_jobs">Scheduled Jobs container features</h4>
+<h3 id="features_sched_jobs">Scheduled Jobs container features</h3>
 <p>If you want to run the scheduled jobs features, that add jobs to the Quartz schedule, in a standalone container, install these features::</p>
 <ul>
 	<li>Akana Policy Manager Services&#8212;this feature bundle includes the Akana Scheduled Jobs feature which adds jobs to the Quartz scheduler. It also includes Akana Security Services<!--(security.services)-->. This feature is needed on all containers except Network Director.</li>
@@ -249,7 +249,7 @@ nav-title: Sample Deployment Scenario
 
 
 
-<h3 id="related_topics">Related Topics</h3>
+<h2 id="related_topics">Related Topics</h2>
 <div class="relatedlinks" id="install"><!-- #BeginLibraryItem "/Library/relatedtopics_install.lbi" -->
 <ul>
 	<li><a href="../upgrade/upgrading_akana_api_platform_all.htm">Upgrading the Akana API Platform (all versions)</a></li>
