@@ -98,7 +98,8 @@ nav-title: SOAP Facade to REST Service
 	<li>Test the API in Test Client with a valid airport code (for example, LAX, ATL). Use the SOAP request message below. It won't work until you add the mediation, because the SOAP message is not understood by the REST back-end service.</li>
 </ol>
 
-<h4 id="uc_rest_to_soap_req_soap"><strong>SOAP request</strong></h4>
+
+<h4 id="uc_rest_to_soap_req_soap">SOAP request</h4>
 <pre>&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sch="https://soa.smext.faa.gov/asws/schemas"&gt;
   &lt;soapenv:Header /&gt;
   &lt;soapenv:Body&gt;
@@ -183,7 +184,9 @@ nav-title: SOAP Facade to REST Service
 </ol>
 <p>That completes the setup. Now it's showtime! See <a href="#uc_rest_to_soap_05">Run the test case</a> below.</p>
 
-<h4 id="uc_js_script"><strong>Mediation script</strong></h4>
+
+
+<h4 id="uc_js_script">Mediation script></h4>
 <pre>// Get message and normalize<br />msg = processContext.getVariable(&quot;message&quot;);<br />normalmsg = msg.normalize();<br /> <br />auditLog.debug(&quot;Normalized message is: &quot; + normalmsg.getContentAsString());<br /> <br />// Create XML2JSON converter<br />converter= com.soa.json.xml.script.XML2JSON.converter();<br />converter.setForceTopLevelObject( true );<br /> <br />// optional - use if needed<br />// converter.setRemoveNamespacePrefixes( true );<br />// converter.setIgnoreNamespaces( true );<br /> <br />// Convert XML to JSON<br />var jsonStr = converter.convert(normalmsg.getContentAsString());<br />auditLog.debug(&quot;JSON string is: &quot; + jsonStr);<br /> <br />// Parse JSON string into JSON object<br />jsonObj = JSON.parse(jsonStr);<br /> <br />// Get airport code <br />// An Activity Variable named airportCode needs to be defined<br />airportCode = jsonObj.GET_getAirportStatus_InputMessage.airportCode;<br /> <br />// Option 1<br />// In this approach to map to parameters from the backend service<br />// in the invoke activity<br />// Set Activity Variable via the processContext to use in the Invoke<br />processContext.setVariable(&quot;airportCode&quot;,airportCode);<br />auditLog.debug(&quot;airportCode: &quot; + processContext.getVariable(&quot;airportCode&quot;));<br /> <br />// Option 2<br />// Invoke the backend service without having to map parameters by<br />// passing the newly created message in to the Invoke<br />// Create a new normalized message<br />backendRequest = msgFactory.createNormalized();<br />backendRequest.createTransportHeaders();<br />backendRequest.setContentType(&quot;application/json&quot;);<br /> <br />// Add the airport code as a message part<br />backendRequest.addPart(&quot;airportCode&quot;,airportCode);<br /> <br />// Set the Activity Variable with the newly-created message<br />processContext.setVariable(&quot;backendRequest&quot;,backendRequest);
 </pre>
 
