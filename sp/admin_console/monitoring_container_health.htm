@@ -11,9 +11,6 @@ nav-title: System Health Tool
 ---
 <h1 id="top">Monitoring the Health of a Container: Akana System Health Tool</h1>
 <p>This technical note provides information about the Akana System Health tool and its associated API.</p>
-<p><a href="using_admin_console.htm" class="button secondary">Using the Admin Console</a> 
-<a href="../container_management/container_management.htm" class="button secondary">Managing Containers</a></p>
-
 <h4 class="stamp">Supported Platforms: 8.2 and later</h4>
 <div class = "divider1"></div>
 
@@ -21,7 +18,7 @@ nav-title: System Health Tool
 
 <h2 style="color: gray;">Table of Contents</h2>
 <ol class="table_of_contents">
-	<li><a href="#summary">Summary</a></li>
+	<li><a href="#summary">Overview</a></li>
 	<li><a href="#configuration">Configuration</a></li>
 	<li><a href="#panels">Panels</a></li>
 	<li><a href="#settings">Settings</a></li>
@@ -32,12 +29,13 @@ nav-title: System Health Tool
 	<li><a href="#custom_panel">Custom Panel</a></li>
 	<li><a href="#field_info">System Health tool: additional information</a></li>
 	<li><a href="#next">What's Next?</a></li>
+	<li><a href="#monitoring_load_balancing">Monitoring Container Status with Load Balancing</a></li>
 </ol>
 <div class = "divider1"></div>
 
 
 
-<h2 id="summary">Summary</h2>
+<h2 id="summary">Overview</h2>
 <p>Before API Platform version 8.2, container health statistics were only available visually through the Monitoring Tool (see <a href="using_admin_monitoring_tool.htm" title="monitoring tool">Using the Admin Monitoring Tool</a>). 
 Since these statistics were only available through the GUI, there was no way to use the data for operational use. With the introduction of the System Health Tool in version 8.2, you can now retrieve these health statistics by making a GET call to any Akana container. In addition, the System Health Tool allows thresholds to be configured for any monitored attributes, providing the means to get information on any values that fall outside normal or expected ranges.</p>
 <p>This is a feature of the core platform and can be leveraged by all containers, including Policy Manager, Community Manager, and Envision. A primary use case for this tool is to check the health of the container to determine if it is ready to handle traffic.</p>
@@ -395,4 +393,125 @@ System Health Tool API using the links provided.</p>
 
 <h2 id="next">What's Next?</h2>
 <p>Container health data can be polled and collected into a data store. You can use the collected data to gain valuable operational insight.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="monitoring_load_balancing">Monitoring Container Status with Load Balancing</h2>
+<p>In a typical production Akana deployment, the Akana containers are deployed in a cluster and behind a load balancer. The diagram below shows the Network Director behind a load balancer. An application invokes an API hosted on the Network Director through the load balancer.</p>
+<p>It is important that the Network Director is functioning, and all the APIs are deployed on it, before any API is invoked. This helps avoid 404 errors being returned to the application/consumer.</p>
+<p>This configuration is applicable for any of the Akana containers that are behind a load balancer (for example, Policy Manager, Community Manager, OAuth Provider).</p>
+<p><img src="images/health_flowchart.png" alt="Container health with load balancing: flowchart" /></p>
+<p>To ensure that the Network Director or container is ready to receive requests, the load balancers should be configured to monitor the state of the container using the Load Balancer's system health check URL. This URL returns one of the following:</p>
+<ul>
+	<li>An HTTP 200 status code if the container ready to process inbound traffic.</li>
+	<li>An HTTP 503 status code if the container is still coming up.</li>
+</ul>
+<p>All the Akana containers that are configured behind a Load Balancer should use the Load Balancer's system health check URL to monitor system health status. </p>
+<p>Configure the following container system health check URL in the Load Balancer and check for the following status codes.</p>
+<p><strong>Method</strong>: GET</p>
+<p><strong>URL</strong>: <span class="apidoc_code">http(s)://&lt;container_admin_host&gt;:&lt;container_port&gt;/admin/health/measurables/akana.service.container.readiness?normal-status=200&amp;failure-status=503&amp;warning-status=503&amp;brief=true</span></p>
+<p><strong>HTTP Status Codes</strong>:</p>
+<ul>
+	<li><strong>200</strong>&#8212;Container is ready, the services/apis are deployed and the container can receive requests.</li>
+	<li><strong>503</strong>&#8212;Container is still not ready to receive requests. </li>
+</ul>
+<h3>Examples</h3>
+<p>An example of the request and responses are below.</p>
+
+
+<h4>Request</h4>
+<pre>GET https://10.1.16.24:8867/admin/health/measurables/akana.service.container.readiness?normal-status=200&amp;failure-status=503&amp;warning-status=503&amp;brief=true HTTP/1.1
+Host: 10.1.16.24:8867
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.1.1 (java 1.5)</pre>
+
+<h4>Response headers: Container is still coming up and is not ready to receive requests</h4>
+<pre>HTTP/1.1 503 Service Unavailable
+Date: Tue, 05 Nov 2019 17:13:46 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked</pre>
+
+<h4>Response content: Container is still coming up and is not ready to receive requests</h4>
+<pre>{
+  "id":"akana.service.container.readiness",
+  "name":"Service Container Readiness",
+  "path":"akana.service.container.readiness",
+  "state":"FAILURE",
+  "childCount":7,
+  "editable":false,
+  "options":{
+    "enableAuth":true,
+    "links":[
+      {
+        "rel":"self",
+        "href":"https://10.1.16.24:8867/admin/health/measurables/akana.service.container.readiness/configuration"
+      }
+    ]
+  },
+  "links":[
+    {
+      "rel":"self",
+      "href":"https://10.1.16.24:8867/admin/health/measurables/akana.service.container.readiness"
+    },
+    {
+      "rel":"brief",
+      "href":"https://10.1.16.24:8867/admin/health/measurables/akana.service.container.readiness?brief=true"
+    },
+    {
+      "rel":"children",
+      "href":"https://10.1.16.24:8867/admin/health/measurables/akana.service.container.readiness/children"
+    },
+    {
+      "rel":"options",
+      "href":"https://10.1.16.24:8867/admin/health/measurables/akana.service.container.readiness/configuration"
+    }
+  ]
+}</pre>
+
+
+<h4>Response headers: Container is ready to receive traffic</h4>
+<pre>HTTP/1.1 200 OK
+Date: Tue, 05 Nov 2019 17:12:20 GMT
+Content-Type: application/json
+Vary: Accept-Encoding, User-Agent
+Transfer-Encoding: chunked</pre>
+
+
+<h4>Response content: Container is ready to receive traffic</h4>
+<pre>{
+  "id":"akana.service.container.readiness",
+  "name":"Service Container Readiness",
+  "path":"akana.service.container.readiness",
+  "state":"NORMAL",
+  "childCount":7,
+  "editable":false,
+  "options":{
+    "enableAuth":true,
+    "links":[
+      {
+        "rel":"self",
+        "href":"https://10.1.16.24:8867/admin/health/measurables/akana.service.container.readiness/configuration"
+      }
+    ]
+  },
+  "links":[
+    {
+      "rel":"self",
+      "href":"https://10.1.16.24:8867/admin/health/measurables/akana.service.container.readiness"
+    },
+    {
+      "rel":"brief",
+      "href":"https://10.1.16.24:8867/admin/health/measurables/akana.service.container.readiness?brief=true"
+    },
+    {
+      "rel":"children",
+      "href":"https://10.1.16.24:8867/admin/health/measurables/akana.service.container.readiness/children"
+    },
+    {
+      "rel":"options",
+      "href":"https://10.1.16.24:8867/admin/health/measurables/akana.service.container.readiness/configuration"
+    }
+  ]
+}</pre>
 <p><a href="#top">Back to top</a></p>
