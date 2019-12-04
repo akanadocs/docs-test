@@ -9,7 +9,7 @@ type: page
 nav-title: SimpleDev Customization Example
 sub-nav-class: Customization
 ---
-<h1 id="top">Example SimpleDev Customization 8 (4 images) </h1>
+<h1 id="top">Example SimpleDev Customization</h1>
 <p>This document describes the process of creating the demodev.eap.soa.com branding for the demo tenant. It provides a step-by-step guide for how to create this exact brand, these steps will be pretty much universally applicable. The steps sort of build on each other, and if you skip ahead you may miss some important instructions. But I'm going to give you the option of doing just that by giving you links to some of the main sections here:</p>
 <ul>
 	<li>Customizing <a href="#sd_customize_styles">Styles</a></li>
@@ -63,27 +63,27 @@ sub-nav-class: Customization
 <p>The premise is easy. We'll do this:</p>
 <ol>
 	<li>Find the source <strong>header.ejs</strong> file.
-<ul>
-	<li>Access the com.soa.atmosphere.theme.simpledev<em>XXXXX.jar from your repository (e.g. $PROD</em>HOME$/sm70/lib/cm-7.2.0)</li>
-	<li>Extract the archive to your file system using your favorite archive (zip) tool</li>
-	<li>
+		<ul>
+			<li>Access the com.soa.atmosphere.theme.simpledev<em>XXXXX.jar from your repository (e.g. $PROD</em>HOME$/sm70/lib/cm-7.2.0)</li>
+			<li>Extract the archive to your file system using your favorite archive (zip) tool</li>
+			<li>
 Browse through the archive to find the file (in this case - META=INF/resources/SOA/Dev/header/views/header.ejs)
-<ul>
-	<li>NOTE: there will be a header.js (not ejs) file in the header directory. This is not the driod you're looking for, you need to head on down a level into views to find the .ejs file.</li>
-	<li>NOTE: remember the path where you found your file, you're going to need it later</li>
-</ul>
-</li>
-</ul>
-</li>
+				<ul>
+					<li>NOTE: there will be a header.js (not ejs) file in the header directory. This is not what you're looking for; you need to head on down a level into views to find the .ejs file.</li>
+					<li>NOTE: remember the path where you found your file. You're going to need it later.</li>
+				</ul>
+			</li>
+		</ul>
+		</li>
 	<li>Edit the file appropriately, in this case I'm being a bit aggressive and am taking out the whole thing conditionally, but you can see from the example here how this construct works for more subtle edits:
-	<p><img src="images/sd_custom_01.png" alt="Customize SimpleDev, layout.ejs code sample #1" /></p></li>
+		<p><img src="images/sd_custom_01.png" alt="Customize SimpleDev, layout.ejs code sample #1" /></p></li>
 	<li>Upload the new <strong>header.ejs</strong> file to the right location using your default theme (or the API).
-<ul>
-	<li>You will use the File Manager in <strong>Config</strong> &gt; <strong>Resources</strong> as a Site Admin in your default theme to do this.  <strong>Note</strong>: yes, I did say using the default theme. All the admin for your tenant (including configuring your SimpleDev theme) is done using the default theme.</li>
-	<li>You could use the File Manager and manually recreate the directory structure for all the files uploading changed files as you go. However, assuming you're going to be changing more than one thing, an easier approach is to duplicate the directory structure you need on your local file system, and zip the whole thing whenever you make a change. This will also make it much easier to apply the same set of customizations to more than one tenant or instance. In this case, the easiest approach for me was to create a structure SOA/Dev/header/views and put my new <strong>header.ejs</strong> file in views. Then I zip up the whole SOA structure, go to <strong>Config</strong> &gt; <strong>Resources</strong> and use the Resources File Manager (<strong>Note</strong>: make sure you're using the File Manager for the Resources structure, not the Content structure). Browse into theme, choose the name of your theme (in my case I have developer on one tenant and simpledev on another), and then upload your newly created zip archive to this location (/resources/theme/developer or /resources/theme/simpledev in my case).</li>
+		<ul>
+			<li>You will use the File Manager in <strong>Config</strong> &gt; <strong>Resources</strong> as a Site Admin in your default theme to do this.  <strong>Note</strong>: yes, I did say using the default theme. All the admin for your tenant (including configuring your SimpleDev theme) is done using the default theme.</li>
+			<li>You could use the File Manager and manually recreate the directory structure for all the files uploading changed files as you go. However, assuming you're going to be changing more than one thing, an easier approach is to duplicate the directory structure you need on your local file system, and zip the whole thing whenever you make a change. This will also make it much easier to apply the same set of customizations to more than one tenant or instance. In this case, the easiest approach for me was to create a structure SOA/Dev/header/views and put my new <strong>header.ejs</strong> file in views. Then I zip up the whole SOA structure, go to <strong>Config</strong> &gt; <strong>Resources</strong> and use the Resources File Manager (<strong>Note</strong>: make sure you're using the File Manager for the Resources structure, not the Content structure). Browse into theme, choose the name of your theme (in my case I have developer on one tenant and simpledev on another), and then upload your newly created zip archive to this location (/resources/theme/developer or /resources/theme/simpledev in my case).</li>
 	<li>At this point you will need to clear the browser cache. I'm going to say that again, in caps. CLEAR THE BROWSER CACHE. Ok, now you can view your site and you should see your shiny new header.</li>
-</ul>
-</li>
+		</ul>
+	</li>
 </ol>
 <p>In my case I actually need to do something a little different with my header that involves messing with the CSS. For details on how to do this, see <a href="#sd_customize_headercss">below</a>.</p>
 <p><a href="#top">Back to top</a></p>
@@ -142,8 +142,8 @@ My content in here
 <p>In my case I only want these styles to apply when I'm on the welcome page, so I'm going to use the above class override so that my final layout.ejs ends up looking like this:</p>
 <p><img src="images/sd_custom_02.png" alt="Customize SimpleDev, layout.ejs code sample #2" /></p>
 </li>
-	<li>Removing all the menus from the header, except for the usertools (the login link or profile dropdown is matter of tweaking the header.ejs a little. I'm going to use the same <code>{% raw %}&lt;% if(can.route.attr(&quot;page&quot;) !== &quot;welcome&quot;){%&gt;....&lt;% }%&gt;{% endraw %}</code> construct I use in layout, but this time I'm not using an inline form because I'm using it to change more significant pieces of the html structure. There are 3 occurances of this in this file; one that takes out the logo, one that takes out the nav links, and one that removes the search bar. I also have an inline instance that overrides the styles of the whole navbar, this adds the following css override which is defined in custom.less:
-<pre>.navbar-default-welcome {
+	<li>Removing all the menus from the header, except for the usertools (the login link or profile dropdown is matter of tweaking the header.ejs a little. I'm going to use the same <code>{% raw %}&lt;% if(can.route.attr(&quot;page&quot;) !== &quot;welcome&quot;){%&gt;....&lt;% }%&gt;{% endraw %}</code> construct I use in layout, but this time I'm not using an inline form because I'm using it to change more significant pieces of the html structure. There are three occurrences of this in this file; one that takes out the logo, one that takes out the nav links, and one that removes the search bar. I also have an inline instance that overrides the styles of the whole navbar, this adds the following css override which is defined in custom.less:
+		<pre>.navbar-default-welcome {
   background: none;
   border: none;
 }</pre>
@@ -152,7 +152,6 @@ My content in here
 	</li>
 	<li>The last step is to replace the text &quot;Login&quot; link with a nice shiny button. I cheated a bit and browsed through the UI looking for some buttons I liked. I liked the Style of the Login button from the login page, so I just used that. Then I opened up the usertools.ejs file and had at it. While I was at it I decided to remove the element where the product welcomed me, that was annoying. See if you can spot the changes:
 	<p><img src="images/sd_custom_04.png" alt="Customize SimpleDev, layout.ejs code sample #4" /></p>
-	<p>xxx101010</p>
 </li>
 </ol>
 <p>And that's it for now. I'll be back to describe the process of uploading and customizing my docs when I get some content I like.</p>
