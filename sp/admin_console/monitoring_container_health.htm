@@ -10,7 +10,7 @@ type: page
 nav-title: System Health Tool
 ---
 <h1 id="top">Monitoring the Health of a Container: Akana System Health Tool</h1>
-<p>This technical note provides information about the Akana System Health tool and its associated API.</p>
+<p>Provides information about the Akana System Health tool and its associated API.</p>
 <div class = "divider1"></div>
 
 
@@ -79,20 +79,56 @@ nav-title: System Health Tool
 	<li>Container lifecycle</li>
 </ul>
 <p><strong>Note</strong>: The system health statistics reflect real-time information about the container. The System Health Tool does not store this information. You can either view real-time information, or you can have an external monitoring tool call the System Health Tool so that you can store and track the data.</p>
-<p>Here are some general recommendations of key items that it might be a good idea to monitor:</p>
-<ul>
-	<li>It's a good idea to monitor CPU and memory at the VM level. Notes re <strong>com.soa.vmstats</strong>:
-		<ul>
-			<li>The memory usage might fluctuate a lot depending on the use of the container.</li>
-			<li>A high memory usage does not indicate a specific issue other than that the container is under load or processing data of some sort.</li>
-		</ul>
-	</li>
-	<li>For containers connecting to the database, it's a good idea to monitor <strong>com.soa.db.stats</strong> – <strong>available.pool.headroom.pct</strong> OR <strong>available.pool.headroom</strong>. This shows how many connections are being used by the DB. If it gets too high, potentially the container will run out of database connections in the pool, and errors might start occurring.</li>
-	<li><strong>akana.health.lifecycle – lifecycle.state</strong>: this indicates that the container is <strong>STARTED</strong> (or not).</li>
-	<li><strong>com.soa.container.config.config.stats – configuration.state</strong>: make sure that the state is <strong>CONFIGURED</strong>.</li>
-	<li><strong>com.soa.transport.http.client</strong> – <strong>pool.headroom</strong> OR <strong>pool.headroom.pct</strong>: this indicates the available connections in the pool for outbound HTTP traffic from the container. For a Network Director container, this generally means connections to Policy Manager and connections to the backend service. For PM/CM, it is still for outbound HTTP traffic but less of a concern. In either case, if the available space is starting to reach its max the container potentially might not have connections available to make any outbound HTTP traffic.</li>
-	<li><strong>soa.jetty.connector</strong> – <strong>connections.open</strong> OR <strong>connections.open.max</strong>: this indicates the connections being used for each inbound listener on the container. If the connections are near the max configured number, there might not be connections available for inbound traffic. </li>
-</ul>
+<p>The table below shows some key items that it might be a good idea to monitor.</p>
+<table class="doctable">
+	<thead>
+		<tr>
+			<th>Item</th>
+			<th>Data</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>com.soa.vmstats</td>
+			<td>Monitors CPU and memory at the VM level. Notes re <strong>com.soa.vmstats</strong>:
+				<ul>
+					<li>The memory usage might fluctuate a lot depending on the use of the container.</li>
+					<li>A high memory usage does not indicate a specific issue other than that the container is under load or processing data of some sort.</li>
+				</ul></td>
+		</tr>
+		<tr>
+			<td><p>com.soa.db.stats:</p>
+				<p> available.pool.headroom.pct</p>
+				<p>OR</p>
+				<p>available.pool.headroom</p></td>
+			<td>For containers connecting to the database, it's a good idea to monitor <strong>com.soa.db.stats</strong> – <strong>available.pool.headroom.pct</strong> OR <strong>available.pool.headroom</strong>. This shows how many connections are being used by the database. If it gets too high, potentially the container will run out of database connections in the pool, and errors might start occurring.</td>
+		</tr>
+		<tr>
+			<td><p>akana.health.lifecycle:</p>
+				<p> lifecycle.state</p></td>
+			<td>Indicates that the container is <strong>STARTED</strong> (or not).</td>
+		</tr>
+		<tr>
+			<td><p>com.soa.container.config.config.stats:</p>
+				<p>configuration.state</p></td>
+			<td>Make sure that the state is <strong>CONFIGURED</strong>.</td>
+		</tr>
+		<tr>
+			<td><p>com.soa.transport.http.client:</p>
+				<p>pool.headroom</p>
+				<p>OR</p>
+				<p> pool.headroom.pct</p></td>
+			<td>This indicates the available connections in the pool for outbound HTTP traffic from the container. For a Network Director container, this generally means connections to Policy Manager and connections to the backend service. For PM/CM, it is still for outbound HTTP traffic but less of a concern. In either case, if the available space is starting to reach its max the container potentially might not have connections available to make any outbound HTTP traffic.</td>
+		</tr>
+		<tr>
+			<td><p>soa.jetty.connector:</p>
+				<p>connections.open</p>
+				<p>OR</p>
+				<p> connections.open.max</p></td>
+			<td>Indicates the connections being used for each inbound listener on the container. If the connections are near the maximum configured number, there might not be connections available for inbound traffic. </td>
+		</tr>
+	</tbody>
+</table>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -355,7 +391,7 @@ System Health Tool API (see <a href="#system_health_tool_api">System Health Tool
 	<li>An HTTP 200 status code if the container ready to process inbound traffic.</li>
 	<li>An HTTP 503 status code if the container is still coming up.</li>
 </ul>
-<p>All the Akana containers that are configured behind a Load Balancer should use the Load Balancer's system health check URL to monitor system health status. </p>
+<p>All the Akana containers that are configured behind a Load Balancer should use the Load Balancer's system health check URL to monitor system health status.</p>
 <p>Configure the following container system health check URL in the Load Balancer and check for the following status codes.</p>
 <p><strong>Method</strong>: GET</p>
 <p><strong>URL</strong>: <span class="apidoc_code">http(s)://&lt;container_admin_host&gt;:&lt;container_port&gt;/admin/health/measurables/akana.service.container.readiness?normal-status=200&amp;failure-status=503&amp;warning-status=503&amp;brief=true</span></p>
