@@ -11,11 +11,9 @@ nav-title: LC Promotion Guide
 ---
 <h1 id="top">Lifecycle Coordinator Promotion Guide </h1>
 <p>Provides information about how to use the Lifecycle Coordinator feature to manage promotion of assets, such as apps and APIs, from one environment to another. such as from Development to Testing.x</p>
-<p><a href="../../sp/install_lc/install_promotion.htm" class="button secondary">Lifecycle Coordinator Installation</a> 
-<a href="promotion_samples.htm" class="button secondary">Sample Topologies</a></p>
-
 <h4 class="stamp">API Platform Version: 8.4.3 and later</h4>
 <hr class="divide_hr" />
+
 
 
 <h2 style="color: gray;">Table of Contents</h2>
@@ -317,8 +315,11 @@ vsep.listenerName = "https"</td>
 	<li><a href="#s05_01_tenantdefinitions">Tenant Definitions</a></li>
 	<li><a href="#s05_01_tenantnames">Tenant Names</a></li>
 	<li><a href="#s05_01_delegatedauth">Delegated Authentication</a></li>
-	<li><a href="#s05_01_tenantproperties">Tenant Properties (8.4.18 and later)</a></li>
+	<li><a href="#s05_01_tenantproperties">Tenant Properties</a> (8.4.18 and later)</li>
+	<li><a href="#s05_01_tenant_ldap_domain">Configuring a tenant to support LDAP login</a> (2019.1.5 and later)</li>
 </ul>
+
+
 <h4 id="s05_01_tenantdefinitions">Tenant Definitions</h4>
 <p>Tenant definitions in the topology provide the Lifecycle Coordinator the necessary information to communicate with the specified tenant. Tenants can be either local (on the same container as the Lifecycle Coordinator) or remote. When defining a tenant:</p>
 <ul>
@@ -337,8 +338,10 @@ vsep.listenerName = "https"</td>
 }</pre>
 <p class="apidoc_note"><strong>Note</strong>: The address value is unique to the tenant. It corresponds to the value specified for the <strong>address</strong> parameter when the tenant was created.</p>
 
+
 <h4 id="s05_01_tenantnames">Tenant Names</h4>
 <p>Tenants require a <strong>name</strong> property which is used to identify the tenant by environments within the topology. This name must be unique within the topology, but need not correspond to the actual tenant name.</p>
+
 
 <h4 id="s05_01_delegatedauth">Delegated Authentication</h4>
 <p>In the promotion profile, you can indicate that authentication for the underlying Lifecycle Repository library is delegated to a specified tenant. This means that users of the specified tenant can log in to the topology library using their email and password for that tenant.</p>
@@ -371,6 +374,8 @@ vsep.listenerName = "https"</td>
 	</li>
 </ol>
 <p>If neither of these approaches is used to specify the authentication tenant, the authentication tenant ID defaults to <strong>lifecycle_coordinator</strong>.</p>
+
+
 <h4 id="s05_01_tenantproperties">Tenant Properties (8.4.18 and later)</h4>
 <p>Tenant definitions can contain optional properties, as shown in the example below.</p>
 <pre>{
@@ -392,6 +397,35 @@ vsep.listenerName = "https"</td>
 <ul>
 	<li><strong>virtual-address</strong>: This property can be used when the URL used to access a remote tenant is different from the tenant's address attribute. For example, this property would be used if the tenant is fronted by a load balancer. If the <strong>virtual-address</strong> property is provided, the URL set in the value of this property is used for all communications with the tenant.</li>
 </ul>
+
+
+<h4 id="s05_01_tenant_ldap_domain">Configuring a tenant to support LDAP login (2019.1.5 and later)</h4>
+<p>In versions prior to 2019.1.5, Lifecycle Coordinator only supported logging in to a developer portal tenant via the Local Domain.</p>
+<p>{<span class="apidoc_red">TB: in this example, can users still log in via local domain using email and password? Or, can they now ONLY log in via LDAP using username and password?</span>}</p>
+<p>In the tenant definition, the credentials are defined as <strong>email</strong> and <strong>password</strong> property values, as shown in the example below.</p>
+<pre>"credentials":{
+  "email":"administrator2@example.com",
+  "password":"password2"
+}</pre>
+<p>In 2019.1.5 and later, Lifecycle Coordinator supports user login via Local Domain or LDAP.</p>
+<p>To allow users to log in via an LDAP domain, include the <strong>ldapDomain</strong> property in the tenant definition, at the same level as the <strong>credentials</strong> property. For LDAP users, the value of the <strong>ldapDomain</strong> property must match the domain name configured in Policy Manager.</p>
+<p>Example tenant definition using the <strong>ldapDomain</strong> property and <strong>user</strong> and <strong>password</strong> credentials:</p>
+<pre>"tenants":[
+  {
+    "id": "tenant2",
+    "name": "ProductionTenant",
+    "address": "http://open.acmepaymentscorp.com:9910",
+    "local": false,
+    "consoleAddress": "http://open.acmepaymentscorp.com:9910/atmosphere",
+    "ldapDomain": "acmepaymentscorp",
+    "credentials": {
+      "user": "my_username",
+      "password": "my_secure_password"
+    },
+    "userAuthenticationSource": false
+  }</pre>
+<p><a href="#top">Back to top</a></p>
+
 
 
 <h3 id="s05_02">Environments</h3>
