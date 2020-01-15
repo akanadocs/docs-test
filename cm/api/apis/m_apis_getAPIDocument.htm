@@ -337,6 +337,7 @@
 			<div class="soa-ui-dc-container-main-content"><!-- main content starts here -->
 					<div class="apidocContent">
 <!-- InstanceBeginEditable name="Heading" -->
+
 <h1 id="top">GET&nbsp;/api/apis/versions/{APIVersionID}/definition/{Specification}</h1>
 <h1>GET&nbsp;/api/apis/versions/{APIVersionID}/definition/{Specification}/{IncludeDocId}</h1>
 <!-- InstanceEndEditable -->
@@ -347,7 +348,7 @@ Returns generated API definition document for the specified API version. With th
 <p id="id_roles"><strong>Authorization Roles/Permissions</strong>: User must have read permission for the API, per the visibility rules below.</p>
 <p><strong>Visibility rules for generated API definition document</strong>: The visibility behavior varies according to the specification for the API, as follows:</p>
 <ul>
-	<li><strong>RAML 0.8/WADL/WSDL documents</strong>: This operation does not support applying visibility scopes to specific content within RAML/WADL/WSDL documents. The platform returns these documents to the user only if the user has permission for the entire API. If the user has partial or no visibility permission for the API, the platform returns an Unauthorized message.</li>
+	<li><strong>RAML 0.8/WSDL documents</strong>: This operation does not support applying visibility scopes to specific content within RAML/WSDL documents. The platform returns these documents to the user only if the user has permission for the entire API. If the user has partial or no visibility permission for the API, the platform returns an Unauthorized message.</li>
 	<li><strong>Swagger 2.0 or 1.2</strong>: The operation returns the Swagger document with the information that the user has visibility to see. In this scenario, if the user has visibility to certain parts of the API, but not others, the user will see the parts that he or she has permission to view.</li>
 </ul>
 <p><strong>Note</strong>: WSDL is generally used for SOAP rather than REST APIs. If you're retrieving the API definition in WSDL format for a REST API it will include proprietary extensions for the Akana platform. For SOAP services it will be standard WSDL.</p>
@@ -410,10 +411,6 @@ Cookie: AtmoAuthToken_{fedmemberid}=TokenID{ID}<!-- #EndLibraryItem --></pre>
 <pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->apis/versions/af5da6b1-2dfb-45ff-8803-07f9cf63143a.acmepaymentscorp/definition/raml/pet</pre>
 <pre>Accept: application/raml+yaml</pre>
 
-<p><strong>Request URL: WADL</strong></p>
-<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->apis/versions/af5da6b1-2dfb-45ff-8803-07f9cf63143a.acmepaymentscorp/definition/wadl/pet</pre>
-<pre>Accept: application/vnd.sun.wadl+xml</pre>
-
 <p><strong>Request URL: WSDL</strong></p>
 <pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->apis/versions/d411c74c-cb62-45b0-8963-474efcb42794.acmepaymentscorp/definition/wsdl</pre>
 <p>No Accept header specification needed.</p>
@@ -439,7 +436,6 @@ Cookie: AtmoAuthToken_{fedmemberid}=TokenID{ID}<!-- #EndLibraryItem --></pre>
 				<ul class="apidoctable_ul">
 					<li>RAML 0.8: application/raml+yaml</li>
 					<li>Swagger: application/json</li>
-					<li>WADL: application/vnd.sun.wadl+xml</li>
 					<li>WSDL: none needed</li>
 				</ul></td>
 		</tr>
@@ -487,7 +483,6 @@ Cookie: AtmoAuthToken_{fedmemberid}=TokenID{ID}<!-- #EndLibraryItem --></pre>
 					<li>swagger (defaults to swagger2 which is Swagger 2.0)</li>
 					<li>swagger1_2</li>
 					<li>raml</li>
-					<li>wadl</li>
 					<li>wsdl</li>
 				</ul></td>
 		</tr>
@@ -505,6 +500,13 @@ Cookie: AtmoAuthToken_{fedmemberid}=TokenID{ID}<!-- #EndLibraryItem --></pre>
 			<td>Optional</td>
 			<td>Optionally, specify the implementation (Sandbox or <!-- #BeginLibraryItem "/Library/environ_live.lbi" -->Live<!-- #EndLibraryItem -->) for which you want the API description document. If not specified, this parameter returns the API definition for the <!-- #BeginLibraryItem "/Library/environ_live.lbi" -->Live<!-- #EndLibraryItem --> implementation, if it exists, and for the Sandbox implementation, if there is no <!-- #BeginLibraryItem "/Library/environ_live.lbi" -->Live<!-- #EndLibraryItem --> implementation.</td>
 		</tr>
+<!--		<tr>
+			<td>Implementation</td>
+			<td>Query</td>
+			<td>string</td>
+			<td>Optional</td>
+			<td>Optionally, specify the implementation for which you want the API description document. {[<span class="apidoc_red">PER RS 4/21/16: Implementation parameter is not fully supported. We started, but finished. Please don’t document. I still see the JIRA.</span>}</td>
+		</tr>-->
 	</tbody>
 </table>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
@@ -743,7 +745,6 @@ Content-Type: application/json;charset=UTF-8</pre>
 	<li><a href="#apidoc_swagger12">Swagger 1.2</a></li>
 	<li><a href="#apidoc_swagger">Swagger 2.0</a></li>
 	<li><a href="#apidoc_raml">RAML</a></li>
-	<li><a href="#apidoc_wadl">WADL</a></li>
 	<li><a href="#apidoc_wsdl">WSDL</a></li>
 </ul>
 <p id="apidoc_swagger12"><strong>Response: Swagger 1.2</strong></p>
@@ -958,46 +959,6 @@ documentation:
     title: "description"
     content: "First version"
 </pre>
-<p id="apidoc_wadl"><strong>Response: WADL</strong></p>
-<pre>?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
-&lt;application xmlns="http://wadl.dev.java.net/2009/02"&gt;
-  &lt;doc&gt;First version&lt;/doc&gt;
-  &lt;grammars /&gt;
-  &lt;resources base="http://{hostname}/prod"&gt;
-    &lt;resource path="/pet"&gt;
-      &lt;method name="POST"&gt;
-        &lt;request&gt;
-          &lt;param name="Body" type="xs:anyType" xmlns:xs="http://www.w3.org/2001/XMLSchema" /&gt;
-          &lt;representation element="xs:anyType" mediaType="*/*" xmlns:xs="http://www.w3.org/2001/XMLSchema" /&gt;
-        &lt;/request&gt;
-        &lt;response status="200"&gt;
-          &lt;representation element="xs:anyType" mediaType="*/*" xmlns:xs="http://www.w3.org/2001/XMLSchema" /&gt;
-        &lt;/response&gt;
-      &lt;/method&gt;
-      &lt;method name="PUT"&gt;
-        &lt;request&gt;
-          &lt;param name="Body" type="xs:anyType" xmlns:xs="http://www.w3.org/2001/XMLSchema" /&gt;
-          &lt;representation element="xs:anyType" mediaType="*/*" xmlns:xs="http://www.w3.org/2001/XMLSchema" /&gt;
-        &lt;/request&gt;
-        &lt;response status="200"&gt;
-          &lt;representation element="xs:anyType" mediaType="*/*" xmlns:xs="http://www.w3.org/2001/XMLSchema" /&gt;
-        &lt;/response&gt;
-      &lt;/method&gt;
-    &lt;/resource&gt;
-    &lt;resource path="/pet/{petId}"&gt;
-      &lt;method name="GET"&gt;
-        &lt;request&gt;
-          &lt;param name="petId" style="template" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema" /&gt;
-          &lt;representation mediaType="*/*" /&gt;
-        &lt;/request&gt;
-        &lt;response status="200"&gt;
-          &lt;representation element="xs:anyType" mediaType="*/*" xmlns:xs="http://www.w3.org/2001/XMLSchema" /&gt;
-        &lt;/response&gt;
-      &lt;/method&gt;
-    &lt;/resource&gt;
-  &lt;/resources&gt;
-&lt;/application&gt;
-</pre>
 
 <p id="apidoc_wsdl"><strong>Response: WSDL</strong></p>
 <p>WSDL is generally used for SOAP rather than REST APIs. If you're retrieving the API definition in WSDL format for a REST API, it will include proprietary extensions for the Akana platform, as shown in the example below. In addition, depending on your browser, you might need to view source in the browser to see it. For SOAP services the response will be standard WSDL.</p>
@@ -1108,7 +1069,8 @@ xmlns:shttp="http://soa.com/wsdl/http" xmlns:soap="http://schemas.xmlsoap.org/ws
 	<li><a href="../Ref_API_Reference.htm">Akana API Platform API: Reference Material</a></li>
 	<li><a href="../aaex/Ref_Ex_Overview.htm">Examples: Overview</a></li>
 </ul> 
-</div><!-- #EndLibraryItem --></div>
+</div><!-- #EndLibraryItem -->
+
 
 				<!-- main content ends here -->
 			</div>
