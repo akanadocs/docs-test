@@ -79,6 +79,7 @@ nav-title: User Workflow
 	<li><a href="#user_ra_15">@UserLocked</a></li>
 	<li><a href="#user_ra_16">@UserUnlocked</a></li>
 	<li><a href="#user_ra_17">@ResolveLoginPendingTask</a></li>
+	<li><a href="#user_ra_18">@UserActivated</a></li>
 </ul>
 <!--<p>{com.soa.atmosphere.impl\META-INF\resources\templates\default-user-workflow-v2.xml}</p>-->
 
@@ -221,6 +222,8 @@ nav-title: User Workflow
 	<li>User notification: com.soa.notification.type.user.unlocked</li>
 	<li>Admin notification: com.soa.notification.type.user.account.status.change</li>
 </ul>
+
+
 <h3 id="user_ra_17">@ResolveLoginPendingTask</h3>
 <p>Used to determine whether there are pending tasks the user must complete before login is complete and, if so, to guide the user through those tasks; for example, validating a two-factor verification code or requesting a new verification code.</p>
 <p>This reserved action is valid only when the user is in the login process; for example, if two-factor authentication is turned on and the user has authenticated with credentials but has not yet provided the verification code.</p>
@@ -256,6 +259,46 @@ nav-title: User Workflow
       &lt;/condition&gt;
     &lt;/conditions&gt;
   &lt;/restrict-to&gt;</pre>
+
+
+<h3 id="user_ra_18">@UserActivated</h3>
+<p><strong>Valid in version: 2019.1.6 and later</strong></p>
+<p>In a scenario where platform self-signup is disabled, but instead a user account is added by the Site Admin, this reserved action detects whether a user account added by the Site Admin has been activated, so that one or more actions can be taken based on that.</p>
+<p>By default, when the user added by the Site Admin is activated, no notification is sent.</p>
+<p> By default, although the <strong>@UserActivated</strong> action is in the default user workflow, and includes a sendNotification function, this action is disabled, because it's commented out in line 834 of the default user workflow:</p>
+<pre>&lt;!-- &lt;common-action id="19" /&gt; --&gt;</pre>
+<p>With this reserved action in use, by un-commenting the <strong>comment-action-id</strong> line in the default user workflow, when the Site Admin activates the account, an email  notification is sent to the user to notify the user that the account is now activated.</p>
+
+<h4>Examples/Notes/Additional Information</h4>
+
+<p>If you remove the comment from line 834, as shown above, the workflow action below comes into effect. Then, if the Site Admin activates a user, the notification <strong>com.soa.notification.type.user.activated</strong> is sent to the user.</p>
+<p>The example below shows the segment of the default user workflow that implements the <strong>@UserActivated</strong> reserved action when the comment tag is removed from line 834.</p>
+<p><strong>Note</strong>: The section of the workflow doc below also shows an additional function to send a notification to the Site Admin. To activate this function, you would also need to add the notification, which is not currently part of the product.</p>
+<pre>&lt;action id="19" name="@UserActivated"&gt;
+  &lt;results&gt;
+    &lt;unconditional-result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt;
+      &lt;post-functions&gt;
+        &lt;function type="sendNotification"&gt;
+          &lt;arg name="role"&gt;User&lt;/arg&gt;
+          &lt;arg name="notificationType"&gt;com.soa.notification.type.user.activated&lt;/arg&gt;
+        &lt;/function&gt;
+        &lt;!--&lt;function type="sendNotification"&gt;
+          &lt;arg name="role"&gt;SiteAdmin&lt;/arg&gt;
+          &lt;arg name="notificationType"&gt;com.soa.notification.type.user.account.state.change&lt;/arg&gt;
+        &lt;/function&gt;--&gt;
+      &lt;/post-functions&gt;
+    &lt;/unconditional-result&gt;
+  &lt;/results&gt;
+&lt;/action&gt;</pre>
+
+<h4>To implement this workflow action</h4>
+<ol>
+	<li>Download the default user workflow. See <a href="../learnmore/site_admin_workflows.htm#proc_workflow_download">To download a workflow document from the developer portal</a>.</li>
+	<li>Remove the comment tag from line 834.</li>
+	<li>Rename the workflow (for example, from <strong>default-user-workflow-v2.xml</strong> to <strong>default-user-workflow-v2-useractivated.xml</strong>).</li>
+	<li>Upload the modified user workflow.</li>
+	<li>Make the modified workflow the default user workflow. See <a href="../learnmore/site_admin_workflows.htm#workflow_custom_specify_users">How do I specify a custom workflow for platform users?</a></li>
+</ol>
 <p><a href="#top">Back to top</a></p>
 
 
