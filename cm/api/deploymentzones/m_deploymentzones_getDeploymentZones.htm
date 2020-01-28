@@ -344,7 +344,6 @@
 <p><!-- #BeginLibraryItem "/Library/desc_getDeploymentZones.lbi" -->Returns a list of valid <a href="../Ref_Glossary_CommunityPlatform.htm#gl_deploymentzone">deployment zones</a> on the platform, in the form of an RSS channel.<!-- #EndLibraryItem --></p>
 <p><strong>Note</strong>: Be sure to include a valid Accept header with this operation. If you don't include the Accept header, the operation might fail in versions later than 8.0, even if it worked in earlier versions.</p>
 <p>For more information on deployment zones, refer to <a href="../aaref/Ref_DeploymentZonesOnThePlatform.htm">Deployment Zones on the Platform</a>.</p>
-<p class="apidoc_note"><strong>Note</strong>: At this time, there is no interface to manage deployment zones in the platform. Deployment zone configuration is optional. Deployment zones are loaded in the DEPLOY_ZONES and DEPLOY_ZONE_CONTAINER tables using a database script. If no deployment zones are configured, the platform API constructs transient deployment zones based on the deployment configuration of the agents available for the platform to host API proxy endpoints. To manage the deployment zones in the platform, contact tech support.</p>
 <p id="id_roles"><strong>Authorization Roles/Permissions</strong>:<!-- #BeginLibraryItem "/Library/roles_user.lbi" --> Must be <a href="../Ref_Glossary_CommunityPlatform.htm#gl_login">logged in</a>.<!-- #EndLibraryItem --><!-- #BeginLibraryItem "/Library/permission_read.lbi" -->
  Must have Read permission for the resource. <!-- #EndLibraryItem -->For example, a <a href="../aaref/Ref_AuthorizationRolesOnThePlatform.htm#authroles_bizadmin">Business Admin</a> or an <a href="../aaref/Ref_AuthorizationRolesOnThePlatform.htm#authroles_apiadmin">API Admin</a>.</p>
 <!-- InstanceEndEditable --><!-- #BeginLibraryItem "/Library/_whatdoyouwanttoreadabout.lbi" -->
@@ -372,7 +371,11 @@
 
 <h2 id="endpoint">URL</h2>
 <!-- InstanceBeginEditable name="URL" -->
-<pre class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->deploymentzones[?][ApiID={APIID}]</pre>
+<pre class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->deploymentzones[?][ApiID={APIID}]
+</pre>
+<p>In the context of a specific business:</p>
+<pre class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->deploymentzones?ContextID={BusinessID}[&amp;][ApiID={APIID}]
+</pre>
 <!-- InstanceEndEditable -->
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 
@@ -380,8 +383,10 @@
 <!-- InstanceBeginEditable name="Sample Request" -->
 <h2 id="samplerequest">Sample Request</h2>
 <p id="id_samplerequest">The example below requests a list of deployment zones.</p>
-<p><strong>Sample request URL</strong></p>
-<pre><span class="apidoc_div_codeendpoint"><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->deploymentzones</span></pre>
+<p><strong>Request URL #1</strong></p>
+<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->deploymentzones</pre>
+<p><strong>Request URL #2</strong></p>
+<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->deploymentzones?ContextID=87da343c-e260-43e2-8fbf-2fab7fae9203.acmepaymentscorp</pre>
 <p><strong>Sample request headers</strong></p>
 <pre>GET&nbsp;/api/deploymentzones HTTP/1.1
 Host:<!-- #BeginLibraryItem "/Library/_endpointhost.lbi" -->{hostname}<!-- #EndLibraryItem -->
@@ -449,6 +454,14 @@ Accept: application/json
 			<td>Optional</td>
 			<td><!-- #BeginLibraryItem "/Library/o_id_ApiID_.lbi" -->The API ID. If this parameter is included, only deployment zones available to the specified API are returned.<!-- #EndLibraryItem --></td>
 		</tr>
+		<tr>
+			<td>ContextID</td>
+			<td>Query</td>
+			<td>string</td>
+			<td>Optional</td>
+			<td><p>In this scenario, the ContextID is the <a href="../aaref/Ref_IDsOnThePlatform.htm#id_businessid">BusinessID</a> of a sub-organization. If no ContextID is provided, the deployment zones for the top-level organization (tenant organization) are returned.</p>
+				<p>In the scenario of creating an API at the organization level, it's important to include the optional ContextID in the request. This allows the developer portal to determine that the user has the correct permissions to create an API for that organization.</p></td>
+		</tr>
 	</tbody>
 </table>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
@@ -468,17 +481,91 @@ Accept: application/json
 
 <p><strong>Sample response headers</strong></p>
 <pre>HTTP/1.1 200 OK
-Date: Mon, 30 Jul 2018 20:10:06 GMT
+Date: Thu, 23 Jan 2020 23:26:23 GMT
 Content-Type: application/json</pre>
 
-<p><a id="rss_deploymentzones_json"></a><strong>Sample response body: application/json</strong></p>
+<p><a id="rss_deploymentzones_json"></a><strong>Sample response body #1: application/json</strong></p>
+<p>The sample response below is NOT in the context of a sub-organization, so the deployment zone information for the top-level organization (tenant organization) is returned.</p>
+<pre>{
+  "channel":{
+    "title":"Deployment Zones",
+    "item":[
+      {
+        "title":"container-1721",
+        "link":"http://gateway.akana.com",
+        "category":[
+          {
+            "value":"Production",
+            "domain":"uddi:soa.com:environment"
+          },
+          {
+            "value":"Sandbox",
+            "domain":"uddi:soa.com:environment"
+          }
+        ],
+        "guid":{
+          "value":"container-1721default-http0"
+        },
+        "EntityReferences":{
+          "EntityReference":[
+            {
+              "Title":"container-1721",
+              "Guid":"container-1721.acmepaymentscorp",
+              "Category":[
+                {
+                  "value":"dzone",
+                  "domain":"uddi:soa.com:resourcetype"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "title":"container-1531",
+        "link":"https://gateway.akana.com",
+        "category":[
+          {
+            "value":"Production",
+            "domain":"uddi:soa.com:environment"
+          },
+          {
+            "value":"Sandbox",
+            "domain":"uddi:soa.com:environment"
+          }
+        ],
+        "guid":{
+          "value":"container-1531mutual-https"
+        },
+        "EntityReferences":{
+          "EntityReference":[
+            {
+              "Title":"container-1531",
+              "Guid":"container-1531.acmepaymentscorp",
+              "Category":[
+                {
+                  "value":"dzone",
+                  "domain":"uddi:soa.com:resourcetype"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "version":"1.0"
+}</pre>
+
+<p><strong>Sample response body #2: application/json</strong></p>
+<p>In the example below, the request was in the context of a sub-organization (ContextID parameter included).</p>
 <pre>{
   "channel": {
     "title": "Deployment Zones",
     "item": [
       {
-        "title": "ed33-ae99-463a-b663-75710bdb67fb",
-        "link": "http://ubu1464qa-10.local.akana.com:7905",
+        "title": "container-1721",
+        "link": "http://gateway.akana.com",
         "category": [
           {
             "value": "Production",
@@ -490,13 +577,44 @@ Content-Type: application/json</pre>
           }
         ],
         "guid": {
-          "value": "ed33-ae99-463a-b663-75710bdb67fbdefault-http0"
+          "value": "container-1721default-http0"
         },
         "EntityReferences": {
           "EntityReference": [
             {
-              "Title": "ed33-ae99-463a-b663-75710bdb67fb",
-              "Guid": "ed33-ae99-463a-b663-75710bdb67fb.acmepaymentscorp",
+              "Title": "container-1721",
+              "Guid": "container-1721.acmepaymentscorp",
+              "Category": [
+                {
+                  "value": "dzone",
+                  "domain": "uddi:soa.com:resourcetype"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "title": "container-1531",
+        "link": "https://gateway.akana.com",
+        "category": [
+          {
+            "value": "Production",
+            "domain": "uddi:soa.com:environment"
+          },
+          {
+            "value": "Sandbox",
+            "domain": "uddi:soa.com:environment"
+          }
+        ],
+        "guid": {
+          "value": "container-1531mutual-https"
+        },
+        "EntityReferences": {
+          "EntityReference": [
+            {
+              "Title": "container-1531",
+              "Guid": "container-1531.acmepaymentscorp",
               "Category": [
                 {
                   "value": "dzone",
@@ -511,29 +629,6 @@ Content-Type: application/json</pre>
   },
   "version": "1.0"
 }</pre>
-
-
-<p><a id="rss_deploymentzones_xml"></a><strong>Sample response body: text/xml</strong></p>
-<pre>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
-&lt;rss xmlns:ns2="http://soa.com/xsd/business/1.0" xmlns:ns3="http://soa.com/xsd/user/1.0" xmlns:ns4="http://soa.com/xsd/rss/1.0" xmlns:ns5="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns6="http://soa.com/xsd/comment/1.0" xmlns:ns7="http://soa.com/xsd/board/1.0" xmlns:ns8="http://soa.com/xsd/dnmodel/1.0" xmlns:ns9="http://soa.com/xsd/resource/1.0" xmlns:ns10="http://soa.com/xsd/legals/1.0" xmlns:ns11="http://soa.com/xsd/fault/1.0" xmlns:ns12="http://soa.com/xsd/api/1.0" xmlns:ns13="http://soa.com/xsd/deploymentzone/1.0" xmlns:ns14="http://soa.com/xsd/asset/1.0" xmlns:ns15="http://soa.com/xsd/ticket/1.0" xmlns:ns16="http://soa.com/xsd/app/1.0" xmlns:ns17="http://soa.com/xsd/review/1.0" xmlns:ns18="http://soa.com/xsd/alert/1.0" xmlns:ns19="http://soa.com/xsd/contract/1.0" xmlns:ns20="http://soa.com/xsd/discussion/1.0" xmlns:ns21="http://soa.com/xsd/search/1.0" xmlns:ns22="http://soa.com/xsd/workflow/1.0" xmlns:ns23="http://soa.com/xsd/client/services/1.0" xmlns:ns24="http://soa.com/xsd/oauth/1.0" version="1.0"&gt;
-  &lt;channel&gt;
-    &lt;title&gt;Deployment Zones&lt;/title&gt;
-    &lt;item&gt;
-      &lt;title&gt;ed33-ae99-463a-b663-75710bdb67fb&lt;/title&gt;
-      &lt;link&gt;http://ubu1464qa-10.local.akana.com:7905&lt;/link&gt;
-      &lt;category domain="uddi:soa.com:environment"&gt;Production&lt;/category&gt;
-      &lt;category domain="uddi:soa.com:environment"&gt;Sandbox&lt;/category&gt;
-      &lt;guid&gt;ed33-ae99-463a-b663-75710bdb67fbdefault-http0&lt;/guid&gt;
-      &lt;ns4:EntityReferences&gt;
-        &lt;ns4:EntityReference&gt;
-          &lt;Title&gt;ed33-ae99-463a-b663-75710bdb67fb&lt;/Title&gt;
-          &lt;Guid&gt;ed33-ae99-463a-b663-75710bdb67fb.acmepaymentscorp&lt;/Guid&gt;
-          &lt;ns4:Category domain="uddi:soa.com:resourcetype"&gt;dzone&lt;/ns4:Category&gt;
-        &lt;/ns4:EntityReference&gt;
-      &lt;/ns4:EntityReferences&gt;
-    &lt;/item&gt;
-  &lt;/channel&gt;
-&lt;/rss&gt;</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 <!-- InstanceEndEditable -->
 

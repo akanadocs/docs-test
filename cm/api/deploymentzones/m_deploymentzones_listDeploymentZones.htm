@@ -373,6 +373,9 @@
 <!-- InstanceBeginEditable name="URL" -->
 <pre class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->deploymentzones[?][Implementation={implementation}][&amp;][{Environment={environment}]
 [&amp;][APIImplementationPattern={implementationpattern}][&amp;][DzoneID={dzone1}][&amp;][DzoneID={dzone2}][&amp;][ApiID={APIID}]</pre>
+<p>In the context of a specific business:</p>
+<pre class="soaapidoc_endpoint"><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->deploymentzones?ContextID={BusinessID}[&amp;][Implementation={implementation}][&amp;][{Environment={environment}]
+[&amp;][APIImplementationPattern={implementationpattern}][&amp;][DzoneID={dzone1}][&amp;][DzoneID={dzone2}][&amp;][ApiID={APIID}]</pre>
 <!-- InstanceEndEditable -->
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 
@@ -380,12 +383,14 @@
 <!-- InstanceBeginEditable name="Sample Request" -->
 <h2 id="samplerequest">Sample Request</h2>
 <p id="id_samplerequest">The example below shows a request for the deployment zone information.</p>
-<p><strong>Request URL</strong></p>
+<p><strong>Request URL #1</strong></p>
 <pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->deploymentzones</pre>
+<p><strong>Request URL #2</strong></p>
+<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->deploymentzones?ContextID=87da343c-e260-43e2-8fbf-2fab7fae9203.acmepaymentscorp</pre>
 <p><strong>Sample request headers</strong></p>
 <pre>GET /api/deploymentzones HTTP/1.1
 Host: {hostname}
-Accept: application/vnd.soa.v81+json</pre>
+Accept: application/vnd.soa.v84+json</pre>
 <p><strong>Sample request body</strong></p>
 <p>Not applicable.</p>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
@@ -470,6 +475,14 @@ Accept: application/vnd.soa.v81+json</pre>
 			<td>Optional</td>
 			<td><!-- #BeginLibraryItem "/Library/o_id_ApiID_.lbi" -->The API ID. If this parameter is included, only deployment zones available to the specified API are returned.<!-- #EndLibraryItem --></td>
 		</tr>
+		<tr>
+			<td>ContextID</td>
+			<td>Query</td>
+			<td>string</td>
+			<td>Optional</td>
+			<td><p>In this scenario, the ContextID is the <a href="../aaref/Ref_IDsOnThePlatform.htm#id_businessid">BusinessID</a> of a sub-organization. If no ContextID is provided, the deployment zones for the top-level organization (tenant organization) are returned.</p>
+				<p>In the scenario of creating an API at the organization level, it's important to include the optional ContextID in the request. This allows the developer portal to determine that the user has the correct permissions to create an API for that organization.</p></td>
+		</tr>
 	</tbody>
 </table>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
@@ -489,11 +502,38 @@ Accept: application/vnd.soa.v81+json</pre>
 <p><strong>Sample response headers: application/vnd.soa.v84+json</strong></p>
 <pre>Status Code: 200 OK
 Content-Type: application/vnd.soa.v84+json
-Date: Mon, 30 Jul 2018 20:24:54 GMT</pre>
-<p><strong>Sample response body: application/vnd.soa.v81+json</strong></p>
+Date: Thu, 23 Jan 2020 23:43:40 GMT</pre>
+<p><strong>Sample response body #1: application/vnd.soa.v81+json</strong></p>
+<p>The sample response below is NOT in the context of a sub-organization, so the deployment zone information for the top-level organization (tenant organization) is returned.</p>
 <pre>{
   "DeploymentZoneInfo": [
     {
+      "DeploymentZoneID": "container-1051.acmepaymentscorp",
+      "Name": "Akana US West",
+      "Description": "",
+      "Location": "37.339835, -121.88615",
+      "ContainerKey": "container-1051",
+      "ContainerName": "Akana US West",
+      "AddressOverrideBehavior": "com.akana.dontallow",
+      "RandomHostNameBehavior": "com.akana.allow",
+      "VirtualHostSupported": false,
+      "DeploymentZoneAccessPoint": [
+        {
+          "Protocol": "http",
+          "Name": "default-http0",
+          "Address": "http://gateway.akana.com:80"
+        },
+        {
+          "Protocol": "https",
+          "Name": "default-https",
+          "Address": "https://gateway.akana.com:443"
+        },
+        {
+          "Protocol": "https",
+          "Name": "mutual-https",
+          "Address": "https://mtl-west.gateway.akana.com:443"
+        }
+      ],
       "DZoneEnvImplAssociations": {
         "DZoneEnvImplAssociation": [
           {
@@ -505,21 +545,53 @@ Date: Mon, 30 Jul 2018 20:24:54 GMT</pre>
             "Environment": "Production"
           }
         ]
-      },
-      "DeploymentZoneID": "ed33-ae99-463a-b663-75710bdb67fb.acmepaymentscorp",
-      "Name": "eapNdTrunk",
-      "ContainerKey": "ed33-ae99-463a-b663-75710bdb67fb",
-      "ContainerName": "eapNdTrunk",
-      "AddressOverrideBehavior": "com.akana.allow",
+      }
+    }
+  ]
+}</pre>
+<p><strong>Sample response body #2: application/vnd.soa.v81+json</strong></p>
+<p>In the example below, the request was in the context of a sub-organization (ContextID parameter included).</p>
+<pre>{
+  "DeploymentZoneInfo": [
+    {
+      "DeploymentZoneID": "container-1051.acmepaymentscorp",
+      "Name": "Akana US West",
+      "Description": "",
+      "Location": "37.339835, -121.88615",
+      "ContainerKey": "container-1051",
+      "ContainerName": "Akana US West",
+      "AddressOverrideBehavior": "com.akana.dontallow",
       "RandomHostNameBehavior": "com.akana.allow",
       "VirtualHostSupported": false,
       "DeploymentZoneAccessPoint": [
         {
           "Protocol": "http",
           "Name": "default-http0",
-          "Address": "http://ubu1464qa-10.local.akana.com:7905"
+          "Address": "http://gateway.akana.com:80"
+        },
+        {
+          "Protocol": "https",
+          "Name": "default-https",
+          "Address": "https://gateway.akana.com:443"
+        },
+        {
+          "Protocol": "https",
+          "Name": "mutual-https",
+          "Address": "https://mtl-west.gateway.akana.com:443"
         }
-      ]
+      ],
+      "DZoneEnvImplAssociations": {
+        "DZoneEnvImplAssociation": [
+          {
+            "Implementation": "Live",
+            "Environment": "Production"
+          },
+          {
+            "Implementation": "Sandbox",
+            "Environment": "Production"
+          }
+        ]
+      }
     }
   ]
 }</pre>
@@ -610,7 +682,6 @@ Date: Mon, 30 Jul 2018 20:24:54 GMT</pre>
 	<li><a href="../aaex/Ref_Ex_Overview.htm">Examples: Overview</a></li>
 </ul> 
 </div><!-- #EndLibraryItem --></div>
-
 				<!-- main content ends here -->
 			</div>
 			</div>			
