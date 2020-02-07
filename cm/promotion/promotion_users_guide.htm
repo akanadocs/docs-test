@@ -29,8 +29,8 @@ nav-title: LC Promotion Guide
 			<li><a href="#s03_05">Asset Filters</a></li>
 			<li><a href="#s03_06">Rules</a></li>
 			<li><a href="#s03_07_00">Asset Model</a></li>
-		</ul>
-	</li>
+			</ul>
+		</li>
 	<li><a href="#lc_installation">Lifecycle Coordinator Installation</a></li>
 	<li><a href="#topology_config">Topology Configuration</a>
 		<ul>
@@ -47,44 +47,58 @@ nav-title: LC Promotion Guide
 			<li><a href="#mapping_visibility_app">App Visibility Mapping</a> (2019.1.0 and later)</li>
 			<li><a href="#asset_notification">Asset Notifications</a> (8.4.17 and later)</li>
 			<li><a href="#properties_element">Properties</a> (8.4.17 and later)</li>
-		</ul>
-	</li>
+			</ul>
+		</li>
 	<li><a href="#dz_configurations">Deployment Zone Configurations</a>
-(8.4.12 and later)
+		(8.4.12 and later)
 		<ul>
 			<li><a href="#s06_01">Using Filters with Deployment Zone Configurations</a></li>
 			<li><a href="#s06_02">Default Endpoint Propagation</a></li>
 			<li><a href="#s06_03">Using Rules with Deployment Zone Configurations</a></li>
 			<li><a href="#s06_04">Duplicate Endpoints</a></li>
-		</ul>
-	</li>
+			</ul>
+		</li>
 	<li><a href="#s08_03_environment_config">Environment Configuration</a>
 		<ul>
 			<li><a href="#s08_04_api_impl_profiles">API Implementation Profiles</a></li>
-		</ul>
-	</li>
+			</ul>
+		</li>
 	<li><a href="#topology_api">Topology API</a>
 		<ul>
 			<li><a href="#topologyapi_01">Finding the Topology API Documentation</a></li>
 			<li><a href="#topologyapi_02">Using the Topology API</a></li>
-		</ul>
-	</li>
+			</ul>
+		</li>
 	<li><a href="#lm_console">Lifecycle Manager Console</a>
 		<ul>
 			<li><a href="#s07_01">Logging In</a></li>
 			<li><a href="#s07_02">Viewing Assets and Iterations</a></li>
 			<li><a href="#s07_03">Promotion Requests</a></li>
+			</ul>
+		</li>
+	<li><a href="#env_decoupled_00">Support for Decoupled Environments in a Topology</a>
+		<ul>
+			<li><a href="#env_decoupled_01">Updating Environment Context information</a></li>
+			<li><a href="#env_decoupled_02">Promoting Assets</a></li>
+			</ul>
+		</li>
+	<li><a href="#app_b_client_apps">"Client app" approach to supporting API to API contracts</a> (2018.0.0 and later)
+		<ul>
+			<li><a href="#app_b_promotion_support">Promotion Support</a></li>
 		</ul>
-	</li>
-	<li><a href="#env_decoupled_00">Support for Decoupled Environments in a Topology</a></li>
+		</li>
 	<li><a href="#runtime_config">Defaulting API Settings using Runtime Configurations</a> (8.4.17 and later)</li>
 	<li><a href="#s09_orchestrated">Appendix A: Promoting Orchestrated APIs</a>
 		<ul>
 			<li><a href="#s09_01_referenced_svcs">Referenced Services</a></li>
-		</ul>
+			</ul>
 	</li>
-	<li><a href="#app_b_client_apps">Appendix B: Support for client apps</a> (2018.0.0 and later)</li>
-	<li><a href="#app_c_tips">Appendix C: Promotion tips and best practices</a></li>
+	<li><a href="#app_c_tips">Appendix B: Promotion tips and best practices</a>
+		<ul>
+			<li><a href="#tip_seq_env">Make changes in earlier environment</a></li>
+			<li><a href="#tip_seq_promote">Promotion sequence for app with API contract</a></li>
+			</ul>
+	</li>
 </ol>
 <hr class="divide_hr" />
 
@@ -1217,8 +1231,8 @@ vsep.listenerName = "https"</td>
 <h2 id="topology_api">Topology API</h2>
 <p>In this section:</p>
 <ul>
-	<li>Finding the Topology API Documentation</li>
-	<li>Using the Topology API</li>
+	<li><a href="#topologyapi_01">Finding the Topology API Documentation</a></li>
+	<li><a href="#topologyapi_02">Using the Topology API</a></li>
 </ul>
 
 
@@ -1257,6 +1271,12 @@ vsep.listenerName = "https"</td>
 
 <h2 id="lm_console">Lifecycle Manager Console</h2>
 <p>The Lifecycle Manager (<strong>LM</strong>) console is useful for accessing promoted assets and their iterations as well as approving promotion requests. Within Lifecycle Manager, a topology is represented as a <strong>library</strong> and the elements of a Topology along with the entities being promoted are represented as <strong>assets</strong>.</p>
+<p>In this section:</p>
+<ul>
+	<li><a href="#s07_01">Logging In</a></li>
+	<li><a href="#s07_02">Viewing Assets and Iterations</a></li>
+	<li><a href="#s07_03">Promotion Requests</a></li>
+</ul>
 
 
 <h3 id="s07_01">Logging In</h3>
@@ -1289,6 +1309,7 @@ vsep.listenerName = "https"</td>
 </ul>
 <p>Additionally, in the case of a promotion failure (generally due to an invalid rule) error details are stored in the Artifacts section of the iteration asset:</p>
 <p><img src="images/promotion_14.jpg" alt="Error details" /></p>
+
 
 <h3 id="s07_03">Promotion Requests</h3>
 <p>The configuration of the topology library can optionally be customized to require approvals for a promotion request. For assistance with customization, contact Akana Professional Services.</p>
@@ -1324,6 +1345,8 @@ vsep.listenerName = "https"</td>
 	<li><a href="#env_decoupled_01">Updating Environment Context information</a></li>
 	<li><a href="#env_decoupled_02">Promoting Assets</a></li>
 </ul>
+
+
 <h3 id="env_decoupled_01">Updating Environment Context information</h3>
 <p>Lifecycle Coordinator needs to have some understanding of the target environment supported by a decoupled tenant so that it can validate for the existence of dependencies when an asset is promoted to that environment. To accomplish this, the promotion context information must be fetched from the decoupled tenant with a GET call to the <strong>getEnvironmentPromotionContext</strong> operation of the TenantAdministrationAPI on the isolated system.</p>
 <pre>{host:port}/api/tenants/{tenant id}/{environment name}/promotion/context?includeServiceInfo=true&amp;includeAPIInfo=true</pre>
@@ -1356,6 +1379,24 @@ vsep.listenerName = "https"</td>
 		</ul>
 	</li>
 </ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="app_b_client_apps">&quot;Client app&quot; approach to supporting API to API contracts</h2>
+<p><strong>API Platform Version: 2018.0.0 and later</strong></p>
+<p>The API Platform allows contracts to be established between apps and APIs, but does not support direct API to API access. In most cases this is not needed. However, API to API access is supported in the underlying infrastructure, and if it's needed you can support it by using a pattern where an API is represented with a <strong>client App</strong>.</p>
+<p>Let's say you're migrating from the underlying infrastructure (Policy Manager) to Community Manager, and your implementation includes API to API contracts. You can use a configuration in Lifecycle Repository to designate whether an API is Consumer or not. If it is, Lifecycle Repository automatically creates an app with the API. This app is tied to the API and replaces the &quot;API to API contracts&quot; concept in Policy Manager.</p>
+<p>&nbsp;</p>
+<p>The idea of Client App is the following. In PM there&rsquo;s a concept of creating API to API contracts. In CM there is no such concept. ISB needed a way to have this concept in CM when they migrated from PM. So Brent came up with this idea… There&rsquo;s a config in LR when you create an API you can choose if it&rsquo;s a Consumer or not. If it is then a Client App gets created with the API automatically by LR. This app is tied to the API and replaces the previous &ldquo;API to API contracts&rdquo; in PM. In this case when the API is promoted the Client App is promoted too.</p>
+<p>With this approach, each API has an accompanying client app that is used to establish access to other APIs for the represented API. Contracts between a client app and another API are logically contracts between the source and target APIs, allowing for full dependency analysis of composite APIs.</p>
+<p>You can configure the API Platform Repository plug-in to support the client app pattern by adding the <strong>Create Client App</strong> task to the post-processing phase of the API submission process. For additional information about configuring a submission process, contact Rogue Wave Technical Support. This task will cause a client app to be created as each API is created. The client app will be named as <strong>{api name}_app</strong> and a <strong>client-app</strong> property will be set on the represented API pointing to the client app. The generated client app will, in turn, have a <strong>represented-api</strong> property to point back to the API.</p>
+<p>Note that the <strong>Create Client App</strong> task can be configured to run based on the setting of a custom property on the API, such as <strong>isConsumer</strong>, allowing the creator of the API to determine whether a client app is needed.</p>
+
+
+<h3 id="app_b_promotion_support">Promotion Support</h3>
+<p>When an API with an accompanying client app is promoted using Lifecycle Coordinator, the client app will also be promoted to the target environment as well as any contracts it has to other APIs. These contracts will be validated prior to API promotion in the same manner as the dependencies for a standard app are validated prior to app promotion.</p>
+<p><strong>Note</strong>: If you want to promote an app that has been given access to an API  (contract has been created), this is not the approach to use. For information about the steps to take in this scenario, see <a href="#tip_seq_promote">Promotion sequence for app with API contract</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -1451,25 +1492,27 @@ Defining process and script mappings by using IDs</h4>
     "condition":"serviceRef.url.indexOf(\"foo.com\") > 0",
     "action":"serviceRef.url = serviceRef.url.replace(\"foo.com\",\"bar.com\")"
   }
-]
-</pre>
+]</pre>
 <p><a href="#top">Back to top</a></p>
 
 
 
-<h2 id="app_b_client_apps">Appendix B: Support for client apps</h2>
-<p><strong>API Platform Version: 2018.0.0 and later</strong></p>
-<p>Currently, the API Platform allows contracts to be established between apps and APIs, but does not support direct API to API access. This can be mitigated through the use of a pattern where an API is represented with a <strong>client App</strong>. With this approach, each API has an accompanying client app that is used to establish access to other APIs for the represented API. Contracts between a client app and another API are logically contracts between the source and target APIs, allowing for full dependency analysis of composite APIs.</p>
-<p>You can configure the API Platform Repository plug-in to support the client app pattern by adding the <strong>Create Client App</strong> task to the post-processing phase of the API submission process. For additional information about configuring a submission process, contact Rogue Wave Technical Support. This task will cause a client app to be created as each API is created. The client app will be named as <strong>{api name}_app</strong> and a <strong>client-app</strong> property will be set on the represented API pointing to the client app. The generated client app will, in turn, have a <strong>represented-api</strong> property to point back to the API.</p>
-<p>Note that the <strong>Create Client App</strong> task can be configured to run based on the setting of a custom property on the API, such as <strong>isConsumer</strong>, allowing the creator of the API to determine whether a client app is needed.</p>
+<h2 id="app_c_tips">Appendix B: Promotion tips and best practices</h2>
+<p>This section includes:</p>
+<ul>
+	<li><a href="#tip_seq_env">Make changes in earlier environment</a></li>
+	<li><a href="#tip_seq_promote">Promotion sequence for app with API contract</a></li>
+</ul>
+
+<h4 id="tip_seq_env">Make changes in earlier environment</h4>
+<p>When making changes to an asset in the hierarchy, always make changes in the Dev environment (or whichever environment is first in the promotion chain).</p>
+<p>If you make changes in a later environment, they will be lost on a subsequent iteration.</p>
 
 
-<h3 id="app_b_promotion_support">Promotion Support</h3>
-<p>When an API with an accompanying client app is promoted using Lifecycle Coordinator, the client app will also be promoted to the target environment as well as any contracts it has to other APIs. These contracts will be validated prior to API promotion in the same manner as the dependencies for a standard app are validated prior to app promotion.</p>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<h2 id="app_c_tips">Appendix C: Promotion tips and best practices</h2>
-<p>When making changes to an asset in the hierarchy, always make changes in the Dev environment (or whichever environment is first in the promotion chain). If you make changes in a later environment, they will be lost on a subsequent iteration.</p>
+<h4 id="tip_seq_promote">Promotion sequence for app with API contract</h4>
+<p>If you want to promote an app that has been given access to an API (contract has been created), follow this sequence:</p>
+<ol>
+	<li>First, promote the API to the target environment.</li>
+	<li>Then, promote the app. At that point, the contract is promoted with the app.</li>
+</ol>
 <p><a href="#top">Back to top</a></p>

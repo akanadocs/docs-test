@@ -80,6 +80,7 @@ nav-title: Domains
 	<li><a href="#domain_oauth_provider_support_sso_login">How can I set up my Akana OAuth/OIDC Provider domain to support end-user login from an external identity provider?</a></li>
 	<li><a href="#auth_server_url_define">What is an Authorization Server URL?</a></li>
 	<li><a href="#auth_server_url_platform">What is the OAuth Authorization Server URL for the platform?</a></li>
+	<li><a href="#platform_oauth_endpoints">What are the OAuth endpoints for the platform?</a></li>
 	<li><a href="#what_are_the_oauth_custom_headers">What are the OAuth custom headers?</a></li>
 	<li><a href="#what_is_a_jwt_bearer_assertion">What is a Bearer Assertion, and what does the platform support for Bearer Assertions?</a></li>
 	<li><a href="#what_token_types_should_i_support">What token types should I support?</a></li>
@@ -165,7 +166,7 @@ nav-title: Domains
 		</tr>
 		<tr>
 			<td><p>2019.1.4 and later: <a href="#domain_oauth_provider_configure">Akana OAuth/OIDC Provider</a></p>
-			<p>Prior to 2019.1.4: OAuth/OIDC Provider (same link)</p></td>
+				<p>Prior to 2019.1.4: OAuth/OIDC Provider (same link)</p></td>
 			<td>No</td>
 			<td>Yes</td>
 		</tr>
@@ -677,8 +678,9 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
 
 <h2 id="oauth_provider_domain_which_type">Which type of OAuth Provider domain should I set up?</h2>
 <p>The platform offers two options for setting up an OAuth Provider domain:</p>
-<ul><li><strong>Akana OAuth/OIDC Provider Domain</strong>
-	<p>Choose this option if you are using the Akana API platform as your OAuth/OIDC provider. You can set up a separate provider that you want to use for authentication, such as Google or Facebook, and the platform manages the process of authenticating via the separate provider and manages authorization, token issuance, and API access. For more information, see <a href="#domain_oauth_provider_configure">How do I set up and configure an Akana OAuth/OIDC Provider domain?</a> below.</p></li>
+<ul>
+	<li><strong>Akana OAuth/OIDC Provider Domain</strong>
+		<p>Choose this option if you are using the Akana API platform as your OAuth/OIDC provider. You can set up a separate provider that you want to use for authentication, such as Google or Facebook, and the platform manages the process of authenticating via the separate provider and manages authorization, token issuance, and API access. For more information, see <a href="#domain_oauth_provider_configure">How do I set up and configure an Akana OAuth/OIDC Provider domain?</a> below.</p></li>
 	<li><strong>External OAuth Provider Domain</strong>
 	<p>Choose this option if you want to use an entity other than the Akana API platform as your OAuth/OIDC provider; for example, PingFederate or Google. For more information, see <a href="bus_admin_domains_eoap.htm">External OAuth Provider Domain</a>.</p></li>
 </ul>
@@ -1115,7 +1117,7 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
 	</li>
 </ul>
 				<p>Firewalls and DNS servers must be set up for this URL so that end users and apps can access the URL. This protocol/host/path should resolve to one or more containers with either the OAuth Provider or OAuth Provider Agent feature installed.</p>
-				<p>For more information, including the specific paths for different OAuth URLs for the OAuth provider, see <a href="#auth_server_url_platform">What is the OAuth Authorization Server URL for the platform?</a></p></td>
+				<p>For more information, including the specific paths for different OAuth URLs for the OAuth provider, see <a href="#platform_oauth_endpoints">What are the OAuth endpoints for the platform?</a></p></td>
 		</tr>
 		<tr>
 			<td>Additional Virtual Hosts</td>
@@ -1165,7 +1167,21 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
 <h2 id="auth_server_url_platform">What is the OAuth Authorization Server URL for the platform?</h2>
 <p>When you are setting up an Akana OAuth/OIDC Provider domain on the platform, the URL you provide for the Authorization Server (OAuth endpoint) is the base of the URL for the Request Token URL, Access Token URL, and Authorize URL, with additional parts of the paths as shown below.</p>
 <p>When setting up the OAuth Authorization Server URL in the platform, enter only the base of the URL, including protocol, host, and port if needed. The platform appends the appropriate path as listed below after the {oauth.provider.url} variable.</p>
-<p>For example, if the Authorization Server URL you specified in the provider configuration was https://www.acmepaymentscorp.com:9800, use that value in place of the {oauth.provider.url} placeholder. The platform appends the rest of the URL in each case; for OAuth 2.0, OAuth Authorization Endpoint URL becomes https://www.acmepaymentscorp.com:9800/oauth/auz/authorize and OAuth Token Endpoint URL becomes  https://www.acmepaymentscorp.com:9800/oauth/oauth20/token.</p>
+<p>For example, let's say the Authorization Server URL you specify in the provider configuration is:</p>
+<pre>https://www.acmepaymentscorp.com:9800</pre>
+<p>Use that value in place of the {oauth.provider.url} placeholder. The platform appends the rest of the URL in each case.</p>
+<p>For OAuth 2.0, the OAuth Authorization Endpoint URL becomes:</p>
+<pre>https://www.acmepaymentscorp.com:9800/oauth/auz/authorize</pre>
+<p>OAuth Token Endpoint URL becomes:</p>
+<pre>https://www.acmepaymentscorp.com:9800/oauth/oauth20/token</pre>
+<p><strong>Note</strong>: App developers need to know the Authorization Server URL in order to set up their apps to use the OAuth domain. This information must be made available to API Admins, who must make sure it is included in API documentation.</p>
+<p>For general information on Authorization Server URLs, see <a href="#auth_server_url_define">What is an Authorization Server URL?</a> above.</p>
+<p><strong>Note</strong>: If you are setting up an External OAuth Provider domain, you'll need to provide the Authorization Server URL of your provider. Generally, this is available at the well-known configuration endpoint. See <a href="bus_admin_domains_eoap.htm#why_choose_eoap">When would I choose an External OAuth Provider domain?</a></p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="platform_oauth_endpoints">What are the OAuth endpoints for the platform?</h2>
 <p>The full URLs for both supported OAuth versions are shown below.</p>
 <p>OAuth endpoints for 1.0a:</p>
 <ul>
@@ -1178,9 +1194,6 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
 	<li><strong>OAuth Authorization Endpoint URL</strong>: {oauth.provider.url}/oauth/auz/authorize</li>
 	<li><strong>OAuth Token Endpoint URL</strong>: {oauth.provider.url}/oauth/oauth20/token</li>
 </ul>
-<p><strong>Note</strong>: App developers need to know the Authorization Server URL in order to set up their apps to use the OAuth domain. This information must be made available to API Admins, who must make sure it is included in API documentation.</p>
-<p>For general information on Authorization Server URLs, see <a href="#auth_server_url_define">What is an Authorization Server URL?</a> above.</p>
-<p><strong>Note</strong>: If you are setting up an External OAuth Provider domain, you'll need to provide the Authorization Server URL of your provider. Generally, this is available at the well-known configuration endpoint. See <a href="bus_admin_domains_eoap.htm#why_choose_eoap">When would I choose an External OAuth Provider domain?</a></p>
 <p><a href="#top">Back to top</a></p>
 
 
