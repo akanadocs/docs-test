@@ -382,11 +382,14 @@
 
 <!-- InstanceBeginEditable name="Sample Request" -->
 <h2 id="samplerequest">Sample Request</h2>
-<p id="id_samplerequest">The example below shows a request for the deployment zone information.</p>
+<p id="id_samplerequest">The examples below show a request for the deployment zone information.</p>
 <p><strong>Request URL #1</strong></p>
 <pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->deploymentzones</pre>
 <p><strong>Request URL #2</strong></p>
 <pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->deploymentzones?ContextID=87da343c-e260-43e2-8fbf-2fab7fae9203.acmepaymentscorp</pre>
+<p><strong>Request URL #3</strong></p>
+<p>In the example below, the OrgKey parameter is included. This supersedes the ContextID.</p>
+<pre><!-- #BeginLibraryItem "/Library/_endpointbase.lbi" -->https://{hostname}/api/<!-- #EndLibraryItem -->deploymentzones?OrgKey=uddi%3Asoa.com%3Aatmosphere%3Abusiness%3A89535988-cfe8-44e0-8fdb-15f8ebf2109f</pre>
 <p><strong>Sample request headers</strong></p>
 <pre>GET /api/deploymentzones HTTP/1.1
 Host: {hostname}
@@ -474,10 +477,29 @@ Accept: application/vnd.soa.v84+json</pre>
 			<td>Query</td>
 			<td>string</td>
 			<td>Optional</td>
-			<td><p>In this scenario, the ContextID is the <a href="../aaref/Ref_IDsOnThePlatform.htm#id_businessid">BusinessID</a> of a sub-organization. If no ContextID is provided, the deployment zones for the top-level organization (tenant organization) are returned.</p>
-				<p>In the scenario of creating an API at the organization level, it's important to include the optional ContextID in the request. This allows the developer portal to determine that the user has the correct permissions to create an API for that organization.</p></td>
+			<td><p>In this scenario, the ContextID is the <a href="../aaref/Ref_IDsOnThePlatform.htm#id_businessid">BusinessID</a> of a sub-organization.</p>
+				<p>If you're creating an API within the context of a specific organization level, it's important to include the optional ContextID in the request. This allows the developer portal to determine that the user has the correct permissions to create an API for that organization.</p>
+				<p>Notes:</p>
+				<ul class="apidoctable_ul">
+					<li>If ContextID is provided, the deployment zone permissions are checked against the context.</li>
+					<li> If ContextID is not provided, the deployment zones for the top-level organization (tenant organization) are returned.</li>
+					<li>If the OrgKey parameter is provided, OrgKey supersedes ContextID with regard to deployment zone permissions.</li>
+				</ul></td>
 		</tr>
-	</tbody>
+		<tr>
+			<td><p>OrgKey</p>
+				<p>Version: 2019.1.7</p></td>
+			<td>Query</td>
+			<td>string</td>
+			<td>Optional</td>
+			<td><p>If OrgKey is provided, the deployment zone permissions are checked against this context. If OrgKey is not provided, the deployment zones for the top-level organization (tenant organization) are returned.</p>
+				<p><strong>Note</strong>: If you're not sure of the OrgKey, you could run one of these operations to get the value:</p>
+				<ul class="apidoctable_ul">
+					<li><span class="apidoc_code"><a href="../apis/m_apis_getAPI.htm">GET&nbsp;/api/apis/{APIID}</a></span> operation (<a href="../aaref/Ref_IDsOnThePlatform.htm#id_organizationkey">OrganizationKey</a> value in the API response)</li>
+					<li><span class="apidoc_code"><a href="../businesses/m_businesses_getBusiness.htm">GET&nbsp;/api/businesses/{BusinessID}</a></span> operation (<a href="../aaref/Ref_IDsOnThePlatform.htm#id_businesskey">BusinessKey</a> value in the API response).</li>
+				</ul></td>
+		</tr>
+		</tbody>
 </table>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 <!-- InstanceEndEditable -->
@@ -493,11 +515,11 @@ Accept: application/vnd.soa.v84+json</pre>
 <!-- InstanceBeginEditable name="Sample Response" -->
 <h2 id="sampleresponse">Sample Response</h2>
 <p id="id_sampleresponse">The sample response below shows successful completion of this operation.</p>
-<p><strong>Sample response headers: application/vnd.soa.v84+json</strong></p>
+<p><strong>Sample response headers</strong></p>
 <pre>Status Code: 200 OK
 Content-Type: application/vnd.soa.v84+json
 Date: Thu, 23 Jan 2020 23:43:40 GMT</pre>
-<p><strong>Sample response body #1: application/vnd.soa.v81+json</strong></p>
+<p><strong>Sample response body #1</strong></p>
 <p>The sample response below is NOT in the context of a sub-organization, so the deployment zone information for the top-level organization (tenant organization) is returned.</p>
 <pre>{
   "DeploymentZoneInfo": [
@@ -543,8 +565,8 @@ Date: Thu, 23 Jan 2020 23:43:40 GMT</pre>
     }
   ]
 }</pre>
-<p><strong>Sample response body #2: application/vnd.soa.v81+json</strong></p>
-<p>In the example below, the request was in the context of a sub-organization (ContextID parameter included).</p>
+<p><strong>Sample response body #2</strong></p>
+<p>In the example below, the request was in the context of a sub-organization (ContextID parameter included in the request).</p>
 <pre>{
   "DeploymentZoneInfo": [
     {
@@ -572,6 +594,44 @@ Date: Thu, 23 Jan 2020 23:43:40 GMT</pre>
           "Protocol": "https",
           "Name": "mutual-https",
           "Address": "https://mtl-west.gateway.akana.com:443"
+        }
+      ],
+      "DZoneEnvImplAssociations": {
+        "DZoneEnvImplAssociation": [
+          {
+            "Implementation": "Live",
+            "Environment": "Production"
+          },
+          {
+            "Implementation": "Sandbox",
+            "Environment": "Production"
+          }
+        ]
+      }
+    }
+  ]
+}</pre>
+<p><strong>Sample response body #3</strong></p>
+<p>In the example below, the request was in the context of a sub-organization (OrgKey parameter included in the request).</p>
+<pre>
+
+{
+  "DeploymentZoneInfo": [
+    {
+      "DeploymentZoneID": "c377f0a2-70f5-4e32-aa8e-cf957b385595.automation",
+      "Name": "bhJNQX",
+      "Description": "ppbABT",
+      "ContainerKey": "1652-80ac-4379-aeb3-d391dca8533e",
+      "ContainerName": "eapNd",
+      "AddressOverrideBehavior": "com.akana.allow",
+      "RandomHostNameBehavior": "com.akana.dontallow",
+      "HostName": "automation.akana.roguewave.com",
+      "VirtualHostSupported": true,
+      "DeploymentZoneAccessPoint": [
+        {
+          "Protocol": "http",
+          "Name": "default-http0",
+          "Address": "http://automation.akana.roguewave.com:7905"
         }
       ],
       "DZoneEnvImplAssociations": {
