@@ -11,7 +11,7 @@ nav-title: API Version Workflow
 ---
 <h1 id="top">API Version Workflow</h1>
 <p>This section provides information about functions, conditions, and variables for the API version workflow, as well as initial actions and reserved actions.</p>
-<p>Note: API version workflow is optional. If no custom workflow is in place, the API version behavior is the default behavior described in the online help for the developer portal. See <a href="../learnmore/apiadmin_.htm">API Administration</a>.</p>
+<p><strong>Note</strong>: API version workflow is optional. If no custom workflow is in place, the API version behavior is the default behavior described in the online help for the developer portal. See <a href="../learnmore/apiadmin_.htm">API Administration</a>.</p>
 <!--<p>{<span class="apidoc_red">C:\SVN\akana\trunk\products\api-portal\com.soa.atmosphere.impl\src\com\soa\api\workflow\impl</span>}</p>-->
 <hr class="divide_hr" />
 
@@ -19,14 +19,28 @@ nav-title: API Version Workflow
 
 <h2 style="color: gray;">Table of Contents</h2>
 <ol class="table_of_contents">
+	<li><a href="#apiv_wf_ov">API Version Workflow: Overview</a></li>
 	<li><a href="#apiv_ia_00">API Version Workflow: Initial Actions</a></li>
 	<li><a href="#apiv_ra_00">API Version Workflow: Reserved Actions</a></li>
 	<li><a href="#apiv_f_00">API Version Workflow: Functions</a></li>
 	<li><a href="#apiv_c_00">API Version Workflow: Conditions</a></li>
 	<li><a href="#apiv_vr_00">API Version Workflow: Variable Resolvers</a></li>
+	<li><a href="#apiv_workflow_template">API Version Workflow: Custom Workflow Template</a></li>
 	<li><a href="#apiv_eg_01">API Version Workflow: Customization Example</a></li>
 </ol>
 <hr class="divide_hr" />
+
+
+
+<h2 id="apiv_wf_ov">API Version Workflow: Overview</h2>
+<p>By default, there is no API version workflow in the platform. In most cases, once an API version is active, it's best not to make changes to it.</p>
+<p>However, in some cases, you might want to allow users with certain roles to be able to make specific modifications to an API version. For these scenarios, you can:</p>
+<ol>
+	<li>Use the custom workflow template provided with this document as a starting point. See <a href="#apiv_workflow_template">API Version Workflow: Custom Workflow Template</a>.</li>
+	<li>Modify the template using the additional workflow actions, functions, conditions, and variable resolvers given in this document.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
 
 
 
@@ -45,118 +59,71 @@ nav-title: API Version Workflow
 
 
 <h2 id="apiv_ra_00">API Version Workflow: Reserved Actions</h2>
+<p>If a custom API version workflow is in place, you can add one or more of the reserved actions given below. Note that for a reserved action to be valid, it must be appropriate for the state a workflow is in. For example, by default when an API version is in Active state it can be deleted but cannot be modified; if an API version is in Rejected state it can be submitted for approval.</p>
 <p>The following reserved actions are valid for API version workflows:</p>
 <ul>
 	<li><a href="#apiv_ra_01">@Delete</a></li>
 	<li><a href="#apiv_ra_02">@Modify</a></li>
-	<li><a href="#apiv_ra_03">@ModifyPolicies</a> (Valid in version: 2019.1.0 and later)</li>
-	<li><a href="#apiv_ra_04">@ModifyDeployments</a> (Valid in version: 2019.1.0 and later)</li>
-	<li><a href="#apiv_ra_05">@ModifyDebugOptions</a> (Valid in version: 2019.1.0 and later)</li>
-	<li><a href="#apiv_ra_06">@ModifyOutboundIdentities</a> (Valid in version: 2019.1.0 and later)</li>
-	<li><a href="#apiv_ra_07">@ModifyExtensionProperties</a> (Valid in version: 2019.1.0 and later)</li>
-	<li><a href="#apiv_ra_08">@DeleteAPIImplementation</a> (Valid in version: 2019.1.0 and later)</li>
-	<li><a href="#apiv_ra_09">@ModifyLegals</a> (Valid in version: 2019.1.0 and later)</li>
 	<li><a href="#apiv_ra_10">apiversion.action.submit.approval</a></li>
 	<li><a href="#apiv_ra_11">apiversion.action.approve</a></li>
 	<li><a href="#apiv_ra_12">apiversion.action.reject</a></li>
 	<li><a href="#apiv_ra_13">apiversion.action.resubmit</a></li>
-	<li><a href="#apiv_ra_14">@AddDeploymentZones</a> (Valid in version: 2019.1.7 and later)</li>
-	<li><a href="#apiv_ra_15">@ModifyAutoConnectSettings</a> (Valid in version: 2019.1.7 and later)</li>
-	<li><a href="#apiv_ra_16">@ModifyImplementationInfo</a> (Valid in version: 2019.1.7 and later)</li>
-	<li><a href="#apiv_ra_17">@AddApiImplementation</a> (Valid in version: 2019.1.7 and later)</li>
-	<li><a href="#apiv_ra_18">@ModifyPolicies</a> (Valid in version: 2019.1.7 and later)</li>
-	<li><a href="#apiv_ra_19">@ModifyDeployments</a> (Valid in version: 2019.1.7 and later)</li>
-	<li><a href="#apiv_ra_20">@ModifyDebugOptions</a> (Valid in version: 2019.1.7 and later)</li>
-	<li><a href="#apiv_ra_21">@ModifyOutboundIdentities</a> (Valid in version: 2019.1.7 and later)</li>
-	<li><a href="#apiv_ra_22">@ModifyExtensionProperties</a> (Valid in version: 2019.1.7 and later)</li>
-	<li><a href="#apiv_ra_23">@DeleteAPIImplementation</a> (Valid in version: 2019.1.7 and later)</li>
-	<li><a href="#apiv_ra_24">@ModifyLegals</a> (Valid in version: 2019.1.7 and later)</li>
-</ul>
+	<li><a href="#apiv_ra_additional">Additional reserved actions for modifying an API version that's already activated</a>:
+		<ul>
+			<li><a href="#apiv_ra_03">@ModifyPolicies</a> (Valid in version: 2019.1.0 and later)</li>
+			<li><a href="#apiv_ra_04">@ModifyDeployments</a> (Valid in version: 2019.1.0 and later)</li>
+			<li><a href="#apiv_ra_05">@ModifyDebugOptions</a> (Valid in version: 2019.1.0 and later)</li>
+			<li><a href="#apiv_ra_06">@ModifyOutboundIdentities</a> (Valid in version: 2019.1.0 and later)</li>
+			<li><a href="#apiv_ra_07">@ModifyExtensionProperties</a> (Valid in version: 2019.1.0 and later)</li>
+			<li><a href="#apiv_ra_08">@DeleteAPIImplementation</a> (Valid in version: 2019.1.0 and later)</li>
+			<li><a href="#apiv_ra_09">@ModifyLegals</a> (Valid in version: 2019.1.0 and later)</li>
+			<li><a href="#apiv_ra_14">@AddDeploymentZones</a> (Valid in version: 2019.1.7 and later)</li>
+			<li><a href="#apiv_ra_15">@ModifyAutoConnectSettings</a> (Valid in version: 2019.1.7 and later)</li>
+			<li><a href="#apiv_ra_16">@ModifyImplementationInfo</a> (Valid in version: 2019.1.7 and later)</li>
+			<li><a href="#apiv_ra_17">@AddApiImplementation</a> (Valid in version: 2019.1.7 and later)</li>
+			<li><a href="#apiv_ra_18">@ModifyPolicies</a> (Valid in version: 2019.1.7 and later)</li>
+			<li><a href="#apiv_ra_19">@ModifyDeployments</a> (Valid in version: 2019.1.7 and later)</li>
+			<li><a href="#apiv_ra_20">@ModifyDebugOptions</a> (Valid in version: 2019.1.7 and later)</li>
+			<li><a href="#apiv_ra_21">@ModifyOutboundIdentities</a> (Valid in version: 2019.1.7 and later)</li>
+			<li><a href="#apiv_ra_22">@ModifyExtensionProperties</a> (Valid in version: 2019.1.7 and later)</li>
+			<li><a href="#apiv_ra_23">@DeleteAPIImplementation</a> (Valid in version: 2019.1.7 and later)</li>
+			<li><a href="#apiv_ra_24">@ModifyLegals</a> (Valid in version: 2019.1.7 and later)</li>
+		</ul>
+	</li>
+	</ul>
 
 
 <h3 id="apiv_ra_01">@Delete</h3>
-<p><strong>Valid in version: 2019.1.0 and later</strong></p>
 <p>Indicates that the API version can be deleted at this point in the workflow, using the user interface or the platform API.</p>
 
 
 <h3 id="apiv_ra_02">@Modify</h3>
-<p><strong>Valid in version: 2019.1.0 and later</strong></p>
 <p>Used to determine whether an API version can be modified or should be read-only. If @Modify is not a valid action, the user interface disables the buttons/links leading to modifying anything about the API version.</p>
+<p>The <strong>@Modify</strong> action is available by default when the API version is in one of the following workflow states:</p>
+<ul>
+	<li>Draft</li>
+	<li>Rejected</li>
+	<li>Pending Approval</li>
+</ul>
 <p><strong>Note</strong>: @Modify controls permission to modify the entire API version. A user with this permission is authorized to perform all edit activities for the API version, such as adding or changing operations in the API design or modifying other API information such as deployment zones, policy assignments, and endpoints. If @Modify is not present in the workflow, the platform checks for additional workflow actions that give more granular permission to perform a specific action, such as <a href="#apiv_ra_03">@ModifyPolicies</a> or <a href="#apiv_ra_04">@ModifyDeployments</a>.</p>
 
 
-<h3 id="apiv_ra_03">@ModifyPolicies</h3>
-<p><strong>Valid in version: 2019.1.0 and later</strong></p>
-<p>If you want to give users with one or more roles permission to modify the policies for an API version, even when the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
-<p>The platform only looks for this workflow action if the @Modify action, which gives broad permission to modify all aspects of the API version, is not present in the custom workflow.</p>
-<p>The example below, from the sample custom workflow template at <a href="#apiv_eg_01">API Version Workflow: Customization Example</a> later in this document, shows use of the @ModifyPolicies reserved action to assign this ability to an API version in Active state.</p>
-<pre>&lt;action id="402" name="@ModifyPolicies"&gt;
-  &lt;restrict-to&gt;
-    &lt;conditions type="OR"&gt;
-      &lt;condition type="authorizeByAtmosphereRole"&gt;
-        &lt;arg name="role"&gt;&amp;AtmoRoleBusinessAdmin;&lt;/arg&gt;
-      &lt;/condition&gt;
-      &lt;condition type="authorizeByAtmosphereRole"&gt;
-        &lt;arg name="role"&gt;&amp;AtmoRoleApiAdmin;&lt;/arg&gt;
-      &lt;/condition&gt;
-      &lt;condition type="authorizeByAtmosphereAction"&gt;
-        &lt;arg name="Action"&gt;Modify&lt;/arg&gt;
-        &lt;arg name="ResourceType"&gt;apiversion&lt;/arg&gt;
-      &lt;/condition&gt; 
-    &lt;/conditions&gt;
-  &lt;/restrict-to&gt;
-  &lt;results&gt;
-    &lt;unconditional-result old-status="Active" status="Active" step="400" /&gt;
-  &lt;/results&gt;
-&lt;/action&gt;
-</pre>
-
-
-<h3 id="apiv_ra_04">@ModifyDeployments</h3>
-<p><strong>Valid in version: 2019.1.0 and later</strong></p>
-<p>If you want to give users with one or more roles permission to add, modify, or delete deployments for an API version, even when the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
-<p>The platform only looks for this workflow action if the @Modify action, which gives broad permission to modify all aspects of the API version, is not present in the custom workflow.</p>
-
-
-<h3 id="apiv_ra_05">@ModifyDebugOptions</h3>
-<p><strong>Valid in version: 2019.1.0 and later</strong></p>
-<p>If you want to give users with one or more roles permission to modify the debug setting for an API version, even when the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
-<p>The platform only looks for this workflow action if the @Modify action, which gives broad permission to modify all aspects of the API version, is not present in the custom workflow.</p>
-
-<h3 id="apiv_ra_06">@ModifyOutboundIdentities</h3>
-<p><strong>Valid in version: 2019.1.0 and later</strong></p>
-<p>If you want to give users with one or more roles permission to modify the outbound identities for an API version, even when the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
-<p>The platform only looks for this workflow action if the @Modify action, which gives broad permission to modify all aspects of the API version, is not present in the custom workflow.</p>
-
-
-<h3 id="apiv_ra_07">@ModifyExtensionProperties</h3>
-<p><strong>Valid in version: 2019.1.0 and later</strong></p>
-<p>If you want to give users with one or more roles permission to modify the extension properties for an API version (when extension properties are in place), even when the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
-<p>The platform only looks for this workflow action if the @Modify action, which gives broad permission to modify all aspects of the API version, is not present in the custom workflow.</p>
-
-
-<h3 id="apiv_ra_08">@DeleteAPIImplementation</h3>
-<p><strong>Valid in version: 2019.1.0 and later</strong></p>
-<p>If you want to give users with one or more roles permission to delete an implementation for an API version, even when the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
-<p>The platform only looks for this workflow action if the @Modify action, which gives broad permission to modify all aspects of the API version, is not present in the custom workflow.</p>
-
-
-<h3 id="apiv_ra_09">@ModifyLegals</h3>
-<p><strong>Valid in version: 2019.1.0 and later</strong></p>
-<p>If you want to give users with one or more roles permission to modify the legal agreement for an API version, even when the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
-<p>The platform only looks for this workflow action if the @Modify action, which gives broad permission to modify all aspects of the API version, is not present in the custom workflow.</p>
-
-
 <h3 id="apiv_ra_10">apiversion.action.submit.approval</h3>
-<p><strong>Valid in version: 2019.1.0 and later</strong></p>
 <p>Used to submit a new or revised API version for approval.</p>
 <p>The Business Admin for the organization can submit an API version for approval.</p>
+<p>The <strong>apiversion.action.submit.approval</strong> action is available by default when the API version is in one of the following workflow states:</p>
+<ul>
+	<li>Draft</li>
+</ul>
 <p>For an example of a workflow section that includes this action, see <a href="#apiv_f_05">updateApiVersionStatus</a>.</p>
 
 
 <h3 id="apiv_ra_11">apiversion.action.approve</h3>
-<p><strong>Valid in version: 2019.1.0 and later</strong></p>
 <p>Used to approve a new or revised API version that was submitted for approval.</p>
+<p>The <strong>apiversion.action.approve</strong> action is available by default when the API version is in this workflow state:</p>
+<ul>
+	<li><strong>Pending Approval</strong></li>
+</ul>
 <p>The Business Admin for the organization, or the API Approver, can approve or reject an API version.</p>
 <p>The example below shows a section of the template workflow showing steps and actions when an API version is pending approval. Valid actions are Approve (<strong>apiversion.action.approve</strong>) or Reject (<strong>apiversion.action.reject</strong>).  When the action is <strong>apiversion.action.approve</strong> (line 3), the applicable conditions are applied as shown below.</p>
 <pre>&lt;step id="300" name="Pending Approval!"&gt;
@@ -206,71 +173,185 @@ nav-title: API Version Workflow
 
 
 <h3 id="apiv_ra_12">apiversion.action.reject</h3>
-<p><strong>Valid in version: 2019.1.0 and later</strong></p>
 <p>Used to reject a new or revised API version that was submitted for approval.</p>
 <p>The Business Admin for the organization, or the API Approver, can approve or reject an API version.</p>
+<p>The <strong>apiversion.action.reject</strong> action is available by default when the API version is in this workflow state:</p>
+<ul>
+	<li><strong>Pending Approval</strong></li>
+</ul>
 <p>For an example of a workflow section that includes this action, see <a href="#apiv_ra_11">apiversion.action.approve</a> above.</p>
 
 
 <h3 id="apiv_ra_13">apiversion.action.resubmit</h3>
-<p><strong>Valid in version: 2019.1.0 and later</strong></p>
 <p>Used to resubmit a new or revised API version for approval.</p>
 <p>Same as <strong>apiversion.action.submit.approval</strong> above.</p>
+<p>The <strong>apiversion.action.reject</strong> action is available by default when the API version is in this workflow state:</p>
+<ul>
+	<li><strong>Rejected</strong></li>
+</ul>
 
 
-<h3 id="apiv_ra_14">@AddDeploymentZones</h3>
+
+<h3 id="apiv_ra_additional">Additional reserved actions for modifying an API version that's already activated</h3>
+<p>for your convenience, additional reserved actions are available in case you want to be able to modify one or more properties of an API version after activation. For example, you might need to change a deployment zone or add an implementation. In most cases it's not a good idea to modify an API version, but it might be necessary in some scenarios. By using one or more of these additional reserved actions, you can grant permissions to users with certain roles, to modify one or more specific aspects of an API version.</p>
+<p>Note: The reserved actions below are only valid to be assigned when the API workflow state is <strong>ACTIVE</strong>. In the attached API version template (see <a href="#apiv_workflow_template">API Version Workflow: Custom Workflow Template</a> below), this step: <span class="apidoc_code">&lt;step id=&quot;400&quot; name=&quot;Active&quot;&gt;</span>.</p>
+<p>The following reserved actions are available in this category:</p>
+<ul>
+	<li><a href="#apiv_ra_03">@ModifyPolicies</a> (Valid in version: 2019.1.0 and later)</li>
+	<li><a href="#apiv_ra_04">@ModifyDeployments</a> (Valid in version: 2019.1.0 and later)</li>
+	<li><a href="#apiv_ra_05">@ModifyDebugOptions</a> (Valid in version: 2019.1.0 and later)</li>
+	<li><a href="#apiv_ra_06">@ModifyOutboundIdentities</a> (Valid in version: 2019.1.0 and later)</li>
+	<li><a href="#apiv_ra_07">@ModifyExtensionProperties</a> (Valid in version: 2019.1.0 and later)</li>
+	<li><a href="#apiv_ra_08">@DeleteAPIImplementation</a> (Valid in version: 2019.1.0 and later)</li>
+	<li><a href="#apiv_ra_09">@ModifyLegals</a> (Valid in version: 2019.1.0 and later)</li>
+	<li><a href="#apiv_ra_14">@AddDeploymentZones</a> (Valid in version: 2019.1.7 and later)</li>
+	<li><a href="#apiv_ra_15">@ModifyAutoConnectSettings</a> (Valid in version: 2019.1.7 and later)</li>
+	<li><a href="#apiv_ra_16">@ModifyImplementationInfo</a> (Valid in version: 2019.1.7 and later)</li>
+	<li><a href="#apiv_ra_17">@AddApiImplementation</a> (Valid in version: 2019.1.7 and later)</li>
+	<li><a href="#apiv_ra_18">@ModifyPolicies</a> (Valid in version: 2019.1.7 and later)</li>
+	<li><a href="#apiv_ra_19">@ModifyDeployments</a> (Valid in version: 2019.1.7 and later)</li>
+	<li><a href="#apiv_ra_20">@ModifyDebugOptions</a> (Valid in version: 2019.1.7 and later)</li>
+	<li><a href="#apiv_ra_21">@ModifyOutboundIdentities</a> (Valid in version: 2019.1.7 and later)</li>
+	<li><a href="#apiv_ra_22">@ModifyExtensionProperties</a> (Valid in version: 2019.1.7 and later)</li>
+	<li><a href="#apiv_ra_23">@DeleteAPIImplementation</a> (Valid in version: 2019.1.7 and later)</li>
+	<li><a href="#apiv_ra_24">@ModifyLegals</a> (Valid in version: 2019.1.7 and later)</li>
+</ul>
+
+
+
+<h4 id="apiv_ra_03">@ModifyPolicies</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>If you want to give users with one or more roles permission to modify the policies for an API version, even when the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p><strong>Note</strong>: This is provided for your convenience in case you want to modify an API version after it's been activated. In most cases, this is not necessary or recommended.</p>
+<p>The platform only looks for this workflow action if the @Modify action, which gives broad permission to modify all aspects of the API version, is not present in the custom workflow.</p>
+<p>The example below, from the sample custom workflow template at <a href="#apiv_eg_01">API Version Workflow: Customization Example</a> later in this document, shows use of the @ModifyPolicies reserved action to assign this ability to an API version in Active state.</p>
+<pre>&lt;action id="402" name="@ModifyPolicies"&gt;
+  &lt;restrict-to&gt;
+    &lt;conditions type="OR"&gt;
+      &lt;condition type="authorizeByAtmosphereRole"&gt;
+        &lt;arg name="role"&gt;&amp;AtmoRoleBusinessAdmin;&lt;/arg&gt;
+      &lt;/condition&gt;
+      &lt;condition type="authorizeByAtmosphereRole"&gt;
+        &lt;arg name="role"&gt;&amp;AtmoRoleApiAdmin;&lt;/arg&gt;
+      &lt;/condition&gt;
+      &lt;condition type="authorizeByAtmosphereAction"&gt;
+        &lt;arg name="Action"&gt;Modify&lt;/arg&gt;
+        &lt;arg name="ResourceType"&gt;apiversion&lt;/arg&gt;
+      &lt;/condition&gt; 
+    &lt;/conditions&gt;
+  &lt;/restrict-to&gt;
+  &lt;results&gt;
+    &lt;unconditional-result old-status="Active" status="Active" step="400" /&gt;
+  &lt;/results&gt;
+&lt;/action&gt;
+</pre>
+
+
+<h4 id="apiv_ra_04">@ModifyDeployments</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>If you want to give users with one or more roles permission to add, modify, or delete deployments for an API version, even when the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p><strong>Note</strong>: This is provided for your convenience in case you want to modify an API version after it's been activated. In most cases, this is not necessary or recommended.</p>
+<p>The platform only looks for this workflow action if the @Modify action, which gives broad permission to modify all aspects of the API version, is not present in the custom workflow.</p>
+
+
+<h4 id="apiv_ra_05">@ModifyDebugOptions</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>If you want to give users with one or more roles permission to modify the debug setting for an API version, even when the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p><strong>Note</strong>: This is provided for your convenience in case you want to modify an API version after it's been activated. In most cases, this is not necessary or recommended.</p>
+<p>The platform only looks for this workflow action if the @Modify action, which gives broad permission to modify all aspects of the API version, is not present in the custom workflow.</p>
+
+<h4 id="apiv_ra_06">@ModifyOutboundIdentities</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>If you want to give users with one or more roles permission to modify the outbound identities for an API version, even when the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p><strong>Note</strong>: This is provided for your convenience in case you want to modify an API version after it's been activated. In most cases, this is not necessary or recommended.</p>
+<p>The platform only looks for this workflow action if the @Modify action, which gives broad permission to modify all aspects of the API version, is not present in the custom workflow.</p>
+
+
+<h4 id="apiv_ra_07">@ModifyExtensionProperties</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>If you want to give users with one or more roles permission to modify the extension properties for an API version (when extension properties are in place), even when the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p><strong>Note</strong>: This is provided for your convenience in case you want to modify an API version after it's been activated. In most cases, this is not necessary or recommended.</p>
+<p>The platform only looks for this workflow action if the @Modify action, which gives broad permission to modify all aspects of the API version, is not present in the custom workflow.</p>
+
+
+<h4 id="apiv_ra_08">@DeleteAPIImplementation</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>If you want to give users with one or more roles permission to delete an implementation for an API version, even when the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p><strong>Note</strong>: This is provided for your convenience in case you want to modify an API version after it's been activated. In most cases, this is not necessary or recommended.</p>
+<p>The platform only looks for this workflow action if the @Modify action, which gives broad permission to modify all aspects of the API version, is not present in the custom workflow.</p>
+
+
+<h4 id="apiv_ra_09">@ModifyLegals</h4>
+<p><strong>Valid in version: 2019.1.0 and later</strong></p>
+<p>If you want to give users with one or more roles permission to modify the legal agreement for an API version, even after the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p><strong>Note</strong>: This is provided for your convenience in case you want to modify an API version after it's been activated. In most cases, this is not necessary or recommended.</p>
+<p>The platform only looks for this workflow action if the @Modify action, which gives broad permission to modify all aspects of the API version, is not present in the custom workflow.</p>
+
+
+<h4 id="apiv_ra_14">@AddDeploymentZones</h4>
 <p><strong>Valid in version: 2019.1.7 and later</strong></p>
-<p>If you want to give users with one or more roles permission to add a deployment zone for an API version, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p>If you want to give users with one or more roles permission to add a deployment zone for an API version, even after the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p><strong>Note</strong>: This is provided for your convenience in case you want to modify an API version after it's been activated. In most cases, this is not necessary or recommended.</p>
 
 
-<h3 id="apiv_ra_15">@ModifyAutoConnectSettings</h3>
+<h4 id="apiv_ra_15">@ModifyAutoConnectSettings</h4>
 <p><strong>Valid in version: 2019.1.7 and later</strong></p>
-<p>If you want to give users with one or more roles permission to modify the auto-connect setting for an API version, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p>If you want to give users with one or more roles permission to modify the auto-connect setting for an API version, even after the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p><strong>Note</strong>: This is provided for your convenience in case you want to modify an API version after it's been activated. In most cases, this is not necessary or recommended.</p>
 
 
-<h3 id="apiv_ra_16">@ModifyImplementationInfo</h3>
+<h4 id="apiv_ra_16">@ModifyImplementationInfo</h4>
 <p><strong>Valid in version: 2019.1.7 and later</strong></p>
-<p>If you want to give users with one or more roles permission to modify implementation information for an API version, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p>If you want to give users with one or more roles permission to modify implementation information for an API version, even after the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p><strong>Note</strong>: This is provided for your convenience in case you want to modify an API version after it's been activated. In most cases, this is not necessary or recommended.</p>
 
 
-<h3 id="apiv_ra_17">@AddApiImplementation</h3>
+<h4 id="apiv_ra_17">@AddApiImplementation</h4>
 <p><strong>Valid in version: 2019.1.7 and later</strong></p>
-<p>If you want to give users with one or more roles permission to add an implementation to an API version, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p>If you want to give users with one or more roles permission to add an implementation to an API version, even after the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p><strong>Note</strong>: This is provided for your convenience in case you want to modify an API version after it's been activated. In most cases, this is not necessary or recommended.</p>
 
 
-<h3 id="apiv_ra_18">@ModifyPolicies</h3>
+<h4 id="apiv_ra_18">@ModifyPolicies</h4>
 <p><strong>Valid in version: 2019.1.7 and later</strong></p>
-<p>If you want to give users with one or more roles permission to add, modify, or delete the policy assignments for one or more of the implementations for an API version, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p>If you want to give users with one or more roles permission to add, modify, or delete the policy assignments for one or more of the implementations for an API version, even after the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p><strong>Note</strong>: This is provided for your convenience in case you want to modify an API version after it's been activated. In most cases, this is not necessary or recommended.</p>
 
 
-<h3 id="apiv_ra_19">@ModifyDeployments</h3>
+<h4 id="apiv_ra_19">@ModifyDeployments</h4>
 <p><strong>Valid in version: 2019.1.7 and later</strong></p>
-<p>If you want to give users with one or more roles permission to modify deployments zone for an API version, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p>If you want to give users with one or more roles permission to modify deployments zone for an API version, even after the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p><strong>Note</strong>: This is provided for your convenience in case you want to modify an API version after it's been activated. In most cases, this is not necessary or recommended.</p>
 
 
-<h3 id="apiv_ra_20">@ModifyDebugOptions</h3>
+<h4 id="apiv_ra_20">@ModifyDebugOptions</h4>
 <p><strong>Valid in version: 2019.1.7 and later</strong></p>
-<p>If you want to give users with one or more roles permission to modify the debug setting for one or more of the implementations for an API version, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p>If you want to give users with one or more roles permission to modify the debug setting for one or more of the implementations for an API version, even after the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p><strong>Note</strong>: This is provided for your convenience in case you want to modify an API version after it's been activated. In most cases, this is not necessary or recommended.</p>
 
 
-<h3 id="apiv_ra_21">@ModifyOutboundIdentities</h3>
+<h4 id="apiv_ra_21">@ModifyOutboundIdentities</h4>
 <p><strong>Valid in version: 2019.1.7 and later</strong></p>
-<p>If you want to give users with one or more roles permission to modify the outbound identities for an API version, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p>If you want to give users with one or more roles permission to modify the outbound identities for an API version, even after the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p><strong>Note</strong>: This is provided for your convenience in case you want to modify an API version after it's been activated. In most cases, this is not necessary or recommended.</p>
 
 
-<h3 id="apiv_ra_22">@ModifyExtensionProperties</h3>
+<h4 id="apiv_ra_22">@ModifyExtensionProperties</h4>
 <p><strong>Valid in version: 2019.1.7 and later</strong></p>
-<p>If you want to give users with one or more roles permission to modify extension properties for an API version, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p>If you want to give users with one or more roles permission to modify extension properties for an API version, even after the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p><strong>Note</strong>: This is provided for your convenience in case you want to modify an API version after it's been activated. In most cases, this is not necessary or recommended.</p>
 
 
-<h3 id="apiv_ra_23">@DeleteAPIImplementation</h3>
+<h4 id="apiv_ra_23">@DeleteAPIImplementation</h4>
 <p><strong>Valid in version: 2019.1.7 and later</strong></p>
-<p>If you want to give users with one or more roles permission to delete an implementation for an API version, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p>If you want to give users with one or more roles permission to delete an implementation for an API version, even after the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p><strong>Note</strong>: This is provided for your convenience in case you want to modify an API version after it's been activated. In most cases, this is not necessary or recommended.</p>
 
 
-<h3 id="apiv_ra_24">@ModifyLegals</h3>
+<h4 id="apiv_ra_24">@ModifyLegals</h4>
 <p><strong>Valid in version: 2019.1.7 and later</strong></p>
-<p>If you want to give users with one or more roles permission to modify the legal agreement configuration for an API version, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p>If you want to give users with one or more roles permission to modify the legal agreement configuration for an API version, even after the API version is activated, you can use this reserved action. You can then specify which roles can perform the action.</p>
+<p><strong>Note</strong>: This is provided for your convenience in case you want to modify an API version after it's been activated. In most cases, this is not necessary or recommended.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -385,7 +466,7 @@ nav-title: API Version Workflow
 	<tbody>
 		<tr>
 			<td>status</td>
-			<td><p>The new status that the API version is being updated to. Use the valid states defined in the sample (see <a href="#apiv_eg_01_template">Custom Workflow Template</a>):</p>
+			<td><p>The new status that the API version is being updated to. Use the valid states defined in the sample (see <a href="#apiv_workflow_template">API Version Workflow: Custom Workflow Template</a>):</p>
 				<ul><li>com.soa.api.state.draft</li>
 					<li>com.soa.api.state.pending_approval</li>
 					<li>com.soa.api.state.rejected</li>
@@ -500,6 +581,17 @@ nav-title: API Version Workflow
 
 <h3 id="apiv_vr_01">${api.dn}</h3>
 <p>The unique ID for the API that the API version is associated with (APIID).</p>
+<p><a href="#top">Back to top</a><p></p>
+
+
+
+
+<h2 id="apiv_workflow_template">API Version Workflow: Custom Workflow Template</h2>
+<!--<p>{https://subversion.aws.roguewave.com/svn/akana/trunk/products/api-portal/com.soa.atmosphere.impl/META-INF/resources/templates/apiversion-workflow-template.xml </p>-->
+<p>As a starting point, download and review this template:</p>
+<p><a href="assets/apiversion-workflow-template.xml">API Workflow Template for Customization</a></p>
+<p>Then, you can modify actions and roles as needed to achieve the results you want.</p>
+<p>When you have your custom workload ready, upload it to the developer portal and assign it as your default workflow for API versions. For instructions, see <a href="../learnmore/apiadmin_workflow_custom.htm#proc_workflow_custom">To implement a custom API version workflow</a> (developer portal documentation).</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -516,7 +608,7 @@ nav-title: API Version Workflow
 <h3>Custom behavior</h3>
 <p>Instead of the default behavior, you might want to implement a scenario where when an API is still being designed it is in Draft state, and remains in Draft state until you submit it for approval. In Draft state, you can save the API and go back tomorrow to add more operations or more model objects, or to add or modify other data associated with the API such as policies and deployment zones.</p>
 <p>When the API is ready, you can submit it for approval. At that point, the API is in Pending Approval state.</p>
-<p>Then, specific users can approve the API. For this template, users with the role of API Approver or Business Admin can approve the API. If the API is approved it is in Activated state. Alternatively, if the API is rejected, it goes back to Draft state.</p>
+<p>Then, specific users can approve the API. For this template, users with the role of API Approver or Business Admin can approve the API. If the API is approved, it is in Activated state. Alternatively, if the API is rejected, it goes back to Draft state.</p>
 
 
 <h3>Activated state: default behavior</h3>
@@ -537,12 +629,6 @@ nav-title: API Version Workflow
 	<li>Change the legal agreement associated with the API version: <a href="#apiv_ra_09">@ModifyLegals</a></li>
 </ul>
 <p>The custom workflow template has the built-in flexibility for you to control any of the above actions to a fine level of granularity.</p>
-
-<h3 id="apiv_eg_01_template">Custom Workflow Template</h3>
-<!--<p>{\akana\trunk\products\api-portal\com.soa.atmosphere.impl\META-INF\resources\templates\apiversion-workflow-template.xml</p>-->
-<p>As a starting point, download and review the linked <a href="assets/apiversion-workflow-template.xml">template workflow for the above behavior</a> provided here.</p>
-<p>Then, you can modify actions and roles as needed to achieve the results you want.</p>
-<p>When you have your custom workload ready, upload it to the developer portal and assign it as your default workflow for API versions. For instructions, see <a href="../learnmore/apiadmin_workflow_custom.htm#proc_workflow_custom">To implement a custom API version workflow</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
