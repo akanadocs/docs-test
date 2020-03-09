@@ -31,6 +31,7 @@ nav-title: Database Maintenance
 	<li><a href="#partitioning_verylarge">Partitioning large data stores under load (MySQL Only)</a></li>
 	<li><a href="#drop_partitions">Dropping partitions</a></li>
 	<li><a href="#mongodb_maintenance">MongoDB maintenance</a></li>
+<li><a href="#mongodb_02">Recommended MongoDB search index for Tenant Org metrics</a></li>
 </ol>
 <hr class="divide_hr" />
 
@@ -196,6 +197,7 @@ monitoring.delete.usage.enable=false</pre>
 	<li><a href="#cron_delete_oracle">Deleting/archiving data: Oracle</a></li>
 	<li><a href="#cron_delete_mssqlserver">Deleting/archiving data: Microsoft SQL Server</a></li>
 </ul>
+
 
 
 <h3 id="cron_delete_mysql">Deleting/archiving data: MySQL</h3>
@@ -792,3 +794,278 @@ db.TRANSACTION_METRIC.createIndex({ "createdDate": 1 },{ expireAfterSeconds: 483
 <p>The example below creates a TTL index on METRIC_ROLLUP_DATA. </p>
 <pre>db.OPERATIONAL_METRIC.createIndex({ "value.timestamp": 1 },{ expireAfterSeconds: 31536000, "name" : "OPERATIONAL_METRIC_Clnp", background: true })</pre>
 <p><a href="#top">back to top</a></p>
+
+
+
+<h2 id="mongodb_02">Recommended MongoDB search index for Tenant Org metrics</h2>
+<p>If you are using the Tenant Org metrics, use the search index below.</p>
+<p>If you already have search indexes in place, check against your current indexes before creating the below so you don't end up with duplicates.</p>
+<pre>use METRIC_ROLLUP_DATA 
+db.OPERATIONAL_METRIC.createIndex(
+    {
+  "value._rolluptype" : 1,
+  "value.hierarchy.organization.id" : 1,
+  "value.timestamp" : 1  },
+  { name: "OPERATIONAL_METRIC_ORG_8AIdx", background : true}
+)
+
+rs1:PRIMARY> var exp = db.OPERATIONAL_METRIC.explain("executionStats")
+rs1:PRIMARY> exp.find({ "$and" : [ { "value._rolluptype": "DAYS" }, { "value._timezones": "GMT" },  { "value.hierarchy.organization.id": 16764 }, { "value.timestamp": { $gte: new Date(1548979200000) }} ]})
+{
+    "queryPlanner" : {
+        "plannerVersion" : 1,
+        "namespace" : "METRIC_ROLLUP_DATA.OPERATIONAL_METRIC",
+        "indexFilterSet" : false,
+        "parsedQuery" : {
+            "$and" : [
+                {
+                    "value._rolluptype" : {
+                        "$eq" : "DAYS"
+                    }
+                },
+                {
+                    "value._timezones" : {
+                        "$eq" : "GMT"
+                    }
+                },
+                {
+                    "value.hierarchy.organization.id" : {
+                        "$eq" : 16764
+                    }
+                },
+                {
+                    "value.timestamp" : {
+                        "$gte" : ISODate("2019-02-01T00:00:00Z")
+                    }
+                }
+            ]
+        },
+        "winningPlan" : {
+            "stage" : "FETCH",
+            "filter" : {
+                "value._timezones" : {
+                    "$eq" : "GMT"
+                }
+            },
+            "inputStage" : {
+                "stage" : "IXSCAN",
+                "keyPattern" : {
+                    "value._rolluptype" : 1,
+                    "value.hierarchy.organization.id" : 1,
+                    "value.timestamp" : 1
+                },
+                "indexName" : "OPERATIONAL_METRIC_ORG_8AIdx",
+                "isMultiKey" : true,
+                "multiKeyPaths" : {
+                    "value._rolluptype" : [ ],
+                    "value.hierarchy.organization.id" : [
+                        "value.hierarchy"
+                    ],
+                    "value.timestamp" : [ ]
+                },
+                "isUnique" : false,
+                "isSparse" : false,
+                "isPartial" : false,
+                "indexVersion" : 2,
+                "direction" : "forward",
+                "indexBounds" : {
+                    "value._rolluptype" : [
+                        "[\"DAYS\", \"DAYS\"]"
+                    ],
+                    "value.hierarchy.organization.id" : [
+                        "[16764.0, 16764.0]"
+                    ],
+                    "value.timestamp" : [
+                        "[new Date(1548979200000), new Date(9223372036854775807)]"
+                    ]
+                }
+            }
+        },
+        "rejectedPlans" : [
+            {
+                "stage" : "FETCH",
+                "filter" : {
+                    "$and" : [
+                        {
+                            "value._timezones" : {
+                                "$eq" : "GMT"
+                            }
+                        },
+                        {
+                            "value.hierarchy.organization.id" : {
+                                "$eq" : 16764
+                            }
+                        }
+                    ]
+                },
+                "inputStage" : {
+                    "stage" : "IXSCAN",
+                    "keyPattern" : {
+                        "value._rolluptype" : 1,
+                        "value.contract.id" : 1,
+                        "value.timestamp" : 1
+                    },
+                    "indexName" : "OPERATIONAL_METRIC_RLP_6AIdx",
+                    "isMultiKey" : false,
+                    "multiKeyPaths" : {
+                        "value._rolluptype" : [ ],
+                        "value.contract.id" : [ ],
+                        "value.timestamp" : [ ]
+                    },
+                    "isUnique" : false,
+                    "isSparse" : false,
+                    "isPartial" : false,
+                    "indexVersion" : 2,
+                    "direction" : "forward",
+                    "indexBounds" : {
+                        "value._rolluptype" : [
+                            "[\"DAYS\", \"DAYS\"]"
+                        ],
+                        "value.contract.id" : [
+                            "[MinKey, MaxKey]"
+                        ],
+                        "value.timestamp" : [
+                            "[new Date(1548979200000), new Date(9223372036854775807)]"
+                        ]
+                    }
+                }
+            },
+            {
+                "stage" : "FETCH",
+                "filter" : {
+                    "value._timezones" : {
+                        "$eq" : "GMT"
+                    }
+                },
+                "inputStage" : {
+                    "stage" : "IXSCAN",
+                    "keyPattern" : {
+                        "value._rolluptype" : 1,
+                        "value.hierarchy.organization.id" : 1,
+                        "value.service.id" : 1,
+                        "value.operation.id" : 1,
+                        "value.timestamp" : 1
+                    },
+                    "indexName" : "OPERATIONAL_METRIC_RLP_1AIdx",
+                    "isMultiKey" : true,
+                    "multiKeyPaths" : {
+                        "value._rolluptype" : [ ],
+                        "value.hierarchy.organization.id" : [
+                            "value.hierarchy"
+                        ],
+                        "value.service.id" : [ ],
+                        "value.operation.id" : [ ],
+                        "value.timestamp" : [ ]
+                    },
+                    "isUnique" : false,
+                    "isSparse" : false,
+                    "isPartial" : false,
+                    "indexVersion" : 2,
+                    "direction" : "forward",
+                    "indexBounds" : {
+                        "value._rolluptype" : [
+                            "[\"DAYS\", \"DAYS\"]"
+                        ],
+                        "value.hierarchy.organization.id" : [
+                            "[16764.0, 16764.0]"
+                        ],
+                        "value.service.id" : [
+                            "[MinKey, MaxKey]"
+                        ],
+                        "value.operation.id" : [
+                            "[MinKey, MaxKey]"
+                        ],
+                        "value.timestamp" : [
+                            "[new Date(1548979200000), new Date(9223372036854775807)]"
+                        ]
+                    }
+                }
+            }
+        ]
+    },
+    "executionStats" : {
+        "executionSuccess" : true,
+        "nReturned" : 0,
+        "executionTimeMillis" : 1,
+        "totalKeysExamined" : 0,
+        "totalDocsExamined" : 0,
+        "executionStages" : {
+            "stage" : "FETCH",
+            "filter" : {
+                "value._timezones" : {
+                    "$eq" : "GMT"
+                }
+            },
+            "nReturned" : 0,
+            "executionTimeMillisEstimate" : 0,
+            "works" : 2,
+            "advanced" : 0,
+            "needTime" : 0,
+            "needYield" : 0,
+            "saveState" : 0,
+            "restoreState" : 0,
+            "isEOF" : 1,
+            "invalidates" : 0,
+            "docsExamined" : 0,
+            "alreadyHasObj" : 0,
+            "inputStage" : {
+                "stage" : "IXSCAN",
+                "nReturned" : 0,
+                "executionTimeMillisEstimate" : 0,
+                "works" : 1,
+                "advanced" : 0,
+                "needTime" : 0,
+                "needYield" : 0,
+                "saveState" : 0,
+                "restoreState" : 0,
+                "isEOF" : 1,
+                "invalidates" : 0,
+                "keyPattern" : {
+                    "value._rolluptype" : 1,
+                    "value.hierarchy.organization.id" : 1,
+                    "value.timestamp" : 1
+                },
+                "indexName" : "OPERATIONAL_METRIC_ORG_8AIdx",
+                "isMultiKey" : true,
+                "multiKeyPaths" : {
+                    "value._rolluptype" : [ ],
+                    "value.hierarchy.organization.id" : [
+                        "value.hierarchy"
+                    ],
+                    "value.timestamp" : [ ]
+                },
+                "isUnique" : false,
+                "isSparse" : false,
+                "isPartial" : false,
+                "indexVersion" : 2,
+                "direction" : "forward",
+                "indexBounds" : {
+                    "value._rolluptype" : [
+                        "[\"DAYS\", \"DAYS\"]"
+                    ],
+                    "value.hierarchy.organization.id" : [
+                        "[16764.0, 16764.0]"
+                    ],
+                    "value.timestamp" : [
+                        "[new Date(1548979200000), new Date(9223372036854775807)]"
+                    ]
+                },
+                "keysExamined" : 0,
+                "seeks" : 1,
+                "dupsTested" : 0,
+                "dupsDropped" : 0,
+                "seenInvalidated" : 0
+            }
+        }
+    },
+    "serverInfo" : {
+        "host" : "MMOHMAD10L3",
+        "port" : 27020,
+        "version" : "3.6.9",
+        "gitVersion" : "167861a164723168adfaaa866f310cb94010428f"
+    },
+    "ok" : 1
+}
+rs1:PRIMARY>
+</pre>
+<p><a href="#top">Back to top</a></p>
