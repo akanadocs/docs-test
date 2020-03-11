@@ -12,11 +12,9 @@ nav-title: Runtime Configuration
 <h1 id="top">Defaulting API Settings using Runtime Configurations</h1>
 <p>Learn how to use the Runtime Configurations feature to establish <strong>templates</strong> so that API implementation properties can be established and selectively applied based on custom property filters.</p>
 <p><strong>Note</strong>: As of the 2018.0.0 release, the behavior in this document can now be defined as part of the Promotion feature within the topology directly, using the <strong>Environment Configuration</strong> element. See <a href="../promotion/promotion_users_guide.htm#s08_03_environment_config">Environment Configuration</a> (Promotion Guide).</p>
-<p><a href="../../sp/install_lc/install_promotion.htm" class="button secondary">Lifecycle Coordinator Installation</a> 
-<a href="../promotion/promotion_samples.htm" class="button secondary">Sample Topologies</a></p>
-
 <h4 class="stamp">API Platform Version: 8.4.17 and later</h4>
 <hr class="divide_hr" />
+
 
 
 <h2 style="color: gray;">Table of Contents</h2>
@@ -51,7 +49,8 @@ nav-title: Runtime Configuration
 			<li><a href="#s08_01_12_oauth_provider">OAuth Provider Domain</a> (2019.1.0 and later)</li>
 			<li><a href="#s08_01_12b_oauth_version">OAuth Version</a> (2019.1.2 and later)</li>
 			<li><a href="#s08_01_13_api_type">API Type (REST or SOAP)</a> (2019.1.0 and later)</li>
-			<li><a href="#s08_01_14_run_on_updates">run-on-updates Classifier</a> (2019.1.2 and later)</li>
+			<li><a href="#s08_01_14_run_on_updates">run-on-updates classifier</a> (2019.1.2 and later)</li>
+			<li><a href="#s08_01_15_preserve_existing_policies">preserve-existing-policies classifier</a> (2019.1.10 and later)</li>
 		</ul>
 		</li>
 	<li><a href="#s08_02_publishing">Publishing a Runtime Configuration Asset</a></li>
@@ -101,7 +100,8 @@ nav-title: Runtime Configuration
 	<li><a href="#s08_01_12_oauth_provider">OAuth Provider Domain</a> (2019.1.0 and later)</li>
 	<li><a href="#s08_01_12b_oauth_version">OAuth Version</a> (2019.1.2 and later)</li>
 	<li><a href="#s08_01_13_api_type">API Type (REST or SOAP)</a> (2019.1.0 and later)</li>
-	<li><a href="#s08_01_14_run_on_updates">run-on-updates Classifier</a></li>
+	<li><a href="#s08_01_14_run_on_updates">run-on-updates Classifier</a> (2019.1.2 and later)</li>
+	<li><a href="#s08_01_15_preserve_existing_policies">preserve-existing-policies Classifier</a> (2019.1.10 and later)</li>
 </ul>
 
 
@@ -401,6 +401,28 @@ nav-title: Runtime Configuration
 <p>For example, the API context path or implementation details might be modified to specific values that are different from the values defined in the Runtime Configuration. If the API details or implementation details have been modified in the developer portal, you might not want the Runtime Configuration to be applied again, because it would overwrite the changes. To accomplish this, add the <strong>run-on-updates</strong> classifier to the Runtime Configuration, with a value of <strong>false</strong>. When <strong>run-on-updates</strong> is set to <strong>false</strong>, the Runtime Configuration rules are not applied on edits to the API.</p>
 <p>Default: <strong>true</strong>.</p>
 
+
+
+<h3 id="s08_01_15_preserve_existing_policies">preserve-existing-policies classifier</h3>
+<p><strong>API Platform Version: 2019.1.10 and later</strong></p>
+<p>If you have the <strong>run-on-updates</strong> classifier set to <strong>true</strong>, you can also use the <strong>preserve-existing-policies</strong>, with a value of <strong>true</strong>, so that existing updates to the API's properties are overwritten but the policies attached to the API are not overwritten. In this scenario, if the policy settings in the source and destination are different, the destination policy settings are preserved.</p>
+<p>Default value: <strong>True</strong>.</p>
+<p>To implement this classifier, make the modifications below to your files:</p>
+	<p><strong>lpc.lpc</strong></p>
+	<p>Add the classifier below. For more information on updating this file, see <a href="#update_lpc_lpc">lpc.lpc</a>.</p>
+<pre>&lt;classifier name=&quot;preserve-existing-policies&quot; /&gt;</pre>
+<p><strong>GDT.xml</strong></p>
+<p>In the <strong>gdt.xml</strong> file, add the section below.</p>
+<p>For more information on updating this file, see <a href="#update_gdt_xml">gdt.xml</a>.</p>
+<pre>&lt;define-classifier display-name=&quot;Preserve Existing Policies&quot;   help-text=&quot;If Run On Updates is true, and classifer is set to false all policies will be replaced by Runtime Configuration after edit &quot; include-in-search-filter=&quot;false&quot; max-occurs=&quot;1&quot;    name=&quot;preserve-existing-policies&quot; open=&quot;true&quot; type=&quot;string&quot;&gt;
+  &lt;add-value value=&quot;true&quot;/&gt;
+  &lt;add-value value=&quot;false&quot;/&gt;
+&lt;/define-classifier&gt;</pre>
+	<p><strong>RuntimeConfig.ctxml</strong></p>
+	<p>In the <strong>RuntimeConfig.ctxml</strong> file, add the section below.</p>
+	<p>For more information on updating this file, see <a href="#update_runtime_configuration_ctxml">Runtime Configuration.ctxml</a>.</p>
+<pre>&lt;use-classifier appear-on-edit=&quot;true&quot; name=&quot;preserve-existing-policies&quot;/&gt;</pre>
+<p>Default: <strong>true</strong>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -476,6 +498,13 @@ nav-title: Runtime Configuration
 <p>In the <strong>Runtime Configuration.ctxml</strong> file, add the section below that applies to the version you're upgrading to.</p>
 <p><strong>Note</strong>: If you include properties that are not valid for the version you're using you'll get an error. Only include properties that are valid for your version.</p>
 
+<p><strong>Add these lines if you're updating to 2019.1.10 or later</strong>:</p>
+	<pre>&lt;use-classifier appear-on-edit=&quot;true&quot; name=&quot;preserve-existing-policies&quot;/&gt;
+&lt;use-classifier appear-on-edit=&quot;true&quot; name=&quot;oauth-version&quot;/&gt;
+&lt;use-classifier appear-on-edit=&quot;true&quot; name=&quot;run-on-updates&quot; /&gt;
+&lt;use-classifier appear-on-edit=&quot;true&quot; name=&quot;oauth-domain&quot; /&gt;
+&lt;use-classifier appear-on-edit=&quot;true&quot; name=&quot;group-visibility&quot; /&gt;
+&lt;use-classifier appear-on-edit=&quot;true&quot; name=&quot;api-visibility&quot; /&gt;	</pre>
 <p id="ctxml_update_20190102"><strong>Add these lines if you're updating to 2019.1.2 or later</strong>:</p>
 <pre>&lt;use-classifier appear-on-edit="true" name="oauth-version"/&gt;
 &lt;use-classifier appear-on-edit=&quot;true&quot; name=&quot;run-on-updates&quot; /&gt;
@@ -493,8 +522,9 @@ nav-title: Runtime Configuration
 
 <p id="ctxml_update_20180011"><strong>Add these lines if you're updating to 2018.0.11 or later</strong>:</p>
 <pre>&lt;use-classifier appear-on-edit="true" name="api-visibility" /&gt;</pre>
-<p>For more information on the settings above, refer to the applicable section earlier in this document:</p>
+	<p>For more information on the settings above, refer to the applicable section earlier in this document:</p>
 <ul>
+	<li><a href="#s08_01_15_preserve_existing_policies">preserve-existing-policies classifier</a> (2019.1.10 and later)</li>
 	<li><a href="#s08_01_12b_oauth_version">oauth-version</a> (2019.1.2 and later)</li>
 	<li><a href="#s08_01_14_run_on_updates">run-on-updates</a> (2019.1.2 and later)</li>
 	<li><a href="#s08_01_12_oauth_provider">oauth-domain</a> (2019.1.0 and later)</li>
@@ -503,6 +533,34 @@ nav-title: Runtime Configuration
 </ul>
 <h3 id="update_gdt_xml">gdt.xml</h3>
 <p>In the <strong>gdt.xml</strong> file, add the section below that applies to the version you're upgrading to.</p>
+
+<p id="gdtxml_update_20190110"><strong>Add these lines if you're updating to 2019.1.10 or later</strong>:</p>
+<pre>
+&lt;define-classifier display-name=&quot;Preserve Existing Policies&quot; elp-text=&quot;If Run On Updates is true, and classifer is set to false all policies will be replaced by Runtime Configuration after edit &quot; include-in-search-filter=&quot;false&quot; max-occurs=&quot;1&quot;    name=&quot;preserve-existing-policies&quot; open=&quot;true&quot; type=&quot;string&quot;&gt;
+  &lt;add-value value=&quot;true&quot;/&gt;
+  &lt;add-value value=&quot;false&quot;/&gt;
+&lt;/define-classifier&gt;
+&lt;define-classifier display-name=&quot;OAuth Version&quot; help-text=&quot;If OAuth domain is set, This allows the user to set OAuth version&quot; include-in-search-filter=&quot;false&quot; max-occurs=&quot;1&quot; name=&quot;oauth-version&quot; open=&quot;false&quot; type=&quot;string&quot;&gt;
+  &lt;add-value value=&quot;OAuth 1.0a&quot;/&gt;
+  &lt;add-value value=&quot;OAuth 2.0&quot;/&gt;
+  &lt;add-value value=&quot;OAuth 1.0a|OAuth 2.0&quot;/&gt;
+&lt;/define-classifier&gt;
+&lt;define-classifier display-name="Run On Updates" help-text="Runtime Configuration Runs On Updates" include-in-search-filter="false" max-occurs="1" name="run-on-updates" open="false" type="string"&gt;
+  &lt;add-value value="true" /&gt;
+  &lt;add-value value="false" /&gt;
+&lt;/define-classifier&gt;
+&lt;define-classifier display-name=&quot;OAuth Domain&quot; help-text=&quot;Set the OAuth Domain of an API with default scopes&quot; include-in-search-filter=&quot;true&quot; max-occurs=&quot;1&quot; name=&quot;oauth-domain&quot; open=&quot;false&quot; type=&quot;string&quot; value-ordering=&quot;GDT&quot; value-source=&quot;OAuthDomain&quot; /&gt;
+&lt;define-classifier display-name=&quot;Group Visibility&quot; help-text=&quot;Groups that can view the API, if it is private&quot; include-in-search-filter=&quot;true&quot; name=&quot;group-visibility&quot; open=&quot;false&quot; type=&quot;string&quot; value-ordering=&quot;GDT&quot; value-source=&quot;GroupVisibility&quot; /&gt;
+&lt;define-classifier display-name=&quot;API Visibility&quot; help-text=&quot;Sets the visibility of an API created&quot; include-in-search-filter=&quot;false&quot; max-occurs=&quot;1&quot; name=&quot;api-visibility&quot; open=&quot;false&quot; type=&quot;string&quot;&gt;
+  &lt;add-value value=&quot;Public&quot; /&gt;
+  &lt;add-value value=&quot;Private&quot; /&gt;
+  &lt;add-value value=&quot;Registered Users&quot; /&gt;
+&lt;/define-classifier&gt;
+&lt;define-classifier display-name="API Type" help-text="Filters by API type (REST or SOAP)" include-in-search-filter="false" max-occurs="1" name="api-type" open="false" type="string"&gt;
+  &lt;add-value uuid="_krkHEuCREem_kpApngGvFQ" value="SOAP" /&gt;
+  &lt;add-value uuid="_krkHE-CREem_kpApngGvFQ" value="REST" /&gt;
+&lt;/define-classifier&gt;
+</pre>
 
 <p id="gdtxml_update_20190102"><strong>Add these lines if you're updating to 2019.1.2 or later</strong>:</p>
 <pre>
@@ -561,7 +619,8 @@ nav-title: Runtime Configuration
 <pre>  &lt;value-source name="GroupVisibility" class="com.soa.repository.platformintegration.GroupVisibilityValueSource" /&gt;
   &lt;value-source name="OAuthDomain" class="com.soa.repository.platformintegration.OauthDomainValueSource" /&gt;
   &lt;classifier name=&quot;run-on-updates&quot; /&gt;
-  &lt;classifier name=&quot;api-type&quot; /&gt;</pre>
+  &lt;classifier name=&quot;api-type&quot; /&gt;
+&lt;classifier name=&quot;preserve-existing-policies&quot; /&gt;</pre>
 <p><strong>Under &lt;asset-validator class=&quot;com.logiclibrary.registry.ScriptValidator&quot; name=&quot;InitializeAPI&quot;&gt;</strong></p>
 <pre>  &lt;asset-filter name="api-type:REST" description="API Type REST"&gt;
     &lt;classifier-criteria classifier-category="api-type"&gt;
