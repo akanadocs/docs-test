@@ -11,8 +11,7 @@ nav-title: Internationalizing Error Messages
 ---
 <h1 id="top">Internationalizing Error Messages</h1>
 <p>Learn how to set up custom/internationalized runtime error messages in the Akana API Gateway.</p>
-<p><strong>Note</strong>: The approach in this document is effective only for runtime error messages. Although alert codes in the database are in the same message bundles, this approach does not customize the alert codes.</p>
-<p>There is an additional special property, <strong>_basename</strong>, that you can use along with the <strong>_locale</strong> property. This allows the resource bundle base name to be set, which helps identify the resources in use.</p>
+<p><strong>Note</strong>: The approach in this document is effective only for runtime error and informational messages. It is not applicable to alert messages defined in the database.</p>
 <h4 class="stamp">API Platform Version: 2019.0.12 and later</h4>
 <hr class="divide_hr" />
 
@@ -20,10 +19,7 @@ nav-title: Internationalizing Error Messages
 
 <h2 style="color: gray;">Table of Contents</h2>
 <ol class="table_of_contents">
-	<li><a href="#overview">Overview</a>		</li>
-	<ul>
-		<li><a href="#custom_properties">Custom Properties</a></li>
-	</ul>
+	<li><a href="#overview">Overview</a></li>
 	<li><a href="#s01_00">Step 1: Create the Java properties file</a></li>
 	<li><a href="#s02_00">Step 2: Deploy the files</a></li>
 	<li><a href="#s03_00">View configuration changes</a></li>
@@ -43,8 +39,9 @@ nav-title: Internationalizing Error Messages
 </ol>
 
 
-<h3 id="custom_properties">Custom Properties</h3>
-<p>There are two custom properties that you&nbsp;can use in customizing error messages:</p>
+
+<h2 id="s01_00">Step 1: Create the Java properties file</h2>
+<p>There are two custom properties that you can use in customizing error messages:</p>
 <ul>
 	<li><strong>_locale</strong>: Identifies the locale for the messages.</li>
 	<li><strong>_basename</strong>: Optional. Allows you to set the resource bundle base name, which helps identify the resources in use. Helps reduce the likelihood of collisions, and speeds up lookups.</li>
@@ -55,30 +52,24 @@ nav-title: Internationalizing Error Messages
 <p>When you create the new properties file and add it to the /deploy folder of a container, and update the platform settings, messages are returned based on the message key.</p>
 <p>The service is at the /messages context.</p>
 <p>For example let's say you create a file named <strong>com.akana.messages-default.cfg</strong> with these contents:</p>
-<pre>301300=message content<br />_locale=en_us</pre>
+<pre>_locale=en_us
+301300=message content</pre>
 <p>You can then test the file by calling the message in the browser, as follows:</p>
 <pre>{protocol}//{hostname}:{port}/messages?key=301300&locale=en&param=pt&param=yy </pre>
 <p>In this example, the URL uses the key from the file.</p>
 <p>You'll see the default message text for this message ID: </p>
 <pre>Error while updating WSDL. WSDL port type [pt] is used outside of service updated [yy].</pre>
 <p>To override an existing message, a file can be dropped into the deploy folder using a file name that corresponds to the pattern <strong>com.akana.messages-{qualifier}.cfg</strong>, where {qualifier} is a unique string that identifies the file. The file is a normal properties file that contains the localization strings corresponding to the appropriate keys.</p>
-
-
-
-
-
-
-
-<h2 id="s01_00">Step 1: Create the Java properties file</h2>
 <p>To create the properties file name and contents, follow the instructions below.</p>
 <h4>To create the properties file</h4>
 <ol>
 	<li>Create a configuration file, using the file name com.akana.messages-{qualifier}.cfg, where {qualifier} is a unique string used to identify the file. For example, for Spanish, you might use: <strong>com.akana.messages-es.cfg</strong>.</li>
-	<li>Model your file contents on the example below, where the first line is the message code/content, expressed as a name/value pair, and the second line sets the locale:
-		<pre>301300=message content<br />_locale=en_us</pre>
+	<li>Model your file contents on the example below, to include the <strong>_locale</strong> setting, to set the locale, and the message code/content, expressed as a name/value pair:
+<pre>_locale=en_us
+301300=message content</pre>
 	</li>
 	<li>Save the file.</li>
-	</ol>
+</ol>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -91,7 +82,7 @@ nav-title: Internationalizing Error Messages
 		Add the following files:
 		<ul>
 			<li>The file or files you created in Step 1.</li>
-			<li>This Jar file: <a href="images/com.akana.test.jaxrs_2019.0.0.jar">com.akana.test.jaxrs_2019.0.0.jar</a>.</li>
+			<li>The <strong>com.akana.test.jaxrs_2019.0.0.jar</strong> Jar file. To get this file, <a href="../../cm/learnmore/basics_support.htm#support_contact">contact Akana support</a>.</li>
 		</ul>
 	<p>An example is shown below.</p>
 	<p><img src="images/error_message_int_01.png"alt="Adding files to the /deploy/ folder"/></p>
@@ -105,7 +96,7 @@ nav-title: Internationalizing Error Messages
 
 <h2 id="s03_00">View configuration changes</h2>
 <p>You can view the configuration changes that you've made, in the Akana Administration Console for the container.</p>
-<h4>To view configuration settings&nbsp;for messages</h4>
+<h4>To view configuration settings for messages</h4>
 <ol>
 	<li>Log in to the Akana Administration Console.</li>
 	<li>Click the <strong>Configuration</strong> tab.</li>
