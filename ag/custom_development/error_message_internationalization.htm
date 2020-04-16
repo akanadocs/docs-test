@@ -10,8 +10,8 @@ type: page
 nav-title: Internationalizing Error Messages
 ---
 <h1 id="top">Internationalizing Error Messages</h1>
-<p>Learn how to set up custom/internationalized runtime error messages in the Akana API Gateway.</p>
-<p><strong>Note</strong>: The approach in this document is effective only for runtime error and informational messages. It is not applicable to alert messages defined in the database.</p>
+<p>Learn how to set up custom/internationalized runtime error messages and other UI copy components in the Akana Gateway.</p>
+<p><strong>Note</strong>: The approach in this document is effective only for runtime error and informational messages and UI copy. It is not applicable to alert messages defined in the database.</p>
 <h4 class="stamp">API Platform Version: 2019.0.12 and later</h4>
 <hr class="divide_hr" />
 
@@ -23,25 +23,24 @@ nav-title: Internationalizing Error Messages
 	<li><a href="#s01_00">Step 1: Create the Java properties file</a></li>
 	<li><a href="#s02_00">Step 2: Deploy the files</a></li>
 	<li><a href="#s03_00">View configuration changes</a></li>
-	<li><a href="#s04_00">Test</a></li>
 </ol>
 <hr class="divide_hr" />
 
 
 
 <h2 id="overview">Overview</h2>
-<p>The default language for error messages in the Akana Gateway is US English. However, you can override the default for one or more existing messages by setting up a new Java properties file and updating the platform settings to reference the new file.</p>
-<p>In the properties file, you can define error message keys and the applicable localization strings, set up as name/value pairs.</p>
+<p>The out-of-the-box copy for the Akana Gateway, both messaging and UI copy, is in US English. However, you can override the default for some types of messages and UI copy by setting up a new Java properties file and updating the platform settings to reference the new file.</p>
+<p>In the properties file, you can define error message and UI copy keys and the applicable localization strings, set up as name/value pairs.</p>
 <p>The steps are:</p>
 <ol>
-	<li><a href="#s01_00">Step 1: Create the Java properties file</a> that specifies the new locale and the new error message content.</li>
+	<li><a href="#s01_00">Step 1: Create the Java properties file</a> that specifies the new copy.</li>
 	<li><a href="#s02_00">Step 2: Upload the Java properties file</a> to the /deploy folder of your installation.</li>
 </ol>
 
 
 
 <h2 id="s01_00">Step 1: Create the Java properties file</h2>
-<p>There are two custom properties that you can use in customizing error messages:</p>
+<p>There are two custom properties that you can use in customizing runtime error and informational messages and UI copy in the Akana Gateway:</p>
 <ul>
 	<li><strong>_locale</strong>: Identifies the locale for the messages.</li>
 	<li><strong>_basename</strong>: Optional. Allows you to set the resource bundle base name, which helps identify the resources in use. Helps reduce the likelihood of collisions, and speeds up lookups.</li>
@@ -50,16 +49,10 @@ nav-title: Internationalizing Error Messages
 
 
 <p>When you create the new properties file and add it to the /deploy folder of a container, and update the platform settings, messages are returned based on the message key.</p>
-<p>The service is at the /messages context.</p>
-<p>For example let's say you create a file named <strong>com.akana.messages-default.cfg</strong> with these contents:</p>
+<p>For example, the file below sets the _locale property and redefines the message content for one message:</p>
 <pre>_locale=en_us
 301300=message content</pre>
-<p>You can then test the file by calling the message in the browser, as follows:</p>
-<pre>{protocol}//{hostname}:{port}/messages?key=301300&locale=en&param=pt&param=yy </pre>
-<p>In this example, the URL uses the key from the file.</p>
-<p>You'll see the default message text for this message ID: </p>
-<pre>Error while updating WSDL. WSDL port type [pt] is used outside of service updated [yy].</pre>
-<p>To override an existing message, a file can be dropped into the deploy folder using a file name that corresponds to the pattern <strong>com.akana.messages-{qualifier}.cfg</strong>, where {qualifier} is a unique string that identifies the file. The file is a normal properties file that contains the localization strings corresponding to the appropriate keys.</p>
+<p>To override an existing message, you can add a file in the /deploy/ folder using a file name that corresponds to the pattern <strong>com.akana.messages-{qualifier}.cfg</strong>, where {qualifier} is a unique string that identifies the file. The file is a normal properties file that contains the localization strings corresponding to the appropriate keys.</p>
 <p>To create the properties file name and contents, follow the instructions below.</p>
 <h4>To create the properties file</h4>
 <ol>
@@ -79,17 +72,11 @@ nav-title: Internationalizing Error Messages
 <h4>To deploy the files</h4>
 <ol>
 	<li>Go to the /deploy/ directory of the container.<br />
-		Add the following files:
-		<ul>
-			<li>The file or files you created in Step 1.</li>
-			<li>The <strong>com.akana.test.jaxrs_2019.0.0.jar</strong> Jar file. To get this file, <a href="../../cm/learnmore/basics_support.htm#support_contact">contact Akana support</a>.</li>
-		</ul>
-	<p>An example is shown below.</p>
-	<p><img src="images/error_message_int_01.png"alt="Adding files to the /deploy/ folder"/></p>
+		Add the  file or files you created in Step 1. An example is shown below.
+			<p><img src="images/error_message_int_01.png"alt="Adding your file to the /deploy/ folder"/></p>
 	</li>
 	<li>Restart the container.</li>
 </ol>
-<p>Now, you can test the messages in the browser. See <a href="#s04_00">Test</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -104,12 +91,4 @@ nav-title: Internationalizing Error Messages
 		<p><img src="images/error_message_int_02.png"alt="Viewing the configuration settings"/></p>
 	</li>
 </ol>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<h2 id="s04_00">Test</h2>
-<p>Log in to the Akana platform and then, from the browser, construct a request for one of the messages you've set up in the custom config properties file, using this format for the URL:</p>
-<pre>{protocol}//{hostname}:{port}/messages?key={messagekey}&amp;locale={_locale}</pre>
-<p>You'll see the error message returned.</p>
 <p><a href="#top">Back to top</a></p>
