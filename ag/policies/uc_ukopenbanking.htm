@@ -5,12 +5,12 @@ description: An end-to-end example of using the JOSE Policy v2 to successfully i
 product: ag
 category: learn
 sub-nav-class: Policies - Operational
-weight: 20
+weight: 04
 type: page
 nav-title: Use Case - Open Banking
 ---
 <h1 id="top">Use Case: Open Banking</h1>
-<p>An end-to-end example of successfully implementing the UK Open Banking standards via the Akana API Platform, using the JOSE Policy v2.</p>
+<p>An end-to-end example of successfully implementing the UK Open Banking standards via the Akana API Platform, using the JOSE Security Policy v2.</p>
 <p>This example could also be applied to alternative standards, such as the ones being created by the Berlin Group and STET for PSD2.</p>
 <p>In this use case, the content is signed but not encrypted. The policy also supports encryption; this is just an example.</p>
 <p>For information about using policies in the context of the developer portal, see <a href="../../cm/learnmore/bus_admin_organizations.htm#h_business_policies">Business Policies</a>.</p>
@@ -20,70 +20,97 @@ nav-title: Use Case - Open Banking
 
 <h2 style="color: gray;">Table of Contents</h2>
 <ol class="table_of_contents">
-	<li><a href="#tc_ukob_introduction">Introduction</a></li>
-	<li><a href="#tc_ukob_overview">Use case overview</a></li>
-	<li><a href="#tc_ukob_setup">Setting up the use case</a>
+	<li><a href="#uc_uk_ob_overview">Use case overview</a></li>
+	<li><a href="#tc_ukob_setup">Setting up the use case</a></li>
+	<li><a href="#s01">Step 1: Set up the OAuth Provider domain</a>
+		<ol>
+			<li><a href="#s01_01">Create the OAuth Provider domain</a></li>
+			<li><a href="#s01_02">Add the authorization server URL as a trusted hostname</a></li>
+		</ol></li>
+	<li><a href="#s02_policies">Step 2: Create the policies</a>
 		<ul>
-			<li><a href="#s01">Step 1: Set up the OAuth Provider domain</a></li>
-			<li><a href="#s02_policies">Step 2: Create the policies</a></li>
-			<li><a href="#s02">Create the API</a></li>
-			<li><a href="#s03">Modify the API implementation so that there is only a Sandbox implementation</a></li>
-			<li><a href="#s04">Create a mock response</a></li>
-			<li><a href="#s05">Set up the API OAuth Details</a></li>
-			<li><a href="#s06">Set up the policies</a></li>
-			<li><a href="#s07">Attach the policies to the API</a></li>
-			<li><a href="#s08">Create the app</a></li>
-			<li><a href="#s09">Request, and approve, a contract between the app and the API</a></li>
-			<li><a href="#s10_keystore_00">Create the keystore/certificate</a></li>
-		</ul>
-		</li>
-	<li><a href="#tc_ukob_run">Running the use case</a></li>
-	<li><a href="#tc_ukob_results">Results</a></li>
-	<li><a href="#tc_ukob_metrics">Reviewing metrics</a></li>
-	<li><a href="#tc_ukob_resources">Resources</a></li>
+			<li><a href="#s02_policies_01">Policy overview</a></li>
+			<li><a href="#s02_policies_02">Setting up the policies</a></li>
+		</ul></li>
+	<li><a href="#s03_api">Step 3: Create and configure the API</a>
+		<ol>
+			<li><a href="#s03_01">Step 3-1: Create the API</a></li>
+			<li><a href="#s03_02">Step 3-2: Modify the API implementation so that there is only a Sandbox implementation</a></li>
+			<li><a href="#s03_03">Step 3-3: turn off anonymous access</a></li>
+			<li><a href="#s03_04">Step 3-4: Attach the policies to the API</a></li>
+			<li><a href="#s03_05">Step 3-5: Create a mock response</a></li>
+			<li><a href="#s03_06">Step 3-6: Set up the API OAuth Details</a></li>
+		</ol>
+	</li>
+	<li><a href="#s04_app">Step 4: Create the app</a></li>
+	<li><a href="#s05_contract">Step 5: Create a contract between the app and the API</a></li>
+	<li><a href="#s06_keystore">Step 6: Create the keystore/certificate</a>
+<ol>
+	<li><a href="#s06_keystore_01">Keystore Explorer: Generate a new key pair</a></li>
+	<li><a href="#s06_keystore_02">Keystore Explorer: Generate a certificate signing request (csr file)</a></li>
+	<li><a href="#s06_keystore_03">Developer Portal: Import certificate signing request to app (csr file)</a></li>
+	<li><a href="#s06_keystore_04">Developer Portal: Export signed certificate (certificate.cer file)</a></li>
+	<li><a href="#s06_keystore_05">Keystore Explorer: Import certificate (cer file)</a></li>
+	<li><a href="#s06_keystore_06">Keystore Explorer: Save the keystore as a p12 file</a></li>
+</ol>
+	</li>
+	<li><a href="#tc_ukob_run">Running the use case</a>
+		<ul>
+			<li><a href="#tc_ukob_results">Results</a></li>
+			<li><a href="#tc_ukob_trace_tab">Review the Trace tab</a></li>
+			<li><a href="#tc_ukob_token_decode">Decode the JWT token</a></li>
+			<li><a href="#tc_ukob_metrics">Review the metrics</a></li>
+		</ul></li>
+	<li><a href="#tc_ukob_resources">Resources</a>
+		<ul>
+			<li><a href="#tc_ukob_resources_01">The input Swagger file for the API</a></li>
+			<li><a href="#tc_ukob_resources_02">The request content for the Test Client message</a></li>
+			<li><a href="#tc_ukob_resources_03">The response content for the Content Activity in the Process Editor</a> (set up in <a href="#s03_05">Step 3-5: Create a mock response</a>)</li>
+			<li><a href="#tc_ukob_resources_04">A valid keystore</a></li>
+		</ul></li>
 </ol>
 <hr class="divide_hr" />
 
 
 
-<h2 id="tc_ukob_introduction">Introduction</h2>
+<h2 id="uc_uk_ob_overview">Use case overview</h2>
 <p>The UK Open Banking security profile is based on a layered architecture. Security is implemented:</p>
 <ol>
 	<li>At the transport layer.</li>
 	<li>At the client authorization layer.</li>
-	<li>At the message level, with the JOSE policy which ensures the integrity of the message.</li>
+	<li>At the message level, with the JOSE Security Policy v2 which ensures the integrity of the message.</li>
 </ol>
 <p>This example shows all three layers:</p>
 <ol>
 	<li>Mutual TLS via certificate-based client authentication.</li>
 	<li>Client authorization based on resource owner authentication and consent using OAuth 2.0/OpenID Connect.</li>
-	<li>Message security using the JOSE policy, with the security requirements specific to the UK Open Banking standard in place.</li>
+	<li>Message security using the JOSE Security Policy v2, with the security requirements specific to the UK Open Banking standard in place.</li>
 </ol>
-<p><strong>Note</strong>: This use case uses the UK Open Banking specification version 3.0, as set up in the JOSE policy configuration.</p>
+<p><strong>Note</strong>: This use case uses the UK Open Banking specification version 3.0, as set up in the JOSE Security Policy v2 configuration.</p>
 <p><a href="#top">Back to top</a></p>
 
 
+<p>---------------------------</p>
 
-<h2 id="tc_ukob_overview">Use case overview</h2>
 <p>In this use case we will set up:</p>
 <ul>
 	<li>An OAuth Provider domain</li>
 	<li>An API that uses the OAuth Provider domain to require JWT authentication, required by the UK Open Banking standard.
 	<p>Note that this is an example for illustration purposes; of course, the API does not actually connect with a bank. This is a sandbox API scenario. If the API is called successfully and all the security rules are satisfied, a static response is returned.</p></li>
-	<li>An app that accesses the API, has an active contract&nbsp;with the API, has a certificate in place, and presents the certificate when calling the API in Test Client.</li>
+	<li>An app that accesses the API, has an active contract with the API, has a certificate in place, and presents the certificate when calling the API in Test Client.</li>
 </ul>
 <p>With this setup in place, you'll be able to see how the platform supports API access within the context of the UK Open Banking standard. In the API Test Client you'll be able to send a message from your app to the API and receive a successful response.</p>
-<p>This use case sets up an API with the JOSE policy assigned to it. We will create a contract between the app and the API, and test in Test Client. You'll be able to see the JOSE headers in action and see how the integrity of the message is preserved.</p>
-<p>This example illustrates how the JOSE policy protects the API and enforces the rules of the UK Open Banking standard.</p>
+<p>This use case sets up an API with the JOSE Security Policy v2 assigned to it. We will create a contract between the app and the API, and test in Test Client. You'll be able to see the JOSE headers in action and see how the integrity of the message is preserved.</p>
+<p>This example illustrates how the JOSE Security Policy v2 protects the API and enforces the rules of the UK Open Banking standard.</p>
 <p>In this example the content is signed, but not encrypted.</p>
 <p>This use case includes all artifacts and instructions you'll need to set up the use case yourself.</p>
-<p>Once you have the use case set up and running successfully, you can also use negative testing to see how the JOSE policy protects the message, so that it fails if any of the values are tampered with.</p>
+<p>Once you have the use case set up and running successfully, you can also use negative testing to JOSE Security Policy v2 JOSE policy protects the message, so that it fails if any of the values are tampered with.</p>
 
 <h4 id="uc_ob_prerequisites">Prerequisites</h4>
 <p>To run this use case you'll need the following:</p>
 <ul>
 	<li>A working installation of the Akana API Platform, either on-prem or a SaaS account.</li>
-	<li>A keystore, in&nbsp;.p12 or&nbsp;.jks format, or a way of generating it. The keystore contains the cryptographic primary key and corresponding certificate chain. The use case includes instructions for using Keystore Exporer to generate a keystore in .p12 format.  See <a href="#s10_keystore_00">Create the keystore/certificate</a>.
+	<li>A keystore, in&nbsp;.p12 or&nbsp;.jks format, or a way of generating it. The keystore contains the cryptographic primary key and corresponding certificate chain. The use case includes instructions for using Keystore Exporer to generate a keystore in .p12 format. See <a href="#s06_keystore">Create the keystore/certificate</a>.
 		<p>These are required for setting up the mutual TLS connection and also for signing the message (JWT) as required by the JOSE Security policy.</p></li>
 	<li>The API Gateway must be configured to have an HTTPS listener that accepts (or requires) client certificates.
 	<p><strong>Note</strong>: If you are using the SaaS platform, this is already configured for you.</p></li>
@@ -95,49 +122,84 @@ nav-title: Use Case - Open Banking
 <h2 id="tc_ukob_setup">Setting up the use case</h2>
 <p>To get this use case working in the Akana API platform you'll need to:</p>
 <ul>
-	<li><a href="#s01">Set up the OAuth Provider domain</a> {<span class="apidoc_red">To comply with the spec, a scope called &ldquo;accounts&rdquo; must be configured with the Domain. So perhaps this calls for a distinct domain….One tricky bit here: the Authorization Server URL has to be unique. If a domain is already present that uses the &lsquo;default&rsquo; tenant hostname for its Authorization Server, then an additional virtual host must be configured (domain configuration will reject duplicate use of a hostname).</span>} [modify site settings for new resource owner authentication.]</li>
-	<li>{<span class="apidoc_red">Maybe Create the Policies should go here?</span>}</li>
-	<li>Create and configure the API:
-		<ul>
-			<li><a href="#s02">Create the API</a></li>
-			<li><a href="#s03">Modify the API implementation so that there is only a Sandbox implementation</a></li>
-			<li><a href="#s04">Create a mock response</a></li>
-		</ul>
-	</li>
-	<li>Secure the API:
-		<ul>
-			<li><a href="#s05">Set up the API OAuth Details</a></li>
-			<li><a href="#s06">Set up the policies</a></li>
-			<li><a href="#s07">Attach the policies to the API</a></li>
-			</ul>
-	</li>
-	<li><a href="#s08">Create the app</a></li>
-	<li><a href="#s09">Request, and approve, a contract between the app and the API</a></li>
-	<li><a href="#s10_keystore_00">Create the keystore/certificate</a></li>
+	<li><a href="#s01">Set up the OAuth Provider domain</a> (Site Admin task) {<span class="apidoc_red">To comply with the spec, a scope called &ldquo;accounts&rdquo; must be configured with the Domain. So perhaps this calls for a distinct domain….One tricky bit here: the Authorization Server URL has to be unique. If a domain is already present that uses the &lsquo;default&rsquo; tenant hostname for its Authorization Server, then an additional virtual host must be configured (domain configuration will reject duplicate use of a hostname).</span>} [modify site settings for new resource owner authentication.]</li>
+	<li><a href="#s02_policies">Step 2: Create the policies</a> (Business Admin task)</li>
+	<li><a href="#s03_api">Step 3: Create and configure the API</a></li>
+	<li><a href="#s04_app">Step 4: Create the app</a></li>
+	<li><a href="#s05_contract">Step 5: Create a contract between the app and the API</a></li>
+	<li><a href="#s06_keystore">Step 6: Create the keystore/certificate</a></li>
 	</ul>
 <p>Once all the above is set up, you're ready to test the API in Test Client: see <a href="#run">Running the use case</a>.</p>
+<p><a href="#top">Back to top</a></p>
 
 
-<h3 id="s01">Step 1: Set up the OAuth Provider domain</h3>
-<p>You'll need to have Site Admin permissions to set up the OAuth provider domain.</p>
+
+<h2 id="s01">Step 1: Set up the OAuth Provider domain</h2>
+<p>In this section:</p>
+<ul>
+	<li><a href="#s01_01">Create the OAuth Provider domain</a></li>
+	<li><a href="#s01_02">Add the authorization server URL as a trusted hostname</a></li>
+</ul>
+
+
+<h3 id="s01_01">Create the OAuth Provider domain</h3>
+<p>You'll need to have Site Admin permissions to set up the OAuth provider domain (or ask a Site Admin to do it for you).</p>
 <ol>
-	<li>Go to <strong>Admin</strong> &gt; <strong>Domains</strong> and click <strong>Add Domain</strong>.</li>
+	<li>Go to <strong>More</strong> &gt; <strong>Admin</strong> &gt; <strong>Domains</strong> and click <strong>Add Domain</strong>.</li>
 	<li>Choose <strong>Akana OAuth/OIDC Provider</strong>.</li>
 	<li>In the <strong>Add OAuth/OIDC Provider</strong> wizard, set values as follows:
 		<ul>
-			<li><strong>Tab 1</strong>: Name, optional description. In this example: <strong>OAuth_OIDC_UKOB</strong>.</li>
+			<li><strong>Tab 1</strong>: Name, optional description. In this example: <strong>OAuth_OIDC_UK_OB_UC</strong>.</li>
 			<li><strong>Tab 2, Grant Types</strong>: Choose <strong>Client Credentials</strong>.
 				<p><strong>Note</strong>: For simplicity, this example uses the Client Credentials grant type. The scenario could easily be extended to support additional grant types, such as Authorization Code, which would require a Resource Owner Authentication Domain.</p></li>
-			<li><strong>Tab 3, Token</strong>: Choose <strong>Referenced Bearer</strong>. {<span class="apidoc_red">OvG can we say something about our choice here, bit of info?</span>}</li>
-			<li><strong>Tab 5, Scopes</strong>: Create one scope, <strong>accounts</strong>. This is required to comply with the UK Open Banking specification. </li>
-			<li><strong>Tab 7, Branding</strong>: Enter the Authorization Server URL for your developer portal. In this example: <strong>https://oauth-ob.<span class="apidoc_red">acmepaymentscorp</span>.apiportal.akana.com</strong>. {<span class="apidoc_red">OvG is this needed? What can it be?</span>}</li>
+			<li><strong>Tab 3, Token</strong>: Choose <strong>Referenced Bearer</strong> (the default).</li>
+			<li><strong>Tab 5, Scopes</strong>: Create one scope, <strong>accounts</strong>. This is required to comply with the UK Open Banking specification. In this use case:
+			<p><strong>Name</strong>: <strong>accounts</strong></p>
+			<p><strong>Short Description</strong>: accounts scope for UK_OB_UC</p>
+			<p><strong>Full Description</strong>: accounts scope for UK Open Banking use case</p>
+			<p><strong>Note</strong>: In a production system it's not a good idea to specify a default scope. When you specify a scope as the default, it is granted automatically to any client that passes validation for accessing any API using this OAuth Provider domain. However, for the purposes of this use case it's convenient, and means that you don't need to specify the scope in the request when testing in Test Client. {<span class="apidoc_red">OvG please check this statement</span>}</p>
+			</li>
+			<li><strong>Tab 7, Branding</strong>: Enter the Authorization Server URL for your developer portal. In this example: <strong>https://oauth-ukobuc.acmepaymentscorp.apiportal.akana.com</strong>.
+			<p><strong>Note</strong>: If you're not sure what value to use for the authorization Server URL, see <a href="#oauth_provider_domain_auth_server_url_defining">Defining the authorization server URL</a> below.			</p>
+			</li>
 		</ul>
 		</li>
 	
-	<li>Save.</li>
+	<li>Click <strong>Save</strong>.</li>
 </ol>
 
-<p>---------paste start---------</p>
+<h4 id="oauth_provider_domain_auth_server_url_defining">Defining the authorization server URL</h4>
+<p>The authorization server URL must be unique. Unless you have a unique URL, you can create a valid authorization server URL for your new OAuth Provider domain by prefixing your tenant hostname with some unique characters.</p>
+<p>For example:</p>
+<ul>
+	<li><strong>Developer portal URL</strong>: https://acmepaymentscorp.akana.com/#/home/landing</li>
+	<li><strong>Authorization server URL</strong>: https://uk_ob_uc.acmepaymentscorp.akana.com/#/home/landing </li>
+</ul>
+<p>The prefix value can be anything that meets normal URL guidelines, as long as it is unique over all your domains.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="s01_02">Add the authorization server URL as a trusted hostname</h3>
+<p>You must make sure that the Authorization Server URL you set up in the OAuth Provider domain in the previous step (<strong>Tab 7, Branding</strong>) is trusted.</p>
+<p>You'll need to have Site Admin permissions for this step.</p>
+
+
+<h4 id="proc_site_settings_auth_server_url">To add the authorization server URL in the site settings as a trusted hostname</h4>
+<ol>
+	<li>Log in to the developer portal as a Site Admin.</li>
+	<li>Go to <strong>More</strong> &gt; <strong>Admin</strong> &gt; <strong>Site</strong>.</li>
+	<li>In the <strong>Themes</strong> section, find the theme you're using. To the right, click the arrow and choose <strong>Edit Theme</strong>.</li>
+	<li>In the Edit Theme dialog box, in the Virtual Hosts / Vanity Hostnames field, add the authorization server URL. In this example, <strong>oauth-ukobuc.rcoaless.apiportal.akana.com</strong>. Use a comma separator between multiple hostnames, as shown below.
+		<p><img src="images_uc_uk_ob/uc_ukob_dp_site.png" alt="Adding the Authorization Server URL to the site settings"/></p>
+	</li>
+	<li>Click Finish.</li>
+	<li>In the <strong>Site Settings</strong> page, click <strong>Save</strong>.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
 <h2 id="s02_policies">Step 2: Create the policies</h2>
 <p>In this section:</p>
 <ul>
@@ -147,16 +209,16 @@ nav-title: Use Case - Open Banking
 
 
 <h3 id="s02_policies_01">Policy overview</h3>
-<p>The entire Open Banking security profile is covered through the three out-of-the-box configurable policies shown in the table below (first three rows). Once you've configured these policies, you can re-use them across APIs. You can also easily update them, if necessary, at which point the&nbsp;changes are immediately effective in the APIs that are using the policies.</p>
+<p>The entire Open Banking security profile is covered through the three out-of-the-box configurable policies shown in the table below (first three rows). Once you've configured these policies, you can re-use them across APIs. You can also easily update them, if necessary, at which point the changes are immediately effective in the APIs that are using the policies.</p>
 <p>The table below summarizes information about the policies used in this use case. Note:</p>
 <ul>
-	<li>Detailed auditing is optional for logging, and is not required for UK Open Banking.</li>
-	<li>The first two policies do not require configuration.</li>
+	<li>The <a href="#policy_detailed_auditing">Detailed Auditing</a> policy is optional for logging, and is not required for UK Open Banking.</li>
+	<li>The <a href="#policy_oauth">OAuth Policy</a> and <a href="#policy_detailed_auditing">Detailed Auditing</a> policy do not require configuration.p</li>
 </ul>
 <p>These two policies require setup and configuration by the Business Admin:</p>
 <ul>
-	<li>HTTP Security</li>
-	<li>JOSE Policy v2</li>
+	<li><a href="#policy_http_security">HTTP Security</a></li>
+	<li><a href="#policy_jose_security_v2">JOSE Security Policy v2</a></li>
 </ul>
 <table class="doctable">
 	<thead>
@@ -168,29 +230,31 @@ nav-title: Use Case - Open Banking
 	</thead>
 	<tbody>
 		<tr>
-			<td>OAuth</td>
-			<td>Enforces OAuth</td>
-			<td><p>When this policy is attached to an API, and the user invokes the API in Test Client, the client is redirected to an authorization server to get an access token in order to be able to access the API. Test Client uses the internal Akana authorization server. This use case uses the Client Credentials OAuth grant; therefore the user must provide the credentials in Test Client. When the client's credentials are validated, the authorization server generates the token, which is sent with the message request.</p>
+			<td id="policy_oauth">OAuth</td>
+			<td>Enforces OAuth.</td>
+			<td><p>When the OAuth policy is attached to an API, and the user invokes the API in Test Client, the client is redirected to an authorization server to get an access token in order to be able to access the API. Test Client uses the internal Akana authorization server. This use case uses the Client Credentials OAuth grant; therefore the user must provide the credentials in Test Client. When the client's credentials are validated, the authorization server generates the token, which is sent with the message request.</p>
 				<p>In the context of this example, OAuth scopes are not a significant factor.</p>
 				<p>No configuration required.</p></td>
 		</tr>
 		<tr>
-			<td>HTTP Security</td>
-			<td>This policy validate the identity as it is presented through a certificate with the internal client identity store, as an authentication step</td>
-			<td><p>When this policy is attached to an API, and the user invokes the API in Test Client, the user must present a valid keystore, which is then validated by the Gateway. Test Client extracts the details from the TLS context, from the transport layer, to validate the certificate.</p>
-				<p>The HTTP Security Policy comes into play in the second part of <a href="#tc_ukob_run">Running  the use case</a>.</p>
+			<td id="policy_http_security">HTTP Security</td>
+			<td>Validate the identity as it is presented through a certificate with the internal client identity store, as an authentication step.</td>
+			<td><p>When the HTTP Security policy is attached to an API, and the user invokes the API, the HTTP security policy authenticates the client based on the client certificate.</p>
+				<p>It is a good practice to use this policy to explicitly specify that a client certificate is required. {<span class="apidoc_red">OvG please review wording</span>}</p>
+				<p>in Test Client, the user must present a valid keystore, which is then validated by the Gateway. Test Client extracts the details from the TLS context, from the transport layer, to validate the certificate.</p>
+				<p>The HTTP Security policy comes into play in the second part of <a href="#tc_ukob_run">Running the use case</a>.</p>
 				<p>Configuration required.</p></td>
 		</tr>
 		<tr>
-			<td>JOSE Policy v2</td>
-			<td>Enforces UK Open Banking rules</td>
-			<td><p>The JOSE policy adds very specific security to the part of the message exchange where the message is coming in from the client. The message is subjected to a number of rules, as specified by the UK OB rules and as configured in the JOSE policy.</p>
+			<td id="policy_jose_security_v2">JOSE Security Policy v2</td>
+			<td>Enforces UK Open Banking rules.</td>
+			<td><p>The JOSE Security Policy v2 adds very specific security to the part of the message exchange where the message is coming in from the client. The message is subjected to a number of rules, as specified by UK Open Banking standard and as configured in the JOSE Security Policy v2.</p>
 				<p>Configuration required.</p></td>
 		</tr>
 		<tr>
-			<td id="appsettings_user_defined_identity">Detailed Auditing</td>
-			<td id="appsettings_user_defined_identity">Logs message information&nbsp;for later review.</td>
-			<td><p>Because the use case is a test scenario, it's a good idea to add the Detailed Auditing policy, so that you can view transaction details.  This doesn't relate to Open Banking; it’s just for developer convenience.</p>
+			<td id="policy_detailed_auditing">Detailed Auditing</td>
+			<td>Logs message information for later review.</td>
+			<td><p>Because the use case is a test scenario, it's a good idea to add the Detailed Auditing policy, so that you can view transaction details. This doesn't relate to Open Banking; it’s just for developer convenience.</p>
 				<p>No configuration required.</p></td>
 		</tr>
 	</tbody>
@@ -198,16 +262,16 @@ nav-title: Use Case - Open Banking
 
 
 <h3 id="s02_policies_02">Setting up the policies</h3>
-<p>To set up the policies for this use case, follow the instructions below.</p>
+<p>You'll need to have Business Admin permissions to create and configure the policies for this use case (or ask a Business Admin to do it for you).</p>
 <h4>To create the policies</h4>
 <ol>
-	<li>Log in to the developer portal as a&nbsp;Business Admin.</li>
+	<li>Log in to the developer portal as a Business Admin.</li>
 	<li>Go to More &gt; Organizations &gt; All Organizations and choose your organization.</li>
 	<li>From the left menu, choose <strong>Policies</strong>.</li>
 	<li>Create the HTTP Security policy:
 		<ul>
-			<li>Choose Add.</li>
-			<li>Specify policy name. In this example: <strong>HTTP Security Policy_OB</strong>.</li>
+			<li>Click <strong>Add</strong>.</li>
+			<li>Specify policy name. In this example: <strong>HTTP Security Policy_UK_OB_UC</strong>.</li>
 			<li>For <strong>Policy Category</strong>, choose <strong>Operational Policy</strong>.</li>
 			<li>For <strong>Policy Sub-Type</strong>, choose <strong>HTTP Security Policy</strong>.</li>
 			<li>Click <strong>Save</strong>.</li>
@@ -218,45 +282,60 @@ nav-title: Use Case - Open Banking
 		<ul>
 			<li>In the <strong>Policy Summary</strong> section, click <strong>Edit</strong>.</li>
 			<li>For <strong>Authentication Options</strong>, choose <strong>Client Certificate</strong>.</li>
-			<li>Click <strong>Next</strong>&nbsp;and then click <strong>Finish</strong>.</li>
+			<li>Click <strong>Finish</strong> and then click <strong>Close</strong>.</li>
 		</ul>
 		</li>
 	
-	<li>Activate the HTTP Security policy: from the drop-down arrow at the top right, choose <strong>Activate Policy</strong>.</li>
-	<li>Create the JOSE Policy v2:
+	<li>Activate the HTTP Security policy: from the drop-down arrow at the top right, choose <strong>Activate Policy</strong>, enter a comment, and confirm.</li>
+	<li>Create the JOSE Security Policy v2:
 		<ul>
-			<li>Choose Add.</li>
-			<li>Specify policy name. In this example: <strong>JOSE Policy v2_OB</strong>.</li>
+			<li>Click <strong>Add</strong>.</li>
+			<li>Specify policy name. In this example: <strong>JOSE Policy v2_UK_OB_UC</strong>.</li>
 			<li>For <strong>Policy Category</strong>, choose <strong>Operational Policy</strong>.</li>
-			<li>For <strong>Policy Sub-Type</strong>, choose <strong>JOSE Policy v2  (Unencoded Payload Support)</strong>.</li>
+			<li>For <strong>Policy Sub-Type</strong>, choose <strong>JOSE Security Policy v2 (Unencoded Payload Support)</strong>.</li>
 			<li>Click <strong>Save</strong>.</li>
 		</ul>
 	</li>
-	<li>Configure the JOSE policy options:
+	<li>Configure the JOSE Security Policy v2 policy options:
 		<ul>
-			<li><strong>In the <strong>Policy Summary</strong> section, click <strong>Edit</strong>.</strong></li>
-			<li><strong>Protection Scope</strong>: <strong>IN</strong> (in from the client to the Gateway)</li>
-			<li><strong>Serialization</strong>: Compact.</li>
-			<li><strong>Role</strong>: Provider</li>
+			<li>In the <strong>Policy Summary</strong> section, click <strong>Edit</strong>.</li>
+			<li>In the <strong>Options</strong> page, for <strong>Protection Scope</strong>, choose <strong>IN</strong> (this means in from the client to the Gateway)</li>
+			<li>For <strong>Serialization</strong>, choose Compact.</li>
+			<li>For <strong>Role</strong>, choose Provider.</li>
 			<li><strong>Unencoded Detached Payload</strong>: Check the box.</li>
 			<li><strong>Header Parameter Name</strong>: <strong>x-jws-signature</strong></li>
 			<li><strong>UK Open Banking</strong>: Check the box.</li>
+			<li>Click <strong>Next</strong>.</li>
 		</ul>
 	</li>
-	<li>Specify the JOSE policy IN message options:
+	<li>Specify the JOSE Security Policy v2 IN message options:
 		<ul>
 			<li><strong>Signed Content</strong>: check the box.</li>
-			<li><strong>Private Headers</strong>: check the box and specify the two UK Open Banking headers, <strong>http://openbanking.org.uk/iat</strong> (&quot;issued at&quot; header) and <strong>http://openbanking.org.uk/iss</strong> (&quot;issuer&quot; header).</li>
-			<li>Click <strong>Finish</strong>&nbsp;and then click <strong>Close</strong>.</li>
+			<li><strong>Private Headers</strong>: check the box and specify the two UK Open Banking headers, <strong>http://openbanking.org.uk/iat</strong> (&quot;issued at&quot; header) and <strong>http://openbanking.org.uk/iss</strong> (&quot;issuer&quot; header), as shown in the example below.
+			<p><img src="images_uc_uk_ob/uc_ukob_policy_josev2_in_options.png" alt="JOSE Security Policy v2: setting up the private headers"/></p></li>
+			<li>Click <strong>Finish</strong> and then click <strong>Close</strong>.</li>
 			</ul>
 	</li>
 	
-	<li>Activate the JOSE policy v2: from the drop-down arrow at the top right, choose <strong>Activate Policy</strong>.</li>
+	<li>Activate the JOSE Security Policy v2: from the drop-down arrow at the top right, choose <strong>Activate Policy</strong>, enter a comment, and confirm.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="s03_api">Step 3: Create and configure the API</h2>
+<p>In this section:</p>
+<ol>
+	<li><a href="#s03_01">Step 3-1: Create the API</a></li>
+	<li><a href="#s03_02">Step 3-2: Modify the API implementation so that there is only a Sandbox implementation</a></li>
+	<li><a href="#s03_03">Step 3-3: turn off anonymous access</a></li>
+	<li><a href="#s03_04">Step 3-4: Attach the policies to the API</a></li>
+	<li><a href="#s03_05">Step 3-5: Create a mock response</a></li>
+	<li><a href="#s03_06">Step 3-6: Set up the API OAuth Details</a></li>
 </ol>
 
 
-
-<h3 id="s02">Step 2: Create the API</h3>
+<h3 id="s03_01">Step 3-1: Create the API</h3>
 <p>This example uses the Swagger for the Account and Transaction API, one of the APIs published by the UK Open Banking Implementation Entity:</p>
 <ul>
 	<li><a href="images_uc_uk_ob/account-info-swagger-3.0-x.json">Account and Transaction API Swagger file</a></li>
@@ -264,25 +343,30 @@ nav-title: Use Case - Open Banking
 <p>In <strong>Add API</strong>:</p>
 <ol>
 	<li>Upload the Swagger file.</li>
-	<li>Click the <strong>Advanced Options</strong> slider bar to see the additional properties you can set.</li>
-	<li>Choose Implementation Pattern of <strong>Orchestration</strong>. {<span class="apidoc_red">OvG does it still need to be Orchestration although we are not using the mock response/proxy API?</span>}</li>
+	<li>Click the <strong>Advanced Options</strong> slider bar to see additional settings.</li>
+	<li>Choose Implementation Pattern of <strong>Orchestration</strong>.
+		<p><strong>Note</strong>: This use case uses Orchestration so that we can set up a mock response, in the Process Editor.</p></li>
 	<li>Click <strong>Save</strong>.</li>
+	<li>Optional: in this use case, for clarity, an extra step: edit the API description to modify the title:
+		<ul>
+			<li><strong>Old title</strong>: Account_and_Transaction_API_Specification</li>
+			<li><strong>New title</strong>: Account_and_Transaction_API_Specification_uk_ob_uc </li>
+		</ul>
+		</li>
 </ol>
-<h3 id="s03">Step 3: Modify the API implementation so that there is only a Sandbox implementation</h3>
-<p>Go to <strong>API</strong> &gt; <strong>Implementations</strong> and do the following:</p>
+<h3 id="s03_02">Step 3-2: Modify the API implementation so that there is only a Sandbox implementation</h3>
 <p>It's not mandatory, but easier to have just one implementation. Follow the steps below to add a Sandbox implementation and then delete the default Live implementation.</p>
 
 <h4>To create the Sandbox implementation</h4>
 <ol>
-	<li>Go to <strong>API</strong> &gt; <strong>Implementations.</strong></li>
 	<li>Add a Sandbox implementation:
 		<ul>
-			<li>API &gt; <strong>Implementations</strong> &gt; <strong>Add</strong>.</li>
-			<li>For <strong>Pattern</strong>, choose <strong>Orchestration</strong>.</li>
-			<li>Save.</li>
-		</ul>
+			<li>Go to <strong>API</strong> &gt; <strong>Implementations.</strong></li>
+			<li>Click <strong>Add</strong> to add a Sandbox implementation.</li>
+			<li>For <strong>Pattern</strong>, choose <strong>Orchestration</strong>.				</li>
+			<li>Click <strong>Save</strong>.</li>
+			</ul>
 	</li>
-	
 	<li>Update the implementation:
 		<ul>
 			<li>Go back into the <strong>Sandbox</strong> implementation.</li>
@@ -290,23 +374,49 @@ nav-title: Use Case - Open Banking
 			<li>Delete all protocols except <strong>mutual-https</strong>. In this example, there are two protocols to delete, <strong>default-http0</strong> and <strong>default-https</strong>, as shown below.
 				<p><img src="images_uc_uk_ob/uc_ukob_api_delete_protocols.png" alt="Process Editor -- setting up the mock response"/></p></li>
 			<li>Save.</li>
-		</ul>
+			</ul>
 	</li>
 	
 	<li>Delete the <strong>Live</strong> implementation.</li>
 </ol>
 
 
+<h3 id="s03_03">Step 3-3: turn off anonymous access</h3>
+<p>By default, a Sandbox implementation allows anonymous access. Make sure this setting is turned off.</p>
+<h4>To disable anonymous access</h4>
+<ol>
+	<li>Go to <strong>API</strong> &gt; <strong>Implementations</strong> and choose the <strong>Sandbox</strong> implementation.</li>
+	<li>In the top section, click <strong>Edit</strong>.</li>
+	<li>Clear the <strong>Allow Anonymous Access</strong> checkbox.</li>
+	<li>Click <strong>Save</strong>.</li>
+</ol>
 
-<h3 id="s04">Step 4: Create a mock response</h3>
+
+<h3 id="s03_04">Step 3-4: Attach the policies to the API</h3>
+<ol>
+	<li>Go to <strong>API</strong> &gt; <strong>Implementations</strong> and choose the Sandbox implementation.</li>
+	<li>In the <strong>Policies</strong> section, click <strong>Edit</strong>.</li>
+	<li>Add the following policies to the API:
+		<ul>
+			<li><strong>DetailedAuditing</strong> (for tracking message requests and responses for information and debug purposes)</li>
+			<li><strong>OAuthSecurity Polic</strong>y (so that you can use OAuth)</li>
+			<li><strong>HTTP Security Policy</strong> (to enforce Mutual TLS)</li>
+			<li><strong>JOSE Security Policy v2</strong> (to enforce UK Open Banking requirements)</li>
+		</ul>
+	</li>
+	<li>Click <strong>Save</strong> to save the policy selections.</li>
+</ol>
+
+
+<h3 id="s03_05">Step 3-5: Create a mock response</h3>
 <p>The next step is to modify the first resource in this API, <strong>CreateAccountAccessConsent</strong>, which allows the <a href="../../cm/learnmore/basics_glossary.htm#gl_tpp">third-party provider</a> (TPP) to request access consent in order to provide a service to the consumer. In the Process Editor for the <strong>CreateAccountAccessConsent</strong> operation, create a mock response.</p>
 
 <h4>To create the mock response</h4>
 <ol>
 	<li>Go to <strong>API</strong> &gt; <strong>Implementations</strong> and choose the <strong>Sandbox</strong> implementation.</li>
 	<li>Scroll down to the bottom section, <strong>Resources</strong>.</li>
-	<li>In the top row, for the <strong>CreateAccountAccessConsent</strong> operation, click the drop-down arrow to the right and choose <strong>Edit Process</strong>:
-	<p><img src="images_uc_uk_ob/uc_ukob_api_implementation_edit_process.png" alt="API Implementation - Accesing the Process Editor"/></p>
+	<li>In the top row, for the <strong>CreateAccountAccessConsent</strong> operation, click the drop-down arrow to the right and choose <strong>Edit Process</strong>, as shown below.
+		<p><img src="images_uc_uk_ob/uc_ukob_api_implementation_edit_process.png" alt="API Implementation - Accesing the Process Editor"/></p>
 	</li>
 	<li>In the Process Editor, add a <strong>Content Activity</strong> (on the left, fourth icon from the top). Connect it in between the Receive and Reply nodes.</li>
 	<li>Double-click to edit the Content Activity. Set up values as shown below: <strong>Static Content</strong>, Content-Type <strong>application/json</strong>, static text <strong>{&quot;Status&quot;:&quot;OK&quot;}</strong> to variable name <strong>message</strong>.
@@ -314,11 +424,11 @@ nav-title: Use Case - Open Banking
 	</li>
 	<li>Click <strong>Finish</strong> to save the Content Activity.</li>
 	<li>In the Process Editor, click the <strong>Save</strong> icon (on the left, fifth icon from the bottom) to save the process changes.</li>
-	<li>Click <strong>Finish</strong>&nbsp;to exit&nbsp;the Process Editor.</li>
+	<li>Click <strong>Finish</strong> to exit the Process Editor.</li>
 </ol>
 
 
-<h3 id="s05">Step 5: Set up the API OAuth Details</h3>
+<h3 id="s03_06">Step 3-6: Set up the API OAuth Details</h3>
 <p>You'll need to set up the OAuth Details so that the API can use the domain that you set up, as an OAuth Provider domain.</p>
 
 <h4>To set up the API OAuth details</h4>
@@ -332,30 +442,11 @@ nav-title: Use Case - Open Banking
 			<li>In the <strong>Apply OAuth Settings to the Following Endpoint(s)</strong> field, make sure only the <strong>Sandbox</strong> implementation is selected. In this use case, it is the only one.</li>
 		</ol>
 	</li>
-	<li>In <strong>Tab 2</strong>, <strong>Scope Mapping</strong>, choose <strong>API-Wide Scope Mapping</strong> and then choose the <strong>accounts</strong> scope.
-{<span class="apidoc_red">OvG	I wrote this note from my first effort: &quot;In	my API I don't have that. No scopes specified.?? This piece not done.&quot; Now, second time through, I did this. If I get through this and it now works -- perhaps that could have been the problem with my token failing...? even so it would be a bug.</span>}	</li>
-	<li>Click <strong>Finish</strong>.</li>
+	<li>In <strong>Tab 2</strong>, <strong>Scope Mapping</strong>, choose <strong>API-Wide Scope Mapping</strong> and then choose the <strong>accounts</strong> scope.</li>
 </ol>
 
 
-<h3 id="s07">Step 7: Attach the policies to the API</h3>
-<ol>
-	<li>Go to <strong>API</strong> &gt; <strong>Implementations</strong> and choose the Sandbox implementation.</li>
-	<li>In the <strong>Policies</strong> section, click <strong>Edit</strong>.</li>
-	<li>Add the following policies to the API:
-		<ul>
-			<li><strong>DetailedAuditing</strong> (for tracking message requests and responses for information and debug purposes)</li>
-			<li><strong>OAuthSecurity Polic</strong>y (so that you can use OAuth)</li>
-			<li><strong>HTTP Security Policy</strong> (to enforce Mutual TLS)</li>
-			<li><strong>JOSE Security Policy v2</strong> (to enforce UK Open Banking requirements)</li>
-		</ul>
-	</li>
-	<li>Click <strong>Save</strong> to save the policy selections.</li>
-	<li>On the <strong>API Details</strong> page, click <strong>Save</strong> again to confirm your changes.</li>
-</ol>
-
-
-<h3 id="s08">Create the app</h3>
+<h2 id="s04_app">Step 4: Create the app</h2>
 <p>Create an app. For this example, the app name is <strong>AccountsApp_UK_OB_UC</strong>.</p>
 <ol>
 	<li>Navigation: <strong>Apps</strong> &gt; <strong>Add App</strong>.</li>
@@ -366,12 +457,12 @@ nav-title: Use Case - Open Banking
 		</ul>
 		</li>
 	
-	<li>Click <strong>Save</strong>.</li>
+	<li>Click <strong>Finish</strong>.</li>
 </ol>
 
 
 
-<h3 id="s09">Create a contract between the app and the API</h3>
+<h2 id="s05_contract">Step 5: Create a contract between the app and the API</h2>
 
 
 <h4 id="contract_request">To request a contract</h4>
@@ -387,63 +478,81 @@ nav-title: Use Case - Open Banking
 	</li>
 	<li>Click <strong>Save</strong>.</li>
 </ol>
+<p><strong>Note</strong>: Because this is a Sandbox implementation, activation is immediate. By default, API Admin approval is not required for a contract in the Sandbox implementation.</p>
 
 
-<h4 id="contract_approve">To approve a contract</h4>
+
+<h2 id="s06_keystore">Step 6: Create the keystore/certificate</h2>
+<p>This example uses Keystore Explorer to generate the keystore needed to authenticate the app when accessing the API in Test Client. Whatever tool you use to manage your keystore, the steps are the same:</p>
 <ol>
-	<li>Go to your user Dashboard, or to the Forum page for your API.</li>
-	<li>Find the API Access request and approve it.</li>
-	<li>Because this is in the Sandbox, activation is immediate.&nbsp;{<span class="apidoc_red">or is it that because it's Sandbox approval is not needed? Perhaps. test</span>}</li>
+	<li><a href="#s06_keystore_01">Keystore Explorer: Generate a new key pair</a></li>
+	<li><a href="#s06_keystore_02">Keystore Explorer: Generate a certificate signing request (csr file)</a></li>
+	<li><a href="#s06_keystore_03">Developer Portal: Import certificate signing request to app (csr file)</a></li>
+	<li><a href="#s06_keystore_04">Developer Portal: Export signed certificate (certificate.cer file)</a></li>
+	<li><a href="#s06_keystore_05">Keystore Explorer: Import certificate (cer file)</a></li>
+	<li><a href="#s06_keystore_06">Keystore Explorer: Save the keystore as a p12 file</a></li>
 </ol>
+<p><strong>Note</strong>: In this scenario, for testing purposes, Test Client is emulating the API. Therefore, Test Client needs the private key, included in the p12 file (Step 6), in order to authenticate the request being sent to the API. Of course, in a production scenario you would not upload the private key. Make sure that you are using a temporary keystore that you will not use in your production implementation. {<span class="apidoc_red">OvG please check this note which is in two places</span>}</p>
 
 
 
-<h3 id="s10_keystore_00">Step 8: Create the keystore/certificate</h3>
-<p>This example uses Keystore Explorer to generate the CSR (Certificate Signing Request). Whatever tool you use to manage your keystore, the steps are the same:</p>
-<ol>
-	<li><a href="#s10_keystore_01">Keystore Explorer: Generate a new keypair</a></li>
-	<li><a href="#s10_keystore_02">Keystore Explorer: Generate a certificate signing request (csr file)</a></li>
-	<li><a href="#s10_keystore_03">Developer Portal: Import certificate signing request to app (csr file)</a></li>
-	<li><a href="#s10_keystore_04">Developer Portal: Export signed certificate (certificate.cer file)</a></li>
-	<li><a href="#s10_keystore_05">Keystore Explorer: Import certificate (cer file)</a></li>
-	<li><a href="#s10_keystore_06">Keystore Explorer: Save the keystore as a p12 file</a></li>
-</ol>
-<p>You can then use the p12 file to authenticate the app in Test Client.</p>
+<h3 id="s06_keystore_00">Certificate Process: Overview</h3><p></p>
+<p>When you create the keystore, you create a private and public key pair. To turn that into something that you can use, you need a certificate. It&rsquo;s the certificate that you exchange with others. The private key, you store in a secure location such as a vault, to keep it safe.</p>
+<p>	The CSR (Certificate Signing request) is essentially a copy of your public key, signed with your private key, which you submit to a Certificate Authority.</p>
+<p>The Certificate Authority verifies your identity and generates a certificate, signed by the Certificate Authority and with its seal on the certificate. From then on, the certificate binds that public key to the private key, which is kept secret.</p>
+<p>	When the CA verifies a CSR and then puts its seal on a certificate, the CA is vouching that the public key is valid and will only work in conjunction with the private key of the party that has handed over the CSR.</p>
+<p>	As the final step, to have your public key as a vouched-for public key in your keystore, you import the CER reply back to the keystore. At that point the keystore has three things:</p>
+<ul>
+	<li>The public key</li>
+	<li>The private key</li>
+	<li>The seal of the vouching Certificate Authority (trust anchor), confirming that the public key is valid</li>
+</ul>
+<p>At this point, for the purpose of this use case, you can generate the .p12 file, which Test Client uses to authenticate the app.</p>
+<p><strong>Note</strong>: The .p12 file contains the private key, which you would not normally share. For testing purposes, it's necessary to share the private key with Test Client. Although Test Client does not store this information, it's important to have a separate public/private key pair that you use only for testing, and a different key store that you use for production.</p>
 
 
-<h4 id="s10_keystore_01">Keystore Explorer: Generate a new key pair</h4>
+<h3 id="s06_keystore_01">Keystore Explorer: Generate a new key pair</h3>
 <p>The first step is to generate a public/private key pair.</p>
 <ol>
-	<li>In Keystore Explorer, click the icon to create a new key pair.</li>
-	<li>In the <strong>New KeyStore Type</strong> dialog box, choose <strong>JKS</strong> and click <strong>OK</strong>.
-	<p>A new, unnamed keystore is created.</p></li>
-	<li>Click the <strong>Generate Key Pair</strong> icon (two keys) to create a new keypair:
-		<p><img src="images_uc_uk_ob/uc_ukob_ks_generate_key_pair.png" alt="Keystore Explorer - Generate Keypair"/></p>
-	</li>
+	<li>In Keystore Explorer, click the <strong>Create a new KeyStore</strong> icon.</li>
+	<li>In the <strong>New KeyStore Type</strong> dialog box, choose <strong>PKCS12</strong> and click <strong>OK</strong>.
+		<p>A new, unnamed keystore is created.</p></li>
+	<li>Click the <strong>Generate Key Pair</strong> icon to create a new key pair:
+		<p><img src="images_uc_uk_ob/uc_ukob_ks_generate_key_pair.png" alt="Keystore Explorer - Generate Key Pair"/></p>
+		</li>
 	<li>In the <strong>Generate Key Pair</strong> dialog box, choose <strong>RSA</strong> and click <strong>OK</strong>. </li>
 	<li>At the <strong>Generate Key Pair Certificate</strong> dialog box, in the <strong>Name</strong> field, click the book icon.</li>
-	<li>In the <strong>Name</strong> dialog box, specify values for each field. These values are used later. When done, click <strong>OK</strong>.
-<p><strong>Note</strong>: It's a good idea to use the app name as the Common Name.</p>
-	</li>
+	<li>In the <strong>Name</strong> dialog box, specify values for each field. These values are used later. In this example:
+		<ul>
+			<li>CN: <strong>AccountsApp_UK_OB_UC</strong>
+			<p><strong>Note</strong>: It's a good idea to use the app name as the Common Name (CN), for simplicity.</p></li>
+			<li>OU: <strong>accounts</strong></li>
+			<li>O: <strong>akana</strong></li>
+			<li>L: <strong>EUS</strong></li>
+			<li>ST: <strong>FL</strong></li>
+			<li>C: <strong>US</strong></li>
+		</ul>
+</li>
+	<li>When done, click <strong>OK</strong>.</li>
 	<li>At the <strong>Generate Key Pair Certificate</strong> dialog box, copy the value from the <strong>Name</strong> field and save it out (for example, to a text file:
 		<p><img src="images_uc_uk_ob/uc_ukob_ks_generate_key_pair_certificate.png" alt="Keystore Explorer - Saving the name"/></p>
 	</li>
 	<li>Click <strong>OK</strong>.</li>
-	<li>At the <strong>New Pair Key Entry Alias</strong> dialog box, enter an alias. It's a good idea to use the app name.</li>
+	<li>At the <strong>New Pair Key Entry Alias</strong> dialog box, enter an alias. It's a good idea to use the app name. By default, Keystore Explorer uses the CN from the Name field, so if you used the app name for the Common Name,you can just accept the default.</li>
 	<li>At the <strong>New Pair Key Entry Password</strong> dialog box, specify the password and then confirm it. Make sure you can remember the password.</li>
 	<li>Click <strong>OK</strong>. The key pair is generated, and you'll see a confirmation message.</li>
 </ol>
 
 
-<h4 id="s10_keystore_02">Keystore Explorer: Generate a certificate signing request (csr file)</h4>
+<h3 id="s06_keystore_02">Keystore Explorer: Generate a certificate signing request (csr file)</h3>
 <p>The next step is to generate a Certificate Signing Request in the form of a csr file, which you will then import into the developer portal.</p>
 <ol>
-	<li>In Keystore Explorer, right-click the keypair file and choose <strong>Generate CSR</strong>.</li>
-	<li>In the <strong>CSR File</strong> field, browse to the location where you want to store the CSR, and then click <strong>OK</strong>. You'll see a confirmation message that the CSR file was created.	</li>
+	<li>In Keystore Explorer, right-click the key pair file and choose <strong>Generate CSR</strong>.</li>
+	<li>In the <strong>CSR File</strong> field, browse to the location where you want to store the CSR, and then click <strong>OK</strong>. You'll see a confirmation message: <strong>CSR Generation Successful</strong>.</li>
 </ol>
 
 
-<h4 id="s10_keystore_03">Developer Portal: Import certificate signing request to app (csr file)</h4>
+<h3 id="s06_keystore_03">Developer Portal: Import certificate signing request to app (csr file)</h3>
 <p>The next step is to import the certificate signing request to the developer portal. </p>
 <ol>
 	<li>In the developer portal, go to the app's <strong>Details</strong> page.</li>
@@ -453,20 +562,20 @@ nav-title: Use Case - Open Banking
 </ol>
 
 
-<h4 id="s10_keystore_04">Developer Portal: Export signed certificate (certificate.cer file)</h4>
+<h3 id="s06_keystore_04">Developer Portal: Export signed certificate (certificate.cer file)</h3>
 <p>Now, download the certificate (.cer file) that the platform provides based on the CSR that you uploaded.</p>
 <ol>
 	<li>In the developer portal, in the app's <strong>Details</strong> page, <strong>Security</strong> section, click <strong>Show Keys</strong>, and then click <strong>Export Credentials</strong>, as shown below.
 		<p><img src="images_uc_uk_ob/uc_ukob_ks_export_credentials.png" alt="Developer Portal - Export credentials"/></p>
 	</li>
 	<li>Browse to the location where you want to save the file, and save it.
-		<p><strong>Note</strong>: It's a good idea to use the same location for all files, and to change from the default file name, <strong>certificate.cer</strong>, so that the name matches the .csr file.</p>
+		<p><strong>Note</strong>: It's a good idea to use the same location for all files, and to change from the default file name, <strong>certificate.cer</strong>, so that the name matches the .csr file. In this example: <strong>accountsapp_uk_ob_uc.cer</strong>.</p>
 	</li>
 </ol>
 
 
-<h4 id="s10_keystore_05">Keystore Explorer: Import certificate (cer file)</h4>
-<p>The next step is to import the certificate (cer file) that the platform generated, to Keystore Explorer, so that {<span class="apidoc_red">OvG please help with descriptive wording. Is it, so that the platform can use PKI authentication for the app that is accessing the API?</span>}.</p>
+<h3 id="s06_keystore_05">Keystore Explorer: Import certificate (cer file)</h3>
+<p>The next step is to import the certificate (cer file) that the platform generated, to Keystore Explorer, so that the keystore will include the certificate information along with the public and private key pair.</p>
 <ol>
 	<li>In Keystore Explorer, right-click and choose <strong>Import CA Reply</strong>, then choose <strong>From File</strong>, as shown below.
 		<p><img src="images_uc_uk_ob/uc_ukob_ks_import_ca_reply.png" alt="Keystore Explorer - Import CA Reply"/></p>
@@ -476,76 +585,95 @@ nav-title: Use Case - Open Banking
 <p><strong>Note</strong>: If there is any problem with the certificate, Keystore Explorer returns an error message. Validation is done before import.</p>
 
 
-<h4 id="s10_keystore_06">Keystore Explorer: Save the keystore as a p12 file</h4>
-<p>The final step is to save the keystore as a .p12 file, which you can then import to Test Client for authenticating the app. The P12 file includes the private key and the digital certificate.</p>
+<h3 id="s06_keystore_06">Keystore Explorer: Save the keystore as a p12 file</h3>
+<p>The final step is to save the keystore as a <strong>.p12</strong> file, which you can then import to Test Client for authenticating the app. The <strong>.p12</strong> file includes the private key and the digital certificate.</p>
+<h4>To create the p12 file</h4>
 <ol>
 	<li>In Keystore Explorer, click <strong>File</strong> &gt; <strong>Save As</strong>.</li>
-	<li>Specify the password, confirm it, and then click <strong>OK</strong>. Make sure you can remember the password.</li>
-	<li>Navigate to the location where you want to save the file. In the <strong>Save As Type</strong> field, specify file type of <strong>p12</strong> and click <strong>Save</strong>.</li>
+	<li>In the <strong>Set KeyStore Password</strong> dialog, specify the password, confirm it, and then click <strong>OK</strong>. Make sure you can remember the password.</li>
+	<li>Navigate to the location where you want to save the file. In the <strong>Save as type</strong> field, specify file type of <strong>p12</strong>, and then, in the <strong>File name</strong> field, make sure the extension is p12. Click <strong>Save</strong>. In this example: <strong>accountsapp_uk_ob_uc.p12</strong>.</li>
 </ol>
 <p><a href="#top">Back to top</a></p>
 
 
 
 <h2 id="tc_ukob_run">Running the use case</h2>
-<p>At this point, everything is set up. It's time to test the API in Test Client to see how the UK Open Banking rules are enforced. Showtime!</p>
-<p>Go to the <strong>API</strong> &gt; <strong>Test Client</strong>.</p>
-<p>In Test Client:</p>
+<p>At this point, everything is set up. It's time to test the API in Test Client to see how the UK Open Banking rules are enforced.</p>
+
+<h4>To run the use case</h4>
 <ol>
-	<li>Choose the app.</li>
-	<li>Choose the operation (xxx)</li>
+	<li>Go to the <strong>API</strong> &gt; <strong>Test Client</strong>.</li>
+	<li>In the Operation drop-down list, make sure the operation you used in <a href="#s03_05">Step 3-5: Create a mock response</a> is selected. It's the first operation so should be the default.</li>
+	<li>In the Content field, put some valid JSON content. You can use the standard request JSON for this operation, provided in the Resources section below: see <a href="#tc_ukob_resources_02">Request content for the Test Client message</a>.</li>
 	<li>Add the following headers:
 		<ul>
+			<li>xxx </li>
 			<li>{<span class="apidoc_red">OvG where did those headers come from? xxx</span>}</li>
-			<li>x-fapi-financial-id : xxx</li>
+			<li>x-fapi-financial-id : xxx Put any string value. Test Client does not validate this header.</li>
 			<li>x-fapi-financial-id : xxx</li>
 			</ul>
 		</li>
 	
-	<li>In the Content box, provide the message payload. For this example, use the content provided in <a href="#ob_uc_resources_02">Content for the Test Client message</a> below.</li>
-	<li>Click the <strong>Setup</strong> button.</li>
-	<li>xxx</li>
-	<li>Uploading the P12 file: questions. {<span class="apidoc_red">does it have to be a P12 file or what else can it be in the Test Client dialog? Does PKCS12 mean P12? Need to update Test Client doc: app_testing_tc.htm#tc_upload_keystore</span>} Test Client needs the private key in order to sign the request being sent to the API.</li>
+	<li>Click the <strong>Setup</strong> button. In the <strong>Setup</strong> dialog box:
+		<ul>
+			<li>Make sure the correct app is displayed.</li>
+			<li>Check the <strong>Upload Keystore</strong> box.</li>
+			<li>For <strong>Keystore Type</strong>, choose <strong>PKCS12</strong>.
+				<p><strong>Note</strong>: In this scenario, for testing purposes, Test Client is emulating the API. Therefore, Test Client needs the private key, included in the p12 file, in order to sign the request being sent to the API. Of course, in a production scenario you would not upload the private key. Make sure that you are using a temporary keystore that you will not use in your production implementation.</p></li>
+			<li>In <strong>File to Upload</strong>, browse to the location of the .p12 file, and upload it. In this example: <strong>accountsapp_uk_ob_uc.p12</strong>.</li>
+			<li>Enter the password, and click <strong>Save</strong>.</li>
+			</ul>
+		</li>
 	<li>Click the <strong>Security</strong> button.</li>
-	<li>In the page for the JOSE Security policy:
+	<li>In the <strong>HTTP Security Policy</strong> page, click <strong>Next</strong>.</li>
+	<li>In the <strong>JOSE Security Policy v2</strong> page:
 	<ul>
-		<li>In the <strong>Signature/MAC Algorithm</strong> field, choose RS256.</li>
-		<li>In the <strong>Private Headers</strong> section, add the <strong>http://openbanking.org.uk/iat</strong> (&quot;issued at&quot; header) and provide any value. At runtime, Test Client updates with the correct value.</li>
-		<li>In the <strong>Private Headers</strong> section, add the <strong>http://openbanking.org.uk/iss</strong> (&quot;issuer&quot; header) and provide the Subject DN. This value must match the subject DN from the certificate that corresponds with the keystore that you just uploaded. For example: {<span class="apidoc_red">OvG could I borrow the value you used please? I will change it. Or I need to use mine</span>}
-			<pre>xxx</pre></li>
+		<li>In the <strong>Signature/MAC Algorithm</strong> field, choose <strong>RS256</strong>. The UK Open Banking standard requires an RS value.
+			<p>The JSON web token, which Test Client will create to satisfy the JOSE Security Policy v2, will be signed using the keystore that you just uploaded. The same keystore is used for the TLS connection (HTTP Security Policy) and to sign the JSON web token (JWT) for the JOSE Security Policy v2.</p></li>
+		<li>In the <strong>Private Headers</strong> section, add the <strong>http://openbanking.org.uk/iat</strong> (&quot;issued at&quot; header) in the <strong>Name</strong> field, and provide any value. At runtime, Test Client updates with the correct value.</li>
+		<li>In the <strong>Private Headers</strong> section, add the <strong>http://openbanking.org.uk/iss</strong> (&quot;issuer&quot; header) in the <strong>Name</strong> field, and then, in the <strong>Value</strong> field, provide the Subject DN. This value must match the subject DN from the certificate that corresponds with the keystore that you just uploaded. In this use case:
+			<pre>CN=AccountsApp_UK_OB_UC,OU=OU,O=Akana,L=NA,ST=FL,C=US</pre></li>
 		<li>Click <strong>Next</strong>.</li>
-	</ul>
-	</li>
+		</ul>
+		</li>
 	
 	<li>In the page for the OAuth policy, choose <strong>Client Credentials</strong> and click <strong>Get Token</strong> to generate the OAuth access token.</li>
 	<li>In the SameOriginPolicy page, click <strong>Finish</strong>.</li>
 	<li>In Test Client, click <strong>Invoke</strong>.</li>
-	<li>Review the successful response</li>
-	<li>{<span class="apidoc_red">do we need to decode any tokens or anything?</span>}</li>
+	<li>Review the successful response, as shown in the Results section below. You can also:
+		<ul>
+			<li><a href="#tc_ukob_trace_tab">Review the Trace tab</a></li>
+			<li><a href="#tc_ukob_token_decode">Decode the JWT token</a></li>
+			<li><a href="#tc_ukob_metrics">Review the metrics</a></li>
+		</ul>
+		</li>
 </ol>
 <p><a href="#top">Back to top</a></p>
 
 
 
-<h2 id="tc_ukob_results">Results</h2>
+<h3 id="tc_ukob_results">Results</h3>
 <p>The illustration below shows a successful response in Test Client.</p>
 <p><img src="images_uc_uk_ob/uc_results.png" alt="UK Open Banking use case: result in Test Client" /></p>
 <p><a href="#top">Back to top</a></p>
 
 
 
-<h2 id="tc_ukob_trace_tab">Review Trace tab and decode token</h2>
+<h3 id="tc_ukob_trace_tab">Review the Trace tab</h3>
 <p>In Test Client, review the <strong>Trace</strong> tab. The results should look something like the below.</p>
 <p><img src="images_uc_uk_ob/uc_results_trace.png" alt="UK Open Banking use case: Trace tab in Test Client" /></p>
 <p>You can see that:</p>
 <ul>
 	<li>The JOSE Authorization header has been prepared.</li>
-	<li>The <strong>x-jws-signature</strong> header, specified in the JOSE policy, has been sent. {<span class="apidoc_red">Is that the same as the JOSE Authorization header?</span>}</li>
+	<li>The <strong>x-jws-signature</strong> header, specified in the JOSE Security Policy v2, has been sent. {<span class="apidoc_red">Is that the same as the JOSE Authorization header?</span>}</li>
 	<li>Because of the OAuth configuration used, in this example there is a second JWT token, a Bearer token, generated for the message. This is the OAuth access token. It contains the information that this is a valid client, and that the client identity has been validated against the identity store configured for the OAuth provider.</li>
 </ul>
+
+
+<h3 id="tc_ukob_token_decode">Decode the JWT token</h3>
 <p>You can copy the token in the <strong>x-jws-signature</strong> header and decode it in the JWT debugger at <a href="https://jwt.io/" title="https://jwt.io/" target="_blank">https://jwt.io/</a>. The above example is decoded below.</p>
 <p><img src="images_uc_uk_ob/uc_results_jwt_jose.png" alt="UK Open Banking use case: JWT token, decoded" /></p>
-<p><strong>Note</strong>: Since this example uses the Detached Payload option, the payload is not included in the JWT token, so the Payload section of the token is empty.</p>
+<p><strong>Note</strong>: Since this example uses the Detached Payload option, the payload is not included in the JWT token, so the Payload section of the token is empty. {<span class="apidoc_red">OvG not sure if this statement is true?</span>}</p>
 <p>When decoded at <a href="https://jwt.io/" title="https://jwt.io/" target="_blank">https://jwt.io/</a>, the Bearer token looks like this:</p>
 <p><img src="images_uc_uk_ob/uc_results_jwt_bearer.png" alt="UK Open Banking use case: JWT token, decoded" /></p>
 <p>This token shows the claims that are valid for the OAuth authorization context. The API Gateway validates these claims.</p>
@@ -553,7 +681,7 @@ nav-title: Use Case - Open Banking
 
 
 
-<h2 id="tc_ukob_metrics">Reviewing metrics</h2>
+<h3 id="tc_ukob_metrics">Review the metrics</h3>
 <p>You can also review the analytics information.</p>
 <p>In the developer portal, go to <strong>Analytics</strong> &gt; <strong>Logs</strong>. Choose one of the messages you just sent. You can look at the Info, Body, and Headers. In the Body tab you'll be able to see that the policies were enforced successfully.</p>
 <p>The <strong>Info</strong> tab is shown below.</p>
@@ -569,61 +697,92 @@ nav-title: Use Case - Open Banking
 <p>Resources for this use case include:</p>
 <ul>
 	<li><a href="#tc_ukob_resources_01">The input Swagger file for the API</a></li>
-	<li><a href="#tc_ukob_resources_02">The content for the Test Client message</a></li>
-	<li><a href="#tc_ukob_resources_03">A valid keystore</a></li>
+	<li><a href="#tc_ukob_resources_02">The request content for the Test Client message</a></li>
+	<li><a href="#tc_ukob_resources_03">The response content for the Content Activity in the Process Editor</a> (set up in <a href="#s03_05">Step 3-5: Create a mock response</a>)</li>
+	<li><a href="#tc_ukob_resources_04">A valid keystore</a></li>
 </ul>
 
 
 <h3 id="tc_ukob_resources_01">Input Swagger file</h3>
-<p>This example uses the Open Banking Account and Transaction API, available at&nbsp;the following URLs:</p>
+<p>This example uses the Open Banking Account and Transaction API, converted to OAS 3.0, available at the following URL:</p>
+<ul>
+	<li><strong>Version 3.0.0, converted to OAS 3.0</strong>: <a href="https://raw.githubusercontent.com/OpenBankingUK/read-write-api-specs/v3.0.0/dist/account-info-swagger.json" title="Link to source content for OAS 3.0 version" target="_blank">https://raw.githubusercontent.com/OpenBankingUK/read-write-api-specs/v3.0.0/dist/account-info-swagger.json</a></li>
+</ul>
+<p>The OAS 3.0 file for this use case is available here:</p>
+<ul>
+<li><a href="images_uc_uk_ob/account-info-swagger-3.0_OAS.json">OAS 3.0 file</a></li>
+</ul>
+
+
+<h4 id="tc_ukob_resources_01_02">Additional Swagger versions available</h4>
+<p>You could also use these versions:</p>
 <ul>
 	<li><strong>Version 3.1.1</strong>: <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/999622968/Account+and+Transaction+API+Specification+-+v3.1.1#AccountandTransactionAPISpecification-v3.1.1-SwaggerSpecification" title="Link to Atlassian site for 3.1.1 Swagger" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/999622968/Account+and+Transaction+API+Specification+-+v3.1.1#AccountandTransactionAPISpecification-v3.1.1-SwaggerSpecification</a></li>
 	<li><strong>Version 3.1.2</strong>: <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/1077805296/Account+and+Transaction+API+Specification+-+v3.1.2#AccountandTransactionAPISpecification-v3.1.2-SwaggerSpecification" title="Link to Atlassian site for 3.1.2 Swagger" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/1077805296/Account+and+Transaction+API+Specification+-+v3.1.2#AccountandTransactionAPISpecification-v3.1.2-SwaggerSpecification</a></li>
 </ul>
-<p>However, the default Swagger file for this API, in the default values for <strong>Consumes</strong> and <strong>Produces</strong>, includes a charset parameter: <strong>application/json; charset=utf-f</strong>.</p>
+<p>Note that the default Swagger file for this API, in the default values for <strong>Consumes</strong> and <strong>Produces</strong>, includes a charset parameter: <strong>application/json; charset=utf-f</strong>.</p>
 <p>Both versions of the UK Open Banking Specification state that the media type must be <strong>application/json</strong> (apart from specific exceptions), and the Akana JOSE v2 policy expects these values exactly. With the charset parameter, the messages fail.</p>
-<p>Therefore, for this use case, the Swagger has been slightly modified; the default media type values have been replaced with <strong>application/json</strong>:</p>
+<p>In case you want to use either of these versions for this use case, the Swagger has been slightly modified; the default media type values have been replaced with <strong>application/json</strong>:</p>
 <ul>
 	<li><a href="images_uc_uk_ob/account-info-swagger-3.0-x.json">Modified Swagger file</a></li>
 </ul>
 
 
-<h3 id="tc_ukob_resources_02">Content for the Test Client message</h3>
-<p>The message POST content used in the use case is below.</p>
+<h3 id="tc_ukob_resources_02">Request content for the Test Client message</h3>
+<p>The message POST content used in the use case is below. {<span class="apidoc_red">OvG: there are dates in here. How did you get this? I guess I will just update to future dates -- but, does it need to match the response or anything?</span>}</p>
 <pre>{
-  "Data":{
-    "Permissions":[
-      "ReadAccountsDetail",
-      "ReadBalances",
-      "ReadBeneficiariesDetail",
-      "ReadDirectDebits",
-      "ReadProducts",
-      "ReadStandingOrdersDetail",
-      "ReadTransactionsCredits",
-      "ReadTransactionsDebits",
-      "ReadTransactionsDetail",
-      "ReadOffers",
-      "ReadPAN",
-      "ReadParty",
-      "ReadPartyPSU",
-      "ReadScheduledPaymentsDetail",
-      "ReadStatementsDetail"
+  "Data": {
+    "Permissions": [
+      "ReadAccountsBasic"
     ],
-    "ExpirationDateTime":"2017-05-02T00:00:00+00:00",
-    "TransactionFromDateTime":"2017-05-03T00:00:00+00:00",
-    "TransactionToDateTime":"2017-12-03T00:00:00+00:00"
+    "ExpirationDateTime": "2020-04-16T16:05:46.165Z",
+    "TransactionFromDateTime": "2020-04-16T16:05:46.165Z",
+    "TransactionToDateTime": "2020-04-16T16:05:46.165Z"
   },
-  "Risk":{
+  "Risk": {}
+}</pre>
+<p><a href="#top">Back to top</a></p>
 
+
+
+<h3 id="tc_ukob_resources_03">The response content for the Content Activity in the Process Editor</h3>
+<p>Because this use case is run in the Sandbox implementation and is not really accessing an Open Banking API, the API response is defined as a static response that is returned when the operation is accessed successfully. The response content is shown below.</p>
+<p>This content is used in set up in <a href="#s03_05">Step 3-5: Create a mock response</a>.</p>
+<p>It really doesn't matter what content you define since the response is static. However, this is an example of what a response for this operation might look like in a production environment.</p>
+<pre>{
+  "Data": {
+    "ConsentId": "string",
+    "CreationDateTime": "2020-04-16T16:05:46.226Z",
+    "Status": "Authorised",
+   "StatusUpdateDateTime": "2020-04-16T16:05:46.226Z",
+    "Permissions": [
+      "ReadAccountsBasic"
+    ],
+    "ExpirationDateTime": "2020-04-16T16:05:46.226Z",
+    "TransactionFromDateTime": "2020-04-16T16:05:46.226Z",
+    "TransactionToDateTime": "2020-04-16T16:05:46.226Z"
+  },
+  "Risk": {},
+  "Links": {
+    "Self": "string",
+    "First": "string",
+    "Prev": "string",
+    "Next": "string",
+    "Last": "string"
+  },
+  "Meta": {
+    "TotalPages": 0,
+    "FirstAvailableDateTime": "2020-04-16T16:05:46.226Z",
+    "LastAvailableDateTime": "2020-04-16T16:05:46.226Z"
   }
 }</pre>
 <p><a href="#top">Back to top</a></p>
 
 
 
-<h3 id="tc_ukob_resources_03">A valid keystore</h3>
-<p>For this example, you'll need to be able to generate a keystore for the xxx.</p>
-<p>You could use a tool such as Keystore Explorer.</p>
+<h3 id="tc_ukob_resources_04">A valid keystore</h3>
+<p>For this example, you'll need to be able to generate a keystore, including generating the public and private key pair, creating a certificate signing request, importing a signed certificate, and generating a P12 file. For details of the steps, see <a href="#s06_keystore">Step 6: Create the keystore/certificate</a>.</p>
+<p>For these activities, you could use a tool such as Keystore Explorer, downloadable from <a href="http://keystore-explorer.org/downloads.html" title="Link to Keystore Explorer, Downloads page" target="_blank">http://keystore-explorer.org/downloads.html</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
