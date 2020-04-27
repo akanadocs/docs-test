@@ -108,7 +108,7 @@ nav-title: Use Case - UK Open Banking
 <p>To run this use case you'll need the following:</p>
 <ul>
 	<li>A working installation of the Akana API Platform, either on-prem or a SaaS account.</li>
-	<li>A keystore, in&nbsp;.p12 format, or a way of generating it. The keystore contains the cryptographic primary key and corresponding certificate chain. The platform supports both&nbsp;.p12 and&nbsp;.jks format. This use case includes instructions for using Keystore Explorer to generate a keystore in .p12 format. See <a href="#s06_keystore">Create the keystore/certificate</a>.
+	<li>A keystore, in&nbsp;.p12 format, or a way of generating it. The keystore contains the cryptographic private key and corresponding certificate chain. The platform supports both&nbsp;.p12 and&nbsp;.jks format. This use case includes instructions for using Keystore Explorer to generate a keystore in .p12 format. See <a href="#s06_keystore">Create the keystore/certificate</a>.
 		<p>These are required for setting up the mutual TLS connection and also for signing the message (JWT) as required by the JOSE Security policy.</p></li>
 	<li>The API Gateway must be configured to have an HTTPS listener that accepts (or requires) client certificates.
 	<p><strong>Note</strong>: If you are using the SaaS platform, this is already configured for you, but you must be sure to use the mTLS endpoint (hostname includes <strong>mtl</strong>). In this use case, this is set up in <a href="#s03_02">Step 3-2: Modify the API implementation so that there is only a Sandbox implementation</a>.</p></li>
@@ -151,6 +151,7 @@ nav-title: Use Case - UK Open Banking
 			<li><strong>Tab 2, Grant Types</strong>: Choose <strong>Client Credentials</strong>.
 				<p><strong>Note</strong>: For simplicity, this example uses the Client Credentials grant type. The scenario could easily be extended to support additional grant types, such as Authorization Code, which would require a Resource Owner Authentication Domain.</p></li>
 			<li><strong>Tab 3, Token</strong>: Choose <strong>Referenced Bearer</strong>.</li>
+			<li><strong>Tab 4</strong>: no setup needed.</li>
 			<li><strong>Tab 5, Scopes</strong>: Create one scope, <strong>accounts</strong>. This is required to comply with the UK Open Banking specification. In this use case:
 			<p><strong>Name</strong>: <strong>accounts</strong></p>
 			<p><strong>Short Description</strong>: <strong>accounts scope for UK_OB_UC</strong></p>
@@ -158,7 +159,8 @@ nav-title: Use Case - UK Open Banking
 			<p><strong>Default Scope</strong>: leave it as checked. </p>
 			<p><strong>Note</strong>: By default, the <strong>Default Scope</strong> box is checked, meaning that the new scope is granted automatically to any client that passes validation for accessing any API that uses this OAuth Provider domain. In a production scenario it might not be a good idea to allow a scope to be granted by default. However, for the purposes of this use case it's convenient, and means that you don't need to specify the scope in the request when testing in Test Client. {<span class="apidoc_red">OvG_10 reworded here</span>}</p>
 			</li>
-			<li><strong>Tab 7, Branding</strong>: Enter the Authorization Server URL for your developer portal. In this example: <strong>https://oauth-uk-ob-uc.acmepaymentscorp.apiportal.akana.com</strong>.
+			<li><strong>Tab 6</strong>: no setup needed.</li>
+			<li><strong>Tab 7, Branding</strong>: Enter the Authorization Server URL for your own developer portal. In this example: <strong>https://oauth-uk-ob-uc.acmepaymentscorp.apiportal.akana.com</strong>.
 				<p><strong>Note</strong>: If you're not sure what value to use for the authorization Server URL, see <a href="#oauth_provider_domain_auth_server_url_defining">Defining the authorization server URL</a> below.			</p>
 			</li>
 		</ul>
@@ -194,7 +196,8 @@ nav-title: Use Case - UK Open Banking
 	<li>Log in to the developer portal as a Site Admin.</li>
 	<li>Go to <strong>More</strong> &gt; <strong>Admin</strong> &gt; <strong>Site</strong>.</li>
 	<li>In the <strong>Themes</strong> section, find the theme you're using. To the right, click the arrow and choose <strong>Edit Theme</strong>.</li>
-	<li>In the Edit Theme dialog box, in the Virtual Hosts / Vanity Hostnames field, add the authorization server URL. In this example, <strong>oauth-ukobuc.rcoaless.apiportal.akana.com</strong>. Use a comma separator between multiple hostnames, as shown below.
+	<li>In the <strong>Edit Theme</strong> dialog box, in the <strong>Virtual Hosts / Vanity Hostnames</strong> field, <strong>add</strong> the authorization server URL. In this example, <strong>oauth-uk-ob-uc.rcoaless.apiportal.akana.com</strong>. Use a comma separator between multiple hostnames, as shown below.
+		<p><strong>Important</strong>: Be sure to leave your existing hostname untouched. Add the authorization server URL as an additional hostname.</p>
 		<p><img src="images_uc_uk_ob/uc_ukob_dp_site.png" alt="Adding the Authorization Server URL to the site settings"/></p>
 	</li>
 	<li>Click Finish.</li>
