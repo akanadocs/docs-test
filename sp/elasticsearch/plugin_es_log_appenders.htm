@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Akana API Platform</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="../../style/reset.css" rel="stylesheet" type="text/css" />
+<link href="../../style/base.css" rel="stylesheet" type="text/css" />
+<link href="../../style/document.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="documentation supportContent">
+<!-----
+layout: page
+title: Akana Elasticsearch Log Appender plug-in
+description: Learn about how to install and use the Akana Elasticsearch Log Appender plug-in.
+product: sp
+category: gs
+weight: 05
+sub-nav-class: Elasticsearch
+type: page
+nav-title: Akana Elasticsearch Log Appender plug-in
+----->
+<h1 id="top">Akana Elasticsearch Log Appender Plug-In</h1>
+<p>Learn about how to install and use the Akana Elasticsearch Log Appender plug-in.</p>
+<hr class="divide_hr" />
+
+
+
+<h2 style="color: gray;">Table of Contents</h2>
+<ol class="table_of_contents">
+	<li><a href="#es_plugin_overview">Overview</a></li>
+	<li><a href="#es_plugin_install">Installation</a></li>
+	<li><a href="#es_plugin_log">Logged Data</a></li>
+</ol>
+<hr class="divide_hr" />
+
+
+
+<h2 id="es_plugin_overview">Overview</h2>
+<p>The Akana Elasticsearch Log Appender plug-in can be installed on each of the Akana Containers. This plug-in allows Akana container exception data (and optionally access log information) into Elasticsearch. The data pushed into Elasticsearch can be viewed using Kibana or queried directly. The data is returned as a JSON document.</p>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h2 id="es_plugin_install">Installation</h2>
+<p>The Akana Elasticsearch Log Appender plug-in is part of the Akana Option packs and is downloaded from the Support Download site. It can be installed in any of the Akana containera.</p>
+<p>Any container where the Akana Elasticsearch Log Appender plug-in is installed, needs to be able to access the Elasticsearch server. </p>
+<p>After the plug-in is installed, the following configuration category is added to the container and the following properties configured.</p>
+<p>The configuration PID is: <strong>com.akana.log.elasticsearch</strong>:</p>
+<p><img src="images/ac_cc_com_akana_log_elasticsearch.png" alt="Configuration properties for Elasticsearch"/></p>
+<p>Properties that are required are shown in the table below.</p>
+<table class="doctable">
+	<thead>
+		<tr>
+			<th>Property</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<!--	<tr>
+		<td>Alert Workflow Definition</td>
+		<td>The workflow definition that will apply to all new alerts on the platform (existing alerts are not affected).</td>
+	</tr>-->
+		<tr>
+			<td>requestDataSaver.elasticHost</td>
+			<td><p>The Elasticsearch server host and port url: <strong>http(s)://{es_host}:{es_port}</strong>.</p></td>
+		</tr>
+		<!--	<tr>
+		<td>Publishing of Alerts</td>
+		<td>Indicates whether alerts are published automatically or must be approved by a moderator (Admin).{commenting out 9/9/15 as is not in UI}</td>
+	</tr>-->
+		<tr>
+			<td>requestDataSaver.elasticIndex</td>
+			<td><p>The Elasticsearch index for to store the data.</p>
+				<p>Default: <strong>request-log</strong>.</p></td>
+		</tr>
+		<tr>
+			<td>requestLog.enabled</td>
+			<td>To enable the logging, set to <strong>true</strong>. False disables the logging.</td>
+		</tr>
+	</tbody>
+</table>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h2 id="es_plugin_log">Logged Data</h2>
+<p>This plug-in pushes the exceptions from the container log file into Elasticsearch. An example document is shown below. This 404 exception is logged in Elasticsearch. For additional information regarding this error (for example, what may have caused the error, exception) the container log files residing on the file system are still required, because this information is not pushed into Elasticsearch.</p>
+<pre>{
+  "_index": "request-log",
+  "_type": "_doc",
+  "_id": "ecd1436d-6552-431b-a79e-07082646bac7",
+  "_version": 1,
+  "_score": null,
+  "_source": {
+    "@timestamp": "2020-02-24T23:55:35.524Z",
+    "hostName": "ap-ex-swest",
+    "applicationName": "AP",
+    "containerKey": "1000105",
+    "instanceName": "ap-ex-swest",
+    "logger": "com.soa.transport.jetty.JettyTransportBinding",
+    "level": "ERROR",
+    "className": "com.soa.transport.http.HttpException",
+    "message": "HTTP Error [404:Not Found] when accessing the URI [Not specified]",
+    "stackTrace": "com.soa.transport.http.HttpException: HTTP Error [404:Not Found] when accessing the URI [Not specified]\n\tat com.soa.jbi.jaxrs.deploy.PopulateExchangeStatusHandler.handleResponse(PopulateExchangeStatusHandler.java:85)\n\tat org.apache.wink.server.handlers.AbstractHandler.handleResponse(AbstractHandler.java:38)\n\tat org.apache.wink.server.handlers.ResponseHandlersChain.handle(ResponseHandlersChain.java:26)\n\tat org.apache.wink.server.handlers.ResponseHandlersChain.handle(ResponseHandlersChain.java:22)\n\tat org.apache.wink.server.handlers.AbstractHandlersChain.doChain(AbstractHandlersChain.java:63)\n\tat org.apache.wink.server.handlers.AbstractHandler.handleResponse(AbstractHandler.java:39)\n\tat org.apache.wink.server.handlers.ResponseHandlersChain.handle(ResponseHandlersChain.java:26)\n\tat org.apache.wink.server.handlers.ResponseHandlersChain.handle(ResponseHandlersChain.java:22)\n\tat org.apache.wink.server.handlers.AbstractHandlersChain.doChain(AbstractHandlersChain.java:63)\n\tat org.apache.wink.server.handlers.AbstractHandlersChain.run(AbstractHandlersChain.java:48)\n\tat com.soa.jbi.jaxrs.deploy.RESTInvoker.invoke(RESTInvoker.java:76)\n\tat com.soa.jbi.jaxrs.deploy.WinkService.invoke(WinkService.java:81)\n\tat com.soa.jbi.component.wsf.impl.AbstractWSFService.handle(AbstractWSFService.java:273)\n\tat sun.reflect.GeneratedMethodAccessor813.invoke(Unknown Source)\n\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.lang.reflect.Method.invoke(Method.java:498)\n\tat org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:317)\n\tat org.eclipse.gemini.blueprint.service.importer.support.internal.aop.ServiceInvoker.doInvoke(ServiceInvoker.java:56)\n\tat org.eclipse.gemini.blueprint.service.importer.support.internal.aop.ServiceInvoker.invoke(ServiceInvoker.java:60)\n\tat org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)\n\tat org.springframework.aop.support.DelegatingIntroductionInterceptor.doProceed(DelegatingIntroductionInterceptor.java:133)\n\tat org.springframework.aop.support.DelegatingIntroductionInterceptor.invoke(DelegatingIntroductionInterceptor.java:121)\n\tat org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)\n\tat org.eclipse.gemini.blueprint.service.util.internal.aop.ServiceTCCLInterceptor.invokeUnprivileged(ServiceTCCLInterceptor.java:70)\n\tat org.eclipse.gemini.blueprint.service.util.internal.aop.ServiceTCCLInterceptor.invoke(ServiceTCCLInterceptor.java:53)\n\tat org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)\n\tat org.eclipse.gemini.blueprint.service.importer.support.LocalBundleContextAdvice.invoke(LocalBundleContextAdvice.java:57)\n\tat org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)\n\tat org.springframework.aop.support.DelegatingIntroductionInterceptor.doProceed(DelegatingIntroductionInterceptor.java:133)\n\tat org.springframework.aop.support.DelegatingIntroductionInterceptor.invoke(DelegatingIntroductionInterceptor.java:121)\n\tat org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)\n\tat org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:207)\n\tat com.sun.proxy.$Proxy392.handle(Unknown Source)\n\tat com.soa.jbi.component.wsf.WSFSE.handle(WSFSE.java:212)\n\tat com.soa.jbi.core.messaging.DeliveryChannelImpl.receiveMessageExchange(DeliveryChannelImpl.java:208)\n\tat com.soa.jbi.core.container.SimpleRouter.send(SimpleRouter.java:142)\n\tat com.soa.jbi.messaging.lbha.LBHARouter.send(LBHARouter.java:178)\n\tat com.soa.jbi.core.container.JBIContainer.send(JBIContainer.java:404)\n\tat com.soa.jbi.core.messaging.DeliveryChannelImpl.sendSync(DeliveryChannelImpl.java:164)\n\tat com.soa.jbi.core.messaging.DeliveryChannelImpl.sendSync(DeliveryChannelImpl.java:146)\n\tat com.soa.jbi.component.http.impl.HttpInBinding$HttpBindingResponseGenerator.generateResponse(HttpInBinding.java:341)\n\tat com.soa.message.handler.invoke.HandlerInvocationDefaultImpl.handleResponseGenerator(HandlerInvocationDefaultImpl.java:176)\n\tat com.soa.message.handler.invoke.HandlerInvocationDefaultImpl.invokeHandle(HandlerInvocationDefaultImpl.java:74)\n\tat com.soa.jbi.component.http.impl.HttpInBinding.processConsumerRequest(HttpInBinding.java:183)\n\tat com.soa.jbi.component.http.impl.HttpInBinding.accept(HttpInBinding.java:166)\n\tat com.soa.jbi.component.http.impl.HttpMultiEndpointBinding.accept(HttpMultiEndpointBinding.java:109)\n\tat com.soa.transport.jetty.JettyTransportBinding$EntityHandler.handle(JettyTransportBinding.java:969)\n\tat com.soa.transport.jetty.JettyTransportBinding$JettyHandler.handle(JettyTransportBinding.java:1146)\n\tat com.soa.platform.jetty.management.HttpContextHandler$HandlerList.handle(HttpContextHandler.java:456)\n\tat com.soa.platform.jetty.management.HttpContextHandler.doHandle(HttpContextHandler.java:379)\n\tat org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:372)\n\tat org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:189)\n\tat org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:978)\n\tat org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:135)\n\tat org.eclipse.jetty.server.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:255)\n\tat org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:154)\n\tat org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:116)\n\tat org.eclipse.jetty.server.Server.handle(Server.java:367)\n\tat org.eclipse.jetty.server.AbstractHttpConnection.handleRequest(AbstractHttpConnection.java:486)\n\tat org.eclipse.jetty.server.AbstractHttpConnection.headerComplete(AbstractHttpConnection.java:926)\n\tat org.eclipse.jetty.server.AbstractHttpConnection$RequestHandler.headerComplete(AbstractHttpConnection.java:988)\n\tat org.eclipse.jetty.http.HttpParser.parseNext(HttpParser.java:640)\n\tat org.eclipse.jetty.http.HttpParser.parseAvailable(HttpParser.java:235)\n\tat org.eclipse.jetty.server.AsyncHttpConnection.handle(AsyncHttpConnection.java:82)\n\tat org.eclipse.jetty.io.nio.SslConnection.handle(SslConnection.java:196)\n\tat org.eclipse.jetty.io.nio.SelectChannelEndPoint.handle(SelectChannelEndPoint.java:628)\n\tat org.eclipse.jetty.io.nio.SelectChannelEndPoint$1.run(SelectChannelEndPoint.java:52)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n\n\t",
+    "request": null,
+    "tenant": "none",
+    "eventId": "264c24d7-5761-11ea-9044-b5a9b2cef593",
+    "alertCode": 9022
+  },
+  "fields": {
+    "@timestamp": [
+      "2020-02-24T23:55:35.524Z"
+    ]
+  },
+  "sort": [
+    1582588535524
+  ]
+}</pre>
+<p><a href="#top">back to top</a></p>
+
+
+
+<hr class="divide_hr" />
+
+
+
+<h2 id="related_topics">Related Topics</h2>
+<div class="relatedlinks" id="elasticsearch"><!-- #BeginLibraryItem "/Library/relatedtopics_elasticsearch.lbi" -->
+<ul>
+	<li><a href="plugin_es_log_appenders.htm">Akana Elasticsearch Log Appender Plug-In</a></li>
+	<li><a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a></li>
+	<li><a href="../platform_install/install_es_secure_tc.htm">Configuring Elasticsearch with Security</a></li>
+</ul>
+<ul>
+	<li><a href="../platform_install/install_es_troubleshooting.htm">Troubleshooting Elasticsearch</a></li>
+	<li><a href="../../cm/learnmore/basics_glossary.htm">Glossary of Terms</a></li>
+</ul><!-- #EndLibraryItem --></div>
+
+
+
+
+</div>
+</body>
+</html>
