@@ -73,6 +73,7 @@ nav-title: Use Case - UK Open Banking
 			<li><a href="#tc_ukob_resources_02">Request content for the Test Client message</a></li>
 			<li><a href="#tc_ukob_resources_03">Response content for the Content Activity in the Process Editor</a> (set up in <a href="#s03_05">Step 3-5: Create a mock response</a>)</li>
 			<li><a href="#tc_ukob_resources_04">A valid keystore</a></li>
+			<li><a href="#tc_ukob_on_prem_https_listener">On-prem setup: Setting up the HTTPS listener</a></li>
 		</ul></li>
 </ol>
 <hr class="divide_hr" />
@@ -108,15 +109,10 @@ nav-title: Use Case - UK Open Banking
 	<li>A working installation of the Akana API Platform, either on-prem or a SaaS account.</li>
 	<li>A keystore, in&nbsp;.p12 format, or a way of generating it. The keystore contains the cryptographic private key and corresponding certificate chain. The platform supports both&nbsp;.p12 and&nbsp;.jks format. This use case includes instructions for using Keystore Explorer to generate a keystore in .p12 format. See <a href="#s06_keystore">Create the keystore/certificate</a>.
 		<p>These are required for setting up the mutual TLS connection and also for signing the message (JWT) as required by the JOSE Security policy.</p></li>
-	<li>The API Gateway must be configured to have an HTTPS listener that accepts (or requires) client certificates.
-		<p>If you are using the SaaS platform, this is already configured for you, but you must be sure to use the mTLS endpoint (hostname includes <strong>mtl</strong>). In this use case, this is set up in <a href="#s03_02">Step 3-2: Modify the API implementation so that there is only a Sandbox implementation</a>.</p>
-		<p>If you have an on-prem installation, set up an inbound HTTPS listener for any Network Director container that needs it, with these settings:</p>
+	<li>The API Gateway must be configured to have an HTTPS listener that accepts (or requires) client certificates:
 		<ul>
-			<li>Listener type: HTTPS.</li>
-			<li>Name: make sure the name is unique for the container.</li>
-			<li>Specify the port. Make sure you choose a port that isn't already in use.</li>
-			<li>Set the <strong>client certificates</strong> field to either <strong>accept</strong> or <strong>require</strong>. If you choose <strong>require</strong>,  the listener will reject any connection request that does not offer a valid client certificate.</li>
-			<li>Set <strong>Bind to all interfaces</strong> to <strong>true</strong>.</li>
+			<li><strong>SaaS</strong>: If you are using the SaaS platform, the HTTPS listener is already configured for you, but you must be sure to use the mTLS endpoint (hostname includes <strong>mtl</strong>). In this use case, this is set up in <a href="#s03_02">Step 3-2: Modify the API implementation so that there is only a Sandbox implementation</a>.</li>
+			<li><strong>On-Prem</strong>: If you have an on-prem installation, set up an inbound HTTPS listener for any Network Director container that needs it. For more information, see <a href="#tc_ukob_on_prem_https_listener">On-prem setup: Setting up the HTTPS listener</a>.</li>
 		</ul>
 	</li>
 	</ul>
@@ -168,11 +164,9 @@ nav-title: Use Case - UK Open Banking
 			</li>
 			<li><strong>Tab 6</strong>: no setup needed.</li>
 			<li><strong>Tab 7, Branding</strong>: Enter the Authorization Server URL for your own developer portal. In this example: <strong>https://oauth-uk-ob-uc.acmepaymentscorp.apiportal.akana.com</strong>.
-				<p><strong>Note</strong>: If you're not sure what value to use for the authorization Server URL, see <a href="#oauth_provider_domain_auth_server_url_defining">Defining the authorization server URL</a> below.			</p>
-			</li>
+				<p><strong>Note</strong>: If you're not sure what value to use for the authorization Server URL, see <a href="#oauth_provider_domain_auth_server_url_defining">Defining the authorization server URL</a> below.</p></li>
 		</ul>
 		</li>
-	
 	<li>Click <strong>Save</strong>.</li>
 </ol>
 
@@ -829,6 +823,22 @@ nav-title: Use Case - UK Open Banking
 <h3 id="tc_ukob_resources_04">A valid keystore</h3>
 <p>For this example, you'll need to be able to generate a keystore, including generating the public and private key pair, creating a certificate signing request, importing a signed certificate, and generating a P12 file. For details of the steps, see <a href="#s06_keystore">Step 6: Create the keystore/certificate</a>.</p>
 <p>For these activities, you could use a tool such as Keystore Explorer, downloadable from <a href="http://keystore-explorer.org/downloads.html" title="Link to Keystore Explorer, Downloads page" target="_blank">http://keystore-explorer.org/downloads.html</a>.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h3 id="tc_ukob_on_prem_https_listener">On-prem setup: Setting up the HTTPS listener</h3>
+<p>This use case requires HTTPS. If you have an on-prem installation, you'll need to have an inbound HTTPS listener for any Network Director container that needs it.</p>
+<p>For instructions on setting up an HTTPS listener, including explanations for each field, see <a href="../listeners/about_listeners.htm#proc_listener_add">Adding a Listener</a>.</p>
+<p>Configure your HTTPS listener with these settings:</p>
+<ul>
+	<li><strong>Listener Type</strong>: HTTPS.</li>
+	<li><strong>Listener Name</strong>: make sure the name is unique for the container.</li>
+	<li><strong>Bind to all interfaces</strong>: Check the box to set this field to <strong>true</strong>.</li>
+	<li><strong>Port Number</strong>: Specify the port. Make sure you choose a port that isn't already in use.</li>
+	<li><strong>Client Certificates</strong>: Set to either <strong>accept</strong> or <strong>require</strong>. If you choose <strong>require</strong>,  the listener will reject any connection request that does not offer a valid client certificate.</li>
+	<li><strong>Clone services hosted on other listener(s)</strong>: Check the box.</li>
+</ul>
 <p><a href="#top">Back to top</a></p>
 
 
