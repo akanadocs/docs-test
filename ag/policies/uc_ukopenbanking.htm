@@ -62,17 +62,19 @@ nav-title: Use Case - UK Open Banking
 	</li>
 	<li><a href="#tc_ukob_run">Running the use case</a>
 		<ul>
+			<li><a href="#tc_ukob_test">Testing in Test Client</a></li>
 			<li><a href="#tc_ukob_results">Results</a></li>
-			<li><a href="#tc_ukob_trace_tab">Review the Trace tab</a></li>
-			<li><a href="#tc_ukob_token_decode">Decode the JWT token</a></li>
-			<li><a href="#tc_ukob_metrics">Review the metrics</a></li>
+			<li><a href="#tc_ukob_trace_tab">Reviewing the Trace tab</a></li>
+			<li><a href="#tc_ukob_token_decode">Decoding the JWT token</a></li>
+			<li><a href="#tc_ukob_metrics">Reviewing the metrics</a></li>
 		</ul></li>
-	<li><a href="#tc_ukob_resources">Resources</a>
+	<li><a href="#tc_ukob_resources">Additional information/resources</a>
 		<ul>
 			<li><a href="#tc_ukob_resources_01">Input Swagger file for the API</a></li>
 			<li><a href="#tc_ukob_resources_02">Request content for the Test Client message</a></li>
 			<li><a href="#tc_ukob_resources_03">Response content for the Content Activity in the Process Editor</a> (set up in <a href="#s03_05">Step 3-5: Create a mock response</a>)</li>
 			<li><a href="#tc_ukob_resources_04">A valid keystore</a></li>
+			<li><a href="#tc_ukob_policies">Policy details</a></li>
 		</ul></li>
 	<li><a href="#tc_ukob_on_prem_00">Extra steps for on-prem setup</a>
 		<ul>
@@ -80,7 +82,7 @@ nav-title: Use Case - UK Open Banking
 			<li><a href="#tc_ukob_on_prem_hosts_file">On-prem setup: Updating the etc/hosts file</a></li>
 		</ul>
 	</li>
-</ul>
+</ol>
 <hr class="divide_hr" />
 
 
@@ -107,7 +109,7 @@ nav-title: Use Case - UK Open Banking
 	<li><strong>App</strong>: An app that accesses the API, has an active contract with the API, has a certificate in place, and presents the certificate when calling the API in Test Client. You'll be able to send a message and receive a successful response, and you can see the JOSE headers in action and see how the integrity of the message is preserved.</li>
 </ul>
 <p>In this example the content is signed, but not encrypted.</p>
-<p>This use case includes all artifacts and instructions you'll need to set up the use case yourself, in the <a href="#tc_ukob_resources">Resources</a> section.</p>
+<p>This use case includes all artifacts and instructions you'll need to set up the use case yourself, in the <a href="#tc_ukob_resources">Additional information/resources</a> section.</p>
 <h3 id="uc_ob_prerequisites">Prerequisites</h3>
 <p>To run this use case you'll need the following:</p>
 <ul>
@@ -223,8 +225,8 @@ nav-title: Use Case - UK Open Banking
 
 
 <h3 id="s02_policies_01">Policy overview</h3>
-<p>The entire Open Banking security profile is covered through the three out-of-the-box configurable policies shown in the table below (first three rows). Once you've configured these policies, you can re-use them across APIs. You can also easily update them, if necessary, at which point the changes are immediately effective in the APIs that are using the policies.</p>
-<p>The table below summarizes information about the policies used in this use case. Note:</p>
+<p>In this use case you'll set up and apply the four policies listed below. For more information about the individual policies and what each is doing, see <a href="#tc_ukob_policies">Policy details</a>.</p>
+<p>Note:</p>
 <ul>
 	<li>The <a href="#policy_detailed_auditing">Detailed Auditing</a> policy is optional for logging, and is not required for UK Open Banking.</li>
 	<li>The <a href="#policy_oauth">OAuth Policy</a> and <a href="#policy_detailed_auditing">Detailed Auditing</a> policy do not require configuration.</li>
@@ -234,54 +236,6 @@ nav-title: Use Case - UK Open Banking
 	<li><a href="#policy_http_security">HTTP Security</a></li>
 	<li><a href="#policy_jose_security_v2">JOSE Security Policy v2</a></li>
 </ul>
-<table class="doctable">
-	<thead>
-		<tr>
-			<th>Policy Name</th>
-			<th>Function</th>
-			<th>Comments</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td id="policy_oauth">OAuth</td>
-			<td>Enforces OAuth.</td>
-			<td><p>When the OAuth policy is attached to an API, and the user invokes the API in Test Client, the client is redirected to an authorization server to get an access token in order to be able to access the API. Test Client uses the authorization server specified in the API's configuration (API OAuth Details). This use case uses the Client Credentials OAuth grant; therefore, the user must provide the credentials in Test Client. When the client's credentials are validated, the authorization server generates the token, which is sent with the message request.</p>
-				<p>In the context of this example, OAuth scopes are not a significant factor.</p>
-				<p>No configuration required.</p></td>
-		</tr>
-		<tr>
-			<td id="policy_http_security2">HTTP Security</td>
-			<td>Validates whether a valid client certificate is presented by the client.</td>
-			<td><p>When the HTTP Security policy is attached to an API, the HTTP security policy validates the client certificate that is presented by the client invoking the API.</p>
-				<p>It is a good practice to use this policy to explicitly specify that a client certificate is required.</p>
-				<p>With the policy configuration given in this use case, this policy extracts the client certificate from the TLS context. Note that this requires that the API is called over an HTTPS connection, with the API Gateway HTTPS listener configured to either <strong>accept</strong> or <strong>require</strong> client certificates.</p>
-				<p>On the Akana SaaS Platform, an HTTPS endpoint has already been preconfigured for this purpose.</p>
-				<p>At runtime, once an HTTPS connection has been established, the policy explicitly validates the presence of a valid client certificate, and only allows the process to continue to execute if a valid certificate is found.</p>
-				<p>Akana Test Client allows the user to upload a keystore. If a valid keystore has been uploaded, with this use case Test Client uses the certificate to:</p>
-				<ul>
-					<li>Establish the mutually secured HTTPS connection.</li>
-					<li>Sign the JWT that is generated by Test Client (to comply with JOSE Security Policy configuration).</li>
-				</ul>
-				<p>The HTTP Security policy comes into play in the second part of <a href="#tc_ukob_run">Running the use case</a>.</p>
-				<p>Configuration required.</p></td>
-		</tr>
-		<tr>
-			<td id="policy_jose_security_v2">JOSE Security Policy v2</td>
-			<td>Enforces UK Open Banking rules.</td>
-			<td><p>The JOSE Security Policy v2 adds very specific security to the part of the message exchange where the message is coming in from the client. The message is subjected to a number of rules, as specified by UK Open Banking standard and as configured in the JOSE Security Policy v2.</p>
-				<p>Configuration required.</p></td>
-		</tr>
-		<tr>
-			<td id="policy_detailed_auditing">Detailed Auditing</td>
-			<td>Logs message information for later review.</td>
-			<td><p>Because the use case is a test scenario, it's a good idea to add the Detailed Auditing policy, so that you can view transaction details. This doesn't relate to Open Banking; it’s just for developer convenience.</p>
-				<p>No configuration required.</p></td>
-		</tr>
-	</tbody>
-</table>
-
-
 <h3 id="s02_policies_02">Setting up the policies</h3>
 <p>You'll need to have Business Admin permissions to create and configure the policies for this use case (or ask a Business Admin to do it for you).</p>
 <h4>To create the policies</h4>
@@ -467,6 +421,7 @@ nav-title: Use Case - UK Open Banking
 			<li>Make sure OAuth 2.0 is selected and no other OAuth version.</li>
 			<li>In the <strong>Apply OAuth Settings to the Following Endpoint(s)</strong> field, make sure only the <strong>Sandbox</strong> implementation is selected. In this use case, it is the only one.</li>
 		</ol>
+
 	</li>
 	<li>In <strong>Tab 2</strong>, <strong>Scope Mapping</strong>, choose <strong>API-Wide Scope Mapping</strong> and then choose the <strong>accounts</strong> scope: click <strong>Edit</strong>, check the box for the <strong>accounts</strong> scope, and then click <strong>Finish</strong>.</li>
 	<li>In the API OAuth Settings wizard, click <strong>Finish</strong> to save and close.</li>
@@ -640,6 +595,18 @@ nav-title: Use Case - UK Open Banking
 
 <h2 id="tc_ukob_run">Running the use case</h2>
 <p>At this point, everything is set up. It's time to test the API in Test Client to see how the UK Open Banking rules are enforced.</p>
+<p>In this section:</p>
+<ul>
+	<li><a href="#tc_ukob_test">Testing in Test Client</a></li>
+	<li><a href="#tc_ukob_trace_tab">Reviewing the Trace tab</a></li>
+	<li><a href="#tc_ukob_results_headers">Reviewing the Headers tab</a></li>
+	<li><a href="#tc_ukob_token_decode">Decoding the JWT token</a></li>
+	<li><a href="#tc_ukob_metrics">Reviewing the metrics</a></li>
+</ul>
+
+
+<h3 id="tc_ukob_test">Testing in Test Client</h3>
+<p>In the context of your API, you can test the API with the contracted app, uploading the credentials, and see how Test Client applies the policy settings to enforce the UK Open Banking specification.</p>
 
 <h4>To run the use case</h4>
 <ol>
@@ -672,7 +639,9 @@ nav-title: Use Case - UK Open Banking
 	<li>In the <strong>JOSE Security Policy v2</strong> page:
 	<ul>
 		<li>In the <strong>Signature/MAC Algorithm</strong> field, choose <strong>RS256</strong>. The UK Open Banking standard requires an RS value.
-			<p>The JSON web token, which Test Client will create to satisfy the JOSE Security Policy v2, will be signed using the keystore that you just uploaded. The same keystore is used for the TLS connection (HTTP Security Policy) and to sign the JSON web token (JWT) for the JOSE Security Policy v2.</p></li>
+			<p><strong>Note</strong>: It's easy to miss this step. If you don't choose the RS256 algorithm, the message will fail. The UK Open Banking specification requires an RS* algorithm.</p>
+			<p>The JSON web token, which Test Client will create to satisfy the JOSE Security Policy v2, will be signed using the keystore that you just uploaded. The same keystore is used for the TLS connection (HTTP Security Policy) and to sign the JSON web token (JWT) for the JOSE Security Policy v2.</p>
+		</li>
 		<li>In the <strong>Private Headers</strong> section, add the <strong>http://openbanking.org.uk/iat</strong> (&quot;issued at&quot; header) in the <strong>Name</strong> field, and provide any value. At runtime, Test Client updates with the correct value (date/time in <a href="../../cm/learnmore/basics_glossary.htm#gl_epochtime">Epoch</a> format).</li>
 		<li>In the <strong>Private Headers</strong> section, add the <strong>http://openbanking.org.uk/iss</strong> (&quot;issuer&quot; header) in the <strong>Name</strong> field, and then, in the <strong>Value</strong> field, provide the Subject DN. This value must match the subject DN from the certificate that corresponds with the keystore that you just uploaded. In this use case:
 			<pre>CN=AccountsApp_UK_OB_UC,OU=OU,O=Akana,L=EUS,ST=FL,C=US</pre></li>
@@ -685,10 +654,10 @@ nav-title: Use Case - UK Open Banking
 	<li>In Test Client, click <strong>Invoke</strong>.</li>
 	<li>Review the successful response, as shown in the Results section below. You can also:
 		<ul>
-			<li><a href="#tc_ukob_trace_tab">Review the Trace tab</a></li>
-			<li><a href="#tc_ukob_results_headers">Review the Headers tab</a></li>
-			<li><a href="#tc_ukob_token_decode">Decode the JWT token</a></li>
-			<li><a href="#tc_ukob_metrics">Review the metrics</a></li>
+			<li><a href="#tc_ukob_trace_tab">Reviewing the Trace tab</a></li>
+			<li><a href="#tc_ukob_results_headers">Reviewing the Headers tab</a></li>
+			<li><a href="#tc_ukob_token_decode">Decoding the JWT token</a></li>
+			<li><a href="#tc_ukob_metrics">Reviewing the metrics</a></li>
 		</ul>
 		</li>
 </ol>
@@ -704,7 +673,7 @@ nav-title: Use Case - UK Open Banking
 
 
 
-<h3 id="tc_ukob_trace_tab">Review the Trace tab</h3>
+<h3 id="tc_ukob_trace_tab">Reviewing the Trace tab</h3>
 <p>In Test Client, review the <strong>Trace</strong> tab. The results should look something like the below.</p>
 <p><img src="images_uc_uk_ob/uc_tc_results_trace.png" alt="UK Open Banking use case: Trace tab in Test Client" /></p>
 <p>You can see that:</p>
@@ -715,12 +684,12 @@ nav-title: Use Case - UK Open Banking
 </ul>
 
 
-<h3 id="tc_ukob_results_headers">Review the Headers tab</h3>
+<h3 id="tc_ukob_results_headers">Reviewing the Headers tab</h3>
 <p>In Test Client, review the <strong>Headers</strong> tab. You can see the custom headers and the <strong>x-jws-signature</strong> header, as shown in the example below.</p>
 <p><img src="images_uc_uk_ob/uc_tc_results_headers.png" alt="UK Open Banking use case: Headers tab in Test Client" /></p>
 
 
-<h3 id="tc_ukob_token_decode">Decode the JWT token</h3>
+<h3 id="tc_ukob_token_decode">Decoding the JWT token</h3>
 <p>You can copy the token in the <strong>x-jws-signature</strong> header and decode it in the JWT debugger at <a href="https://jwt.io/" title="https://jwt.io/" target="_blank">https://jwt.io/</a>. An example is shown below.</p>
 <p><img src="images_uc_uk_ob/uc_results_jwt_jose.png" alt="UK Open Banking use case: JWT token, decoded" /></p>
 <p><strong>Note</strong>: Since this example uses the Detached Payload option, the payload is not included in the JWT token, so the Payload section of the token is empty.</p>
@@ -728,7 +697,7 @@ nav-title: Use Case - UK Open Banking
 
 
 
-<h3 id="tc_ukob_metrics">Review the metrics</h3>
+<h3 id="tc_ukob_metrics">Reviewing the metrics</h3>
 <p>You can also review the analytics information.</p>
 <p>In the developer portal, in the context of the API, go to <strong>Analytics</strong> &gt; <strong>Logs</strong>. Choose one of the messages you just sent. You can look at the Info, Body, and Headers. In the Body tab you'll be able to see that the policies were enforced successfully.</p>
 <p>The <strong>Info</strong> tab is shown below.</p>
@@ -740,7 +709,7 @@ nav-title: Use Case - UK Open Banking
 
 
 
-<h2 id="tc_ukob_resources">Resources</h2>
+<h2 id="tc_ukob_resources">Additional information/resources</h2>
 <p>Resources for this use case include:</p>
 <ul>
 	<li><a href="#tc_ukob_resources_01">Input Swagger file for the API</a></li>
@@ -832,6 +801,58 @@ nav-title: Use Case - UK Open Banking
 <p>For these activities, you could use a tool such as Keystore Explorer, downloadable from <a href="http://keystore-explorer.org/downloads.html" title="Link to Keystore Explorer, Downloads page" target="_blank">http://keystore-explorer.org/downloads.html</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
+	
+<h3 id="tc_ukob_policies">Policy details</h3>
+<p>The table below summarizes information about the policies used in this use case, in <a href="#s02_policies_02">Setting up the policies</a>.</p>
+<table class="doctable">
+	<thead>
+		<tr>
+			<th>Policy Name</th>
+			<th>Function</th>
+			<th>Comments</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td id="policy_oauth">OAuth</td>
+			<td>Enforces OAuth.</td>
+			<td><p>When the OAuth policy is attached to an API, and the user invokes the API in Test Client, the client is redirected to an authorization server to get an access token in order to be able to access the API. Test Client uses the authorization server specified in the API's configuration (API OAuth Details). This use case uses the Client Credentials OAuth grant; therefore, the user must provide the credentials in Test Client. When the client's credentials are validated, the authorization server generates the token, which is sent with the message request.</p>
+				<p>In the context of this example, OAuth scopes are not a significant factor.</p>
+				<p>No configuration required.</p></td>
+		</tr>
+		<tr>
+			<td id="policy_http_security2">HTTP Security</td>
+			<td>Validates whether a valid client certificate is presented by the client.</td>
+			<td><p>When the HTTP Security policy is attached to an API, the HTTP security policy validates the client certificate that is presented by the client invoking the API.</p>
+				<p>It is a good practice to use this policy to explicitly specify that a client certificate is required.</p>
+				<p>With the policy configuration given in this use case, this policy extracts the client certificate from the TLS context. Note that this requires that the API is called over an HTTPS connection, with the API Gateway HTTPS listener configured to either <strong>accept</strong> or <strong>require</strong> client certificates.</p>
+				<p>On the Akana SaaS Platform, an HTTPS endpoint has already been preconfigured for this purpose.</p>
+				<p>At runtime, once an HTTPS connection has been established, the policy explicitly validates the presence of a valid client certificate, and only allows the process to continue to execute if a valid certificate is found.</p>
+				<p>Akana Test Client allows the user to upload a keystore. If a valid keystore has been uploaded, with this use case Test Client uses the certificate to:</p>
+				<ul>
+					<li>Establish the mutually secured HTTPS connection.</li>
+					<li>Sign the JWT that is generated by Test Client (to comply with JOSE Security Policy configuration).</li>
+				</ul>
+				<p>The HTTP Security policy comes into play in the second part of <a href="#tc_ukob_run">Running the use case</a>.</p>
+				<p>Configuration required.</p></td>
+		</tr>
+		<tr>
+			<td id="policy_jose_security_v2">JOSE Security Policy v2</td>
+			<td>Enforces UK Open Banking rules.</td>
+			<td><p>The JOSE Security Policy v2 adds very specific security to the part of the message exchange where the message is coming in from the client. The message is subjected to a number of rules, as specified by UK Open Banking standard and as configured in the JOSE Security Policy v2.</p>
+				<p>Configuration required.</p></td>
+		</tr>
+		<tr>
+			<td id="policy_detailed_auditing">Detailed Auditing</td>
+			<td>Logs message information for later review.</td>
+			<td><p>Because the use case is a test scenario, it's a good idea to add the Detailed Auditing policy, so that you can view transaction details. This doesn't relate to Open Banking; it’s just for developer convenience.</p>
+				<p>No configuration required.</p></td>
+		</tr>
+	</tbody>
+</table>
+<p><a href="#top">Back to top</a></p>
+
+
 
 
 <h2 id="tc_ukob_on_prem_00">Extra steps for on-prem setup</h2>
@@ -879,4 +900,4 @@ nav-title: Use Case - UK Open Banking
 </ul>
 <ul>
 	<li><a href="../../cm/learnmore/basics_glossary.htm">Glossary of Terms for the Developer Portal</a></li>
-</ul>
+</ul></div>
