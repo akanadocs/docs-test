@@ -13,10 +13,10 @@ nav-title: JOSE Security v2
 <p>Learn how to use the JOSE Security Policy v2 (Unencoded Payload Support) to sign and encrypt JSON message content.</p>
 <p>For information about using policies in the context of the developer portal, see <a href="../../cm/learnmore/bus_admin_organizations.htm#h_business_policies">Business Policies</a>.</p>
 <h4 class="stamp">Supported Platforms: 8.4.17 and later</h4>
+
+
+
 <hr class="divide_hr" />
-
-
-
 <h2 style="color: gray;">Table of Contents</h2>
 <ol class="table_of_contents">
 	<li><a href="#introduction">Introduction</a></li>
@@ -97,6 +97,7 @@ nav-title: JOSE Security v2
 	<li><a href="#jose_ob_tan"><strong>tan</strong> claim</a> (v3.1) (Version 2018.0.4 and later)</li>
 	<li><a href="#jose_ob_typ"><strong>typ</strong> claim</a> (v3.1) (Version 2018.0.4 and later)</li>
 	<li><a href="#jose_ob_error_msging">Error messaging requirements</a> (v3.1) (Version 2018.0.4 and later)</li>
+	<li><a href="#jose_ob_enforce_appendix_f">Enforce Appendix F</a> (Version 2019.1.14 and later)</li>
 </ul>
 
 
@@ -160,6 +161,13 @@ nav-title: JOSE Security v2
 <p><strong>Valid in version: 2018.0.4 and later</strong></p>
 <p>When you enable Open Banking support on the JOSE Security Policy v2, and choose version 3.1, the error messages returned to the API client application are formatted according to the Open Banking specification version 3.1; see <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ErrorResponseStructure" title="Open Banking 3.1 specification, section titled Standard Error Code(s)" target="_blank">Open Banking 3.1 specification, section titled Standard Error Code(s)</a>. By default, only a generic summary error message is returned.</p>
 <p>For more information about the specific messaging used, see <a href="#jose_error_codes_ob">Open Banking error messages for the JOSE Security Policy v2</a>.</p>
+
+
+<h3 id="jose_ob_enforce_appendix_f">Enforce Appendix F</h3>
+<p><strong>Valid in version: 2019.1.14 and later</strong></p>
+
+<p>When you choose the <strong>Unencoded Detached Payload</strong> option, for the <strong>Provider</strong> role, and choose <strong>Enforce Appendix F</strong>, the policy applies Base64 encoding to the payload and removes the Base64 header, as covered in the <a href="https://tools.ietf.org/html/rfc7515#appendix-F" title="Link to Appendix F of the JWS specification, RFC-7515" target="_blank">Appendix F (Detached Content) section of the JWS specification (RFC-7515)</a>.</p>
+<p>For more information, see <a href="#uk_ob_unencdetpld">Unencoded Detached Payload</a> below.</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -209,7 +217,7 @@ nav-title: JOSE Security v2
 
 
 <h2 id="jose_unenc_options_p1">Configuring JOSE Security Policy v2 options</h2>
-<p><img src="images/jose_v2_01_options.png" alt="JOSE Security Policy v2 (Unencoded Payload Support): policy options" /></p>
+<p><img src="images/jose_v2_01_options_2019_1_14.png" alt="JOSE Security Policy v2 (Unencoded Payload Support): policy options" /></p>
 <p>On the <strong>Specify JOSE Security Policy v2 Options</strong> page, specify general configuration settings. Refer to the details below.</p>
 
 <dl>
@@ -246,14 +254,17 @@ nav-title: JOSE Security v2
 </dd>
 
 
-<dt>Unencoded Detached Payload</dt>
-<dd>Check this box if you want to exclude the payload from the signed and/or encrypted portion of the message. Instead, the payload is sent in the message body, unencoded. You'll also need to specify the <strong>Header Parameter Name</strong>&#8212;the name of the header containing a detached JWS signature of the body of the payload.</dd>
-<dd> If you want the signing/encryption to apply to all parts of the message, including the payload, leave this box cleared (the default).</dd>
+<dt id="uk_ob_unencdetpld">Unencoded Detached Payload</dt>
+<dd>Check this box if you want to exclude the payload from the signed and/or encrypted portion of the message. Instead, the payload is sent in the message body, unencoded. You'll also need to specify the header parameter name.</dd>
+<dd>If you want the signing/encryption to apply to all parts of the message, including the payload, leave this box cleared (the default).</dd>
 <dd><strong>Note</strong>: If you check this box, for IN messages the client must send the <strong>b64</strong> claim, with a value of <strong>false</strong>; for OUT or FAULT messages, the platform sends the b64 claim with a value of <strong>false</strong>. If the detached payload option is not used, the <strong>b64</strong> claim is not sent.</dd>
 <dd>Sample header for unencoded detached payload:
 <pre>{&quot;kid&quot;:&quot;signKey&quot;,&quot;alg&quot;:&quot;RS256&quot;,&quot;cty&quot;:&quot;application/json&quot;, &quot;b64&quot;:false, &quot;crit&quot;:[&quot;b64&quot;]}</pre></dd>
 <dd>Sample header when unencoded detached payload is not selected:
 <pre>{&quot;kid&quot;:&quot;signKey&quot;,&quot;alg&quot;:&quot;RS256&quot;,&quot;cty&quot;:&quot;application/json&quot;}</pre></dd>
+<dd><strong>Header Parameter Name</strong>—The name of the header containing a detached JWS signature of the body of the payload. For example, <strong>x-jws-signature</strong>. Required if <strong>Unencoded Detached Payload</strong> is checked.</dd>
+<dd><strong>Enforce Appendix F</strong> (2019.1.14 and later)—Optional: check this box if you want the policy to integrity-protect content that is not itself contained in the JWS. For details, refer to the <a href="https://tools.ietf.org/html/rfc7515#appendix-F" title="Link to Appendix F of the JWS specification, RFC-7515" target="_blank">Appendix F (Detached Content) section of the JWS specification (RFC-7515)</a>. This option is available only for Provider role, and only if <strong>Unencoded Detached Payload</strong> is checked.</dd>
+<dd>When this box is checked, the policy applies Base64 encoding to the payload and removes the Base64 header.</dd>
 
 
 <dt id="jose_v2_uk_ob">UK Open Banking (8.4.18 and later, 3.1 support in 2018.0.4, URL support in 2019.1.0 and later)</dt>
@@ -590,6 +601,7 @@ nav-title: JOSE Security v2
   "signature":"damrs8P_kUGDR0RJ6Vn1aB6VDHgGwZZyFXsYwzGLSXvHg60BNsTNn8geKAA-ObcnEDj_5-FTBt42u8Kt0MGkzWcvxkM4iU8mC
 yAaxqpA1zv_4r0I-bk46Odt9VeKXiLezjRoLLctLvD-LRgVvwNG9EMmwe_qV6tWUCChSdw7cAxH9dthqD3sKmHBtVWEzO1PVWIQn46TuWCEeBla0
 ggiK6UPYD4fnJCpGiq_3r_6Ygb64YjnjSMScoF2-f8z8mGZptOZsojzlI_bcJ3yFRyzit__uwQcyMBQ73maen9gZnXb48RCy-QTdEAQbhOWXYDe8
+
 oCFYaoEOkGZlREUmWcQtQ",
   "header":{
     "kid":"signKey",
@@ -640,7 +652,7 @@ stmZKsRWrVx-tnmLX7aIhz9NL0jOmRf1deh4HAenk7JKPzUgAxZssylmTCivkuV10yrdlIgyUYELkHNz
 	<li>Example: <a href="https://tools.ietf.org/html/rfc7797#section-4.1" target="_blank">4.1. Example with Header Parameters {"alg":"HS256"}</a>.</li>
 </ul>
 <p>With Compact format, the request is similar in structure, but it's not a JSON object.</p>
-<p>It is simply a compact version of the information. The values should be the same, if the content is the same.</p>
+<p>It is simply a compact version of the information. The values should be the same if the content is the same.</p>
 <p>The example below shows the body (payload) of the same response message used in the previous examples, now in Compact format.</p>
 <p>The Compact structure is in three sections:</p>
 <ol>
