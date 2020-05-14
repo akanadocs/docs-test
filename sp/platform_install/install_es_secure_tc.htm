@@ -31,12 +31,13 @@ nav-title: Configuring Elasticsearch with security
 <ol class="table_of_contents">
 	<li><a href="#es_xpack">Setting up X-Pack</a> (2018.0.0 and later)
 	<ol>
-		<li><a href="#xpack_01_change_bootstrap_value">Step 1: Change the bootstrap.password value for built-in users</a></li>
-		<li><a href="#xpack_02_set_up_roles">Step 2: Set up user and user roles</a></li>
-		<li><a href="#xpack_03_add_user_with_roles">Step 3: Add user with specific roles</a></li>
-		<li><a href="#xpack_04_enable_xpack_in_yaml">Step 4: Modify the Elasticsearch YAML file</a></li>
+		<li><a href="#xpack_04_enable_xpack_in_yaml">Step 1: Modify the Elasticsearch YAML file</a></li>
+		<li><a href="#xpack_01_change_bootstrap_value">Step 2: Change the bootstrap.password value for built-in users</a></li>
+		<li><a href="#xpack_02_set_up_roles">Step 3: Set up user and user roles</a></li>
+		<li><a href="#xpack_03_add_user_with_roles">Step 4: Add user with specific roles</a></li>
 		<li><a href="#xpack_05_encryption_node">Step 5: Set up encryption for communications between nodes in a cluster/encrypting HTTP client communications</a></li>
 		<li><a href="#xpack_06_encryption_client">Step 6: Set up encryption for communications from the client to the Elasticsearch cluster</a></li>
+		<li><a href="#xpack_ts">Troubleshooting</a></li>
 	</ol>
 </li>
 	<li><a href="#es_shield">Installing and configuring the Elasticsearch Shield plug-in</a> (8.4x, prior to 2018.0.0)
@@ -65,22 +66,78 @@ nav-title: Configuring Elasticsearch with security
 <p><strong>All versions</strong>:</p>
 <p>To set up the X-Pack plug-in, complete the following steps:</p>
 <ol>
-	<li><a href="#xpack_01_change_bootstrap_value">Step 1: Change the bootstrap.password value for built-in users</a></li>
-	<li><a href="#xpack_02_set_up_roles">Step 2: Set up user and user roles</a></li>
-	<li><a href="#xpack_03_add_user_with_roles">Step 3: Add user with specific roles</a></li>
-	<li><a href="#xpack_04_enable_xpack_in_yaml">Step 4: Modify the Elasticsearch YAML file</a></li>
+	<li><a href="#xpack_04_enable_xpack_in_yaml">Step 1: Modify the Elasticsearch YAML file</a></li>
+	<li><a href="#xpack_01_change_bootstrap_value">Step 2: Change the bootstrap.password value for built-in users</a></li>
+	<li><a href="#xpack_02_set_up_roles">Step 3: Set up user and user roles</a></li>
+	<li><a href="#xpack_03_add_user_with_roles">Step 4: Add user with specific roles</a></li>
 	<li><a href="#xpack_05_encryption_node">Step 5: Set up encryption for communications between nodes in a cluster/encrypting HTTP client communications</a></li>
 	<li><a href="#xpack_06_encryption_client">Step 6: Set up encryption for communications from the client to the Elasticsearch cluster</a></li>
 </ol>
 
 
-<h3 id="xpack_01_change_bootstrap_value">Step 1: Change the bootstrap.password value for built-in users</h3>
+
+<h3 id="xpack_04_enable_xpack_in_yaml">Step 1: Modify the Elasticsearch YAML file</h3>
+<p>The next step is to manually change some of the settings in one of the Elasticsearch configuration files, <strong>elasticsearch.yml</strong>,  to enable X-Pack security.</p>
+<p>The <strong>elasticsearch.yml</strong> file is generally stored in the<strong> {elasticsearch_home}/config</strong> folder. It might have some default placeholder content, but not all the placeholder values.</p>
+<p>As a starting point to model your changes, you can use the example in <a href="#yaml_xpack">Sample Elasticsearch YAML file with security settings</a> below.</p>
+<p><strong>Note</strong>: The first part of the file, up to the section titled <strong>Various</strong>, is needed for all Elasticsearch installation, even if security is not added. The last section, <strong>Various</strong>, is where you set up the values for your secure installation.</p>
+<p>To enable X-Pack security, you'll at least need to provide username/password.</p>
+<p>In the YAML file, change the value for the <strong>xpack.security.enabled</strong> setting to <strong>true</strong>, as shown below.</p>
+<pre>xpack.security.enabled: true</pre>
+<p>You'll also need to set up other values. For details on how to modify the <strong>elasticsearch.yml</strong> file with the general settings for an Akana API Platform implementation, see <a href="install_es_config.htm#es_yaml">What changes do I need to make to the Elasticsearch YAML file?</a></p>
+<p>For general information about the <strong>elasticsearch.yml</strong> file, see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html" title="Information about the elasticsearch.yml file" target="_blank">https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html</a>.</p>
+<h4>To configure the Elasticsearch YAML file</h4>
+<ol>
+	<li>Modify the properties in the <strong>elasticsearch.yml</strong> file, using the example in <a href="#yaml_xpack">Sample Elasticsearch YAML file with security settings</a> below (you can copy and paste). The secure values are set in the last section, <strong>Various</strong>, below.</li>
+	<li>Restart the Elasticsearch cluster.</li>
+</ol>
+
+<h4 id="yaml_xpack">Sample Elasticsearch YAML file with security settings</h4>
+<p><strong>Note</strong>: The example below excludes the first part of the YAML file, and shows only the last part, with the security settings. For an example of the first part of the file, see <a href="install_es_config.htm#yaml_sample_no_xpack">Sample Elasticsearch YAML file</a>.</p>
+<p>{<span class="apidoc_red">GG did we need to add something else into the YAML file?</span>}</p>
+<pre># ======================== Elasticsearch Configuration =========================
+#
+...
+#
+# ---------------------------------- Various -----------------------------------
+# (This section is needed only if you want to configure security)
+#
+# Require explicit names when deleting indices:
+#
+#action.destructive_requires_name: true
+xpack.security.enabled: true
+
+#xpack.ssl.client_authentication
+#xpack.ssl.verification_mode: certificate
+
+#xpack.security.transport.ssl.enabled: true
+
+#pkcs12 or jks
+#xpack.security.transport.ssl.verification_mode: certificate 
+#xpack.security.transport.ssl.keystore.path: certs/elastic-certificates.p12 
+#xpack.security.transport.ssl.truststore.path: certs/elastic-certificates.p12
+
+#pem
+#xpack.security.transport.ssl.verification_mode: certificate 
+#xpack.security.transport.ssl.key: certs\instance.key 
+#xpack.security.transport.ssl.certificate: certs\instance.crt 
+#xpack.security.transport.ssl.certificate_authorities: [ "certs/ca.crt" ]
+
+xpack.security.http.ssl.enabled: true
+xpack.ssl.verification_mode: certificate
+xpack.security.http.ssl.keystore.path: certs/elastic-certificates.p12 
+xpack.security.http.ssl.truststore.path: certs/elastic-certificates.p12</pre>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h3 id="xpack_01_change_bootstrap_value">Step 2: Change the bootstrap.password value for built-in users</h3>
 <p>Elasticsearch comes with a built-in default user. As a first step, change the <strong>bootstrap.password</strong> value.</p>
 <p>For information about changing the bootstrap.password value for built-in users, refer to the Elasticsearch help: <a href="https://www.elastic.co/guide/en/elastic-stack-overview/current/get-started-built-in-users.html" title="link to Elasticsearch doc re changing bootstrap password value for built-in users" target="_blank">https://www.elastic.co/guide/en/elastic-stack-overview/current/get-started-built-in-users.html</a>.</p>
 <p><a href="#top">back to top</a></p>
 
 
-<h3 id="xpack_02_set_up_roles">Step 2: Set up user and user roles</h3>
+<h3 id="xpack_02_set_up_roles">Step 3: Set up user and user roles</h3>
 <p>You can:</p>
 <ul>
 	<li><a href="#proc_xpack_addrole_api">Add new roles using the X-Pack role management API</a></li>
@@ -88,10 +145,11 @@ nav-title: Configuring Elasticsearch with security
 </ul>
 
 <h4 id="proc_xpack_addrole_api">To add new roles using the X-Pack role management API</h4>
-<p>Use the built-in user, which you updated in the previous step, to call this API. To use this API, you must have at least the <strong>manage_security</strong> cluster privilege. </p>
+<p>Use the built-in user, which you updated in the previous step, to call this API, which is part of the Elasticsearch API. See <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-get-role.html" title="Link to Elasticsearch Role Management API" target="_blank">https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-get-role.html</a>.</p>
+<p>To use this API, you must have at least the <strong>manage_security</strong> cluster privilege. </p>
 <p><strong>Adding a new role: example
 </strong></p>
-<p>The following API adds a new role, <strong>read-only-user</strong>, with a privilege of <strong>read</strong> for the search indexes. This can be used on the containers where search is performed but indexing is not (<strong>Community Manager Scheduled Jobs</strong> feature is not installed).</p>
+<p>The following API adds a new role, <strong>read-only-user</strong>, with a privilege of <strong>read</strong> for the search indexes. This can be used on the containers where search is performed but indexing is not (<strong>Community Manager Scheduled Jobs</strong> feature is not installed). {<span class="apidoc_red">GG -- you had a question re the URL we should use below -- said you would check with MM and FH?</span>}</p>
 <p><strong>URL:</strong></p>
 <pre>POST /_xpack/security/role/read_only_user</pre>
 <p><strong>Message body:</strong></p>
@@ -136,7 +194,7 @@ nav-title: Configuring Elasticsearch with security
 <p><a href="#top">back to top</a></p>
 
 
-<h3 id="xpack_03_add_user_with_roles">Step 3: Add user with specific roles</h3>
+<h3 id="xpack_03_add_user_with_roles">Step 4: Add user with specific roles</h3>
 <p>Use the built-in user above to call this api. To use this API, you must have at least the <strong>manage_security</strong> cluster privilege.</p>
 <p>For information about using this approach, see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.3/security-api-put-user.html" title="Link to Elasticsearch help re using API to add user with specific roles." target="_blank">https://www.elastic.co/guide/en/elasticsearch/reference/6.3/security-api-put-user.html</a> (Elasticsearch help).</p>
 <p><strong>Example #1: adding adminuser</strong></p>
@@ -168,63 +226,6 @@ nav-title: Configuring Elasticsearch with security
   "email":"superuser@example.com"
 }</pre>
 <p><a href="#top">back to top</a></p>
-
-
-<h3 id="xpack_04_enable_xpack_in_yaml">Step 4: Modify the Elasticsearch YAML file</h3>
-<p>The next step is to manually change some of the settings in one of the Elasticsearch configuration files, <strong>elasticsearch.yml</strong>,  to enable X-Pack security.</p>
-<p>The <strong>elasticsearch.yml</strong> file is generally stored in the<strong> {elasticsearch_home}/config</strong> folder. It might have some default placeholder content, but not all the placeholder values.</p>
-<p>As a starting point to model your changes, you can use the example in <a href="#yaml_xpack">Sample Elasticsearch YAML file with security settings</a> below.</p>
-<p><strong>Note</strong>: The first part of the file, up to the section titled <strong>Various</strong>, is needed for all Elasticsearch installation, even if security is not added. The last section, <strong>Various</strong>, is where you set up the values for your secure installation.</p>
-<p>To enable X-Pack security, you'll at least need to provide username/password.</p>
-<p>In the YAML file, change the value for the <strong>xpack.security.enabled</strong> setting to <strong>true</strong>, as shown below.</p>
-<pre>xpack.security.enabled: true</pre>
-<p>You'll also need to set up other values. For details on how to modify the <strong>elasticsearch.yml</strong> file with the general settings for an Akana API Platform implementation, see <a href="install_es_config.htm#es_yaml">What changes do I need to make to the Elasticsearch YAML file?</a></p>
-<p>For general information about the <strong>elasticsearch.yml</strong> file, see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html" title="Information about the elasticsearch.yml file" target="_blank">https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html</a>.</p>
-<h4>To configure the Elasticsearch YAML file</h4>
-<ol>
-	<li>Modify the properties in the <strong>elasticsearch.yml</strong> file, using the example in <a href="#yaml_xpack">Sample Elasticsearch YAML file with security settings</a> below (you can copy and paste). The secure values are set in the last section, <strong>Various</strong>, below.</li>
-	<li>Restart the Elasticsearch cluster.</li>
-</ol>
-
-<h4 id="yaml_xpack">Sample Elasticsearch YAML file with security settings</h4>
-<p><strong>Note</strong>: The example below excludes the first part of the YAML file, and shows only the last part, with the security settings. For an example of the first part of the file, see <a href="install_es_config.htm#yaml_sample_no_xpack">Sample Elasticsearch YAML file</a>.</p>
-<pre># ======================== Elasticsearch Configuration =========================
-#
-...
-#
-# ---------------------------------- Various -----------------------------------
-# (This section is needed only if you want to configure security)
-#
-# Require explicit names when deleting indices:
-#
-#action.destructive_requires_name: true
-xpack.security.enabled: true
-
-#xpack.ssl.client_authentication
-#xpack.ssl.verification_mode: certificate
-
-#xpack.security.transport.ssl.enabled: true
-
-#pkcs12 or jks
-#xpack.security.transport.ssl.verification_mode: certificate 
-#xpack.security.transport.ssl.keystore.path: certs/elastic-certificates.p12 
-#xpack.security.transport.ssl.truststore.path: certs/elastic-certificates.p12
-
-#pem
-#xpack.security.transport.ssl.verification_mode: certificate 
-#xpack.security.transport.ssl.key: certs\instance.key 
-#xpack.security.transport.ssl.certificate: certs\instance.crt 
-#xpack.security.transport.ssl.certificate_authorities: [ "certs/ca.crt" ]
-
-xpack.security.http.ssl.enabled: true
-xpack.ssl.verification_mode: certificate
-xpack.security.http.ssl.keystore.path: certs/elastic-certificates.p12 
-xpack.security.http.ssl.truststore.path: certs/elastic-certificates.p12</pre>
-<p><a href="#top">back to top</a></p>
-
-
-
-
 
 
 
@@ -282,6 +283,13 @@ xpack.security.http.ssl.truststore.path: certs/elastic-certificates.p12</pre>
 			</ul>
 		<p><strong>Note</strong>: For Rest Client, only PKCS12 and JKS formats are accepted at this time. The PEM formats are not supported.</p></li>
 </ol>
+<p><a href="#top">back to top</a></p>
+
+
+<h3 id="xpack_ts">Troubleshooting</h3>
+<p>You might encounter this error:</p>
+<pre>X-Pack Security is disabled by configuration.</pre>
+<p>YOu will get this error if you try to change the password (<a href="#xpack_01_change_bootstrap_value">Step 2: Change the bootstrap.password value for built-in users</a>) before modifying the Elasticsearch YAML file to enable X-Pack configuration (<a href="#xpack_04_enable_xpack_in_yaml">Step 1: Modify the Elasticsearch YAML file</a>) {<span class="apidoc_red">GG please review/check/correct. This was where you had to set up the YAML before the passwords but I don't get exactly what it was.</span>}</p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -445,16 +453,13 @@ elastic.client.keystorePath</pre>
 
 
 <h2 id="related_topics">Related Topics</h2>
-<div class="relatedlinks" id="install"><!-- #BeginLibraryItem "/Library/relatedtopics_install.lbi" -->
+<div class="relatedlinks" id="elasticsearch"><!-- #BeginLibraryItem "/Library/relatedtopics_elasticsearch.lbi" -->
 <ul>
-	<li><a href="../upgrade/upgrading_akana_api_platform_all.htm">Upgrading the Akana API Platform (all versions)</a></li>
-	<li><a href="../upgrade/upgrading_min_downtime.htm">Use Case: Upgrading with Minimum Downtime</a></li>
-	<li><a href="../upgrade/upgrading_micro.htm">Minor-Version Update Notes</a></li>
-</ul>
-<ul>
-	<li><a href="installing_akana_api_platform_all.htm">Installing the Akana API Platform (all versions)</a></li>
-	<li><a href="implementation_planning.htm">Planning Your Implementation</a></li>
-	<li><a href="install_cm_jython_script.htm">Installation Jython Script</a></li>
+	<li><a href="../elasticsearch/plugin_es_log_appenders.htm">Akana Elasticsearch Log Appender Plug-In</a></li>
 	<li><a href="install_es_config.htm">Installing and Configuring Elasticsearch</a></li>
 	<li><a href="install_es_secure_tc.htm">Configuring Elasticsearch with Security</a></li>
+</ul>
+<ul>
+	<li><a href="install_es_troubleshooting.htm">Troubleshooting Elasticsearch</a></li>
+	<li><a href="../../cm/learnmore/basics_glossary.htm">Glossary of Terms</a></li>
 </ul><!-- #EndLibraryItem --></div>
