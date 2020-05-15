@@ -62,7 +62,12 @@ nav-title: Upgrade to 2019.x.x
 <ol class="table_of_contents">
 	<li><a href="#perform_config_actions">Perform configuration actions</a></li>
 	<li><a href="#check_system_health">Check system health</a></li>
-	<li><a href="#es_config">Configure Elasticsearch</a></li>
+	<li><a href="#es_config">Configure Elasticsearch</a>
+		<ul>
+			<li><a href="#es_upgrade_task_20190112">Post-upgrade task for Elasticsearch indexing when upgrading to or across 2019.1.12</a><span class="apidoc_red">***</span></li>
+			<li><a href="#es_upgrade_task_20190114">Post-upgrade task for Elasticsearch indexing when upgrading to or across 2019.1.14 (Lifecycle Repository only)</a><span class="apidoc_red">***</span></li>
+		</ul>
+	</li>
 	<li><a href="#restart_all">Restart all containers</a></li>
 </ol>
 
@@ -122,7 +127,8 @@ nav-title: Upgrade to 2019.x.x
 	<li><a href="#s01_00_version_specific">Step 1-0: Check for version-specific upgrade notes</a></li>
 	<li><a href="#s01_01_review_rn">Step 1-1: Review release notes</a></li>
 	<li><a href="#s01_02_plan">Step 1-2: Plan the upgrade</a></li>
-	<li><a href="#s01_03_es_install_config">Step 1-3: Install and configure Elasticsearch (if not already done)</a></li>
+	<li><a href="#s01_03_es_install_config">Step 1-3: Install and configure Elasticsearch (if not already done)</a>.
+	<p>For certain versions, there are also post-upgrade tasks to include additional information in the search index. See <a href="#es_upgrade_task_20190112">Post-upgrade task for Elasticsearch indexing when upgrading to or across 2019.1.12</a> and <a href="#es_upgrade_task_20190114">Post-upgrade task for Elasticsearch indexing when upgrading to or across 2019.1.14 (Lifecycle Repository only)</a>.</p></li>
 	<li>Check if there are any constraints or requirements associated with the type of database you're using, such as permissions required. For details, see <a href="../platform_install/installing_akana_api_platform_v2019.htm#database_notes">Database Notes</a> (installation doc).</li>
 </ul>
 <p><a href="#top">back to top</a></p>
@@ -415,6 +421,35 @@ ps -ef
 <p><a href="#top">back to top</a></p>
 
 
+<h3 id="es_upgrade_task_20190112">Post-upgrade task for Elasticsearch indexing when upgrading to or across 2019.1.12<span class="apidoc_red">***</span></h3>
+<p>In version 2019.1.12, the search capability for APIs was extended to support searching for both  partial and complete  API endpoint. To search for a complete endpoint, users can use surrounding double quotes.</p>
+<p>Example: <strong>&quot;https://example.com/v1/payments&quot;</strong> searches for the full endpoint.</p>
+<p>To enable endpoint searching, delete the indices for &quot;api&quot; and &quot;metadata&quot;, then reindex the api objects. The steps below use localhost:9200 as an example.</p>
+	<ol>
+	<li>Run this command:
+<pre>$ curl -XDELETE 'localhost:9200/default_api'</pre></li>
+	<li>Run this command:
+<pre>$ curl -XDELETE 'localhost:9200/default_metadata'</pre></li>
+	<li>Run this query: 
+<pre>"delete from INDEX_STATUS where OBJECTTYPE ='api';"</pre></li>
+</ol>
+
+
+<h3 id="es_upgrade_task_20190114">Post-upgrade task for Elasticsearch indexing when upgrading to or across 2019.1.14 (Lifecycle Repository only)<span class="apidoc_red">***</span></h3>
+<p>In version 2019.1.14, the developer portal supports searching extended metadata in Lifecycle Repository APIs, apps, and users.</p>
+<p>To enable metadata search if you are using Lifecycle Repository, delete the search indexes for APIs, apps, and users and then reindex the objects.</p>
+<p>The steps below use localhost:9200 as an example.</p>
+<ol>
+	<li>Delete the search indexes:
+<pre>$ curl -XDELETE 'localhost:9200/default_api'
+$ curl -XDELETE 'localhost:9200/default_app'
+$ curl -XDELETE 'localhost:9200/default_user'
+$ curl -XDELETE 'localhost:9200/default_metadata'</pre></li>
+	<li>Run the query:
+<pre>delete from INDEX_STATUS where OBJECTTYPE in ('api', 'app', 'user');</pre></li>
+</ol>
+
+
 
 <h2 id="restart_all">Restart all containers</h2>
 <p>After running the configuration actions on all containers, stop and restart all containers.</p>
@@ -470,6 +505,7 @@ ps -ef
 <p>Common post-upgrade tasks are:</p>
 <ul>
 	<li><a href="#post_upgrade_01">Manage PKI Keys</a> (once per container)</li>
+
 	<li><a href="#post_upgrade_02">Configure Database Options</a> (once per installation)</li>
 	<li><a href="#post_upgrade_03">Manage Schemas</a> (once per installation)</li>
 	<li><a href="#post_upgrade_04">Create Policy Manager Admin User</a> (once per installation)</li>
