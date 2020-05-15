@@ -77,28 +77,32 @@ nav-title: Configuring Elasticsearch with security
 
 <h3 id="xpack_04_enable_xpack_in_yaml">Step 1: Modify the Elasticsearch YAML file</h3>
 <p>You will need to manually change some of the settings in one of the Elasticsearch configuration files, <strong>elasticsearch.yml</strong>,  to enable X-Pack security.</p>
-<p>The <strong>elasticsearch.yml</strong> file is generally stored in the <strong>/etc/elasticsearch/ </strong> folder. It might have some default placeholder content, but not all the placeholder values.</p>
+<p>The location of the <strong>elasticsearch.yml</strong> file depends on your installation method; for example, it might be stored in the <strong>/etc/elasticsearch/ </strong> folder. For information about the location, refer to the Elasticsearch documentation: <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html#config-files-location" title="Link to Elasticsearch documentation, COnfig Files Location section" target="_blank">https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html#config-files-location</a>.</p>
+<p>It might have some default placeholder content, but not all the placeholder values.</p>
 <p>As a starting point to model your changes, you can use the example in <a href="#yaml_xpack">Sample Elasticsearch YAML file with security settings</a> below.</p>
 <p><strong>Note</strong>: The first part of the file, up to the section titled <strong>Various</strong>, is needed for all Elasticsearch installation, even if security is not added. The last section, <strong>Various</strong>, is where you set up the values for your secure installation.</p>
-<p>To enable X-Pack security, you'll at least need to provide username/password.</p>
-<p>In the YAML file, change the value for the <strong>xpack.security.enabled</strong> setting to <strong>true</strong>, as shown below.</p>
+<p>In the YAML file, change the value for the <strong>xpack.security.enabled</strong> setting to <strong>true</strong>, as shown below.
+	</p>
 <pre>xpack.security.enabled: true</pre>
+<p>Also, change the value for the <strong>xpack.security.transport.ssl.enabled</strong> setting to <strong>true</strong>, as shown below.
+	</p>
+<pre>xpack.security.transport.ssl.enabled: true</pre>
 <p>You'll also need to set up other values. For details on how to modify the <strong>elasticsearch.yml</strong> file with the general settings for an Akana API Platform implementation, see <a href="install_es_config.htm#es_yaml">What changes do I need to make to the Elasticsearch YAML file?</a></p>
 <p>For general information about the <strong>elasticsearch.yml</strong> file, see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html" title="Information about the elasticsearch.yml file" target="_blank">https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html</a>.</p>
 <h4>To configure the Elasticsearch YAML file</h4>
 <ol>
-	<li>Modify the properties in the <strong>elasticsearch.yml</strong> file, using the example in <a href="#yaml_xpack">Sample Elasticsearch YAML file with security settings</a> below (you can copy and paste). The secure values are set in the last section, <strong>Various</strong>, below.</li>
+	<li>Modify the properties in the <strong>elasticsearch.yml</strong> file, using the example in <a href="#yaml_xpack">Sample Elasticsearch YAML file with security settings</a> below (you can copy and paste). The secure values are set in the last section, <strong>Various</strong>, below.
+	<p>If you're using a free version of Elasticsearch, you'll need to make sure both these lines are in your file, uncommented and set to <strong>true</strong>. If you have a paid version, the default for both these values is already <strong>true</strong>. Consult your Elasticsearch documentation.</p></li>
 	<li>Restart the Elasticsearch cluster.</li>
 </ol>
 
 <h4 id="yaml_xpack">Sample Elasticsearch YAML file with security settings</h4>
 <p><strong>Note</strong>: The example below excludes the first part of the YAML file, and shows only the last part, with the security settings. For an example of the first part of the file, see <a href="install_es_config.htm#yaml_sample_no_xpack">Sample Elasticsearch YAML file</a>.</p>
-<p>The example below includes the following two lines which are needed for implementing secure Elasticsearch:</p>
+<p>The example below includes the following lines which are needed for implementing secure Elasticsearch:</p>
 <ul>
 	<li>xpack.security.enabled: true</li>
 	<li>xpack.security.transport.ssl.enabled: true</li>
 </ul>
-<p>If you're using a free version of Elasticsearch, you'll need to make sure both these lines are in your file, uncommented and set to <strong>true</strong>. If you have a paid version, the default for both these values is already <strong>true</strong>. Consult your Elasticsearch documentation.</p>
 <pre># ======================== Elasticsearch Configuration =========================
 #
 ...
@@ -199,7 +203,7 @@ xpack.security.http.ssl.truststore.path: certs/elastic-certificates.p12</pre>
 
 
 <h3 id="xpack_03_add_user_with_roles">Step 4: Add user with specific roles</h3>
-<p>Use the built-in user above to call this api. To use this API, you must have at least the <strong>manage_security</strong> cluster privilege.</p>
+<p>Use the built-in user above to call this API. To use this API, you must have at least the <strong>manage_security</strong> cluster privilege.</p>
 <p>For information about using this approach, see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.3/security-api-put-user.html" title="Link to Elasticsearch help re using API to add user with specific roles." target="_blank">https://www.elastic.co/guide/en/elasticsearch/reference/6.3/security-api-put-user.html</a> (Elasticsearch help).</p>
 <p><strong>Example #1: adding adminuser</strong></p>
 <p>The following example creates a user <strong>adminuser</strong>.</p>
@@ -392,7 +396,6 @@ transport.profiles.client.ssl: false
 #This setting keeps certificate authentication active for node-to-node traffic, but removes the requirement to distribute a signed certificate to transport clients. 
 #transport.profiles.client.shield.ssl.client.auth: no
 shield.http.ssl.client.auth: optional</pre>
-
 
 <h4 id="yaml_ssl_disabled">Sample YAML with SSL disabled</h4>
 <pre>shield.enabled: true
