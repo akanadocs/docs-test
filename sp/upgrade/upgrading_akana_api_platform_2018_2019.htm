@@ -64,8 +64,8 @@ nav-title: Upgrade to 2019.x.x
 	<li><a href="#check_system_health">Check system health</a></li>
 	<li><a href="#es_config">Configure Elasticsearch</a>
 		<ul>
-			<li><a href="#es_upgrade_task_20190112">Post-upgrade task for Elasticsearch indexing when upgrading to or across 2019.1.12</a><span class="apidoc_red">***</span></li>
-			<li><a href="#es_upgrade_task_20190114">Post-upgrade task for Elasticsearch indexing when upgrading to or across 2019.1.14 (Lifecycle Repository only)</a><span class="apidoc_red">***</span></li>
+			<li><a href="#es_upgrade_task_20190112">Post-upgrade task for Elasticsearch indexing when upgrading to or across 2019.1.12</a></li>
+			<li><a href="#es_upgrade_task_20190114">Post-upgrade task for Elasticsearch indexing when upgrading to or across 2019.1.14 (Lifecycle Repository only)</a></li>
 		</ul>
 	</li>
 	<li><a href="#restart_all">Restart all containers</a></li>
@@ -421,23 +421,22 @@ ps -ef
 <p><a href="#top">back to top</a></p>
 
 
-<h3 id="es_upgrade_task_20190112">Post-upgrade task for Elasticsearch indexing when upgrading to or across 2019.1.12<span class="apidoc_red">***</span></h3>
+<h3 id="es_upgrade_task_20190112">Post-upgrade task for Elasticsearch indexing when upgrading to or across 2019.1.12</h3>
 <p>In version 2019.1.12, the search capability for APIs was extended to support searching for both  partial and complete  API endpoint. To search for a complete endpoint, users can use surrounding double quotes.</p>
 <p>Example: <strong>&quot;https://example.com/v1/payments&quot;</strong> searches for the full endpoint.</p>
-<p>To enable endpoint searching, delete the indices for &quot;api&quot; and &quot;metadata&quot;, then reindex the api objects. The steps below use localhost:9200 as an example.</p>
-	<ol>
-	<li>Run this command:
-<pre>$ curl -XDELETE 'localhost:9200/default_api'</pre></li>
-	<li>Run this command:
-<pre>$ curl -XDELETE 'localhost:9200/default_metadata'</pre></li>
+<p>To enable endpoint searching for existing APIs, delete the indexes for <strong>api</strong> and <strong>metadata</strong>, and then reindex the api objects.</p>
+<p>The steps below use localhost:9200 as an example.</p>
+	<ol><li>Delete the search indexes:
+		<pre>$ curl -XDELETE 'localhost:9200/default_api'
+$ curl -XDELETE 'localhost:9200/default_metadata'</pre></li>
 	<li>Run this query: 
 <pre>"delete from INDEX_STATUS where OBJECTTYPE ='api';"</pre></li>
 </ol>
 
 
-<h3 id="es_upgrade_task_20190114">Post-upgrade task for Elasticsearch indexing when upgrading to or across 2019.1.14 (Lifecycle Repository only)<span class="apidoc_red">***</span></h3>
+<h3 id="es_upgrade_task_20190114">Post-upgrade task for Elasticsearch indexing when upgrading to or across 2019.1.14 (Lifecycle Repository only)</h3>
 <p>In version 2019.1.14, the developer portal supports searching extended metadata in Lifecycle Repository APIs, apps, and users.</p>
-<p>To enable metadata search if you are using Lifecycle Repository, delete the search indexes for APIs, apps, and users and then reindex the objects.</p>
+<p>To enable metadata search for existing data if you are using Lifecycle Repository, delete the search indexes for APIs, apps, and users, and then reindex the objects.</p>
 <p>The steps below use localhost:9200 as an example.</p>
 <ol>
 	<li>Delete the search indexes:
@@ -505,7 +504,6 @@ $ curl -XDELETE 'localhost:9200/default_metadata'</pre></li>
 <p>Common post-upgrade tasks are:</p>
 <ul>
 	<li><a href="#post_upgrade_01">Manage PKI Keys</a> (once per container)</li>
-
 	<li><a href="#post_upgrade_02">Configure Database Options</a> (once per installation)</li>
 	<li><a href="#post_upgrade_03">Manage Schemas</a> (once per installation)</li>
 	<li><a href="#post_upgrade_04">Create Policy Manager Admin User</a> (once per installation)</li>
