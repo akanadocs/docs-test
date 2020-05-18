@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wsdl:definitions targetNamespace="urn:com.soa.legals.api" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:com.soa.legals.api" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nms3="urn:org.apache.wink.common.model.rss" xmlns:nms2="http://soa.com/xsd/dnmodel/1.0" xmlns:nms1="http://soa.com/xsd/legals/1.0" xmlns:shttp="http://soa.com/wsdl/http">
   <wsdl:types>
-    <xs:schema targetNamespace="http://soa.com/xsd/user/1.0" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-<xs:element name="UserID" type="xs:string"/>
-</xs:schema>
     <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/dnmodel/1.0" version="1.0" xmlns:tns="http://soa.com/xsd/dnmodel/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:element name="Image"><xs:complexType><xs:all><xs:element name="Url" type="xs:anyURI"/><xs:element name="Title" type="xs:string"/><xs:element name="Link" type="xs:anyURI"/><xs:element minOccurs="0" name="Description" type="xs:string"/></xs:all></xs:complexType></xs:element>
 <xs:element name="TargetResource"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="Name" type="xs:string"/><xs:element minOccurs="0" name="ID" type="xs:string"/><xs:element minOccurs="0" name="Type" type="xs:string"/><xs:element minOccurs="0" name="Avatar" type="xs:string"/><xs:element minOccurs="0" ref="tns:Image"/><xs:element minOccurs="0" name="Visibility" type="xs:string"/><xs:element default="false" minOccurs="0" name="IsResourceLevelPermissionSupported" type="xs:boolean"/></xs:sequence></xs:complexType></xs:element>
 <xs:element name="TargetResources"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" ref="tns:TargetResource"/></xs:sequence></xs:complexType></xs:element>
+</xs:schema>
+    <xs:schema targetNamespace="http://soa.com/xsd/user/1.0" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="UserID" type="xs:string"/>
 </xs:schema>
     <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:element name="category" nillable="true" type="rssCategory"/>
@@ -54,12 +54,16 @@
     <wsdl:part name="getAgreementDocumentsResponse" element="tns:rss">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="createNewAgreementRequestMessage">
+    <wsdl:part name="parameter0" element="nms1:AgreementDocument">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getAgreementDocumentRequestMessage">
     <wsdl:part name="DocumentID" type="xs:string">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="createNewAgreementRequestMessage">
-    <wsdl:part name="parameter0" element="nms1:AgreementDocument">
+  <wsdl:message name="acceptAgreementResponseMessage">
+    <wsdl:part element="xs:any">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="listAgreementDocumentsRequestMessage">
@@ -68,20 +72,16 @@
     <wsdl:part name="ResourceID" type="xs:string">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="acceptAgreementResponseMessage">
-    <wsdl:part element="xs:any">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="createNewAgreementResponseMessage">
-    <wsdl:part element="xs:any">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="getAgreementDocumentResponseMessage">
     <wsdl:part element="xs:any">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="acceptAgreementRequestMessage">
     <wsdl:part name="parameter0" element="nms1:UserAgreement">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAgreementDocumentResponseMessage">
+    <wsdl:part element="xs:any">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getAgreementDocumentsRequestMessage">
@@ -105,40 +105,10 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="LegalsAPIPortType">
-    <wsdl:operation name="getAgreementDocument">
-      <wsdl:input message="tns:getAgreementDocumentRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getAgreementDocumentResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="createNewAgreement">
       <wsdl:input message="tns:createNewAgreementRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:createNewAgreementResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="updateAgreement">
-      <wsdl:input message="tns:updateAgreementRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:updateAgreementResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getAgreementDocuments">
-      <wsdl:input message="tns:getAgreementDocumentsRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getAgreementDocumentsResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="deleteAgreement">
-      <wsdl:input message="tns:deleteAgreementRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:deleteAgreementResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="listAgreementDocuments">
-      <wsdl:input message="tns:listAgreementDocumentsRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:listAgreementDocumentsResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="acceptAgreement">
@@ -147,24 +117,64 @@
       <wsdl:output message="tns:acceptAgreementResponseMessage">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="deleteAgreement">
+      <wsdl:input message="tns:deleteAgreementRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:deleteAgreementResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateAgreement">
+      <wsdl:input message="tns:updateAgreementRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:updateAgreementResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAgreementDocument">
+      <wsdl:input message="tns:getAgreementDocumentRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getAgreementDocumentResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAgreementDocuments">
+      <wsdl:input message="tns:getAgreementDocumentsRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getAgreementDocumentsResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listAgreementDocuments">
+      <wsdl:input message="tns:listAgreementDocumentsRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:listAgreementDocumentsResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="LegalsAPIBinding" type="tns:LegalsAPIPortType">
     <shttp:binding/>
-    <wsdl:operation name="getAgreementDocument">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /legals/{DocumentID}</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="*/*" location="/legals/{DocumentID}" method="GET" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+json,application/vnd.soa.v81+xml"/>
-      <wsdl:input>
-    <shttp:input name="DocumentID" part="DocumentID" type="path"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="" part="" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="createNewAgreement">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /legals</sdoc:displayName></wsdl:documentation>
     <shttp:operation inputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+json,application/vnd.soa.v81+xml" location="/legals" method="POST" outputSerialization="text/plain"/>
       <wsdl:input>
     <shttp:input name="parameter0" part="parameter0" type="entity"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="" part="" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="acceptAgreement">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /legals/agreements</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v81+xml" location="/legals/agreements" method="POST" outputSerialization="text/plain"/>
+      <wsdl:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="" part="" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteAgreement">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">DELETE /legals/{DocumentID}</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/legals/{DocumentID}" method="DELETE" outputSerialization="text/plain"/>
+      <wsdl:input>
+    <shttp:input name="DocumentID" part="DocumentID" type="path"/>
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="" part="" type="entity"/>
@@ -181,6 +191,16 @@
     <shttp:output name="" part="" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getAgreementDocument">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /legals/{DocumentID}</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="*/*" location="/legals/{DocumentID}" method="GET" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+json,application/vnd.soa.v81+xml"/>
+      <wsdl:input>
+    <shttp:input name="DocumentID" part="DocumentID" type="path"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="" part="" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getAgreementDocuments">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /legals</sdoc:displayName></wsdl:documentation>
     <shttp:operation location="/legals" method="GET" outputSerialization="text/xml,application/json,application/xml,application/rss+xml"/>
@@ -192,16 +212,6 @@
     <shttp:output name="getAgreementDocumentsResponse" part="getAgreementDocumentsResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="deleteAgreement">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">DELETE /legals/{DocumentID}</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/legals/{DocumentID}" method="DELETE" outputSerialization="text/plain"/>
-      <wsdl:input>
-    <shttp:input name="DocumentID" part="DocumentID" type="path"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="" part="" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="listAgreementDocuments">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /legals</sdoc:displayName></wsdl:documentation>
     <shttp:operation location="/legals" method="GET" outputSerialization="application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v81+xml"/>
@@ -211,16 +221,6 @@
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="listAgreementDocumentsResponse" part="listAgreementDocumentsResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="acceptAgreement">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /legals/agreements</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v81+xml" location="/legals/agreements" method="POST" outputSerialization="text/plain"/>
-      <wsdl:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="" part="" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
