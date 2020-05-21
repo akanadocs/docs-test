@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions targetNamespace="urn:com.soa.dnworkflow.api" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:com.soa.dnworkflow.api" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nms2="urn:org.apache.wink.common.model.rss" xmlns:nms1="http://soa.com/xsd/workflow/1.0" xmlns:shttp="http://soa.com/wsdl/http">
+<wsdl:definitions targetNamespace="urn:com.soa.dnworkflow.api" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:com.soa.dnworkflow.api" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nms2="http://soa.com/xsd/workflow/1.0" xmlns:nms1="urn:org.apache.wink.common.model.rss" xmlns:shttp="http://soa.com/wsdl/http">
   <wsdl:types>
+    <xs:schema targetNamespace="http://soa.com/xsd/user/1.0" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="UserID" type="xs:string"/>
+</xs:schema>
     <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:element name="category" nillable="true" type="rssCategory"/>
 <xs:element name="channel" nillable="true" type="rssChannel"/>
@@ -26,9 +29,6 @@
 <xs:complexType name="rssGuid"><xs:simpleContent><xs:extension base="xs:string"><xs:attribute name="isPermaLink" type="xs:boolean"/></xs:extension></xs:simpleContent></xs:complexType>
 <xs:complexType name="rssItem"><xs:all><xs:element minOccurs="0" name="title" type="xs:string"/><xs:element minOccurs="0" name="link" type="xs:anyURI"/><xs:element minOccurs="0" name="description" type="xs:string"/><xs:element minOccurs="0" name="author" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="category" nillable="true" type="rssCategory"/><xs:element minOccurs="0" name="comments" type="xs:anyURI"/><xs:element minOccurs="0" name="enclosure" type="rssEnclosure"/><xs:element minOccurs="0" name="guid" type="rssGuid"/><xs:element name="pubDate" type="xs:string"/><xs:element minOccurs="0" name="source" type="rssSource"/><xs:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/></xs:all></xs:complexType>
 </xs:schema>
-    <xs:schema targetNamespace="http://soa.com/xsd/user/1.0" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-<xs:element name="UserID" type="xs:string"/>
-</xs:schema>
     <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/workflow/1.0" version="1.0" xmlns:ns1="http://soa.com/xsd/user/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:import namespace="http://soa.com/xsd/user/1.0"/>
 <xs:element name="Action"><xs:complexType><xs:sequence><xs:element ref="ns1:UserID"/><xs:element name="ActionName" type="xs:string"/><xs:element minOccurs="0" name="Comments" type="xs:string"/><xs:element minOccurs="0" name="Parameters"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" ref="ns2:ActionParameter" xmlns:ns2="http://soa.com/xsd/workflow/1.0"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
@@ -43,18 +43,18 @@
     <wsdl:part name="InitActionID" type="xs:string">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="deleteWorkflowDefinitionResponseMessage">
+    <wsdl:part name="deleteWorkflowDefinitionResponse" type="xs:string">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getWorkflowDefinitionConfigurationRequestMessage">
     <wsdl:part name="WorkflowDefKey" type="xs:string">
     </wsdl:part>
     <wsdl:part name="download" type="xs:boolean">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="deleteWorkflowDefinitionResponseMessage">
-    <wsdl:part name="deleteWorkflowDefinitionResponse" type="xs:string">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="addWorkflowDefinitionResponseMessage">
-    <wsdl:part name="addWorkflowDefinitionResponse" element="nms1:WorkflowDefinition">
+    <wsdl:part name="addWorkflowDefinitionResponse" element="nms2:WorkflowDefinition">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="uploadWorkloadConfigurationRequestMessage">
@@ -82,27 +82,27 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getActionDetailsResponseMessage">
-    <wsdl:part name="getActionDetailsResponse" element="nms1:WfActionDefinition">
+    <wsdl:part name="getActionDetailsResponse" element="nms2:WfActionDefinition">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getInitActionDetailsResponseMessage">
-    <wsdl:part name="getInitActionDetailsResponse" element="nms1:WfActionDefinition">
+    <wsdl:part name="getInitActionDetailsResponse" element="nms2:WfActionDefinition">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getActionsResponseMessage">
     <wsdl:part name="getActionsResponse" element="tns:rss">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="addWorkloadDefinitionConfigurationResponseMessage">
-    <wsdl:part name="addWorkloadDefinitionConfigurationResponse" element="nms1:WorkflowDefinition">
+  <wsdl:message name="uploadWorkloadConfigurationResponseMessage">
+    <wsdl:part name="uploadWorkloadConfigurationResponse" element="nms2:WorkflowDefinition">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="uploadWorkloadConfigurationResponseMessage">
-    <wsdl:part name="uploadWorkloadConfigurationResponse" element="nms1:WorkflowDefinition">
+  <wsdl:message name="addWorkloadDefinitionConfigurationResponseMessage">
+    <wsdl:part name="addWorkloadDefinitionConfigurationResponse" element="nms2:WorkflowDefinition">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getWorkflowDefinitionResponseMessage">
-    <wsdl:part name="getWorkflowDefinitionResponse" element="nms1:WorkflowDefinition">
+    <wsdl:part name="getWorkflowDefinitionResponse" element="nms2:WorkflowDefinition">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getWorkflowDefinitionRequestMessage">
@@ -118,7 +118,7 @@
   <wsdl:message name="performWorkflowActionRequestMessage">
     <wsdl:part name="ObjectID" type="xs:string">
     </wsdl:part>
-    <wsdl:part name="parameter0" element="nms1:Action">
+    <wsdl:part name="parameter0" element="nms2:Action">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getWorkflowDefinitionConfigurationResponseMessage">
@@ -144,30 +144,6 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="WorkflowAPIPortType">
-    <wsdl:operation name="addWorkloadDefinitionConfiguration">
-      <wsdl:input message="tns:addWorkloadDefinitionConfigurationRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:addWorkloadDefinitionConfigurationResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getInitActionDetails">
-      <wsdl:input message="tns:getInitActionDetailsRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getInitActionDetailsResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getActionDetails">
-      <wsdl:input message="tns:getActionDetailsRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getActionDetailsResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getWorkflowDefinitionConfiguration">
-      <wsdl:input message="tns:getWorkflowDefinitionConfigurationRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getWorkflowDefinitionConfigurationResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="listWorkflowDefinitions">
       <wsdl:input message="tns:listWorkflowDefinitionsRequestMessage">
     </wsdl:input>
@@ -198,6 +174,30 @@
       <wsdl:output message="tns:deleteWorkflowDefinitionResponseMessage">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getWorkflowDefinitionConfiguration">
+      <wsdl:input message="tns:getWorkflowDefinitionConfigurationRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getWorkflowDefinitionConfigurationResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getActionDetails">
+      <wsdl:input message="tns:getActionDetailsRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getActionDetailsResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addWorkloadDefinitionConfiguration">
+      <wsdl:input message="tns:addWorkloadDefinitionConfigurationRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:addWorkloadDefinitionConfigurationResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getInitActionDetails">
+      <wsdl:input message="tns:getInitActionDetailsRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getInitActionDetailsResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="performWorkflowAction">
       <wsdl:input message="tns:performWorkflowActionRequestMessage">
     </wsdl:input>
@@ -213,49 +213,6 @@
   </wsdl:portType>
   <wsdl:binding name="WorkflowAPIBinding" type="tns:WorkflowAPIPortType">
     <shttp:binding/>
-    <wsdl:operation name="addWorkloadDefinitionConfiguration">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /workflow/definitions</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="multipart/form-data" location="/workflow/definitions" method="POST" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
-      <wsdl:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="addWorkloadDefinitionConfigurationResponse" part="addWorkloadDefinitionConfigurationResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getInitActionDetails">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /workflow/objecttypes/{ObjectType}/initactions/{InitActionID}</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/workflow/objecttypes/{ObjectType}/initactions/{InitActionID}" method="GET" outputSerialization="application/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+json,application/vnd.soa.v81+xml"/>
-      <wsdl:input>
-    <shttp:input name="ObjectType" part="ObjectType" type="path"/>
-    <shttp:input name="InitActionID" part="InitActionID" type="path"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getInitActionDetailsResponse" part="getInitActionDetailsResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getActionDetails">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /workflow/objects/{ObjectID}/actions/{ActionID}</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/workflow/objects/{ObjectID}/actions/{ActionID}" method="GET" outputSerialization="application/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+json,application/vnd.soa.v81+xml"/>
-      <wsdl:input>
-    <shttp:input name="ObjectID" part="ObjectID" type="path"/>
-    <shttp:input name="ActionID" part="ActionID" type="path"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getActionDetailsResponse" part="getActionDetailsResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getWorkflowDefinitionConfiguration">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /workflow/definitions/{WorkflowDefKey}/configuration.xml</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/workflow/definitions/{WorkflowDefKey}/configuration.xml" method="GET" outputSerialization="text/xml,application/xml,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+json,application/vnd.soa.v81+xml"/>
-      <wsdl:input>
-    <shttp:input name="WorkflowDefKey" part="WorkflowDefKey" type="path"/>
-    <shttp:input name="download" part="download" type="query"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="" part="" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="listWorkflowDefinitions">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /workflow/definitions</sdoc:displayName></wsdl:documentation>
     <shttp:operation location="/workflow/definitions" method="GET" outputSerialization="application/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+json,application/vnd.soa.v81+xml"/>
@@ -308,6 +265,49 @@
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="deleteWorkflowDefinitionResponse" part="deleteWorkflowDefinitionResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getWorkflowDefinitionConfiguration">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /workflow/definitions/{WorkflowDefKey}/configuration.xml</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/workflow/definitions/{WorkflowDefKey}/configuration.xml" method="GET" outputSerialization="text/xml,application/xml,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+json,application/vnd.soa.v81+xml"/>
+      <wsdl:input>
+    <shttp:input name="WorkflowDefKey" part="WorkflowDefKey" type="path"/>
+    <shttp:input name="download" part="download" type="query"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="" part="" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getActionDetails">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /workflow/objects/{ObjectID}/actions/{ActionID}</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/workflow/objects/{ObjectID}/actions/{ActionID}" method="GET" outputSerialization="application/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+json,application/vnd.soa.v81+xml"/>
+      <wsdl:input>
+    <shttp:input name="ObjectID" part="ObjectID" type="path"/>
+    <shttp:input name="ActionID" part="ActionID" type="path"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getActionDetailsResponse" part="getActionDetailsResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addWorkloadDefinitionConfiguration">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /workflow/definitions</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="multipart/form-data" location="/workflow/definitions" method="POST" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
+      <wsdl:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="addWorkloadDefinitionConfigurationResponse" part="addWorkloadDefinitionConfigurationResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getInitActionDetails">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /workflow/objecttypes/{ObjectType}/initactions/{InitActionID}</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/workflow/objecttypes/{ObjectType}/initactions/{InitActionID}" method="GET" outputSerialization="application/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+json,application/vnd.soa.v81+xml"/>
+      <wsdl:input>
+    <shttp:input name="ObjectType" part="ObjectType" type="path"/>
+    <shttp:input name="InitActionID" part="InitActionID" type="path"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getInitActionDetailsResponse" part="getInitActionDetailsResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="performWorkflowAction">
