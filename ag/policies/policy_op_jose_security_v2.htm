@@ -37,6 +37,7 @@ nav-title: JOSE Security v2
 	<li><a href="#tools_encode">Online tools for encoding and decoding</a></li>
 	<li><a href="#jose_unenc_troubleshooting">JOSE Security Policy v2 (Unencoded Payload Support): troubleshooting</a></li>
 	<li><a href="#jose_error_codes_ob">Open Banking error messages for the JOSE Security Policy v2</a> (2018.0.4 and later)</li>
+	<li><a href="#jose_v2_appendix_f">Appendix F configuration in the JOSE Security Policy v2</a> (2019.1.14 and later)</li>
 </ol>
 <hr class="divide_hr" />
 
@@ -168,7 +169,11 @@ nav-title: JOSE Security v2
 <p><strong>Valid in version: 2019.1.14 and later</strong></p>
 
 <p>When you choose the <strong>Unencoded Detached Payload</strong> option, for the <strong>Provider</strong> role, and choose <strong>Enforce Appendix F</strong>, the policy applies Base64 encoding to the payload and removes the Base64 header, as covered in the <a href="https://tools.ietf.org/html/rfc7515#appendix-F" title="Link to Appendix F of the JWS specification, RFC-7515" target="_blank">Appendix F (Detached Content) section of the JWS specification (RFC-7515)</a>.</p>
-<p>For more information, see <a href="#uk_ob_unencdetpld">Unencoded Detached Payload</a> below.</p>
+<p>More detailed configuration information later in this document:</p>
+<ul>
+	<li> <a href="#uk_ob_unencdetpld">Unencoded Detached Payload</a></li>
+	<li><a href="#jose_v2_appendix_f">Appendix F configuration in the JOSE Security Policy v2</a></li>
+</ul>
 <p><a href="#top">back to top</a></p>
 
 
@@ -1521,6 +1526,70 @@ character ({char}) at position ({position}).</pre>
 		</tr>
 	</tbody>
 </table>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="jose_v2_appendix_f">Appendix F Configuration in the JOSE Security Policy v2</h2>
+<p><strong>Valid in version: 2019.1.14 and later</strong></p>
+<p>Update 2019.1.14 introduces an additional option in the JOSE Security Policy v2. This option was implemented to support Appendix F: Detached Content as defined in the JWS specification. For full details, refer to the <a href="https://tools.ietf.org/html/rfc7515#appendix-F" title="Link to Appendix F of the JWS specification, RFC-7515" target="_blank">Appendix F (Detached Content) section of the JWS specification (RFC-7515)</a>.</p>
+<p>The JOSE Security Policy v2 includes a new flag to implement the new option, which is available for both the request and the response. For UK Open Banking support, both the Appendix F option and the UK Open Banking 3.1 flag must be checked, as shown below.</p>
+<p><strong>Request Policy Configuration:</strong></p>
+<p><img src="images/jose_v2_appendix_f_request.png" alt="JOSE Security Policy v2 (Unencoded Payload Support), Appendix F implementation: Request message configuration" /></p>
+<p><strong>Response Policy Configuration:</strong></p>
+<p><img src="images/jose_v2_appendix_f_response.png" alt="JOSE Security Policy v2 (Unencoded Payload Support), Appendix F implementation: Response message configuration" /></p>
+<p>With the Appendix F option checked, the b64 critical header is not required in the JWS header. The differences between these headers is shown below with and without the Appendix F option selected.</p>
+<p><strong>With</strong> UK Open Banking 3.1, <strong>without</strong> Appendix F:</p>
+<p>With the UK Open Banking 3.1 option selected (without Appendix F selected), the JWS header includes the b64 header.</p>
+<pre>{
+  "kid":"joseclient",
+  "alg":"PS256",
+  "cty":"application/json",
+  "b64":false,
+  "crit":[
+    "b64",
+    "http://openbanking.org.uk/iat",
+    "http://openbanking.org.uk/tan",
+    "http://openbanking.org.uk/iss"
+  ],
+  "http://openbanking.org.uk/iat":1589394578,
+  "http://openbanking.org.uk/tan":"OpenBanking",
+  "http://openbanking.org.uk/iss":"CN=joseclient,OU=akana,O=acmepaymentscorp,L=EUS,ST=FL,C=US"
+}</pre>
+<p><strong>With</strong> UK Open Banking 3.1, <strong>with</strong> Appendix F:</p>
+<p>With the UK Open Banking 3.1 option select and the Appendix F option also selected, the JWS header does <strong>not</strong> include the b64 header, as shown below.</p>
+<pre>{
+  "alg": "PS256",
+  "kid": "joseclient",
+  "typ": "JOSE",
+  "http://openbanking.org.uk/iat": 1588365348,
+  "http://openbanking.org.uk/iss": "CN=joseclient,OU=akana,O=acmepaymentscorp,L=EUS,ST=FL,C=US",
+  "http://openbanking.org.uk/tan": "OpenBanking",
+  "crit": [
+    "http://openbanking.org.uk/iat",
+    "http://openbanking.org.uk/iss",
+    "http://openbanking.org.uk/tan"
+  ]
+}</pre>
+
+
+<h4 id="jose_v2_appendix_f_results">Appendix F option: implementation results</h4>
+<p>When the Appendix F option is selected, the b64 header <strong>must not</strong> be sent and <strong>will not</strong> be returned in the response.</p>
+<h4>Error scenario</h4>
+<p>If the b64 header is sent in the request, the following error is returned, with a status code of 400:</p>
+<pre>{
+  "Code":"[400] Bad Request",
+  "Id":"94477-a6e9a65f-7d89-4293-90cf-c78128743436",
+  "Message":"An invalid value is supplied in the JOSE header.",
+  "Errors":[
+    {
+      "ErrorCode":"UK.OBIE.Signature.InvalidClaim",
+      "Message":"Error code: 94477, parameters: null",
+      "Path":"b64",
+      "Url":"https://openbanking.atlassian.net/wiki/spaces/DZ/pages/1000702294/Read+Write+Data+API+Specification+-+v3.1.1"
+    }
+  ]
+}</pre>
 <p><a href="#top">Back to top</a></p>
 
 
