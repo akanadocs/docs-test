@@ -11,6 +11,7 @@ nav-title: Service Level
 ---
 <h1 id="top">Using the Service Level Policy</h1>
 <p>Learn how to define conditions for measuring and reporting performance of a specific contract.</p>
+<p><strong>Note</strong>: This policy does not enforce service level, and does not operate in real time. Service level is checked at intervals as defined in the policy configuration, and alerts are generated if a defined rule is violated, but this policy does not block service calls.</p>
 <p>For information about using policies in the context of the developer portal, see <a href="../../cm/learnmore/bus_admin_organizations.htm#h_business_policies">Business Policies</a>.</p>
 <hr class="divide_hr" />
 
@@ -40,8 +41,28 @@ nav-title: Service Level
 
 
 <h2 id="introduction">Introduction</h2>
-<p>The Service Level Policy defines conditions for measuring and reporting performance of a specific contract. Each policy is composed of a <strong>Rule</strong> and an <strong>Access Interval</strong>. Rules represent the conditions you define to measure and report performance of a service contract. When a defined system condition matches a defined rule, an alert is raised. A <strong>Rule</strong> is composed of <strong>Rule Elements</strong> (Alert Code, Metric, Operator, Value, Units, and Interval) that you can configure to meet your service monitoring requirements.</p>
-<p><a href="#top">back to top</a></p>
+<p>The Service Level Policy defines conditions for measuring and reporting performance of a specific contract. </p>
+<p>Note that this policy measures and reports on service level. It provides metrics, but it does not block any service calls.</p>
+<p>In this policy, you can define:</p>
+<ul>
+	<li><strong>Rule (one or more)</strong>: Each rule represents a set of conditions you define to measure and report performance of a service contract. When a defined system condition matches a defined rule, an alert is raised. A <strong>Rule</strong> is composed of <strong>Rule Elements</strong> (Alert Code, Metric, Operator, Value, Units, and Interval) that you can configure to meet your service monitoring requirements.</li>
+	<li><strong>Access time</strong>: Defines the time periods during which the policy is enforced. You can define access time periods uniquely for each day of the week&#8212;all day, or a start/end range (HH:MM)&#8212;and the time zone.</li>
+</ul>
+	<p>Here's how it works:</p>
+	<ol>
+		<li>The platform collects statistics for all API calls. The raw data is recorded in the database.</li>
+		<li>Platform processes run at intervals to analyze the data to see if any Service Level Policy limits have been reached.
+		<p>The platform uses the time frame specified in the policy rule (see <a href="#fielddef_interval">Interval</a> below). For example:</p>
+		<ul>
+			<li>A rule limit of 5 faults per hour is checked each hour, on the hour.</li>
+			<li>A limit of 100 transactions per 15 minutes is checked on the quarter-hour (for example, 1:00. 1:15, 1:30, 1:45).</li>
+		</ul>
+		</li>
+	
+		<li><strong>Alert</strong>: If a rule has been violated for the specified interval, an alert is generated.</li>
+		<li><strong>&quot;Clearing&quot; Alert</strong>: At the next scheduled interval, the rule is checked again. If the rule is still exceeded, no action is taken. If the rule limit is no longer exceeded, an alert is generated to notify users that the violation is over.</li>
+	</ol>
+	<p><a href="#top">back to top</a></p>
 
 
 
@@ -81,7 +102,7 @@ nav-title: Service Level
 
 
 <h2 id="service_level_policy_config_rules">Configuring Service Level Policy Rules</h2>
-<p>Rules represent the conditions you define to measure and report performance for the specific service that is referencing or contains the configuration of a Service Level Policy. When a defined system condition matches a defined rule, an alert is raised in Policy Manager.</p>
+<p>Rules represent the conditions you define to measure and report performance for the specific service that is referencing or contains the configuration of a Service Level Policy. When a defined system condition matches a defined rule, an alert is generated.</p>
 <p><strong>Note</strong>: You can select from available SLA Custom Alert Codes in the drop-down list box on the Alert Code field. You can also enter a new SLA Custom Alert Code directly into the Service Level Policy Rule line item. The minimum SLA Alert Code start number is 700000. For more information on adding a new alert code in the <strong>Alerts</strong> &gt; <strong>Alert Codes</strong> section of the Management Console, refer to <strong>About Alert Codes</strong> in the Policy Manager Online Help (accessible via the Policy Manager Management Console).</p>
 <p>A rule is composed of the elements shown below.</p>
 <table class="doctable">
@@ -99,7 +120,7 @@ nav-title: Service Level
 	</tr>
 	<tr>
 		<td>Metric</td>
-		<td><p>A Metric is a measurable function (such as a Response Time) that is used in the rule calculation. Valid values:</p>
+		<td><p>A measurable function (such as a Response Time) that is used in the rule calculation. Valid values:</p>
 			<ul>
 				<li>Average Response Time</li>
 				<li>Number of Faults</li>
@@ -118,16 +139,16 @@ nav-title: Service Level
 	</tr>
 	<tr>
 		<td>Value</td>
-		<td><p>A Value is a numerical value that establishes the threshold of the metric. This value is manually entered into a text box.</p></td>
+		<td><p>A numerical value that establishes the threshold of the metric. Type the value in the box.</p></td>
 	</tr>
 	<tr>
 		<td>Units</td>
-		<td><p>A Unit is the unit measure by which the value is counted. Available values are: <strong>milliseconds</strong>, <strong>seconds</strong>, <strong>minutes</strong>, <strong>hours</strong>, <strong>days</strong>, as shown below.</p>
+		<td><p>The unit measure by which the value is counted. Available values are: <strong>milliseconds</strong>, <strong>seconds</strong>, <strong>minutes</strong>, <strong>hours</strong>, <strong>days</strong>, as shown below.</p>
 			<p><img src="images/qos_service_level_sla_units.jpg" alt="Service Level Policy Units" /></p></td>
 	</tr>
 	<tr>
-		<td>Interval</td>
-		<td><p>An Interval is the time interval over which the rule is measured. Available values are <strong>Any</strong>, <strong>15 minutes</strong>, <strong>1 hour</strong>, <strong>1 day</strong>, <strong>1 week</strong>, and <strong>1 month</strong>, as shown below.</p>
+		<td id="fielddef_interval">Interval</td>
+		<td><p>The time interval over which the rule is measured. Available values, as shown below: <strong>Any</strong>, <strong>15 minutes</strong>, <strong>1 hour</strong>, <strong>1 day</strong>, <strong>1 week</strong>, <strong>1 month</strong>.</p>
 			<p><img src="images/qos_service_level_sla_interval.jpg" alt="Service Level Policy Intervals" /></p></td>
 	</tr>
 </table>
@@ -240,23 +261,23 @@ nav-title: Service Level
 	<li>Create a physical service in the <strong>Policy Manager Management Console</strong> using <strong>Create Physical Service</strong>.</li>
 	<li>Provide service details and finish the wizard.</li>
 	<li>Using <strong>Virtualize Service</strong>, virtualize and host the physical service on Network Director (<strong>ND1</strong>), and assign a name (for example, <strong>Vs1</strong>).</li>
-	<li>Navigate to <strong>Organization</strong> &gt; <strong>Policies</strong> &gt; <strong>QOS Policies</strong> and use <strong>Add Policy</strong> to create a Service Level Policy.</li>
+	<li>Navigate to <strong>Organization</strong> &gt; <strong>Policies</strong> &gt; <strong>QoS Policies</strong> and use <strong>Add Policy</strong> to create a Service Level Policy.</li>
 	<li>Configure the Service Level Policy as per the use case with an alert code and a usage count of greater than 50 messages in 1 minute, as shown below.
 		<p><img src="images/service_level_uc_pm_01.jpg" alt="" /></p></li>
 	<li>Activate the policy in the Policy Workflow portlet and attach it to the Vs1 service in the <strong>Service Details</strong> &gt; <strong>Policy Attachments</strong> &gt; <strong>QoS</strong> section.
-<p>In this scenario, when there are more than 50 hits for a service in the 1-minute interval that was configured in the policy rules, an SLA alert is triggered at the beginning of the next configured time interval (in this example, at the beginning of the next minute), and an email is sent to the administrator.</p>
+<p>In this scenario, when there are more than 50 hits for a service in the 1-minute interval that was configured in the policy rules, an alert is triggered at the beginning of the next configured time interval (in this example, at the beginning of the next minute), and an email is sent to the administrator.</p>
 	<p><img src="images/service_level_uc_pm_02.jpg" alt="" /></p></li>
 </ol>
 
 
 <h3 id="uc_policy_qos_service_level_pm_02">SLA Generates Clear Alert / Email When Throughput Drops Below Limit</h3>
-<p>In this scenario, set up an SLA that generates a clear alert and sends an email to alert the administrator when the throughput has dropped below 50 requests in a minute.</p>
+<p>In this scenario, generate an alert because the range defined in the policy is exceeded, and then generate a clear alert that sends an email to alert the administrator when the throughput has dropped back into the defined range.</p>
 <ol>
 	<li>Add an alert code to the <strong>Policy Manager Management Console</strong> in the <strong>Alerts</strong> &gt; <strong>Alert Codes</strong> tab with email configuration.</li>
 	<li>Create a physical service in the <strong>Policy Manager Management Console</strong> using <strong>Create Physical Service</strong>.</li>
 	<li>Provide service details and finish the wizard.</li>
 	<li>Using <strong>Virtualize Service</strong>, virtualize and host the physical service on Network Director (<strong>ND1</strong>), and assign a name (for example, <strong>Vs1</strong>).</li>
-	<li>Navigate to <strong>Organization</strong> &gt; <strong>Policies</strong> &gt; <strong>QOS Policies</strong> and use <strong>Add Policy</strong> to create a Service Level Policy.</li>
+	<li>Navigate to <strong>Organization</strong> &gt; <strong>Policies</strong> &gt; <strong>QoS Policies</strong> and use <strong>Add Policy</strong> to create a Service Level Policy.</li>
 	<li>Configure the Service Level Policy to generate the alert code you created in Step 1 for a usage count of greater than 50 in 1 minute.</li>
 	<li>Activate the policy in the Policy Workflow portlet and attach it to the Vs1 service in the <strong>Service Details</strong> &gt; <strong>Policy Attachments</strong> &gt; <strong>QoS</strong> section. You will see:
 <ol>
@@ -271,6 +292,7 @@ nav-title: Service Level
 
 
 <h3 id="uc_policy_qos_service_level_pm_03">Timeline Diagram</h3>
+<p>The diagram below shows the points at which alerts are generated or cleared. Note that requests are still successful even after an alert is generated.</p>
 <p><img src="images/service_level_uc_pm_04.jpg" alt="" /></p>
 
 
@@ -281,7 +303,7 @@ nav-title: Service Level
 	<li>Create a physical service in the <strong>Policy Manager Management Console</strong> using <strong>Create Physical Service</strong>.</li>
 	<li>Provide service details and finish the wizard.</li>
 	<li>Using <strong>Virtualize Service</strong>, virtualize and host the physical service on Network Director (<strong>ND1</strong>), and assign a name (for example, <strong>Vs1</strong>).</li>
-	<li>Navigate to <strong>Organization</strong> &gt; <strong>Policies</strong> &gt; <strong>QOS Policies</strong> and use <strong>Add Policy</strong> to create a Service Level Policy.</li>
+	<li>Navigate to <strong>Organization</strong> &gt; <strong>Policies</strong> &gt; <strong>QoS Policies</strong> and use <strong>Add Policy</strong> to create a Service Level Policy.</li>
 	<li>Configure the Service Level Policy as per the use case with the above alert code, and greater than 300 usage count in 15 minute.</li>
 	<li>Activate the policy in the Policy Workflow portlet and attach it to the Vs1 service in the <strong>Service Details</strong> &gt; <strong>Policy Attachments</strong> &gt; <strong>QoS</strong> section.	</li>
 </ol>
@@ -384,8 +406,8 @@ nav-title: Service Level
 	<p><img src="images/service_level_uc_cm_29.jpg" alt="" /></p>
 	<p>The license is now configured with the QoS Policy attachment at the Terms Level.</p>
 	<p><img src="images/service_level_uc_cm_30.jpg" alt="" /></p></li>
-	<li>Next we have to use this scope in API &gt; Scope Mapping. Go to the API and click Scope Mapping.
-		<p><img src="images/service_level_uc_cm_31.jpg" alt="" /></p></li>
+	<li>Next, we have to use this scope in API &gt; Scope Mapping. Go to the API and click <strong>Scope Mapping</strong>.
+<p><img src="images/service_level_uc_cm_31.jpg" alt="" /></p></li>
 	<li>Map your scope at Operation level or at API level. Select Scope, then confirm and save changes.
 		<p><img src="images/service_level_uc_cm_32.jpg" alt="" /></p></li>
 	<li>Now request API Access for this API. While requesting API access, select the license that is attached to the QoS Policy at the Terms level.
