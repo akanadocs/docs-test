@@ -19,9 +19,13 @@ nav-title: API Consumer Application Security (CM)
 <h2 style="color: gray;">Table of Contents</h2>
 <ol class="table_of_contents">
 	<li><a href="#introduction">Introduction</a></li>
-	<li><a href="#configuration">Configuration</a></li>
-	<li><a href="#policy_activating">Activating a policy</a></li>
+	<li><a href="#api_consumer_app_security_create">Creating an API Consumer Application Security policy</a></li>
+
+	<li><a href="#api_consumer_app_security_config">Configuring the API Consumer Application Security policy</a></li>
+	<li><a href="#api_consumer_app_security_options">Configuring API Consumer Application Security Policy options</a></li>
+<li><a href="#policy_activating">Activating a policy</a></li>
 	<li><a href="#policy_attach">Attaching a policy</a></li>
+	<li><a href="#policy_attach_cm">Attaching a policy in the developer portal</a></li>
 </ol>
 <hr class="divide_hr" />
 
@@ -31,52 +35,81 @@ nav-title: API Consumer Application Security (CM)
 <p>The &quot;API Consumer Application Security Policy&quot; is used to identify (authenticate) an application that is attempting to consume an API to determine if it is authorized or not. This policy type supports multiple mechanisms for the App to present its identity. See <strong>Configuration Options</strong> (below) for a list of supported authentication methods.</p>
 <p><strong>Note</strong>: Use of this policy is reserved for API Administrators of the Community Manager application. </p>
 
-<h4 id="config_options">Configuration Options</h4>
-<p>The policy includes the following configuration options:</p>
-<p><strong>No Signature</strong></p>
-<p>A checkbox that allows you to perform authentication with no signature. If enabled (checkbox selected), selection of algorithms is disabled. If disabled (checkbox unselected), algorithms are enabled.</p>
-<p><strong>Algorithm(s)</strong></p>
-<p>If <strong>No Signature</strong> is disabled, configure one or more authentication algorithms based on your requirements. The authentication method(s) selected are based on the protocols supported by your API.</p>
-<p><strong>Note</strong>: If your API supports OAut,h the API Consumer Security Policy is not required. Refer to the <a href="policy_op_oauth_security.htm">Using the OAuth Security Policy</a> or <a href="policy_op_oauth1a_security.htm">Using the OAuth 1.0a Security Policy</a>.</p>
-<ul>
-	<li><strong>SHA1 (Shared Secret)</strong>&#8212;SHA1 hash function.</li>
-	<li><strong>SHA1 with RSA</strong>&#8212;RSA encryption algorithms with SHA1 hash function.</li>
-	<li><strong>SHA256 with RSA</strong>&#8212;RSA encryption algorithms with SHA-256 (32-bit words) hash function. </li>
-	<li><strong>HMAC SHA1</strong>&#8212;Keyed-hash message authentication code with SHA1 hash function.</li>
-	<li><strong>HMAC SHA256</strong>&#8212;Keyed-hash message authentication code with SHA-256 (32-bit words) hash function. </li>
-	<li><strong>Authorization Header Scheme</strong>&#8212;The name of the authorization header scheme.</li>
-	<li><strong>Authorization Header Parameters Prefix</strong>&#8212;The authorization header parameters prefix.</li>
-	<li><strong>Cookie Name</strong>&#8212;Name of the API authentication cookie. </li>
-	<li><strong>ClockSkew (in seconds)</strong>&#8212;Specify the clock skew (in seconds) that will be used to synchronize timestamps across hosts.</li>
-</ul>
-<p><a href="#top">Back to top</a></p>
 
 
 
-<h2 id="configuration">Configuration</h2>
-<p>Let's take a quick walkthrough of the API Consumer Application Security Policy configuration process to get you started.</p>
-
-<h4 id="step_01">Step 1: Add Policy</h4>
-<p>You can create an API Consumer Application Security Policy instance using <strong>Add Policy</strong> in the <strong>Policies</strong> &gt; <strong>Operational Policies</strong> section.</p>
-
-<h4 id="step_02">Step 2: Modify Policy</h4>
-<p>When you <strong>Modify</strong> the API Consumer Application Security Policy on the <strong>Policy Details</strong> page the initial policy will look like this. The <strong>No Signature</strong> checked option provides a simple header security (for example, ApplicationSecurityUnsigned) default policy.</p>
-<p><img src="images_cm_policies/modify_api_con_app_sec_policy.jpg" alt="" /></p>
-<p>Another common simple header security policy for Community Manager applications provides SHA1-Shared Secret (for example, ApplicationSecuritySigned) support as follows:</p>
-<p><img src="images_cm_policies/shared_secret_default.jpg" alt="" /></p>
-<p>You can get started using the default policy configurations (provided here), and then expand your configuration based on your requirements:</p>
-
-
-<h4 id="step_03_act">Step 3: Activate Policy</h4>
-<p>When the policy configuration is complete, activate the policy so that you can use it.</p>
+<h2 id="api_consumer_app_security_create">Creating an API Consumer Application Security policy</h2>
+<p>The first step in creating a policy is to define the basic policy information.</p>
+<h4>To add an operational policy</h4>
+<ol>
+	<li>Go to <strong>Workbench</strong> &gt; <strong>Browse</strong> &gt; <strong>Organization</strong>, and select <strong>Policies</strong> &gt; <strong>Operational Policies</strong>. The <strong>Policies Summary</strong> is displayed.</li>
+	<li>Click <strong>Add Policy</strong>.</li>
+	<li>Choose the policy type and click <strong>Next</strong>.</li>
+	<li>Specify a name (required) and description (optional) and click <strong>Finish</strong>. At the <strong>Completion Summary</strong>, click <strong>Close</strong>. The <strong>Add Policy</strong> Wizard creates a draft policy instance that you can then configure on the <strong>Policy Details</strong> page.</li>
+</ol>
+<p>For more information, see <a href="policy_management.htm#add_policy">Add Policy</a>.</p>
+<p><a href="#top">back to top</a></p>
 
 
-<h4 id="step_03">Step 4: Assign Policy to API in Community Manager</h4>
-<p>After you configure the policy, launch Community Manager and assign the policy:</p>
-<p>On the <strong>API Details</strong> page, select <strong>Edit</strong>, go to the <strong>Proxy</strong> page, select (for example, <strong>ApplicationSecurityUnsigned</strong>), and save the configuration.</p>
-<p><img src="images_cm_policies/edit_api_menu.jpg" alt="" /><img src="images_cm_policies/select api consumer policy.jpg" alt="" /></p>
-<p>To verify the policy is attached to the API in Policy Manager, launch the <strong>Policy Manager Management Console</strong>, go to the <strong>Services</strong> folder and select the service (API) that is added to the <strong>Community Manager</strong> portal. The policy will display in the <strong>Policy Attachments</strong> &gt; <strong>Operational</strong> section as illustrated below.</p>
-<p><img src="images_cm_policies/api_consumer_assign_policy.jpg" alt="" /></p>
+
+<h2 id="api_consumer_app_security_config">Configuring the API Consumer Application Security Policy</h2>
+<p>Once you've defined the basic policy information, you can configure the technical details that determine how the policy works when it's attached to a service.</p>
+
+<h4 id="proc_config_api_consumer_app_security">To configure an API Consumer Application Security Policy</h4>
+<ol>
+	<li>Go to <strong>Workbench</strong> &gt; <strong>Browse</strong> &gt; <strong>Organization</strong> and select the <strong>Policies</strong> &gt; <strong>Operational Policies</strong> folder. The <strong>Policies Summary</strong> is displayed.</li>
+	<li>Find the policy on the list and double-click to go to the <strong>Details</strong> page for the policy.</li>
+	<li>In the second panel, click <strong>Modify</strong> to access the <strong>Modify API Consumer Application Security Policy</strong> page.</li>
+	<li>Either choose No Signature, or specify which security option will apply. For details on field values, see <a href="#api_consumer_app_security_options">Configuring API Consumer Application Security Policy options</a> below.</li>
+	<li>If applicable, specify additional configuration values for your policy: 
+		<ul>
+			<li>Authorization header scheme</li>
+			<li>Authorization header parameters prefix</li>
+			<li>Cookie Name</li>
+			<li>Clock Skew</li>
+			<li>Character set for Decoding</li>
+			</ul>
+		<p>For details on field values, see <a href="#api_consumer_app_security_options">Configuring API Consumer Application Security Policy options</a> below.</p>
+		</li>
+	<li> When you're done, click <strong>Apply</strong>.	The policy configuration is saved.</li>
+</ol>
+<p>After you've configured your policy, you can activate it, then attach it to a web service, operation, or binding.</p>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h2 id="api_consumer_app_security_options">Configuring API Consumer Application Security Policy options</h2>
+<p>When you choose to modify the API Consumer Application Security Policy, you'll see that the <strong>No Signature</strong> option is enabled by default, as shown below. This option provides a simple header security default policy; for example, ApplicationSecurityUnsigned.</p>
+<p>Another common simple header security policy for apps in the developer portal provides SHA1-Shared Secret support; for example, ApplicationSecuritySigned. Just check the<strong> SHA1 (Shared Secret)</strong> box.</p>
+<p>You can get started using the default policy configurations, as shown below, and then expand your configuration based on your requirements.</p>
+<p><img src="images/api_consumer_security_application_v20190116.png" alt="API Consumer Application Security Policy" /></p>
+<p>On the <strong>Modify API Consumer Application Security Policy</strong> page, you can customize the policy as needed. Refer to the details below.</p>
+<dl>
+	<dt>No Signature</dt>
+	<dd>You can choose to perform authentication with no signature. If you choose this option, configuration is complete; you cannot specify any algorithm options.</dd>
+	<dt>Algorithm(s)</dt>
+	<dd>If <strong>No Signature</strong> is disabled, configure one or more authentication algorithms based on your requirements. Configure one or more authentication methods based on the protocols supported by your API.</dd>
+	<dd><strong>Note</strong>: If your API supports OAuth, the API Consumer Security Policy is not required. Instead, use the applicable policy. Refer to <a href="policy_op_oauth_security.htm">Using the OAuth Security Policy</a> or <a href="policy_op_oauth1a_security.htm">Using the OAuth 1.0a Security Policy</a>.
+		<ul>
+			<li><strong>SHA1 (Shared Secret)</strong>&#8212;SHA1 hash function.</li>
+			<li><strong>SHA1 with RSA</strong>&#8212;RSA encryption algorithms with SHA1 hash function.</li>
+			<li><strong>SHA256 with RSA</strong>&#8212;RSA encryption algorithms with SHA-256 hash function (32-bit words). </li>
+			<li><strong>HMAC SHA1</strong>&#8212;Keyed-hash message authentication code with SHA1 hash function (32-bit words).</li>
+			<li><strong>HMAC SHA256</strong>&#8212;Keyed-hash message authentication code with SHA-256 hash function. </li>
+		</ul>
+	</dd>
+	<dt>Authorization Header Scheme</dt>
+	<dd>The name of the authorization header scheme.</dd>
+	<dt>Authorization Header Parameters Prefix</dt>
+	<dd>The authorization header parameters prefix.</dd>
+	<dt>Cookie Name</dt>
+	<dd>Name of the API authentication cookie. </dd>
+	<dt>ClockSkew (in seconds)</dt>
+	<dd>Specify the clock skew (in seconds) that will be used to synchronize timestamps across hosts.</dd>
+	<dt>Character set for decoding (for query string values, defaults to UTF-8)</dt>
+	<dd><strong>Valid in version: 2019.1.16.</strong></dd>
+	<dd>If messages will contain special characters not supported by UTF-8, for example certain Scandinavian characters, use this field to specify the character set you want the policy to use. Examples: <strong>ISO8859_1</strong> or <strong>Cp1252</strong>.</dd>
+</dl>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -90,6 +123,13 @@ nav-title: API Consumer Application Security (CM)
 
 <h2 id="policy_attach">Attaching a policy</h2>
 <p>To use the policy, go to the <strong>Policies</strong> folder in the respective organization and attach the policy to a web service, binding, or binding operation.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="policy_attach_cm">Attaching a policy in the developer portal</h2>
+<p>After you configure the policy, you can assign the policy to an API implementation, in the developer portal.</p>
+<p>For instructions, see <a href="../../cm/learnmore/apiadmin_implementations.htm#api_impl_policies_how_assign">How do I assign policies to my API implementation?</a></p>
 <p><a href="#top">Back to top</a></p>
 
 
