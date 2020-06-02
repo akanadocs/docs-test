@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Using the Service Level Policy
-description: Learn how to defines conditions for measuring and reporting performance of a specific contract.
+description: Learn how to define conditions for measuring and reporting on API performance.
 product: ag
 category: learn
 sub-nav-class: Policies - QoS
@@ -10,7 +10,7 @@ type: page
 nav-title: Service Level
 ---
 <h1 id="top">Using the Service Level Policy</h1>
-<p>Learn how to define conditions for measuring and reporting performance of a specific contract.</p>
+<p>Learn how to define conditions for measuring and reporting on API performance.</p>
 <p><strong>Note</strong>: This policy does not enforce service level, and does not operate in real time. Service level is checked at intervals as defined in the policy configuration, and alerts are generated if a defined rule is violated, but this policy does not block service calls.</p>
 <p>For information about using policies in the context of the developer portal, see <a href="../../cm/learnmore/bus_admin_organizations.htm#h_business_policies">Business Policies</a>.</p>
 <hr class="divide_hr" />
@@ -34,7 +34,6 @@ nav-title: Service Level
 	<li><a href="#policy_attach">Attaching a policy</a></li>
 	<li><a href="#policy_test">Testing the Policy and Viewing Monitoring Data</a></li>
 	<li><a href="#uc_policy_qos_service_level_pm_00">Service Level Policy: use cases for Policy Manager</a></li>
-	<li><a href="#uc_policy_qos_service_level_cm">Service Level Policy: use cases for the Akana API Platform (Community Manager)</a></li>
 </ol>
 <hr class="divide_hr" />
 
@@ -45,7 +44,8 @@ nav-title: Service Level
 <p>Note that this policy measures and reports on service level. It provides metrics, but it does not block any service calls.</p>
 <p>In this policy, you can define:</p>
 <ul>
-	<li><strong>Rule (one or more)</strong>: Each rule represents a set of conditions you define to measure and report performance of a service contract. When a defined system condition matches a defined rule, an alert is raised. A <strong>Rule</strong> is composed of <strong>Rule Elements</strong> (Alert Code, Metric, Operator, Value, Units, and Interval) that you can configure to meet your service monitoring requirements.</li>
+	<li><strong>Rule (one or more)</strong>: Each rule represents a set of conditions you define to measure and report performance of a service contract. When a defined system condition matches a defined rule, an alert is raised. A <strong>Rule</strong> is composed of <strong>Rule Elements</strong> (Alert Code, Metric, Operator, Value, Units, and Interval) that you can configure to meet your service monitoring requirements.
+	<p><strong>Note</strong>: To see the alerts in Policy Manager: <strong>Policy Manager</strong> &gt; <strong>Workbench</strong>. Alerts are not displayed in the developer portal, but you can see the behavior with regard to whether messages are allowed or limited by attaching a Detailed Auditing policy to the API and reviewing the metrics and logs.</p></li>
 	<li><strong>Access time</strong>: Defines the time periods during which the policy is enforced. You can define access time periods uniquely for each day of the week&#8212;all day, or a start/end range (HH:MM)&#8212;and the time zone.</li>
 </ul>
 	<p>Here's how it works:</p>
@@ -55,12 +55,17 @@ nav-title: Service Level
 		<p>The platform uses the time frame specified in the policy rule (see <a href="#fielddef_interval">Interval</a> below). For example:</p>
 		<ul>
 			<li>A rule limit of 5 faults per hour is checked each hour, on the hour.</li>
-			<li>A limit of 100 transactions per 15 minutes is checked on the quarter-hour (for example, 1:00. 1:15, 1:30, 1:45).</li>
+			<li>A limit of 100 transactions per 15 minutes is checked on the quarter-hour (for example, 1:00, 1:15, 1:30, 1:45).</li>
 		</ul>
 		</li>
 	
 		<li><strong>Alert</strong>: If a rule has been violated for the specified interval, an alert is generated.</li>
-		<li><strong>&quot;Clearing&quot; Alert</strong>: At the next scheduled interval, the rule is checked again. If the rule is still exceeded, no action is taken. If the rule limit is no longer exceeded, an alert is generated to notify users that the violation is over.</li>
+		<li><strong>&quot;Clearing&quot; Alert</strong>: At the next scheduled interval, the rule is checked again. The platform applies the following logic:
+			<ul>
+				<li>If the message count is still exceeded, no action is taken; there is no additional alert, but the alert is not cleared.</li>
+				<li>If a rule is no longer exceeded, the Service Level Policy generates a &quot;<strong>Clearing</strong>&quot; alert  to notify users that the violation is over.</li>
+			</ul>
+		</li>
 	</ol>
 	<p><a href="#top">back to top</a></p>
 
@@ -88,11 +93,11 @@ nav-title: Service Level
 <ol>
 	<li>Create the policy as covered above.</li>
 	<li>At the <strong>Policies Summary</strong> page, in the <strong>Service Level Policy</strong> section, click <strong>Modify</strong>. The <strong>Modify Service Level Policy Rules</strong> page appears, as shown below.
-		<p><img src="images/qos_service_level_modifyrules.png" alt="QoS Service Level policy: Modify Service Level Policy Rules" /></p>
+		<p><img src="images/service_level_modifyrules.png" alt="QoS Service Level policy: Modify Service Level Policy Rules" /></p>
 	</li>
 	<li>Add one or more rules, as needed. For information about the fields, refer to <a href="#service_level_policy_config_rules">Configuring Service Level Policy Rules</a> below.</li>
 	<li>Click <strong>Next</strong>. The <strong>Modify Service Level Policy Access Time</strong> page appears, as shown below.
-	<p><img src="images/qos_service_level_modifyaccesstime.png" alt="QoS Service Level policy: Modify Service Level Policy Access Time" /></p></li>
+	<p><img src="images/service_level_modifyaccesstime.png" alt="QoS Service Level policy: Modify Service Level Policy Access Time" /></p></li>
 	<li>Configure values for the access times, for each day of the week, and specify time zone. For information about the fields, refer to <a href="#service_level_policy_config_access_time_options">Configuring Security Level Policy Access Time options</a> below.</li>
 	<li>When done, click <strong>Finish</strong>.</li>
 	<li>At the <strong>Completion Summary</strong> page, click <strong>Close</strong>.</li>
@@ -116,7 +121,7 @@ nav-title: Service Level
 		<td>Alert Code</td>
 		<td><p>The Alert Code identification number that represents the alert that is sent when the defined condition is met.</p>
 			<p>Choose from the drop-down list or manually enter an alert code.</p>
-			<p><img src="images/qos_service_level_alertcode.png" alt="Service Level Policy: Alert Code field" /></p></td>
+			<p><img src="images/service_level_alertcode.png" alt="Service Level Policy: Alert Code field" /></p></td>
 	</tr>
 	<tr>
 		<td>Metric</td>
@@ -135,7 +140,7 @@ nav-title: Service Level
 	<tr>
 		<td>Operator</td>
 		<td><p>A symbol representing a mathematical function, such as &gt; (greater than) or &lt;+ (less than or equal to), used to limit or expand your search to qualify the metric. Available values are shown below.</p>
-			<p><img src="images/qos_service_level_sla_operator.jpg" alt="Service Level Policy Metrics" /></p></td>
+			<p><img src="images/service_level_sla_operator.jpg" alt="Service Level Policy Metrics" /></p></td>
 	</tr>
 	<tr>
 		<td>Value</td>
@@ -144,12 +149,12 @@ nav-title: Service Level
 	<tr>
 		<td>Units</td>
 		<td><p>The unit measure by which the value is counted. Available values are: <strong>milliseconds</strong>, <strong>seconds</strong>, <strong>minutes</strong>, <strong>hours</strong>, <strong>days</strong>, as shown below.</p>
-			<p><img src="images/qos_service_level_sla_units.jpg" alt="Service Level Policy Units" /></p></td>
+			<p><img src="images/service_level_sla_units.jpg" alt="Service Level Policy Units" /></p></td>
 	</tr>
 	<tr>
 		<td id="fielddef_interval">Interval</td>
 		<td><p>The time interval over which the rule is measured. Available values, as shown below: <strong>Any</strong>, <strong>15 minutes</strong>, <strong>1 hour</strong>, <strong>1 day</strong>, <strong>1 week</strong>, <strong>1 month</strong>.</p>
-			<p><img src="images/qos_service_level_sla_interval.jpg" alt="Service Level Policy Intervals" /></p></td>
+			<p><img src="images/service_level_sla_interval.jpg" alt="Service Level Policy Intervals" /></p></td>
 	</tr>
 </table>
 
@@ -308,114 +313,6 @@ nav-title: Service Level
 	<li>Activate the policy in the Policy Workflow portlet and attach it to the Vs1 service in the <strong>Service Details</strong> &gt; <strong>Policy Attachments</strong> &gt; <strong>QoS</strong> section.	</li>
 </ol>
 <p>If there are more than 300 hits for a service in the interval that was configured, in this case 15 minutes, the SLA alert is triggered at the beginning of the next 15-minute interval.</p>
-<p><a href="#top">Back to top</a></p>
-
-
-
-<h2 id="uc_policy_qos_service_level_cm">Service Level Policy: use cases for the Akana API Platform (Community Manager)</h2>
-<p>This section provides a list of Community Manager-specific usage scenarios for the Service Level Policy. It includes:</p>
-<ol>
-	<li><a href="#uc_policy_qos_service_level_cm_00">Add / Configure Service Level Policy</a></li>
-	<li><a href="#uc_policy_qos_service_level_cm_01">Scenario 1: Verify Service Level Policy Alerts at the Service Level</a></li>
-	<li><a href="#uc_policy_qos_service_level_cm_02">Scenario 2: Verify Service Level Policy Alerts at the Contract Level</a></li>
-	<li><a href="#uc_policy_qos_service_level_cm_03">Scenario 3: Verify Service Level Policy Alerts at the License>Term Level</a></li>
-</ol>
-
-
-
-<h3 id="uc_policy_qos_service_level_cm_00">Add / Configure Service Level Policy</h3>
-<p>If you are using a Service Level Policy with Community Manager, you must first add the policy to the Community Manager Tenant Organization in Policy Manager. Once that's done, it will be available for selection in the developer portal.</p>
-<ol>
-	<li>In the <strong>Policy Manager Management Console</strong>, go to the Tenant Organization, choose <strong>Policies</strong> &gt; <strong>QoS Policies</strong>, and then click <strong>Add Policy</strong>.
-		<p><img src="images/service_level_uc_cm_01.jpg" alt="" /></p></li>
-	<li>Specify Policy Name, Policy Type (Service Level Policy), click <strong>Finish</strong>, and then click <strong>Close</strong>.
-	<p><img src="images/service_level_uc_cm_02.jpg" alt="" /></p>
-	<p><img src="images/service_level_uc_cm_03.jpg" alt="" /></p></li>
-	<li>On the Service Level Policy Details screen, click <strong>Modify</strong>.
-	<p><img src="images/service_level_uc_cm_04.jpg" alt="" /></p>
-	<p><strong>Note</strong>: You can use custom defined alert codes or predefined Policy Manager alert codes when configuring the Service Level Policy. You can add a custom alert code in the <strong>Alerts</strong> &gt; <strong>Alert Codes</strong> section as shown below:</p>
-<p><img src="images/service_level_uc_cm_05.jpg" alt="" /></p></li>
-	<li>Review the metrics that are available for Service Level Policy configuration, and configure the metrics based on your requirements.
-		<p><img src="images/service_level_uc_cm_06.jpg" alt="" /></p>
-	<p>For example, we will use the Usage Count metric in the use case below. Click <strong>Next</strong> to continue.</p>
-<p><img src="images/service_level_uc_cm_07.jpg" alt="" /></p></li>
-	<li>Configure <strong>Access Day</strong> and Access Time, click <strong>Finish,</strong> and then click <strong>Close</strong>.
-<p><img src="images/service_level_uc_cm_08.jpg" alt="" /></p>
-	<p><img src="images/service_level_uc_cm_09.jpg" alt="" /></p></li>
-	<li>Activate the policy.
-		<p><img src="images/service_level_uc_cm_10.jpg" alt="" /></p></li>
-</ol>
-
-
-<h3 id="uc_policy_qos_service_level_cm_01">Scenario 1: Verify Service Level Policy Alerts at the Service Level</h3>
-<ol>
-	<li>Launch Community Manager.</li>
-	<li>Go to <strong>API Details</strong> &gt; <strong>Edit API</strong> &gt; <strong>Proxy Section</strong> &gt; <strong>Advanced Options</strong> and attach the following policies:
-		<ol>
-			<li>In the Quality of Service Policies section, attach Service Level Policy.</li>
-			<li>In the Operational Policies section, attach Atmosphere Application Security Policy (No Signature) and Detailed Auditing.
-			</li>
-		</ol>
-
-	<p><img src="images/service_level_uc_cm_11.jpg" alt="" /></p></li>
-	<li>Go to the app that is connected with the above API (App &gt; Test Client) and send more than 5 requests. Result: When a policy condition matches a defined rule, an alert is raised in Policy Manager &gt; Registry Level, as shown below.
-		<p><strong>Note</strong>: These alerts are not supported in the Community Manager Dashboard.</p>
-		<p><img src="images/service_level_uc_cm_12.jpg" alt="" /></p></li>
-	<li>In Policy Manager, select <strong>View Alert</strong> and review the alerts.
-		<p><img src="images/service_level_uc_cm_13.jpg" alt="" /></p>
-		<p><img src="images/service_level_uc_cm_14.jpg" alt="" /></p></li>
-</ol>
-
-
-<h3 id="uc_policy_qos_service_level_cm_02">Scenario 2: Verify Service Level Policy Alerts at the Contract Level</h3>
-<p>While requesting API Access, select the Service Level Policy checkbox and finish the process. Make sure the contract is activated.</p>
-<p><strong>Note</strong>: This scenario assumes that the <strong>Atmosphere Application Security Policy</strong> is attached to the API implementation (API &gt; Implementation &gt; Policies).</p>
-<ol>
-	<li>Go to <strong>App</strong> &gt; <strong>Test Client</strong> and send more than 5 requests.</li>
-	<li>When a policy condition matches a defined rule, an alert is raised in the <strong>Policy Manager</strong> &gt; <strong>Registry</strong> level.
-<p><img src="images/service_level_uc_cm_16.jpg" alt="" /></p>
-		<p><img src="images/service_level_uc_cm_17.jpg" alt="" /></p>
-	<p>After a 1 min interval, the SLA will be cleared.</p>
-		<p><img src="images/service_level_uc_cm_18.jpg" alt="" /></p>
-		<p><img src="images/service_level_uc_cm_19.jpg" alt="" /></p>
-	<p>Alert in Community Manager Dashboard:</p>
-		<p><img src="images/service_level_uc_cm_20.jpg" alt="" /></p></li>
-</ol>
-
-
-
-<h3 id="uc_policy_qos_service_level_cm_03">Scenario 3: Verify Service Level Policy Alerts at the License &gt; Term Level</h3>
-<ol>
-	<li>Launch Community Manager.</li>
-	<li>While adding an API, select the <strong>Use Licenses</strong> check box.
-<p><img src="images/service_level_uc_cm_21.jpg" alt="" /></p></li>
-	<li>Go to <strong>Administration</strong> &gt; <strong>Scopes</strong> and click <strong>Add Scope</strong>. Provide details based on your requirement and save.
-		<p><img src="images/service_level_uc_cm_22.jpg" alt="" /></p>
-	<p><img src="images/service_level_uc_cm_23.jpg" alt="" /></p></li>
-	<li>Go to Licenses and click <strong>Add License</strong>.
-<p><img src="images/service_level_uc_cm_24.jpg" alt="" /></p></li>
-	<li>Provide details based on your requirements and click Next.
-	<p><img src="images/service_level_uc_cm_25.jpg" alt="" /></p></li>
-	<li>Click <strong>Add Term</strong>.
-<p><img src="images/service_level_uc_cm_26.jpg" alt="" /></p></li>
-	<li>Select Scope and click <strong>Next</strong>.
-<p><img src="images/service_level_uc_cm_27.jpg" alt="" /></p></li>
-	<li>Attach QoS Policies &gt; Service Level Policy at the Terms level, and click <strong>Next</strong>.
-<p><img src="images/service_level_uc_cm_28.jpg" alt="" /></p></li>
-	<li>Upload Legals (if required) and click <strong>Finish</strong>.
-	<p><img src="images/service_level_uc_cm_29.jpg" alt="" /></p>
-	<p>The license is now configured with the QoS Policy attachment at the Terms Level.</p>
-	<p><img src="images/service_level_uc_cm_30.jpg" alt="" /></p></li>
-	<li>Next, we have to use this scope in API &gt; Scope Mapping. Go to the API and click <strong>Scope Mapping</strong>.
-<p><img src="images/service_level_uc_cm_31.jpg" alt="" /></p></li>
-	<li>Map your scope at Operation level or at API level. Select Scope, then confirm and save changes.
-		<p><img src="images/service_level_uc_cm_32.jpg" alt="" /></p></li>
-	<li>Now request API Access for this API. While requesting API access, select the license that is attached to the QoS Policy at the Terms level.
-		<p><img src="images/service_level_uc_cm_33.jpg" alt="" /></p></li>
-	<li>Next, Go to Test Client and send more that 5 requests to meet the defined Service Level Policy rule.
-	<p>The following alert will display in the Community Manager Dashboard:</p>
-	<p><img src="images/service_level_uc_cm_34.jpg" alt="" /></p></li>
-</ol>
 <p><a href="#top">Back to top</a></p>
 
 
