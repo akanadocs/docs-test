@@ -66,15 +66,15 @@ nav-title: SAML Overview
 <p>As with other SSO solutions, SAML provides authentication and verification of end-users via the SAML Web Browser SSO Profile, so that applications can outsource this critical, sensitive, and complex task. At a high level, the exchange of information is as follows:</p>
 <ol>
 	<li>The end-user requests a service from an app.
-  <p>App = Service Provider; provides service to the end-user. Corresponds to Relying Party role in OpenID Connect; relies on the Identity Provider for verification of the user's identity.</p></li>
+	<p>App = Service Provider; provides service to the end-user. Corresponds to Relying Party role in OpenID Connect; relies on the Identity Provider for verification of the user's identity.</p></li>
 	<li>Before providing the service to the user, the app must authenticate the user. To do this, the app redirects the user to a supported SAML Identity Provider (IdP) of the end-user's choosing. The IdP:
-    <ol>
-    	<li>Requests authentication information from the user.</li>
-    	<li>Verifies the information.</li>
-    	<li>Logs the user in.</li>
-    	<li>Redirects the user back to the app.</li>
-    </ol>
-  <p>The Identity Provider provides user authentication services to the Service Provider. This role corresponds to the Asserting Party role in OpenID Connect. The Identity Provider sends the authentication information in the form of an XML document called a SAML Assertion.</p></li>
+		<ol>
+			<li>Requests authentication information from the user.</li>
+			<li>Verifies the information.</li>
+			<li>Logs the user in.</li>
+			<li>Redirects the user back to the app.</li>
+		</ol>
+	<p>The Identity Provider provides user authentication services to the Service Provider. This role corresponds to the Asserting Party role in OpenID Connect. The Identity Provider sends the authentication information in the form of an XML document called a SAML Assertion.</p></li>
 	<li>The app delivers the service to the end-user.</li>
 </ol>
 <p>Of course, before being able to authenticate their users via a SAML Identity Provider, the app must first set up an account with the SAML Identity Provider.</p>
@@ -86,8 +86,8 @@ nav-title: SAML Overview
 
 <h2 id="s01_04">How SAML web browser SSO profile works: behind the scenes</h2>
 <p>As part of the SAML Web Browser SSO Profile standard, the Service Provider defines a metadata file which includes information and settings that allow the Service Provider and the Identity Provider to validate each other's messages.</p>
-<p>Once you've chosen your SAML Identity Provider, you create a Service Provider account with the IdP. In the context of the platform, since the platform is acting as your Service Provider, some of the values you specify are determined by your own choices and some values are determined by the platform and what it supports. Once you provide values and make choices, the Identity Provider generates a metadata XML file that includes values relevant to messages from the Identity Provider to the platform (as your Service Provider). For an example, see <a href="04_req_resp_metadata.htm#s04_05">Sample Metadata File: Identity Provider</a>.</p>
-<p>In the same way, you create a domain in Policy Manager for the Identity Provider. Here, you provide values relevant to the Identity Provider and values you specify with the Identity Provider, such as the <a href="08_glossary.htm#gl_attributes">attributes</a> you will use to identify your users with the Identity Provider. For example, you might use <strong>firstname</strong>, <strong>lastname</strong>, and <strong>emailaddress</strong>, or you might use <strong>username</strong> and <strong>password</strong>. Once you've set up this information, the platform generates a metadata XML file that includes values relevant to messages from the Identity Provider to the Service Provider. For an example, see <a href="04_req_resp_metadata.htm#s04_06">Sample Metadata File: Service Provider</a>.</p>
+<p>Once you've chosen your SAML Identity Provider, you create a Service Provider account with the IdP. In the context of the platform, since the platform is acting as your Service Provider, some of the values you specify are determined by your own choices and some values are determined by the platform and what it supports. Once you provide values and make choices, the Identity Provider generates a metadata XML file that includes values relevant to messages from the Identity Provider to the platform (as your Service Provider)<!--{<span class="apidoc_red">DK ATMO-21360: Query this section and next para, they are both the same. Surely one should be different?</span>}-->. For an example, see <a href="04_req_resp_metadata.htm#s04_05">Sample Metadata File: Identity Provider</a>.</p>
+<p>In the same way, you create a domain in Policy Manager for the Identity Provider. Here, you provide values relevant to the Identity Provider and values you specify with the Identity Provider, such as the <a href="08_glossary.htm#gl_attributes">attributes</a> you will use to identify your users with the Identity Provider. For example, you might use <strong>firstname</strong>, <strong>lastname</strong>, and <strong>emailaddress</strong>, or you might use <strong>username</strong> and <strong>password</strong>. Once you've set up this information, the platform generates a metadata XML file that includes values relevant to messages from the Identity Provider to the Service Provider<!--{<span class="apidoc_red">DK ATMO-21360: Query this section and previous para, they are both the same. Surely one should be different?</span>}-->. For an example, see <a href="04_req_resp_metadata.htm#s04_06">Sample Metadata File: Service Provider</a>.</p>
 <p>This exchange of information via metadata sets the groundwork for the establishment of mutual trust and secure exchange of information between the two parties. Validation, encryption, and decryption go on in the background and are transparent to the user, as shown in the diagram below.</p>
 <p>In some cases, such as with SSO Circle, the IdP publishes a generic metadata file. In other cases, such as PingFederate, the IdP metadata file is customized for each account. The Service Provider metadata file is always custom; when configuring your account with the IdP, you must provide the metadata file or configure the values manually.</p>
 <p><a href="#top">Back to top</a></p>
@@ -98,23 +98,22 @@ nav-title: SAML Overview
 <p>The sequence diagram below shows the basic exchange of information between the consumer (via the User-Agent), the Service Provider, and the Identity Provider when the SAML Web Browser SSO profile is used for single sign-on.</p>
 <p><strong>Note</strong>: The diagram below is general to SAML. For specific options supported, refer to <a href="02_platform_saml_support.htm#s02_02">Supported SAML bindings for single sign-on</a>.</p>
 <p><img src="images/01_SAML_Diagram_06b.jpg" alt="SAML diagram" /></p>
-
 <p>In the above:</p>
 <ol>
 	<li><strong>Redirect to Identity Provider for SSO Service</strong>: Service Provider sends
 {<strong>AuthnRequest</strong>} request (authentication request) to Identity Provider. Three bindings are offered by the SAML specification:
 <ul>
-    	<li>HTTP POST. Sends the message content as a POST parameter in the payload. For more information, see <a href="08_glossary.htm#gl_http_post">HTTP POST</a>.</li>
-    	<li>HTTP Redirect. Redirects the user to the Identity Provider for login. Sends the message content in the URL. For more information, see <a href="08_glossary.htm#gl_http_redirect">HTTP Redirect</a>.</li>
-    	<li>HTTP Artifact (not currently supported by the Akana solution). Instead of sending the message content, sends a SAML Artifact to the content so the Identity Provider can retrieve it from an Artifact Resolution Service. For more information, see <a href="08_glossary.htm#gl_http_artifact">HTTP Artifact</a>.</li>
-      </ul>
-    </li>
+			<li>HTTP POST. Sends the message content as a POST parameter in the payload. For more information, see <a href="08_glossary.htm#gl_http_post">HTTP POST</a>.</li>
+			<li>HTTP Redirect. Redirects the user to the Identity Provider for login. Sends the message content in the URL. For more information, see <a href="08_glossary.htm#gl_http_redirect">HTTP Redirect</a>.</li>
+			<li>HTTP Artifact (not currently supported by the Akana solution). Instead of sending the message content, sends a SAML Artifact to the content so the Identity Provider can retrieve it from an Artifact Resolution Service. For more information, see <a href="08_glossary.htm#gl_http_artifact">HTTP Artifact</a>.</li>
+			</ul>
+		</li>
 	<li><strong>Redirect to Service Provider with SAML Assertion</strong>: Identity Provider sends {<strong>Response</strong>} message to Service Provider. Two bindings offered by the SAML specification:
 <ul>
-    	<li>HTTP POST</li>
-    	<li>HTTP Artifact</li>
-    </ul>
-    </li>
+			<li>HTTP POST</li>
+			<li>HTTP Artifact</li>
+		</ul>
+		</li>
 </ol>
 <p><a href="#top">Back to top</a></p>
 
@@ -140,6 +139,7 @@ nav-title: SAML Overview
 <div class="relatedlinks">
 <ul>
 	<li><a href="00_overview_doc.htm">SAML Doc Table of Contents</a></li>
+<!--	<li><a href="01_overview_saml.htm">Overview of SAML</a></li>-->
 	<li><a href="02_platform_saml_support.htm">SAML Web Browser SSO Support</a></li>
 	<li><a href="03_saml_setup.htm">Setting Up the SAML Web Browser SSO Feature</a></li>
 </ul>
