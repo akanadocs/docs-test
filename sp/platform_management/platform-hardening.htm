@@ -56,9 +56,11 @@ nav-title: Platform Hardening
 		<li><a href="#disallowing_user_profile_modification">Disallowing User Profile Modification</a></li>
 		<li><a href="#configuring_account_login_rules">Configuring Account Login Rules</a></li>
 		<li><a href="#configuring_password_complexity_rules">Configuring Password Complexity Rules</a></li>
-		<li><a href="#malicious_pattern_policy_on_apis">Adding the Malicious Pattern Detection policy to upload APIs</a></li>
-		<li><a href="#comments_limit_file_type">Limiting file type for upload in comments</a></li>
-	</ul></li>
+		<li><a href="#malicious_pattern_policy_on_apis">Adding the Malicious Pattern Detection policy to developer portal APIs that support file upload</a></li>
+		<li><a href="#comments_limit_file_type">Limiting file types allowed for upload</a></li>
+		<li><a href="#cm_security_whitelisting">Enforcing whitelisting for cross-site scripting prevention</a> (2019.1.11 and later)</li>
+	</ul>
+	</li>
 </ol>
 <hr class="divide_hr" />
 
@@ -77,7 +79,7 @@ nav-title: Platform Hardening
 
 <h3 id="install_network_director_on_a_separate_container">Install Network Director on a Separate Container</h3>
 <p>API traffic processing should be handled separately from Web traffic and Admin traffic. To this end, the Network Director should not be installed on the same container as Community Manager, or Policy Manager features:</p>
-<p><img src="../images/ph_201800_hardening_admin_console.png" alt="Akana Administration Console" title="Akana Administration Console" /></p>
+<p><img src="images/ph_201800_hardening_admin_console.png" alt="Akana Administration Console" title="Akana Administration Console" /></p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -310,7 +312,7 @@ https.socket.factory.cipherSuites=TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_
 <p>In the Akana Administration Console, the Administrator can limit the scripting languages supported by the API platform. For example, you could choose not to support Jython. Limiting the supported scripting languages helps close the door on possible malignant efforts to hack the system using those scripting languages.</p>
 <p>For maximum security, limit this setting to <strong>js</strong> only.</p>
 <p>The setting is in the Akana Administration Console: <strong>Configuration</strong> &gt; <strong>com.soa.script.framework</strong>, as shown below.</p>
-<p><img src="../images/ph_84_limit_scripting_language.jpg" alt="Limit the scripting language allowed" /></p>
+<p><img src="images/ph_84_limit_scripting_language.jpg" alt="Limit the scripting language allowed" /></p>
 <p>By default, all scripting languages supported by the platform are shown, as comma-separated values. To update, remove one or more values and click <strong>Apply Changes</strong>.</p>
 <p><a href="#top">back to top</a></p>
 
@@ -322,7 +324,7 @@ https.socket.factory.cipherSuites=TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_
 <p>You can prevent forward proxying:</p>
 <ul>
 	<li>Via the developer portal user interface: <strong>Administration</strong> &gt; <strong>Site</strong>, as shown below. Changing this setting in the user interface affects all containers for the installation.
-	<p><img src="../images/ph_84_limit-forward-proxy.jpg" alt="Limit forward proxy setting" /></p></li>
+	<p><img src="images/ph_cm_site_limit_forward_proxy.png" alt="Limit forward proxy setting" /></p></li>
 	<li>In the Akana Administration Console for each container. Configure the following setting:
 		<pre>com.soa.atmosphere.forwardproxy -&gt;
 forward.proxy.allowedHosts=&lt;Network Director Host(s) and/or Load Balancer host&gt;</pre></li>
@@ -336,7 +338,6 @@ forward.proxy.allowedHosts=&lt;Network Director Host(s) and/or Load Balancer hos
 <p>Configure a translation of the X-Forwarded-Host header.</p>
 <p><strong>Scope</strong>: Network Director Containers</p>
 <p>In the Akana Administration Console, configure the following:</p>
-
 <pre>com.soa.http.client.core ->
 header.formatter.interceptor.templates=replace=X-Forwarded-Host:{host}</pre>
 <p><a href="#top">back to top</a></p>
@@ -358,10 +359,10 @@ com.soa.api.security.cache.refreshTime=300000</pre>
 <p>The Anti-Virus Policy scans for files that are uploaded from the Community Manager Portal.</p>
 <p><strong>Scope</strong>: All Community Manager Containers</p>
 <p>In the Policy Manager Console, create an Anti-Virus Operational Policy and configure the policy.</p>
-<p><img src="../images/ph_84_modify-av-policy.png" alt="Create Anti Virus Policy" title="Create Anti Virus Policy" /></p>
+<p><img src="images/ph_84_modify-av-policy.png" alt="Create Anti Virus Policy" title="Create Anti Virus Policy" /></p>
 <p>Attach this policy to the ConsoleResourceAPIService and the ContentAPIService in the Policy Manager &gt; Community Manager node in the Policy Manager Console Organization tree. 
 </p>
-<p><img src="../images/ph_84_attach-av-policy.png" alt="Attach Anti Virus Policy" title="Attach Anti Virus Policy" /></p>
+<p><img src="images/ph_84_attach-av-policy.png" alt="Attach Anti Virus Policy" title="Attach Anti Virus Policy" /></p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -377,7 +378,7 @@ org.owasp.csrfguard.Enabled=true</pre>
 	<li><strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong> &gt; <strong>CSRF Support for Read Requests</strong></li>
 	<li><strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong> &gt; <strong>CSRF Support for Write Requests</strong></li>
 </ul>
-<p><img src="../images/ph_84_enable-csrf-support.png" alt="Enable CSRF Support" title="Enable CSRF Support" /></p>
+<p><img src="images/ph_84_enable-csrf-support.png" alt="Enable CSRF Support" title="Enable CSRF Support" /></p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -450,7 +451,7 @@ xFrameOptions=[DESIRED HEADER]</pre>
 <pre>com.soa.framework.xsl.transform -&gt;
 java.extension.enabled=false</pre>
 <p>In the Akana Administration Console:</p>
-<p><img src="../images/ph_8413_xslt.jpg" alt="java.extension.enabled setting" /></p>
+<p><img src="images/ph_8413_xslt.jpg" alt="java.extension.enabled setting" /></p>
 <p>By default, this is set to <strong>false</strong>, to disallow XSLT transformation.</p>
 <p><a href="#top">back to top</a></p>
 
@@ -466,8 +467,9 @@ java.extension.enabled=false</pre>
 	<li><a href="#disallowing_user_profile_modification">Disallowing User Profile Modification</a></li>
 	<li><a href="#configuring_account_login_rules">Configuring Account Login Rules</a></li>
 	<li><a href="#configuring_password_complexity_rules">Configuring Password Complexity Rules</a></li>
-	<li><a href="#malicious_pattern_policy_on_apis">Adding the Malicious Pattern Detection policy to upload APIs</a></li>
-	<li><a href="#comments_limit_file_type">Limiting file type for upload in comments</a></li>
+	<li><a href="#malicious_pattern_policy_on_apis">Adding the Malicious Pattern Detection policy to developer portal APIs that support file upload</a></li>
+	<li><a href="#comments_limit_file_type">Limiting file types allowed for upload</a></li>
+	<li><a href="#cm_security_whitelisting">Enforcing whitelisting for cross-site scripting prevention</a> (2019.1.11 and later)</li>
 </ul>
 
 
@@ -475,7 +477,7 @@ java.extension.enabled=false</pre>
 <p>User Account Enumeration occurs when the Community Manager user interface provides direct feedback to a user during the signup and registration processes to the effect that a user account already exists or is already registered. If this is turned off, no useful feedback is provided to the user, minimizing the security risk, but decreasing usability.</p>
 <p><strong>Scope</strong>: All Community Manager Containers</p>
 <p>In Community Manager, choose <strong>Admin</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong> &gt; <strong>Allow User Enum</strong>:</p>
-<p><img src="../images/ph_84_allow-user-enum.png" alt="Allow User Enumeration" title="Allow User Enumeration" /></p>
+<p><img src="images/ph_cm_settings_security_enum.png" alt="Allow User Enumeration" title="Allow User Enumeration" /></p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -484,10 +486,10 @@ java.extension.enabled=false</pre>
 <p>Challenge Questions/Answers are often required to increase security around password reset. When signing up to the platform, the user must provide the answer to one or more security questions, if the platform is set up to require them. The user's answers are stored in the database, and the user must answer one or more security questions on demand to perform certain functions such as resetting a password or changing the user profile.</p>
 <p>
 In Community Manager, choose <strong>Admin</strong> &gt; <strong>Settings</strong> &gt; <strong>Users</strong> &gt; <strong>Enforce Challenge Questions on Login</strong>:</p>
-<p><img src="../images/ph_84_user-settings.jpg" alt="User Settings" /></p>
+<p><img src="images/ph_cm_settings_user_challenge_questions.png" alt="User Settings" /></p>
 <p>Set <strong>Enforce Challenge Questions on Login</strong> to <strong>Enabled</strong>.</p>
 <p>Additional settings can be found under <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong>:</p>
-<p><img src="../images/ph_84_encrypt-challenge-answers.png" alt="Encrypt Challenge Answers" title="Encrypt Challenge Answers" /></p>
+<p><img src="images/ph_cm_settings_security_challenge_questions.png" alt="Encrypt Challenge Answers" title="Encrypt Challenge Answers" /></p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -497,7 +499,7 @@ In Community Manager, choose <strong>Admin</strong> &gt; <strong>Settings</stron
 <p>For each security question set up in the developer portal, as well as specifying the actual question, the Site Admin can configure constraints such as minimum and maximum number of letters, numbers, and special characters allowed or required in the answers, whether answers are case-sensitive, and whether spaces are allowed.</p>
 <p>The Site Admin can delete questions; however, if any users have already set up answers to questions that are then deleted, those questions and answers are still available for account verification purposes.</p>
 <p>Security question settings can be found under <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Challenges</strong>:</p>
-<p><img src="../images/ph_846_security_config.jpg" alt="Configuring constraints on security challenge answers" /></p>
+<p><img src="images/ph_846_security_config.jpg" alt="Configuring constraints on security challenge answers" /></p>
 <p><strong>Note</strong>: In the developer portal, the security challenge feature doesn't allow users to give the same answer twice. This is a precaution against users being lazy and using a default value, which is less secure, rather than setting up authentic answers to the questions.</p>
 <p>For more information about configurable settings in the developer portal, see <a href="../../cm/learnmore/site_admin_settings.htm">Site Resource Settings</a> (Site Admin help).</p>
 <p><a href="#top">back to top</a></p>
@@ -508,7 +510,7 @@ In Community Manager, choose <strong>Admin</strong> &gt; <strong>Settings</stron
 <p>User Profile Modification permits a user access to their own profile for modification. In some circumstances, you may wish to prevent this (e.g. when user accounts are pre-provisioned).</p>
 <p><strong>Scope</strong>: All Community Manager Containers</p>
 <p>In Community Manager, User Profile Modification configuration can be found under <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong>:</p>
-<p><img src="../images/ph_84_user-profile-modification.png" alt="User Profile Modification" title="User Profile Modification" /></p>
+<p><img src="images/ph_cm_settings_security_user_modify_profile.png" alt="User Profile Modification" title="User Profile Modification" /></p>
 <p><a href="#top">back to top</a></p>
 
 
@@ -519,7 +521,7 @@ In Community Manager, choose <strong>Admin</strong> &gt; <strong>Settings</stron
 <p>Login policies can be set:</p>
 <ul>
 	<li>Via the developer portal user interface: <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Login</strong>, as shown below.
-	<p><img src="../images/ph_84_login-policy.jpg" alt="Login Policy page" /></p>
+	<p><img src="images/ph_cm_settings_login.png" alt="Login Policy page" /></p>
 	</li>
 	<li>Via an <a href="../../cm/api/businesses/m_businesses_updateLoginPolicy.htm">API call</a> into the system.</li>
 </ul>
@@ -533,14 +535,14 @@ In Community Manager, choose <strong>Admin</strong> &gt; <strong>Settings</stron
 <p>Password rules can be set:</p>
 <ul>
 	<li>Via the developer portal user interface: <strong>Administration</strong> &gt; <strong>Settings</strong> &gt; <strong>Password</strong>, as shown below.
-	<p><img src="../images/ph_84_password-policy.jpg" alt="Login Policy page" /></p></li>
+	<p><img src="images/ph_cm_settings_password_policy.png" alt="Password Policy page" /></p></li>
 	<li>Via an <a href="../../cm/api/businesses/m_businesses_updatePasswordPolicy.htm">API call</a> into the system.</li>
 </ul>
 <p><a href="#top">back to top</a></p>
 
 
 
-<h3 id="malicious_pattern_policy_on_apis">Adding the Malicious Pattern Detection policy to upload APIs</h3>
+<h3 id="malicious_pattern_policy_on_apis">Adding the Malicious Pattern Detection policy to developer portal APIs that support file upload</h3>
 <p>It's a good idea to attach the HTTP Malicious Pattern Detection Policy to all developer portal APIs that support upload. This provides a layer of protection against upload of malicious content.</p>
 <p>The following services in the Akana API Platform API include operations that support upload:</p>
 <ul>
@@ -567,17 +569,30 @@ In Community Manager, choose <strong>Admin</strong> &gt; <strong>Settings</stron
 <ol>
 	<li>Define the policy. For information about this policy, see <a href="../../ag/policies/policy_op_http_malicious_pattern_detection.htm">Using the HTTP Malicious Pattern Detection Policy</a>.</li>
 	<li>In Policy Manager, in the Organization Tree, locate your Akana API Platform services. An example is shown below.
-	<p><img src="../images/ph_201800_services.jpg" alt="Locating CM services in PM" /></p></li>
+	<p><img src="images/ph_201800_services.jpg" alt="Locating CM services in PM" /></p></li>
 	<li>Click through to the applicable service. In the <strong>Policy Attachments</strong>, <strong>Operational</strong> section, click <strong>Manage</strong>.</li>
 	<li>Add the policy and save your changes.</li>
 </ol>
 <p><a href="#top">back to top</a></p>
 
 
-<h3 id="comments_limit_file_type">Limiting file type for upload in comments</h3>
+<h3 id="comments_limit_file_type">Limiting file types allowed for upload</h3>
 <h4 class="stamp">Valid in Version: 2019.1.0 and later</h4>
-<p> In the developer portal, you can restrict the media types allowed for uploading to comments, discussions, tickets, alerts, or reviews. The default allows any media type.</p>
-<p>This setting is configured by the Site Admin. Choose <strong>More</strong> &gt; <strong>Admin</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong> &gt; <strong>Limit file types allowed for upload to comments</strong>:</p>
-<p><img src="../images/ph_201910_limit_file_types.png" alt="Limiting file types for upload in comments" /></p>
+<p>In the developer portal, you can restrict the media types allowed for uploading to comments, discussions, tickets, alerts, or reviews. The default allows any media type.</p>
+<p>This setting is configured by the Site Admin. Choose <strong>More</strong> &gt; <strong>Admin</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong> &gt; <strong>Limit file types allowed for upload</strong>.</p>
+<p>For an illustration, see <a href="#cm_security_whitelisting">Enforcing whitelisting for cross-site scripting prevention</a> below.</p>
+<p>For more information, see <a href="../../cm/learnmore/site_admin_settings.htm#settings_config_security_business">How do I configure settings for business security?</a></p>
+<p><a href="#top">back to top</a></p>
+
+
+
+
+<h3 id="cm_security_whitelisting">Enforcing whitelisting for cross-site scripting prevention</h3>
+<h4 class="stamp">Valid in Version: 2019.1.11 and later</h4>
+<p>In the developer portal, you can enforce whitelisting for cross-site scripting prevention.</p>
+<p>You can also </p>
+<p>the media types allowed for uploading to comments, discussions, tickets, alerts, or reviews. The default allows any media type.</p>
+<p>This setting is configured by the Site Admin. Choose <strong>More</strong> &gt; <strong>Admin</strong> &gt; <strong>Settings</strong> &gt; <strong>Security</strong> &gt; <strong>Enforce whitelisting for cross-site scripting prevention</strong>.</p>
+<p><img src="images/ph_cm_settings_security_whitelist.png" alt="Developer portal security settings page" /></p>
 <p>For more information, see <a href="../../cm/learnmore/site_admin_settings.htm#settings_config_security_business">How do I configure settings for business security?</a></p>
 <p><a href="#top">back to top</a></p>
