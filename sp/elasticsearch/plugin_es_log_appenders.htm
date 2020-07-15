@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Akana Elasticsearch Log Appender plug-in
-description: Learn about how to install and use the Akana Elasticsearch Log Appender plug-in.
+description: Learn how to install and use the Akana Elasticsearch Log Appender plug-in to write log files to the Elasticsearch server.
 product: sp
 category: gs
 weight: 04
@@ -10,7 +10,7 @@ type: page
 nav-title: Akana Elasticsearch Log Appender plug-in
 ---
 <h1 id="top">Akana Elasticsearch Log Appender Plug-In</h1>
-<p>Learn about how to install and use the Akana Elasticsearch Log Appender plug-in.</p>
+<p>Learn how to install and use the Akana Elasticsearch Log Appender plug-in to write log files to the Elasticsearch server.</p>
 <hr class="divide_hr" />
 
 
@@ -19,7 +19,10 @@ nav-title: Akana Elasticsearch Log Appender plug-in
 <ol class="table_of_contents">
 	<li><a href="#es_plugin_overview">Overview</a></li>
 	<li><a href="#es_plugin_install">Installation</a></li>
-	<li><a href="#es_plugin_log">Logged Data</a></li>
+	<li><a href="#props_com_soa_log">Configuring properties to save container logs to Elasticsearch (com.soa.log)</a></li>
+	<li><a href="#es_plugin_log_com_soa_log">Logged Data: container logs</a></li>
+	<li><a href="#props_com_akana_log_elasticsearch">Configuring properties to save HTTP access logs to Elasticsearch (com.akana.log.elasticsearch)</a></li>
+	<li><a href="#es_plugin_com_akana_log_elasticsearch">Logged Data: HTTP access logs</a></li>
 </ol>
 <hr class="divide_hr" />
 
@@ -28,6 +31,11 @@ nav-title: Akana Elasticsearch Log Appender plug-in
 <h2 id="es_plugin_overview">Overview</h2>
 <p>The Akana Elasticsearch Log Appender plug-in can be installed on each of the Akana containers. This plug-in allows Akana container exception data, and optionally access log information, into Elasticsearch.</p>
 <p>You can use Kibana to view the data pushed into Elasticsearch, or query it directly. The data is returned as a JSON document.</p>
+<p>There are two sets of configuration properties that you can use to configure the Elasttsicsearch Log Appender plug-in to write data to Elasticsearch rather than the default location:</p>
+<ul>
+	<li><strong>com.soa.log</strong>: Allows you to configure the platform to write the container logs to the Elasticsearch server.</li>
+	<li><strong>com.akana.log.elasticsearch</strong>: Allows you to configure the platform to write the HTTP request logs to the Elasticsearch server.</li>
+</ul>
 <p><a href="#top">back to top</a></p>
 
 
@@ -38,9 +46,109 @@ nav-title: Akana Elasticsearch Log Appender plug-in
 <p>Unzip the file, and then copy everything contained inside the /lib/ folder in the ZIP file (folders and files), to the /lib/ folder of your installation. For example: <strong>\lib\optionpacks\2019.1.3</strong>.</p>
 <p>You can then install the feature using the Akana Administration Console.</p>
 <p>Any container where the Akana Elasticsearch Log Appender plug-in is installed, must be able to access the Elasticsearch server. </p>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h2 id="props_com_soa_log">Configuring properties to save container logs to Elasticsearch (com.soa.log)</h2>
+<p>After installing the plug-in, you can configure the container so that, instead of writing the server logs to the disk, it writes them to the Elasticsearch searver.</p>
+<p>In the Akana Administration Console, go to <strong>Configuration</strong> &gt; <strong>com.soa.log</strong> and configure the properties indicated in the boxes below.</p>
+<p><img src="images/ac_cc_com_soa_log.png" alt="Configuration properties for com.soa.log"/></p>
+<p>Properties that are required are shown in the table below.</p>
+<table class="doctable">
+	<thead>
+		<tr>
+			<th>Property</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<!--	<tr>
+		<td>Alert Workflow Definition</td>
+		<td>The workflow definition that will apply to all new alerts on the platform (existing alerts are not affected).</td>
+	</tr>-->
+		<tr>
+			<td>log4j.appender.ELASTIC</td>
+			<td><p>xxx</p></td>
+		</tr>
+		<!--	<tr>
+		<td>Publishing of Alerts</td>
+		<td>Indicates whether alerts are published automatically or must be approved by a moderator (Admin).{commenting out 9/9/15 as is not in UI}</td>
+	</tr>-->
+		<tr>
+			<td>log4j.appender.ELASTIC.applicationName</td>
+			<td><p>Name of the application xxx</p></td>
+		</tr>
+		<tr>
+			<td>log4j.appender.ELASTIC.elasticHost</td>
+			<td>Fully-qualified hostname for the xxx: for example, http://rcoaless.aws.akana.roguewave.com:9200</td>
+		</tr>
+		<tr>
+			<td>log4j.appender.ELASTIC.elasticIndex</td>
+			<td>{<span class="apidoc_red">default value? + any info re how should it be configured? Valid values?</span>}</td>
+		</tr>
+		<tr>
+			<td>log4j.appender.ELASTIC.threshold</td>
+			<td>{<span class="apidoc_red">default value? + any info re how should it be configured? Valid values?</span>}</td>
+		</tr>
+		<tr>
+			<td>log4j.appender.ELASTIC.verbose</td>
+			<td><p>{<span class="apidoc_red">default? Build shows <strong>true</strong> but perhaps we've configured it that way for QA?</span>} </p>
+				<p>With verbose set to <strong>false</strong>, only error information is stored in Elasticsearch. When set to <strong>true</strong>, the whole log message is stored: potentially useful for debugging, but with increased load in terms of processing and storage. There is also the possibility of sensitive information in the messages, which could be a security risk.</p></td>
+		</tr>
+		<tr>
+			<td>log4j.rootLogger</td>
+			<td><p>Add ELASTIC as the last entry on the list. For example: <strong>WARN, FILE, ELASTIC</strong></p>
+				<p><strong>Note</strong>: For an example of how to configure this property if you are configuring the instance with automation, see <a href="../automation/automation_examples.htm#recipes_saas_config">saas-config recipe: specifying properties to write the logs to the Elasticsearch server</a>.</p></td>
+		</tr>
+	</tbody>
+</table>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h2 id="es_plugin_log_com_soa_log">Logged Data: container logs</h2>
+<p>This plug-in pushes the exceptions from the access request log file into Elasticsearch. An example message is shown below. This 404 exception is logged in Elasticsearch. For additional information regarding this error (for example, what may have caused the error, exception) the container log files residing on the file system are still required, because this information is not pushed into Elasticsearch.</p>
+<pre>{
+  &quot;_index&quot;: &quot;request-log&quot;,
+  &quot;_type&quot;: &quot;_doc&quot;,
+  &quot;_id&quot;: &quot;ecd1436d-6552-431b-a79e-07082646bac7&quot;,
+  &quot;_version&quot;: 1,
+  &quot;_score&quot;: null,
+  &quot;_source&quot;: {
+    &quot;@timestamp&quot;: &quot;2020-02-24T23:55:35.524Z&quot;,
+    &quot;hostName&quot;: &quot;ap-ex-swest&quot;,
+    &quot;applicationName&quot;: &quot;AP&quot;,
+    &quot;containerKey&quot;: &quot;1000105&quot;,
+    &quot;instanceName&quot;: &quot;ap-ex-swest&quot;,
+    &quot;logger&quot;: &quot;com.soa.transport.jetty.JettyTransportBinding&quot;,
+    &quot;level&quot;: &quot;ERROR&quot;,
+    &quot;className&quot;: &quot;com.soa.transport.http.HttpException&quot;,
+    &quot;message&quot;: &quot;HTTP Error [404:Not Found] when accessing the URI [Not specified]&quot;,
+    &quot;stackTrace&quot;: &quot;com.soa.transport.http.HttpException: HTTP Error [404:Not Found] when. . . . [abbreviated for display purposes] \n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n\n\t&quot;,
+    &quot;request&quot;: null,
+    &quot;tenant&quot;: &quot;none&quot;,
+    &quot;eventId&quot;: &quot;264c24d7-5761-11ea-9044-b5a9b2cef593&quot;,
+    &quot;alertCode&quot;: 9022
+  },
+  &quot;fields&quot;: {
+    &quot;@timestamp&quot;: [
+      &quot;2020-02-24T23:55:35.524Z&quot;
+    ]
+  },
+  &quot;sort&quot;: [
+    1582588535524
+  ]
+}</pre>
+<p><a href="#top">back to top</a></p>
+
+
+
+<h2 id="props_com_akana_log_elasticsearch">Configuring properties to save HTTP access logs to Elasticsearch (com.akana.log.elasticsearch)</h2>
+<p><strong>THIS IS THE JETTY REQUEST LOGGER -- HTTP access logs.xxx.</strong></p>
 <p>After the plug-in is installed, the following configuration category is added to the container and the following properties configured.</p>
 <p>The configuration PID is: <strong>com.akana.log.elasticsearch</strong>:</p>
-<p><img src="images/ac_cc_com_akana_log_elasticsearch.png" alt="Configuration properties for Elasticsearch"/></p>
+<p><img src="images/ac_cc_com_akana_log_elasticsearch.png" alt="Configuration properties for com.akana.log.elasticsearch"/></p>
 <p>Properties that are required are shown in the table below.</p>
 <table class="doctable">
 	<thead>
@@ -77,38 +185,48 @@ nav-title: Akana Elasticsearch Log Appender plug-in
 
 
 
-<h2 id="es_plugin_log">Logged Data</h2>
-<p>This plug-in pushes the exceptions from the container log file into Elasticsearch. An example document is shown below. This 404 exception is logged in Elasticsearch. For additional information regarding this error (for example, what may have caused the error, exception) the container log files residing on the file system are still required, because this information is not pushed into Elasticsearch.</p>
+<h2 id="es_plugin_com_akana_log_elasticsearch">Logged Data: HTTP access logs</h2>
+<p>This plug-in pushes the exceptions from the HTTP access request log file <!--(Jetty access log) -->into Elasticsearch. An example log entry is shown below.</p>
 <pre>{
-  "_index": "request-log",
-  "_type": "_doc",
-  "_id": "ecd1436d-6552-431b-a79e-07082646bac7",
-  "_version": 1,
-  "_score": null,
-  "_source": {
-    "@timestamp": "2020-02-24T23:55:35.524Z",
-    "hostName": "ap-ex-swest",
-    "applicationName": "AP",
-    "containerKey": "1000105",
-    "instanceName": "ap-ex-swest",
-    "logger": "com.soa.transport.jetty.JettyTransportBinding",
-    "level": "ERROR",
-    "className": "com.soa.transport.http.HttpException",
-    "message": "HTTP Error [404:Not Found] when accessing the URI [Not specified]",
-    "stackTrace": "com.soa.transport.http.HttpException: HTTP Error [404:Not Found] when accessing the URI [Not specified]\n\tat com.soa.jbi.jaxrs.deploy.PopulateExchangeStatusHandler.handleResponse(PopulateExchangeStatusHandler.java:85)\n\tat org.apache.wink.server.handlers.AbstractHandler.handleResponse(AbstractHandler.java:38)\n\tat org.apache.wink.server.handlers.ResponseHandlersChain.handle(ResponseHandlersChain.java:26)\n\tat org.apache.wink.server.handlers.ResponseHandlersChain.handle(ResponseHandlersChain.java:22)\n\tat org.apache.wink.server.handlers.AbstractHandlersChain.doChain(AbstractHandlersChain.java:63)\n\tat org.apache.wink.server.handlers.AbstractHandler.handleResponse(AbstractHandler.java:39)\n\tat org.apache.wink.server.handlers.ResponseHandlersChain.handle(ResponseHandlersChain.java:26)\n\tat org.apache.wink.server.handlers.ResponseHandlersChain.handle(ResponseHandlersChain.java:22)\n\tat org.apache.wink.server.handlers.AbstractHandlersChain.doChain(AbstractHandlersChain.java:63)\n\tat org.apache.wink.server.handlers.AbstractHandlersChain.run(AbstractHandlersChain.java:48)\n\tat com.soa.jbi.jaxrs.deploy.RESTInvoker.invoke(RESTInvoker.java:76)\n\tat com.soa.jbi.jaxrs.deploy.WinkService.invoke(WinkService.java:81)\n\tat com.soa.jbi.component.wsf.impl.AbstractWSFService.handle(AbstractWSFService.java:273)\n\tat sun.reflect.GeneratedMethodAccessor813.invoke(Unknown Source)\n\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.lang.reflect.Method.invoke(Method.java:498)\n\tat org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:317)\n\tat org.eclipse.gemini.blueprint.service.importer.support.internal.aop.ServiceInvoker.doInvoke(ServiceInvoker.java:56)\n\tat org.eclipse.gemini.blueprint.service.importer.support.internal.aop.ServiceInvoker.invoke(ServiceInvoker.java:60)\n\tat org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)\n\tat org.springframework.aop.support.DelegatingIntroductionInterceptor.doProceed(DelegatingIntroductionInterceptor.java:133)\n\tat org.springframework.aop.support.DelegatingIntroductionInterceptor.invoke(DelegatingIntroductionInterceptor.java:121)\n\tat org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)\n\tat org.eclipse.gemini.blueprint.service.util.internal.aop.ServiceTCCLInterceptor.invokeUnprivileged(ServiceTCCLInterceptor.java:70)\n\tat org.eclipse.gemini.blueprint.service.util.internal.aop.ServiceTCCLInterceptor.invoke(ServiceTCCLInterceptor.java:53)\n\tat org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)\n\tat org.eclipse.gemini.blueprint.service.importer.support.LocalBundleContextAdvice.invoke(LocalBundleContextAdvice.java:57)\n\tat org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)\n\tat org.springframework.aop.support.DelegatingIntroductionInterceptor.doProceed(DelegatingIntroductionInterceptor.java:133)\n\tat org.springframework.aop.support.DelegatingIntroductionInterceptor.invoke(DelegatingIntroductionInterceptor.java:121)\n\tat org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)\n\tat org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:207)\n\tat com.sun.proxy.$Proxy392.handle(Unknown Source)\n\tat com.soa.jbi.component.wsf.WSFSE.handle(WSFSE.java:212)\n\tat com.soa.jbi.core.messaging.DeliveryChannelImpl.receiveMessageExchange(DeliveryChannelImpl.java:208)\n\tat com.soa.jbi.core.container.SimpleRouter.send(SimpleRouter.java:142)\n\tat com.soa.jbi.messaging.lbha.LBHARouter.send(LBHARouter.java:178)\n\tat com.soa.jbi.core.container.JBIContainer.send(JBIContainer.java:404)\n\tat com.soa.jbi.core.messaging.DeliveryChannelImpl.sendSync(DeliveryChannelImpl.java:164)\n\tat com.soa.jbi.core.messaging.DeliveryChannelImpl.sendSync(DeliveryChannelImpl.java:146)\n\tat com.soa.jbi.component.http.impl.HttpInBinding$HttpBindingResponseGenerator.generateResponse(HttpInBinding.java:341)\n\tat com.soa.message.handler.invoke.HandlerInvocationDefaultImpl.handleResponseGenerator(HandlerInvocationDefaultImpl.java:176)\n\tat com.soa.message.handler.invoke.HandlerInvocationDefaultImpl.invokeHandle(HandlerInvocationDefaultImpl.java:74)\n\tat com.soa.jbi.component.http.impl.HttpInBinding.processConsumerRequest(HttpInBinding.java:183)\n\tat com.soa.jbi.component.http.impl.HttpInBinding.accept(HttpInBinding.java:166)\n\tat com.soa.jbi.component.http.impl.HttpMultiEndpointBinding.accept(HttpMultiEndpointBinding.java:109)\n\tat com.soa.transport.jetty.JettyTransportBinding$EntityHandler.handle(JettyTransportBinding.java:969)\n\tat com.soa.transport.jetty.JettyTransportBinding$JettyHandler.handle(JettyTransportBinding.java:1146)\n\tat com.soa.platform.jetty.management.HttpContextHandler$HandlerList.handle(HttpContextHandler.java:456)\n\tat com.soa.platform.jetty.management.HttpContextHandler.doHandle(HttpContextHandler.java:379)\n\tat org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:372)\n\tat org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:189)\n\tat org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:978)\n\tat org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:135)\n\tat org.eclipse.jetty.server.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:255)\n\tat org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:154)\n\tat org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:116)\n\tat org.eclipse.jetty.server.Server.handle(Server.java:367)\n\tat org.eclipse.jetty.server.AbstractHttpConnection.handleRequest(AbstractHttpConnection.java:486)\n\tat org.eclipse.jetty.server.AbstractHttpConnection.headerComplete(AbstractHttpConnection.java:926)\n\tat org.eclipse.jetty.server.AbstractHttpConnection$RequestHandler.headerComplete(AbstractHttpConnection.java:988)\n\tat org.eclipse.jetty.http.HttpParser.parseNext(HttpParser.java:640)\n\tat org.eclipse.jetty.http.HttpParser.parseAvailable(HttpParser.java:235)\n\tat org.eclipse.jetty.server.AsyncHttpConnection.handle(AsyncHttpConnection.java:82)\n\tat org.eclipse.jetty.io.nio.SslConnection.handle(SslConnection.java:196)\n\tat org.eclipse.jetty.io.nio.SelectChannelEndPoint.handle(SelectChannelEndPoint.java:628)\n\tat org.eclipse.jetty.io.nio.SelectChannelEndPoint$1.run(SelectChannelEndPoint.java:52)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n\n\t",
-    "request": null,
-    "tenant": "none",
-    "eventId": "264c24d7-5761-11ea-9044-b5a9b2cef593",
-    "alertCode": 9022
-  },
-  "fields": {
-    "@timestamp": [
-      "2020-02-24T23:55:35.524Z"
-    ]
-  },
-  "sort": [
-    1582588535524
-  ]
+  "_index":"request-log",
+  "_type":"_doc",
+  "_id":"GREqUnMBasfBiMra4uPq",
+  "_score":1.0,
+  "_source":{
+    "@timestamp":"2020-07-15T11:10:09.127Z",
+    "hostName":"3TNT8P4",
+    "containerKey":"6ff2-409f-4a2d-974d-664c6b4b7a99",
+    "instanceName":"eapNd",
+    "apache2":{
+      "access":{
+        "method":"GET",
+        "http_version":"1.1",
+        "vhost":"gw.aka.na",
+        "secure":false,
+        "url":"http://gw.aka.na:7905/admin/config/",
+        "request_type":"application/json",
+        "request_size":-1,
+        "remote_ip":"10.250.24.223",
+        "remote_port":45920,
+        "local_ip":"10.250.25.249",
+        "local_port":7905,
+        "user_name":"",
+        "referrer":null,
+        "user_agent_header":"okhttp/4.2.1",
+        "response_type":"application/json",
+        "response_code":200,
+        "access":{
+          "bytes":180
+        },
+        "dispatch_duration":1,
+        "duration":1
+      }
+    },
+    "accept":{
+      "accept":"application/json",
+      "accept-encoding":"gzip"
+    }
+  }
 }</pre>
 <p><a href="#top">back to top</a></p>
 

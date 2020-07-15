@@ -66,6 +66,7 @@ nav-title: Automation Examples
 	<li><a href="#ts_properties_commandline">Providing property values at the command line</a></li>
 	<li><a href="#resource_download_extract">Downloading and extracting the installation files</a></li>
 	<li><a href="#cluster_support">Cluster support</a></li>
+	<li><a href="#recipes_saas_config">saas-config recipe: specifying properties to write the logs to the Elasticsearch server</a></li>
 </ol>
 <hr class="divide_hr" />
 
@@ -489,6 +490,42 @@ CONTAINER_NAME=pm01</pre>
 	<li>The use of recipes allows configuration tasks to be automated across the cluster, in addition to remote management of container configuration properties.</li>
 </ul>
 <p><a href="#top">back to top</a></p>
+
+
+
+<h2 id="recipes_saas_config">saas-config recipe: specifying properties to write the logs to the Elasticsearch server</h2>
+<p>The example below shows a scenario of running the saas-config recipe and specifying properties that will write the logs to the Elasticsearch server. For information about the process, and instructions for configuring via the user interface, see <a href="../elasticsearch/plugin_es_log_appenders.htm#props_com_soa_log">Configuring properties to save container logs to Elasticsearch (com.soa.log)</a>.</p>
+<pre>{
+  "name":"es-config",
+  "description":"ES logger",
+  "phases":[
+    "deploy"
+  ],
+  "configurations":[
+    {
+      "pid":"com.soa.log",
+      "add":{
+        "log4j.appender.ELASTIC":"com.akana.log4j.elasticsearch.ElasticSearchAppender",
+        "log4j.appender.ELASTIC.applicationName":"AP",
+        "log4j.appender.ELASTIC.verbose":"true",
+        "log4j.appender.ELASTIC.elasticIndex":"log4j-elastic",
+        "log4j.appender.ELASTIC.elasticHost":"${ELASTIC_HOST|http://localhost:7900/}"
+      }
+    },
+    {
+      "pid":"com.soa.log",
+      "update":{
+        "log4j.rootLogger":"ERROR, FILE, ELASTIC"
+      }
+    }
+  ]
+}</pre>
+<p>xxx</p>
+<p><a href="#top">back to top</a></p>
+
+
+
+<!--<p>{<span class="apidoc_red">Note GW 10/4/19 ATMO-29930: GW says we could add examples to this automation doc page, set of smaller tasks: how do I turn on scheduler, turn off scheduler, turn on scheduled job, how do I add a health check, how do I register a Gateway. The example below, to register an ND container, is moved from the upgrade doc to here and we will add the other tasks to this section in the future.</span></p>-->
 
 
 
