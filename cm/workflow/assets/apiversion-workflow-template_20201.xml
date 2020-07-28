@@ -9,6 +9,7 @@
 <!ENTITY AtmoRoleBusinessAdmin "BusinessAdmin">
 <!ENTITY AtmoRoleAPIApprover "API Approver">
 <!ENTITY AtmoRoleApiAdmin "ApiAdmin" >
+<!ENTITY AtmoRoleApiOwner "API Owner" >
 ]>
 
 <!-- ============================================================ apiversion_workflow_template.xml 
@@ -22,11 +23,22 @@
                 <conditions type="OR">
                     <condition type="authorizeByAtmosphereRole">
                         <arg name="role">&AtmoRoleBusinessAdmin;</arg>
-                    </condition>
+                    </condition>                    
                     <condition type="authorizeByAtmosphereAction">
 						<arg name="Action">Add</arg>
                         <arg name="ResourceType">apiversion</arg>
-					</condition> 
+					</condition>
+					<!-- Start For backward compatibility -->
+                    <condition type="authorizeByAtmosphereRole">
+                        <arg name="role">&AtmoRoleApiOwner;</arg>
+                    </condition>                    
+                    
+                    <!-- Users in Api administrator group for that particular api -->
+					<condition type="authorizeByAtmosphereRole">
+						<arg name="scope">${api.dn}</arg>
+                        <arg name="role">&AtmoRoleApiAdmin;</arg>
+                    </condition>
+					<!-- End For backward compatibility -->
                 </conditions>
             </restrict-to>
 			<results>
@@ -243,6 +255,13 @@
 		</step>
 		
 		<step id="400" name="Active">
+			<!-- Uncomment if you want the new apiversion to request access to the previous APPs that are connected to the previous apiversion -->
+			<!--<pre-functions>
+                <function type="connectAppsFromPreviousVersion">
+                </function>
+            </pre-functions>
+              -->
+		
 			<actions>
 				<action id="401" name="@Delete">
 					<restrict-to>
@@ -399,6 +418,215 @@
 						<unconditional-result old-status="Active" status="Active" step="400" />
 					</results>
 				</action>
+				<action id="409" name="@ModifyApiDetails">
+					<restrict-to>
+						<conditions type="OR">
+		                    <condition type="authorizeByAtmosphereRole">
+		                        <arg name="role">&AtmoRoleBusinessAdmin;</arg>
+		                    </condition>
+		                    <condition type="authorizeByAtmosphereRole">
+		                        <arg name="role">&AtmoRoleApiAdmin;</arg>
+		                    </condition>
+		                    <condition type="authorizeByAtmosphereAction">
+								<arg name="Action">Modify</arg>
+		                        <arg name="ResourceType">apiversion</arg>
+							</condition> 
+                		</conditions>
+					</restrict-to>
+					<results>
+						<unconditional-result old-status="Active" status="Active" step="400" />
+					</results>
+				</action>
+				<action id="410" name="@ManageLicenses">
+					<restrict-to>
+						<conditions type="OR">
+		                    <condition type="authorizeByAtmosphereRole">
+		                        <arg name="role">&AtmoRoleBusinessAdmin;</arg>
+		                    </condition>
+		                    <condition type="authorizeByAtmosphereRole">
+		                        <arg name="role">&AtmoRoleApiAdmin;</arg>
+		                    </condition>
+		                    <condition type="authorizeByAtmosphereAction">
+								<arg name="Action">Modify</arg>
+		                        <arg name="ResourceType">apiversion</arg>
+							</condition> 
+                		</conditions>
+					</restrict-to>
+					<results>
+						<unconditional-result old-status="Active" status="Active" step="400" />
+					</results>
+				</action>				
+				<action id="411" name="@ModifyApiDesign">
+					<restrict-to>
+						<conditions type="OR">
+		                    <condition type="authorizeByAtmosphereRole">
+		                        <arg name="role">&AtmoRoleBusinessAdmin;</arg>
+		                    </condition>
+		                    <condition type="authorizeByAtmosphereRole">
+		                        <arg name="role">&AtmoRoleApiAdmin;</arg>
+		                    </condition>
+		                    <condition type="authorizeByAtmosphereAction">
+								<arg name="Action">Modify</arg>
+		                        <arg name="ResourceType">apiversion</arg>
+							</condition> 
+                		</conditions>
+					</restrict-to>
+					<results>
+						<unconditional-result old-status="Active" status="Active" step="400" />
+					</results>
+				</action>				
+				<action id="412" name="@ModifyOAuthDetails">
+					<restrict-to>
+						<conditions type="OR">
+		                    <condition type="authorizeByAtmosphereRole">
+		                        <arg name="role">&AtmoRoleBusinessAdmin;</arg>
+		                    </condition>
+		                    <condition type="authorizeByAtmosphereRole">
+		                        <arg name="role">&AtmoRoleApiAdmin;</arg>
+		                    </condition>
+		                    <condition type="authorizeByAtmosphereAction">
+								<arg name="Action">Modify</arg>
+		                        <arg name="ResourceType">apiversion</arg>
+							</condition> 
+                		</conditions>
+					</restrict-to>
+					<results>
+						<unconditional-result old-status="Active" status="Active" step="400" />
+					</results>
+				</action>
+				<action id="413" name="@ModifyImplementationInfo">
+					<restrict-to>
+						<conditions type="OR">
+		                    <condition type="authorizeByAtmosphereRole">
+		                        <arg name="role">&AtmoRoleBusinessAdmin;</arg>
+		                    </condition>
+		                    <condition type="authorizeByAtmosphereRole">
+		                        <arg name="role">&AtmoRoleApiAdmin;</arg>
+		                    </condition>
+		                    <condition type="authorizeByAtmosphereAction">
+								<arg name="Action">Modify</arg>
+		                        <arg name="ResourceType">apiversion</arg>
+							</condition> 
+                		</conditions>
+					</restrict-to>
+					<results>
+						<unconditional-result old-status="Active" status="Active" step="400" />
+					</results>
+				</action>								
+				<action id="414" name="@ProcessEditorModify">
+					<restrict-to>
+						<conditions type="OR">
+		                    <condition type="authorizeByAtmosphereRole">
+		                        <arg name="role">&AtmoRoleBusinessAdmin;</arg>
+		                    </condition>
+		                    <condition type="authorizeByAtmosphereRole">
+		                        <arg name="role">&AtmoRoleApiAdmin;</arg>
+		                    </condition>
+		                    <condition type="authorizeByAtmosphereAction">
+								<arg name="Action">Modify</arg>
+		                        <arg name="ResourceType">apiversion</arg>
+							</condition> 
+                		</conditions>
+					</restrict-to>
+					<results>
+						<unconditional-result old-status="Active" status="Active" step="400" />
+					</results>
+				</action>				
+				<action id="415" name="@ModifyServiceCertificate">
+					<restrict-to>
+						<conditions type="OR">
+		                    <condition type="authorizeByAtmosphereRole">
+		                        <arg name="role">&AtmoRoleBusinessAdmin;</arg>
+		                    </condition>
+		                    <condition type="authorizeByAtmosphereRole">
+		                        <arg name="role">&AtmoRoleApiAdmin;</arg>
+		                    </condition>
+		                    <condition type="authorizeByAtmosphereAction">
+								<arg name="Action">Modify</arg>
+		                        <arg name="ResourceType">apiversion</arg>
+							</condition> 
+                		</conditions>
+					</restrict-to>
+					<results>
+						<unconditional-result old-status="Active" status="Active" step="400" />
+					</results>
+				</action>				
+				<action id="416" name="@AddDeploymentZones">
+					<restrict-to>
+						<conditions type="OR">
+		                    <condition type="authorizeByAtmosphereRole">
+		                        <arg name="role">&AtmoRoleBusinessAdmin;</arg>
+		                    </condition>
+		                    <condition type="authorizeByAtmosphereRole">
+		                        <arg name="role">&AtmoRoleApiAdmin;</arg>
+		                    </condition>
+		                    <condition type="authorizeByAtmosphereAction">
+								<arg name="Action">Modify</arg>
+		                        <arg name="ResourceType">apiversion</arg>
+							</condition> 
+                		</conditions>
+					</restrict-to>
+					<results>
+						<unconditional-result old-status="Active" status="Active" step="400" />
+					</results>
+				</action>				
+				<action id="417" name="@ModifyTargetEndpoints">
+					<restrict-to>
+						<conditions type="OR">
+		                    <condition type="authorizeByAtmosphereRole">
+		                        <arg name="role">&AtmoRoleBusinessAdmin;</arg>
+		                    </condition>
+		                    <condition type="authorizeByAtmosphereRole">
+		                        <arg name="role">&AtmoRoleApiAdmin;</arg>
+		                    </condition>
+		                    <condition type="authorizeByAtmosphereAction">
+								<arg name="Action">Modify</arg>
+		                        <arg name="ResourceType">apiversion</arg>
+							</condition> 
+                		</conditions>
+					</restrict-to>
+					<results>
+						<unconditional-result old-status="Active" status="Active" step="400" />
+					</results>
+				</action>
+				<action id="418" name="@ModifyAutoConnectSettings">
+					<restrict-to>
+						<conditions type="OR">
+		                    <condition type="authorizeByAtmosphereRole">
+		                        <arg name="role">&AtmoRoleBusinessAdmin;</arg>
+		                    </condition>
+		                    <condition type="authorizeByAtmosphereRole">
+		                        <arg name="role">&AtmoRoleApiAdmin;</arg>
+		                    </condition>
+		                    <condition type="authorizeByAtmosphereAction">
+								<arg name="Action">Modify</arg>
+		                        <arg name="ResourceType">apiversion</arg>
+							</condition> 
+                		</conditions>
+					</restrict-to>
+					<results>
+						<unconditional-result old-status="Active" status="Active" step="400" />
+					</results>
+				</action>
+				<action id="419" name="@AddApiImplementation">
+					<restrict-to>
+						<conditions type="OR">
+		                    <condition type="authorizeByAtmosphereRole">
+		                        <arg name="role">&AtmoRoleBusinessAdmin;</arg>
+		                    </condition>
+		                    <condition type="authorizeByAtmosphereRole">
+		                        <arg name="role">&AtmoRoleApiAdmin;</arg>
+		                    </condition>
+		                    <condition type="authorizeByAtmosphereAction">
+								<arg name="Action">Modify</arg>
+		                        <arg name="ResourceType">apiversion</arg>
+							</condition> 
+                		</conditions>
+					</restrict-to>
+					<results>
+						<unconditional-result old-status="Active" status="Active" step="400" />
+					</results>
+				</action>						
 			</actions>			
 		</step>
 		<step id="500" name="Finished">
