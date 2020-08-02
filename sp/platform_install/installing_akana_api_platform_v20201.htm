@@ -244,8 +244,8 @@ nav-title: Installing Akana API Platform 2020.1.x
 			</li>
 			<li>Akana Community Manager OAuth Provider (Should be installed for any Community Manager container) </li>
 			<li>Akana Community Manager Scheduled Jobs </li>
-			<li>Akana Management Services<!-- {<span class="apidoc_red">MM: ML had this, EN didn't. If you have scheduled jobs on another container do you not need it? Just need it somewhere?</span>}--></li>
-			<li>Akana OAuth Provider<!-- {<span class="apidoc_red">MM: ML installs this. When do we need Akana CM OAuth Provider vs Akana OAuth Provider?</span>}--></li>
+			<li>Akana Management Services {<span class="apidoc_red">Q01: MM (old comment): ML had this, EN didn't. If you have scheduled jobs on another container do you not need it? Just need it somewhere?</span>}</li>
+			<li>Akana OAuth Provider {<span class="apidoc_red">Q02: MM (old comment): ML installs this. When do we need Akana CM OAuth Provider vs Akana OAuth Provider?</span>}</li>
 			<li>Akana Policy Manager Console </li>
 			<li>Akana Policy Manager Services&#8212;this feature bundle includes the Akana Scheduled Jobs feature which adds jobs to the Quartz scheduler. It also includes Akana Security Services<!--(security.services)-->. This feature is needed on all containers except Network Director.</li>
 		</ul>
@@ -545,7 +545,6 @@ nav-title: Installing Akana API Platform 2020.1.x
 	<li>Oracle: See <a href="#notes_database_oracle">Database notes: Oracle</a> below.</li>
 	<li>MySQL:
 		<ul>
-			<li>If you're using MySQL, there are specific configuration requirements for certain MySQL properties. See <a href="#notes_database_mysql_settings">MySQL: database settings for the API Platform</a> below.</li>
 			<li>If you're running MySQL and are using the Lifecycle Repository feature, see <a href="#notes_database_mysql_rm_all">Database notes: MySQL with Lifecycle Coordinator/Lifecycle Repository</a> below.</li>
 		</ul>
 	</li>
@@ -584,7 +583,7 @@ nav-title: Installing Akana API Platform 2020.1.x
 	<li><a href="#note_oracle_drivers">Database drivers</a></li>
 	<li><a href="#note_oracle_password">Oracle password</a></li>
 	<li><a href="#note_oracle_service_name">Use Oracle Service Name, not SID</a></li>
-	<li><a href="#note_oracle_12c">Database permissions, Oracle 12c or later</a></li>
+	<li><a href="#note_oracle_12cr2">Database permissions, Oracle 12c R2 or later</a></li>
 	<li><a href="#database_creation_oracle_18c">Database creation, Oracle 18c or later</a></li>
 </ul>
 
@@ -598,7 +597,7 @@ nav-title: Installing Akana API Platform 2020.1.x
 <p>When you're setting up an Oracle database, the wizard offers two options, Oracle Service Name and SID.</p>
 <p>It's best to use Oracle Service Name, as recommended by Oracle. This is true for any version Oracle 12cR1 or later.</p>
 
-<h4 id="note_oracle_12c">Database permissions, Oracle 12c or later</h4>
+<h4 id="note_oracle_12cr2">Database permissions, Oracle 12c R2 or later</h4>
 <p>When using Oracle 12c or later to configure a new database, the DBA must GRANT SELECT ON SYS.USER$ TO SYSTEM; (substitute the SYSTEM user for the user specified for the Administrator credentials). This is because Oracle 12c introduced restricted access to SYS.USER$, which the platform uses to query on.</p>
 
 <h4 id="database_creation_oracle_18c">Database creation, Oracle 18c or later</h4>
@@ -651,35 +650,11 @@ ALTER DATABASE {db.instance.name}
 <h3 id="notes_database_mysql">Database Notes, MySQL</h3>
 <p>If you're working with a MySQL database, please note the following:</p>
 <ul>
-	<li><a href="#notes_database_mysql_settings">Database Notes, MySQL: database settings for the API Platform</a></li>
-	<li><a href="#notes_database_mysql_sql_mode">Database Notes, MySQL 5.7: modifications to sql_mode default value</a></li>
 	<li><a href="#notes_database_mysql_rm_all">Database notes: MySQL with Lifecycle Coordinator/Lifecycle Repository</a></li>
 </ul>
 
 
-<h4 id="notes_database_mysql_settings">Database Notes, MySQL: database settings for the API Platform</h4>
-<p>If you're using MySQL 5.6, the settings below are required for the API Platform. You'll need to configure these settings in the <strong>my.ini</strong> file <strong>before</strong> loading the database schema in MySQL.</p>
-<p>Specific properties are listed below, with references to the applicable MySQL documentation:</p>
-<ul>
-	<li>innodb_large_prefix=ON; (<a href="http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_large_prefix" title="http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_large_prefix" target="_blank">http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_large_prefix</a>)</li>
-	<li>innodb_file_format=barracuda; (<a href="http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_file_format" title="http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_file_format" target="_blank">http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_file_format</a>)</li>
-	<li>innodb_file_per_table=ON; (<a href="http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_file_per_table" title="http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_file_per_table" target="_blank">http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_file_per_table</a>)</li>
-	<li>Optional, for better performance: 
-	<p>innodb_flush_log_at_trx_commit=0; (<a href="http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_flush_log_at_trx_commit" title="http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_flush_log_at_trx_commit" target="_blank">http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_flush_log_at_trx_commit</a>) </p></li>
-	<li>max_allowed_packet=1073741824; (<a href="http://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html#sysvar_max_allowed_packet" title="http://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html#sysvar_max_allowed_packet" target="_blank">http://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html#sysvar_max_allowed_packet</a>)</li>
-</ul>
-<p>For more information, refer to <a href="install_mysql_dbsettings.htm">MySQL Database Property Settings</a>.</p>
-
-<h4 id="notes_database_mysql_sql_mode">Database Notes, MySQL 5.7: modifications to sql_mode default value</h4>
-<p><strong>Note</strong>: Akana support of MySQL 5.7 ends October 2020.</p>
-<p>In MySQL 5.7, the default value of <span class="apidoc_code">sql_mode</span> includes <strong>NO_ZERO_IN_DATE</strong> and <strong>NO_ZERO_DATE</strong>, which are not currently compatible with Akana.</p>
-<p>The default value for <span class="apidoc_code">sql_mode</span> in MySQL 5.7 is:</p>
-<pre>ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION</pre>
-<p>If you're using MySQL 5.7 with Akana products, you must modify <span class="apidoc_code">sql_mode</span> in your MySQL config files to exclude these two values.</p>
-<p>An example of a valid setting for <span class="apidoc_code">sql_mode</span> with the Akana API Platform is:</p>
-<pre>ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,ALLOW_INVALID_DATES</pre>
-
-<h4 id="notes_database_mysql_rm_all">Database notes: MySQL with Lifecycle Coordinator/Lifecycle Repository</h4>
+<h4 id="notes_database_mysql_rm_all">Database notes: MySQL with Lifecycle Coordinator/Lifecycle Repository {<span class="apidoc_red">Q03: Is this still valid for MySQL 8.0?</span>}</h4>
 <p>For Akana API Platform installs using the Lifecycle Coordinator or Lifecycle Repository features, there are some constraints. </p>
 <p>The Lifecycle Repository feature requires the following installation features:</p>
 <ul>
@@ -753,31 +728,22 @@ Query OK, 0 rows affected (0.00 sec)</pre>
 <ul>
 	<li> <strong>/instances/{container_name}/deploy</strong> folder</li>
 </ul>
-<p>Database options, with driver information: {<span class="apidoc_red">Update with info when system requirements fully done</span>}</p>
+<p>Database options, with driver information: </p>
 <ul>
-	<li><strong>MySQL 5.7</strong>: install this file: 
-		<p><strong>mysql-connector-java-8.0.13.jar</strong></p>
-		<p>Downloadable from: <a href="https://mvnrepository.com/artifact/mysql/mysql-connector-java/8.0.13" title="download location for MySQL database driver" target="_blank">https://mvnrepository.com/artifact/mysql/mysql-connector-java/8.0.13</a></p>
-		</li>
-	<li><strong>MySQL 5.6</strong>: install this file:
-		<p><strong>mysql-connector-java-5.1.40-bin.jar</strong></p>
+	<li><strong>MySQL 8.0</strong>: install this file:
+		<p><strong>mysql-connector-java-5.1.40-bin.jar</strong>{<span class="apidoc_red">Q04: driver info?</span>}</p>
 		<p>Downloadable from: <a href="https://mvnrepository.com/artifact/mysql/mysql-connector-java/5.1.40" title="download location for MySQL database driver" target="_blank">https://mvnrepository.com/artifact/mysql/mysql-connector-java/5.1.40</a></p>
 		</li>
 	<li><strong>Oracle 12c Release 2, Oracle 18c (18.3) supported in 2019.1.0 and later, Oracle 19c</strong>: install this file:
 		<p><strong>Ojdbc8.jar</strong></p>
 		<p>Downloadable from: <a href="http://www.oracle.com/technetwork/database/features/jdbc/jdbc-ucp-122-3110062.html" title="download location for Oracle 12c R2 database driver" target="_blank">http://www.oracle.com/technetwork/database/features/jdbc/jdbc-ucp-122-3110062.html</a> (download requires accepting the agreement and logging in).</p>
-		<p>Also, for Oracle 12c and later, see <a href="#note_oracle_12c">note about database permissions needed</a>.</p>
-		</li>
-	<li><strong>Oracle 12c</strong>: install this file:
-		<p><strong>Ojdbc7.jar</strong></p>
-		<p>Downloadable from: <a href="http://www.oracle.com/technetwork/database/features/jdbc/jdbc-drivers-12c-download-1958347.html" title="download location for Oracle 12c database driver" target="_blank">http://www.oracle.com/technetwork/database/features/jdbc/jdbc-drivers-12c-download-1958347.html</a> (download requires accepting the agreement and logging in).</p>
-		<p>Also, for Oracle 12c and later, see <a href="#note_oracle_12c">note about database permissions needed</a>.</p>
-		</li>
-	<li><strong>Microsoft SQL Server 2012</strong>: no database driver installation is required.</li>
-	<li><strong>Microsoft SQL Server 2016</strong>: no database driver installation is required. If you don't install a driver, the default JTDS driver is used.
+		<p>Also see <a href="#note_oracle_12cr2">Database permissions, Oracle 12c R2 or later</a>.</p>
+</li>
+	<li><strong>Microsoft SQL Server 2012 SP4</strong>: no database driver installation is required.</li>
+	<li><strong>Microsoft SQL Server 2016 SP2</strong>: no database driver installation is required. If you don't install a driver, the default JTDS driver is used.
 		<p>Akana API Platform has also been tested with the following driver (Version: 2019.0.5 and later):</p>
 		<p><strong>mssql-jdbc-7.0.0.jre8.jar</strong></p>
-		<p>Downloadable from: <a href="https://www.microsoft.com/en-us/download/details.aspx?id=57175" title="Link for Microsoft SQL Server 2016 driver download" target="_blank">https://www.microsoft.com/en-us/download/details.aspx?id=57175</a>.</p>
+		<p>Downloadable from: <a href="https://www.microsoft.com/en-us/download/details.aspx?id=57175" title="Link for Microsoft SQL Server 2016 SP2 driver download" target="_blank">https://www.microsoft.com/en-us/download/details.aspx?id=57175</a>.</p>
 		<p>If you use this driver, you'll need to install using the default JTDS driver, then run the first two pending tasks, <strong>Manage PKI Keys</strong> and <strong>Add Database</strong>, and then modify some configuration settings and restart the container. You can modify the settings in the Akana Administration Console or by editing the configuration file (<strong>{install_dir}/instances/{instance}/cm/com/soa/database/config/{config_file}</strong>). The settings you'll need to update are:</p>
 		<ul>
 			<li><strong>com.soa.database.config</strong> &gt; <strong>driver</strong>: change to <strong>com.microsoft.sqlserver.jdbc.SQLServerDriver</strong>.</li>
@@ -1212,7 +1178,7 @@ container.key=aap202010</pre>
 
 
 <h3 id="features_cm_pm">Community Manager/Policy Manager container features with access to MongoDB</h3>
-<p>{<span class="apidoc_red">AB please verify the below option choices are correct for 2020.1.0</span>}</p>
+<p>{<span class="apidoc_red">Q05: AB please verify the below option choices are correct for 2020.1.0</span>}</p>
 <p>In each CM/PM combo container shown in this sample deployment, install the following features:</p>
 <ul>
 	<li>Akana Policy Manager Console <!--(policy.manager.console)--></li>
@@ -1244,7 +1210,7 @@ container.key=aap202010</pre>
 <ul>
 	<li>Akana API Platform ND Extensions Feature (needed for API analytics and Akana API Platform OAuth and security policies)<!--(api.security.policy.handler)--></li>
 </ul>
-<p><strong>Note</strong>: In a version prior to 2019.1.0, you might have installed the <strong>Akana OAuth Provider Agent</strong> or <strong>Akana Community Manager OAuth Provider Agent</strong> features in your Network Director container. In version 2020.1.x, do <strong>not</strong> install these features. If you do, your Network Director container will not work correctly. These features will be removed in a later version. {<span class="apidoc_red">check if these are still there. Prob they are not and can just remove this note.e</span>}</p>
+<p><strong>Note</strong>: In a version prior to 2019.1.0, you might have installed the <strong>Akana OAuth Provider Agent</strong> or <strong>Akana Community Manager OAuth Provider Agent</strong> features in your Network Director container. In version 2020.1.x, do <strong>not</strong> install these features. If you do, your Network Director container will not work correctly. These features will be removed in a later version. {<span class="apidoc_red">Q06: check if these are still there. Prob they are not and can just remove this note.</span>}</p>
 
 <h3 id="features_oauth_alone">Standalone OAuth container features</h3>
 <p>If you are using the Akana API Platform as your OAuth Provider, install the following features on the standalone OAuth container, or the container where you want the OAuth feature to reside. These are not required if you're using an external OAuth provider.</p>
@@ -1293,7 +1259,7 @@ container.key=aap202010</pre>
 
 
 <h3 id="features_cm_alone">Standalone Community Manager (developer portal)</h3>
-<p>{<span class="apidoc_red">AB please verify the below option choices are correct for 2020.1.0</span>}</p>
+<p>{<span class="apidoc_red">Q07: AB please verify the below option choices are correct for 2020.1.0</span>}</p>
 <p><strong>Note</strong>: The developer portal would be for app developers only.</p>
 <p>Install the following features:</p>
 <ul>
