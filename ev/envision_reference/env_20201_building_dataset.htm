@@ -1,0 +1,75 @@
+---
+layout: page
+title: Data Set Building Guide for Envision
+description: Guidelines for designing data sets for Envision.
+product: ev
+category: learn
+weight: 08
+sub-nav-class: Designing with Envision
+type: page
+nav-title: Data Set Building Guide
+---
+<h1 id="top">Data Set Building Guide for Envision</h1>
+<p>Guidelines for designing data sets for Envision.</p>
+<h4 class="stamp">Supported Envision Versions: 2020.1.1</h4>
+<hr class="divide_hr" />
+
+
+
+<h2 style="color: gray;">Table of Contents</h2>
+<ol class="table_of_contents">
+	<li><a href="#ev_building_dataset_overview">Overview</a></li>
+	<li><a href="#ev_building_dataset_s01">Dimensions</a>
+		<ul>
+			<li><a href="#ev_building_dataset_s01_01">Dependent or Independent Dimension?</a></li>
+			<li><a href="#ev_building_dataset_s01_02">Empty Dimension (Implied/Core)</a></li>
+			<li><a href="#ev_building_dataset_s01_03">Time Series Dimension</a></li>
+		</ul>
+	</li>
+	<li><a href="#ev_building_dataset_s02">Metrics</a>
+		<ul>
+			<li><a href="#ev_building_dataset_s02_01">Occurrence (Request Count)</a></li>
+		</ul>
+	</li>
+
+</ol>
+<hr class="divide_hr" />
+
+
+
+<h2 id="ev_building_dataset_overview">Overview</h2>
+<p>Data sets are the first consideration when setting up Envision. The choices made during data set creation will impact the size of your project and how efficient it is in showing you the information you need.</p>
+
+
+
+<h2 id="ev_building_dataset_s01">Dimensions</h2>
+<p>Dimensions allow you to correlate and compare metrics in a context. Each dimensions that you add will multiply the required storage space and data analyzed for each charting query. Carefully consider the objective of each data set to choose appropriate dimensions.</p>
+
+
+<h3 id="ev_building_dataset_s01_01">Dependent or Independent Dimension?</h3>
+<p>It is wise to add only dependent dimensions required to accomplish the use case to keep the cost of the maintaining the dataset low. When dimensions are independent consider separating into separate data sets to reduce data requirements.</p>
+<p>For example, consider a use case where you have two independent objectives:</p>
+<ol>
+<li>Track sales trends by product feature</li>
+<li>Track lead source efficacy for each product</li>
+</ol>
+<p>Tracking sales metrics with all dimensions in a single data set (Product, Feature, Lead Source) would result in Product # * Feature #  * Lead Source # for each time interval. Where as if you separate into different data sets (Product, Lead Source) and (Product, Feature) you'll have Product # * Feature # + Product # * Lead Source #. Assume you have 1000 products, 100 features, and 10 lead sources. In the first example you'd produce 1000 * 100 * 10, 1 million data points, while in the second example you'd product (1000 * 100) + (1000 * 10), 100,000 + 10,000, 110,000 data points. That is an order of magnitude less data.</p>
+
+
+<h3 id="ev_building_dataset_s01_02">Empty Dimension (Implied/Core)</h3>
+<p>There is always an empty/implied/core dimension which is defined by the event that triggers a metric to be collected. For example, when tracking orders, the event of a customer making an order triggers the collection of various metrics and dimensions. There is no explicit dimension defined for the order nor transaction as the data set implies that every event is an order/transaction. It is important NOT to specify an implied dimension explicitly it will cause too much data to be accumulated.</p>
+
+
+<h3 id="ev_building_dataset_s01_03">Time Series Dimension</h3>
+<p>Everything we track and measure is related to time. A time dimension is assumed/built-in for every data set. You should NOT define a dimension based on time for your data set as it will dramatically increase the storage and compute requirements. The time an event occurred shall be aggregated into a time window from the real-time event's timestamp property.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="ev_building_dataset_s02">Metrics</h2>
+<p>Capture as many metrics as you can use, these are cheap facts that get accumulated over time intervals as real-time events are aggregated. You cannot search/filter charts by metrics, but you'll be able to compute their Min, Max , Sum, or Average values for any dimension over any time interval. </p>
+
+
+<h3 id="ev_building_dataset_s02_01">Occurrence (Request Count)</h3>
+<p>Every data set inherently collects the count or occurrence of an event (empty/implied/core dimension). There is no need to map nor define a custom dimension to count the occurrence. For example, if you're data set is tracking orders you'll always have access to the number of orders accumulated over a time interval via the Request Count metric. However if you want to know the quantity of items in an order you'll need to define a custom metric with min, max, sum, and/or average accumulators.</p>
+<p><a href="#top">Back to top</a></p>
