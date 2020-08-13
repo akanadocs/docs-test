@@ -40,8 +40,8 @@ nav-title: Use Case - UK Open Banking
 	<li><a href="#s03_api">Step 3: Create and configure the API</a>
 		<ul>
 			<li><a href="#s03_01">Step 3-1: Create the API</a></li>
-			<li><a href="#s03_02">Step 3-2: Modify the API implementation so that there is only a Sandbox implementation</a></li>
-			<li><a href="#s03_03">Step 3-3: turn off anonymous access</a></li>
+			<li><a href="#s03_02">SStep 3-2: Modify the API implementation so that only mutual HTTPS is valid</a></li>
+			<li><a href="#s03_03">Step 3-3: Turn off anonymous access</a></li>
 			<li><a href="#s03_04">Step 3-4: Attach the policies to the API</a></li>
 			<li><a href="#s03_05">Step 3-5: Create a mock response</a></li>
 			<li><a href="#s03_06">Step 3-6: Set up the API OAuth Details</a></li>
@@ -115,7 +115,7 @@ nav-title: Use Case - UK Open Banking
 <ul>
 	<li>A working installation of the Akana API Platform, either on-prem or a SaaS account. The API Gateway must be configured to have an HTTPS listener that accepts (or requires) client certificates:
 		<ul>
-			<li><strong>SaaS</strong>: If you are using the SaaS platform, the HTTPS listener is already configured for you, but you must be sure to use the mTLS endpoint (hostname includes <strong>mtl</strong>). In this use case, this is set up in <a href="#s03_02">Step 3-2: Modify the API implementation so that there is only a Sandbox implementation</a>.</li>
+			<li><strong>SaaS</strong>: If you are using the SaaS platform, the HTTPS listener is already configured for you, but you must be sure to use the mTLS endpoint (hostname includes <strong>mtl</strong>). In this use case, this is set up in <a href="#s03_02">Step 3-2: Modify the API implementation so that only mutual HTTPS is valid</a>.</li>
 			<li><strong>On-Prem</strong>: If you have an on-prem installation, set up an inbound HTTPS listener for any Network Director container that needs it. For more information, see <a href="#tc_ukob_on_prem_https_listener">On-prem setup: Setting up the HTTPS listener</a>.</li>
 		</ul>
 	</li>
@@ -302,8 +302,8 @@ nav-title: Use Case - UK Open Banking
 <p>In this section:</p>
 <ol>
 	<li><a href="#s03_01">Step 3-1: Create the API</a></li>
-	<li><a href="#s03_02">Step 3-2: Modify the API implementation so that there is only a Sandbox implementation</a></li>
-	<li><a href="#s03_03">Step 3-3: turn off anonymous access</a></li>
+	<li><a href="#s03_02">Step 3-2: Modify the API implementation so that only mutual HTTPS is valid</a></li>
+	<li><a href="#s03_03">Step 3-3: Turn off anonymous access</a></li>
 	<li><a href="#s03_04">Step 3-4: Attach the policies to the API</a></li>
 	<li><a href="#s03_05">Step 3-5: Create a mock response</a></li>
 	<li><a href="#s03_06">Step 3-6: Set up the API OAuth Details</a></li>
@@ -323,7 +323,10 @@ nav-title: Use Case - UK Open Banking
 	<li>Click the <strong>Advanced Options</strong> slider bar to see additional settings.</li>
 	<li>Choose Implementation Pattern of <strong>Orchestration</strong>.
 		<p><strong>Note</strong>: This use case uses Orchestration so that we can set up a mock response, in the Process Editor.</p></li>
-	<li>Click <strong>Save</strong>.</li>
+	<li>In the <strong>Implementation</strong> field, click the drop-down list and choose Sandbox, then choose the Deployment Zone. An example is shown below.
+<p><img src="images_uc_uk_ob/uc_ukob_api_add_sandbox.png" alt="Add API - specifying Sandbox implementation"/></p>
+</li>
+<li>Click <strong>Save</strong>.</li>
 	<li>Optional: in this use case, for clarity, edit the API description to modify the title:
 		<ul>
 			<li><strong>Old title</strong>: Account_and_Transaction_API_Specification</li>
@@ -331,35 +334,22 @@ nav-title: Use Case - UK Open Banking
 		</ul>
 		</li>
 </ol>
-<h3 id="s03_02">Step 3-2: Modify the API implementation so that there is only a Sandbox implementation</h3>
-<p>It's not mandatory, but easier to have just one implementation. Follow the steps below to add a Sandbox implementation and then delete the default Live implementation.</p>
-
-<h4>To create the Sandbox implementation</h4>
+<h3 id="s03_02">Step 3-2: Modify the API implementation so that only mutual HTTPS is valid</h3>
+<p>When you create the API, by default it is connected to all valid endpoints. Follow the steps below to delete any protocols other than Mutual HTTPS.</p>
+<h4>To modify the Sandbox implementation</h4>
 <ol>
-	<li>Add a Sandbox implementation:
-		<ul>
-			<li>Go to <strong>API</strong> &gt; <strong>Implementations.</strong></li>
-			<li>Click <strong>Add</strong> to add a Sandbox implementation.</li>
-			<li>For <strong>Pattern</strong>, choose <strong>Orchestration</strong>.				</li>
-			<li>Click <strong>Save</strong>.</li>
-			</ul>
-	</li>
-	<li>Update the implementation:
-		<ul>
-			<li>Go back into the <strong>Sandbox</strong> implementation.</li>
-			<li>In the <strong>Deployments</strong> section, click <strong>Edit</strong>.</li>
-			<li>Delete all protocols except <strong>mutual-https</strong>. In this example, there are two protocols to delete, <strong>default-http0</strong> and <strong>default-https</strong>, as shown below.
-				<p><img src="images_uc_uk_ob/uc_ukob_api_delete_protocols.png" alt="Process Editor -- setting up the mock response"/></p></li>
-			<li>Save.</li>
-			</ul>
-	</li>
+	<li>Go to <strong>API</strong> &gt; <strong>Implementations</strong> and choose the <strong>Sandbox</strong> implementation.</li>
+	<li>In the <strong>Deployments</strong> section, click <strong>Edit</strong>.</li>
+<li>Delete all protocols except <strong>mutual-https</strong>. In this example, there are two protocols to delete, <strong>default-http0</strong> and <strong>default-https</strong>, as shown below.
+		<p><img src="images_uc_uk_ob/uc_ukob_api_delete_protocols.png" alt="Process Editor -- setting up the mock response"/></p>
+</li>
+<li>Click <strong>Save</strong>.</li>
 	
 	<li>Click <strong>Go back to Implementations</strong>.</li>
-	<li>Delete the <strong>Live</strong> implementation.</li>
 </ol>
 
 
-<h3 id="s03_03">Step 3-3: turn off anonymous access</h3>
+<h3 id="s03_03">Step 3-3: Turn off anonymous access</h3>
 <p>By default, a Sandbox implementation allows anonymous access. Make sure this setting is turned off.</p>
 <h4>To disable anonymous access</h4>
 <ol>
