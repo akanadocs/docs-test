@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wsdl:definitions targetNamespace="http://soa.com/wsdl/user/1.0" xmlns:nms7="http://soa.com/xsd/resource/1.0" xmlns:nms6="http://soa.com/xsd/app/1.0" xmlns:nms5="http://soa.com/wsdl/user/1.0" xmlns:nms4="http://soa.com/xsd/notification/1.0" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://soa.com/wsdl/user/1.0" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nms3="http://soa.com/xsd/login/1.0" xmlns:nms2="urn:org.apache.wink.common.model.rss" xmlns:nms1="http://soa.com/xsd/user/1.0" xmlns:shttp="http://soa.com/wsdl/http">
   <wsdl:types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/resource/1.0" version="1.0" xmlns:ns1="http://soa.com/xsd/user/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:import namespace="http://soa.com/xsd/user/1.0"/>
+<xs:element name="Rating"><xs:complexType><xs:sequence><xs:element name="ID" type="xs:string"/><xs:element ref="ns1:UserID"/><xs:element name="Rating" type="xs:int"/></xs:sequence></xs:complexType></xs:element>
+<xs:element name="RatingSummary"><xs:complexType><xs:sequence><xs:element name="Five" type="xs:int"/><xs:element name="Four" type="xs:int"/><xs:element name="Three" type="xs:int"/><xs:element name="Two" type="xs:int"/><xs:element name="One" type="xs:int"/></xs:sequence></xs:complexType></xs:element>
+</xs:schema>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/dnmodel/1.0" version="1.0" xmlns:tns="http://soa.com/xsd/dnmodel/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="Image"><xs:complexType><xs:all><xs:element name="Url" type="xs:anyURI"/><xs:element name="Title" type="xs:string"/><xs:element name="Link" type="xs:anyURI"/><xs:element minOccurs="0" name="Description" type="xs:string"/></xs:all></xs:complexType></xs:element>
+<xs:element name="TargetResource"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="Name" type="xs:string"/><xs:element minOccurs="0" name="ID" type="xs:string"/><xs:element minOccurs="0" name="Type" type="xs:string"/><xs:element minOccurs="0" name="Avatar" type="xs:string"/><xs:element minOccurs="0" ref="tns:Image"/><xs:element minOccurs="0" name="Visibility" type="xs:string"/><xs:element default="false" minOccurs="0" name="IsResourceLevelPermissionSupported" type="xs:boolean"/></xs:sequence></xs:complexType></xs:element>
+<xs:element name="TargetResources"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" ref="tns:TargetResource"/></xs:sequence></xs:complexType></xs:element>
+</xs:schema>
+    <xs:schema targetNamespace="http://jaxb.dev.java.net/array" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:complexType final="#all" name="stringArray"><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="xs:string"/></xs:sequence></xs:complexType>
+</xs:schema>
     <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:element name="category" nillable="true" type="rssCategory"/>
 <xs:element name="channel" nillable="true" type="rssChannel"/>
@@ -14,17 +27,45 @@
 <xs:element name="skipHours" nillable="true" type="rssSkipHours"/>
 <xs:element name="source" nillable="true" type="rssSource"/>
 <xs:element name="textInput" nillable="true" type="rssTextInput"/>
-<xs:complexType name="rssSkipDays"><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="day" nillable="true" type="xs:string"/></xs:sequence></xs:complexType>
+<xs:complexType name="rssTextInput"><xs:all><xs:element name="title" type="xs:string"/><xs:element name="description" type="xs:string"/><xs:element name="name" type="xs:string"/><xs:element name="link" type="xs:anyURI"/></xs:all></xs:complexType>
 <xs:complexType name="rssChannel"><xs:all><xs:element name="title" type="xs:string"/><xs:element name="link" type="xs:anyURI"/><xs:element name="description" type="xs:string"/><xs:element minOccurs="0" name="language" type="xs:string"/><xs:element minOccurs="0" name="copyright" type="xs:string"/><xs:element minOccurs="0" name="managingEditor" type="xs:string"/><xs:element minOccurs="0" name="webMaster" type="xs:string"/><xs:element minOccurs="0" name="pubDate" type="xs:string"/><xs:element minOccurs="0" name="lastBuildDate" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="category" nillable="true" type="rssCategory"/><xs:element minOccurs="0" name="generator" type="xs:string"/><xs:element minOccurs="0" name="docs" type="xs:anyURI"/><xs:element minOccurs="0" name="cloud" type="rssCloud"/><xs:element minOccurs="0" name="ttl" type="xs:int"/><xs:element minOccurs="0" name="image" type="rssImage"/><xs:element minOccurs="0" name="rating" type="xs:string"/><xs:element minOccurs="0" name="textInput" type="rssTextInput"/><xs:element minOccurs="0" name="skipHours" type="rssSkipHours"/><xs:element minOccurs="0" name="skipDays" type="rssSkipDays"/><xs:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/><xs:element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="rssItem"/></xs:all></xs:complexType>
 <xs:complexType name="rssCategory"><xs:simpleContent><xs:extension base="xs:string"><xs:attribute name="domain" type="xs:string"/></xs:extension></xs:simpleContent></xs:complexType>
 <xs:complexType name="rssCloud"><xs:sequence/><xs:attribute name="domain" type="xs:string" use="required"/><xs:attribute name="port" type="xs:int" use="required"/><xs:attribute name="path" type="xs:string" use="required"/><xs:attribute name="registerProcedure" type="xs:string" use="required"/><xs:attribute name="protocol" type="xs:string" use="required"/></xs:complexType>
 <xs:complexType name="rssImage"><xs:all><xs:element name="url" type="xs:string"/><xs:element name="title" type="xs:string"/><xs:element name="link" type="xs:anyURI"/><xs:element default="88" minOccurs="0" name="width" type="xs:int"/><xs:element default="31" minOccurs="0" name="height" type="xs:int"/><xs:element minOccurs="0" name="description" type="xs:string"/></xs:all></xs:complexType>
-<xs:complexType name="rssTextInput"><xs:all><xs:element name="title" type="xs:string"/><xs:element name="description" type="xs:string"/><xs:element name="name" type="xs:string"/><xs:element name="link" type="xs:anyURI"/></xs:all></xs:complexType>
 <xs:complexType name="rssSkipHours"><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="hour" nillable="true" type="xs:string"/></xs:sequence></xs:complexType>
+<xs:complexType name="rssSkipDays"><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="day" nillable="true" type="xs:string"/></xs:sequence></xs:complexType>
 <xs:complexType name="rssSource"><xs:simpleContent><xs:extension base="xs:string"><xs:attribute name="url" type="xs:string" use="required"/></xs:extension></xs:simpleContent></xs:complexType>
 <xs:complexType name="rssEnclosure"><xs:sequence/><xs:attribute name="url" type="xs:string" use="required"/><xs:attribute name="length" type="xs:string" use="required"/><xs:attribute name="type" type="xs:string" use="required"/></xs:complexType>
 <xs:complexType name="rssGuid"><xs:simpleContent><xs:extension base="xs:string"><xs:attribute name="isPermaLink" type="xs:boolean"/></xs:extension></xs:simpleContent></xs:complexType>
 <xs:complexType name="rssItem"><xs:all><xs:element minOccurs="0" name="title" type="xs:string"/><xs:element minOccurs="0" name="link" type="xs:anyURI"/><xs:element minOccurs="0" name="description" type="xs:string"/><xs:element minOccurs="0" name="author" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="category" nillable="true" type="rssCategory"/><xs:element minOccurs="0" name="comments" type="xs:anyURI"/><xs:element minOccurs="0" name="enclosure" type="rssEnclosure"/><xs:element minOccurs="0" name="guid" type="rssGuid"/><xs:element name="pubDate" type="xs:string"/><xs:element minOccurs="0" name="source" type="rssSource"/><xs:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/></xs:all></xs:complexType>
+</xs:schema>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/app/1.0" version="1.0" xmlns:ns1="http://soa.com/xsd/resource/1.0" xmlns:ns2="http://soa.com/xsd/dnmodel/1.0" xmlns:ns3="http://soa.com/xsd/business/1.0" xmlns:ns4="http://jaxb.dev.java.net/array" xmlns:tns="http://soa.com/xsd/app/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:import namespace="http://soa.com/xsd/resource/1.0"/>
+<xs:import namespace="http://soa.com/xsd/dnmodel/1.0"/>
+<xs:import namespace="http://soa.com/xsd/business/1.0"/>
+<xs:import namespace="http://jaxb.dev.java.net/array"/>
+<xs:element name="AppSettings"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="PublicAppSupport" type="xs:string"/><xs:element minOccurs="0" name="PublicAppBoardSupport" type="xs:string"/><xs:element minOccurs="0" name="PublicAppRatingsSupport" type="xs:string"/><xs:element minOccurs="0" name="PublicAppReviewsSupport" type="xs:string"/><xs:element minOccurs="0" name="PrivateAppSupport" type="xs:string"/><xs:element minOccurs="0" name="PrivateAppBoardSupport" type="xs:string"/><xs:element minOccurs="0" name="PrivateAppRatingsSupport" type="xs:string"/><xs:element minOccurs="0" name="PrivateAppReviewsSupport" type="xs:string"/><xs:element minOccurs="0" name="UserDefinedIdentitySupport" type="xs:string"/><xs:element minOccurs="0" name="SimultaneousSandboxProductAccessSupport" type="xs:string"/><xs:element minOccurs="0" name="ReturnPlainTextSharedSecret" type="xs:string"/><xs:element minOccurs="0" name="RegisteredUsersAppSupport" type="xs:string"/><xs:element minOccurs="0" name="RegisteredUsersAppRatingsSupport" type="xs:string"/><xs:element minOccurs="0" name="RegisteredUsersAppReviewsSupport" type="xs:string"/><xs:element minOccurs="0" name="AppPromotionSupport" type="xs:string"/></xs:sequence></xs:complexType></xs:element>
+<xs:element name="AppVersionSettings"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="AppBoardSupport" type="xs:string"/><xs:element minOccurs="0" name="AppRatingsSupport" type="xs:string"/><xs:element minOccurs="0" name="AppReviewsSupport" type="xs:string"/><xs:element minOccurs="0" name="UserDefinedIdentitySupport" type="xs:string"/><xs:element minOccurs="0" name="SimultaneousSandboxProductAccessSupport" type="xs:string"/><xs:element minOccurs="0" name="ReturnPlainTextSharedSecret" type="xs:string"/></xs:sequence></xs:complexType></xs:element>
+<xs:element name="Application"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="AppID" type="xs:string"/><xs:element minOccurs="0" name="Name" type="xs:string"/><xs:element minOccurs="0" name="Description" type="xs:string"/><xs:element minOccurs="0" name="Summary" type="xs:string"/><xs:element minOccurs="0" name="Visibility" type="xs:string"/><xs:element minOccurs="0" name="InitialEnvironment" type="xs:string"/><xs:element minOccurs="0" name="DefaultVersionID" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="Tag" type="xs:string"/><xs:element minOccurs="0" name="IsFollowed" type="xs:boolean"/><xs:element minOccurs="0" ref="ns1:RatingSummary"/><xs:element minOccurs="0" name="PictureID" type="xs:long"/><xs:element minOccurs="0" name="State" type="xs:string"/><xs:element minOccurs="0" name="Created" type="xs:dateTime"/><xs:element minOccurs="0" name="Updated" type="xs:dateTime"/><xs:element minOccurs="0" name="AvatarURL" type="xs:anyURI"/><xs:element minOccurs="0" ref="tns:ApplicationVersion"/><xs:element minOccurs="0" ref="tns:AppSettings"/><xs:element minOccurs="0" name="TeamID" type="xs:string"/><xs:element minOccurs="0" ref="ns2:Image"/><xs:element minOccurs="0" ref="tns:ApplicationVersions"/><xs:element minOccurs="0" name="Connections" type="xs:long"/><xs:element minOccurs="0" name="Followers" type="xs:long"/><xs:element minOccurs="0" name="Rating" type="xs:float"/><xs:element minOccurs="0" ref="ns3:BusinessID"/><xs:element minOccurs="0" ref="ns2:TargetResources"/></xs:sequence></xs:complexType></xs:element>
+<xs:element name="ApplicationVersion"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="RuntimeID" type="xs:string"/><xs:element minOccurs="0" name="AppID" type="xs:string"/><xs:element minOccurs="0" name="Name" type="xs:string"/><xs:element minOccurs="0" name="Description" type="xs:string"/><xs:element minOccurs="0" name="WebsiteAddress" type="xs:string"/><xs:element minOccurs="0" name="Visibility" type="xs:string"/><xs:element minOccurs="0" name="InitialEnvironment" type="xs:string"/><xs:element minOccurs="0" name="CurrentEnvironment" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="Tag" type="xs:string"/><xs:element minOccurs="0" name="HasKeyInfo" type="xs:boolean"/><xs:element minOccurs="0" name="Created" type="xs:dateTime"/><xs:element minOccurs="0" name="Updated" type="xs:dateTime"/><xs:element minOccurs="0" name="State" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="SecurityMechanisms" type="xs:string"/><xs:element minOccurs="0" ref="ns1:RatingSummary"/><xs:element minOccurs="0" name="Identity" type="xs:string"/><xs:element minOccurs="0" name="SharedSecret" type="xs:string"/><xs:element minOccurs="0" name="EncryptedSharedSecret" type="xs:string"/><xs:element minOccurs="0" ref="tns:AppVersionSettings"/><xs:element minOccurs="0" ref="ns2:TargetResources"/><xs:element name="classifiers"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="entry"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="key" type="xs:string"/><xs:element minOccurs="0" name="value" type="ns4:stringArray"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element><xs:element name="artifacts"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="entry"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="key" type="xs:string"/><xs:element minOccurs="0" name="value" type="xs:string"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element><xs:element name="labels"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="entry"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="key" type="xs:string"/><xs:element minOccurs="0" name="value" type="xs:anyType"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
+<xs:element name="ApplicationVersions"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" ref="tns:ApplicationVersion"/></xs:sequence></xs:complexType></xs:element>
+<xs:element name="Applications"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" ref="tns:Application"/></xs:sequence></xs:complexType></xs:element>
+</xs:schema>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/wsdl/user/1.0" version="1.0" xmlns:ns1="http://soa.com/xsd/user/1.0" xmlns:tns="http://soa.com/wsdl/user/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:import namespace="http://soa.com/xsd/user/1.0"/>
+<xs:element name="SignupResponse" type="tns:signupResponse"/>
+<xs:complexType name="signupResponse"><xs:sequence><xs:element minOccurs="0" name="authIdentifier" type="xs:string"/><xs:element minOccurs="0" name="authTokenValidUntil" type="xs:string"/><xs:element minOccurs="0" name="domainName" type="xs:string"/><xs:element minOccurs="0" name="emailAddress" type="xs:string"/><xs:element minOccurs="0" name="expired" type="xs:boolean"/><xs:element minOccurs="0" name="firstName" type="xs:string"/><xs:element minOccurs="0" name="lastName" type="xs:string"/><xs:element minOccurs="0" name="loginDomainID" type="xs:string"/><xs:element minOccurs="0" name="loginState" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="pendingAgreements" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="pendingNotifications" type="xs:int"/><xs:element minOccurs="0" name="pendingTaskData" type="xs:anyType"/><xs:element maxOccurs="unbounded" minOccurs="0" name="pendingTasks" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="profileName" type="xs:string"/><xs:element minOccurs="0" name="sessionValidUntil" type="xs:string"/><xs:element minOccurs="0" name="signupStatus" type="xs:string"/><xs:element minOccurs="0" name="state" type="xs:string"/><xs:element minOccurs="0" name="userID" type="xs:string"/><xs:element minOccurs="0" name="userName" type="xs:string"/><xs:element minOccurs="0" name="userPhones"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" ref="ns1:UserPhone"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType>
+</xs:schema>
+    <xs:schema targetNamespace="http://soa.com/xsd/business/1.0" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="BusinessID" type="xs:string"/>
+</xs:schema>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/notification/1.0" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="NotificationsState"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="NotificationID" type="xs:string"/><xs:element name="State" type="xs:string"/></xs:sequence></xs:complexType></xs:element>
+</xs:schema>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/login/1.0" version="1.0" xmlns:tns="http://soa.com/xsd/login/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="LoginDomain"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="LoginDomainID" type="xs:string"/><xs:element name="DomainName" type="xs:string"/><xs:element name="FedmemberId" type="xs:string"/><xs:element name="DisplayMode" type="xs:string"/><xs:element name="Title" type="xs:string"/><xs:element name="Sequence" type="xs:int"/><xs:element maxOccurs="unbounded" name="VirtualHost" type="xs:string"/><xs:element name="IdSystemType" type="xs:string"/><xs:element name="LogoAssigned" type="xs:boolean"/><xs:element default="true" name="Enabled" type="xs:boolean"/><xs:element minOccurs="0" name="LogoId" type="xs:long"/></xs:sequence></xs:complexType></xs:element>
+<xs:element name="loginResponse" type="tns:loginResponse"/>
+<xs:complexType name="loginResponse"><xs:sequence><xs:element minOccurs="0" name="authToken" type="xs:string"/><xs:element minOccurs="0" name="authTokenValidUntil" type="xs:string"/><xs:element minOccurs="0" name="avatarURL" type="xs:string"/><xs:element minOccurs="0" name="csrfToken" type="xs:string"/><xs:element minOccurs="0" name="lastLoginDate" type="xs:string"/><xs:element minOccurs="0" name="loginDomainID" type="xs:string"/><xs:element minOccurs="0" name="loginState" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="pendingAgreements" nillable="true" type="xs:string"/><xs:element name="pendingNotifications" type="xs:int"/><xs:element minOccurs="0" name="pendingTaskData" type="xs:anyType"/><xs:element maxOccurs="unbounded" minOccurs="0" name="pendingTasks" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="sessionValidUntil" type="xs:string"/><xs:element minOccurs="0" name="status" type="xs:string"/><xs:element minOccurs="0" name="userFDN" type="xs:string"/><xs:element minOccurs="0" name="userName" type="xs:string"/></xs:sequence></xs:complexType>
 </xs:schema>
     <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/user/1.0" version="1.0" xmlns:ns1="http://soa.com/xsd/business/1.0" xmlns:tns="http://soa.com/xsd/user/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:import namespace="http://soa.com/xsd/business/1.0"/>
@@ -58,47 +99,6 @@
 <xs:element name="UserRoles"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="RoleName" type="xs:string"/></xs:sequence></xs:complexType></xs:element>
 <xs:element name="UserStatus"><xs:complexType><xs:sequence><xs:element name="APIs" type="xs:int"/><xs:element name="Followings" type="xs:int"/><xs:element name="Discussions" type="xs:int"/><xs:element name="Tickets" type="xs:int"/></xs:sequence></xs:complexType></xs:element>
 <xs:complexType name="emailChangeResponse"><xs:sequence><xs:element minOccurs="0" name="changeStatus" type="xs:boolean"/><xs:element minOccurs="0" name="newEmailAddress" type="xs:string"/><xs:element minOccurs="0" name="userIdentificationChallenge"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="UserID" type="xs:string"/><xs:element name="ChallengeCode" type="xs:string"/><xs:element minOccurs="0" name="ChallengeQuestion" type="xs:string"/><xs:element minOccurs="0" name="Answer" type="xs:string"/></xs:sequence></xs:complexType></xs:element><xs:element minOccurs="0" name="userName" type="xs:string"/></xs:sequence></xs:complexType>
-</xs:schema>
-    <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/resource/1.0" version="1.0" xmlns:ns1="http://soa.com/xsd/user/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-<xs:import namespace="http://soa.com/xsd/user/1.0"/>
-<xs:element name="Rating"><xs:complexType><xs:sequence><xs:element name="ID" type="xs:string"/><xs:element ref="ns1:UserID"/><xs:element name="Rating" type="xs:int"/></xs:sequence></xs:complexType></xs:element>
-<xs:element name="RatingSummary"><xs:complexType><xs:sequence><xs:element name="Five" type="xs:int"/><xs:element name="Four" type="xs:int"/><xs:element name="Three" type="xs:int"/><xs:element name="Two" type="xs:int"/><xs:element name="One" type="xs:int"/></xs:sequence></xs:complexType></xs:element>
-</xs:schema>
-    <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/dnmodel/1.0" version="1.0" xmlns:tns="http://soa.com/xsd/dnmodel/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-<xs:element name="Image"><xs:complexType><xs:all><xs:element name="Url" type="xs:anyURI"/><xs:element name="Title" type="xs:string"/><xs:element name="Link" type="xs:anyURI"/><xs:element minOccurs="0" name="Description" type="xs:string"/></xs:all></xs:complexType></xs:element>
-<xs:element name="TargetResource"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="Name" type="xs:string"/><xs:element minOccurs="0" name="ID" type="xs:string"/><xs:element minOccurs="0" name="Type" type="xs:string"/><xs:element minOccurs="0" name="Avatar" type="xs:string"/><xs:element minOccurs="0" ref="tns:Image"/><xs:element minOccurs="0" name="Visibility" type="xs:string"/><xs:element default="false" minOccurs="0" name="IsResourceLevelPermissionSupported" type="xs:boolean"/></xs:sequence></xs:complexType></xs:element>
-<xs:element name="TargetResources"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" ref="tns:TargetResource"/></xs:sequence></xs:complexType></xs:element>
-</xs:schema>
-    <xs:schema targetNamespace="http://soa.com/xsd/business/1.0" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-<xs:element name="BusinessID" type="xs:string"/>
-</xs:schema>
-    <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/login/1.0" version="1.0" xmlns:tns="http://soa.com/xsd/login/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-<xs:element name="LoginDomain"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="LoginDomainID" type="xs:string"/><xs:element name="DomainName" type="xs:string"/><xs:element name="FedmemberId" type="xs:string"/><xs:element name="DisplayMode" type="xs:string"/><xs:element name="Title" type="xs:string"/><xs:element name="Sequence" type="xs:int"/><xs:element maxOccurs="unbounded" name="VirtualHost" type="xs:string"/><xs:element name="IdSystemType" type="xs:string"/><xs:element name="LogoAssigned" type="xs:boolean"/><xs:element default="true" name="Enabled" type="xs:boolean"/><xs:element minOccurs="0" name="LogoId" type="xs:long"/></xs:sequence></xs:complexType></xs:element>
-<xs:element name="loginResponse" type="tns:loginResponse"/>
-<xs:complexType name="loginResponse"><xs:sequence><xs:element minOccurs="0" name="authToken" type="xs:string"/><xs:element minOccurs="0" name="authTokenValidUntil" type="xs:string"/><xs:element minOccurs="0" name="avatarURL" type="xs:string"/><xs:element minOccurs="0" name="csrfToken" type="xs:string"/><xs:element minOccurs="0" name="lastLoginDate" type="xs:string"/><xs:element minOccurs="0" name="loginDomainID" type="xs:string"/><xs:element minOccurs="0" name="loginState" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="pendingAgreements" nillable="true" type="xs:string"/><xs:element name="pendingNotifications" type="xs:int"/><xs:element minOccurs="0" name="pendingTaskData" type="xs:anyType"/><xs:element maxOccurs="unbounded" minOccurs="0" name="pendingTasks" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="sessionValidUntil" type="xs:string"/><xs:element minOccurs="0" name="status" type="xs:string"/><xs:element minOccurs="0" name="userFDN" type="xs:string"/><xs:element minOccurs="0" name="userName" type="xs:string"/></xs:sequence></xs:complexType>
-</xs:schema>
-    <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/app/1.0" version="1.0" xmlns:ns1="http://soa.com/xsd/resource/1.0" xmlns:ns2="http://soa.com/xsd/dnmodel/1.0" xmlns:ns3="http://soa.com/xsd/business/1.0" xmlns:ns4="http://jaxb.dev.java.net/array" xmlns:tns="http://soa.com/xsd/app/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-<xs:import namespace="http://soa.com/xsd/resource/1.0"/>
-<xs:import namespace="http://soa.com/xsd/dnmodel/1.0"/>
-<xs:import namespace="http://soa.com/xsd/business/1.0"/>
-<xs:import namespace="http://jaxb.dev.java.net/array"/>
-<xs:element name="AppSettings"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="PublicAppSupport" type="xs:string"/><xs:element minOccurs="0" name="PublicAppBoardSupport" type="xs:string"/><xs:element minOccurs="0" name="PublicAppRatingsSupport" type="xs:string"/><xs:element minOccurs="0" name="PublicAppReviewsSupport" type="xs:string"/><xs:element minOccurs="0" name="PrivateAppSupport" type="xs:string"/><xs:element minOccurs="0" name="PrivateAppBoardSupport" type="xs:string"/><xs:element minOccurs="0" name="PrivateAppRatingsSupport" type="xs:string"/><xs:element minOccurs="0" name="PrivateAppReviewsSupport" type="xs:string"/><xs:element minOccurs="0" name="UserDefinedIdentitySupport" type="xs:string"/><xs:element minOccurs="0" name="SimultaneousSandboxProductAccessSupport" type="xs:string"/><xs:element minOccurs="0" name="ReturnPlainTextSharedSecret" type="xs:string"/><xs:element minOccurs="0" name="RegisteredUsersAppSupport" type="xs:string"/><xs:element minOccurs="0" name="RegisteredUsersAppRatingsSupport" type="xs:string"/><xs:element minOccurs="0" name="RegisteredUsersAppReviewsSupport" type="xs:string"/><xs:element minOccurs="0" name="AppPromotionSupport" type="xs:string"/></xs:sequence></xs:complexType></xs:element>
-<xs:element name="AppVersionSettings"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="AppBoardSupport" type="xs:string"/><xs:element minOccurs="0" name="AppRatingsSupport" type="xs:string"/><xs:element minOccurs="0" name="AppReviewsSupport" type="xs:string"/><xs:element minOccurs="0" name="UserDefinedIdentitySupport" type="xs:string"/><xs:element minOccurs="0" name="SimultaneousSandboxProductAccessSupport" type="xs:string"/><xs:element minOccurs="0" name="ReturnPlainTextSharedSecret" type="xs:string"/></xs:sequence></xs:complexType></xs:element>
-<xs:element name="Application"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="AppID" type="xs:string"/><xs:element minOccurs="0" name="Name" type="xs:string"/><xs:element minOccurs="0" name="Description" type="xs:string"/><xs:element minOccurs="0" name="Summary" type="xs:string"/><xs:element minOccurs="0" name="Visibility" type="xs:string"/><xs:element minOccurs="0" name="InitialEnvironment" type="xs:string"/><xs:element minOccurs="0" name="DefaultVersionID" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="Tag" type="xs:string"/><xs:element minOccurs="0" name="IsFollowed" type="xs:boolean"/><xs:element minOccurs="0" ref="ns1:RatingSummary"/><xs:element minOccurs="0" name="PictureID" type="xs:long"/><xs:element minOccurs="0" name="State" type="xs:string"/><xs:element minOccurs="0" name="Created" type="xs:dateTime"/><xs:element minOccurs="0" name="Updated" type="xs:dateTime"/><xs:element minOccurs="0" name="AvatarURL" type="xs:anyURI"/><xs:element minOccurs="0" ref="tns:ApplicationVersion"/><xs:element minOccurs="0" ref="tns:AppSettings"/><xs:element minOccurs="0" name="TeamID" type="xs:string"/><xs:element minOccurs="0" ref="ns2:Image"/><xs:element minOccurs="0" ref="tns:ApplicationVersions"/><xs:element minOccurs="0" name="Connections" type="xs:long"/><xs:element minOccurs="0" name="Followers" type="xs:long"/><xs:element minOccurs="0" name="Rating" type="xs:float"/><xs:element minOccurs="0" ref="ns3:BusinessID"/><xs:element minOccurs="0" ref="ns2:TargetResources"/></xs:sequence></xs:complexType></xs:element>
-<xs:element name="ApplicationVersion"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="RuntimeID" type="xs:string"/><xs:element minOccurs="0" name="AppID" type="xs:string"/><xs:element minOccurs="0" name="Name" type="xs:string"/><xs:element minOccurs="0" name="Description" type="xs:string"/><xs:element minOccurs="0" name="WebsiteAddress" type="xs:string"/><xs:element minOccurs="0" name="Visibility" type="xs:string"/><xs:element minOccurs="0" name="InitialEnvironment" type="xs:string"/><xs:element minOccurs="0" name="CurrentEnvironment" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="Tag" type="xs:string"/><xs:element minOccurs="0" name="HasKeyInfo" type="xs:boolean"/><xs:element minOccurs="0" name="Created" type="xs:dateTime"/><xs:element minOccurs="0" name="Updated" type="xs:dateTime"/><xs:element minOccurs="0" name="State" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="SecurityMechanisms" type="xs:string"/><xs:element minOccurs="0" ref="ns1:RatingSummary"/><xs:element minOccurs="0" name="Identity" type="xs:string"/><xs:element minOccurs="0" name="SharedSecret" type="xs:string"/><xs:element minOccurs="0" name="EncryptedSharedSecret" type="xs:string"/><xs:element minOccurs="0" ref="tns:AppVersionSettings"/><xs:element minOccurs="0" ref="ns2:TargetResources"/><xs:element name="classifiers"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="entry"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="key" type="xs:string"/><xs:element minOccurs="0" name="value" type="ns4:stringArray"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element><xs:element name="artifacts"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="entry"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="key" type="xs:string"/><xs:element minOccurs="0" name="value" type="xs:string"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element><xs:element name="labels"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="entry"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="key" type="xs:string"/><xs:element minOccurs="0" name="value" type="xs:anyType"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
-<xs:element name="ApplicationVersions"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" ref="tns:ApplicationVersion"/></xs:sequence></xs:complexType></xs:element>
-<xs:element name="Applications"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" ref="tns:Application"/></xs:sequence></xs:complexType></xs:element>
-</xs:schema>
-    <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/wsdl/user/1.0" version="1.0" xmlns:ns1="http://soa.com/xsd/user/1.0" xmlns:tns="http://soa.com/wsdl/user/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-<xs:import namespace="http://soa.com/xsd/user/1.0"/>
-<xs:element name="SignupResponse" type="tns:signupResponse"/>
-<xs:complexType name="signupResponse"><xs:sequence><xs:element minOccurs="0" name="authIdentifier" type="xs:string"/><xs:element minOccurs="0" name="authTokenValidUntil" type="xs:string"/><xs:element minOccurs="0" name="domainName" type="xs:string"/><xs:element minOccurs="0" name="emailAddress" type="xs:string"/><xs:element minOccurs="0" name="expired" type="xs:boolean"/><xs:element minOccurs="0" name="firstName" type="xs:string"/><xs:element minOccurs="0" name="lastName" type="xs:string"/><xs:element minOccurs="0" name="loginDomainID" type="xs:string"/><xs:element minOccurs="0" name="loginState" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="pendingAgreements" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="pendingNotifications" type="xs:int"/><xs:element minOccurs="0" name="pendingTaskData" type="xs:anyType"/><xs:element maxOccurs="unbounded" minOccurs="0" name="pendingTasks" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="profileName" type="xs:string"/><xs:element minOccurs="0" name="sessionValidUntil" type="xs:string"/><xs:element minOccurs="0" name="signupStatus" type="xs:string"/><xs:element minOccurs="0" name="state" type="xs:string"/><xs:element minOccurs="0" name="userID" type="xs:string"/><xs:element minOccurs="0" name="userName" type="xs:string"/><xs:element minOccurs="0" name="userPhones"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" ref="ns1:UserPhone"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType>
-</xs:schema>
-    <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/notification/1.0" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-<xs:element name="NotificationsState"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="NotificationID" type="xs:string"/><xs:element name="State" type="xs:string"/></xs:sequence></xs:complexType></xs:element>
-</xs:schema>
-    <xs:schema targetNamespace="http://jaxb.dev.java.net/array" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-<xs:complexType final="#all" name="stringArray"><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="xs:string"/></xs:sequence></xs:complexType>
 </xs:schema>
   </wsdl:types>
   <wsdl:message name="modifyAccountSettingsResponseMessage">
@@ -381,6 +381,10 @@
   </wsdl:message>
   <wsdl:message name="inviteUserToPlatformResponseMessage">
   </wsdl:message>
+  <wsdl:message name="getBoardResponseMessage">
+    <wsdl:part name="getBoardResponse" element="nms5:rss">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getAppsRequestMessage">
     <wsdl:part name="UserID" type="xs:string">
     </wsdl:part>
@@ -401,10 +405,6 @@
     <wsdl:part name="IncludeTags" type="xs:boolean">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getBoardResponseMessage">
-    <wsdl:part name="getBoardResponse" element="nms5:rss">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="getAccountSettingsResponseMessage">
     <wsdl:part name="getAccountSettingsResponse" element="nms1:AccountSettings">
     </wsdl:part>
@@ -421,14 +421,14 @@
     <wsdl:part name="getUserRolesResponse" element="nms1:UserRoles">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="listUserAttributesResponseMessage">
-    <wsdl:part name="listUserAttributesResponse" element="nms1:UserAttributes">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="saveChallengesRequestMessage">
     <wsdl:part name="UserID" type="xs:string">
     </wsdl:part>
     <wsdl:part name="parameter0" element="nms1:UserIdentificationChallenges">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listUserAttributesResponseMessage">
+    <wsdl:part name="listUserAttributesResponse" element="nms1:UserAttributes">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getImageResponseMessage">
@@ -499,10 +499,6 @@
     <wsdl:part name="completeSignupAdvancedResponse" element="nms5:SignupResponse">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getMyGroupsRequestMessage">
-    <wsdl:part name="UserID" type="xs:string">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="getApisRequestMessage">
     <wsdl:part name="UserID" type="xs:string">
     </wsdl:part>
@@ -513,6 +509,10 @@
     <wsdl:part name="count" type="xs:integer">
     </wsdl:part>
     <wsdl:part name="versionCount" type="xs:integer">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getMyGroupsRequestMessage">
+    <wsdl:part name="UserID" type="xs:string">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getBoardRequestMessage">
@@ -575,14 +575,14 @@
     <wsdl:part name="Type" type="xs:string">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="completeSignupAdvancedRequestMessage">
-    <wsdl:part name="parameter0" element="nms1:CompleteSignUpUser">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="getLoginDomainRequestMessage">
     <wsdl:part name="UserID" type="xs:string">
     </wsdl:part>
     <wsdl:part name="cache" type="xs:boolean">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="completeSignupAdvancedRequestMessage">
+    <wsdl:part name="parameter0" element="nms1:CompleteSignUpUser">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getMyLoginDomainRequestMessage">
@@ -667,14 +667,14 @@
     <wsdl:part name="getAuthorizationResultResponse" element="nms1:AuthorizationResult">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="saveChallengesResponseMessage">
+    <wsdl:part name="saveChallengesResponse" element="nms1:UserIdentificationChallenges">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="saveExtensionPropertiesRequestMessage">
     <wsdl:part name="UserID" type="xs:string">
     </wsdl:part>
     <wsdl:part name="parameter0" element="nms1:UserExtensionProperties">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="saveChallengesResponseMessage">
-    <wsdl:part name="saveChallengesResponse" element="nms1:UserIdentificationChallenges">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="modifyPasswordRequestMessage">
@@ -775,16 +775,16 @@
     <wsdl:part name="getFollowingResponse" type="xs:string">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getApisResponseMessage">
+    <wsdl:part name="getApisResponse" element="nms5:rss">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="changeUserDomainRequestMessage">
     <wsdl:part name="UserID" type="xs:string">
     </wsdl:part>
     <wsdl:part name="DomainID" type="xs:string">
     </wsdl:part>
     <wsdl:part name="parameter0" element="nms1:ChangeUserDomainRequest">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="getApisResponseMessage">
-    <wsdl:part name="getApisResponse" element="nms5:rss">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getFollowersRequestMessage">
@@ -804,28 +804,40 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="UserAPIPortType">
-    <wsdl:operation name="modifyUser">
-      <wsdl:input message="nms5:modifyUserRequestMessage">
+    <wsdl:operation name="getAuthorizationResult">
+      <wsdl:input message="nms5:getAuthorizationResultRequestMessage">
     </wsdl:input>
-      <wsdl:output message="nms5:modifyUserResponseMessage">
+      <wsdl:output message="nms5:getAuthorizationResultResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getNotifications">
-      <wsdl:input message="nms5:getNotificationsRequestMessage">
+    <wsdl:operation name="getChallenges">
+      <wsdl:input message="nms5:getChallengesRequestMessage">
     </wsdl:input>
-      <wsdl:output message="nms5:getNotificationsResponseMessage">
+      <wsdl:output message="nms5:getChallengesResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getUserRoles">
-      <wsdl:input message="nms5:getUserRolesRequestMessage">
+    <wsdl:operation name="saveChallenges">
+      <wsdl:input message="nms5:saveChallengesRequestMessage">
     </wsdl:input>
-      <wsdl:output message="nms5:getUserRolesResponseMessage">
+      <wsdl:output message="nms5:saveChallengesResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getFollowings">
-      <wsdl:input message="nms5:getFollowingsRequestMessage">
+    <wsdl:operation name="validateEmailChangeCode">
+      <wsdl:input message="nms5:validateEmailChangeCodeRequestMessage">
     </wsdl:input>
-      <wsdl:output message="nms5:getFollowingsResponseMessage">
+      <wsdl:output message="nms5:validateEmailChangeCodeResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="sendEmailChangeCode">
+      <wsdl:input message="nms5:sendEmailChangeCodeRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="nms5:sendEmailChangeCodeResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUserPermissions">
+      <wsdl:input message="nms5:getUserPermissionsRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="nms5:getUserPermissionsResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="addUser">
@@ -834,10 +846,10 @@
       <wsdl:output message="nms5:addUserResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getMyLoginDomain">
-      <wsdl:input message="nms5:getMyLoginDomainRequestMessage">
+    <wsdl:operation name="modifyUser">
+      <wsdl:input message="nms5:modifyUserRequestMessage">
     </wsdl:input>
-      <wsdl:output message="nms5:getMyLoginDomainResponseMessage">
+      <wsdl:output message="nms5:modifyUserResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getFollowing">
@@ -852,16 +864,52 @@
       <wsdl:output message="nms5:modifyPasswordResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getUserPermissions">
-      <wsdl:input message="nms5:getUserPermissionsRequestMessage">
+    <wsdl:operation name="getFollowings">
+      <wsdl:input message="nms5:getFollowingsRequestMessage">
     </wsdl:input>
-      <wsdl:output message="nms5:getUserPermissionsResponseMessage">
+      <wsdl:output message="nms5:getFollowingsResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getAuthorizationResult">
-      <wsdl:input message="nms5:getAuthorizationResultRequestMessage">
+    <wsdl:operation name="getBoard">
+      <wsdl:input message="nms5:getBoardRequestMessage">
     </wsdl:input>
-      <wsdl:output message="nms5:getAuthorizationResultResponseMessage">
+      <wsdl:output message="nms5:getBoardResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFollowers">
+      <wsdl:input message="nms5:getFollowersRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="nms5:getFollowersResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getApis">
+      <wsdl:input message="nms5:getApisRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="nms5:getApisResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLoginDomain">
+      <wsdl:input message="nms5:getLoginDomainRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="nms5:getLoginDomainResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="changeStatus">
+      <wsdl:input message="nms5:changeStatusRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="nms5:changeStatusResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNotifications">
+      <wsdl:input message="nms5:getNotificationsRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="nms5:getNotificationsResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMyLoginDomain">
+      <wsdl:input message="nms5:getMyLoginDomainRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="nms5:getMyLoginDomainResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="changeNotificationState">
@@ -972,6 +1020,12 @@
       <wsdl:output message="nms5:getUserPreferencesResponseMessage">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getUserRoles">
+      <wsdl:input message="nms5:getUserRolesRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="nms5:getUserRolesResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getUserPreference">
       <wsdl:input message="nms5:getUserPreferenceRequestMessage">
     </wsdl:input>
@@ -1026,76 +1080,22 @@
       <wsdl:output message="nms5:changeUserDomainResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getChallenges">
-      <wsdl:input message="nms5:getChallengesRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="nms5:getChallengesResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="saveChallenges">
-      <wsdl:input message="nms5:saveChallengesRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="nms5:saveChallengesResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getApis">
-      <wsdl:input message="nms5:getApisRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="nms5:getApisResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="sendEmailChangeCode">
-      <wsdl:input message="nms5:sendEmailChangeCodeRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="nms5:sendEmailChangeCodeResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="validateEmailChangeCode">
-      <wsdl:input message="nms5:validateEmailChangeCodeRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="nms5:validateEmailChangeCodeResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getBoard">
-      <wsdl:input message="nms5:getBoardRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="nms5:getBoardResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getFollowers">
-      <wsdl:input message="nms5:getFollowersRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="nms5:getFollowersResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getLoginDomain">
-      <wsdl:input message="nms5:getLoginDomainRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="nms5:getLoginDomainResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="changeStatus">
-      <wsdl:input message="nms5:changeStatusRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="nms5:changeStatusResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="listApps">
       <wsdl:input message="nms5:listAppsRequestMessage">
     </wsdl:input>
       <wsdl:output message="nms5:listAppsResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getStatus">
-      <wsdl:input message="nms5:getStatusRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="nms5:getStatusResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getUser">
       <wsdl:input message="nms5:getUserRequestMessage">
     </wsdl:input>
       <wsdl:output message="nms5:getUserResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getStatus">
+      <wsdl:input message="nms5:getStatusRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="nms5:getStatusResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getAvatar">
@@ -1173,49 +1173,72 @@
   </wsdl:portType>
   <wsdl:binding name="UserAPIBinding" type="nms5:UserAPIPortType">
     <shttp:binding/>
-    <wsdl:operation name="modifyUser">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /users/{userID}</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json" location="/users/{userID}" method="PUT" outputSerialization="text/plain"/>
-      <wsdl:input>
-    <shttp:input name="userID" part="userID" type="path"/>
-    <shttp:input name="parameter0" part="parameter0" type="entity"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="modifyUserResponse" part="modifyUserResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getNotifications">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/notifications</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="*/*" location="/users/{UserID}/notifications" method="GET" outputSerialization="text/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml"/>
-      <wsdl:input>
-    <shttp:input name="UserID" part="UserID" type="path"/>
-    <shttp:input name="start" part="start" type="query"/>
-    <shttp:input name="count" part="count" type="query"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getNotificationsResponse" part="getNotificationsResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getUserRoles">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/roles</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="*/*" location="/users/{UserID}/roles" method="GET" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
+    <wsdl:operation name="getAuthorizationResult">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/auzstatus</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/users/{UserID}/auzstatus" method="GET" outputSerialization="application/json,application/xml,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml"/>
       <wsdl:input>
     <shttp:input name="UserID" part="UserID" type="path"/>
     <shttp:input name="ResourceID" part="ResourceID" type="query"/>
+    <shttp:input name="ResourceKey" part="ResourceKey" type="query"/>
+    <shttp:input name="ScopeID" part="ScopeID" type="query"/>
+    <shttp:input name="ResourceType" part="ResourceType" type="query"/>
+    <shttp:input name="Action" part="Action" type="query"/>
+    <shttp:input name="Role" part="Role" type="query"/>
+    <shttp:input name="AuthorizeAll" part="AuthorizeAll" type="query"/>
       </wsdl:input>
       <wsdl:output>
-    <shttp:output name="getUserRolesResponse" part="getUserRolesResponse" type="entity"/>
+    <shttp:output name="getAuthorizationResultResponse" part="getAuthorizationResultResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getFollowings">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/followings</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="*/*" location="/users/{UserID}/followings" method="GET" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
+    <wsdl:operation name="getChallenges">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/challenges</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/users/{UserID}/challenges" method="GET" outputSerialization="application/xml,application/json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml"/>
       <wsdl:input>
     <shttp:input name="UserID" part="UserID" type="path"/>
-    <shttp:input name="Type" part="Type" type="query"/>
       </wsdl:input>
       <wsdl:output>
-    <shttp:output name="getFollowingsResponse" part="getFollowingsResponse" type="entity"/>
+    <shttp:output name="getChallengesResponse" part="getChallengesResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="saveChallenges">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /users/{UserID}/challenges</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="application/json,application/xml,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml" location="/users/{UserID}/challenges" method="PUT" outputSerialization="application/xml,application/json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml"/>
+      <wsdl:input>
+    <shttp:input name="UserID" part="UserID" type="path"/>
+    <shttp:input name="parameter0" part="parameter0" type="entity"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="saveChallengesResponse" part="saveChallengesResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="validateEmailChangeCode">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /users/validateEmailChangeCode</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="application/json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json" location="/users/validateEmailChangeCode" method="POST" outputSerialization="application/json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
+      <wsdl:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="validateEmailChangeCodeResponse" part="validateEmailChangeCodeResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="sendEmailChangeCode">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /users/{userID}/sendEmailChangeCode</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="application/x-www-form-urlencoded" location="/users/{userID}/sendEmailChangeCode" method="POST" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
+      <wsdl:input>
+    <shttp:input name="userID" part="userID" type="path"/>
+    <shttp:input name="newEmailAddress" part="newEmailAddress" type="form"/>
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="getUserPermissions">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/permissions</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/users/{UserID}/permissions" method="GET" outputSerialization="application/json,application/xml,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml"/>
+      <wsdl:input>
+    <shttp:input name="UserID" part="UserID" type="path"/>
+    <shttp:input name="ScopeID" part="ScopeID" type="query"/>
+    <shttp:input name="ResourceID" part="ResourceID" type="query"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getUserPermissionsResponse" part="getUserPermissionsResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="addUser">
@@ -1228,11 +1251,15 @@
     <shttp:output name="addUserResponse" part="addUserResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getMyLoginDomain">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/mylogindomain</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/users/mylogindomain" method="GET" outputSerialization="application/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml"/>
+    <wsdl:operation name="modifyUser">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /users/{userID}</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json" location="/users/{userID}" method="PUT" outputSerialization="text/plain"/>
+      <wsdl:input>
+    <shttp:input name="userID" part="userID" type="path"/>
+    <shttp:input name="parameter0" part="parameter0" type="entity"/>
+      </wsdl:input>
       <wsdl:output>
-    <shttp:output name="getMyLoginDomainResponse" part="getMyLoginDomainResponse" type="entity"/>
+    <shttp:output name="modifyUserResponse" part="modifyUserResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getFollowing">
@@ -1257,33 +1284,107 @@
     <shttp:output name="modifyPasswordResponse" part="modifyPasswordResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getUserPermissions">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/permissions</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/users/{UserID}/permissions" method="GET" outputSerialization="application/json,application/xml,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml"/>
+    <wsdl:operation name="getFollowings">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/followings</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="*/*" location="/users/{UserID}/followings" method="GET" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
       <wsdl:input>
     <shttp:input name="UserID" part="UserID" type="path"/>
-    <shttp:input name="ScopeID" part="ScopeID" type="query"/>
-    <shttp:input name="ResourceID" part="ResourceID" type="query"/>
+    <shttp:input name="Type" part="Type" type="query"/>
       </wsdl:input>
       <wsdl:output>
-    <shttp:output name="getUserPermissionsResponse" part="getUserPermissionsResponse" type="entity"/>
+    <shttp:output name="getFollowingsResponse" part="getFollowingsResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getAuthorizationResult">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/auzstatus</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/users/{UserID}/auzstatus" method="GET" outputSerialization="application/json,application/xml,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml"/>
+    <wsdl:operation name="getBoard">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/board</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/users/{UserID}/board" method="GET" outputSerialization="text/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml"/>
       <wsdl:input>
     <shttp:input name="UserID" part="UserID" type="path"/>
-    <shttp:input name="ResourceID" part="ResourceID" type="query"/>
-    <shttp:input name="ResourceKey" part="ResourceKey" type="query"/>
-    <shttp:input name="ScopeID" part="ScopeID" type="query"/>
-    <shttp:input name="ResourceType" part="ResourceType" type="query"/>
-    <shttp:input name="Action" part="Action" type="query"/>
-    <shttp:input name="Role" part="Role" type="query"/>
-    <shttp:input name="AuthorizeAll" part="AuthorizeAll" type="query"/>
+    <shttp:input name="ItemType" part="ItemType" type="query"/>
+    <shttp:input name="DiscussionType" part="DiscussionType" type="query"/>
+    <shttp:input name="APIID" part="APIID" type="query"/>
+    <shttp:input name="TicketLabel" part="TicketLabel" type="query"/>
+    <shttp:input name="TicketState" part="TicketState" type="query"/>
+    <shttp:input name="AppID" part="AppID" type="query"/>
+    <shttp:input name="ItemID" part="ItemID" type="query"/>
+    <shttp:input name="Tag" part="Tag" type="query"/>
+    <shttp:input name="IncludeComments" part="IncludeComments" type="query"/>
+    <shttp:input name="NumberOfComments" part="NumberOfComments" type="query"/>
+    <shttp:input name="IncludeActions" part="IncludeActions" type="query"/>
+    <shttp:input name="IncludeCommentActions" part="IncludeCommentActions" type="query"/>
+    <shttp:input name="start" part="start" type="query"/>
+    <shttp:input name="count" part="count" type="query"/>
+    <shttp:input name="SortBy" part="SortBy" type="query"/>
+    <shttp:input name="IncludeSelfAuthored" part="IncludeSelfAuthored" type="query"/>
+    <shttp:input name="PublishedState" part="PublishedState" type="query"/>
       </wsdl:input>
       <wsdl:output>
-    <shttp:output name="getAuthorizationResultResponse" part="getAuthorizationResultResponse" type="entity"/>
+    <shttp:output name="getBoardResponse" part="getBoardResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFollowers">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/followers</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="*/*" location="/users/{UserID}/followers" method="GET" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
+      <wsdl:input>
+    <shttp:input name="UserID" part="UserID" type="path"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getFollowersResponse" part="getFollowersResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getApis">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/apis</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="*/*" location="/users/{UserID}/apis" method="GET" outputSerialization="text/xml,application/rss+xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml"/>
+      <wsdl:input>
+    <shttp:input name="UserID" part="UserID" type="path"/>
+    <shttp:input name="includeVersions" part="includeVersions" type="query"/>
+    <shttp:input name="start" part="start" type="query"/>
+    <shttp:input name="count" part="count" type="query"/>
+    <shttp:input name="versionCount" part="versionCount" type="query"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getApisResponse" part="getApisResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLoginDomain">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/logindomain</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/users/{UserID}/logindomain" method="GET" outputSerialization="application/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml"/>
+      <wsdl:input>
+    <shttp:input name="UserID" part="UserID" type="path"/>
+    <shttp:input name="cache" part="cache" type="query"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getLoginDomainResponse" part="getLoginDomainResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="changeStatus">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /users/{UserID}/status</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="application/json,application/xml,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml" location="/users/{UserID}/status" method="PUT" outputSerialization="application/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml"/>
+      <wsdl:input>
+    <shttp:input name="UserID" part="UserID" type="path"/>
+    <shttp:input name="parameter0" part="parameter0" type="entity"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="changeStatusResponse" part="changeStatusResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNotifications">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/notifications</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="*/*" location="/users/{UserID}/notifications" method="GET" outputSerialization="text/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml"/>
+      <wsdl:input>
+    <shttp:input name="UserID" part="UserID" type="path"/>
+    <shttp:input name="start" part="start" type="query"/>
+    <shttp:input name="count" part="count" type="query"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getNotificationsResponse" part="getNotificationsResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMyLoginDomain">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/mylogindomain</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/users/mylogindomain" method="GET" outputSerialization="application/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml"/>
+      <wsdl:output>
+    <shttp:output name="getMyLoginDomainResponse" part="getMyLoginDomainResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="changeNotificationState">
@@ -1497,6 +1598,17 @@
     <shttp:output name="getUserPreferencesResponse" part="getUserPreferencesResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getUserRoles">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/roles</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="*/*" location="/users/{UserID}/roles" method="GET" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
+      <wsdl:input>
+    <shttp:input name="UserID" part="UserID" type="path"/>
+    <shttp:input name="ResourceID" part="ResourceID" type="query"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getUserRolesResponse" part="getUserRolesResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getUserPreference">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/preferences/{PreferenceName}</sdoc:displayName></wsdl:documentation>
     <shttp:operation location="/users/{UserID}/preferences/{PreferenceName}" method="GET" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
@@ -1605,118 +1717,6 @@
     <shttp:output name="changeUserDomainResponse" part="changeUserDomainResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getChallenges">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/challenges</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/users/{UserID}/challenges" method="GET" outputSerialization="application/xml,application/json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml"/>
-      <wsdl:input>
-    <shttp:input name="UserID" part="UserID" type="path"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getChallengesResponse" part="getChallengesResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="saveChallenges">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /users/{UserID}/challenges</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="application/json,application/xml,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml" location="/users/{UserID}/challenges" method="PUT" outputSerialization="application/xml,application/json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml"/>
-      <wsdl:input>
-    <shttp:input name="UserID" part="UserID" type="path"/>
-    <shttp:input name="parameter0" part="parameter0" type="entity"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="saveChallengesResponse" part="saveChallengesResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getApis">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/apis</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="*/*" location="/users/{UserID}/apis" method="GET" outputSerialization="text/xml,application/rss+xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml"/>
-      <wsdl:input>
-    <shttp:input name="UserID" part="UserID" type="path"/>
-    <shttp:input name="includeVersions" part="includeVersions" type="query"/>
-    <shttp:input name="start" part="start" type="query"/>
-    <shttp:input name="count" part="count" type="query"/>
-    <shttp:input name="versionCount" part="versionCount" type="query"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getApisResponse" part="getApisResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="sendEmailChangeCode">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /users/{userID}/sendEmailChangeCode</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="application/x-www-form-urlencoded" location="/users/{userID}/sendEmailChangeCode" method="POST" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
-      <wsdl:input>
-    <shttp:input name="userID" part="userID" type="path"/>
-    <shttp:input name="newEmailAddress" part="newEmailAddress" type="form"/>
-      </wsdl:input>
-    </wsdl:operation>
-    <wsdl:operation name="validateEmailChangeCode">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /users/validateEmailChangeCode</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="application/json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json" location="/users/validateEmailChangeCode" method="POST" outputSerialization="application/json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
-      <wsdl:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="validateEmailChangeCodeResponse" part="validateEmailChangeCodeResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getBoard">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/board</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/users/{UserID}/board" method="GET" outputSerialization="text/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml"/>
-      <wsdl:input>
-    <shttp:input name="UserID" part="UserID" type="path"/>
-    <shttp:input name="ItemType" part="ItemType" type="query"/>
-    <shttp:input name="DiscussionType" part="DiscussionType" type="query"/>
-    <shttp:input name="APIID" part="APIID" type="query"/>
-    <shttp:input name="TicketLabel" part="TicketLabel" type="query"/>
-    <shttp:input name="TicketState" part="TicketState" type="query"/>
-    <shttp:input name="AppID" part="AppID" type="query"/>
-    <shttp:input name="ItemID" part="ItemID" type="query"/>
-    <shttp:input name="Tag" part="Tag" type="query"/>
-    <shttp:input name="IncludeComments" part="IncludeComments" type="query"/>
-    <shttp:input name="NumberOfComments" part="NumberOfComments" type="query"/>
-    <shttp:input name="IncludeActions" part="IncludeActions" type="query"/>
-    <shttp:input name="IncludeCommentActions" part="IncludeCommentActions" type="query"/>
-    <shttp:input name="start" part="start" type="query"/>
-    <shttp:input name="count" part="count" type="query"/>
-    <shttp:input name="SortBy" part="SortBy" type="query"/>
-    <shttp:input name="IncludeSelfAuthored" part="IncludeSelfAuthored" type="query"/>
-    <shttp:input name="PublishedState" part="PublishedState" type="query"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getBoardResponse" part="getBoardResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getFollowers">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/followers</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="*/*" location="/users/{UserID}/followers" method="GET" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
-      <wsdl:input>
-    <shttp:input name="UserID" part="UserID" type="path"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getFollowersResponse" part="getFollowersResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getLoginDomain">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/logindomain</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/users/{UserID}/logindomain" method="GET" outputSerialization="application/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml"/>
-      <wsdl:input>
-    <shttp:input name="UserID" part="UserID" type="path"/>
-    <shttp:input name="cache" part="cache" type="query"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getLoginDomainResponse" part="getLoginDomainResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="changeStatus">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /users/{UserID}/status</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="application/json,application/xml,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml" location="/users/{UserID}/status" method="PUT" outputSerialization="application/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml"/>
-      <wsdl:input>
-    <shttp:input name="UserID" part="UserID" type="path"/>
-    <shttp:input name="parameter0" part="parameter0" type="entity"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="changeStatusResponse" part="changeStatusResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="listApps">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/apps</sdoc:displayName></wsdl:documentation>
     <shttp:operation inputSerialization="*/*" location="/users/{UserID}/apps" method="GET" outputSerialization="application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+xml"/>
@@ -1735,16 +1735,6 @@
     <shttp:output name="listAppsResponse" part="listAppsResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getStatus">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/status</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="*/*" location="/users/{UserID}/status" method="GET" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
-      <wsdl:input>
-    <shttp:input name="UserID" part="UserID" type="path"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getStatusResponse" part="getStatusResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getUser">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{userID}</sdoc:displayName></wsdl:documentation>
     <shttp:operation location="/users/{userID}" method="GET" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
@@ -1753,6 +1743,16 @@
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="getUserResponse" part="getUserResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getStatus">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /users/{UserID}/status</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="*/*" location="/users/{UserID}/status" method="GET" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
+      <wsdl:input>
+    <shttp:input name="UserID" part="UserID" type="path"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getStatusResponse" part="getStatusResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getAvatar">
