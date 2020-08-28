@@ -1,0 +1,232 @@
+---
+layout: page
+title: Using Kafka
+description: Provides information about Kafka implementation in version 2020.1.2, including benefits, installation, and configuration.
+product: sp
+category: gs
+weight: 05
+sub-nav-class: Kafka
+type: page
+nav-title: Using Kafka
+---
+<h1 id="top">Using Kafka</h1>
+<p>Provides information about Kafka implementation in versio 2020.1.2, including benefits, installation, and configuration.</p>
+<h4 class="stamp">Valid in Version: 2020.1.2 and later</h4>
+<hr class="divide_hr" />
+
+
+
+<h2 style="color: gray;">Table of Contents</h2>
+<ol class="table_of_contents">
+	<li><a href="#overview">Overview</a></li>
+	<li><a href="#kafka_advantages">Advantages of Kafka implementation with the Akana Platform</a></li>
+<li><a href="#kafka_deployment_rec">Kafka Deployment Recommendations</a></li>
+	<li><a href="#kafka_installing">Installing Akana Kafka features </a></li>
+<li><a href="#topic_config">Topic Configuration</a></li>
+	<li><a href="#kafka_troubleshooting">Troubleshooting Your Kafka Implementation</a></li>
+	<li><a href="#kafka_future">Future Developments</a></li>
+</ol>
+<hr class="divide_hr" />
+
+
+
+<h2 id="overview">Overview</h2>
+<p>In version 2020.1.2, the API Platform offers optional <a href="../../cm/learnmore/basics_glossary.htm#gl_kafka">Kafka</a> integration.</p>
+<p>Kafka is noted for its capabilities to support high throughput, scalability, safe permanent storage of streams of data in a distributed and fault-tolerant cluster, and high availability across distributed clusters and geographical regions. It supports scalability with fault tolerance for heavy-traffic systems.</p>
+<p>You can choose to use Kafka for your implementation of the Akana Platform, particularly if your traffic volumes are very high.</p>
+<p>Using Kafka as part of the API Platform requires separate installation and configuration of Kafka itself, including hardware requirements. See <a href="#kafka_installing">Installing Akana Kafka features </a>.</p>
+<p>Kafka is distributed, partitioned, and highly fault-tolerant.</p>
+<p>If you have an implementation that's high-volume, with many or very large messages, you can use Kafka to more efficiently manage the traffic flow to help ensure the load on the API Gateway remains manageable.</p>
+<p>You also have the option to use Elasticsearch for temporary storage of large messages. See <a href="#kafka_config_claim_check">Claim check pattern</a> below.</p>
+<p>For general information about Kafka, see <a href="https://kafka.apache.org/" title="Link to Apache Kafka site" target="_blank">https://kafka.apache.org/</a> (external site).</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="kafka_advantages">Advantages of Kafka implementation with the Akana Platform</h2>
+<p>By using Kafka in your implementation, you can benefit from the additional data processing capabilities of Kafka. Practical benefits:</p>
+<ul>
+	<li>Reduction of memory load on the Gateway&#8212;Help reduce the possibility of out of memory (OOM) problems with the Gateway. Using Kafka helps reduce memory load on the Gateways by moving usage data, particularly recorded messages, out of memory in a more timely manner. </li>
+<li>Reduction of potential impact on other containers&#8212;In-memory usage data and metric data causing out of memory issues on the Gateways could also impact the Policy Manager containers which are the consumers of the data.</li>
+<li>Safety of usage data&#8212;Helps prevent loss of usage data. Because of limitations relating to the synchronous REST APIs used to report usage and metrics, loss of usage data is possible in times of high volume. Of course, usage data is critical. Using Kafka is a way to implement a more efficient configuration, in scenarios where loss of critical usage data might be a possibility because of high volume and/or limited resources.</li>
+<li>Kafka can help balance load in terms of CPU, memory, and persistent storage management across the system. For example, a pull model such as Kafka for usage data in Policy Manager allows for a mmore even load profile than the default push model through REST APIs.</li>
+<li>Using Kafka can help reduce  stress on both Gateway containers and Policy Manager containers. The availability and health of the Policy Manager containers is essential for the success of the Gateways.</li>
+	<li>Using Kafka, you can use a percentage of the Heap instead of an arbitrary queue size number (the maximum number of messages that can be queued) for usage messages/bulk data.</li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="kafka_deployment_rec">Kafka Deployment Recommendations</h2>
+<p>In this section:</p>
+<ul>
+<li><a href="#deploy_rec_version">Supported versions</a></li>
+<li><a href="#deploy_rec_brokers">Brokers</a></li>
+	<li><a href="#deploy_rec_zoo">Zookeeper instances</a></li>
+	<li><a href="#deploy_rec_inst_consumer">Consumer instances</a></li>
+	<li><a href="#deploy_rec_partition">Partitions</a></li>
+	<li><a href="#deploy_rec_replicationc">Replication factor</a></li>
+<li><a href="#deploy_rec_disc">Disk allocation</a></li>
+<li><a href="#deploy_rec_monitoring">Monitoring</a></li>
+	<li><a href="#deploy_rec_mirror">Mirroring</a></li>
+</ul>
+
+
+<h3 id="deploy_rec_version">Supported versions</h3>
+<p>Kafka version supported: Version 2.2.1.</p>
+
+
+<h3 id="deploy_rec_brokers">Brokers</h3>
+<p>Requirement: 3 brokers with 4 vCPU and 16GB RAM each.</p>
+
+
+<h3 id="deploy_rec_zoo">Zookeeper instances</h3>
+<p>Requirement: 3 Zookeeper instances with 2 vCPU and 8GB RAM each.</p>
+<h3 id="deploy_rec_inst_consumer">Consumer instances</h3>
+<p>Requirement: 3 Consumer instances with 4 vCPU and 16GB RAM each.</p>
+<p>The number of consumers is usually proportionate to the number of partitions. The consumer instances should be increased based on the throughput that the NDs are generating. The data will not be lost, but could be delayed if the consumers are slow consuming the throughput. There is no splitting/chunking of the messages in the implementation, so any consumer can consume from any partition at any given time.</p>
+<h3 id="deploy_rec_partition">Partitions</h3>
+<p>Recommendation:  </p>
+<pre>Number of partitions &gt;= ND * 3</pre>
+<p>So, for each Network Director container, there should be at least three partitions.</p>
+<p>For recommendations and formulas, refer to the Kafka documentation: <a href="https://kafka.apache.org/documentation/" title="Link to Kafka documentation" target="_blank">https://kafka.apache.org/documentation/</a>.</p>
+<h3 id="deploy_rec_replication">Replication factor</h3>
+<p>The maximum replication factor is:</p>
+<pre>Number of replicas &lt;= number of brokers</pre>
+<p>For example, in an environment with three brokers, two replications are recommended.</p>
+<p>For more information, refer to the Kafka documentation, Replication section: <a href="https://kafka.apache.org/documentation/#replication" title="Link to Kafka documentation, Replication section" target="_blank">https://kafka.apache.org/documentation/#replication</a>.</p>
+
+
+<h3 id="deploy_rec_disc">Disk allocation</h3>
+<p>Recommendation:</p>
+<ul>
+<li>General purpose SSD/1d {<span class="apidoc_red">is it SSD-1D? SSD1?</span>}</li>
+<li>Retention: 10 MB/s</li>
+</ul>
+<h3 id="deploy_rec_monitoring">Monitoring</h3>
+<p>xxx</p>
+
+
+<h3 id="deploy_rec_mirror">Mirroring</h3>
+<p>Mirroring is out of scope in the 2020.1.2 implementation of Kafka.</p>
+<p>However, you can achieve the same effect by configuring your implementation to xxx.</p>
+<p>{<span class="apidoc_red">MM&quot; &quot;Mirroring is out of scope – you can still achieve multi region, explain how</span>}</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="kafka_installing">Installing Akana Kafka features </h2>
+<p>You'll need to install Kafka features in each container:</p>
+<ul>
+<li><a href="#kafka_install_nd">Network Director container</a></li>
+<li><a href="#kafka_install_pm">All other containers</a></li>
+</ul>
+<p>In each container, install the following features, available in the Akana Administration Console: Available Features &gt; Plug-In:</p>
+<ul>
+<li>Akana Kafka Support for Network Director</li>
+<li>Akana Kafka Support for Policy Manager</li>
+</ul>
+<p>&nbsp;</p>
+
+
+<h3 id="kafka_install_nd">Network Director container</h3>
+<p>In each Network Director container, install the following feature, available in the Akana Administration Console: Available Features &gt; Plug-In:</p>
+<ul>
+<li>Akana Kafka Support for Network Director</li>
+</ul>
+<p>If you are running automation recipes, the recipe is:</p>
+<ul>
+<li>xxx</li>
+</ul>
+
+
+<h3 id="kafka_install_pm">All other Containers (Consumer Containers?)</h3>
+<p>For each consumer container (Policy Manager or Community Manager), install the following feature, available in the Akana Administration Console: Available Features &gt; Plug-In:</p>
+<ul>
+<li>Akana Kafka Support for Policy Manager</li>
+</ul>
+<p>If you are running automation recipes, the recipe is:</p>
+<ul>
+<li>xxx</li>
+</ul>
+<p>{<span class="apidoc_red">What about other types of containers? Like, a dedicated OAuth container or something?</span>}</p>
+
+
+
+<h2 id="topic_config">Configuration</h2>
+<p>In this section:</p>
+<ul>
+<li><a href="#kafka_config_topic">Topic Configuration</a></li>
+<li><a href="#kafka_config_server_ts">Server Configuration and Trust Store</a></li>
+<li><a href="#kafka_config_monitoring'">Monitoring</a></li>
+<li><a href="#kafka_config_claim_check">Claim Check pattern</a></li>
+</ul>
+
+
+<h3 id="kafka_config_topic">Topic Configuration</h3>
+<p>When you install the Kafka feature, the platform includes recommended topic names. If you accept these recommendations, no other Kafka usage configuration is needed.</p>
+<p>If you choose to use different topic names, you'll need to update the configuration on all Gateways and on all containers on which the Akana Kafka Consumers feature is installed.</p>
+<p>The default topic names are:</p>
+<ul>
+<li>container.usage</li>
+<li>container.bulk</li>
+<li>container.rollup</li>
+<li>container.transaction</li>
+</ul>
+
+
+<h3 id="kafka_config_server_ts">Server Configuration and Trust Store</h3>
+<p>{<span class="apidoc_red">MM: Information about Kafka server configuration and truststore to come.</span>}</p>
+
+
+<h3 id="kafka_config_monitoring">Monitoring</h3>
+<p>explain the basic information we are gathering – Its expected to have a system wide monitoring of Kafka.</p>
+
+
+<h3 id="kafka_config_claim_check">Claim Check pattern</h3>
+<p>The Akana Platform Kafka implementation supports a claim check pattern. With this configuration, xxx. </p>
+<p>You also have the option to use Elasticsearch for temporary storage of large messages (&quot;claim check&quot; system) to help optimize traffic handling and ease the burden on the Gateway. The message body and headers are stored in Elasticsearch, with a unique ID. The only data that is indexed is the ID; message and header content is not indexed, which means that the message size does not increase the processing burden significantly. If you use Detailed Auditing policy on your messages, or if your traffic includes large attachments, you might choose this option. However, note that we do not recommend using the Detailed Auditing policy habitually in a runtime environment because of the increased load to the system. In most cases, the Basic Auditing policy is all that's needed.</p>
+<p>{<span class="apidoc_red">MM: is special config needed for that?</span>}</p>
+<p>{<span class="apidoc_red">MM: Claim check pattern – When to use Elastcsearch for bulk data processing.</span>}</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="kafka_troubleshooting">Troubleshooting Your Kafka Implementation</h2>
+<p>{<span class="apidoc_red">MM: see if we can explain some common problems we have come across.</span>}</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="kafka_future">Future Developments</h2>
+<p>The Kafka capabilities outlined above are the first stage in a phased implementation. In the future we plan to:</p>
+<ul>
+<li>Provide secure REST APIs for customers to be able to add subscriptions to Kafka Topics and add Pipeline instances in different stages to rollup, transform, enrich, filter Kafka streams.</li>
+<li>Provide the ability to configure Source and Sink destinations and provide the ability to define the State Stores.</li>
+<li>OOB UI for monitoring the pipelines instances and also the ability to add custom pipelines to store the data into data stores like Time Series databases and integrate with dashboards like Tableau, Grafana, Redash or Superset.</li>
+<li>Implement Event-Driven architecture</li>
+<li>Extend message broker support to Kafka streams. Message brokers are supported in the product right now, but this support will be extended to Kafka streams. The Akana service Orchestration pattern can be leveraged to send asynchronous events to Kafka topics and poll to receive events.</li>
+</ul>
+
+<p><a href="#top">Back to top</a></p>
+
+
+
+<hr class="divide_hr" />
+
+
+
+<h2 id="related_topics">Related Topics</h2>
+<div class="relatedlinks" id="install"><!-- #BeginLibraryItem "/Library/relatedtopics_install.lbi" -->
+<ul>
+	<li><a href="../upgrade/upgrading_akana_api_platform_all.htm">Upgrading the Akana API Platform (all versions)</a></li>
+	<li><a href="../upgrade/upgrading_min_downtime.htm">Use Case: Upgrading with Minimum Downtime</a></li>
+	<li><a href="../upgrade/upgrading_micro.htm">Minor-Version Update Notes</a></li>
+</ul>
+<ul>
+	<li><a href="../platform_install/installing_akana_api_platform_all.htm">Installing the Akana API Platform (all versions)</a></li>
+	<li><a href="../platform_install/implementation_planning.htm">Planning Your Implementation</a></li>
+	<li><a href="../platform_install/install_cm_jython_script.htm">Installation Jython Script</a></li>
+	<li><a href="../platform_install/install_es_config.htm">Installing and Configuring Elasticsearch</a></li>
+	<li><a href="../platform_install/install_es_secure_tc.htm">Configuring Elasticsearch with Security</a></li>
+</ul><!-- #EndLibraryItem --></div>
