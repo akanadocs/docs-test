@@ -29,7 +29,9 @@ nav-title: Performance Tuning
 		<li><a href="#jre_memory">Configuring the JVM memory settings</a></li>
 		<li><a href="#listener_connection_pool">Configuring the container listeners</a></li>
 		<li><a href="#client_connection_pool">Configuring the client connection pool</a></li>
-	</ul></li>
+		<li><a href="#transport_config_linger">Configuring how long connections wait to purge data when closing</a></li>
+	</ul>
+</li>
 	<li><a href="#other_settings">Other Settings</a>
 	<ul>
 		<li><a href="#gif_metrics">Calculating GIF metrics</a></li>
@@ -105,6 +107,7 @@ nav-title: Performance Tuning
 	<li><a href="#jre_memory">Configuring the JVM memory settings</a></li>
 	<li><a href="#listener_connection_pool">Configuring the container listeners</a></li>
 	<li><a href="#client_connection_pool">Configuring the client connection pool</a></li>
+	<li><a href="#transport_config_linger">Configuring how long connections wait to purge data when closing</a></li>
 </ul>
 
 <h3 id="os_file_handles">Configuring OS File Handles</h3>
@@ -129,15 +132,15 @@ nav-title: Performance Tuning
 <h3 id="jre_memory">Configuring the JVM memory settings</h3>
 <p>Generally, we do not advise changing the JVM memory settings. A better approach is to install more containers and load-balance across them. This is due to the overhead incurred in managing the increased memory. The container ships with the following defaults:</p>
 <ul>
-<li>For 32-bit machines:
-  <pre>-Xmx1024M -XX:MaxPermSize=192M</pre></li>
-<li>For 64-bit machines:
-  <pre>-Xmx2048M -XX:MaxPermSize=256M</pre></li>
+	<li>For 32-bit machines:
+		<pre>-Xmx1024M -XX:MaxPermSize=192M</pre></li>
+	<li>For 64-bit machines:
+		<pre>-Xmx2048M -XX:MaxPermSize=256M</pre></li>
 </ul>
 <p>The changes you make will depend on which product version you're using and also which Java version you're using. See <a href="#java_versions">Note re Java versions</a> below. Follow these instructions:</p>
 <ul>
-  <li>For Java 8: see <a href="#increase_mem_java8">To increase the JVM memory settings: Java 8</a></li>
-  <li>For Java 7: see <a href="#increase_mem_java7">To increase the JVM memory settings: Java 7</a></li>
+	<li>For Java 8: see <a href="#increase_mem_java8">To increase the JVM memory settings: Java 8</a></li>
+		<li>For Java 7: see <a href="#increase_mem_java7">To increase the JVM memory settings: Java 7</a></li>
 </ul>
 
 <h4 id="increase_mem_java8">To increase the JVM memory settings: Java 8</h4>
@@ -154,7 +157,7 @@ wrapper.java.additional.9 = -Xmx4096M</pre>
 <p>If you decide to increase the memory settings, first find the existing settings.</p>
 <p>Modify the setting in this file:</p>
 <ul>
-  <li><strong>RegisterContainerService.bat</strong></li>
+	<li><strong>RegisterContainerService.bat</strong></li>
 </ul>
 <p>In the<strong> </strong>file, these are the existing 32-bit settings:</p>
 <pre>set JAVA_MEM=--JvmMx 1024
@@ -184,8 +187,8 @@ RegisterContainerServiceYAJWS.bat {container name}</pre>
 <h4 id="java_versions">Note re Java versions</h4>
 <p>The above instructions vary according to the Java version your installation is using. Supported versions:</p>
 <ul>
-  <li>Akana platform  version 7.2.x uses Java 7.0, unless the installation has upgraded to an external JVM.</li>
-  <li>Version 8.0 and later uses Java 8.0.</li>
+	<li>Akana platform  version 7.2.x uses Java 7.0, unless the installation has upgraded to an external JVM.</li>
+	<li>Version 8.0 and later uses Java 8.0.</li>
 </ul>
 <p><strong>Scope</strong>: All Containers</p>
 <p><a href="#top">back to top</a></p>
@@ -223,8 +226,19 @@ http.connection.manager.maxTotal = 2000
 
 com.soa.http.client.core &gt; 
 http.connection.manager.defaultMaxPerRoute = 1500</pre>
-
 <p><a href="#top">back to top</a></p>
+
+
+<h3 id="transport_config_linger">Configuring how long connections wait to purge data when closing</h3>
+<h4 class="stamp">Valid in Version: 2020.1.1 and later</h4>
+<p>In the Akana Administration Console, you can configure the <strong>SO_LINGER</strong> time for a listener. This controls how long connections will wait to purge all data when closing.</p>
+<p>In versions prior to 2020.1.1, the time was set to 30 seconds, which could be too long in some scenarios. In 2020.1.1, the default is 10 seconds and the value is configurable.</p>
+<p>In the Akana Administration Console, configure the following (value shown is the default):</p>
+<pre>
+com.soa.platform.jetty &gt; 
+http.incoming.transport.config.linger = 10</pre>
+<p><a href="#top">back to top</a></p>
+
 
 
 <h2 id="other_settings">Other settings</h2>
