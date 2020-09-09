@@ -21,7 +21,8 @@ nav-title: Using Kafka
 	<li><a href="#overview">Overview</a></li>
 	<li><a href="#kafka_advantages">Advantages of Kafka implementation with the Akana Platform</a></li>
 <li><a href="#kafka_deployment_rec">Kafka Deployment Recommendations</a></li>
-	<li><a href="#kafka_installing">Installing Akana Kafka features</a></li>
+<li><a href="#kafka_install">Installing Apache Kafka for testing purposes</a></li>
+	<li><a href="#kafka_akana_install">Installing Akana Kafka features</a></li>
 <li><a href="#kafka_config_properties">Configuration Properties for Kafka</a></li>
 <li><a href="#topic_config">Topic Configuration</a></li>
 	<li><a href="#kafka_future">Future Developments</a></li>
@@ -31,15 +32,11 @@ nav-title: Using Kafka
 
 
 <h2 id="overview">Overview</h2>
-<p>In version 2020.1.1, the API Platform offers optional <a href="../../cm/learnmore/basics_glossary.htm#gl_kafka">Kafka</a> integration.</p>
-<p>Kafka is noted for its capabilities to support high throughput, scalability, safe storage of streams of data in a distributed and fault-tolerant cluster, and high availability across distributed clusters and geographical regions. It supports scalability with fault tolerance for heavy-traffic systems.</p>
-<p>You can choose to use Kafka for your implementation of the Akana Platform, particularly if your traffic volumes are very high. Data is channeled through Kafka and is then stored in the RDBMS or in MongoDB.</p>
-<p>Using Kafka as part of the API Platform requires separate installation and configuration of Kafka itself, including hardware requirements. See <a href="#kafka_installing">Installing Akana Kafka features</a>.</p>
-<p>Kafka is distributed, partitioned, and highly fault-tolerant.</p>
-<p>If you have an implementation that's high-volume, with many or very large messages, you can use Kafka to more efficiently manage the traffic flow to help ensure the load on the API Gateway remains manageable.</p>
-<p>You also have the option to use Elasticsearch for temporary storage of large messages. See <a href="#kafka_config_claim_check">Claim Check pattern (with Detailed Auditing policy)</a> below.</p>
+<p>In version 2020.1.1, the Akana Platform offers the option to use <a href="../../cm/learnmore/basics_glossary.htm#gl_kafka">Kafka</a> as an alternative for streaming audit data. If you have an implementation that's high-volume, with many or very large messages, you can use Kafka to more efficiently manage the traffic flow to help ensure the load on the API Gateway remains manageable. Audit data is channeled through Kafka and is then persisted through the RDBMS or in MongoDB. In general, the Gateway produces data into Kafka. Consumer containers will then, in turn, read the data.</p>
+<p>Kafka is noted for its capabilities to support high throughput, scalability, safe storage of streams of data in a distributed and fault-tolerant cluster, and high availability across distributed clusters and geographical regions. It supports scalability with fault tolerance for heavy-traffic systems. Kafka is distributed, partitioned, and highly fault-tolerant.</p>
+<p>Using Kafka as part of the API Platform requires separate installation and configuration of Kafka itself, including hardware requirements. See <a href="#kafka_akana_install">Installing Akana Kafka features</a>.</p>
+<p>You also have the option, as part of your Kafka implementation, to use Elasticsearch for temporary storage of large messages. See <a href="#kafka_config_claim_check">Claim Check pattern (with Detailed Auditing policy)</a> below.</p>
 <p>For general information about Kafka, see <a href="https://kafka.apache.org/" title="Link to Apache Kafka site" target="_blank">https://kafka.apache.org/</a> (external site).</p>
-<p>The Gateway writes to Kafka and Policy Manager reads from Kafka.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -69,7 +66,7 @@ nav-title: Using Kafka
 	<li><a href="#deploy_rec_replication">Replication factor</a></li>
 <li><a href="#deploy_rec_disc">Disk allocation</a></li>
 <li><a href="#deploy_rec_monitoring">Monitoring</a></li>
-	<li><a href="#deploy_rec_mirror">Mirroring</a></li>
+	<li><a href="#deploy_rec_mirror">Cross-region mirroring</a></li>
 </ul>
 
 
@@ -85,11 +82,11 @@ nav-title: Using Kafka
 <p>Requirement: 3 Zookeeper instances with 2 vCPU and 8GB RAM each.</p>
 <h3 id="deploy_rec_inst_consumer">Consumer instances</h3>
 <p>Requirement: 3 Consumer instances with 4 vCPU and 16GB RAM each.</p>
-<p>The number of consumers is usually proportionate to the number of partitions. The consumer instances should be increased based on the throughput that the NDs are generating. The data will not be lost, but could be delayed if the consumers are slow consuming the throughput. There is no splitting/chunking of the messages in the implementation, so any consumer can consume from any partition at any given time.</p>
+<p>The number of consumers is usually proportionate to the number of partitions. The consumer instances should be increased based on the throughput that the Gateway containers are generating, so that the consumer throughput is balanced with the producer throughput.</p>
+
+
 <h3 id="deploy_rec_partition">Partitions</h3>
-<p>Recommendation:</p>
-<pre>Number of partitions &gt;= ND * 3</pre>
-<p>So, for each Network Director container, there should be at least three partitions.</p>
+<p>As a general rule of thumb, use three times as many partitions as there are Gateways OR producers.</p>
 <p>For recommendations and formulas, refer to the Kafka documentation: <a href="https://kafka.apache.org/documentation/" title="Link to Kafka documentation" target="_blank">https://kafka.apache.org/documentation/</a>.</p>
 <h3 id="deploy_rec_replication">Replication factor</h3>
 <p>The maximum replication factor is:</p>
@@ -108,14 +105,19 @@ nav-title: Using Kafka
 
 
 <h3 id="deploy_rec_monitoring">Monitoring</h3>
-<p>It's expected that there will be a system-wide monitoring of Kafka.</p>
-<h3 id="deploy_rec_mirror">Mirroring</h3>
-<p>Mirroring is out of scope in the 2020.1.1 implementation of Kafka. It will be available in a future version.</p>
+<p>In any production deployment it is expected that there will be a system-wide monitoring of Kafka.</p>
+<h3 id="deploy_rec_mirror">Cross-region mirroring</h3>
+<p>Cross-region mirroring (replication) is out of scope in the 2020.1.1 implementation of Kafka. It is projected for a future version.</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
-<h2 id="kafka_installing">Installing Akana Kafka features</h2>
+<h2 id="kafka_install">Installing Apache Kafka for testing purposes</h2>
+<p>You might want to install a single-broker Kafka on a standalone container, locally, perhaps for testing purposes. Of course for a production environment you would need more, but for testing purposes you could set up Kafka using the Apache Kafka Quickstart Guide: <a href="http://kafka.apache.org/quickstart" title="http://kafka.apache.org/quickstart" target="_blank">http://kafka.apache.org/quickstart</a>.</p><p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="kafka_akana_install">Installing Akana Kafka features</h2>
 <p>You'll need to install Kafka features in each container:</p>
 <ul>
 <li><a href="#kafka_install_nd">Installing Kafka in the Network Director container</a></li>
@@ -188,13 +190,13 @@ nav-title: Using Kafka
 
 
 <h3 id="config_com_akana_kafka">Configuration category: com.akana.kafka</h3>
-<p>The three values shown below are set when you install the Kafka feature. Do not change the values.</p>
+<p>The three values shown below are set when you install the Kafka feature.</p>
 <p>In this configuration category, you can add additional properties and values supported by Kafka. There are many supported configuration properties, as covered in the Apache Kafka documentation, Configuration section: <a href="https://kafka.apache.org/documentation/#configuration" title="https://kafka.apache.org/documentation/#configuration" target="_blank">https://kafka.apache.org/documentation/#configuration</a>.</p>
 <p>For example, you could add the <strong>acks</strong> property to configure "the number of acknowledgments the producer requires the leader to have received before considering a request complete,&quot; along with <strong>min.insync.replicas</strong> to specify &quot;the minimum number of replicas that must acknowledge a write for the write to be considered successful.&quot; Or you could add the <strong>ssl.truststore.location</strong> and <strong>ssl.truststore.password</strong> properties to set up a trust store.</p>
 <p><img src="images/aac_config_com_akana_kafka.png" alt="Akana Admin Console: Configuration properties for Kafka, com.akana.kafka" /></p>
 <dl>
 <dt>bootstrap.servers</dt>
-<dd>The address for the bootstrap servers, which you set up as part of installing the Kafka feature. This is the <strong>bootstrap.servers</strong> Kafka configuration property.</dd>
+<dd>The address for the bootstrap servers, which you set up as part of installing the Kafka feature. This is the <strong>bootstrap.servers</strong> Kafka configuration property. Format is {hostname{:{port}, with comma separators for multiple values. For an example see <a href="#proc_kafka_install_nd">To install Kafka on the Network Director container</a>, or refer to the Kafka documentation for the <strong>bootstrap.servers</strong> property: <a href="https://kafka.apache.org/documentation/#bootstrap.servers" title="https://kafka.apache.org/documentation/#bootstrap.servers" target="_blank">https://kafka.apache.org/documentation/#bootstrap.servers</a>.</dd>
 
 <dt>role</dt>
 <dd>The role of Kafka in this instance. Defaults to <strong>monitoring</strong>, the only valid value.</dd>
@@ -209,7 +211,7 @@ nav-title: Using Kafka
 <p>Set the following properties:</p>
 <dl>
 <dt>reader values:</dt>
-<dd>For the Policy Manager and Community Manager consumer containers, set the value for all four <strong>reader</strong> properties to <strong>true</strong>:
+<dd>For the Policy Manager and Community Manager containers, or any other Akana Kafka consumer container, set the value for all four <strong>reader</strong> properties to <strong>true</strong>:
 <ul>
 <li>kafka.bulk.reader.enable</li>
 <li>kafka.rollup.reader.enable</li>
@@ -251,10 +253,11 @@ nav-title: Using Kafka
 <li>container.rollup</li>
 <li>container.transaction</li>
 </ul>
+<p>You'll need to create these topics in the Broker as part of setup, using the Create Topic script: see <a href="http://kafka.apache.org/quickstart" title="http://kafka.apache.org/quickstart" target="_blank">http://kafka.apache.org/quickstart</a>, Step 3, Create a Topic to Store Your Events.</p>
 
 
 <h3 id="kafka_config_server_ts">Server Configuration and Trust Store</h3>
-<p>For information about the server configuration and trust store properties, refer to the Apache Kafka documentation, Configuration section: <a href="https://kafka.apache.org/documentation/#configuration" title="https://kafka.apache.org/documentation/#configuration" target="_blank">https://kafka.apache.org/documentation/#configuration</a>..</p>
+<p>For information about the server configuration and trust store properties, refer to the Apache Kafka documentation, Configuration section: <a href="https://kafka.apache.org/documentation/#configuration" title="https://kafka.apache.org/documentation/#configuration" target="_blank">https://kafka.apache.org/documentation/#configuration</a>.</p>
 <p>You can add these properties in the com.akana.kafka configuration. See <a href="#config_com_akana_kafka">Configuration category: com.akana.kafka</a>.</p>
 
 
