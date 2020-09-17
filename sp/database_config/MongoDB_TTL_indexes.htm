@@ -10,7 +10,8 @@ type: page
 nav-title: MongoDB TTL Indexes
 ---
 <h1 id="top">Managing MongoDB TTL Indexes</h1>
-<p>Learn how to manage the <a href="../../cm/learnmore/basics_glossary.htm#gl_ttl">TTL index</a> on MongoDB RAW collections, to configure deletion time.</p>
+<p>Learn how to manage the TTL (Time to Live) index on MongoDB RAW collections, to configure deletion time.</p>
+<p>{<span class="apidoc_red">MKL is it correct to use RAW all caps? Couldn't find a definition for this.</span>}</p>
 <h4 class="stamp">Valid in Version: 2020.2.0 and later</h4>
 <hr class="divide_hr" />
 
@@ -18,54 +19,43 @@ nav-title: MongoDB TTL Indexes
 
 <h2 style="color: gray;">Table of Contents</h2>
 <ol class="table_of_contents">
-	<li><a href="#overview">Overview: TTL indexes</a></li>
-	
 	<li><a href="#akana_ttl_usage">How the Akana Platform uses TTL indexes</a></li>
 	<li><a href="#ttl_extending">Extending the TTL</a></li>
 	<li><a href="#uc_ttl_extend">Use case: Extending the TTL</a></li>
-	<li><a href="#xxx">Guidance</a></li>
+	<li><a href="#ttl_increase_impact">System impact of increased TTL.</a></li>
 </ol>
 <hr class="divide_hr" />
 
 
 
-<h2 id="overview">Overview: TTL indexes</h2>
-<p>The platform uses MongoDB for xxx.</p>
-<p>MongoDB built-in TTL (Time to Live) indexes allow you to control how long data is kept for. When the TTL setting is reached, the MongoDB document is deleted.</p>
-<p>By default,  data added to the METRIC_RAW_DATA table is scheduled for deletion after 1 hour via a MongoDB TTL index.</p>
+<h2 id="akana_ttl_usage">How the Akana Platform uses TTL indexes</h2>
+<p>The Akana Platform uses <a href="../../cm/learnmore/basics_glossary.htm#gl_mongodb">MongoDB</a>, as an alternative to the traditional RDBMS, to help scale certain features such as OAuth, analytics, auditing, and Policy Manager alerts.</p>
+<p>The platform uses MongoDB for managing analytics information in the developer portal (Community Manager) as well as for the Envision product. In the Akana Platform, analytics data is marked for deletion on <a href="../../cm/learnmore/basics_glossary.htm#gl_ttl">TTL index</a> columns after they have been aggregated into rollups.</p>
+<p>In these scenarios, MongoDB built-in TTL indexes allow you to control how long data is kept for. When the TTL setting is reached, the MongoDB document is deleted.</p>
+<p>By default, data added to the METRIC_RAW_DATA table is scheduled for deletion after 1 hour via a MongoDB TTL index.</p>
 <p>In some cases, the MongoDB Administrator might want to modify the TTL indexes; for example, if the data is not being processed fast enough (see <a href="#uc_ttl_extend">Use case: Extending the TTL</a> below). </p>
 <p>For information about modifying the MongoDB TTL indexes, refer to the MongoDB documentation: <a href="https://docs.mongodb.com/manual/core/index-ttl/" title="https://docs.mongodb.com/manual/core/index-ttl/" target="_blank">https://docs.mongodb.com/manual/core/index-ttl/</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
-<h2 id="akana_ttl_usage">How the Akana Platform uses TTL indexes</h2>
-<p>{MKL said how we use TTL indexes. Is it the same in PM and EV? But not CM?}</p>
-<p>Akana Envision requires MongoDB.</p>
-<p>In the Akana Platform, analytics data is marked for deletion on TTL index columns after they have been aggregated into rollups.</p>
-<p>{<span class="apidoc_red">MKL is there more we need to say here?</span>}</p>
-<p><a href="#top">Back to top</a></p>
-
-
-
 <h2 id="ttl_extending">Extending the TTL</h2>
-<p>You might find that existing scripts cannot pull data fast enough, and data is therefore lost. In this scenario, you might want to extend the life of the data to accommodate the slower retrieval rate so that data is not lost.</p>
-<p>To do this, you can extend the TTL, as covered in the MongoDB documentation: <a href="https://docs.mongodb.com/manual/core/index-ttl/" title="https://docs.mongodb.com/manual/core/index-ttl/" target="_blank">https://docs.mongodb.com/manual/core/index-ttl/</a>.</p>
-<p>When external systems are interfacing with the raw data directly, extending the TTL, and therefore the life of the data, can give time to these processes to read the data.</p>
+<p>You might find that existing scripts cannot pull data fast enough, and data is therefore lost. In this scenario, you might want to extend the life of the data to accommodate the slower retrieval rate so that data is not lost. When external systems are interfacing with the raw data directly, extending the TTL, and therefore the life of the data, can give these processes time to read the data.</p>
+<p>Extending the TTL is covered in the MongoDB documentation: <a href="https://docs.mongodb.com/manual/core/index-ttl/" title="https://docs.mongodb.com/manual/core/index-ttl/" target="_blank">https://docs.mongodb.com/manual/core/index-ttl/</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
 <h2 id="uc_ttl_extend">Use case: Extending the TTL</h2>
-<p>Let's say that the ETL scripts that are in use {<span class="apidoc_red">MKL what is ETL here?</span>}  are not able to pull data fast enough, resulting in data loss. As a solution, you want to extend the life of the data by modifying the TTL.</p>
-<p>Below is an example of extending the TTL in this scenario.</p>
+<p>Let's say that the <a href="../../cm/learnmore/basics_glossary.htm#gl_etlscript">ETL scripts</a> that are in use are not pulling the analytics data from Community Manager fast enough, resulting in data loss. As a solution, you might want to extend the life of the data by increasing the TTL.</p>
+<p>Below is a generalized example of how to execute the command, from the command line, in a MongoDB instance, to modify the TTL. There are three placeholder values: <strong>collection</strong>, <strong>index_spec</strong>, and <strong>seconds</strong>.</p>
 <pre>db.runCommand({"collMod": &lt;collection&gt;,
     "index": {
            keyPattern: &lt;index_spec&gt;,
            expireAfterSeconds: &lt;seconds&gt;
      }
   })</pre>
-<p>The below is a complete working example of modifying the TTL indexes: {<span class="apidoc_red">MKL: need a lead-in to the below example also.</span>}</p>
+<p>Below is an example of a Java program that performs the TTL update on a collection named <strong>TestDS1</strong>, to modify the TTL indexes.</p>
 <pre>public static void main(String[] args) {
   MongoClientWrapper wrapper = new MongoClientWrapper("mongodb://localhost:27017");
   wrapper.setDefaultDB("METRIC_ROLLUP_DATA");
@@ -91,8 +81,7 @@ public Document updateTTL(String dbName, String collectionName, String deleteOnK
 
 
 
-<h2 id="xxx">Guidance...</h2>
-<p>Per ATMO-33863:</p>
-<p>Must include guidance on data capture requirements if expanding this value and potential impact to Mongo DB cluster.</p>
-<p>{<span class="apidoc_red">MKL? Not sure what to say here.</span>}</p>
+<h2 id="ttl_increase_impact">System impact of increased TTL.</h2>
+<p>It's important to realize that if you increase the TTL time, there will be impact on hardware and memory requirements for data capture, management, and storage.</p>
+<p>For example, if you expand the TTL from the default of 1 hour to a new value of 2 hours, twice as much data will need to be held. This impacts disk space requirements, since data is stored on disk, as well as RAM requirements since the indexes are held in memory.</p>
 <p><a href="#top">Back to top</a></p>
