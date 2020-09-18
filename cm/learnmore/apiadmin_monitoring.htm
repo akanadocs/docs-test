@@ -389,25 +389,26 @@ nav-title: API Analytics
 	<li><a href="#ttfb_02">Viewing the TTFB for a single proxied API call</a></li>
 	<li><a href="#ttfb_03">Viewing the TTFB for an orchestrated call</a></li>
 	<li><a href="#ttfb_04">Additional information on the Next Hops tab</a></li>
+<li><a href="#ttfb_05">Message Properties</a></li>
 </ul>
 
 <h4 id="ttfb_01">TTFB metrics</h4>
 <p>The metric breakdown for TTFB shows how long each hop takes. Rather than just showing the time from when the message is sent to when the response is received, the time is broken down into stages. TTFB metrics include the values listed below.</p>
 <dl>
-	<dt>Request Processing</dt>
+	<dt id="metrics_request_processing">Request Processing</dt>
 	<dd>The time from when the Gateway receives the request to when the Gateway initiates the request to the next-hop service.</dd>
 	<dd>During this time, the Gateway might be performing multiple activities: for example, retrieving public keys or certificates, validating OAuth tokens.</dd>
 
 
-	<dt>Next Hop Response (TTFB)</dt>
+	<dt id="metrics_ttfb">Next Hop Response (TTFB)</dt>
 	<dd>The time from when the Gateway sends the request to when the first byte of response is received. Includes request write time and time taken by the next-hop service.</dd>
 
 
-	<dt>Response Processing</dt>
-	<dd>The time from when the Gateway receives the response from the next-hop service to when the Gateway initiates writing the response.</dd>
+	<dt id="metrics_response_processing">Response Processing</dt>
+	<dd>The time from when the Gateway receives the response from the next-hop service to when the Gateway initiates writing the response (writes the first byte back to the client).</dd>
 
 
-	<dt>Response Sent</dt>
+	<dt id="metrics_response_sent">Response Sent</dt>
 	<dd>The time the Gateway takes to write the complete response to the client.</dd>
 
 
@@ -417,9 +418,10 @@ nav-title: API Analytics
 <p>When you click the arrow to the left of a log entry to view the transaction detail, you can view all the metrics for the API call.</p>
 <p>The first few metrics are a breakdown of TTFB, with bars illustrating the various steps, as shown below.</p>
 <p><img src="assets/analytics_api_logs_ttfb_oneapi.png" alt="API metrics, TTFB -- example with one proxied API" /></p>
+<p>For information on additional message properties, see <a href="#ttfb_05">Message properties</a>.</p>
 
 <h4 id="ttfb_03">Viewing the TTFB for an orchestrated call</h4>
-<p>If your API uses <a href="basics_glossary.htm#gl_orchestration">orchestration</a>, where preparing the resonse to one API call includes separate calls to more than one API, you can see the times for each hop in the API metrics.</p>
+<p>If your API uses <a href="basics_glossary.htm#gl_orchestration">orchestration</a>, where preparing the response to one API call includes separate calls to more than one API, you can see the times for each hop in the API metrics.</p>
 <p>In the example below,&nbsp;it's clear that the first hop takes a lot longer than the second. This information can be useful in debugging a more complex scenario.</p>
 <p><img src="assets/analytics_api_logs_ttfb_orchestration.png" alt="API metrics, TTFB -- example with orchestration" /></p>
 
@@ -427,6 +429,56 @@ nav-title: API Analytics
 <p>If a message represents a call to an API operation that uses <a href="basics_glossary.htm#gl_orchestration">orchestration</a>, there can be multiple hops. In this case, an additional tab, <strong>Next Hops</strong>, is available to give you an information breakdown for each hop, as shown below. This example is an orchestration, with two calls, so there are two sets of metrics.</p>
 <p><img src="assets/analytics_api_logs_ttfb_nexthops.png" alt="API metrics, TTFB -- Next Hops tab" /></p>
 <p>For each next-hop step, the tab displays the HTTP verb, URL, status, request header size, response header size, and next-hop response time (TTFB).</p>
+
+<h4 id="ttfb_05">Message Properties</h4>
+<p>An example of the response properties is shown below, with field descriptions.</p>
+<p><img src="assets/analytics_api_logs_ttfb_message_properties.png" alt="API metrics, TTFB -- Message properties" /></p>
+<dl>
+	<dt>Version Name</dt>
+	<dd>The API version.</dd>
+
+
+	<dt>Method Name</dt>
+	<dd>The name of the API method (operation) being called.</dd>
+
+
+	<dt>Client Host</dt>
+	<dd>IP address for the client host.</dd>
+
+
+	<dt>Request Date</dt>
+	<dd>Timestamp for the request.</dd>
+
+
+	<dt>Response Status Code</dt>
+	<dd>HTTP status code for the response.</dd>
+
+
+	<dt>Request Read Time</dt>
+	<dd>The time taken by Gateway to read the request from the client.</dd>
+
+
+	<dt>Exchange Processing Time</dt>
+	<dd>The total time that the Gateway took to process the message: processing time for the inbound message (<a href="#metrics_request_processing">Request Processing</a> time) plus processing time for the outbound message (<a href="#metrics_response_processing">Response Processing</a> time).</dd>
+
+
+	<dt>Response Time</dt>
+	<dd>The total time taken for the entire API call, from when the Gateway received the incoming message to when it returned the response to the client. It is the total of these values: <a href="#metrics_request_processing">Request Processing</a>, <a href="#metrics_ttfb">Next Hop Response (TTFB)</a>, <a href="#metrics_response_processing">Response Processing</a>, and <a href="#metrics_response_sent">Response Sent</a>.</dd>
+
+
+	<dt>Request Message Size</dt>
+	<dd>Size of the request message.</dd>
+
+
+	<dt>Response Message Size</dt>
+	<dd>Size of the response message.</dd>
+
+
+	<dt>API URL</dt>
+	<dd>The endpoint for the API.</dd>
+
+
+</dl>
 <p><a href="#top">Back to top</a></p>
 
 
