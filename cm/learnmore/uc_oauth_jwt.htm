@@ -1,0 +1,248 @@
+---
+layout: page
+title: Use Case - OAuth with LDAP and JWT | API Admin | Akana API Platform Help
+description: A step-by-step example to demonstrate setting up an OAuth domain to support JWT tokens. This example uses an LDAP domain for authentication.
+product: cm
+category: gs
+sub-nav-class: Quick Start
+weight: 05
+type: page
+nav-title: Use Case - OAuth with LDAP and JWT
+---
+<h1 id="top">Tutorial: OAuth Setup for JWT Support</h1>
+<p>A step-by-step example to demonstrate setting up an OAuth domain to support JWT tokens. This example uses an LDAP domain for authentication.</p>
+<hr class="divide_hr" />
+
+
+
+<h2 style="color: gray;">Table of Contents</h2>
+<ol class="table_of_contents">
+	<li><a href="#s01_prereq">Prerequisite Steps in Policy Manager</a></li>
+	<li><a href="#s02_domain_oauth">Set up the OAuth Domain</a></li>
+	<li><a href="#s03_domain_eoap">Set up the External OAuth Provider Domain</a></li>
+	<li><a href="#s04_app">Set up the App</a></li>
+	<li><a href="#s05_api">Set up the API</a></li>
+	<li><a href="#s06_contract">Create the Contract</a></li>
+	<li><a href="#s07_test">Test in Test Client</a></li>
+	<li><a href="#s08_decode">Optional: Decode the JWT Token</a></li>
+</ol>
+<hr class="divide_hr" />
+
+
+
+<h2 id="s01_prereq">Prerequisite Steps in Policy Manager</h2>
+<p>There are some prerequisite steps that need to be done in the underlying infrastructure, Policy Manager. You can ask the Administrator to do these steps for you:</p>
+<ul>
+<li>Create an LDAP domain. In the Policy Manager Management Console: <strong>Configure</strong> &gt; <strong>Security</strong> &gt; <strong>Identity Systems</strong> &gt; <strong>Add Identity System</strong>. Follow the steps of the <strong>Add Identity System Wizard</strong> wizard. For documentation, see <a href="../../ag/security_config/identity_systems.htm">Identity Systems Overview</a>.</li>
+<li>Create a JWT user. In the Policy Manager Management Console: <strong>Security</strong> &gt; <strong>Users</strong> &gt; <strong>Add User</strong>. This example uses <strong>akanajwtuser</strong> as shown below.
+<p><img src="assets_tutorial_jwt/tutorial_jwt_01.png" alt="xxx" /> {missing image}</p>
+<p>At the <strong>Summary</strong>, click <strong>Manage PKI Keys</strong>. <span class="apidoc_red">This example uses the Manage PKI Keys option, which gives credentials signed by the platform.</span> Save.</p>
+</li>
+<li>Set up the JWT user as an organization identity for your developer portal. In the Policy Manager Management Console: Go to <strong>Workbench</strong> and, on the left, choose your organization. If there are multiple organizations, be sure to choose the correct organization. On the right, under <strong>Actions</strong>, choose <strong>Manage Organization Identities</strong>, as shown below.
+<table width="200" border="0">
+<tbody>
+<tr>
+<td style="vertical-align:top;"><img src="assets_tutorial_jwt/tutorial_jwt_03_pm_registry.png" alt="xxx" /></td>
+<td style="vertical-align:top;"><p><img src="assets_tutorial_jwt/tutorial_jwt_04_pm_manage_organization_identities.png" alt="xxx" /></p></td>
+</tr>
+</tbody>
+</table>
+<p>Use the Search tools to find the <strong>akanajwtuser</strong> user and add it to your organization, and then save.</p></li>
+</ul>
+<p>That completes the prerequisite steps in Policy Manager.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="s02_domain_oauth">Set up the OAuth Domain</h2>
+<p>In this step, you will set up the OAuth Domain in the developer portal, and configure it to use JWT.</p>
+
+
+<h4 id="proc_domain_oauth_oidc">To set up an Akana OAuth/OIDC Provider domain</h4>
+<ol>
+<li>Log in to the developer portal as a Business Admin.</li>
+<li>Go to <strong>More</strong> &gt; <strong>Admin</strong> &gt; <strong>Domains</strong>.
+</li>
+<li>Click <strong>Add Domain</strong>, and choose <strong>Akana OAuth/OIDC Provider</strong>, as shown below.
+<p><img src="assets_tutorial_jwt/tutorial_jwt_10_add_domain.png" alt="xxx" /></p>
+</li>
+<li>In <strong>Tab 1, Details</strong>, provide a name for the domain. In this example: <strong>Akana JWT Provider</strong>.</li>
+<li>In <strong>Tab 2, Grant Types</strong>, choose all four grant types. In the <strong>Resource Owner Authentication Domain</strong> field, choose the LDAP domain that you set up. An example is shown below.
+<p><img src="assets_tutorial_jwt/tutorial_jwt_11_oauth_domain_tab2_grant_types.png" alt="xxx" /></p>
+</li>
+<li>In <strong>Tab 3, Token</strong>, click <strong>JWT Bearer Access Token</strong>. Specify the following values, as shown in the example:
+<ul>
+<li>Issuer: <strong>akana</strong></li>
+<li>Reference Signing Key from Platform: <strong>akanajwtuser</strong>.</li>
+</ul>
+<p><img src="assets_tutorial_jwt/tutorial_jwt_12_oauth_domain_tab3_token.png" alt="xxx" /></p></li>
+<li>In <strong>Tab 4, OpenID Connect</strong>, check the box to enable OpenID Connect, as shown below:
+<p><img src="assets_tutorial_jwt/tutorial_jwt_13_oauth_domain_tab4_openidconnect.png" alt="xxx" /></p></li>
+<li>In <strong>Tab 5, Scopes</strong>, no changes are needed. Make sure <strong>User Authorization required</strong> is checked. It is the default.</li>
+<li>In <strong>Tab 6, Properties</strong>, no changes are needed.</li>
+<li>In <strong>Tab 7, Branding</strong>, type in the full Authorization Server URL, including the port number, as shown below. In this example: <strong>http://open.soa.dev:8900/</strong>.
+<p><img src="assets_tutorial_jwt/xxx.png" alt="xxx" /></p></li>
+<li>Click <strong>Save</strong>.</li>
+</ol>
+<p>The next step is to add an External OAuth Provider domain. This domain will <strong>xxx</strong>.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="s03_domain_eoap">Set up the External OAuth Provider Domain</h2>
+<p>In this step, you will set up the OAuth Domain in the developer portal, and configure it to use JWT.</p><h4 id="proc_domain_eoap">To set up an External OAuth Provider domain</h4>
+<ol>
+<li>Log in to the developer portal as a Business Admin.</li>
+<li>Go to <strong>More</strong> &gt; <strong>Admin</strong> &gt; <strong>Domains</strong>.</li>
+<li>Click <strong>Add Domain</strong>, and choose <strong>External OAuth Provider</strong>.</li>
+<li>In <strong>Tab 1, Details</strong>, provide a name for the domain. In this example: <strong>Akana External</strong>.</li>
+<li>In <strong>Tab 2, Configure</strong>:
+<ol>
+<li>In the Provider Type field, choose Akana.</li>
+<li>Specify the well-known configuration URL for your provider. In this example: <strong>http://opencloud2019-1-ubuntu1804-oracle12c.aws.akana.roguewave.com:7900/.well-known/openid-configuration</strong>, as shown below: {<span class="apidoc_red">update screen cap below</span>}
+<p><img src="assets_tutorial_jwt/tutorial_jwt_pdf_15.png" alt="xxx" /></p>
+</li>
+</ol>
+</li>
+<li>In <strong>Tab 3, Provider</strong>:
+<ol>
+<li>In the top section, specify Issuer, and the endpoints. In this example, Client Registration Endpoint is not needed. Example is shown below, with text values.
+<p><img src="assets_tutorial_jwt/tutorial_jwt_21_eoap_domain_tab3_provider_01.png" alt="xxx" /></p>
+<p>Issuer: <strong>Auth Server IP:Port</strong></p>
+<p>Authorization Server URL: <strong>Auth Server IP:Port/oauth/auz/authorize</strong></p>
+<p>Token Endpoint URL: <strong>Auth Server IP:Port/oauth/oauth20/token</strong></p>
+<p>JWK Set URL: <strong>Auth Server IP:Port/oauth/jwks</strong></p>
+<p>Userinfo Endpoint URL: <strong>Auth Server IP:Port/oauth/userinfo</strong></p>
+</li>
+<li>In the bottom section, choose all the features you want to support. In this example, all options are selected, as shown below. {<span class="apidoc_red">update screen cap below</span>}
+<p><img src="assets_tutorial_jwt/tutorial_jwt_pdf_16.png" alt="xxx" /></p>
+</li>
+</ol>
+</li>
+<li>In <strong>Tab 4, Access Token Validation</strong>:
+<ol>
+<li>Check the <strong>JWT Bearer Access Token</strong> box.</li>
+<li>Make sure <strong>Reference signing keys from an existing platform identity</strong> is selected</li>
+<li>In the <strong>Identity</strong> field below it, specify the platform identity that you created in Policy Manager. In this example: <strong>akanajwtuser</strong>. {<span class="apidoc_red">Doc said ClientID and User but showed the platform identity. And Identity field only takes one value...?</span>}
+<p><img src="assets_tutorial_jwt/tutorial_jwt_21_eoap_domain_tab4_accesstokenvalidation.png" alt="xxx" /></p>
+</li>
+</ol>
+</li>
+<li>In <strong>Tab 5, Extensions</strong>, no changes are needed.</li>
+<li>Click <strong>Save</strong>.</li>
+</ol>
+
+<p>Now that you have the two domains set up, you are ready to create the app and API and test.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="s04_app">Set up the App</h2>
+<p>There's nothing special about the app. This is a short step.</p>
+
+<h4>To create an app</h4>
+<ol>
+<li>Log in to the developer portal.</li>
+<li>Create an app:
+<ul>
+<li><strong>Apps</strong> &gt; <strong>Add App</strong>.</li>
+<li>For detailed instructions, see xxx.</li>
+</ul>
+</li>
+<li>To configure the app to work with OAuth, go to the <strong>App Details</strong> page and click <strong>OAuth Profile</strong>:
+<p><img src="assets_tutorial_jwt/tutorial_jwt_pdf_24.jpg" alt="xxx" /></p>
+</li>
+<li>In the <strong>App OAuth Profile</strong> page, under<strong> JWKS URL</strong>, add your JWKS endpoint, Auth Server IP:Port/oauth/jwks. In this example:
+<p><img src="assets_tutorial_jwt/tutorial_jwt_pdf_25.jpg" alt="xxx" /></p>
+</li>
+</ol>
+<p>Now, create the API.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="s05_api">Set up the API</h2>
+<p>There are a few settings you have to choose to get the API ready to use OAuth. Follow the steps below.</p>
+<h4>To create an API</h4>
+<ol>
+<li>Log in to the developer portal.</li>
+<li>Create an API:
+<ul>
+<li><strong>APIs</strong> &gt; <strong>Add API</strong>.</li>
+<li>For detailed instructions, see xxx.</li>
+</ul>
+</li>
+<li>Modify the API implementation to use the OAuth Security Policy:
+<ul>
+<li><strong>Implementations</strong> &gt; choose implementation &gt; on <strong>Policies</strong> section, click <strong>Edit</strong> and add the policy, as shown below.
+<p><img src="assets_tutorial_jwt/tutorial_jwt_pdf_19.png" alt="xxx" /></p>
+</li>
+</ul>
+</li>
+
+<li>Set up the API OAuth Details to use the OAuth Provider domain you set up:
+<ul>
+<li>From the API's <strong>Details</strong> page, from the drop-down on the right, choose <strong>OAuth Details</strong>:
+<p><img src="assets_tutorial_jwt/tutorial_jwt_31_cm_api_oauth.png" alt="xxx" /></p></li>
+<li>In the <strong>API OAuth Settings</strong> wizard, <strong>Tab 1, Provider</strong>, choose the OAuth Provider created earlier. In this example, <strong>AkanaJWTProvider</strong>:
+<p><img src="assets_tutorial_jwt/tutorial_jwt_pdf_21.png" alt="xxx" /></p>
+</li>
+
+
+
+<li>In <strong>Tab 2, Scope Mapping</strong>, choose <strong>API-Wide Scope Mapping</strong>, then click <strong>Edit</strong> and choose both openid and scopes:
+<p><img src="assets_tutorial_jwt/tutorial_jwt_pdf_22.png" alt="xxx" /></p>
+</li>
+
+
+
+</ul>
+</li>
+<li>Click <strong>Save</strong>. </li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="s06_contract">Create the Contract</h2>
+<p>There must be a contract between the app and the API so that you can see OAuth in action. The app developer requests a contract with the API, and the API developer approves it.</p>
+<h4>To create the contract</h4>
+<ol>
+<li>In the developer portal, go to<!-- #BeginLibraryItem "/Library/hdr_myapis_nav_all.lbi" -->&nbsp;<strong>APIs</strong> &gt; <strong>My APIs</strong> &gt; choose API &gt;&nbsp;<!-- #EndLibraryItem --><strong>Overview</strong>.</li>
+<li>At the top right, click <strong>Access</strong>:
+<p><img src="assets_tutorial_jwt/tutorial_jwt_pdf_23.png" alt="xxx" /></p>
+</li>
+<li>In Tab 1, <strong>Select App</strong>, specify the app/app version. In this example, <strong>xxx</strong>. </li>
+<li>Click <strong>Next</strong>.</li>
+<li>In Tab 2, <strong>Endpoint</strong>, choose the endpoint.</li>
+<li>Click <strong>Save</strong>.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="s07_test">Test in Test Client</h2>
+<p>Once everything is set up, you can test in Test Client, get the OAuth token, and get the API response.</p>
+<p>To test in Test Client</p>
+<ol>
+<li>In the developer portal, go to<!-- #BeginLibraryItem "/Library/hdr_myapis_nav_all.lbi" -->&nbsp;<strong>APIs</strong> &gt; <strong>My APIs</strong> &gt; choose API &gt;&nbsp;<!-- #EndLibraryItem --><strong>Test Client</strong>.</li>
+<li>Choose the operation.</li>
+<li>Click the <strong>Security</strong> button. You'll see the OAuth Security Policy page. Choose OAuth 2.0 / Authorization Code / Secret. You should see something like this:
+<p><img src="assets_tutorial_jwt/tutorial_jwt_pdf_26.jpg" alt="xxx" /></p>
+</li>
+<li>Click <strong>Get Token</strong>. You should see something like this:
+<p><img src="assets_tutorial_jwt/tutorial_jwt_pdf_27.png" alt="xxx" /></p>
+</li>
+<li>After logging in, the token is generated:
+<p><img src="assets_tutorial_jwt/tutorial_jwt_pdf_28.jpg" alt="xxx" /></p>
+</li>
+</ol>
+<p>For general documentation about using Test Client, see <a href="api_admin_testing_tc.htm">API Testing with Test Client</a>.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="s08_decode">Optional: Decode the JWT Token</h2>
+<p>You can parse the token on <a href="https://jwt.io/" title="https://jwt.io/" target="_blank">https://jwt.io/</a> to make sure it is correct. An example is shown below.</p>
+<p><img src="assets_tutorial_jwt/tutorial_jwt_pdf_29.jpg" alt="xxx" /></p>
+<p><a href="#top">Back to top</a></p>
