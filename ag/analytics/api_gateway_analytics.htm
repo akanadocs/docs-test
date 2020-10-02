@@ -48,7 +48,7 @@ nav-title: API Gateway Analytics
 	<li><a href="#s06_00">Use Case&#8212;Point of Sale Metrics for Shoe Retailer</a>
 		<ul>
 			<li><a href="#s06_01">The API</a></li>
-			<li><a href="#s06_02">The Data Set</a></li>
+			<li><a href="#s06_02">The Dataset</a></li>
 			<li><a href="#s06_03">The Policy</a></li>
 			<li><a href="#s06_04">The Charts</a></li>
 			<li><a href="#s06_05">The Dashboard</a></li>
@@ -63,11 +63,11 @@ nav-title: API Gateway Analytics
 <h2 id="s01_00">Overview</h2>
 <p>The API Gateway can collect a wide range of data that can be analyzed with the help of the Envision analytics platform. This collaboration is enabled through a set of plugins for each products that provide cross-over functionality that enhance each product's experience. The list of capabilities provided by the plugins are as follows.</p>
 <ul>
-	<li>Configuration of an operational metrics data set, charts, and dashboards in Envision.</li>
-	<li>Population of the operational data set in Envision from messages processed by the API Gateway.</li>
+	<li>Configuration of an operational metrics dataset, charts, and dashboards in Envision.</li>
+	<li>Population of the operational dataset in Envision from messages processed by the API Gateway.</li>
 	<li>API Gateway controlled security (authorization) for operational data in Envision.</li>
-	<li>Population of user created data sets in Envision from messages processed by the API Gateway.</li>
-	<li>SLA enforcement for user created data set metrics.</li>
+	<li>Population of user created datasets in Envision from messages processed by the API Gateway.</li>
+	<li>SLA enforcement for user created dataset metrics.</li>
 </ul>
 <p>There are three plugins that together provide these capabilities: one for the Network Director, one for the Policy Manager Console, and one for Envision. This document describes the plugins including their architecture, installation, and configuration.</p>
 <p><a href="#top">Back to top</a></p>
@@ -86,19 +86,19 @@ nav-title: API Gateway Analytics
 <p><img src="assets/ag_analytics_02_02.jpg" alt=""/></p>
 <p>When the Envision plugin is installed with the Policy Manager features the Java API used for reporting metrics is overridden with one that writes those metrics to the MongoDB NoSQL database Envision uses. This Java API override also replaces the remote API's implementation so any metrics delivered remotely from the Network Director are also written to the NoSQL database. When the analytics plugin is installed with the Network Director the Network Director can then also write directly to the NoSQL database as an option.</p>
 <p><img src="assets/ag_analytics_02_03.jpg" alt=""/></p>
-<p>Envision supports analyzing data from any source, any domain, only relying on user defined metadata describing a set of data (data set) and how the data should be processed. The Envision plugin introduces a new policy, the Business Metrics policy, that will instruct the Network Director how to extract data from managed API/service messages that can then be fed into Envision to fill data sets created by users.</p>
+<p>Envision supports analyzing data from any source, any domain, only relying on user defined metadata describing a set of data (dataset) and how the data should be processed. The Envision plugin introduces a new policy, the Business Metrics policy, that will instruct the Network Director how to extract data from managed API/service messages that can then be fed into Envision to fill datasets created by users.</p>
 <p>The Business Metrics policy handler supports a variety of data extraction mechanisms, including XPath, JsonPath, RegEx, and script-based expressions. Based on the policy configuration a multitude of these mechanisms may have to be used to extract data from each message processed by the Network Director. To avoid adding latency to the delivery of each message the policy handler will extract data from a message in a separate thread.</p>
 <p><img src="assets/ag_analytics_02_04.jpg" alt=""/></p>
-<p>Based on the needs specified in the Business Metrics policy the Business Metrics policy handler will copy portions of the request/response/fault message (headers, body) to the Raw Message Queue along with instructions on how data should be extracted. The Data Extractor executes in the Data Extraction Thread pulling the records from the Raw Message Queue, extracting the data, and placing the extracted data in the Data Set Queue. The Metrics Reporter executes in the Metrics Delivery Thread calling the API for persisting the extracted data.</p>
+<p>Based on the needs specified in the Business Metrics policy the Business Metrics policy handler will copy portions of the request/response/fault message (headers, body) to the Raw Message Queue along with instructions on how data should be extracted. The Data Extractor executes in the Data Extraction Thread pulling the records from the Raw Message Queue, extracting the data, and placing the extracted data in the Dataset Queue. The Metrics Reporter executes in the Metrics Delivery Thread calling the API for persisting the extracted data.</p>
 <p>The API Gateway supports using MongoDB as a metrics store using the MongoDB plugin. The Envision plugins automatically install the MongoDB plugin so that all metrics, including metrics collected by the Business Metrics policy, are stored in the MongoDB NoSQL database. That means all administration (viewing, exporting, archiving) of metrics will be performed against the MongoDB database. This also mean that all SLA calculations will be performed using the MongoDB database. This is achieved by replacing the Evaluator module of the SLA Engine. The SLA Engine modules are illustrated in the diagram below.</p>
 <p><img src="assets/ag_analytics_02_05.jpg" alt=""/></p>
 <p>When using the MongoDB database the Evaluator module, which evaluates whether SLAs are violated, is swapped out with a module that not only can query for information from MongoDB but will actually use the power of MongoDB to perform calculations using the MongoDB processor itself. This frees up computing resources for the Policy Manager process. In addition, an evaluator for SLAs based on business metrics is introduced. This evaluator will also use MongoDB. The following diagram illustrates the addition of the two MongoDB based evaluators.</p>
 <p><img src="assets/ag_analytics_02_06.jpg" alt=""/></p>
-<p>Not all the plugins used in the integration of the API Gateway with Envision change the behavior of the API Gateway. An API Gateway plugin is also installed on the Envision analytics platform which provides integrated security (authorization) around the access to records in data sets. By default Envision secures data in data sets based on the owner's shared settings on the data set. Optionally data sets created by different business systems such as the API Gateway can be protected through the use of a security plugin.</p>
-<p>Each data set in Envision can optionally reference a security provider. That provider is consulted when the data queries are performed in Envision.</p>
+<p>Not all the plugins used in the integration of the API Gateway with Envision change the behavior of the API Gateway. An API Gateway plugin is also installed on the Envision analytics platform which provides integrated security (authorization) around the access to records in datasets. By default Envision secures data in datasets based on the owner's shared settings on the dataset. Optionally datasets created by different business systems such as the API Gateway can be protected through the use of a security plugin.</p>
+<p>Each dataset in Envision can optionally reference a security provider. That provider is consulted when the data queries are performed in Envision.</p>
 <p><img src="assets/ag_analytics_02_07.jpg" alt=""/></p>
-<p>The Data Set Access Layer in Envision first consults the Data Set configuration to identify a Security Provider (if any). It then consults the Security Provider providing the provider contextual information about the data access request. The security provider then providers additional filter criteria that when added to the query of MongoDB will filter out records that should not be accessible. By translating security permissions into a NoSQL query security can be enforced in a highly efficient way by the NoSQL server instead of filtering out records in memory.</p>
-<p>The API Gateway plugin for Envision will create a Security Provider for the operational metrics data set it installs in Envision. The filter created is based on the user's access to the API/services the operational metrics are collected for. A user who does not have access to an API in the Policy Manager console for example will not have access to data in the operational metrics data set for that API regardless of how a chart is configured.</p>
+<p>The Dataset Access Layer in Envision first consults the Dataset configuration to identify a Security Provider (if any). It then consults the Security Provider providing the provider contextual information about the data access request. The security provider then providers additional filter criteria that when added to the query of MongoDB will filter out records that should not be accessible. By translating security permissions into a NoSQL query security can be enforced in a highly efficient way by the NoSQL server instead of filtering out records in memory.</p>
+<p>The API Gateway plugin for Envision will create a Security Provider for the operational metrics dataset it installs in Envision. The filter created is based on the user's access to the API/services the operational metrics are collected for. A user who does not have access to an API in the Policy Manager console for example will not have access to data in the operational metrics dataset for that API regardless of how a chart is configured.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -209,21 +209,21 @@ nav-title: API Gateway Analytics
 
 
 <h3 id="s05_02">Business Metrics Policy</h3>
-<p>The Business Metrics policy provides instructions for extracting data from processed messages and mapping that data to fields in an Envision data set. To create a Business Metrics policy, select the Business Metrics policy type in the first page of the Create Operational Policy wizard.</p>
+<p>The Business Metrics policy provides instructions for extracting data from processed messages and mapping that data to fields in an Envision dataset. To create a Business Metrics policy, select the Business Metrics policy type in the first page of the Create Operational Policy wizard.</p>
 <p><img src="assets/ag_analytics_05_01.jpg" alt=""/></p>
-<p>The Business Metrics policy editor is a multi-page wizard. On the first page you select the data set you want to fill with the policy.</p>
+<p>The Business Metrics policy editor is a multi-page wizard. On the first page you select the dataset you want to fill with the policy.</p>
 <p><img src="assets/ag_analytics_05_02.jpg" alt=""/></p>
-<p>A pull-down at the top will display the public data sets created in Envision as well as the logged in user's private data sets in Envision (if any). The dimensions and metrics for the selected data set are displayed in read-only tables to ensure the correct data set is selected.</p>
-<p>The next four pages provide instructions for the creation of structures, variables, dimensions, and metrics. Dimensions and metrics have been discussed already. A variable is a value that doesn't correspond one-to-one with a dimension or metric in the target data set, but it can be used in an expression that will result in the creation of a dimension or metric. It can be used in multiple expressions in fact so it provides an opportunity for reuse and optimization by instructing the engine to perform a function once instead of repeatedly.</p>
+<p>A pull-down at the top will display the public datasets created in Envision as well as the logged in user's private datasets in Envision (if any). The dimensions and metrics for the selected dataset are displayed in read-only tables to ensure the correct dataset is selected.</p>
+<p>The next four pages provide instructions for the creation of structures, variables, dimensions, and metrics. Dimensions and metrics have been discussed already. A variable is a value that doesn't correspond one-to-one with a dimension or metric in the target dataset, but it can be used in an expression that will result in the creation of a dimension or metric. It can be used in multiple expressions in fact so it provides an opportunity for reuse and optimization by instructing the engine to perform a function once instead of repeatedly.</p>
 <p>A structure models a sub-component of request or response message that may appear multiple times. For example if there are several items with their own properties that appear in a purchase transaction each item would be a structure. It is necessary to identify structures if dimensions or metrics are found in these sub-components and they need to be grouped together for aggregation. For example if each item in a purchase has a type and a price, in order for the aggregation engine to sum prices by type price cannot be collected without associating it to, or grouping it with, the type.</p>
-<p>All four pages are organized in a similar way and provide similar capabilities. A table at the top of the page identifies the items being populated, structures, variables, dimensions, or metrics. For dimensions and metrics those tables are static as the rows are populated from the data set definition in Envision. Structures and variables on the other hand can be added and removed.</p>
+<p>All four pages are organized in a similar way and provide similar capabilities. A table at the top of the page identifies the items being populated, structures, variables, dimensions, or metrics. For dimensions and metrics those tables are static as the rows are populated from the dataset definition in Envision. Structures and variables on the other hand can be added and removed.</p>
 <p><img src="assets/ag_analytics_05_03.jpg" alt=""/></p>
 <p>To create a variable, select <strong>Add</strong> from the <strong>Variables</strong> table.</p>
 <p><img src="assets/ag_analytics_05_04.jpg" alt=""/></p>
 <p>A new row will be added in the table. Each cell of the row is editable. The Type cell is a pull-down of the variable types supported which correspond to the types supported for metrics and dimensions by Envision.</p>
-<p>Structures do not have a type. Instead they are mapped to Groups defined in a Data Set.</p>
+<p>Structures do not have a type. Instead they are mapped to Groups defined in a Dataset.</p>
 <p><img src="assets/ag_analytics_05_05.jpg" alt=""/></p>
-<p>The Group column in the Payload Structures table holds a pull-down populated with all the Groups identified in a Data Set. The user selects a Group in the pull-down to associate the structure with the Group.</p>
+<p>The Group column in the Payload Structures table holds a pull-down populated with all the Groups identified in a Dataset. The user selects a Group in the pull-down to associate the structure with the Group.</p>
 <p>When any row of the target tables (structures, variables, dimensions, metrics) are selected the page is expanded to include options for how to extract or derive the value for the item identified by the selected row. Those options will described in more detail below. When finished configuring those options select Apply on the bottom right of the page. A checkmark will be displayed to the left of the item's row indicating its value has been defined.</p>
 <p><img src="assets/ag_analytics_05_06.jpg" alt=""/></p>
 <p>To start over again with those options select Clear. To delete a variable select the row identifying the variable to delete and select Remove.</p>
@@ -284,16 +284,16 @@ nav-title: API Gateway Analytics
 
 
 <h3 id="s05_03">Business Service Level Policy</h3>
-<p>The Business Service Level policy provides the ability to define a Service Level Agreement (SLA) based on data set defined in Envision instead of the standard operational metrics provided by Policy Manager. For example, an SLA can be created based on the number of items sold, or the number of calls made from a particular user-agent. To create a Business Service Level Policy select the Business Service Level Policy type in the first page of the Create QoS Policy wizard.</p>
+<p>The Business Service Level policy provides the ability to define a Service Level Agreement (SLA) based on dataset defined in Envision instead of the standard operational metrics provided by Policy Manager. For example, an SLA can be created based on the number of items sold, or the number of calls made from a particular user-agent. To create a Business Service Level Policy select the Business Service Level Policy type in the first page of the Create QoS Policy wizard.</p>
 <p><img src="assets/ag_analytics_05_10.jpg" alt=""/></p>
-<p>The Business Service Level Policy editor is a multi-page wizard. On the first page you select the data set you want to use as the basis of the policy.</p>
+<p>The Business Service Level Policy editor is a multi-page wizard. On the first page you select the dataset you want to use as the basis of the policy.</p>
 <p><img src="assets/ag_analytics_05_11.jpg" alt=""/></p>
-<p>Next you select what records in the data set you want the metrics to measure the service level with. Essentially you are defining a query, or filter.</p>
+<p>Next you select what records in the dataset you want the metrics to measure the service level with. Essentially you are defining a query, or filter.</p>
 <p><img src="assets/ag_analytics_05_12.jpg" alt=""/></p>
-<p>If you want the metrics to be aggregated for all records in the data set nothing need be selected on the screen. However if you want to filter the records by one or more dimensions, select those dimensions. In the text fields to the right of the selected dimensions enter the values of the dimensions you want to filter by. In the illustration above we are filtering the data set to only the transactions made at the LA and SD stores.</p>
+<p>If you want the metrics to be aggregated for all records in the dataset nothing need be selected on the screen. However if you want to filter the records by one or more dimensions, select those dimensions. In the text fields to the right of the selected dimensions enter the values of the dimensions you want to filter by. In the illustration above we are filtering the dataset to only the transactions made at the LA and SD stores.</p>
 <p>Next define the rules for the policy. This page is identical to the standard Policy Manager Service Level Policy. You select an alert code to generate when an expression is met in a specified interval.</p>
 <p><img src="assets/ag_analytics_05_13.jpg" alt=""/></p>
-<p>What makes this different than the standard service level policy is the metrics to choose from are those collected in the selected data set. As seen above an alert will be generated with over 10000 shoes of a certain style are sold in a day.</p>
+<p>What makes this different than the standard service level policy is the metrics to choose from are those collected in the selected dataset. As seen above an alert will be generated with over 10000 shoes of a certain style are sold in a day.</p>
 <p>The final page is for defining the times that the policy should govern. This is also the same as the standard Policy Manager Service Level Policy.</p>
 <p><img src="assets/ag_analytics_05_14.jpg" alt=""/></p>
 <p>The policy acts in a similar way to the standard service level policy. Alerts are generated when the expressions are met. As long as the expressions continue to be met on subsequent intervals nothing more is done. Once the expression is no longer met a <strong>clear</strong> alert is generated.</p>
@@ -335,7 +335,7 @@ nav-title: API Gateway Analytics
 <p>In this section:</p>
 <ul>
 	<li><a href="#s06_01">The API</a></li>
-	<li><a href="#s06_02">The Data Set</a></li>
+	<li><a href="#s06_02">The Dataset</a></li>
 	<li><a href="#s06_03">The Policy</a></li>
 	<li><a href="#s06_04">The Charts</a></li>
 	<li><a href="#s06_05">The Dashboard</a></li>
@@ -389,9 +389,9 @@ nav-title: API Gateway Analytics
 	<li>When a purchase is made the customers ZIP code is collected and recorded on line 23.</li>
 	<li>The time of the transaction is on line 24. Due to system latency it may not be the same time as the gateway will process or record the data about the transaction.</li>
 </ul>
-<h3 id="s06_02">The Data Set</h3>
-<p>The first step in achieving the goals described in this use case is to define a Data Set for the purchases in Envision.</p>
-<p>The Data Set is named <strong>Shoe POS Sales</strong>.</p>
+<h3 id="s06_02">The Dataset</h3>
+<p>The first step in achieving the goals described in this use case is to define a Dataset for the purchases in Envision.</p>
+<p>The Dataset is named <strong>Shoe POS Sales</strong>.</p>
 <p><img src="assets/ag_analytics_05_17.jpg" alt=""/></p>
 <p>By selecting the PM Security Filter any data displayed in charts and dashboards will be secured by the Policy Manager security system. Only users with access to the APIs reporting the metrics will be able to view the information.</p>
 <p><img src="assets/ag_analytics_05_18.jpg" alt=""/></p>
@@ -405,7 +405,7 @@ nav-title: API Gateway Analytics
 <h3 id="s06_03">The Policy</h3>
 <p>A Business Metrics policy is created in Policy Manager named <strong>Shoe POS Metrics Policy</strong>.</p>
 <p><img src="assets/ag_analytics_05_21.jpg" alt=""/></p>
-<p>The policy fills the Shoe POS Sales Data Set. There is one structure defined named <strong>Item</strong> that corresponds to the <strong>Item</strong> group in the Data Set.</p>
+<p>The policy fills the Shoe POS Sales dataset. There is one structure defined named <strong>Item</strong> that corresponds to the <strong>Item</strong> group in the Dataset.</p>
 <p><img src="assets/ag_analytics_05_22.jpg" alt=""/></p>
 <p>The <strong>Item</strong> structure is identified in the message using an XPath expression. When tested against the sample message described previously the XPath expression returns the <strong>shoe:item</strong> elements in the message. All subsequent XPath expressions for metrics and dimensions in the <strong>Item</strong> group will be performed relative to each of the <strong>shoe:item</strong> elements in the message.</p>
 <p>There are no variables defined in the policy. Each of the dimensions are extracted from the message using XPath expressions.</p>
@@ -415,7 +415,7 @@ nav-title: API Gateway Analytics
 <p>The metrics are defined in a similar way to the dimensions.</p>
 <p><img src="assets/ag_analytics_05_25.jpg" alt=""/></p>
 <p>The <strong>Style Subtotal</strong> metric poses a challenge because there is not a single element in the message that provides this number. It is calculated by multiplying the sho:quantity by the sho:unitPrice. When testing the expression both subtotals are shown. During actual execution of the policy these subtotals, along with the <strong>Style Quantity</strong> metric expression results, will be grouped together in order to not lose their correlation. So instead of three separate arrays for style, quantity, and price there will be a single array of structures where each structure will have a style, quantity, and price.</p>
-<p>With a Data Set and policy now defined, once the policy is attached to the POS API in Policy Manager the Network Director can now begin capturing and storing metrics. The data will be aggregated according to the Data Set settings.</p>
+<p>With a Dataset and policy now defined, once the policy is attached to the POS API in Policy Manager the Network Director can now begin capturing and storing metrics. The data will be aggregated according to the Dataset settings.</p>
 
 
 <h3 id="s06_04">The Charts</h3>
@@ -423,7 +423,7 @@ nav-title: API Gateway Analytics
 <p>The first chart is a combination chart that displays company wide sales and the sales for each store.</p>
 <p><img src="assets/ag_analytics_05_26.jpg" alt=""/></p>
 <p>The first chart in the combination is a standard column chart with a column per store representing the total sales for a given hour. The second chart is a standard line chart with a single line reflecting the sum of all transactions made using the POS API. There is no Drilldown capability defined so both charts will be displayed at the same time. The column chart is defined first so that the line of the line chart will be layered on top.</p>
-<p>Both charts in the combination use the Shoe POS Sales Data Set as their source with the Hours Duration. The store chart uses the Store Dimension for Data Grouping. The company chart has no grouping as the measurements should be summed without breaking them down in any way.</p>
+<p>Both charts in the combination use the Shoe POS Sales dataset as their source with the Hours Duration. The store chart uses the Store Dimension for Data Grouping. The company chart has no grouping as the measurements should be summed without breaking them down in any way.</p>
 <p><img src="assets/ag_analytics_05_27.jpg" alt=""/></p>
 <p>The measurements will be displayed over time. The X-Axis <strong>Value Ref</strong> will therefore use a date field. The Transaction Date is used as opposed to the Create Time to be more reflective of the time at the terminals.</p>
 <p><img src="assets/ag_analytics_05_28.jpg" alt=""/></p>
@@ -434,11 +434,11 @@ nav-title: API Gateway Analytics
 <p>The second chart is a combination chart that displays the quantity sold by store, by style, and by style for a given store. The first chart in the combination is a standard column chart with a column per store representing the total sales for a given hour.</p>
 <p><img src="assets/ag_analytics_05_31.jpg" alt=""/></p>
 <p>The second chart is a standard line chart with a single line reflecting the sum of all transactions made using the POS API. There is no Drilldown capability defined so both charts will be displayed at the same time. The column chart is defined first so that the line of the line chart will be layered on top.</p>
-<p>Both charts in the combination use the Shoe POS Sales Data Set as their source with the Hours Duration. The store chart uses the Store Dimension for Data Grouping. The company chart has no grouping as the measurements should be summed without breaking them down in any way.</p>
+<p>Both charts in the combination use the Shoe POS Sales dataset as their source with the Hours Duration. The store chart uses the Store Dimension for Data Grouping. The company chart has no grouping as the measurements should be summed without breaking them down in any way.</p>
 <p><img src="assets/ag_analytics_05_32.jpg" alt=""/></p>
-<p>The third chart is a combination chart that displays the quantity sold company wide and overlays the number of errors that have been reported by the API. It provides a quantitative impact of errors on the business. The first chart in the combination is a standard column chart with a column for the number of errors the API encountered. It uses the API Operational Metric Data Set to graph errors.</p>
+<p>The third chart is a combination chart that displays the quantity sold company wide and overlays the number of errors that have been reported by the API. It provides a quantitative impact of errors on the business. The first chart in the combination is a standard column chart with a column for the number of errors the API encountered. It uses the API Operational Metric Dataset to graph errors.</p>
 <p><img src="assets/ag_analytics_05_33.jpg" alt=""/></p>
-<p>The second chart in the combination is a standard line chart with a line for the total quantity sold over time. It uses the Shoe POS Sales data set for the quantity. The X-Axis of the charts use different dimensions, Time Stamp vs Transaction Date, but as long as they have values that align the graphs overlay perfectly.</p>
+<p>The second chart in the combination is a standard line chart with a line for the total quantity sold over time. It uses the Shoe POS Sales dataset for the quantity. The X-Axis of the charts use different dimensions, Time Stamp vs Transaction Date, but as long as they have values that align the graphs overlay perfectly.</p>
 <p><img src="assets/ag_analytics_05_34.jpg" alt=""/></p>
 
 
