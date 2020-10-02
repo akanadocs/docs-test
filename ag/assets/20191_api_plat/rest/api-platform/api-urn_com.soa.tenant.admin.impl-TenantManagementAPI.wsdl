@@ -14,8 +14,8 @@
 <xs:element name="TenantStateChangeRequest"><xs:complexType><xs:sequence><xs:element name="TargetState" type="xs:string"/></xs:sequence></xs:complexType></xs:element>
 <xs:element name="UsageMetric"><xs:complexType><xs:complexContent><xs:extension base="tns:MetricValueType"><xs:sequence><xs:element name="MetricID" type="xs:string"/><xs:element name="MetricType" type="xs:string"/><xs:element minOccurs="0" ref="tns:MetricItemList"/><xs:element maxOccurs="unbounded" minOccurs="0" ref="tns:DayUsage"/><xs:element minOccurs="0" ref="tns:AggregateUsage"/><xs:element maxOccurs="unbounded" minOccurs="0" name="AdditionalNote" type="xs:string"/></xs:sequence></xs:extension></xs:complexContent></xs:complexType></xs:element>
 <xs:complexType name="Theme"><xs:sequence><xs:element name="Theme" type="xs:string"/><xs:element maxOccurs="unbounded" name="VirtualHosts" type="xs:string"/><xs:element name="ConsoleAddress" type="xs:string"/><xs:element name="SiteTitle" type="xs:string"/><xs:element name="SiteDescription" type="xs:string"/><xs:element name="TenantID" type="xs:long"/><xs:element name="FedmemberID" type="xs:string"/><xs:element name="ThemeImpl" type="xs:string"/><xs:element name="Alias" type="xs:string"/></xs:sequence></xs:complexType>
-<xs:complexType name="TenantUserAccount"><xs:sequence><xs:element name="Email" type="xs:string"/><xs:element maxOccurs="unbounded" name="Role" type="xs:string"/><xs:element minOccurs="0" name="FirstName" type="xs:string"/><xs:element minOccurs="0" name="LastName" type="xs:string"/></xs:sequence></xs:complexType>
 <xs:complexType name="MetricValueType"><xs:sequence><xs:element minOccurs="0" name="MetricValue" type="xs:double"/><xs:element minOccurs="0" name="MetricUnits" type="xs:string"/></xs:sequence></xs:complexType>
+<xs:complexType name="TenantUserAccount"><xs:sequence><xs:element name="Email" type="xs:string"/><xs:element maxOccurs="unbounded" name="Role" type="xs:string"/><xs:element minOccurs="0" name="FirstName" type="xs:string"/><xs:element minOccurs="0" name="LastName" type="xs:string"/></xs:sequence></xs:complexType>
 </xs:schema>
     <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/dnmodel/1.0" version="1.0" xmlns:tns="http://soa.com/xsd/dnmodel/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:element name="Image"><xs:complexType><xs:all><xs:element name="Url" type="xs:anyURI"/><xs:element name="Title" type="xs:string"/><xs:element name="Link" type="xs:anyURI"/><xs:element minOccurs="0" name="Description" type="xs:string"/></xs:all></xs:complexType></xs:element>
@@ -95,12 +95,6 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="TenantManagementAPIPortType">
-    <wsdl:operation name="changeTenantState">
-      <wsdl:input message="tns:changeTenantStateRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:changeTenantStateResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="addNewTenant">
       <wsdl:input message="tns:addNewTenantRequestMessage">
     </wsdl:input>
@@ -111,6 +105,12 @@
       <wsdl:input message="tns:getPlatformUsageRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:getPlatformUsageResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="changeTenantState">
+      <wsdl:input message="tns:changeTenantStateRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:changeTenantStateResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="removeTenant">
@@ -128,17 +128,6 @@
   </wsdl:portType>
   <wsdl:binding name="TenantManagementAPIBinding" type="tns:TenantManagementAPIPortType">
     <shttp:binding/>
-    <wsdl:operation name="changeTenantState">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /subscriptions/{SubscriptionID}/state</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="application/xml,application/json,application/vnd.soa.v80+json,application/vnd.soa.v80+xml" location="/subscriptions/{SubscriptionID}/state" method="PUT" outputSerialization="application/xml,application/json,application/vnd.soa.v80+json,application/vnd.soa.v80+xml"/>
-      <wsdl:input>
-    <shttp:input name="SubscriptionID" part="SubscriptionID" type="path"/>
-    <shttp:input name="parameter0" part="parameter0" type="entity"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="changeTenantStateResponse" part="changeTenantStateResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="addNewTenant">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /subscriptions</sdoc:displayName></wsdl:documentation>
     <shttp:operation inputSerialization="application/xml,application/json,application/vnd.soa.v80+json,application/vnd.soa.v80+xml" location="/subscriptions" method="POST" outputSerialization="application/xml,application/json,application/vnd.soa.v80+json,application/vnd.soa.v80+xml"/>
@@ -162,6 +151,17 @@
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="getPlatformUsageResponse" part="getPlatformUsageResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="changeTenantState">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /subscriptions/{SubscriptionID}/state</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="application/xml,application/json,application/vnd.soa.v80+json,application/vnd.soa.v80+xml" location="/subscriptions/{SubscriptionID}/state" method="PUT" outputSerialization="application/xml,application/json,application/vnd.soa.v80+json,application/vnd.soa.v80+xml"/>
+      <wsdl:input>
+    <shttp:input name="SubscriptionID" part="SubscriptionID" type="path"/>
+    <shttp:input name="parameter0" part="parameter0" type="entity"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="changeTenantStateResponse" part="changeTenantStateResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="removeTenant">
