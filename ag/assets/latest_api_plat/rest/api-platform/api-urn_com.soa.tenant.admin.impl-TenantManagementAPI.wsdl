@@ -76,14 +76,14 @@
     <wsdl:part name="SubscriptionID" type="xs:string">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="removeTenantRequestMessage">
-    <wsdl:part name="SubscriptionID" type="xs:string">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="changeTenantStateRequestMessage">
     <wsdl:part name="SubscriptionID" type="xs:string">
     </wsdl:part>
     <wsdl:part name="parameter0" element="nms1:TenantStateChangeRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="removeTenantRequestMessage">
+    <wsdl:part name="SubscriptionID" type="xs:string">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="addNewTenantRequestMessage">
@@ -95,16 +95,10 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="TenantManagementAPIPortType">
-    <wsdl:operation name="removeTenant">
-      <wsdl:input message="tns:removeTenantRequestMessage">
+    <wsdl:operation name="changeTenantState">
+      <wsdl:input message="tns:changeTenantStateRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:removeTenantResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="addNewTenant">
-      <wsdl:input message="tns:addNewTenantRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:addNewTenantResponseMessage">
+      <wsdl:output message="tns:changeTenantStateResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getPlatformUsage">
@@ -113,39 +107,36 @@
       <wsdl:output message="tns:getPlatformUsageResponseMessage">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="addNewTenant">
+      <wsdl:input message="tns:addNewTenantRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:addNewTenantResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="removeTenant">
+      <wsdl:input message="tns:removeTenantRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:removeTenantResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getTenant">
       <wsdl:input message="tns:getTenantRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:getTenantResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="changeTenantState">
-      <wsdl:input message="tns:changeTenantStateRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:changeTenantStateResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="TenantManagementAPIBinding" type="tns:TenantManagementAPIPortType">
     <shttp:binding/>
-    <wsdl:operation name="removeTenant">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">DELETE /subscriptions/{SubscriptionID}</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/subscriptions/{SubscriptionID}" method="DELETE" outputSerialization="application/xml,application/json,application/vnd.soa.v80+json,application/vnd.soa.v80+xml"/>
+    <wsdl:operation name="changeTenantState">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /subscriptions/{SubscriptionID}/state</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="application/xml,application/json,application/vnd.soa.v80+json,application/vnd.soa.v80+xml" location="/subscriptions/{SubscriptionID}/state" method="PUT" outputSerialization="application/xml,application/json,application/vnd.soa.v80+json,application/vnd.soa.v80+xml"/>
       <wsdl:input>
     <shttp:input name="SubscriptionID" part="SubscriptionID" type="path"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="removeTenantResponse" part="removeTenantResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="addNewTenant">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /subscriptions</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="application/xml,application/json,application/vnd.soa.v80+json,application/vnd.soa.v80+xml" location="/subscriptions" method="POST" outputSerialization="application/xml,application/json,application/vnd.soa.v80+json,application/vnd.soa.v80+xml"/>
-      <wsdl:input>
     <shttp:input name="parameter0" part="parameter0" type="entity"/>
       </wsdl:input>
       <wsdl:output>
-    <shttp:output name="addNewTenantResponse" part="addNewTenantResponse" type="entity"/>
+    <shttp:output name="changeTenantStateResponse" part="changeTenantStateResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getPlatformUsage">
@@ -163,6 +154,26 @@
     <shttp:output name="getPlatformUsageResponse" part="getPlatformUsageResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="addNewTenant">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /subscriptions</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="application/xml,application/json,application/vnd.soa.v80+json,application/vnd.soa.v80+xml" location="/subscriptions" method="POST" outputSerialization="application/xml,application/json,application/vnd.soa.v80+json,application/vnd.soa.v80+xml"/>
+      <wsdl:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="addNewTenantResponse" part="addNewTenantResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="removeTenant">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">DELETE /subscriptions/{SubscriptionID}</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/subscriptions/{SubscriptionID}" method="DELETE" outputSerialization="application/xml,application/json,application/vnd.soa.v80+json,application/vnd.soa.v80+xml"/>
+      <wsdl:input>
+    <shttp:input name="SubscriptionID" part="SubscriptionID" type="path"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="removeTenantResponse" part="removeTenantResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getTenant">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /subscriptions/{SubscriptionID}</sdoc:displayName></wsdl:documentation>
     <shttp:operation location="/subscriptions/{SubscriptionID}" method="GET" outputSerialization="application/xml,application/json,application/vnd.soa.v81+json,application/vnd.soa.v81+xml"/>
@@ -171,17 +182,6 @@
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="getTenantResponse" part="getTenantResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="changeTenantState">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /subscriptions/{SubscriptionID}/state</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="application/xml,application/json,application/vnd.soa.v80+json,application/vnd.soa.v80+xml" location="/subscriptions/{SubscriptionID}/state" method="PUT" outputSerialization="application/xml,application/json,application/vnd.soa.v80+json,application/vnd.soa.v80+xml"/>
-      <wsdl:input>
-    <shttp:input name="SubscriptionID" part="SubscriptionID" type="path"/>
-    <shttp:input name="parameter0" part="parameter0" type="entity"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="changeTenantStateResponse" part="changeTenantStateResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
