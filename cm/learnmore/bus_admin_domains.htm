@@ -86,7 +86,6 @@ nav-title: Domains
 	<li><a href="#what_token_types_should_i_support">What token types should I support?</a></li>
 	<li><a href="#how_does_token_encryption_work">How does token encryption work?</a></li>
 	<li><a href="#how_manage_grant_revoked_cancelled">How does the platform manage validation of the JWT access tokens in the resource server when the grant is revoked or cancelled?</a></li>
-	<li><a href="#ts_domain_auth_server_url_slash_jwt">Troubleshooting: Trailing slash on Authorization Server URL can result in JWT token validation failure when using private key JWT for client validation</a></li>
 </ol>
 
 
@@ -1110,28 +1109,27 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
 			<td>Select this check box if your OAuth provider should only accept requests over HTTPS.</td>
 		</tr>
 		<tr>
-			<td id="domain_oauth_provider_authserverurl">Authorization Server URL</td>
-			<td><p>The <a href="basics_glossary.htm#gl_oauth_authorizationserverurl">Authorization Server URL</a> set up in your Akana OAuth/OIDC Provider domain configuration; for example, https://www.myauthorizationserver:9800. This is the public URL that apps will use to access this OAuth provider. Can be HTTP or HTTPS. If the <strong>Requires SSL</strong> box is checked (see above), must be HTTPS.</p>
-				<p>Based on the Authorization Server URL specified, the platform derives these endpoints:</p>
-				<ul>
-					<li>Authorization Endpoint (for OAuth 1.0a and OAuth 2.0): {Authorization Server URL}/oauth/auz/authorize</li>
-					<li>OAuth 2.0 Token Endpoint: {Authorization Server URL}/oauth/oauth20/token</li>
-					<li>OAuth 1.0 Token Endpoint: {Authorization Server URL}/oauth/oauth10/token</li>
-				</ul>
-				<p>If the Akana OAuth/OIDC Provider domain uses OpenID Connect for authentication (OpenID Connect support is checked in the Akana OAuth/OIDC Provider domain configuration, Tab 3):</p>
-				<ul>
-					<li>Userinfo Endpoint: {Authorization Server URL}/oauth/userinfo</li>
-					<li>JWKS Endpoint: {Authorization Server URL}/oauth/jwks</li>
-				</ul>
+<td id="domain_oauth_provider_authserverurl">Authorization Server URL</td>
+<td><p>The <a href="basics_glossary.htm#gl_oauth_authorizationserverurl">Authorization Server URL</a> set up in your Akana OAuth/OIDC Provider domain configuration; for example, https://www.myauthorizationserver:9800. This is the public URL that apps will use to access this OAuth provider. Can be HTTP or HTTPS. If the <strong>Requires SSL</strong> box is checked (see above), must be HTTPS.</p>
+<p>Based on the Authorization Server URL specified, the platform derives these endpoints:</p>
+<ul>
+	<li>Authorization Endpoint (for OAuth 1.0a and OAuth 2.0): {Authorization Server URL}/oauth/auz/authorize</li>
+	<li>OAuth 2.0 Token Endpoint: {Authorization Server URL}/oauth/oauth20/token</li>
+	<li>OAuth 1.0 Token Endpoint: {Authorization Server URL}/oauth/oauth10/token</li>
+</ul>
+<p>If the Akana OAuth/OIDC Provider domain uses OpenID Connect for authentication (OpenID Connect support is checked in the Akana OAuth/OIDC Provider domain configuration, Tab 3):</p>
+<ul>
+	<li>Userinfo Endpoint: {Authorization Server URL}/oauth/userinfo</li>
+	<li>JWKS Endpoint: {Authorization Server URL}/oauth/jwks</li>
+</ul>
 <p>For an OpenID Connect provider, all the endpoints and provider details are available via the discovery URL/well-known configuration URL:</p>
 <ul>
-	<li>{Authorization Server URL}/.well-known/openid-configuration
-	</li>
+	<li>{Authorization Server URL}/.well-known/openid-configuration </li>
 </ul>
-				<p>Firewalls and DNS servers must be set up for this URL so that end users and apps can access the URL. This protocol/host/path should resolve to one or more containers with the Akana OAuth Provider feature installed.</p>
-				<p>For more information, including the specific paths for different OAuth URLs for the OAuth provider, see <a href="#platform_oauth_endpoints">What are the OAuth endpoints for the platform?</a></p>
-<p><strong>Note</strong>: In most cases, do <strong>not</strong> include a trailing slash on the Authorization Server URL. See <a href="#ts_domain_auth_server_url_slash_jwt">Troubleshooting: Trailing slash on Authorization Server URL can result in JWT token validation failure when using private key JWT for client validation</a>.</p></td>
-		</tr>
+<p>Firewalls and DNS servers must be set up for this URL so that end users and apps can access the URL. This protocol/host/path should resolve to one or more containers with the Akana OAuth Provider feature installed.</p>
+<p>For more information, including the specific paths for different OAuth URLs for the OAuth provider, see <a href="#platform_oauth_endpoints">What are the OAuth endpoints for the platform?</a></p>
+<p><strong>Note</strong>: In versions prior to 2020.1.0, a trailing slash on the Authorization Server URL results in failure to validate a <a href="basics_glossary.htm#gl_privatekeyjwt">Private Key JWT</a> token (private_key_jwt), with an error that the <strong>aud</strong> claim does not match the intended audience. In version 2020.1.0 and later, the developer portal resolves this internally.</p></td>
+</tr>
 		<tr>
 			<td>Additional Virtual Hosts</td>
 			<td><p>If your OAuth provider has one or more additional virtual hosts, as well as the hostname in the Authorization Server URL, enter the additional hostnames, separated by commas.</p>
@@ -1173,7 +1171,7 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
 <p>When setting up an Akana OAuth/OIDC Provider domain on the platform, once you have specified the Authorization Server URL it is important to make sure that requests are directed to this URL where the Akana OAuth Provider feature is installed. This might include additional actions; for example, adding a DNS entry or configuring the load balancer if the URL is a virtual endpoint on F5. If you are setting up an External OAuth Provider domain, this is not necessary.</p>
 <p>The URL you provide for the Authorization Server is the base of the URL for the Request Token URL, Access Token URL, and Authorize URL, with additional parts of the paths as shown below. The <a href="basics_glossary.htm#gl_oauth_callbackurl">Callback URL</a> is the Redirect URL that an app developer would provide in the App details page.</p>
 <p>For specific Authorization Server URLs for the platform, see <a href="#auth_server_url_platform">What is the OAuth Authorization Server URL for the platform?</a> below.</p>
-<p><strong>Note</strong>: In most cases, when setting up an Authorization Server URL in domain configuration, make sure there are no training characters on the URL, including a trailing slash.</p>
+<p><strong>Note</strong>: In most cases, when setting up an Authorization Server URL in domain configuration, make sure there are no training characters on the URL, including a training slash.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -1193,7 +1191,7 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
 <ul>
 <li>App developers need to know the Authorization Server URL in order to set up their apps to use the OAuth domain. This information must be made available to API Admins, who must make sure it is included in API documentation.</li>
 <li>If you are setting up an External OAuth Provider domain, you'll need to provide the Authorization Server URL of your provider. Generally, this is available at the well-known configuration endpoint. See <a href="bus_admin_domains_eoap.htm#why_choose_eoap">When would I choose an External OAuth Provider domain?</a></li>
-<li>In most cases, when setting up an Authorization Server URL in domain configuration, make sure there are no training characters on the URL, including a trailing slash.</li>
+<li>In most cases, when setting up an Authorization Server URL in domain configuration, make sure there are no training characters on the URL, including a training slash.</li>
 </ul>
 <p><a href="#top">Back to top</a></p>
 
@@ -1310,14 +1308,6 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
 <p><a href="#top">Back to top</a></p>
 
 
-<h2 id="ts_domain_auth_server_url_slash_jwt">Troubleshooting: Trailing slash on Authorization Server URL can result in JWT token validation failure when using private key JWT for client validation</h2>
-<p>In most cases it's not necessary to put a trailing slash on the Authorization Server URL when you set it up in the Akana OAuth/OIDC Provider domain,  Tab 7, Branding. An example of a valid Authorization Server URL:</p>
-<pre>https://www.myauthorizationserver:9800</pre>
-<p>In some cases, a trailing slash on the Authorization Server URL could result in failure to validate a private_key_jwt token, with an error that the <strong>aud</strong> claim does not match the intended audience. The token endpoint referenced in the <strong>aud</strong> claim references the Authorization Server URL, and a trailing slash in the domain configuration can cause this mismatch. In version 2020.1.0 and later, the developer portal resolves this internally so that it is not a problem.</p>
-<p>If you encounter the error above, check the Authorization Server URL in the domain setup and make sure it doesn't have a trailing slash.</p>
-<p><a href="#top">Back to top</a></p>
-
-
 
 <hr class="divide_hr" />
 <h2 id="h_samlwebssoslodomain">SAML Web SSO/SLO Domain:</h2>
@@ -1374,7 +1364,6 @@ There are two kinds of JWT tokens the platform uses in OAuth:</p>
 <p>You must first define the CA SiteMinder domain via the <strong>Configure</strong> &gt; <strong>Security</strong> &gt; <strong>Identity Systems</strong> section of the <a href="basics_glossary.htm#gl_policy_manager">Policy Manager</a> Management Console. For more information, refer to the following external documentation:</p>
 <ul>
 	<li>The <strong>Add Identity System</strong> (Active Directory) topic in the Policy Manager Online Help.</li>
-
 	<li>For information about integrating CA SiteMinder with Policy Manager, see <a href="../../ag/ca_siteminder/ca_siteminder_pm_toc.htm" title="Integrate CA SiteMinder with Policy Manager" target="_blank">Integrate CA SiteMinder with Policy Manager</a>. This includes instructions on how to set up CA SiteMinder and install the identity system (domain) in Policy Manager.</li>
 	<li>The <strong>Enterprise API Platform Installation Guide</strong> (for information on how to install a CA SiteMinder Identity System).</li>
 </ul>
