@@ -311,15 +311,11 @@ nav-title: Use Case - UK Open Banking
 
 
 <h3 id="s03_01">Step 3-1: Create the API</h3>
-<p>This example uses a version of the Swagger for the Account and Transaction API, one of the APIs published by the UK Open Banking Implementation Entity, converted from Swagger 2.0 format to Open API 3.0 format:</p>
-<ul>
-	<li><a href="images_uc_uk_ob/account-info-swagger-3.0_OAS.json">OAS 3.0 version of the Open Banking Account and Transaction API</a></li>
-</ul>
+<p>This example uses a version of the Swagger for the Open Banking Payment Initiation API, one of the APIs published by the UK Open Banking Implementation Entity. For the Swagger JSON file, see <a href="#tc_ukob_resources_01">Input Swagger file for the API</a>.</p>
 <p>In <strong>Add API</strong>:</p>
 <ol>
 	<li>Choose <strong>APIs</strong> &gt; <strong>Add API</strong>.</li>
-	<li>Upload the Swagger file. In this use case we are using the <a href="images_uc_uk_ob/account-info-swagger-3.0_OAS.json">OAS 3.0 version of the Open Banking Account and Transaction API</a>.
-		<p>For more information, see <a href="#tc_ukob_resources_01">Input Swagger file for the API</a>.</p></li>
+	<li>Upload the Swagger file. In this use case we are using the Open Banking Payment Initiation API. For the Swagger file, see <a href="#tc_ukob_resources_01">Input Swagger file for the API</a>.</li>
 	<li>Click the <strong>Advanced Options</strong> slider bar to see additional settings.</li>
 	<li>Choose Implementation Pattern of <strong>Orchestration</strong>.
 		<p><strong>Note</strong>: This use case uses Orchestration so that we can set up a mock response, in the Process Editor.</p></li>
@@ -329,8 +325,8 @@ nav-title: Use Case - UK Open Banking
 <li>Click <strong>Save</strong>.</li>
 	<li>Optional: in this use case, for clarity, edit the API description to modify the title:
 		<ul>
-			<li><strong>Old title</strong>: Account_and_Transaction_API_Specification</li>
-			<li><strong>New title</strong>: Account_and_Transaction_API_Specification_UK_OB_UC</li>
+			<li><strong>Old title</strong>: Payment_Initiation_API</li>
+			<li><strong>New title</strong>: Payment_Initiation_API_UK_OB_UC</li>
 		</ul>
 		</li>
 </ol>
@@ -338,14 +334,12 @@ nav-title: Use Case - UK Open Banking
 <p>When you create the API, by default it is connected to all valid endpoints. Follow the steps below to delete any protocols other than Mutual HTTPS.</p>
 <h4>To modify the Sandbox implementation</h4>
 <ol>
-	<li>Go to <strong>API</strong> &gt; <strong>Implementations</strong> and choose the <strong>Sandbox</strong> implementation.</li>
+	<li>Go to <strong>API</strong> &gt; <strong>Implementations</strong> and choose the <strong>Sandbox</strong> implementation (it should be the only one).</li>
 	<li>In the <strong>Deployments</strong> section, click <strong>Edit</strong>.</li>
 <li>Delete all protocols except <strong>mutual-https</strong>. In this example, there are two protocols to delete, <strong>default-http0</strong> and <strong>default-https</strong>, as shown below.
 		<p><img src="images_uc_uk_ob/uc_ukob_api_delete_protocols.png" alt="Process Editor -- setting up the mock response"/></p>
 </li>
 <li>Click <strong>Save</strong>.</li>
-	
-	<li>Click <strong>Go back to Implementations</strong>.</li>
 </ol>
 
 
@@ -383,8 +377,8 @@ nav-title: Use Case - UK Open Banking
 <ol>
 	<li>Go to <strong>API</strong> &gt; <strong>Implementations</strong> and choose the <strong>Sandbox</strong> implementation.</li>
 	<li>Scroll down to the bottom section, <strong>Resources</strong>.</li>
-	<li>In the top row, for the <strong>CreateAccountAccessConsent</strong> operation, click the drop-down arrow to the right and choose <strong>Edit Process</strong>, as shown below.
-		<p><img src="images_uc_uk_ob/uc_ukob_api_implementation_edit_process.png" alt="API Implementation - Accesing the Process Editor"/></p>
+	<li>In the top row, for the <strong>/domestic-payment-consents</strong> operation, click the drop-down arrow to the right and choose <strong>Edit Process</strong>, as shown below.
+	<p><img src="images_uc_uk_ob/uc_ukob_api_implementation_edit_process.png" alt="API Implementation - Accesing the Process Editor"/></p>
 	</li>
 	<li>In the Process Editor, add a <strong>Content Activity</strong> (on the left, third or fourth icon from the top). Connect it in between the Receive and Reply nodes.</li>
 	<li>Double-click to edit the Content Activity. Set up values as shown below: From <strong>Static Content</strong>, Content Type <strong>application/json</strong>. In the box, paste the static text for the response: see <a href="#tc_ukob_resources_03">Response content for the Content Activity in the Process Editor</a>.
@@ -523,7 +517,7 @@ nav-title: Use Case - UK Open Banking
 	</li>
 	<li>Click <strong>OK</strong>.</li>
 	<li>At the <strong>New Pair Key Entry Alias</strong> dialog box, enter an alias. It's a good idea to use the app name. By default, Keystore Explorer uses the CN from the Name field, so if you used the app name for the Common Name, you can just accept the default.</li>
-	<li>At the <strong>New Pair Key Entry Password</strong> dialog box, specify the password and then confirm it. Make sure you can remember the password.</li>
+	<li>At the <strong>New Pair Key Entry Password</strong> dialog box, specify the password and then confirm it. Make sure you remember the password.</li>
 	<li>Click <strong>OK</strong>. The key pair is generated, and you'll see a confirmation message.</li>
 </ol>
 
@@ -604,14 +598,15 @@ nav-title: Use Case - UK Open Banking
 		<ul>
 			<li>Authorization</li>
 			<li>x-customer-user-agent</li>
+<li>x-fapi-auth-date</li>
 			<li>x-fapi-customer-ip-address</li>
-			<li>x-fapi-customer-last-logged-time</li>
-			<li>x-fapi-financial-id</li>
 			<li>x-fapi-interaction-id</li>
+<li>x-idempotency-key</li>
+<li>x-jws-signature</li>
 			</ul>
 		</li>
-	<li>In the Content field, paste the content included in <a href="#tc_ukob_resources_02">Request content for the Test Client message</a> below.
-	<p><strong>Note</strong>: It really doesn't matter what the request content is, as long as you use valid JSON. You could just include one set of curly braces: {}. The validation is the important thing. However, the example provided with this use case is the standard request format for this operation, per the API definition.</p></li>
+	<li>In the <strong>Content</strong> field, paste the content included in <a href="#tc_ukob_resources_02">Request content for the Test Client message</a> below.
+<p><strong>Note</strong>: It really doesn't matter what the request content is, as long as you use valid JSON. You could just include one set of curly braces: {}. The validation is the important thing. However, the example provided with this use case is the standard request format for this operation, per the API definition.</p></li>
 	<li>Click the <strong>Setup</strong> button. In the <strong>Setup</strong> dialog box:
 		<ul>
 			<li>Make sure the correct app is displayed.</li>
@@ -623,10 +618,12 @@ nav-title: Use Case - UK Open Banking
 			</ul>
 		</li>
 	<li>Click the <strong>Security</strong> button.</li>
-	<li>In the <strong>HTTP Security Policy</strong> page, click <strong>Next</strong>.</li>
+	<li>In the <strong>HTTP Security Policy</strong> page, click <strong>Next</strong>.
+<p><strong>Note</strong>: The sequence of the pages for the policies might not match the sequence given in the next few steps. Follow the steps for each policy page as it appears.</p>
+</li>
 	<li>In the <strong>JOSE Security Policy v2</strong> page:
 	<ul>
-		<li>In the <strong>Signature/MAC Algorithm</strong> field, choose <strong>RS256</strong>. The UK Open Banking standard requires an RS value.
+		<li>In the <strong>Signature/MAC Algorithm</strong> field, choose <strong>RS256</strong>. The UK Open Banking standard requires an RS value. HS256 is the default value, so you must change it.
 			<p><strong>Note</strong>: It's easy to miss this step. If you don't choose the RS256 algorithm, the message will fail. The UK Open Banking specification requires an RS* algorithm.</p>
 			<p>The JSON web token, which Test Client will create to satisfy the JOSE Security Policy v2, will be signed using the keystore that you just uploaded. The same keystore is used for the TLS connection (HTTP Security Policy) and to sign the JSON web token (JWT) for the JOSE Security Policy v2.</p>
 		</li>
@@ -708,17 +705,23 @@ nav-title: Use Case - UK Open Banking
 
 
 <h3 id="tc_ukob_resources_01">Input Swagger file for the API</h3>
-<p>This example uses the Open Banking Account and Transaction API, converted to OAS 3.0. The Swagger 2.0 file for this API is available at the following URL:</p>
+<p>This example uses the Open Banking Payment Initiation API. The OAS JSON file for this API is available at the following URL:</p>
 <ul>
-	<li><strong>Version 3.0.0, converted to OAS 3.0</strong>: <a href="https://raw.githubusercontent.com/OpenBankingUK/read-write-api-specs/v3.0.0/dist/account-info-swagger.json" title="Link to source content for OAS 3.0 version" target="_blank">https://raw.githubusercontent.com/OpenBankingUK/read-write-api-specs/v3.0.0/dist/account-info-swagger.json</a></li>
+	<li><a href="https://raw.githubusercontent.com/OpenBankingUK/read-write-api-specs/master/dist/openapi/payment-initiation-openapi.json" title="Link to source content for OAS 3.0 version" target="_blank">https://raw.githubusercontent.com/OpenBankingUK/read-write-api-specs/master/dist/openapi/payment-initiation-openapi.json</a></li>
 </ul>
-<p>For this use case, we've converted to OAS 3.0. The converted file for this use case is available here:</p>
+<p>For this use case, we've made two slight modifications to the JSON file:</p>
 <ul>
-<li><a href="images_uc_uk_ob/account-info-swagger-3.0_OAS.json">OAS 3.0 version of the Open Banking Account and Transaction API</a></li>
+<li>Slightly modified the JSON to remove the application/jose+jwe content type, for simplicity since this use case does not use JWE, which is not mandatory for UK Open Banking compliance, and the application/jose+jwe content-type would display as the default in Test Client (since available content-type values are displayed alphabetically).</li>
+<li>Removed the charset values from the parameters. In the original file, the default values for Consumes and Produces include a charset parameter: application/json; charset=utf-f. Both versions of the UK Open Banking Specification state that the media type must be application/json (apart from specific exceptions).</li>
+</ul>
+<p>The file used in this use case is available here:</p>
+<ul>
+<li><a href="images_uc_uk_ob/payment-initiation-openapi-3.1.6-modified.json">OAS 3.0 version of the Open Banking Payment Initiation API</a></li>
 </ul>
 
 
 <h4 id="tc_ukob_resources_01_02">Additional Swagger versions available</h4>
+<p>{<span class="apidoc_red">OvG: Probably best to just take out this section?</span>}</p>
 <p>You could also use these versions:</p>
 <ul>
 	<li><strong>Version 3.1.1</strong>: <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/999622968/Account+and+Transaction+API+Specification+-+v3.1.1#AccountandTransactionAPISpecification-v3.1.1-SwaggerSpecification" title="Link to Atlassian site for 3.1.1 Swagger" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/999622968/Account+and+Transaction+API+Specification+-+v3.1.1#AccountandTransactionAPISpecification-v3.1.1-SwaggerSpecification</a></li>
@@ -735,15 +738,18 @@ nav-title: Use Case - UK Open Banking
 <h3 id="tc_ukob_resources_02">Request content for the Test Client message</h3>
 <p>The message POST content used in the use case is below.</p>
 <pre>{
-  "Data": {
-    "Permissions": [
-      "ReadAccountsBasic"
+  "Data":{
+    "Permissions":[
+      "ReadAccountsBasic",
+      "ReadBalances"
     ],
-    "ExpirationDateTime": "2020-05-10T16:05:46.165Z",
-    "TransactionFromDateTime": "2020-05-10T16:05:46.165Z",
-    "TransactionToDateTime": "2020-05-10T16:05:46.165Z"
+    "ExpirationDateTime":"2020-06-09T13:44:07.946Z",
+    "TransactionFromDateTime":"2020-06-09T13:44:07.947Z",
+    "TransactionToDateTime":"2020-06-09T13:44:07.947Z"
   },
-  "Risk": {}
+  "Risk":{
+    
+  }
 }</pre>
 <p><a href="#top">Back to top</a></p>
 
@@ -754,30 +760,129 @@ nav-title: Use Case - UK Open Banking
 <p>This content is used in <a href="#s03_05">Step 3-5: Create a mock response</a>.</p>
 <p>It really doesn't matter what content you define since the response is static. However, this is an example of what a response for this operation might look like in a production environment.</p>
 <pre>{
-  "Data": {
-    "ConsentId": "string",
-    "CreationDateTime": "2020-05-10T16:05:46.226Z",
-    "Status": "Authorised",
-   "StatusUpdateDateTime": "2020-05-10T16:05:46.226Z",
-    "Permissions": [
-      "ReadAccountsBasic"
+  "Data":{
+    "ConsentId":"string",
+    "CreationDateTime":"2020-10-16T19:15:28.891Z",
+    "Status":"Authorised",
+    "StatusUpdateDateTime":"2020-10-16T19:15:28.891Z",
+    "CutOffDateTime":"2020-10-16T19:15:28.891Z",
+    "ExpectedExecutionDateTime":"2020-10-16T19:15:28.891Z",
+    "ExpectedSettlementDateTime":"2020-10-16T19:15:28.891Z",
+    "Charges":[
+      {
+        "ChargeBearer":"BorneByCreditor",
+        "Type":[
+          "UK.OBIE.CHAPSOut",
+          "UK.OBIE.BalanceTransferOut",
+          "UK.OBIE.MoneyTransferOut"
+        ],
+        "Amount":{
+          "Amount":"string",
+          "Currency":"string"
+        }
+      }
     ],
-    "ExpirationDateTime": "2020-05-10T16:05:46.226Z",
-    "TransactionFromDateTime": "2020-05-10T16:05:46.226Z",
-    "TransactionToDateTime": "2020-05-10T16:05:46.226Z"
+    "Initiation":{
+      "InstructionIdentification":"string",
+      "EndToEndIdentification":"string",
+      "LocalInstrument":[
+        "UK.OBIE.BACS",
+        "UK.OBIE.BalanceTransfer",
+        "UK.OBIE.CHAPS",
+        "UK.OBIE.Euro1",
+        "UK.OBIE.FPS",
+        "UK.OBIE.Link",
+        "UK.OBIE.MoneyTransfer",
+        "UK.OBIE.Paym",
+        "UK.OBIE.SEPACreditTransfer",
+        "UK.OBIE.SEPAInstantCreditTransfer",
+        "UK.OBIE.SWIFT",
+        "UK.OBIE.Target2"
+      ],
+      "InstructedAmount":{
+        "Amount":"string",
+        "Currency":"string"
+      },
+      "DebtorAccount":{
+        "SchemeName":[
+          "UK.OBIE.BBAN",
+          "UK.OBIE.IBAN",
+          "UK.OBIE.PAN",
+          "UK.OBIE.Paym",
+          "UK.OBIE.SortCodeAccountNumber"
+        ],
+        "Identification":"string",
+        "Name":"string",
+        "SecondaryIdentification":"string"
+      },
+      "CreditorAccount":{
+        "SchemeName":[
+          "UK.OBIE.BBAN",
+          "UK.OBIE.IBAN",
+          "UK.OBIE.PAN",
+          "UK.OBIE.Paym",
+          "UK.OBIE.SortCodeAccountNumber"
+        ],
+        "Identification":"string",
+        "Name":"string",
+        "SecondaryIdentification":"string"
+      },
+      "CreditorPostalAddress":{
+        "AddressType":"Business",
+        "Department":"string",
+        "SubDepartment":"string",
+        "StreetName":"string",
+        "BuildingNumber":"string",
+        "PostCode":"string",
+        "TownName":"string",
+        "CountrySubDivision":"string",
+        "Country":"string",
+        "AddressLine":[
+          "string"
+        ]
+      },
+      "RemittanceInformation":{
+        "Unstructured":"string",
+        "Reference":"string"
+      },
+      "SupplementaryData":{
+        
+      }
+    },
+    "Authorisation":{
+      "AuthorisationType":"Any",
+      "CompletionDateTime":"2020-10-16T19:15:28.891Z"
+    }
   },
-  "Risk": {},
-  "Links": {
-    "Self": "string",
-    "First": "string",
-    "Prev": "string",
-    "Next": "string",
-    "Last": "string"
+  "Risk":{
+    "PaymentContextCode":"BillPayment",
+    "MerchantCategoryCode":"string",
+    "MerchantCustomerIdentification":"string",
+    "DeliveryAddress":{
+      "AddressLine":[
+        "string"
+      ],
+      "StreetName":"string",
+      "BuildingNumber":"string",
+      "PostCode":"string",
+      "TownName":"string",
+      "CountrySubDivision":[
+        "string"
+      ],
+      "Country":"string"
+    }
   },
-  "Meta": {
-    "TotalPages": 0,
-    "FirstAvailableDateTime": "2020-05-10T16:05:46.226Z",
-    "LastAvailableDateTime": "2020-05-10T16:05:46.226Z"
+  "Links":{
+    "Self":"string",
+    "First":"string",
+    "Prev":"string",
+    "Next":"string",
+    "Last":"string"
+  },
+  "Meta":{
+    "TotalPages":0,
+    "FirstAvailableDateTime":"2020-10-16T19:15:28.891Z",
+    "LastAvailableDateTime":"2020-10-16T19:15:28.891Z"
   }
 }</pre>
 <p><a href="#top">Back to top</a></p>
