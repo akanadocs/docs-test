@@ -40,7 +40,7 @@ nav-title: Use Case - UK Open Banking
 	<li><a href="#s03_api">Step 3: Create and configure the API</a>
 		<ul>
 			<li><a href="#s03_01">Step 3-1: Create the API</a></li>
-			<li><a href="#s03_02">SStep 3-2: Modify the API implementation so that only mutual HTTPS is valid</a></li>
+			<li><a href="#s03_02">Step 3-2: Modify the API implementation so that only mutual HTTPS is valid</a></li>
 			<li><a href="#s03_03">Step 3-3: Turn off anonymous access</a></li>
 			<li><a href="#s03_04">Step 3-4: Attach the policies to the API</a></li>
 			<li><a href="#s03_05">Step 3-5: Create a mock response</a></li>
@@ -161,10 +161,10 @@ nav-title: Use Case - UK Open Banking
 				<p><strong>Note</strong>: For simplicity, this example uses the Client Credentials grant type. The scenario could easily be extended to support additional grant types, such as Authorization Code, which would require a Resource Owner Authentication Domain.</p></li>
 			<li><strong>Tab 3, Token</strong>: Choose <strong>Referenced Bearer</strong>.</li>
 			<li><strong>Tab 4</strong>: no setup needed.</li>
-			<li><strong>Tab 5, Scopes</strong>: Create one scope, <strong>accounts</strong>. This is required to comply with the UK Open Banking specification. In this use case:
-			<p><strong>Name</strong>: <strong>accounts</strong></p>
-			<p><strong>Short Description</strong>: <strong>accounts scope for UK_OB_UC</strong></p>
-			<p><strong>Full Description</strong>: <strong>accounts scope for UK Open Banking use case</strong></p>
+			<li><strong>Tab 5, Scopes</strong>: Create one scope, <strong>payments</strong>. This is required to comply with the UK Open Banking specification. In this use case:
+			<p><strong>Name</strong>: <strong>payments</strong></p>
+			<p><strong>Short Description</strong>: <strong>payments scope for UK_OB_UC</strong></p>
+			<p><strong>Full Description</strong>: <strong>payments scope for UK Open Banking use case</strong></p>
 			<p><strong>Default Scope</strong>: leave it as checked. </p>
 			<p><strong>Note</strong>: By default, the <strong>Default Scope</strong> box is checked, meaning that the new scope is granted automatically to any client that passes validation for accessing any API that uses this OAuth Provider domain. In a production scenario it might not be a good idea to allow a scope to be granted by default. However, for the purposes of this use case it's convenient, and means that you don't need to specify the scope in the request when testing in Test Client.</p>
 			</li>
@@ -279,15 +279,16 @@ nav-title: Use Case - UK Open Banking
 			<li>For <strong>Role</strong>, leave it as <strong>Provider</strong> (the default).</li>
 			<li><strong>Unencoded Detached Payload</strong>: Check the box.</li>
 			<li><strong>Header Parameter Name</strong>: <strong>x-jws-signature</strong></li>
-			<li><strong>UK Open Banking</strong>: Check the box. For this use case, make sure the version is set to <strong>Version 3.0 or earlier</strong>.</li>
+			<li><strong>Enforce Appendix F</strong>: check the box.</li>
+			<li><strong>UK Open Banking</strong>: Check the box, and set the version to <strong>Version 3.1</strong>.</li>
 			<li>Click <strong>Next</strong>.</li>
 		</ul>
 	</li>
 	<li>Specify the following JOSE Security Policy v2 IN message options (leave other options unchanged):
 		<ul>
 			<li><strong>Signed Content</strong>: check the box.</li>
-			<li><strong>Private Headers</strong>: check the box and specify the two UK Open Banking headers, <strong>http://openbanking.org.uk/iat</strong> (&quot;issued at&quot; header) and <strong>http://openbanking.org.uk/iss</strong> (&quot;issuer&quot; header), as shown in the example below.
-			<p><img src="images_uc_uk_ob/uc_ukob_policy_josev2_in_options.png" alt="JOSE Security Policy v2: setting up the private headers"/></p></li>
+			<li><strong>Private Headers</strong>: check the box and specify three UK Open Banking headers: <strong>http://openbanking.org.uk/iat</strong> (&quot;issued at&quot; header), <strong>http://openbanking.org.uk/iss</strong> (&quot;issuer&quot; header), and <strong>http://openbanking.org.uk/tan</strong>, the <strong>tan</strong> header required by the UK Open Banking specification version 3.1. For the <strong>tan</strong> header, provide a value of <strong>OpenBankingTrustAnchor</strong>. The private headers are shown in the example below.
+				<p><img src="images_uc_uk_ob/uc_ukob_policy_josev2_in_options.png" alt="JOSE Security Policy v2: setting up the private headers"/></p></li>
 			<li>Click <strong>Finish</strong> and then click <strong>Close</strong>.</li>
 			</ul>
 	</li>
@@ -405,7 +406,7 @@ nav-title: Use Case - UK Open Banking
 			<li>In the <strong>Apply OAuth Settings to the Following Endpoint(s)</strong> field, make sure only the <strong>Sandbox</strong> implementation is selected. In this use case, it is the only one.</li>
 		</ol>
 	</li>
-	<li>In <strong>Tab 2</strong>, <strong>Scope Mapping</strong>, choose <strong>API-Wide Scope Mapping</strong> and then choose the <strong>accounts</strong> scope: click <strong>Edit</strong>, check the box for the <strong>accounts</strong> scope, and then click <strong>Finish</strong>.</li>
+	<li>In <strong>Tab 2</strong>, <strong>Scope Mapping</strong>, choose <strong>API-Wide Scope Mapping</strong> and then choose the <strong>payments</strong> scope: click <strong>Edit</strong>, check the box for the <strong>payments</strong> scope, and then click <strong>Finish</strong>.</li>
 	<li>In the API OAuth Settings wizard, click <strong>Finish</strong> to save and close.</li>
 </ol>
 
@@ -416,7 +417,7 @@ nav-title: Use Case - UK Open Banking
 	<li>Navigation: <strong>Apps</strong> &gt; <strong>Add App</strong>.</li>
 	<li>Provide required values:
 		<ul>
-			<li><strong>App Name</strong>: In this use case, <strong>AccountsApp_UK_OB_UC</strong></li>
+			<li><strong>App Name</strong>: In this use case, <strong>PaymentsApp_UK_OB_UC</strong></li>
 			<li><strong>Version ID</strong>: In this use case, <strong>v1</strong></li>
 		</ul>
 		</li>
@@ -431,11 +432,11 @@ nav-title: Use Case - UK Open Banking
 
 <h4 id="contract_request">To request a contract</h4>
 <ol>
-	<li>Go to the <strong>Overview</strong> page for the API you created.</li>
+	<li>Go to the <strong>Overview</strong> page for the API you created. In this example: <strong>Payment_Initiation_API_UK_OB_UC</strong>.</li>
 	<li>At the top right, click <strong>Access</strong>.</li>
 	<li>In the API Access Wizard, choose:
 		<ul>
-			<li><strong>Tab 1, Select App</strong>: Choose the app that you created. In this example, <strong>AccountsApp_UK_OB_UC</strong>.</li>
+			<li><strong>Tab 1, Select App</strong>: Choose the app that you created. In this example, <strong>PaymentsApp_UK_OB_UC</strong>.</li>
 			<li><strong>Tab 2, Endpoint</strong>: Choose Sandbox.</li>
 		</ul>
 		<p><strong>Note</strong>: Depending on platform configuration, you might see additional tabs in the API Access Wizard. If so, you can skip them. No additional changes are needed. For details, see <a href="../../cm/learnmore/app_access_apis_api_access.htm#api_access_wizard">The API Access Wizard</a> (developer portal help).</p>
@@ -501,9 +502,9 @@ nav-title: Use Case - UK Open Banking
 	<li>At the <strong>Generate Key Pair Certificate</strong> dialog box, in the <strong>Name</strong> field, click the book icon.</li>
 	<li>In the <strong>Name</strong> dialog box, specify values for each field. These values are used later. In this example:
 		<ul>
-			<li>CN: <strong>AccountsApp_UK_OB_UC</strong>
+			<li>CN: <strong>PaymentsApp_UK_OB_UC</strong>
 			<p><strong>Note</strong>: It's a good idea to use the app name as the Common Name (CN), for simplicity.</p></li>
-			<li>OU: <strong>accounts</strong></li>
+			<li>OU: <strong>payments</strong></li>
 			<li>O: <strong>akana</strong></li>
 			<li>L: <strong>EUS</strong></li>
 			<li>ST: <strong>FL</strong></li>
@@ -518,7 +519,8 @@ nav-title: Use Case - UK Open Banking
 	<li>Click <strong>OK</strong>.</li>
 	<li>At the <strong>New Pair Key Entry Alias</strong> dialog box, enter an alias. It's a good idea to use the app name. By default, Keystore Explorer uses the CN from the Name field, so if you used the app name for the Common Name, you can just accept the default.</li>
 	<li>At the <strong>New Pair Key Entry Password</strong> dialog box, specify the password and then confirm it. Make sure you remember the password.</li>
-	<li>Click <strong>OK</strong>. The key pair is generated, and you'll see a confirmation message.</li>
+	<li>Click <strong>OK</strong>.
+		<p>The key pair is generated, and you'll see a confirmation message.</p></li>
 </ol>
 
 
@@ -531,7 +533,7 @@ nav-title: Use Case - UK Open Banking
 
 
 <h3 id="s06_keystore_03"><a href="#s06_keystore_01">Step 6-3: </a>Developer Portal: Import certificate signing request to app (csr file)</h3>
-<p>The next step is to import the certificate signing request to the developer portal. </p>
+<p>The next step is to import the certificate signing request (csr file) to the developer portal. </p>
 <ol>
 	<li>In the developer portal, go to the app's <strong>Details</strong> page.</li>
 	<li>In the <strong>Security</strong> section, click <strong>Show Keys</strong>, and then click <strong>Import Credentials</strong>.</li>
@@ -547,7 +549,7 @@ nav-title: Use Case - UK Open Banking
 		<p><img src="images_uc_uk_ob/uc_ukob_ks_export_credentials.png" alt="Developer Portal - Export credentials"/></p>
 	</li>
 	<li>Browse to the location where you want to save the file, and save it.
-		<p><strong>Note</strong>: It's a good idea to use the same location for all files, and to change from the default file name, <strong>certificate.cer</strong>, so that the name matches the .csr file. In this example: <strong>accountsapp_uk_ob_uc.cer</strong>.</p>
+		<p><strong>Note</strong>: It's a good idea to use the same location for all files, and to change from the default file name, <strong>certificate.cer</strong>, so that the name matches the .csr file. In this example: <strong>paymentsapp_uk_ob_uc.cer</strong>.</p>
 	</li>
 </ol>
 
@@ -558,9 +560,10 @@ nav-title: Use Case - UK Open Banking
 	<li>In Keystore Explorer, right-click and choose <strong>Import CA Reply</strong>, then choose <strong>From File</strong>, as shown below.
 		<p><img src="images_uc_uk_ob/uc_ukob_ks_import_ca_reply.png" alt="Keystore Explorer - Import CA Reply"/></p>
 	</li>
-	<li>Browse to the location of the certificate (cer file) that you exported from the developer portal and import it. You'll see a confirmation message, <strong>CA Reply Import Successful</strong>.</li>
+	<li>Browse to the location of the certificate (cer file) that you exported from the developer portal and import it. You'll see a confirmation message, <strong>CA Reply Import Successful</strong>.
+		<p><strong>Note</strong>: If there is any problem with the certificate, Keystore Explorer returns an error message. Validation is done before import.</p>
+	</li>
 </ol>
-<p><strong>Note</strong>: If there is any problem with the certificate, Keystore Explorer returns an error message. Validation is done before import.</p>
 
 
 <h3 id="s06_keystore_06"><a href="#s06_keystore_01">Step 6-6: </a>Keystore Explorer: Save the keystore as a p12 file</h3>
@@ -569,7 +572,7 @@ nav-title: Use Case - UK Open Banking
 <ol>
 	<li>In Keystore Explorer, click <strong>File</strong> &gt; <strong>Save As</strong>.</li>
 	<li>In the <strong>Set KeyStore Password</strong> dialog, specify the password, confirm it, and then click <strong>OK</strong>. Make sure you can remember the password.</li>
-	<li>Navigate to the location where you want to save the file. In the <strong>Save as type</strong> field, specify file type of <strong>p12</strong>, and then, in the <strong>File name</strong> field, make sure the extension is p12. Click <strong>Save</strong>. In this example: <strong>accountsapp_uk_ob_uc.p12</strong>.</li>
+	<li>Navigate to the location where you want to save the file. In the <strong>Save as type</strong> field, specify file type of <strong>p12</strong>, and then, in the <strong>File name</strong> field, make sure the extension is p12. Click <strong>Save</strong>. In this example: <strong>paymentsapp_uk_ob_uc.p12</strong>.</li>
 </ol>
 <p><a href="#top">Back to top</a></p>
 
@@ -594,17 +597,17 @@ nav-title: Use Case - UK Open Banking
 <ol>
 	<li>Go to the <strong>API</strong> &gt; <strong>Test Client</strong>.</li>
 	<li>In the Operation drop-down list, make sure the operation you used in <a href="#s03_05">Step 3-5: Create a mock response</a> is selected. It's the first operation so should be the default.</li>
-	<li>Provide a value for each of the custom headers that are part of this operation. Test Client does not validate these headers; you can use any string value.
+	<li>Provide a value for some of the custom headers that are part of this operation, as indicated below. Test Client does not validate these headers; you can use any string value. Where indicated, leave the headers blank.
 		<ul>
-			<li>Authorization</li>
-			<li>x-customer-user-agent</li>
-<li>x-fapi-auth-date</li>
-			<li>x-fapi-customer-ip-address</li>
-			<li>x-fapi-interaction-id</li>
-<li>x-idempotency-key</li>
-<li>x-jws-signature</li>
-			</ul>
-		</li>
+			<li><strong>Authorization</strong>: Leave blank.</li>
+			<li><strong>x-customer-user-agent</strong>: Provide any value.</li>
+			<li><strong>x-fapi-auth-date</strong>: Provide any value.</li>
+			<li><strong>x-fapi-customer-ip-address</strong>: Provide any value.</li>
+			<li><strong>x-fapi-interaction-id</strong>: Provide any value.</li>
+			<li><strong>x-idempotency-key</strong>: Provide any value.</li>
+			<li><strong>x-jws-signature</strong>: Leave blank.</li>
+		</ul>
+	</li>
 	<li>In the <strong>Content</strong> field, paste the content included in <a href="#tc_ukob_resources_02">Request content for the Test Client message</a> below.
 <p><strong>Note</strong>: It really doesn't matter what the request content is, as long as you use valid JSON. You could just include one set of curly braces: {}. The validation is the important thing. However, the example provided with this use case is the standard request format for this operation, per the API definition.</p></li>
 	<li>Click the <strong>Setup</strong> button. In the <strong>Setup</strong> dialog box:
@@ -613,14 +616,15 @@ nav-title: Use Case - UK Open Banking
 			<li>Check the <strong>Upload Keystore</strong> box.</li>
 			<li>For <strong>Keystore Type</strong>, choose <strong>PKCS12</strong>.
 				<p><strong>Note</strong>: In this scenario, you are uploading the p12 file, which includes the private key. Make sure that you are using a temporary keystore that you will not use in your production implementation. For more information, see <a href="#note_tc_upload_p12">Note: Uploading the p12 file to Test Client</a>.</p></li>
-			<li>In <strong>File to Upload</strong>, browse to the location of the .p12 file, and upload it. In this example: <strong>accountsapp_uk_ob_uc.p12</strong>.</li>
+			<li>In <strong>File to Upload</strong>, browse to the location of the .p12 file, and upload it. In this example: <strong>paymentsapp_uk_ob_uc.p12</strong>.</li>
 			<li>Enter the password, and click <strong>Save</strong>.</li>
 			</ul>
 		</li>
 	<li>Click the <strong>Security</strong> button.</li>
-	<li>In the <strong>HTTP Security Policy</strong> page, click <strong>Next</strong>.
-<p><strong>Note</strong>: The sequence of the pages for the policies might not match the sequence given in the next few steps. Follow the steps for each policy page as it appears.</p>
-</li>
+	<li>In the page for the OAuth policy, choose <strong>Client Credentials</strong> and click <strong>Get Token</strong> to generate the OAuth access token. Click <strong>Next</strong>.
+	<p><strong>Note</strong>: The sequence of the pages for the policies might not match the sequence given in the next few steps. Follow the steps for each policy page as it appears.</p>
+	</li>
+	<li>In the <strong>HTTP Security Policy</strong> page, click <strong>Next</strong>.</li>
 	<li>In the <strong>JOSE Security Policy v2</strong> page:
 	<ul>
 		<li>In the <strong>Signature/MAC Algorithm</strong> field, choose <strong>RS256</strong>. The UK Open Banking standard requires an RS value. HS256 is the default value, so you must change it.
@@ -629,15 +633,14 @@ nav-title: Use Case - UK Open Banking
 		</li>
 		<li>In the <strong>Private Headers</strong> section, add the <strong>http://openbanking.org.uk/iat</strong> (&quot;issued at&quot; header) in the <strong>Name</strong> field, and provide any value. At runtime, Test Client updates with the correct value (date/time in <a href="../../cm/learnmore/basics_glossary.htm#gl_epochtime">Epoch</a> format).</li>
 		<li>In the <strong>Private Headers</strong> section, add the <strong>http://openbanking.org.uk/iss</strong> (&quot;issuer&quot; header) in the <strong>Name</strong> field, and then, in the <strong>Value</strong> field, provide the Subject DN. This value must match the subject DN from the certificate that corresponds with the keystore that you just uploaded. In this use case:
-			<pre>CN=AccountsApp_UK_OB_UC,OU=OU,O=Akana,L=EUS,ST=FL,C=US</pre></li>
+			<pre>CN=PaymentsApp_UK_OB_UC,OU=OU,O=Akana,L=EUS,ST=FL,C=US</pre></li>
+		<li>In the <strong>Private Headers</strong> section, add the <strong>http://openbanking.org.uk/tan</strong> (&quot;trust anchor&quot; header), with a value of <strong>OpenBankingTrustAnchor</strong> as defined in the policy configuration.</li>
 		<li>Click <strong>Next</strong>.</li>
 		</ul>
 		</li>
-	
-	<li>In the page for the OAuth policy, choose <strong>Client Credentials</strong> and click <strong>Get Token</strong> to generate the OAuth access token. Click <strong>Next</strong>.</li>
 	<li>In the SameOriginPolicy page, click <strong>Finish</strong>.</li>
 	<li>In Test Client, click <strong>Invoke</strong>.</li>
-	<li>Review the successful response, as shown in the Results section below. You can also:
+	<li>Review the successful response, as shown in the <a href="#tc_ukob_results">Results</a> section below. See also:
 		<ul>
 			<li><a href="#tc_ukob_trace_tab">Reviewing the Trace tab</a></li>
 			<li><a href="#tc_ukob_results_headers">Reviewing the Headers tab</a></li>
@@ -653,7 +656,8 @@ nav-title: Use Case - UK Open Banking
 <h3 id="tc_ukob_results">Results</h3>
 <p>The illustration below shows the request in Test Client.</p>
 <p><img src="images_uc_uk_ob/uc_tc_results_request.png" alt="UK Open Banking use case: request in Test Client" /></p>
-<p>The illustration below shows the successful response.<img src="images_uc_uk_ob/uc_tc_results_response.png" alt="UK Open Banking use case: response in Test Client" /></p>
+<p>The illustration below shows the successful response.</p>
+<p><img src="images_uc_uk_ob/uc_tc_results_response.png" alt="UK Open Banking use case: response in Test Client" /></p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -689,7 +693,7 @@ nav-title: Use Case - UK Open Banking
 <p><img src="images_uc_uk_ob/uc_results_logs_info.png" alt="UK Open Banking use case: reviewing the logs -- Info tab" /></p>
 <p>The <strong>Body</strong> tab:</p>
 <p><img src="images_uc_uk_ob/uc_results_logs_body.png" alt="UK Open Banking use case: reviewing the logs -- Body tab" /></p>
-<p>You can see from the above that the API Platform validated the certificate and authenticated that the client is a valid entity associated with the certificate.</p>
+<!--<p>You can see from the above that the API Platform validated the certificate and authenticated that the client is a valid entity associated with the certificate.</p>-->
 <p><a href="#top">Back to top</a></p>
 
 
@@ -717,21 +721,6 @@ nav-title: Use Case - UK Open Banking
 <p>The file used in this use case is available here:</p>
 <ul>
 <li><a href="images_uc_uk_ob/payment-initiation-openapi-3.1.6-modified.json">OAS 3.0 version of the Open Banking Payment Initiation API</a></li>
-</ul>
-
-
-<h4 id="tc_ukob_resources_01_02">Additional Swagger versions available</h4>
-<p>{<span class="apidoc_red">OvG: Probably best to just take out this section?</span>}</p>
-<p>You could also use these versions:</p>
-<ul>
-	<li><strong>Version 3.1.1</strong>: <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/999622968/Account+and+Transaction+API+Specification+-+v3.1.1#AccountandTransactionAPISpecification-v3.1.1-SwaggerSpecification" title="Link to Atlassian site for 3.1.1 Swagger" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/999622968/Account+and+Transaction+API+Specification+-+v3.1.1#AccountandTransactionAPISpecification-v3.1.1-SwaggerSpecification</a></li>
-	<li><strong>Version 3.1.2</strong>: <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/1077805296/Account+and+Transaction+API+Specification+-+v3.1.2#AccountandTransactionAPISpecification-v3.1.2-SwaggerSpecification" title="Link to Atlassian site for 3.1.2 Swagger" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/1077805296/Account+and+Transaction+API+Specification+-+v3.1.2#AccountandTransactionAPISpecification-v3.1.2-SwaggerSpecification</a></li>
-</ul>
-<p>Note that the default Swagger file for this API, in the default values for <strong>Consumes</strong> and <strong>Produces</strong>, includes a charset parameter: <strong>application/json; charset=utf-f</strong>.</p>
-<p>Both versions of the UK Open Banking Specification state that the media type must be <strong>application/json</strong> (apart from specific exceptions), and the Akana JOSE v2 policy expects these values exactly. With the charset parameter, the messages fail.</p>
-<p>In case you want to use either of these versions for this use case, the Swagger has been slightly modified; the default media type values have been replaced with <strong>application/json</strong>:</p>
-<ul>
-	<li><a href="images_uc_uk_ob/account-info-swagger-3.0-x.json">Modified Swagger file</a></li>
 </ul>
 
 
