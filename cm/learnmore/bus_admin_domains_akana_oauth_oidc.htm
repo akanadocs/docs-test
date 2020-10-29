@@ -8,7 +8,7 @@ sub-nav-class: Business Administration
 weight: 3216
 type: page
 nav-title: Akana OAuth/OIDC Provider Domain
----
+
 <h1 id="top">Akana OAuth/OIDC Provider Domain</h1>
 <p>Configure an Akana OAuth/OIDC Provider domain on the platform.</p>
 <p><strong>Note</strong>: For general information about platform domains, or specific information on a different domain, refer to <a href="bus_admin_domains.htm">Domains</a>.</p>
@@ -185,7 +185,7 @@ nav-title: Akana OAuth/OIDC Provider Domain
 					<li><strong>Authorization Code Timeout (seconds)</strong>: specify the <a href="basics_glossary.htm#gl_oauth_authorizationcode">authorization code</a> timeout.</li>
 					<li><strong>Access Token Timeout (seconds)</strong>: specify <a href="basics_glossary.htm#gl_oauth_accesstoken">access token</a> timeout.</li>
 					<li><strong>Issue Refresh Tokens</strong>: Check the box if <a href="basics_glossary.htm#gl_oauth_refreshtoken">refresh tokens</a> will be issued.</li>
-					<li><strong>PKCE Support</strong>: Check the box if the <a href="basics_glossary.htm#gl_pkce">PKCE</a> security extension will be supported. Two additional options become available: <strong>Enforce PKCE</strong> (the most secure since PKCE is required), and <strong>Support Plain Transformation</strong>, a setting that allows compatibility for deployments already existing or that can't use the S256 transformation.
+					<li><strong>PKCE Support</strong>: Check the box if the <a href="basics_glossary.htm#gl_pkce">PKCE</a> security extension will be supported. Two additional options become available: <strong>Enforce PKCE</strong>, which makes PKCE required, and <strong>Support Plain Transformation</strong>, a setting that allows compatibility for deployments already existing or that can't use the S256 transformation.
 				<p>	For more information, see <a href="#domain_oauth_provider_grant_types_authcode_pkce">What is PKCE?</a></p></li>
 				</ul>
 				<p><a href="basics_glossary.htm#gl_oauth_grant_implicit">3-legged, Implicit</a>:</p>
@@ -264,16 +264,33 @@ nav-title: Akana OAuth/OIDC Provider Domain
 <p>In version 2020.2.0, the Akana API platform supports the optional PKCE security extension for OAuth, with the Authorization Code grant type.</p>
 <p>In an OAuth exchange, when the authorization code is returned to the client, it could be intercepted by a malicious attacker if it not on a secure channel such as TLS. The attacker could then exchange the authorization code for an access token and gain access to resources.</p>
 <p>PKCE helps make sure that the authorization code is not intercepted, by adding an additional key that is sent with the authorization code request, and again with the token request. The key is called a Proof Key for Code Exchange (PKCE). </p>
-<p>With PKCE, the client generates two additional values for each authorization request:</p>
+<p>With PKCE, for each authorization request the client generates two additional values:</p>
 <ul>
-	<li>Code challenge&#8212;A unique key sent by the client to the authorization server in the authorization request.</li>
-	<li>Code verifier&#8212;The transformed value of the code challenge.  There are two options: plain, which adds no transformation, and S256, which adds encryption and encoding.</li>
+	<li><strong>Code verifier</strong>&#8212;A unique key, generated according to specific rules laid out in the PKCE standard.</li>
+	<li><strong>Code challenge</strong>&#8212;The transformed value of the code verifier. There are two options:
+		<ul>
+			<li><strong>plain</strong>: Adds no transformation (code challenge is the same as the code verifier).</li>
+			<li><strong>S256</strong>: Adds ASCII encoding, then hashing, then Base-64 encoding, according to the following formula:
+				<pre>BASE64URL-ENCODE(SHA256(ASCII(code_verifier)))</pre>
+			</li>
+		</ul>
+	</li>
 </ul>
-<p>The client sends the code challenge and the code verifier with the authorization request. The server generates the unique authorization code, associates the code challenge and code verifier with it, and sends it to the client. When the client sends the authorization code to the token endpoint, the client also sends the code verifier. The token endpoint validates that the code verifier is the correct value for the unique authorization code, before issuing the token.</p>
-<p>With PKCE enabled, the platform supports the following additional options:</p>
+<p>In the authorization request, the client sends one or two additional parameters for PKCE:</p>
 <ul>
-	<li>Enforce PKCE&#8212;Per the PKCE standard, the code challenge can be required or optional. This setting, checked, corresponds to code challenge required.</li>
-	<li>Support Plain Transformation&#8212;Adds PKCE, but the code verifier is in plain text, which is a lower level of security. </li>
+	<li><strong>code_challenge</strong>: The code challenge value.</li>
+	<li><strong>code_challenge_method</strong>: Indicates the method used to create the code challenge. If included, the value is either <strong>S256</strong> (see the formula above) or <strong>plain</strong>. If not included, defaults to <strong>plain</strong>.</li>
+</ul>
+<p>The authorization server generates the unique authorization code, associates the <strong>code_challenge</strong> and <strong>code_challenge_method</strong> values with it, and sends it to the client.</p>
+<p>Next, the client sends the authorization code to the token endpoint, and also sends one additional value:</p>
+<ul>
+	<li><strong>code_verifier</strong>: The code verifier value.</li>
+</ul>
+<p>The token endpoint takes the authorization code and looks up the <strong>code_challenge</strong> and <strong>code_challenge_method</strong> associated with it. It applies the <strong>code_challenge_method</strong> to the <strong>code_challenge</strong>, and compares the result with the <strong>code_verifier</strong> value. If the values match, the token endpoint issues the token.</p>
+<p>In the Akana OAuth/OIDC Provider domain setup, if PKCE is enabled, the platform supports the following additional options:</p>
+<ul>
+	<li><strong>Enforce PKCE</strong>&#8212;Per the PKCE standard, the code challenge can be required or optional. This setting, checked, corresponds to code challenge required.</li>
+	<li><strong>Support Plain Transformation</strong>&#8212;Adds PKCE, but with <strong>code_challenge_method</strong> of <strong>plain</strong> only. In this scenario, <strong>S256</strong> is not supported.</li>
 </ul>
 <p>For more information, refer to the specification: <a href="https://tools.ietf.org/html/rfc7636" title="Link to PKCE specification, Proof Key for Code Exchange by OAuth Public Clients" target="_blank">https://tools.ietf.org/html/rfc7636</a>.</p>
 <p><a href="#top">Back to top</a></p>
