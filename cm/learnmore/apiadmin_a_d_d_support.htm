@@ -25,8 +25,9 @@ nav-title: API Description Language Support
 	<li><a href="#support_of_external_json_schemas">Does the platform support referencing of JSON schemas that are external to the API document definition?</a></li>
 	<li><a href="#overloaded_operations_support_apidoc">Does the platform support overloaded operations in API documentation?</a></li>
 	<li><a href="#swagger_responses_root">How does the platform support Swagger responses defined at the root level?</a></li>
-	<li><a href="#swagger_support_limitations">Are there any capabilities of the Swagger 2.0 specification that the platform doesn't support?</a></li>
-	<li><a href="#swagger_support_limitations_oas30">Are there any capabilities of the OAS 3.0 specification that the platform doesn't support?</a></li>
+	<li><a href="#support_limitations_swagger_20">Are there any capabilities of the Swagger 2.0 specification that the platform doesn't support?</a></li>
+	<li><a href="#support_limitations_yaml">Are there any capabilities of the YAML specification that the platform doesn't support for Swagger YAML?</a></li>
+	<li><a href="#support_limitations_swagger_oas30">Are there any capabilities of the OAS 3.0 specification that the platform doesn't support?</a></li>
 </ol>
 
 
@@ -169,7 +170,7 @@ nav-title: API Description Language Support
 
 
 
-<h2 id="swagger_support_limitations">Are there any capabilities of the Swagger 2.0 specification that the platform doesn't support?</h2>
+<h2 id="support_limitations_swagger_20">Are there any capabilities of the Swagger 2.0 specification that the platform doesn't support?</h2>
 <p>The platform currently has no support or limited support for these capabilities of the Swagger 2.0 specification (<a href="http://swagger.io/specification/" title="OpenAPI specification" target="_blank">http://swagger.io/specification/</a>):</p>
 <ul>
 	<li><strong>Global Parameters</strong>
@@ -186,7 +187,37 @@ nav-title: API Description Language Support
 
 
 
-<h2 id="swagger_support_limitations_oas30">Are there any capabilities of the OAS 3.0 specification that the platform doesn't support?</h2>
+<h2 id="support_limitations_yaml">Are there any capabilities of the YAML specification that the platform doesn't support for Swagger YAML?</h2>
+<p>The platform currently has no support, or limited support, for the following capabilities of the YAML specification (<a href="https://yaml.org/spec/current.html" title="Link to YAML specification" target="_blank">https://yaml.org/spec/current.html</a>):</p>
+<ul>
+	<li><strong>Node Anchors</strong>: see <a href="https://yaml.org/spec/current.html#anchor/syntax" title="https://yaml.org/spec/current.html#anchor/syntax" target="_blank">https://yaml.org/spec/current.html#anchor/syntax</a></li>
+	<li><strong>Node Aliases</strong>: see <a href="https://yaml.org/spec/current.html#alias/syntax" title="https://yaml.org/spec/current.html#alias/syntax" target="_blank">https://yaml.org/spec/current.html#alias/syntax</a></li>
+</ul>
+<p>The API platform does not recognize YAML anchor nodes as a reference to be used later. Similarly, the platform does not recognize YAML alias nodes and will treat the asterisk (*) indicator as a regular string, which will cause errors if a non-string item is expected.</p>
+<p>For example, if a user attempts to upload a YAML API description document to the developer portal, and the YAML includes the snippet below, it will cause an error, and upload will fail because the <strong>enum</strong> attribute of the property <strong>propertyTwo</strong> below expects an array and sees only the string <strong>ALIASTYPE</strong>.</p>
+<pre>  AliasType:
+    type: string
+    description: "AliasType"
+    enum: &ALIASTYPE
+      - string_one
+      - string_two
+ 
+  MyObject:
+    type: object
+    description: "MyObject"
+    properties:
+      propertyOne: 
+        type: integer
+        description: "property one"
+      propertyTwo:
+        type: string
+        enum: *ALIASTYPE</pre>
+
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="support_limitations_swagger_oas30">Are there any capabilities of the OAS 3.0 specification that the platform doesn't support?</h2>
 <p>There are no known issues with the platform's support of <a href="basics_glossary.htm#gl_oas30">OAS 3.0</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
@@ -321,9 +352,9 @@ nav-title: API Description Language Support
 	<li><a href="api_admin_api_publishing.htm">API Visibility, Licenses, and Settings</a></li>
 	<li><a href="apiadmin_api_phys_svc.htm">Working with Physical Services</a></li>
 	<li><a href="api_admin_oauth_support.htm">OAuth Support</a></li>
-	<li><a href="api_admin_content_guidelines.htm">Content Development Guidelines</a></li>
+	<li><a href="api_admin_content_guidelines.htm">Content Development Guidelines for API Admins</a></li>
 	<li><a href="api_admin_documentation_maintenance.htm">API Documentation Maintenance</a></li>
-	<li><a href="api_admin_documentation_tagging.htm">API Documentation Tagging</a></li>
+	<li><a href="api_admin_documentation_tagging.htm">API Documentation Visibility Tagging</a></li>
 	<li><a href="api_admin_legal_agreement_maintenance.htm">Legal Agreement Maintenance</a></li>
 	<li><a href="basics_glossary.htm">Glossary of Terms</a></li>
 </ul><!-- #EndLibraryItem --></div>
