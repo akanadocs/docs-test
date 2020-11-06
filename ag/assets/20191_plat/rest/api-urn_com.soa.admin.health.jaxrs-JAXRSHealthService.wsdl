@@ -17,8 +17,6 @@
 <xs:complexType name="nameValue"><xs:sequence><xs:element minOccurs="0" name="name" type="xs:string"/><xs:element minOccurs="0" name="state" type="xs:string"/><xs:element minOccurs="0" name="timestamp" type="xs:long"/><xs:element minOccurs="0" name="value" type="xs:anyType"/></xs:sequence></xs:complexType>
 </xs:schema>
   </wsdl:types>
-  <wsdl:message name="getMetadataRequestMessage">
-  </wsdl:message>
   <wsdl:message name="getMetadataDetailRequestMessage">
     <wsdl:part name="id" type="xs:string">
     </wsdl:part>
@@ -39,16 +37,18 @@
     <wsdl:part name="child" type="xs:string">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getMetadataRequestMessage">
+  </wsdl:message>
+  <wsdl:message name="getMeasurableValuesResponseMessage">
+    <wsdl:part name="getMeasurableValuesResponse" element="nms1:NameValue">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getVariableRequestMessage">
     <wsdl:part name="parent" type="xs:string">
     </wsdl:part>
     <wsdl:part name="child" type="xs:string">
     </wsdl:part>
     <wsdl:part name="var" type="xs:string">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="getMeasurableValuesResponseMessage">
-    <wsdl:part name="getMeasurableValuesResponse" element="nms1:NameValue">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteMetadataRequestMessage">
@@ -161,10 +161,6 @@
     <wsdl:part name="getAvailableResponse" element="nms1:HealthMeasurableMetadata">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="createConfigurationResponseMessage">
-    <wsdl:part name="createConfigurationResponse" element="nms1:HealthMeasurableMetadata">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="getMetadataChildResponseMessage">
     <wsdl:part name="getMetadataChildResponse" element="nms1:HealthMeasurableMetadata">
     </wsdl:part>
@@ -181,6 +177,10 @@
     <wsdl:part name="body" element="nms1:HealthMeasurableMetadata">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="createConfigurationResponseMessage">
+    <wsdl:part name="createConfigurationResponse" element="nms1:HealthMeasurableMetadata">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="deleteMetadataResponseMessage">
     <wsdl:part element="xs:any">
     </wsdl:part>
@@ -190,24 +190,6 @@
       <wsdl:input message="tns:getOptionsRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:getOptionsResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="createConfiguration">
-      <wsdl:input message="tns:createConfigurationRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:createConfigurationResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getMetadata">
-      <wsdl:input message="tns:getMetadataRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getMetadataResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getVariable">
-      <wsdl:input message="tns:getVariableRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getVariableResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateOptions">
@@ -288,6 +270,24 @@
       <wsdl:output message="tns:getMeasurablesResponseMessage">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="createConfiguration">
+      <wsdl:input message="tns:createConfigurationRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:createConfigurationResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMetadata">
+      <wsdl:input message="tns:getMetadataRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getMetadataResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getVariable">
+      <wsdl:input message="tns:getVariableRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getVariableResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="JAXRSHealthServiceBinding" type="tns:JAXRSHealthServicePortType">
     <shttp:binding/>
@@ -299,78 +299,6 @@
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="getOptionsResponse" part="getOptionsResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="createConfiguration">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /measurables</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Adds a health configuration.
-A health configuration is comprised of a set of standard Monitorable attributes defined
-using the OSGi MonitorAdmin service interfaces.  A health configuration allows attributes
-from different Monitorable instances to be combined into a hierarchy, and thresholds may
-then be placed on those attributes.  The state of the hierarchy will then reflect the combined
-state of all the component attributes with respect to their configured thresholds.</p>
-<h4>Request:</h4>
-<pre><code>POST /admin/health HTTP/1.1
-Content-Type: application/json
-
-{"name":"My Health Variables"}
-</code></pre>
-<h4>Responses:</h4>
-<ul>
-<li>HTTP/1.1 201 Created</li>
-<li>HTTP/1.1 300 Bad Request if a name or ID is not provided by the client</li>
-</ul>
-<h4>Sample Response:</h4>
-<pre><code>201 Created
-Content-Type: application/json
-Location: http://localhost:9905/admin/health/measurables/my.health.variables
-
-{
-  "id" : "my.health.variables",
-  "name" : "My Health Variables",
-  "state" : "NORMAL",
-  "attributes" : [ ],
-  "children" : [ ],
-  "editable" : true,
-  "links" : [ {
-    "rel" : "self",
-    "href" : "http://localhost:9905/admin/health/measurables/my.health.variables"
-  }, {
-    "rel" : "brief",
-    "href" : "http://localhost:9905/admin/health/measurables/my.health.variables?brief=true"
-  }, {
-    "rel" : "children",
-    "href" : "http://localhost:9905/admin/health/measurables/my.health.variables/children"
-  }, {
-    "rel" : "values",
-    "href" : "http://localhost:9905/admin/health/measurables/my.health.variables/values"
-  } ]
-}
-</code></pre>]]></sdoc:description></wsdl:documentation>
-    <shttp:operation inputSerialization="application/json" location="/measurables" method="POST" outputSerialization="application/json"/>
-      <wsdl:input>
-    <shttp:input name="body" part="body" type="entity"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="createConfigurationResponse" part="createConfigurationResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getMetadata">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET </sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="" method="GET" outputSerialization="application/json,application/xml"/>
-      <wsdl:output>
-    <shttp:output name="getMetadataResponse" part="getMetadataResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getVariable">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /measurables/{parent}/children/{child}/variables/{var}</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/measurables/{parent}/children/{child}/variables/{var}" method="GET" outputSerialization="application/json"/>
-      <wsdl:input>
-    <shttp:input name="parent" part="parent" type="path"/>
-    <shttp:input name="child" part="child" type="path"/>
-    <shttp:input name="var" part="var" type="path"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getVariableResponse" part="getVariableResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateOptions">
@@ -510,6 +438,78 @@ Location: http://localhost:9905/admin/health/measurables/my.health.variables
     <shttp:operation location="/measurables" method="GET" outputSerialization="application/json"/>
       <wsdl:output>
     <shttp:output name="getMeasurablesResponse" part="getMeasurablesResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createConfiguration">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /measurables</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Adds a health configuration.
+A health configuration is comprised of a set of standard Monitorable attributes defined
+using the OSGi MonitorAdmin service interfaces.  A health configuration allows attributes
+from different Monitorable instances to be combined into a hierarchy, and thresholds may
+then be placed on those attributes.  The state of the hierarchy will then reflect the combined
+state of all the component attributes with respect to their configured thresholds.</p>
+<h4>Request:</h4>
+<pre><code>POST /admin/health HTTP/1.1
+Content-Type: application/json
+
+{"name":"My Health Variables"}
+</code></pre>
+<h4>Responses:</h4>
+<ul>
+<li>HTTP/1.1 201 Created</li>
+<li>HTTP/1.1 300 Bad Request if a name or ID is not provided by the client</li>
+</ul>
+<h4>Sample Response:</h4>
+<pre><code>201 Created
+Content-Type: application/json
+Location: http://localhost:9905/admin/health/measurables/my.health.variables
+
+{
+  "id" : "my.health.variables",
+  "name" : "My Health Variables",
+  "state" : "NORMAL",
+  "attributes" : [ ],
+  "children" : [ ],
+  "editable" : true,
+  "links" : [ {
+    "rel" : "self",
+    "href" : "http://localhost:9905/admin/health/measurables/my.health.variables"
+  }, {
+    "rel" : "brief",
+    "href" : "http://localhost:9905/admin/health/measurables/my.health.variables?brief=true"
+  }, {
+    "rel" : "children",
+    "href" : "http://localhost:9905/admin/health/measurables/my.health.variables/children"
+  }, {
+    "rel" : "values",
+    "href" : "http://localhost:9905/admin/health/measurables/my.health.variables/values"
+  } ]
+}
+</code></pre>]]></sdoc:description></wsdl:documentation>
+    <shttp:operation inputSerialization="application/json" location="/measurables" method="POST" outputSerialization="application/json"/>
+      <wsdl:input>
+    <shttp:input name="body" part="body" type="entity"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="createConfigurationResponse" part="createConfigurationResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMetadata">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET </sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="" method="GET" outputSerialization="application/json,application/xml"/>
+      <wsdl:output>
+    <shttp:output name="getMetadataResponse" part="getMetadataResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getVariable">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /measurables/{parent}/children/{child}/variables/{var}</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/measurables/{parent}/children/{child}/variables/{var}" method="GET" outputSerialization="application/json"/>
+      <wsdl:input>
+    <shttp:input name="parent" part="parent" type="path"/>
+    <shttp:input name="child" part="child" type="path"/>
+    <shttp:input name="var" part="var" type="path"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getVariableResponse" part="getVariableResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
