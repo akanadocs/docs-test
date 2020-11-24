@@ -188,10 +188,12 @@ nav-title: API Gateway Analytics
 
 <dt>persistence.mongodb.enabled</dt>
 <dd>Allows you to enable or disable use of MongoDB as NoSQL persistence database.</dd>
+<dd>As long as you are using MongoDB, do not change this setting. The platform default, when MongoDB is not in use, is the RDBMS.</dd>
 
 
 <dt>persistence.mongodb.mapReduceMaxExecTime</dt>
-<dd>The maximum execution time for a <a href="../../cm/learnmore/basics_glossary.htm#gl_mapreduce">MapReduce</a> job to run (in minutes).</dd>
+<dd>The maximum execution time for a <a href="../../cm/learnmore/basics_glossary.htm#gl_mapreduce">MapReduce</a> job to run (in minutes). If maximum execution time is exceeded, the job aborts, and must be recovered by the recovery job.</dd>
+<dd><strong>Note</strong>: We recommend a long timeout value, such as the default 10 minutes. It's best to have a scenario where the maximum execution time is never exceeded. If you are experiencing timeouts, you can adjust the setting to either reduce the maximum batch size or increase the execution time. For a long-term traffic increase, the best solution is to add additional MongoDB shards to share the load.</dd>
 <dd>Default: 10 minutes.</dd>
 
 
@@ -200,7 +202,7 @@ nav-title: API Gateway Analytics
 <dd>Example: <strong>mongodb://mongos1:27017,mongos2:27017,mongos3:27017/Akana?connectTimeoutMS=15000&amp;socketTimeoutMS=1500000&amp;minPoolSize=0&amp;maxPoolSize=100&amp;waitQueueMultiple=5&amp;waitQueueTimeoutMS=10000</strong>.</dd>
 <dd>This is the URI format for defining connections between applications and Envision MongoDB instances. Optional parameters:
 	<ul>
-		<li>authSource&#8212;An authMechanism  must be configured if the user wants to enable MongoDB's access control.</li>
+		<li>authSource&#8212;An authMechanism must be configured if the user wants to enable MongoDB's access control.</li>
 		<li>connectTimeoutMS&#8212;The time in milliseconds to attempt a connection before timing out.</li>
 		<li>socketTimeoutMS&#8212;The time in milliseconds to attempt a send or receive on a socket before the attempt times out.</li>
 		<li>minPoolSize&#8212;The minimum number of connections in the connection pool.</li>
@@ -218,7 +220,7 @@ nav-title: API Gateway Analytics
 
 
 <dt>persistence.mongodb.rollup.maxBatchSize</dt>
-<dd>The maximum number of raw records in a batch. When the batch reaches that size, the MapReduce job is executed.</dd>
+<dd>The maximum number of raw records that can be rolled up in one batch.</dd>
 
 
 <dt>persistence.mongodb.rollup.maxRecoveryBatchSize</dt>
