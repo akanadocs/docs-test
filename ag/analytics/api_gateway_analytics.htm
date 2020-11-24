@@ -31,6 +31,8 @@ nav-title: API Gateway Analytics
 	<li><a href="#s04_00">Installation</a>
 		<ul>
 			<li><a href="#s04_01">Akana MongoDB Support Plugin</a></li>
+			<li><a href="#s04_01b">Akana Administration Console Configuration Settings for MongoDB</a></li>
+			<li><a href="#s04_01c">Managing the Map/Reduce maxBatchSize Settings</a></li>
 		</ul>
 		</li>
 	<li><a href="#s05_00">Usage/Enhancements</a>
@@ -151,11 +153,11 @@ nav-title: API Gateway Analytics
 			<li><strong>Akana Envision Metrics Collector</strong>&#8212;See <a href="../../ev/envision_install/using_envision_console_extensions.htm#ev_install_02_01">Akana Envision Metrics Collector</a>.</li>
 			<li><strong>Akana Envision Policy Manager Console Extensions</strong>&#8212;See <a href="../../ev/envision_install/using_envision_console_extensions.htm#ev_install_02_02">Akana Envision Policy Manager Console Extensions</a>.</li>
 			<li><strong>Akana Envision Policy Manager Service Extensions</strong>&#8212;See <a href="../../ev/envision_install/using_envision_console_extensions.htm#ev_install_02_03">Akana Envision Policy Manager Service Extensions</a>.</li>
-			<li><strong>Akana Policy Manager Security Provider for Envision</strong>&#8212;This plugin is installed on a container with the Akana Policy Manager Services and Envision feature. It installs the security plugin for protecting API Gateway collected operational metrics.</li>
+			<li><strong>Akana Policy Manager Security Provider for Envision</strong>&#8212;See <a href="../../ev/envision_install/using_envision_console_extensions.htm#ev_install_02_03">Akana Envision Policy Manager Service Extensions</a>.</li>
 	</ul>
 <p><strong>Note</strong>: There is an additional, optional plugin for Envision, the <strong>Akana Sample Datasets for Demo Charts</strong>, that installs sample datasets for use in the Envision Console. See <a href="../../ev/envision_install/using_sample_data_sets_for_demo_charts.htm">Using the Akana Sample Datasets for Demo Charts Feature</a>.</p>
 	</li>
-		</ul>
+</ul>
 
 <p>The plugins should all be available in the Available Plug-Ins page.</p>
 <p><img src="assets/ag_analytics_04_03.jpg" alt=""/></p>
@@ -167,10 +169,79 @@ nav-title: API Gateway Analytics
 <p><img src="assets/ag_analytics_04_04.jpg" alt=""/></p>
 <p>If the plugin is installed with the Network Director feature writing directly to the MongoDB database will require the <strong>usage.local.writer.enabled</strong> configuration option in the <strong>com.soa.monitor.usage configuration</strong> category to be set to <strong>true</strong>, as shown below.</p>
 <p><img src="assets/ag_analytics_04_05.jpg" alt=""/></p>
+<p><a href="#top">Back to top</a></p>
 
 
-<h3 id="s04_05">Akana Policy Manager Security Provider for Envision</h3>
-<p>This plugin has no configuration. It is only applicable when both the Policy Manager Management Services and Envision features are installed in the same container.</p>
+<h3 id="s04_01b">Akana Administration Console Configuration Settings for MongoDB</h3>
+<p>This section includes information on the settings you might need to review or adjust for MongoDB management.</p>
+
+<h4>Configuration category: com.soa.persistence.mongodb</h4>
+<dl>
+<dt>persistence.mongodb.async.thread</dt>
+<dd>The number of threads allocated for processing asynchronous requests.</dd>
+
+
+<dt>persistence.mongodb.autoinstall</dt>
+<dd>Allows you to enable or disable automatic installation of seeders.</dd>
+<dd>Default: false.</dd>
+
+
+<dt>persistence.mongodb.enabled</dt>
+<dd>Allows you to enable or disable use of MongoDB as NoSQL persistence database.</dd>
+<dd>As long as you are using MongoDB, do not change this setting. The platform default, when MongoDB is not in use, is the RDBMS.</dd>
+
+
+<dt>persistence.mongodb.mapReduceMaxExecTime</dt>
+<dd>The maximum execution time for a <a href="../../cm/learnmore/basics_glossary.htm#gl_mapreduce">MapReduce</a> job to run (in minutes). If maximum execution time is exceeded, the job aborts, and must be recovered by the recovery job.</dd>
+<dd><strong>Note</strong>: We recommend a long timeout value, such as the default 10 minutes. It's best to have a scenario where the maximum execution time is never exceeded. If you are experiencing timeouts, you can adjust the setting to either reduce the maximum batch size or increase the execution time. For a long-term traffic increase, the best solution is to add additional MongoDB shards to share the load.</dd>
+<dd>Default: 10 minutes.</dd>
+
+
+<dt>persistence.mongodb.mongoClientURI</dt>
+<dd>Provide the seed list of host and IP addresses for query routers for fault-tolerance. For more information, refer to the driver documentation.</dd>
+<dd>Example: <strong>mongodb://mongos1:27017,mongos2:27017,mongos3:27017/Akana?connectTimeoutMS=15000&amp;socketTimeoutMS=1500000&amp;minPoolSize=0&amp;maxPoolSize=100&amp;waitQueueMultiple=5&amp;waitQueueTimeoutMS=10000</strong>.</dd>
+<dd>This is the URI format for defining connections between applications and Envision MongoDB instances. Optional parameters:
+	<ul>
+		<li>authSource&#8212;An authMechanism must be configured if the user wants to enable MongoDB's access control.</li>
+		<li>connectTimeoutMS&#8212;The time in milliseconds to attempt a connection before timing out.</li>
+		<li>socketTimeoutMS&#8212;The time in milliseconds to attempt a send or receive on a socket before the attempt times out.</li>
+		<li>minPoolSize&#8212;The minimum number of connections in the connection pool.</li>
+		<li>maxPoolSize&#8212;The maximum number of connections in the connection pool.</li>
+		<li>waitQueueMultiple&#8212;A number that driver multiples the maxPoolSize value to provide the maximum number of threads allowed to wait for a connection to be available from pool.</li>
+		<li>waitQueueTimeoutMS&#8212;The maximum time in milliseconds that a thread can wait for a connection to become available.</li>
+	</ul>
+</dd>
+<dd>Provide the access control details in case the MongoDB instances are running with auth flag enabled.</dd>
+<dd>The following example shows the access control mechanism for SCRAM-SHA1: <strong>mongodb://{username}:{password}@localhost:27017/Akana?authSource=admin&amp;authMechanism=SCRAM-SHA-1&amp;connectTimeoutMS=15000&amp;socketTimeoutMS=1500000&amp;minPoolSize=0&amp;maxPoolSize=100&amp;waitQueueMultiple=5&amp;waitQueueTimeoutMS=10000</strong>.</dd>
+
+
+<dt>persistence.mongodb.password</dt>
+<dd>The password for connecting to the MongoDB database.</dd>
+
+
+<dt>persistence.mongodb.rollup.maxBatchSize</dt>
+<dd>The maximum number of raw records that can be rolled up in one batch.</dd>
+
+
+<dt>persistence.mongodb.rollup.maxRecoveryBatchSize</dt>
+<dd>The maximum number of raw records in a batch, for a recovery job.</dd>
+
+
+<dt>persistence.mongodb.rollup.skipRecoveryIteration</dt>
+<dd>The number of iterations to skip before running the recovery jobs.</dd>
+
+
+<dt>persistence.mongodb.username</dt>
+<dd>The username for connecting to the MongoDB database.</dd>
+</dl>
+
+
+<h3 id="s04_01c">Managing the Map/Reduce maxBatchSize Settings</h3>
+<h4 class="stamp">Valid in Version: 2020.2.0 and later</h4>
+<p>In 2020.2.0, you can configure the size of the data chunk that MongoDB processes.</p>
+<p>Of course, execution time varies according to the size and number of records to be processed. In general, it's a good idea to keep execution time below one minute.</p>
+<p>As an administrator, it's helpful to be able to control the number of records that a Mongo <a href="../../cm/learnmore/basics_glossary.htm#gl_mapreduce">MapReduce</a> operation will attempt at any one time. If there is too much data for the MongoDB cluster to handle in one go, this could cause a crash or at least delay the processing of the information. In version 2020.2.0 and later, you can adjust the size of the batch size using the <strong>maxBatchSize</strong> configuration property.</p>
+<p>If the batch size is too small for the throughput requirements of the deployment, the best solution is to add additional MongoDB shards to share the load.</p>
 <p><a href="#top">Back to top</a></p>
 
 
