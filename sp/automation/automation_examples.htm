@@ -9,7 +9,7 @@ sub-nav-class: Automation
 type: page
 nav-title: Automation Examples
 ---
-<h1 id="top">Automation Examples </h1>
+<h1 id="top">Automation Examples</h1>
 <p>Simple examples of using automation to install the platform.</p>
 <p><strong>Note</strong>: Certain automation processes are limited to Linux only, though most are valid for both Windows and Linux. See <a href="automation_ref.htm#ov_automation_windows">Running automation recipes on Windows</a>.</p>
 <h4 class="stamp">Supported Platforms: 2018.0.x and later</h4>
@@ -66,6 +66,7 @@ nav-title: Automation Examples
 	<li><a href="#ts_properties_commandline">Providing property values at the command line</a></li>
 	<li><a href="#resource_download_extract">Downloading and extracting the installation files</a></li>
 	<li><a href="#cluster_support">Cluster support</a></li>
+	<li><a href="#recipe_create_smtp">Setting up an SMTP email host using an automation recipe</a></li>
 </ol>
 <hr class="divide_hr" />
 
@@ -489,6 +490,86 @@ CONTAINER_NAME=pm01</pre>
 	<li>The use of recipes allows configuration tasks to be automated across the cluster, in addition to remote management of container configuration properties.</li>
 </ul>
 <p><a href="#top">back to top</a></p>
+
+
+
+<h2 id="recipe_create_smtp">Setting up an SMTP email host using an automation recipe</h2>
+<h4 class="stamp">Valid in Version: 2020.2.0 and later.</h4>
+<p>The example below shows how you can configure an SMTP email host by using an automation recipe rather than using the Policy Manager user interface.</p>
+<p>Navigation to complete this task in Policy Manager: <strong>Configure</strong> &gt; <strong>Email</strong> &gt; <strong>Modify SMTP Email Host</strong>. For more information, see <a href="../../ag/notifications/notifications.htm#proc_smtp_set_up">To set up the SMTP Email Host</a>.</p>
+<p>To configure an SMTP email host, via the user interface or via a recipe, you'll need the values shown below.</p>
+<table class="doctable">
+	<thead>
+		<tr>
+			<th>In the user interface...</th>
+			<th>In the recipe...</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Host name or IP address</td>
+			<td>SMTP_HOST</td>
+		</tr>
+		<tr>
+			<td>Port</td>
+			<td>SMTP_PORT</td>
+		</tr>
+		<tr>
+			<td>SSL Required (yes/no)</td>
+			<td>SMTP_SSL (true/false, default is false)</td>
+		</tr>
+		<tr>
+			<td>Use STARTTLS (yes/no)</td>
+			<td>SMTP_TLS (true/false, default is false)</td>
+		</tr>
+		<tr>
+			<td>From Address</td>
+			<td>SMTP_FROM</td>
+		</tr>
+		<tr>
+			<td>Authenticated (yes/no)</td>
+			<td>SMTP_AUTH</td>
+		</tr>
+		<tr>
+			<td><p>If Authenticated=yes:</p>
+<p>			Username and Password</p></td>
+			<td><p>SMTP_USERNAME</p>
+			<p>SMTP_PASSWORD</p></td>
+		</tr>
+	</tbody>
+</table>
+<p>To do this via a recipe you'll need the following assets:</p>
+<ul>
+	<li>The recipe: <strong>smtp-settings.json</strong>, located in the /recipes/tasks folder in your installation files.</li>
+	<li>A properties file with the properties and values set up. See the example <strong>smtp.properties</strong> file below.</li>
+</ul>
+<p>Follow these basic steps:</p>
+<ol>
+	<li>Create the properties file. For an example, see <a href="#recipe_smtp_properties">Creating an SMTP server: sample properties file</a> below. If needed, add additional values from the table above (for example, port number).</li>
+	<li>Run the recipe at the command line. See <a href="#recipe_smtp_running">Creating an SMTP server: running the recipe</a> below.</li>
+	<li>Review the results in Policy Manager. See <a href="#recipe_smtp_result">Creating an SMTP server: viewing the result in Policy Manager</a> below.</li>
+</ol>
+
+<h4 id="recipe_smtp_properties">Creating an SMTP server: sample properties file</h4>
+<p>The content of the <strong>smtp.properties</strong> file used in this example is shown below.</p>
+<pre>SMTP_HOST=akana-qa-25.aws.akana.roguewave.com
+SMTP_FROM=recipetest@automation.com
+SMTP_AUTH=true
+SMTP_USERNAME=smtp-user
+SMTP_PASSWORD=mypassword</pre>
+
+<h4 id="recipe_smtp_running">Creating an SMTP server: running the recipe</h4>
+<p>The command to run this recipe is shown below.</p>
+<pre>./jython.sh -m akana.recipe --recipe ../recipes/tasks/smtp-settings.json --url http://akana-qa-41.aws.akana.roguewave.com:7900 --user administrator --password mypassword --props ./smtp.properties</pre>
+
+<h4 id="recipe_smtp_result">Creating an SMTP server: viewing the result in Policy Manager</h4>
+<p>Log in to Policy Manager and go to <strong>Configure</strong> &gt; <strong>Email</strong> &gt; <strong>Modify SMTP Email Host</strong>. The result of running the example in this use case is shown below.</p>
+<p><img src="assets/automation_result_smtp_server.png" alt="Setting up an SMTP server via automation -- viewing the results in Policy Manager."/></p>
+<p><a href="#top">back to top</a></p>
+
+
+
+<!--<p>{<span class="apidoc_red">Note GW 10/4/19 ATMO-29930: GW says we could add examples to this automation doc page, set of smaller tasks: how do I turn on scheduler, turn off scheduler, turn on scheduled job, how do I add a health check, how do I register a Gateway. The example below, to register an ND container, is moved from the upgrade doc to here and we will add the other tasks to this section in the future.</span></p>-->
 
 
 
