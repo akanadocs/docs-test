@@ -1,0 +1,118 @@
+<!-- left nav script -->
+<script>
+    function leftnav()
+    {
+        var pages = unsorted_pages_prod_cat.pages.filter(function(a) {
+            return (a.nn == 'oauthapi' && a.sn == 'false');
+        }).sort(function CustomSort(a, b) {
+            if ( ! a["w"] ) { a["w"] = 1000 ;}
+            if ( ! b["w"] ) { b["w"] = 1000 ;}
+            var weighta = a['w'];
+            var weightb = b['w'];
+            if(weighta != weightb){
+                return (weighta - weightb);
+            }
+            else{
+                return (a.nt.localeCompare(b.nt));
+            }
+        });
+        var snpages = unsorted_pages_prod_cat.pages.filter(function(a) {
+            return (a.nn == 'oauthapi' && a.sn == 'true');
+        }).sort(function CustomSort(a, b) {
+            if ( ! a["w"] ) { a["w"] = 1000 ;}
+            if ( ! b["w"] ) { b["w"] = 1000 ;}
+            var weighta = a['w'];
+            var weightb = b['w'];
+            if(weighta != weightb){
+                return (weighta - weightb);
+            }
+            else{
+                return (a.nt.localeCompare(b.nt));
+            }
+        });
+        var ObjUl = $('<ul></ul>').hide();
+        ObjUl.addClass("soa-ui-dc-container-main-left-nav");
+
+        for (i = 0; i < pages.length; i++)
+        {
+            // Get the subnav for this class
+            var classsnpages = snpages.filter(function(a) {
+                return (a.sc == pages[i].sc);
+            });
+
+            var ObjInnerUl = $('<ul></ul>');
+            ObjInnerUl.addClass("soa-ui-dc-container-main-left-nav soa-ui-dc-container-main-left-nav-inner");
+            for (j = 0; j < classsnpages.length; j++)
+            {
+                var ObjInnerli = $('<li></li>');
+                var ObjInnera = $('<a></a>');
+                var ObjInnerp = $('<p></p>');
+
+                ObjInnerli.attr("role", "menuitem");
+
+                if ( classsnpages[j].u == '{{ page.url }}' ) {
+                    ObjInnera.addClass("soa-ui-dc-container-main-left-nav-item-selected soa-ui-dc-container-main-left-nav-item-link");
+                } else {
+                    ObjInnera.addClass("soa-ui-dc-container-main-left-nav-item-link");
+                }
+
+                if ( "{{ site.baseurl }}" ) {
+                    ObjInnera.attr("href", "{{ site.baseurl }}".concat(classsnpages[j].u) );
+                } else {
+                    ObjInnera.attr("href", classsnpages[j].u );
+                }
+                if ( classsnpages[j].ty == 'pdf' ) {
+                    ObjInnera.attr("target", "_blank");
+                }
+                if (classsnpages[j].nt) {
+                    ObjInnera.html(classsnpages[j].nt.replace("&amp;nbsp;", " "));
+                } else {
+                    ObjInnera.html(classsnpages[j].t.replace("&amp;nbsp;", " "));
+                }
+
+                ObjInnerli.addClass("soa-ui-dc-container-main-left-nav-item");
+                ObjInnerli.append(ObjInnera);
+                ObjInnerUl.append(ObjInnerli);          
+            }
+
+            var Objli = $('<li></li>');
+            var Obja = $('<a></a>');
+            var Objp = $('<p></p>');
+
+            if ( pages[i].u == '{{ page.url }}' || 
+                    ( '{{ page.sub-nav-class }}' != '' && pages[i].sc == '{{ page.sub-nav-class }}' ) ) {
+                Objli.addClass("soa-ui-dc-container-main-left-nav-item-selected");
+            }
+
+            Obja.addClass("soa-ui-dc-container-main-left-nav-item-link");
+
+            if ( "{{ site.baseurl }}" ) {
+                Obja.attr("href", "{{ site.baseurl }}".concat(pages[i].u) );
+            } else {
+                Obja.attr("href", pages[i].u );
+            }
+            if ( pages[i].ty == 'pdf' ) {
+                Obja.attr("target", "_blank");
+            }
+            if (pages[i].nt) {
+                Obja.html(pages[i].nt.replace("&amp;nbsp;", " "));
+            } else {
+                Obja.html(pages[i].t.replace("&amp;nbsp;", " "));
+            }
+
+            Objli.addClass("soa-ui-dc-container-main-left-nav-item");
+            Objli.append(Obja);
+            if (classsnpages.length > 0) {
+                Objli.append(ObjInnerUl);
+            }
+
+            ObjUl.append(Objli);
+        }
+        $('.soa-ui-dc-container-main-left').append(ObjUl);
+    }
+    $(document).ready(function() {
+        leftnav();
+        $(".soa-ui-dc-container-main-left").find("ul").first().show();
+    });
+</script>
+<!-- End left nav script -->
