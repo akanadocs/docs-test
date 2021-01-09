@@ -50,7 +50,7 @@ nav-title: Test Your App With APIs
 			<li><a href="#tc_configsettings_aggregatepolicy">Test Client security settings: Aggregate Policy</a> (2019.1.0 and later)</li>
 		</ul>
 	</li>
-	<li><a href="#tc_with_operation_specific_policies_app">Does Test Client support operation-specific policies?</a> (2020.2.0 and later)</li>
+	<li><a href="#tc_with_operation_specific_policies_app">Does Test Client support policies assigned at the operation level?</a> (2020.2.0 and later)</li>
 	<li><a href="#tc_with_cors">Can I use Test Client to test APIs that support CORS?</a></li>
 	<li><a href="#tc_two_log_entries_one_call">Why do I sometimes see two log entries for one Test Client call?</a></li>
 	<li><a href="#tc_response_headers">Why do I see extra response headers in the Headers tab?</a></li>
@@ -263,7 +263,7 @@ nav-title: Test Your App With APIs
 </tbody>
 </table>
 <h4 id="note_tc_operationslist">Note: Operations List in Test Client</h4>
-<p>There is a difference in how operations are filtered based on licensing in the developer portal:</p>
+<p>There is a difference in how operations are filtered based on licensing in the Community Manager developer portal:</p>
 <ul>
 	<li>In the API Test Client, operations are filtered based on licenses after an app has a contract with the API. Before there is a contract, all operations are displayed, but invoking an operation that requires licensing returns an error.</li>
 	<li>In the API documentation, operations are filtered based on licenses  before the contract is created.</li>
@@ -776,7 +776,7 @@ nav-title: Test Your App With APIs
 	<li>HTTP Security Policy with Client Certificate option only (requires Authentication Policy, also supported)</li>
 	<li>OAuth Security Policy</li>
 </ul>
-<p><strong>Note</strong>: The developer portal itself supports many additional policies on APIs. However, Test Client supports only the policies listed in <a href="api_admin_testing_tc.htm#tc_policies_supported">What policies are supported in Test Client?</a>, and the Aggregate Policy can only include the policies listed above. If an API has policies attached that are not supported in Test Client, results might not be as expected. In this scenario, you'll see a message warning you that the policy is not supported and results might be unexpected.</p>
+<p><strong>Note</strong>: The Community Manager developer portal itself supports many additional policies on APIs. However, Test Client supports only the policies listed in <a href="api_admin_testing_tc.htm#tc_policies_supported">What policies are supported in Test Client?</a>, and the Aggregate Policy can only include the policies listed above. If an API has policies attached that are not supported in Test Client, results might not be as expected. In this scenario, you'll see a message warning you that the policy is not supported and results might be unexpected.</p>
 <p>In the example below, the API has an Aggregate Policy which includes the AtmosphereApplicationSecurityPolicy, with an enforcement requirement of AND. This means that the Aggregate Policy includes at least one other policy, and must enforce both of them (or all of them). In this scenario, the <strong>Apply Policy to Request</strong> check box is checked by default, because the Aggregate Policy is configured with an AND condition.</p>
 <p><img src="assets/tc_security_aggregate.png" alt="Test Client security: Aggregate Policy" /></p>
 <p>By default, this check box inherits the policy configuration, and Test Client enforces the conditions of the policy, or not, depending on the setting. If you change the setting, it doesn't change the behavior of the API that you're sending a test message to. It only changes the way that Test Client composes the request. For example, if there is an Aggregate Policy on the API, and it includes an OAuth Policy with an enforcement requirement of AND, Test Client sends an OAuth token with the request. If you clear the check box, the API still requires an OAuth token, but Test Client doesn't send it with the request. You can use this for test scenarios, including negative testing.</p>
@@ -784,7 +784,7 @@ nav-title: Test Your App With APIs
 
 
 
-<h2 id="tc_with_operation_specific_policies_app">Does Test Client support operation-specific policies?</h2>
+<h2 id="tc_with_operation_specific_policies_app">Does Test Client support policies assigned at the operation level?</h2>
 <h4 class="stamp">Valid in Version: 2020.2.0 and later</h4>
 <p>An API can have policies assigned to the entire version of the API in a specific implementation (Sandbox or Live). In Version 2020.2.0 and later, policies can also be assigned to a specific operations. So, for example, an API owner might add an extra security policy to POST, PUT, and DELETE operations, but not to the GET operations.</p>
 <p>If the API has policies assigned at the operation level, and you're using Test Client and choose that operation, you'll see the series of operation-specific pages just as you would if the policy was assigned for the entire API. In terms of using Test Client, there is no difference to the user experience. Normally, Test Client determines which policies to present to the user based on the API that the user is testing. With operation-specific policies, it depends on the API and also the operation that the user is testing.</p>
@@ -795,14 +795,14 @@ nav-title: Test Your App With APIs
 
 <h2 id="tc_with_cors">Can I use Test Client to test APIs that have CORS restrictions?</h2>
 <p>Yes. Test Client supports testing with APIs that have CORS restrictions, so you can try out the APIs you're interested in before using them in your app.</p>
-<p>Many APIs on the developer portal will accept only requests from certain trusted domains. These APIs do not support <a href="basics_glossary.htm#gl_cors">CORS</a> (cross-origin resource sharing). Cross-origin requests are sometimes used to introduce malicious content.</p>
-<p>In the context of the API platform, the platform itself is acting as an intermediary (forward proxy) between the client (the app, sending a message to the API) and the API. Calls from clients to the API are sent to the platform and, from there, redirected to the API live endpoint. However, in most cases, the underlying infrastructure, which processes the requests to the API, is on a different domain from the developer portal.</p>
-<p>In order to support testing with these APIs, Test Client uses a proxy server approach, routing the request via a proxy server hosted on the developer portal to the underlying infrastructure and then to the API itself.</p>
+<p>Many APIs on the Community Manager developer portal will accept only requests from certain trusted domains. These APIs do not support <a href="basics_glossary.htm#gl_cors">CORS</a> (cross-origin resource sharing). Cross-origin requests are sometimes used to introduce malicious content.</p>
+<p>In the context of the API platform, the platform itself is acting as an intermediary (forward proxy) between the client (the app, sending a message to the API) and the API. Calls from clients to the API are sent to the platform and, from there, redirected to the API live endpoint. However, in most cases, the underlying infrastructure, which processes the requests to the API, is on a different domain from the Community Manager developer portal.</p>
+<p>In order to support testing with these APIs, Test Client uses a proxy server approach, routing the request via a proxy server hosted on the Community Manager developer portal to the underlying infrastructure and then to the API itself.</p>
 <p>With this approach, testing an API that has CORS restrictions is supported in Test Client.</p>
 	<p>In <strong>Test Client</strong> &gt; <strong>Security</strong>:</p>
 	<ul>
 		<li>If the API supports CORS: You can check the <strong>API Supports CORS (Cross-Origin Resource Sharing)</strong> check box. The request is routed directly to the underlying infrastructure, without going through the proxy server. Note: if you don't check the box, your request will still work, but is sent via the proxy server.</li>
-		<li>If the API doesn't support CORS: leave the check box cleared. The request is routed via the developer portal's proxy server.</li>
+		<li>If the API doesn't support CORS: leave the check box cleared. The request is routed via the Community Manager developer portal's proxy server.</li>
 		<li>If you're not sure: leave the check box cleared.</li>
 	</ul>
 <p><a href="#top">Back to top</a></p>
@@ -866,8 +866,8 @@ Access-Control-Allow-Headers: Content-Type, api_key, Authorization</pre>
 
 
 <h2 id="tc_ss_not_displayed">The app's shared secret is not displayed, or is encrypted. How do I use Test Client?</h2>
-<p>Display of the app's shared secret is affected by one of the security settings for the developer portal, controlled by the Site Admin. Shared Secret display can be <strong>Plain Text</strong> or <strong>Encrypted</strong>. In some cases, it might not be displayed at all. For more information about this setting, see <a href="site_admin_settings.htm#settings_config_apps_01">General App Settings</a> (Site Admin help).</p>
-<p>If the API requires the app to authenticate, you'll need to have the app's shared secret in order to use the API in Test Client. If the shared secret is displayed, there's nothing extra you'll need to do. However, if the developer portal's security settings are set to encrypt the shared secret, the value is not populated in the <strong>Setup</strong> dialog (see <a href="#tc_settings_security">Test Client: Setup (Authentication Settings)</a> above). In this case, you&rsquo;ll need to get the encrypted shared secret value, decrypt it, and paste the decrypted value into Test Client. Depending on your role, you'll need to do one of the following:</p>
+<p>Display of the app's shared secret is affected by one of the security settings for the Community Manager developer portal, controlled by the Site Admin. Shared Secret display can be <strong>Plain Text</strong> or <strong>Encrypted</strong>. In some cases, it might not be displayed at all. For more information about this setting, see <a href="site_admin_settings.htm#settings_config_apps_01">General App Settings</a> (Site Admin help).</p>
+<p>If the API requires the app to authenticate, you'll need to have the app's shared secret in order to use the API in Test Client. If the shared secret is displayed, there's nothing extra you'll need to do. However, if the Community Manager developer portal's security settings are set to encrypt the shared secret, the value is not populated in the <strong>Setup</strong> dialog (see <a href="#tc_settings_security">Test Client: Setup (Authentication Settings)</a> above). In this case, you&rsquo;ll need to get the encrypted shared secret value, decrypt it, and paste the decrypted value into Test Client. Depending on your role, you'll need to do one of the following:</p>
 <ul>
 	<li>If you&rsquo;re an API Admin: Contact the App Admin for the shared secret value.</li>
 	<li>If you&rsquo;re an App Admin, you'll need to get the shared secret from the <strong>App Details</strong> page and decrypt it. For instructions, see <a href="app_create_app_security.htm#ss_view">How do I view a shared secret?</a></li>

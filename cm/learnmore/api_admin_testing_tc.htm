@@ -40,7 +40,7 @@ nav-title: API Testing
 			<li><a href="#tc_configsettings_aggregatepolicy">Test Client security settings: Aggregate Policy</a> (2019.1.0 and later)</li>
 			</ul>
 	</li>
-	<li><a href="#tc_with_operation_specific_policies_api">Does Test Client support operation-specific policies?</a> (2020.2.0 and later)</li>
+	<li><a href="#tc_with_operation_specific_policies_api">Does Test Client support policies assigned at the operation level?</a> (2020.2.0 and later)</li>
 	<li><a href="#tc_forward_proxy">How does Test Client support APIs that don't allow cross-origin API calls (don't support CORS)?</a></li>
 	<li><a href="#tc_test_cors">How can I use the API Supports CORS check box for testing?</a></li>
 	<li><a href="#tc_test_http_sec_policy">My API uses the HTTP Security policy. Can people still test it in Test Client?</a></li>
@@ -52,7 +52,7 @@ nav-title: API Testing
 
 
 <h2 id="what_is_test_client">What is Test Client?</h2>
-<p>The platform includes an API testing interface, Test Client, that acts as an easy-to-use testing tool for any API that is set up in the developer portal. This test tool allows developers to thoroughly test all capabilities of the API.</p>
+<p>The platform includes an API testing interface, Test Client, that acts as an easy-to-use testing tool for any API that is set up in the Community Manager developer portal. This test tool allows developers to thoroughly test all capabilities of the API.</p>
 <p>It can be used for prototyping, testing, and troubleshooting apps against an API. It includes OAuth support for retrieving the OAuth token in order to process the message.</p>
 <p>As an API admin, it's a good idea to try your API out in Test Client before you publish, so you can see what experience app developers will have when trying out your API.</p>
 <p><a href="#top">Back to top</a></p>
@@ -326,9 +326,9 @@ nav-title: API Testing
 <p>If the endpoint URL is on a host that is not the user interface host, same-origin policy prevents the browser from accepting the response unless the API can send the CORS headers. </p>
 <p>Test Client includes the SameOriginPolicy option by default, because Test Client is capable of supporting cross-origin resource sharing (<a href="basics_glossary.htm#gl_cors">CORS</a>) as well as sending the message via the platform's <a href="basics_glossary.htm#gl_forwardproxy">forward proxy</a> server. The page for this policy is the last page of the <strong>Security</strong> wizard. Depending on the API setup, it might be the only page. </p>
 <p>If the API supports CORS, check the box. Otherwise, leave it cleared, or the request will fail.</p>
-<p>In Test Client, when you click <strong>Invoke</strong>, the request is sent directly from the browser to the API endpoint. If the endpoint supports receiving requests from a different domain, the API supports CORS. If it does not, the call will not be successful, and there will be an error, since the API call is sent from the developer portal to the API endpoint.</p>
+<p>In Test Client, when you click <strong>Invoke</strong>, the request is sent directly from the browser to the API endpoint. If the endpoint supports receiving requests from a different domain, the API supports CORS. If it does not, the call will not be successful, and there will be an error, since the API call is sent from the Community Manager developer portal to the API endpoint.</p>
 <p>If you want your API to support CORS, add the <strong>CorsAllowAll</strong> policy to the proxy API implementation (<strong>API</strong> &gt; <strong>Details</strong> &gt; <strong>Edit</strong> &gt; CorsAllowAll policy). </p>
-<p class="apidoc_note"><strong>Note</strong>: In some cases, the Site Admin might have modified the developer portal setup so that the SameOriginPolicy option is set in the background, either enabled or disabled, and doesn't display to users. If you don't see this page, and have questions about CORS support, contact the Site Admin.</p>
+<p class="apidoc_note"><strong>Note</strong>: In some cases, the Site Admin might have modified the Community Manager developer portal setup so that the SameOriginPolicy option is set in the background, either enabled or disabled, and doesn't display to users. If you don't see this page, and have questions about CORS support, contact the Site Admin.</p>
 <p><img src="assets/tc_security_3_cors.jpg" alt="Test Client security settings for SameOriginPolicy" /></p>
 
 <h4 id="tc_configsettings_httpsecuritypolicy">Test Client security settings: HTTP Security Policy</h4>
@@ -349,7 +349,7 @@ nav-title: API Testing
 	<li>HTTP Security Policy with Client Certificate option only (requires Authentication Policy, also supported)</li>
 	<li>OAuth Security Policy</li>
 </ul>
-<p><strong>Note</strong>: The developer portal itself supports many additional policies on APIs. However, Test Client supports only the policies listed in <a href="#tc_policies_supported">What policies are supported in Test Client?</a>, and the Aggregate Policy can only include the policies listed above. If an API has policies attached that are not supported in Test Client, results might not be as expected. In this scenario, you'll see a message warning you that the policy is not supported and results might be unexpected.</p>
+<p><strong>Note</strong>: The Community Manager developer portal itself supports many additional policies on APIs. However, Test Client supports only the policies listed in <a href="#tc_policies_supported">What policies are supported in Test Client?</a>, and the Aggregate Policy can only include the policies listed above. If an API has policies attached that are not supported in Test Client, results might not be as expected. In this scenario, you'll see a message warning you that the policy is not supported and results might be unexpected.</p>
 <p>In the example below, the API has an Aggregate Policy which includes the AtmosphereApplicationSecurityPolicy, with an enforcement requirement of AND. This means that the Aggregate Policy includes at least one other policy, and must enforce both of them (or all of them). In this scenario, the <strong>Apply Policy to Request</strong> check box is checked by default, because the Aggregate Policy is configured with an AND condition.</p>
 <p><img src="assets/tc_security_aggregate.png" alt="Test Client security: Aggregate Policy" /></p>
 <p>By default, this check box inherits the policy configuration, and Test Client enforces the conditions of the policy, or not, depending on the setting. If you change the setting, it doesn't change the behavior of the API that you're sending a test message to. It only changes the way that Test Client composes the request. For example, if there is an Aggregate Policy on the API, and it includes an OAuth Policy with an enforcement requirement of AND, Test Client sends an OAuth token with the request. If you clear the check box, the API still requires an OAuth token, but Test Client doesn't send it with the request. You can use this for test scenarios, including negative testing.</p>
@@ -357,7 +357,7 @@ nav-title: API Testing
 
 
 
-<h2 id="tc_with_operation_specific_policies_api">Does Test Client support operation-specific policies?</h2>
+<h2 id="tc_with_operation_specific_policies_api">Does Test Client support policies assigned at the operation level?</h2>
 <h4 class="stamp">Valid in Version: 2020.2.0 and later</h4>
 <p>An API can have policies assigned to the entire version of the API in a specific implementation (Sandbox or Live). In Version 2020.2.0 and later, policies can also be assigned to a specific operations. So, for example, an API owner might add an extra security policy to POST, PUT, and DELETE operations, but not to the GET operations.</p>
 <p>If the API has policies assigned at the operation level, and you're using Test Client and choose that operation, you'll see the series of operation-specific pages just as you would if the policy was assigned for the entire API. In terms of using Test Client, there is no difference to the user experience. Normally, Test Client determines which policies to present to the user based on the API that the user is testing. With operation-specific policies, it depends on the API and also the operation that the user is testing.</p>
@@ -365,8 +365,9 @@ nav-title: API Testing
 <p><a href="#top">Back to top</a></p>
 
 
+
 <h2 id="tc_forward_proxy">How does Test Client support APIs that don't allow cross-origin API calls (don't support CORS)?</h2>
-<p>If an API doesn't support <a href="basics_glossary.htm#gl_cors">CORS</a>, by default any calls to the API from Test Client, on the developer portal's URL, would be refused.</p>
+<p>If an API doesn't support <a href="basics_glossary.htm#gl_cors">CORS</a>, by default any calls to the API from Test Client, on the Community Manager developer portal's URL, would be refused.</p>
 <p>As a workaround to support testing these APIs in Test Client, Test Client employs a proxy server, which sends the request to the Network Director, so that the domain is the same.</p>
 <p>By default, when you're using Test Client, if the sending and receiving domains are different the browser sends a pre-flight request (see <a href="#tc_options_request">Why does Test Client send an HTTP OPTIONS request before the call to the API endpoint?</a> below). Based on the results, if the API doesn't support CORS, Test Client sends the request, with special headers, to the proxy server set up for the purpose. The proxy server forwards the request to the underlying infrastructure (Network Director); the request is relayed to the API and the response returned to Test Client.</p>
 <p><a href="#top">Back to top</a></p>
@@ -488,7 +489,7 @@ nav-title: API Testing
 		</tr>
 		<tr>
 			<td>&quot;Error encountered executing {service/operation}. Cause: Cannot establish connection to {API_endpoint} because it cannot be trusted.&quot;</td>
-			<td>The OAuth token is missing or invalid. In Test Client, be sure to click the <strong>Security</strong> button, and then click the <strong>Setup</strong> button. On the page for the OAuth Security policy, make sure the values are correct, and click<strong> Get Token</strong>. The token is required for a successful call to the API endpoint.</td>
+			<td>The OAuth token is missing or invalid. In Test Client, be sure to click the <strong>Security</strong> button, and then click the <strong>Setup</strong> button. On the page for the OAuth Security policy, make sure the values are correct, and click <strong>Get Token</strong>. The token is required for a successful call to the API endpoint.</td>
 		</tr>
 		<tr>
 			<td><p>&quot;This security policy is not supported by Test Client. On &quot;Invoke&quot; you might see errors.&quot;</p></td>
