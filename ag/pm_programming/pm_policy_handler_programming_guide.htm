@@ -16,14 +16,13 @@ nav-title: Policy Handler Programming Guide (HTML)
 	<li><a href="../../sp/platform_install/installing_akana_api_platform_v84.htm">Installing the Akana API Platform 8.4x</a></li>
 	<li><a href="pm_message_handler_programming_guide.htm">Policy Manager Message Handler Programming Guide</a></li>
 </ul>
-
-
 <hr class="divide_hr" />
+
+
+
 <h2 style="color: gray;">Table of Contents</h2>
-
-
 <ol class="table_of_contents">
-	<li><a href="#s01_architecture">1: Policy Handler Framework Architecture</a>
+	<li><a href="#s01_architecture">Policy Handler Framework Architecture</a>
 		<ul>
 			<li><a href="#s01_01_overview">Overview</a></li>
 			<li><a href="#s01_02_policies">Policies</a></li>
@@ -34,15 +33,15 @@ nav-title: Policy Handler Programming Guide (HTML)
 			<li><a href="#s01_07_framework_nd">The Framework in the Network Director Feature</a></li>
 			</ul>
 		</li>
-	<li><a href="#s02_framework">2: Policy Handler Framework API</a>
+	<li><a href="#s02_framework">Policy Handler Framework API</a>
 		<ul>
 			<li><a href="#s02_01_policy_api">Policy API</a></li>
 			<li><a href="#s02_02_policy_handler_factory_api">Policy Handler Factory API</a></li>
 		</ul>
 		</li>
 	
-	<li><a href="#s03_deployment">3: Policy Handler Deployment</a></li>
-	<li><a href="#s04_development">4: Developing a Policy Handler</a>
+	<li><a href="#s03_deployment">Policy Handler Deployment</a></li>
+	<li><a href="#s04_development">Developing a Policy Handler</a>
 		<ul>
 			<li><a href="#s04_01_schema">Policy Assertion Schema</a></li>
 			<li><a href="#s04_02_source_code">Source Code</a></li>
@@ -61,13 +60,13 @@ nav-title: Policy Handler Programming Guide (HTML)
 
 
 
-<h2 id="s01_architecture">1: Policy Handler Framework Architecture</h2>
+<h2 id="s01_architecture">Policy Handler Framework Architecture</h2>
 
 
 <h3 id="s01_01_overview">Overview</h3>
 <p>The Akana API Platform includes an extensible Policy Handler Framework for implementing and enforcing policies on messages. The Policy Handler Framework is an extension of the Message Handler Framework (see the <a href="pm_message_handler_programming_guide.htm">Policy Manager Message Handler Programming Guide</a>, specialized for runtime policies, both Operational and Quality of Service.</p>
 <p>The Policy Handler framework provides a set of interfaces in addition to those provided by the Message Handler Framework that can be implemented by developers who would like to extend the base policy capabilities of the product, which are also implemented using the same framework.</p>
-<p>The policy handler framework is used to process incoming and outgoing messages of web services. This processing is typically constrained to binding specific logic, header processing, security decisions, and minor transformations. It is not intended to provide orchestration, content-based routing, or major transformations. For those capabilities, use the Virtual Service Orchestration Framework.</p>
+<p>The policy handler framework is used to process incoming and outgoing messages of web services. This processing is typically constrained to binding specific logic, header processing, security decisions, and minor transformations. It is not intended to provide orchestration, content-based routing, or major transformations. For those capabilities, use the Virtual Service Orchestration Framework.<!-- {<span class="apidoc_red">GWQ: will people know what this is?</span>}--></p>
 <p>The Policy Handler Framework is used by individual features such as the Network Director. The Network Director acts as a provider and consumer of services; in this scenario, the framework is used for processing both incoming and outgoing message exchanges.</p>
 <p><strong>Note</strong>: this document covers only Network Director use of the Policy Handler Framework.</p>
 <p>The processing performed by the policy handler framework is dictated by policies attached to services in Policy Manager. Enforcement is the act of ensuring a policy is met by a message. Implementation is the act of altering a message so that it conforms to a policy. When the policy framework governs a service that is receiving messages, the framework enforces the policies attached to the service. It must also implement those same policies on messages that are returned to the client.</p>
@@ -200,11 +199,12 @@ nav-title: Policy Handler Programming Guide (HTML)
 	<li>Port</li>
 </ul>
 <p>This enables virtual services to invoke other locally-deployed virtual services while still having policies enforced.</p>
+<!--<p>For OUT bindings, the framework is organized in the same fashion as the Delegate, with the additional binding-specific group described for IN bindings. {<span class="apidoc_red">GWQ not sure what to do with this line, commenting it out. GW 6/10/18</span>}</p>-->
 <p><a href="#top">Back to top</a></p>
 
 
 
-<h2 id="s02_framework">2: Policy Handler Framework API</h2>
+<h2 id="s02_framework">Policy Handler Framework API</h2>
 <p>The Policy Handler Framework API is composed of three major groups of classes:</p>
 <ul>
 	<li><a href="#s02_01_policy_api">Policy API</a>: Provides interfaces and classes for defining policies, assertions, and assertion marshalling.</li>
@@ -249,7 +249,7 @@ nav-title: Policy Handler Programming Guide (HTML)
 
 
 
-<h2 id="s03_deployment">3: Policy Handler Deployment</h2>
+<h2 id="s03_deployment">Policy Handler Deployment</h2>
 <p>The Network Director uses the OSGi (Open Services Gateway initiative) framework for deploying features and extensions.</p>
 <p>The Policy Handler Framework dynamically constructs the chain of handlers by discovering policy handler factories published as OSGi services by OSGi bundles.</p>
 <p>The Policy Handler Framework registers with the OSGi framework for services that implement the <span class="apidoc_code">WSPHandlerFactory</span> interface. It organizes the <span class="apidoc_code">WSPHandlerFactory</span> services into groups as described in the framework/feature sections, through the use of attributes that the <span class="apidoc_code">WSPHandlerFactory</span> services can use to describe themselves. The following are the attributes the Policy Handler Framework will use to group <span class="apidoc_code">WSPHandlerFactory</span> services.</p>
@@ -337,14 +337,14 @@ nav-title: Policy Handler Programming Guide (HTML)
 	<li>Handler1 or Handler3 could have been second since there were no ordering constraints on either one, but in this example Handler1 will be second. Handler4 and Handler5 are in the second message-specific group.</li>
 	<li>Handler5 will be deployed before Handler4 though because of Handler4's <strong>after</strong> attribute which referred directly to Handler5.</li>
 </ul>
-<p>For OUT bindings, these same example services would be defined with the same attributes except that the <strong>role</strong> attribute would have the value of <strong>consumer</strong>. The deployment order would be the same.</p>
+<p>For OUT bindings<!--{<span class="apidoc_red">GWQ not sure about this rewording to remove delegate 7/10/18</span>}-->, these same example services would be defined with the same attributes except that the <strong>role</strong> attribute would have the value of <strong>consumer</strong>. The deployment order would be the same.</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
-<h2 id="s04_development">4: Developing a Policy Handler</h2>
-<p>This section describes the steps necessary to develop and deploy a Policy Handler. The sample artifacts described are available in the /samples directory installed with the product.</p>
-<p>In the example, a policy will be written that will dictate that a transport header be present with the same value as the operation name as defined by the service's WSDL document. The policy handler will be written to both enforce and implement the policy.</p>
+<h2 id="s04_development">Developing a Policy Handler</h2>
+<p>This section describes the steps necessary to develop and deploy a Policy Handler. The sample artifacts described are available in the /samples directory installed with the product.<!-- {<span class="apidoc_red">GWQ are they? I see the folder and various subfolders... can't tell.</span>}--></p>
+<p>In the example, a policy will be written that will dictate that a transport header be present with the same value as the operation name as defined by the service's WSDL document<!-- {<span class="apidoc_red">GWQ: what if it isn't a SOAP service, no WSDL?</span>}-->. The policy handler will be written to both enforce and implement the policy.</p>
 <p>This section includes:</p>
 <ul>
 	<li><a href="#s04_01_schema">Policy Assertion Schema</a></li>
@@ -849,7 +849,7 @@ interface="com.soa.policy.wspolicy.handler.WSPHandlerFactory"&gt;
 35)  &lt;entry key="role" value="consumer"/&gt;
 36)  &lt;/osgi:service-properties&gt;
 37) &lt;/osgi:service&gt;</pre>
-<p>The creation of the <span class="apidoc_code">ComplexPolicyHandler</span> factory is simple and is done on line 01. Then, that same factory instance is published to both the HTTP (REST) and SOAP bindings. Because the factory constructs handlers acting in both the <strong>consumer</strong> and <strong>provider</strong> roles, it must be published multiple times with those roles. In all, the single factory instance is published as four OSGi services:</p>
+<p>The creation of the <span class="apidoc_code">ComplexPolicyHandler</span> factory<!-- {<span class="apidoc_red">GBQ: Earlier we had ComplexPolicyHandlerFactory and now ComplexPolicyHandler factory (with space). Is this correct?</span>}--> is simple and is done on line 01. Then, that same factory instance is published to both the HTTP (REST) and SOAP bindings. Because the factory constructs handlers acting in both the <strong>consumer</strong> and <strong>provider</strong> roles, it must be published multiple times with those roles. In all, the single factory instance is published as four OSGi services:</p>
 <ul>
 	<li>On lines 03&#8211;10, the factory is published as a provider-side HTTP factory.</li>
 	<li>On lines 12&#8211;19 the factory is published as a provider-side SOAP factory.</li>
@@ -927,6 +927,7 @@ interface="com.soa.policy.wspolicy.handler.WSPHandlerFactory"&gt;
 </ul>
 <ul>
 	<li><a href="pm_message_handler_programming_guide.htm">Message Handler Programming Guide</a></li>	
-	<li><a href="../../cm/learnmore/basics_glossary.htm">Glossary of Terms for the Developer Portal</a></li>
+	<li><a href="../../cm/learnmore/basics_glossary.htm">Glossary of Terms for the Community Manager developer portal</a></li>
 </ul>
 </div>
+

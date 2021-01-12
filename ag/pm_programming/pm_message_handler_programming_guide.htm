@@ -19,10 +19,8 @@ nav-title: Message Handler Programming Guide (HTML)
 
 <hr class="divide_hr" />
 <h2 style="color: gray;">Table of Contents</h2>
-
-
 <ol class="table_of_contents">
-	<li><a href="#s01_architecture">1: Message Handler Framework Architecture</a>
+	<li><a href="#s01_architecture">Message Handler Framework Architecture</a>
 		<ul>
 			<li><a href="#s01_01_overview">Overview</a></li>
 			<li><a href="#s01_04_message_handlers">Message Handlers</a></li>
@@ -31,9 +29,9 @@ nav-title: Message Handler Programming Guide (HTML)
 			<li><a href="#s01_07_framework_nd">The Framework in the Network Director Feature</a></li>
 			</ul>
 		</li>
-	<li><a href="#s02_framework">2: Message Handler Framework API</a></li>
-	<li><a href="#s03_deployment">3: Message Handler Deployment</a></li>
-	<li><a href="#s04_development">4: Developing a Message Handler</a>
+	<li><a href="#s02_framework">Message Handler Framework API</a></li>
+	<li><a href="#s03_deployment">Message Handler Deployment</a></li>
+	<li><a href="#s04_development">Developing a Message Handler</a>
 		<ul>
 			<li><a href="#s04_02_source_code">Source Code</a></li>
 			<li><a href="#s04_03_bundle">Bundle</a></li>
@@ -44,13 +42,11 @@ nav-title: Message Handler Programming Guide (HTML)
 
 
 
-
 <hr class="divide_hr" />
 
 
 
-
-<h2 id="s01_architecture">1: Message Handler Framework Architecture</h2>
+<h2 id="s01_architecture">Message Handler Framework Architecture</h2>
 
 
 <h3 id="s01_01_overview">Overview</h3>
@@ -120,11 +116,12 @@ nav-title: Message Handler Programming Guide (HTML)
 	<li>Port</li>
 </ul>
 <p>This enables virtual services to invoke other locally-deployed virtual services while still having policies enforced.</p>
+<!--<p>For OUT bindings, the framework is organized in the same fashion as the Delegate, with the additional binding-specific group described for IN bindings. {<span class="apidoc_red">GWQ not sure what to do with this line, commenting it out. GW 6/10/18</span>}</p>-->
 <p><a href="#top">Back to top</a></p>
 
 
 
-<h2 id="s02_framework">2: Message Handler Framework API</h2>
+<h2 id="s02_framework">Message Handler Framework API</h2>
 <p>The core of the Message Handler Framework is composed of a small number of interfaces and classes, and includes an API for creating handlers. This section provides a brief description of these interfaces and classes. A detailed description of the API can be found with the API documentation installed with the Policy Manager product. A UML diagram of the primary interfaces and classes of the framework is illustrated below.</p>
 <p><img src="images/pmmhpgm_02_01.jpg" alt="UML diagram of the primary interfaces and classes of the framework" /></p>
 <dl>
@@ -155,7 +152,7 @@ nav-title: Message Handler Programming Guide (HTML)
 
 
 
-<h2 id="s03_deployment">3: Message Handler Deployment</h2>
+<h2 id="s03_deployment">Message Handler Deployment</h2>
 <p>The Network Director uses the OSGi (Open Services Gateway initiative) framework for deploying features and extensions.</p>
 <p>The Message Handler Framework dynamically constructs the chain of handlers by discovering message handler factories published as OSGi services by OSGi bundles.</p>
 <p>
@@ -181,7 +178,7 @@ This is a <strong>global</strong> handler.</li>
 
 
 <dt id="attrib_binding">binding</dt>
-<dd>Indicates which binding the handlers from the factory should be deployed for (if the <a href="#attrib_scope"><strong>scope</strong></a> attribute value is <strong>binding</strong>).</dd>
+<dd>Indicates which binding the handlers from the factory should be deployed for (if the <a href="#attrib_scope"><strong>scope</strong></a> attribute value is <strong>binding</strong>).<!-- {<span class="apidoc_red">GWQ: policy handler guide says binding comes into play if scope is concrete. Here, it's if scope is binding. Is that correct?</span>}--></dd>
 
 
 <dt id="attrib_role">role</dt>
@@ -251,13 +248,13 @@ This is a <strong>global</strong> handler.</li>
 	<li>Handler1 or Handler3 could have been second since there were no ordering constraints on either one, but in this example Handler1 will be second. Handler4 and Handler5 are in the second message-specific group.</li>
 	<li>Handler5 will be deployed before Handler4 though because of Handler4's <strong>after</strong> attribute which referred directly to Handler5.</li>
 </ul>
-<p>For OUT bindings, these same example services would be defined with the same attributes except that the <strong>role</strong> attribute would have the value of <strong>consumer</strong>. The deployment order would be the same.</p>
+<p>For OUT bindings<!--{<span class="apidoc_red">GWQ not sure about this rewording to remove delegate 7/10/18</span>}-->, these same example services would be defined with the same attributes except that the <strong>role</strong> attribute would have the value of <strong>consumer</strong>. The deployment order would be the same.</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
-<h2 id="s04_development">4: Developing a Message Handler</h2>
-<p>This section describes the steps necessary to develop and deploy a Message Handler. The sample artifacts described are available in the /samples directory installed with the product.</p>
+<h2 id="s04_development">Developing a Message Handler</h2>
+<p>This section describes the steps necessary to develop and deploy a Message Handler. The sample artifacts described are available in the /samples directory installed with the product.<!-- {<span class="apidoc_red">GWQ are they? I see the folder and various subfolders... can't tell.</span>}--></p>
 <p>In the example, a MessageHandler will be developed that will simply log the contents of the IN and OUT messages of a message exchange. The MessageHandler will be a <strong>global</strong> handler and can therefore be deployed to any binding.</p>
 <p>This section includes:</p>
 <ul>
@@ -424,7 +421,7 @@ elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http
 <p>In this example:</p>
 <ul>
 	<li>Lines 01&#8211;06 hold general information about the Bundle.</li>
-	<li>Lines 07&#8211;12 hold the package dependencies for the Bundle. All packages not defined within the bundle that are imported by code in the Bundle must be listed here. The only exceptions to this are packages that are in the global classpath of the SOA Container such as the Java JRE and Spring packages.</li>
+	<li>Lines 07&#8211;12 hold the package dependencies for the Bundle. All packages not defined within the bundle that are imported by code in the Bundle must be listed here. The only exceptions to this are packages that are in the global classpath of the SOA Container such as the Java JRE and Spring packages.<!-- {<span class="apidoc_red">GWQ: doc said: "A full list of the globally available packages is listed below" but it isn't. Should we add a list?</span>}--></li>
 </ul>
 <p><a href="#top">Back to top</a></p>
 
@@ -450,6 +447,7 @@ elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http
 </ul>
 <ul>
 	<li><a href="pm_policy_handler_programming_guide.htm">Policy Handler Programming Guide</a></li>
-	<li><a href="../../cm/learnmore/basics_glossary.htm">Glossary of Terms for the Developer Portal</a></li>
+	<li><a href="../../cm/learnmore/basics_glossary.htm">Glossary of Terms for the Community Manager developer portal</a></li>
 </ul>
 </div>
+

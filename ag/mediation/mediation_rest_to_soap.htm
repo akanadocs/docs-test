@@ -36,7 +36,7 @@ nav-title: SOAP Facade to REST Service
 
 
 <h2 id="introduction">Introduction</h2>
-<p>In the developer portal, you can set up a SOAP fa&ccedil;ade to a REST back-end service by using the Process Editor to add scripting to a specific operation. When a SOAP message is sent to the back-end service, the process converts it to REST before sending it. The reverse is applied with the response from the REST service. The response is converted back to SOAP format.</p>
+<p>In the Community Manager developer portal, you can set up a SOAP fa&ccedil;ade to a REST back-end service by using the Process Editor to add scripting to a specific operation. When a SOAP message is sent to the back-end service, the process converts it to REST before sending it. The reverse is applied with the response from the REST service. The response is converted back to SOAP format.</p>
 <p>There is more than one way to do this. The example in this document uses a script to convert the SOAP message to JSON, retrieve the input parameter, and send a REST message to the back-end service. The response is rendered in XML.</p>
 <p>This example uses a simple API, the FAA Airport Status API, which has one operation to retrieve the status of a specific airport, and takes one parameter, a three-letter US airport code. For more information about this service, see <a href="https://catalog.data.gov/dataset/airport-status-web-service" title="Link to the FAA Airport Status API" target="_blank">https://catalog.data.gov/dataset/airport-status-web-service</a> (external link).</p>
 <p>The example walks you through the steps for setting up both APIs, designing the mediation, and running the test case.</p>
@@ -45,7 +45,7 @@ nav-title: SOAP Facade to REST Service
 
 
 <h2 id="uc_rest_to_soapt">REST to SOAP mediation use case</h2>
-<p>This section provides detailed instructions for setting up and running a REST to SOAP mediation use case using the FAA Airport Status API. This example includes all the assets and steps needed to access a REST back-end service using SOAP messaging, using the Akana developer portal.</p>
+<p>This section provides detailed instructions for setting up and running a REST to SOAP mediation use case using the FAA Airport Status API. This example includes all the assets and steps needed to access a REST back-end service using SOAP messaging, using the Community Manager developer portal.</p>
 <p>It includes:</p>
 <ol>
 	<li><a href="#uc_rest_to_soap_01">Prerequisites</a></li>
@@ -69,8 +69,8 @@ nav-title: SOAP Facade to REST Service
 
 
 <h3 id="uc_rest_to_soap_02">Register the REST service</h3>
-<p>The first step is to set up the API in the developer portal. Follow the steps below.</p>
-<h4>To set up the REST service as an API in the developer portal</h4>
+<p>The first step is to set up the API in the Community Manager developer portal. Follow the steps below.</p>
+<h4>To set up the REST service as an API in the Community Manager developer portal</h4>
 <ol>
 	<li>Log in to the API Management Portal.</li>
 	<li>Click the <strong>Plus</strong> icon to add a new API.</li>
@@ -81,7 +81,7 @@ nav-title: SOAP Facade to REST Service
 
 <h3 id="uc_rest_to_soap_03">Create the SOAP fa&ccedil;ade</h3>
 <p>Next, set up the SOAP version of the same API. For this, you'd need a WSDL file for the service. For this example, it's provided for you; see link in <a href="#uc_rest_to_soap_01">Prerequisites</a> above.</p>
-<h4>To set up the SOAP fa&ccedil;ade as an API in the developer portal</h4>
+<h4>To set up the SOAP fa&ccedil;ade as an API in the Community Manager developer portal</h4>
 <ol>
 	<li>Log in to the API Management Portal.</li>
 	<li>Click the <strong>Plus</strong> icon to add a new API.</li>
@@ -119,7 +119,7 @@ nav-title: SOAP Facade to REST Service
 </ul>
 <h4>To set up the REST to SOAP mediation</h4>
 <ol>
-	<li>In the developer portal, for the SOAP API, go to <strong>Implementations</strong> &gt; <strong>Live</strong>.</li>
+	<li>In the Community Manager developer portal, for the SOAP API, go to <strong>Implementations</strong> &gt; <strong>Live</strong>.</li>
 	<li>On the Implementations page, scroll down to the <strong>Resources</strong> section at the bottom. To the right of the get_getAirportStatus operation, click the down arrow and choose <strong>Edit Process</strong>. The Process Editor opens.</li>
 	<li>Add a Script Activity to the process by dragging and dropping.
 		<p><img src="images/uc_rest_to_soap_scriptactivity.jpg" alt="Adding a Script activity" /></p>
@@ -178,8 +178,51 @@ nav-title: SOAP Facade to REST Service
 
 
 <h4 id="uc_js_script">Mediation script</h4>
-<pre>// Get message and normalize<br />msg = processContext.getVariable(&quot;message&quot;);<br />normalmsg = msg.normalize();<br /> <br />auditLog.debug(&quot;Normalized message is: &quot; + normalmsg.getContentAsString());<br /> <br />// Create XML2JSON converter<br />converter= com.soa.json.xml.script.XML2JSON.converter();<br />converter.setForceTopLevelObject( true );<br /> <br />// optional - use if needed<br />// converter.setRemoveNamespacePrefixes( true );<br />// converter.setIgnoreNamespaces( true );<br /> <br />// Convert XML to JSON<br />var jsonStr = converter.convert(normalmsg.getContentAsString());<br />auditLog.debug(&quot;JSON string is: &quot; + jsonStr);<br /> <br />// Parse JSON string into JSON object<br />jsonObj = JSON.parse(jsonStr);<br /> <br />// Get airport code <br />// An Activity Variable named airportCode needs to be defined<br />airportCode = jsonObj.GET_getAirportStatus_InputMessage.airportCode;<br /> <br />// Option 1<br />// In this approach to map to parameters from the backend service<br />// in the invoke activity<br />// Set Activity Variable via the processContext to use in the Invoke<br />processContext.setVariable(&quot;airportCode&quot;,airportCode);<br />auditLog.debug(&quot;airportCode: &quot; + processContext.getVariable(&quot;airportCode&quot;));<br /> <br />// Option 2<br />// Invoke the backend service without having to map parameters by<br />// passing the newly created message in to the Invoke<br />// Create a new normalized message<br />backendMessage = msgFactory.createNormalized();<br />backendMessage.createTransportHeaders();<br />backendMessage.setContentType(&quot;application/json&quot;);<br /> <br />// Add the airport code as a message part<br />backendMessage.addPart(&quot;airportCode&quot;,airportCode);<br /> <br />// Set the Activity Variable with the newly-created message<br />processContext.setVariable(&quot;backendMessage&quot;,backendMessage);
-</pre>
+<pre>// Get message and normalize
+msg = processContext.getVariable(&quot;message&quot;);
+normalmsg = msg.normalize();
+
+auditLog.debug(&quot;Normalized message is: &quot; + normalmsg.getContentAsString());
+
+// Create XML2JSON converter
+converter= com.soa.json.xml.script.XML2JSON.converter();
+converter.setForceTopLevelObject( true );
+
+// optional - use if needed
+// converter.setRemoveNamespacePrefixes( true );
+// converter.setIgnoreNamespaces( true );
+
+// Convert XML to JSON
+var jsonStr = converter.convert(normalmsg.getContentAsString());
+auditLog.debug(&quot;JSON string is: &quot; + jsonStr);
+
+// Parse JSON string into JSON object
+jsonObj = JSON.parse(jsonStr);
+
+// Get airport code 
+// An Activity Variable named airportCode needs to be defined
+airportCode = jsonObj.GET_getAirportStatus_InputMessage.airportCode;
+
+// Option 1
+// In this approach to map to parameters from the backend service
+// in the invoke activity
+// Set Activity Variable via the processContext to use in the Invoke
+processContext.setVariable(&quot;airportCode&quot;,airportCode);
+auditLog.debug(&quot;airportCode: &quot; + processContext.getVariable(&quot;airportCode&quot;));
+
+// Option 2
+// Invoke the backend service without having to map parameters by
+// passing the newly created message in to the Invoke
+// Create a new normalized message
+backendMessage = msgFactory.createNormalized();
+backendMessage.createTransportHeaders();
+backendMessage.setContentType(&quot;application/json&quot;);
+
+// Add the airport code as a message part
+backendMessage.addPart(&quot;airportCode&quot;,airportCode);
+
+// Set the Activity Variable with the newly-created message
+processContext.setVariable(&quot;backendMessage&quot;,backendMessage);</pre>
 
 <h4 id="uc_js_variables"><strong>Variables</strong> referenced by the script</h4>
 <p>In the Variables and Faults Editor you'll define these two variables:</p>
@@ -218,6 +261,7 @@ nav-title: SOAP Facade to REST Service
 	<li><a href="../processes/process_reference.htm">Process Reference</a></li>
 </ul>
 <ul>
-	<li><a href="../../cm/learnmore/basics_glossary.htm">Glossary of Terms for the Developer Portal</a></li>
+	<li><a href="../../cm/learnmore/basics_glossary.htm">Glossary of Terms for the Community Manager developer portal</a></li>
 </ul>
 </div>
+

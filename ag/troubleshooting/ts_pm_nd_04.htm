@@ -182,7 +182,45 @@ AND una.ref_id = OI.organizationid</pre>
 <p>Oracle</p>
 
 <h4>Query:</h4>
-<pre>select <br />r.INTVLSTARTDTS,<br />org.BUSINESS_KEY, orgn.NAME ORGNAME, s.SERVICE_KEY, sn.NAME SVCNAME,<br />sum(USAGECOUNT) as TOTALUSAGECOUNT, sum(TOTALRESPTIME)/greatest(sum(USAGECOUNT),1) as<br />AVGRESPTIME,<br />sum(r.SUCCESSCOUNT), sum(r.TOTALSUCCESSRESPTIME)/greatest(sum(r.SUCCESSCOUNT),1) as <br />AVGSUCCESSRESPTIME, <br />sum(r.ERRORCOUNT),sum(r.TOTALERRORRESPTIME)/greatest(sum(r.ERRORCOUNT),1) as <br />AVGERRORRESPTIME, V.CONTRACTNAME<br />from<br />contracts_versions v, UDDI_BUSINESS org, UDDI_NAME orgn, UDDI_NAME sn, UDDI_SERVICE s <br />left outer join<br />mo_rollupdata r on s.BUSINES_SERVICE_ID=r.SERVICEID<br />and r.INTVLSTARTDTS &amp;gt;= to_date ('2013-03-01', 'YYYY-MM-DD') <br />and r.INTVLSTARTDTS &amp;lt; to_date ('2013-03-15', 'YYYY-MM-DD') <br />and s.BUSINES_SERVICE_ID=r.SERVICEID<br />where<br />r.contractid != '0'<br />and V.CONTRACTVERSIONID = r.contractid<br />and org.BUSINESS_ENTITY_ID=orgn.REF_ID and orgn.REF_TYPE='B' <br />and s.BUSINES_SERVICE_ID=sn.REF_ID and sn.REF_TYPE = 'S'<br />and s.BUSINESS_ENTITY_ID=org.BUSINESS_ENTITY_ID<br />and (org.business_key = '&lt;ORGANIZATION KEY&gt;' <br />or<br />org.business_key in (<br />select business_key from uddi_business where business_entity_id in<br />(select to_business_id from<br />uddi_pub_assertion where from_business_id in <br />(select business_entity_id from uddi_business <br />where business_key ='&lt;ORGANIZATION KEY&gt;'))) <br />or<br />org.business_key in (select business_key from uddi_business where business_entity_id in<br />(select to_business_id from uddi_pub_assertion where from_business_id in <br />(select business_entity_id from uddi_business where business_key in <br />(select business_key from uddi_business where business_entity_id in <br />(select to_business_id from uddi_pub_assertion where from_business_id in <br />(select business_entity_id from uddi_business<br />where business_key ='&lt;ORGANIZATION KEY&gt;'))))))<br />)
+<pre>select 
+r.INTVLSTARTDTS,
+org.BUSINESS_KEY, orgn.NAME ORGNAME, s.SERVICE_KEY, sn.NAME SVCNAME,
+sum(USAGECOUNT) as TOTALUSAGECOUNT, sum(TOTALRESPTIME)/greatest(sum(USAGECOUNT),1) as
+AVGRESPTIME,
+sum(r.SUCCESSCOUNT), sum(r.TOTALSUCCESSRESPTIME)/greatest(sum(r.SUCCESSCOUNT),1) as 
+AVGSUCCESSRESPTIME, 
+sum(r.ERRORCOUNT),sum(r.TOTALERRORRESPTIME)/greatest(sum(r.ERRORCOUNT),1) as 
+AVGERRORRESPTIME, V.CONTRACTNAME
+from
+contracts_versions v, UDDI_BUSINESS org, UDDI_NAME orgn, UDDI_NAME sn, UDDI_SERVICE s 
+left outer join
+mo_rollupdata r on s.BUSINES_SERVICE_ID=r.SERVICEID
+and r.INTVLSTARTDTS &amp;gt;= to_date ('2013-03-01', 'YYYY-MM-DD') 
+and r.INTVLSTARTDTS &amp;lt; to_date ('2013-03-15', 'YYYY-MM-DD') 
+and s.BUSINES_SERVICE_ID=r.SERVICEID
+where
+r.contractid != '0'
+and V.CONTRACTVERSIONID = r.contractid
+and org.BUSINESS_ENTITY_ID=orgn.REF_ID and orgn.REF_TYPE='B' 
+and s.BUSINES_SERVICE_ID=sn.REF_ID and sn.REF_TYPE = 'S'
+and s.BUSINESS_ENTITY_ID=org.BUSINESS_ENTITY_ID
+and (org.business_key = '&lt;ORGANIZATION KEY&gt;' 
+or
+org.business_key in (
+select business_key from uddi_business where business_entity_id in
+(select to_business_id from
+uddi_pub_assertion where from_business_id in 
+(select business_entity_id from uddi_business 
+where business_key ='&lt;ORGANIZATION KEY&gt;'))) 
+or
+org.business_key in (select business_key from uddi_business where business_entity_id in
+(select to_business_id from uddi_pub_assertion where from_business_id in 
+(select business_entity_id from uddi_business where business_key in 
+(select business_key from uddi_business where business_entity_id in 
+(select to_business_id from uddi_pub_assertion where from_business_id in 
+(select business_entity_id from uddi_business
+where business_key ='&lt;ORGANIZATION KEY&gt;'))))))
+)
 
 group by (
 org.BUSINESS_KEY, s.SERVICE_KEY, orgn.NAME, sn.NAME, r.INTVLSTARTDTS, v.contractname)
@@ -284,10 +322,24 @@ EBSOutboundXML_vs0                     uddi:d886af83-f3ad-11dd-bbc6-a429f2cfd8d9
 <p>Oracle, MySql</p>
 
 <h4>Query:</h4>
-<pre>SELECT n.Name, s.Service_Key<br />FROM uddi_service s JOIN uddi_name n on s.busines_service_id = n.ref_id<br />WHERE s.busines_service_id<br />  NOT IN(<br />    SELECT s.Busines_service_id<br />    FROM policies p JOIN policy_attachments pa on p.policyid=pa.policyid <br />    JOIN uddi_service s on pa.attachpointid = s.busines_service_id JOIN <br />    uddi_name n on s.busines_service_id = n.ref_id<br />    WHERE s.business_entity_id != 1000 <br />    and p.policytype != 'Denial of Service'<br />  )<br />and s.business_entity_id != 1000;</pre>
+<pre>SELECT n.Name, s.Service_Key
+FROM uddi_service s JOIN uddi_name n on s.busines_service_id = n.ref_id
+WHERE s.busines_service_id
+  NOT IN(
+    SELECT s.Busines_service_id
+    FROM policies p JOIN policy_attachments pa on p.policyid=pa.policyid 
+    JOIN uddi_service s on pa.attachpointid = s.busines_service_id JOIN 
+    uddi_name n on s.busines_service_id = n.ref_id
+    WHERE s.business_entity_id != 1000 
+    and p.policytype != 'Denial of Service'
+  )
+and s.business_entity_id != 1000;</pre>
 
 <h4>Query Sample Results:</h4>
-<pre>NAME                                   SERVICE_KEY<br />Fee&amp;RatesScheduleProcessService_vs0    uddi:b4ecab31-f2e3-11dd-b97e-f7ac69e24a6c<br />EBSOutboundXML                         uddi:a6f29370-f3ad-11dd-bbc6-a429f2cfd8d9<br />EBSOutboundXML_vs0                     uddi:d886af83-f3ad-11dd-bbc6-a429f2cfd8d9</pre>
+<pre>NAME                                   SERVICE_KEY
+Fee&amp;RatesScheduleProcessService_vs0    uddi:b4ecab31-f2e3-11dd-b97e-f7ac69e24a6c
+EBSOutboundXML                         uddi:a6f29370-f3ad-11dd-bbc6-a429f2cfd8d9
+EBSOutboundXML_vs0                     uddi:d886af83-f3ad-11dd-bbc6-a429f2cfd8d9</pre>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -325,7 +377,16 @@ where
     and btcb.REF_ID=b.BINDING_TEMPLAT_ID and wp.PORTID = b.BINDING_TEMPLAT_ID and btkrc.KEY_VALUE=c.CONTAINERKEY ;</pre>
 
 <h4>Query Sample Results:</h4>
-<pre>SERVICE_KEY   SCVNAME CONTAINERKEY BINDINDLOCALPART    ORGNAME ACCESS_URL    LISTENERNAME        CONTAINERNAME BINDINGTYPE    BINDINGNAMESPACE<br />uddi:b4ecab31-f2e3-11dd-b97e-f7ac69e24a6c    Fee&amp;RatesScheduleProcessService_vs0    FX International<br />Payments    HTTP Outbound  AXPCluster1    AXPCluster1 http://dwebservices.trcw.us.aexp.com:80/Fee&amp;RatesScheduleProcessService_Dev    binding.soap11 http://soap.sforce.com/schemas/class/feeandrateschedulProcess<br />feeandrateschedulesProcessBinding<br />uddi:b4ecab31-f2e3-11dd-b97e-f7ac69e24a6c    Fee&amp;RatesScheduleProcessService_vs0    FX International<br />Payments    HTTP Outbound  NewCluster2-old  container-11<br />http://devoutboundhttp.americanexpress.com:80/Fee&amp;RatesScheduleProcessService    binding.soap11 http://soap.sforce.com/schemas/class/feeandrateschedulProcess<br />feeandrateschedulesProcessBinding<br />uddi:b4ecab31-f2e3-11dd-b97e-f7ac69e24a6c    Fee&amp;RatesScheduleProcessService_vs0    FX International<br />Payments    HTTP Outbound</pre>
+<pre>SERVICE_KEY   SCVNAME CONTAINERKEY BINDINDLOCALPART    ORGNAME ACCESS_URL    LISTENERNAME        CONTAINERNAME BINDINGTYPE    BINDINGNAMESPACE
+uddi:b4ecab31-f2e3-11dd-b97e-f7ac69e24a6c    Fee&amp;RatesScheduleProcessService_vs0    FX International
+Payments    HTTP Outbound  AXPCluster1    AXPCluster1 http://dwebservices.trcw.us.aexp.com:80/Fee&amp;RatesScheduleProcessService_Dev    binding.soap11 http://soap.sforce.com/schemas/class/feeandrateschedulProcess
+feeandrateschedulesProcessBinding
+uddi:b4ecab31-f2e3-11dd-b97e-f7ac69e24a6c    Fee&amp;RatesScheduleProcessService_vs0    FX International
+Payments    HTTP Outbound  NewCluster2-old  container-11
+http://devoutboundhttp.americanexpress.com:80/Fee&amp;RatesScheduleProcessService    binding.soap11 http://soap.sforce.com/schemas/class/feeandrateschedulProcess
+feeandrateschedulesProcessBinding
+uddi:b4ecab31-f2e3-11dd-b97e-f7ac69e24a6c    Fee&amp;RatesScheduleProcessService_vs0    FX International
+Payments    HTTP Outbound</pre>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -369,7 +430,16 @@ uddi:db92077d-e09a-11df-b2af-b32e0ed3c2b7    https://utc.b2b.ihg.com/amex/b2b/xm
 <p>Oracle, MySql</p>
 
 <h4>Query:</h4>
-<pre>select cv.contractname as &quot;CONTRACTNAME&quot;, CV.CONTRACTVERSIONKEY as &quot;CONTRACTKEY&quot; <br />from uddi_service us, uddi_business ub join resourceset_orgs rsv on UB.BUSINESS_ENTITY_ID = <br />RSV.ORGANIZATIONID<br />join auz_rules ar on RSV.RESOURCESETID = AR.RESOURCESETID<br />join auz_rulesets ars on ARS.RULESETID = AR.RULESETID<br />join contracts_rulesets cr on CR.RULESETID = ARS.RULESETID<br />join contracts_versions cv on CV.CONTRACTVERSIONID = CR.CONTRACTVERSIONID<br />where UB.BUSINESS_ENTITY_ID = US.BUSINESS_ENTITY_ID<br />and US.SERVICE_KEY = '&lt;SERVICE KEY&gt;' <br />and CV.active= 'Y'</pre>
+<pre>select cv.contractname as &quot;CONTRACTNAME&quot;, CV.CONTRACTVERSIONKEY as &quot;CONTRACTKEY&quot; 
+from uddi_service us, uddi_business ub join resourceset_orgs rsv on UB.BUSINESS_ENTITY_ID = 
+RSV.ORGANIZATIONID
+join auz_rules ar on RSV.RESOURCESETID = AR.RESOURCESETID
+join auz_rulesets ars on ARS.RULESETID = AR.RULESETID
+join contracts_rulesets cr on CR.RULESETID = ARS.RULESETID
+join contracts_versions cv on CV.CONTRACTVERSIONID = CR.CONTRACTVERSIONID
+where UB.BUSINESS_ENTITY_ID = US.BUSINESS_ENTITY_ID
+and US.SERVICE_KEY = '&lt;SERVICE KEY&gt;' 
+and CV.active= 'Y'</pre>
 
 <h4>Query Sample Results:</h4>
 <pre>CONTRACTNAME    CONTRACTKEY
@@ -388,7 +458,15 @@ TEST_CONTRACT_AME df5e3526-9cab-11e2-8723-c48ae6547392:2911</pre>
 <p>Oracle, MySql</p>
 
 <h4>Query:</h4>
-<pre>select UNIQUE cv.contractname as &quot;CONTRACTNAME&quot;, CV.CONTRACTVERSIONKEY as &quot;CONTRACTKEY&quot; <br />from uddi_business ub, uddi_service us join resourceset_svcs rsv on US.BUSINES_SERVICE_ID = <br />RSV.SERVICEID<br />join auz_rules ar on RSV.RESOURCESETID = AR.RESOURCESETID<br />join auz_rulesets ars on ARS.RULESETID = AR.RULESETID<br />join contracts_rulesets cr on CR.RULESETID = ARS.RULESETID<br />join contracts_versions cv on CV.CONTRACTVERSIONID = CR.CONTRACTVERSIONID<br />where us.service_key = '&lt;SERVICE_KEY&gt;' <br />and CV.active='Y'</pre>
+<pre>select UNIQUE cv.contractname as &quot;CONTRACTNAME&quot;, CV.CONTRACTVERSIONKEY as &quot;CONTRACTKEY&quot; 
+from uddi_business ub, uddi_service us join resourceset_svcs rsv on US.BUSINES_SERVICE_ID = 
+RSV.SERVICEID
+join auz_rules ar on RSV.RESOURCESETID = AR.RESOURCESETID
+join auz_rulesets ars on ARS.RULESETID = AR.RULESETID
+join contracts_rulesets cr on CR.RULESETID = ARS.RULESETID
+join contracts_versions cv on CV.CONTRACTVERSIONID = CR.CONTRACTVERSIONID
+where us.service_key = '&lt;SERVICE_KEY&gt;' 
+and CV.active='Y'</pre>
 
 <h4>Query Sample Results:</h4>
 <pre>CONTRACTNAME    CONTRACTKEY
@@ -407,7 +485,15 @@ ZootService4Gaj bee0b952-afc9-11df-baa6-abc70f628665:2795</pre>
 <p>Oracle, MySql</p>
 
 <h4>Query:</h4>
-<pre>select UNIQUE cv.contractname as &quot;CONTRACTNAME&quot;, CV.CONTRACTVERSIONKEY as &quot;CONTRACTKEY&quot; from <br />uddi_business ub, uddi_service us join svc_operations so on US.BUSINES_SERVICE_ID = SO.SERVICEID<br />join resourceset_svcops rsv on SO.OPERATIONID = RSV.OPERATIONID<br />join auz_rules ar on RSV.RESOURCESETID = AR.RESOURCESETID<br />join auz_rulesets ars on ARS.RULESETID = AR.RULESETID<br />join contracts_rulesets cr on CR.RULESETID = ARS.RULESETID<br />join contracts_versions cv on CV.CONTRACTVERSIONID = CR.CONTRACTVERSIONID<br />where us.service_key = '&lt;Service Key&gt;' <br />and CV.ACTIVE='Y'</pre>
+<pre>select UNIQUE cv.contractname as &quot;CONTRACTNAME&quot;, CV.CONTRACTVERSIONKEY as &quot;CONTRACTKEY&quot; from 
+uddi_business ub, uddi_service us join svc_operations so on US.BUSINES_SERVICE_ID = SO.SERVICEID
+join resourceset_svcops rsv on SO.OPERATIONID = RSV.OPERATIONID
+join auz_rules ar on RSV.RESOURCESETID = AR.RESOURCESETID
+join auz_rulesets ars on ARS.RULESETID = AR.RULESETID
+join contracts_rulesets cr on CR.RULESETID = ARS.RULESETID
+join contracts_versions cv on CV.CONTRACTVERSIONID = CR.CONTRACTVERSIONID
+where us.service_key = '&lt;Service Key&gt;' 
+and CV.ACTIVE='Y'</pre>
 
 <h4>Query Sample Results:</h4>
 <pre>OPERATIONKEY    OPERATIONNAME    CONTRACTVERSIONID CONTRACTNAME
@@ -426,7 +512,10 @@ ZootDecision2ServiceSFDC_MSU_Salesforce</pre>
 <p>Oracle, MySql</p>
 
 <h4>Query:</h4>
-<pre>select cv.contractname as &quot;CONTRACTNAME&quot;, CV.CONTRACTVERSIONKEY as &quot;CONTRACTKEY&quot;<br />from uddi_business b join contracts_versions cv on ((cv.providerorgkey = b.business_key) or (cv.consumerorgkey =<br />b.business_key))<br />where cv.providerorgkey = '&lt;PROVIDER_ORG_KEY&gt;'</pre>
+<pre>select cv.contractname as &quot;CONTRACTNAME&quot;, CV.CONTRACTVERSIONKEY as &quot;CONTRACTKEY&quot;
+from uddi_business b join contracts_versions cv on ((cv.providerorgkey = b.business_key) or (cv.consumerorgkey =
+b.business_key))
+where cv.providerorgkey = '&lt;PROVIDER_ORG_KEY&gt;'</pre>
 
 <h4>Query Sample Results:</h4>
 <p>Using Provider key <strong>uddi:132614f0-3bbb-11df-88e8-eacc60ee139f</strong>:</p>
@@ -447,7 +536,12 @@ ZootDecision2ServiceSFDC_MSU_Sales    4ec557bc-6e57-11df-a6b5-a41ff225560f:2766<
 <p>Oracle, MySql</p>
 
 <h4>Query:</h4>
-<pre>SELECT UN.name, UAP.access_url<br />FROM UDDI_ACCESS_POINT UAP, UDDI_BINDING UB, UDDI_NAME UN <br />WHERE UAP.binding_templat_id = UB.binding_templat_id<br />AND UB.busines_service_id = UN.ref_id<br />AND UN.ref_type = 'S'<br />AND UAP.access_url like ('%&lt;KEYWORD&gt;%')</pre>
+<pre>SELECT UN.name, UAP.access_url
+FROM UDDI_ACCESS_POINT UAP, UDDI_BINDING UB, UDDI_NAME UN 
+WHERE UAP.binding_templat_id = UB.binding_templat_id
+AND UB.busines_service_id = UN.ref_id
+AND UN.ref_type = 'S'
+AND UAP.access_url like ('%&lt;KEYWORD&gt;%')</pre>
 
 <h4>Query Sample Results:</h4>
 <p>Using keyword <strong>asmx</strong>.</p>
