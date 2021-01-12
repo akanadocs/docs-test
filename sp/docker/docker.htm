@@ -68,7 +68,7 @@ nav-title: Docker
 
 
 <h2 id="docker_images">Available Docker Images</h2>
-<p>Published images correlate with common deployment segmentation of functionality. Most features can easily be combined or separated further as needed. Options:</p>
+<p>Published images correlate with common deployment segmentation of functionality. Most features can easily be combined or separated further as needed. The following Docker images are available:</p>
 <ul>
 	<li>API Gateway</li>
 	<li>Community Manager (Portal)</li>
@@ -82,7 +82,7 @@ nav-title: Docker
 
 
 <h2 id="docker_security_def">Security by Default</h2>
-<p>Our images are built with security enabled by default when possible. It is important to maintain these security features if customizing images for your organization. The following images are available:</p>
+<p>Our images are built with security enabled by default when possible. It is important to maintain these security features if customizing images for your organization. Notes:</p>
 <ul>
 	<li>Common hardening configurations are enabled by default. See <a href="../platform_management/platform-hardening.htm" title="Link to Hardening Guide">Akana Platform Hardening Guide</a>.</li>
 	<li>Docker image best practices: see <a href="https://www.cisecurity.org/benchmark/docker/" title="Link to Docker doc" target="_blank">https://www.cisecurity.org/benchmark/docker/</a>.</li>
@@ -94,8 +94,9 @@ nav-title: Docker
 
 
 <h2 id="docker_img_inspect">Inspecting Images</h2>
-<p>Our containers include metadata that define useful details about how the container runs and what you should consider configuring via environment variables and file volume mounts. You can easily inspect his information from command line with the following command:
-<pre>$> docker inspect {repository}/portal:<version>
+<p>Our containers include metadata that define useful details about how the container runs and what you should consider configuring via environment variables and file volume mounts. You can easily inspect this information from the command line with the command shown below.</p>
+<p><strong>Code example: Inspect Akana Docker container</strong></p>
+<pre>$> docker inspect {repository}/portal:&lt;version&gt;
 [
   {
     "Id": "sha256:6d9d8e6....",
@@ -150,6 +151,7 @@ nav-title: Docker
 <h4 id="proc_docker_define_deployment">Define and run your Akana test deployment</h4>
 <ol>
 	<li>Define your environment in a local file: ./akana/.env.
+	<p><strong>Code example: Basic Akana Configuration</strong></p>
 		<pre>COMPOSE_PROJECT_NAME=akana-docker
 
 # Docker images to use
@@ -183,6 +185,7 @@ TENANT_CONSOLE_HOST=localhost
 TENANT_VHOSTS=localhost</pre></li>
 	<li>Use this sample compose script to define your Akana containers, save it to a local file named ./akana/docker-compose.yml 
 version: '3.8'.
+		<p><strong>Code example: Quick Start - Simple Local Deploy</strong></p>
 		<pre>version: '3.8'
 
 services:
@@ -427,16 +430,15 @@ services:
 networks:
   akanacompose: {}</pre></li>
 	<li>Run docker-compose up from command-line in the ./akana directory.</li>
-	<li>In your browser, verify Community Manager is running and you can login using the credentials defined in your ./akana/.env file:
+	<li>In your browser, verify Community Manager is running and you can log in using the credentials defined in your ./akana/.env file:
 	<pre>https://localhost:9901/atmosphere</pre></li>
 	<li>Follow the guidance on registering and configuring your Gateway. See <a href="../admin_console/using_network_director_feature.htm#register_nd"> Register Network Director Container</a>.</li>
 </ol>
 
-<h4 id="proc_docker_proxied_api_create">Create your first Proxied API</h4>
+<h4 id="proc_docker_proxied_api_create">Create your first proxied API</h4>
 <p>Review how to create an API. See <a href="../../cm/learnmore/apiadmin_api_add.htm">Adding an API</a>.</p>
-<p><strong>Localhost Services</strong>: If you are proxying a service running on the same host, take notice of how Docker networking will affect your configuration. You will find the common hostname (localhost) and loopback address (127.0.0.1) will not reference your service. This is because within the context of the Akana Docker images, your service does not exist at the network's loopback address. Instead you must use the external IP address for your host to allow the network traffic from Akana out of the Docker network and back to the host machine.</p>
+<p><strong>Localhost Services</strong>: If you are proxying a service running on the same host, take notice of how Docker networking will affect your configuration. You will find that the common hostname (localhost) and loopback address (127.0.0.1) will not reference your service. This is because within the context of the Akana Docker images, your service does not exist at the network's loopback address. Instead you must use the external IP address for your host to allow the network traffic from Akana out of the Docker network and back to the host machine.</p>
 <p><a href="#top">Back to top</a></p>
-
 
 
 
@@ -464,7 +466,7 @@ networks:
 
 
 <h2 id="config_rapid_startup">Rapid Startup Configuration</h2>
-<p>The fastest path to getting containers started is to use the Rapid Startup Environment Variable configuration to define everything that Akana needs to function. This way, as soon as you run the image, the container is ready to go. You can easily see what can be configured by these rapid startup configuration environment variables by inspecting the docker image. The 'docker inspect <image>' command outputs metadata about the image including pre-defined environment variables that Akana will observe at startup.</p>
+<p>The fastest path to getting containers started is to use the Rapid Startup Environment Variable configuration to define everything that Akana needs to function. This way, as soon as you run the image, the container is ready to go. You can easily see what can be configured by these rapid startup configuration environment variables by inspecting the docker image. The 'docker inspect &lt;image&gt;' command outputs metadata about the image including pre-defined environment variables that Akana will observe at startup.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -477,7 +479,7 @@ networks:
 	<li>Specify the password to access the keystore CONATINER_KEYSTORE_PASSWORD as well as your container's CONTAINER_NAME and CONTAINER_ID as environment variables</li>
 	<li>Run the container-identity-task.json recipe to select the key to be used for this container via its alias in the keystore (or HSM).</li>
 </ul>
-<h4>Specifying rapid startup configuration in Akana docker container creation</h4>
+<p><strong>Specifying rapid startup configuration in Akana docker container creation</strong></p>
 <pre>$} docker run -d --name gateway \
   -p 9900:9900 \
   -e CONTAINER_NAME=gw1 \
@@ -492,24 +494,27 @@ $} docker exec -w /opt/akana/bin \
   CONTAINERALIAS=gateway-key \
   CONTAINERALIASPASSWORD=changeit \
   ./jython.sh -m akana.container --props container.properties --recipe ../recipes/tasks/container-identity-task.json</pre>
-You can verify your changes by logging into the Akana Administration Console web UI and launching the <strong>Manage PKI</strong> task from the <strong>Configuration</strong> Tab. You should see your certificate details in the popup.</p>
+<p>You can verify your changes by logging into the Akana Administration Console web UI and launching the <strong>Manage PKI</strong> task from the <strong>Configuration</strong> Tab. You should see your certificate details in the popup.</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
 <h2 id="recipe_config">Recipe Configuration</h2>
 <p>In some cases it is not possible to use Rapid Startup Configuration exclusively, due to the type or complexity of a configuration. In these cases we recommend using the standard Akana automation framework. See <a href="../automation/automation_ref.htm">Automation Reference Guide</a>.</p>
-<p>Akana Docker Containers come with a 'container.properties' file in the /opt/akana/bin folder that can be used for recipe execution</p>
-<p>As with other deployment models, there are useful recipes pre-defined in the /opt/akana/recipes folder</p>
-<p>You must set the working directory to /opt/akana/bin to run the jython scripts.</p>
-<pre>$> docker exec -w /opt/akana/bin <docker-container-name-or-id> ./jython.sh -m akana.container --props container.properties --recipe ../recipes/<name-of-recipe>.json</pre>
-This method can be used to install a RDBMS driver on the fly using the db-driver.json.</p>
+<ul>
+	<li>Akana Docker Containers come with a 'container.properties' file in the /opt/akana/bin folder that can be used for recipe execution</li>
+	<li>As with other deployment models, there are useful recipes pre-defined in the /opt/akana/recipes folder</li>
+	<li>You must set the working directory to /opt/akana/bin to run the jython scripts.</li>
+</ul>
+<p><strong>Running a recipe on an Akana Docker container</strong></p>
+<pre>$> docker exec -w /opt/akana/bin &lt;docker-container-name-or-id&gt; ./jython.sh -m akana.container --props container.properties --recipe ../recipes/&lt;name-of-recipe&gt;.json</pre>
+<p>This method can be used to install a RDBMS driver on the fly using the db-driver.json recipe.</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
 <h2 id="persisting_config">Persisting Container Configuration</h2>
-<p>Once you've configured your image ad hoc, you can persist that to a new image to allow you to redeploy without running all the configuration again. If you are looking to create pre-configured images, you may benefit more from reading (Customizing Akana Docker Images).</p>
+<p>Once you've configured your image ad hoc, you can persist that to a new image to allow you to redeploy without running all the configuration again. If you are looking to create pre-configured images, you may benefit more from reading <a href="#config_images">Customizing Akana Docker Images</a>.</p>
 <pre>$> docker container commit -m "What you changed" {container-id} {repo}/{new-image-name}:{version-tag}</pre>
 <p><a href="#top">Back to top</a></p>
 
@@ -521,11 +526,11 @@ This method can be used to install a RDBMS driver on the fly using the db-driver
 <h4 id="proc_customizing_images">General Steps</h4>
 <ol>
 	<li>(Recommended) Set up version control (VCS) and a build tool project to consistently build your target image</li>
-	<li>Define a new multi-stage Dockerfile (ref: https://docs.docker.com/develop/develop-images/multistage-build/)
+	<li>Define a new multi-stage Dockerfile. See <a href="https://docs.docker.com/develop/develop-images/multistage-build/" title="Link to https://docs.docker.com/develop/develop-images/multistage-build/" target="_blank">https://docs.docker.com/develop/develop-images/multistage-build/</a>.
 		<ol>
 			<li>FROM Akana image as stage1-image</li>
 			<li>COPY any files needed to customize the image</li>
-			<li>RUN any automation recipes (ref: http://docs.akana.com/cm/learnmore/apiadmin_api_add.htm) {<span class="apidoc_red">MDL query link</span>}</li>
+			<li>RUN any automation recipes (see <a href="../automation/automation_examples.htm">Automation Examples</a>)</li>
 			<li>RUN any cleanup of unnecessary files after install</li>
 			<li>FROM your base image</li>
 			<li>COPY --from=stage1-image /opt/akana/ /opt/akana/</li>
@@ -594,12 +599,15 @@ EXPOSE 9901
  
 # Redefine entrypoint
 ENTRYPOINT ["/bin/bash", "/opt/akana/bin/akana-entrypoint.sh", "akana"]</pre>
-You can expand upon a multi-stage docker build like this to modify just about anything, including:</p>
-<p>Linux monitoring tools</p>
-<p>Adding 3rd party agent software</p>
-<p>Running any customization recipe
-When adding open source software it is recommended to use a component scanning tool to identify known vulnerabilities so you can make an educated risk assessment and upgrade as appropriate. 
-</p>
+<p>You can expand upon a multi-stage docker build like this to modify just about anything, including:</p>
+<ul>
+	<li>Linux monitoring tools</li>
+	<li>Adding 3rd party agent software</li>
+	<li>Running any customization recipe
+		When adding open source software it is recommended to use a component scanning tool to identify known vulnerabilities so you can make an educated risk assessment and upgrade as appropriate. 
+	</li>
+</ul>
+<p><strong>Container Security Scanning</strong>: When adding open source software it is recommended to use a component scanning tool to identify known vulnerabilities so that you can make an educated risk assessment and upgrade as appropriate.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -614,45 +622,50 @@ When adding open source software it is recommended to use a component scanning t
 <h2 id="docker_external_pki_setup_eg">Simple external PKI setup for Akana</h2>
 <p>It may be helpful to learn more about PKI and/or provide a more realistic deployment environment using software based cryptography. You can leverage the external keystore feature in Akana by using the keytool command provided with the Java JDK. This setup can be replaced with a hardware security module (HSM) in the future if needed using the same configurations.</p>
 <p>The steps involved are:</p>
-<p>Create a private certificate authority (CA) </p>
-<p>Create keys for each of your Akana containers</p>
-<p>Sign your container key's certificates with your private CA</p>
-<p>(Optional) Install your private CA's public certificate's into your operating system's truststore</p>
-<p>Here is a script that performs steps 1-3 as an example, just run ./gen-pki.sh <hostname> <keystorePassword>:
-#!/bin/bash</p>
-<p></p>
-<p># Clean</p>
-<p>rm *.pem</p>
-<p>rm *.jks</p>
-<p>rm *.jceks</p>
-<p></p>
-<p>PWD=$2</p>
-<p></p>
-<p># Create personal Certificate Authority </p>
-<p>keytool -genkeypair -keystore root.jks -alias root -keyalg rsa -keysize 8192 -validity 1825 -storepass $PWD -keypass $PWD -dname "CN=Akana Root,OU=Akana,O=Perforce,L=Minneapolis,ST=Minnesota,C=US" -ext bc:c</p>
-<p>keytool -genkeypair -keystore ca.jks -alias ca -keyalg rsa -keysize 4096 -storepass $PWD -keypass $PWD -dname "CN=Akana CA,OU=Akana,O=Perforce,L=Minneapolis,ST=Minnesota,C=US" -ext bc:c</p>
-<p></p>
-<p>keytool -keystore root.jks -alias root -storepass $PWD -keypass $PWD -exportcert -rfc > root.pem</p>
-<p>keytool -storepass $PWD -keypass $PWD -keystore ca.jks -certreq -alias ca | keytool -storepass $PWD -keypass $PWD -keystore root.jks -gencert -validity 1825 -alias root -ext BC=0 -rfc > ca.pem</p>
-<p>cat root.pem > cachain.pem</p>
-<p>cat ca.pem >> cachain.pem</p>
-<p>keytool -noprompt -importcert -keystore ca.jks -trustcacerts -storepass $PWD -keypass $PWD -file root.pem</p>
-<p>keytool -noprompt -keystore ca.jks -storepass $PWD -keypass $PWD -importcert -alias ca -file cachain.pem</p>
-<p></p>
-<p># Create Application Certificates Keystores</p>
-<p>for containerName in "portal" "gateway" "policy-manager" "oauth" "envision" "lifecycle-manager"</p>
-<p>do</p>
-<p>    keytool -noprompt -importcert -trustcacerts -keystore $containerName.jceks -storetype jceks -storepass $PWD -alias "Akana Root" -file root.pem</p>
-<p>    keytool -noprompt -importcert -trustcacerts -keystore $containerName.jceks -storetype jceks -storepass $PWD -alias "Akana CA" -file ca.pem</p>
-<p>    keytool -genkeypair -keyalg rsa -keysize 2048 -keystore $containerName.jceks -storetype jceks -storepass $PWD -keypass $PWD -alias $containerName -dname "CN=$containerName,OU=Akana,O=Perforce,L=Minneapolis,ST=Minnesota,C=US"</p>
-<p>    # Build Subject Alternative Names extensions</p>
-<p>    SAN="dns:$containerName,dns:localhost,ip:127.0.0.1"</p>
-<p>    if [[ "$1" != "" ]] ; then </p>
-<p>        SAN="$SAN,dns:$1,dns:$containerName.$1"</p>
-<p>    fi</p>
-<p>    keytool -storepass $PWD -keypass $PWD -keystore $containerName.jceks -storetype jceks -certreq -alias $containerName | keytool -storepass $PWD -keypass $PWD -keystore ca.jks -gencert -validity 365 -alias ca -ext ku:c=dig,keyEncipherment -ext eku=serverAuth -ext san=$SAN -rfc > $containerName.pem</p>
-<p>    cat root.pem ca.pem $containerName.pem > ${containerName}chain.pem</p>
-<p>    keytool -noprompt -keystore $containerName.jceks -storetype jceks -storepass $PWD -keypass $PWD -importcert -alias $containerName -file ${containerName}chain.pem</p>
+<ol>
+	<li>Create a private certificate authority (CA).</li>
+	<li>Create keys for each of your Akana containers.</li>
+	<li>Sign your container key's certificates with your private CA.</li>
+	<li>(Optional) Install your private CA's public certificate's into your operating system's truststore.</li>
+</ol>
+<p>Below is a script that performs steps 1-3 as an example. Just run <span class="apidoc_code">./gen-pki.sh &lt;hostname&gt; &lt;keystorePassword&gt;</span>.</p>
+
+<h4>Generate private PKI</h4>
+<pre>#!/bin/bash
+ 
+# Clean
+rm *.pem
+rm *.jks
+rm *.jceks
+ 
+PWD=$2
+ 
+# Create personal Certificate Authority
+keytool -genkeypair -keystore root.jks -alias root -keyalg rsa -keysize 8192 -validity 1825 -storepass $PWD -keypass $PWD -dname "CN=Akana Root,OU=Akana,O=Perforce,L=Minneapolis,ST=Minnesota,C=US" -ext bc:c
+keytool -genkeypair -keystore ca.jks -alias ca -keyalg rsa -keysize 4096 -storepass $PWD -keypass $PWD -dname "CN=Akana CA,OU=Akana,O=Perforce,L=Minneapolis,ST=Minnesota,C=US" -ext bc:c
+ 
+keytool -keystore root.jks -alias root -storepass $PWD -keypass $PWD -exportcert -rfc > root.pem
+keytool -storepass $PWD -keypass $PWD -keystore ca.jks -certreq -alias ca | keytool -storepass $PWD -keypass $PWD -keystore root.jks -gencert -validity 1825 -alias root -ext BC=0 -rfc > ca.pem
+cat root.pem > cachain.pem
+cat ca.pem >> cachain.pem
+keytool -noprompt -importcert -keystore ca.jks -trustcacerts -storepass $PWD -keypass $PWD -file root.pem
+keytool -noprompt -keystore ca.jks -storepass $PWD -keypass $PWD -importcert -alias ca -file cachain.pem
+ 
+# Create Application Certificates Keystores
+for containerName in "portal" "gateway" "policy-manager" "oauth" "envision" "lifecycle-manager"
+do
+    keytool -noprompt -importcert -trustcacerts -keystore $containerName.jceks -storetype jceks -storepass $PWD -alias "Akana Root" -file root.pem
+    keytool -noprompt -importcert -trustcacerts -keystore $containerName.jceks -storetype jceks -storepass $PWD -alias "Akana CA" -file ca.pem
+    keytool -genkeypair -keyalg rsa -keysize 2048 -keystore $containerName.jceks -storetype jceks -storepass $PWD -keypass $PWD -alias $containerName -dname "CN=$containerName,OU=Akana,O=Perforce,L=Minneapolis,ST=Minnesota,C=US"
+    # Build Subject Alternative Names extensions
+    SAN="dns:$containerName,dns:localhost,ip:127.0.0.1"
+    if [[ "$1" != "" ]] ; then
+        SAN="$SAN,dns:$1,dns:$containerName.$1"
+    fi
+    keytool -storepass $PWD -keypass $PWD -keystore $containerName.jceks -storetype jceks -certreq -alias $containerName | keytool -storepass $PWD -keypass $PWD -keystore ca.jks -gencert -validity 365 -alias ca -ext ku:c=dig,keyEncipherment -ext eku=serverAuth -ext san=$SAN -rfc > $containerName.pem
+    cat root.pem ca.pem $containerName.pem > ${containerName}chain.pem
+    keytool -noprompt -keystore $containerName.jceks -storetype jceks -storepass $PWD -keypass $PWD -importcert -alias $containerName -file ${containerName}chain.pem
+done</pre>
 <p><a href="#top">Back to top</a></p>
 
 
