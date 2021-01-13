@@ -78,18 +78,18 @@
     <wsdl:part element="xs:any">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getPostLoginSettingsRequestMessage">
-    <wsdl:part name="if-modified-since" type="xs:string">
-    </wsdl:part>
-    <wsdl:part name="ResourceVersionKey" type="xs:string">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="uploadRequestMessage">
     <wsdl:part name="parameter0" type="tns:BufferedInMultiPart">
     </wsdl:part>
     <wsdl:part name="path" type="xs:string">
     </wsdl:part>
     <wsdl:part name="unpack" type="xs:boolean">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPostLoginSettingsRequestMessage">
+    <wsdl:part name="if-modified-since" type="xs:string">
+    </wsdl:part>
+    <wsdl:part name="ResourceVersionKey" type="xs:string">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="renameRequestMessage">
@@ -144,8 +144,6 @@
     <wsdl:part element="xs:any">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getResourceVersionKeyRequestMessage">
-  </wsdl:message>
   <wsdl:message name="uploadRootRequestMessage">
     <wsdl:part name="parameter0" type="tns:BufferedInMultiPart">
     </wsdl:part>
@@ -155,6 +153,8 @@
   <wsdl:message name="uploadResponseMessage">
     <wsdl:part element="xs:any">
     </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getResourceVersionKeyRequestMessage">
   </wsdl:message>
   <wsdl:message name="getSettingsRequestMessage">
     <wsdl:part name="if-modified-since" type="xs:string">
@@ -175,10 +175,16 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="ConsoleResourceAPIPortType">
-    <wsdl:operation name="getSettings">
-      <wsdl:input message="tns:getSettingsRequestMessage">
+    <wsdl:operation name="uploadRoot">
+      <wsdl:input message="tns:uploadRootRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:getSettingsResponseMessage">
+      <wsdl:output message="tns:uploadRootResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="upload">
+      <wsdl:input message="tns:uploadRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:uploadResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="generateStyles">
@@ -205,16 +211,10 @@
       <wsdl:output message="tns:scaffoldResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="uploadRoot">
-      <wsdl:input message="tns:uploadRootRequestMessage">
+    <wsdl:operation name="getSettings">
+      <wsdl:input message="tns:getSettingsRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:uploadRootResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="upload">
-      <wsdl:input message="tns:uploadRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:uploadResponseMessage">
+      <wsdl:output message="tns:getSettingsResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="add">
@@ -250,15 +250,27 @@
   </wsdl:portType>
   <wsdl:binding name="ConsoleResourceAPIBinding" type="tns:ConsoleResourceAPIPortType">
     <shttp:binding/>
-    <wsdl:operation name="getSettings">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /{ResourceVersionKey}/settings</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/{ResourceVersionKey}/settings" method="GET" outputSerialization="application/json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
+    <wsdl:operation name="uploadRoot">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST </sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="multipart/form-data" location="" method="POST"/>
       <wsdl:input>
-    <shttp:input name="If-Modified-Since" part="If-Modified-Since" type="header"/>
-    <shttp:input name="ResourceVersionKey" part="ResourceVersionKey" type="path"/>
+    <shttp:input name="parameter0" part="parameter0" type="entity"/>
+    <shttp:input name="unpack" part="unpack" type="query"/>
       </wsdl:input>
       <wsdl:output>
-    <shttp:output name="getSettingsResponse" part="getSettingsResponse" type="entity"/>
+    <shttp:output name="" part="" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="upload">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /{path:.*}</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="multipart/form-data" location="/{path:.*}" method="POST"/>
+      <wsdl:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"/>
+    <shttp:input name="path" part="path" type="path"/>
+    <shttp:input name="unpack" part="unpack" type="query"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="" part="" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="generateStyles">
@@ -299,27 +311,15 @@
     <shttp:output name="" part="" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="uploadRoot">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST </sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="multipart/form-data" location="" method="POST"/>
+    <wsdl:operation name="getSettings">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /{ResourceVersionKey}/settings</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/{ResourceVersionKey}/settings" method="GET" outputSerialization="application/json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
       <wsdl:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"/>
-    <shttp:input name="unpack" part="unpack" type="query"/>
+    <shttp:input name="If-Modified-Since" part="If-Modified-Since" type="header"/>
+    <shttp:input name="ResourceVersionKey" part="ResourceVersionKey" type="path"/>
       </wsdl:input>
       <wsdl:output>
-    <shttp:output name="" part="" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="upload">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /{path:.*}</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="multipart/form-data" location="/{path:.*}" method="POST"/>
-      <wsdl:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"/>
-    <shttp:input name="path" part="path" type="path"/>
-    <shttp:input name="unpack" part="unpack" type="query"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="" part="" type="entity"/>
+    <shttp:output name="getSettingsResponse" part="getSettingsResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="add">

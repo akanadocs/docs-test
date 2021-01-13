@@ -8,13 +8,13 @@
 <xs:element name="NameValue" type="tns:nameValue"/>
 <xs:element name="Options" type="tns:options"/>
 <xs:element name="Threshold" type="tns:threshold"/>
-<xs:complexType name="nameValue"><xs:sequence><xs:element minOccurs="0" name="name" type="xs:string"/><xs:element minOccurs="0" name="state" type="xs:string"/><xs:element minOccurs="0" name="timestamp" type="xs:long"/><xs:element minOccurs="0" name="value" type="xs:anyType"/></xs:sequence></xs:complexType>
+<xs:complexType name="healthMeasurableMetadata"><xs:sequence><xs:element minOccurs="0" name="id" type="xs:string"/><xs:element minOccurs="0" name="name" type="xs:string"/><xs:element minOccurs="0" name="path" type="xs:string"/><xs:element minOccurs="0" name="state" type="xs:string"/><xs:element minOccurs="0" name="childCount" type="xs:int"/><xs:element maxOccurs="unbounded" minOccurs="0" name="attributes" nillable="true" type="tns:monitoredAttribute"/><xs:element maxOccurs="unbounded" minOccurs="0" name="children" nillable="true" type="tns:healthMeasurableMetadata"/><xs:element minOccurs="0" name="editable" type="xs:boolean"/><xs:element minOccurs="0" name="options" type="tns:options"/><xs:element minOccurs="0" name="links"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="link" type="tns:atomLink"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType>
 <xs:complexType name="monitoredAttribute"><xs:sequence><xs:element minOccurs="0" name="type" type="xs:string"/><xs:element minOccurs="0" name="units" type="xs:string"/><xs:element minOccurs="0" name="name" type="xs:string"/><xs:element minOccurs="0" name="path" type="xs:string"/><xs:element minOccurs="0" name="description" type="xs:string"/><xs:element minOccurs="0" name="threshold" type="tns:threshold"/><xs:element minOccurs="0" name="state" type="xs:string"/><xs:element minOccurs="0" name="value" type="xs:anyType"/><xs:element minOccurs="0" name="links"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="link" type="tns:atomLink"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType>
 <xs:complexType name="threshold"><xs:sequence><xs:element minOccurs="0" name="normal" type="xs:string"/><xs:element minOccurs="0" name="warning" type="xs:string"/><xs:element minOccurs="0" name="failure" type="xs:string"/><xs:element minOccurs="0" name="links"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="link" type="tns:atomLink"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType>
 <xs:complexType name="atomLink"><xs:sequence/><xs:attribute name="length" type="xs:string"/><xs:attribute name="title" type="xs:string"/><xs:attribute name="hreflang" type="xs:string"/><xs:attribute name="rel" type="xs:string"/><xs:attribute name="type" type="xs:string"/><xs:attribute name="href" type="xs:anyURI" use="required"/></xs:complexType>
 <xs:complexType name="options"><xs:sequence><xs:element name="enableAuth" type="xs:boolean"/><xs:element minOccurs="0" name="links"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="link" type="tns:atomLink"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType>
+<xs:complexType name="nameValue"><xs:sequence><xs:element minOccurs="0" name="name" type="xs:string"/><xs:element minOccurs="0" name="state" type="xs:string"/><xs:element minOccurs="0" name="timestamp" type="xs:long"/><xs:element minOccurs="0" name="value" type="xs:anyType"/></xs:sequence></xs:complexType>
 <xs:complexType name="healthMeasurableSet"><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="links" nillable="true" type="tns:atomLink"/><xs:element maxOccurs="unbounded" minOccurs="0" name="measurables" nillable="true" type="tns:healthMeasurableMetadata"/></xs:sequence></xs:complexType>
-<xs:complexType name="healthMeasurableMetadata"><xs:sequence><xs:element minOccurs="0" name="id" type="xs:string"/><xs:element minOccurs="0" name="name" type="xs:string"/><xs:element minOccurs="0" name="path" type="xs:string"/><xs:element minOccurs="0" name="state" type="xs:string"/><xs:element minOccurs="0" name="childCount" type="xs:int"/><xs:element maxOccurs="unbounded" minOccurs="0" name="attributes" nillable="true" type="tns:monitoredAttribute"/><xs:element maxOccurs="unbounded" minOccurs="0" name="children" nillable="true" type="tns:healthMeasurableMetadata"/><xs:element minOccurs="0" name="editable" type="xs:boolean"/><xs:element minOccurs="0" name="options" type="tns:options"/><xs:element minOccurs="0" name="links"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="link" type="tns:atomLink"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType>
 </xs:schema>
   </wsdl:types>
   <wsdl:message name="getMetadataRequestMessage">
@@ -95,12 +95,12 @@
     <wsdl:part name="getMeasurablesResponse" element="nms1:HealthMeasurableMetadata">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="createConfigurationRequestMessage">
-    <wsdl:part name="parameter0" element="nms1:HealthMeasurableMetadata">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="getVariableResponseMessage">
     <wsdl:part name="getVariableResponse" element="nms1:MonitoredAttribute">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createConfigurationRequestMessage">
+    <wsdl:part name="parameter0" element="nms1:HealthMeasurableMetadata">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getMetadataChildrenResponseMessage">
@@ -192,12 +192,6 @@
       <wsdl:output message="tns:getOptionsResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="createConfiguration">
-      <wsdl:input message="tns:createConfigurationRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:createConfigurationResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getMetadata">
       <wsdl:input message="tns:getMetadataRequestMessage">
     </wsdl:input>
@@ -208,6 +202,12 @@
       <wsdl:input message="tns:getVariableRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:getVariableResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createConfiguration">
+      <wsdl:input message="tns:createConfigurationRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:createConfigurationResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateOptions">
@@ -301,6 +301,25 @@
     <shttp:output name="getOptionsResponse" part="getOptionsResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getMetadata">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET </sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="" method="GET" outputSerialization="application/json,application/xml"/>
+      <wsdl:output>
+    <shttp:output name="getMetadataResponse" part="getMetadataResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getVariable">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /measurables/{parent}/children/{child}/variables/{var}</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/measurables/{parent}/children/{child}/variables/{var}" method="GET" outputSerialization="application/json"/>
+      <wsdl:input>
+    <shttp:input name="parent" part="parent" type="path"/>
+    <shttp:input name="child" part="child" type="path"/>
+    <shttp:input name="var" part="var" type="path"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getVariableResponse" part="getVariableResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="createConfiguration">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /measurables</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Adds a health configuration.
 A health configuration is comprised of a set of standard Monitorable attributes defined
@@ -352,25 +371,6 @@ Location: http://localhost:9905/admin/health/measurables/my.health.variables
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="createConfigurationResponse" part="createConfigurationResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getMetadata">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET </sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="" method="GET" outputSerialization="application/json,application/xml"/>
-      <wsdl:output>
-    <shttp:output name="getMetadataResponse" part="getMetadataResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getVariable">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /measurables/{parent}/children/{child}/variables/{var}</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/measurables/{parent}/children/{child}/variables/{var}" method="GET" outputSerialization="application/json"/>
-      <wsdl:input>
-    <shttp:input name="parent" part="parent" type="path"/>
-    <shttp:input name="child" part="child" type="path"/>
-    <shttp:input name="var" part="var" type="path"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getVariableResponse" part="getVariableResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateOptions">

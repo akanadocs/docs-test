@@ -4,8 +4,8 @@
     <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/products/admin/console/common/1.0" version="1.0" xmlns:tns="http://soa.com/products/admin/console/common/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:element name="NameValuePair" type="tns:nameValuePair"/>
 <xs:element name="link" type="tns:link"/>
-<xs:complexType name="link"><xs:sequence><xs:element minOccurs="0" name="href" type="xs:string"/><xs:element minOccurs="0" name="rel" type="xs:string"/><xs:element minOccurs="0" name="title" type="xs:string"/><xs:element minOccurs="0" name="type" type="xs:string"/></xs:sequence></xs:complexType>
 <xs:complexType name="nameValuePair"><xs:sequence><xs:element minOccurs="0" name="name" type="xs:string"/><xs:element minOccurs="0" name="value" type="xs:string"/></xs:sequence></xs:complexType>
+<xs:complexType name="link"><xs:sequence><xs:element minOccurs="0" name="href" type="xs:string"/><xs:element minOccurs="0" name="rel" type="xs:string"/><xs:element minOccurs="0" name="title" type="xs:string"/><xs:element minOccurs="0" name="type" type="xs:string"/></xs:sequence></xs:complexType>
 </xs:schema>
     <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/products/admin/console/config/1.0" version="1.0" xmlns:ns1="http://soa.com/products/admin/console/common/1.0" xmlns:tns="http://soa.com/products/admin/console/config/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:import namespace="http://soa.com/products/admin/console/common/1.0"/>
@@ -13,9 +13,9 @@
 <xs:element name="configurations" type="tns:configurations"/>
 <xs:element name="factories" type="tns:factories"/>
 <xs:element name="propertyMetadata" type="tns:propertyMetadata"/>
+<xs:complexType name="factories"><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="factory" type="xs:string"/></xs:sequence></xs:complexType>
 <xs:complexType name="configurationInfo"><xs:sequence><xs:element minOccurs="0" name="pid" type="xs:string"/><xs:element minOccurs="0" name="factoryPid" type="xs:string"/><xs:element minOccurs="0" name="bundleLocation" type="xs:string"/><xs:element minOccurs="0" name="links"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="link" type="ns1:link"/></xs:sequence></xs:complexType></xs:element><xs:element minOccurs="0" name="properties"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="property" type="ns1:nameValuePair"/></xs:sequence></xs:complexType></xs:element><xs:element minOccurs="0" name="metadata"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="definition" type="tns:propertyMetadata"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType>
 <xs:complexType name="propertyMetadata"><xs:sequence><xs:element minOccurs="0" name="defaultValue" type="xs:string"/><xs:element minOccurs="0" name="description" type="xs:string"/><xs:element minOccurs="0" name="id" type="xs:string"/><xs:element minOccurs="0" name="name" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="options" nillable="true" type="xs:string"/><xs:element name="required" type="xs:boolean"/><xs:element minOccurs="0" name="type" type="xs:string"/></xs:sequence></xs:complexType>
-<xs:complexType name="factories"><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="factory" type="xs:string"/></xs:sequence></xs:complexType>
 <xs:complexType name="configurations"><xs:sequence><xs:element minOccurs="0" name="links"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="link" type="ns1:link"/></xs:sequence></xs:complexType></xs:element><xs:element minOccurs="0" name="pids"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="pid" type="tns:configurationInfo"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType>
 </xs:schema>
   </wsdl:types>
@@ -144,6 +144,12 @@
       <wsdl:output message="tns:createPropertyResponseMessage">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getConfiguration">
+      <wsdl:input message="tns:getConfigurationRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getConfigurationResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="createConfiguration">
       <wsdl:input message="tns:createConfigurationRequestMessage">
     </wsdl:input>
@@ -184,12 +190,6 @@
       <wsdl:input message="tns:createFactoryConfigurationRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:createFactoryConfigurationResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getConfiguration">
-      <wsdl:input message="tns:getConfigurationRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getConfigurationResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getConfigurations">
@@ -262,6 +262,56 @@ Location: http://localhost:9900/admin/config/com.akana.test/prop3
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="createPropertyResponse" part="createPropertyResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getConfiguration">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /{pid}</sdoc:displayName><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get configuration by PID]]></sdoc:summary><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Get a specified PID.</p>
+<h4>Request:</h4>
+<pre><code>GET /admin/config/com.akana.test HTTP/1.1
+Accept: application/json
+</code></pre>
+<h4>Responses :</h4>
+<ul>
+<li>HTTP/1.1 200 OK. If successful</li>
+</ul>
+<h4>Response</h4>
+<pre><code>HTTP/1.1 200 OK
+Content-Type:application/json; charset=UTF-8
+
+{
+    "pid": "com.akana.test",
+    "links": [
+        {
+            "href": "http://localhost:9900/admin/config/com.akana.test",
+            "rel": "self"
+        }
+    ],
+    "properties": [
+        {
+            "name": "service.pid",
+            "value": "com.akana.test"
+        },  
+        {
+            "name": "prop3",
+            "value": "value3"
+        },
+        {
+            "name": "prop2",
+            "value": "value2"
+        },
+        {
+            "name": "prop1",
+            "value": "value1"
+        }
+    ]
+}
+</code></pre>]]></sdoc:description></wsdl:documentation>
+    <shttp:operation location="/{pid}" method="GET" outputSerialization="application/json,application/xml"/>
+      <wsdl:input>
+    <shttp:input name="pid" part="pid" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The configuration PID.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getConfigurationResponse" part="getConfigurationResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="createConfiguration">
@@ -539,56 +589,6 @@ Location: http://localhost:9900/admin/config/com.akana.test.factory.a7df3a9e-924
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="createFactoryConfigurationResponse" part="createFactoryConfigurationResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getConfiguration">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /{pid}</sdoc:displayName><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get configuration by PID]]></sdoc:summary><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Get a specified PID.</p>
-<h4>Request:</h4>
-<pre><code>GET /admin/config/com.akana.test HTTP/1.1
-Accept: application/json
-</code></pre>
-<h4>Responses :</h4>
-<ul>
-<li>HTTP/1.1 200 OK. If successful</li>
-</ul>
-<h4>Response</h4>
-<pre><code>HTTP/1.1 200 OK
-Content-Type:application/json; charset=UTF-8
-
-{
-    "pid": "com.akana.test",
-    "links": [
-        {
-            "href": "http://localhost:9900/admin/config/com.akana.test",
-            "rel": "self"
-        }
-    ],
-    "properties": [
-        {
-            "name": "service.pid",
-            "value": "com.akana.test"
-        },  
-        {
-            "name": "prop3",
-            "value": "value3"
-        },
-        {
-            "name": "prop2",
-            "value": "value2"
-        },
-        {
-            "name": "prop1",
-            "value": "value1"
-        }
-    ]
-}
-</code></pre>]]></sdoc:description></wsdl:documentation>
-    <shttp:operation location="/{pid}" method="GET" outputSerialization="application/json,application/xml"/>
-      <wsdl:input>
-    <shttp:input name="pid" part="pid" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The configuration PID.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getConfigurationResponse" part="getConfigurationResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getConfigurations">

@@ -8,16 +8,16 @@
     <wsdl:part name="ServiceQName" type="xs:string">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getApplicationSharedSecretResponseMessage">
+    <wsdl:part name="getApplicationSharedSecretResponse" type="xs:string">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getAppCertificateRequestMessage">
     <wsdl:part name="RuntimeID" type="xs:string">
     </wsdl:part>
     <wsdl:part name="FedMemberID" type="xs:string">
     </wsdl:part>
     <wsdl:part name="ServiceQName" type="xs:string">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="getApplicationSharedSecretResponseMessage">
-    <wsdl:part name="getApplicationSharedSecretResponse" type="xs:string">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getAppCertificateResponseMessage">
@@ -35,10 +35,10 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="ApplicationIdentityAPIPortType">
-    <wsdl:operation name="getAppCertificate">
-      <wsdl:input message="tns:getAppCertificateRequestMessage">
+    <wsdl:operation name="getApplicationJwksUrl">
+      <wsdl:input message="tns:getApplicationJwksUrlRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:getAppCertificateResponseMessage">
+      <wsdl:output message="tns:getApplicationJwksUrlResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getApplicationSharedSecret">
@@ -47,23 +47,26 @@
       <wsdl:output message="tns:getApplicationSharedSecretResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getApplicationJwksUrl">
-      <wsdl:input message="tns:getApplicationJwksUrlRequestMessage">
+    <wsdl:operation name="getAppCertificate">
+      <wsdl:input message="tns:getAppCertificateRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:getApplicationJwksUrlResponseMessage">
+      <wsdl:output message="tns:getAppCertificateResponseMessage">
     </wsdl:output>
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="ApplicationIdentityAPIBinding" type="tns:ApplicationIdentityAPIPortType">
     <shttp:binding/>
-    <wsdl:operation name="getAppCertificate">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /identities/{RuntimeID}/certificate</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="*/*" location="/identities/{RuntimeID}/certificate" method="GET" outputSerialization="application/octet-stream"/>
+    <wsdl:operation name="getApplicationJwksUrl">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /identities/{RuntimeID}/oauthdetails</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="*/*" location="/identities/{RuntimeID}/oauthdetails" method="GET" outputSerialization="application/json,application/xml,text/xml"/>
       <wsdl:input>
     <shttp:input name="RuntimeID" part="RuntimeID" type="path"/>
     <shttp:input name="FedMemberID" part="FedMemberID" type="query"/>
     <shttp:input name="ServiceQName" part="ServiceQName" type="query"/>
       </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getApplicationJwksUrlResponse" part="getApplicationJwksUrlResponse" type="entity"/>
+      </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getApplicationSharedSecret">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /identities/{RuntimeID}/secret</sdoc:displayName></wsdl:documentation>
@@ -77,17 +80,14 @@
     <shttp:output name="getApplicationSharedSecretResponse" part="getApplicationSharedSecretResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getApplicationJwksUrl">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /identities/{RuntimeID}/oauthdetails</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="*/*" location="/identities/{RuntimeID}/oauthdetails" method="GET" outputSerialization="application/json,application/xml,text/xml"/>
+    <wsdl:operation name="getAppCertificate">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /identities/{RuntimeID}/certificate</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="*/*" location="/identities/{RuntimeID}/certificate" method="GET" outputSerialization="application/octet-stream"/>
       <wsdl:input>
     <shttp:input name="RuntimeID" part="RuntimeID" type="path"/>
     <shttp:input name="FedMemberID" part="FedMemberID" type="query"/>
     <shttp:input name="ServiceQName" part="ServiceQName" type="query"/>
       </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getApplicationJwksUrlResponse" part="getApplicationJwksUrlResponse" type="entity"/>
-      </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="ApplicationIdentityAPI">

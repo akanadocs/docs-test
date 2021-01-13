@@ -14,13 +14,13 @@
 <xs:element name="skipHours" nillable="true" type="rssSkipHours"/>
 <xs:element name="source" nillable="true" type="rssSource"/>
 <xs:element name="textInput" nillable="true" type="rssTextInput"/>
+<xs:complexType name="rssImage"><xs:all><xs:element name="url" type="xs:string"/><xs:element name="title" type="xs:string"/><xs:element name="link" type="xs:anyURI"/><xs:element default="88" minOccurs="0" name="width" type="xs:int"/><xs:element default="31" minOccurs="0" name="height" type="xs:int"/><xs:element minOccurs="0" name="description" type="xs:string"/></xs:all></xs:complexType>
 <xs:complexType name="rssSkipDays"><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="day" nillable="true" type="xs:string"/></xs:sequence></xs:complexType>
+<xs:complexType name="rssCloud"><xs:sequence/><xs:attribute name="domain" type="xs:string" use="required"/><xs:attribute name="port" type="xs:int" use="required"/><xs:attribute name="path" type="xs:string" use="required"/><xs:attribute name="registerProcedure" type="xs:string" use="required"/><xs:attribute name="protocol" type="xs:string" use="required"/></xs:complexType>
+<xs:complexType name="rssSkipHours"><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="hour" nillable="true" type="xs:string"/></xs:sequence></xs:complexType>
 <xs:complexType name="rssChannel"><xs:all><xs:element name="title" type="xs:string"/><xs:element name="link" type="xs:anyURI"/><xs:element name="description" type="xs:string"/><xs:element minOccurs="0" name="language" type="xs:string"/><xs:element minOccurs="0" name="copyright" type="xs:string"/><xs:element minOccurs="0" name="managingEditor" type="xs:string"/><xs:element minOccurs="0" name="webMaster" type="xs:string"/><xs:element minOccurs="0" name="pubDate" type="xs:string"/><xs:element minOccurs="0" name="lastBuildDate" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="category" nillable="true" type="rssCategory"/><xs:element minOccurs="0" name="generator" type="xs:string"/><xs:element minOccurs="0" name="docs" type="xs:anyURI"/><xs:element minOccurs="0" name="cloud" type="rssCloud"/><xs:element minOccurs="0" name="ttl" type="xs:int"/><xs:element minOccurs="0" name="image" type="rssImage"/><xs:element minOccurs="0" name="rating" type="xs:string"/><xs:element minOccurs="0" name="textInput" type="rssTextInput"/><xs:element minOccurs="0" name="skipHours" type="rssSkipHours"/><xs:element minOccurs="0" name="skipDays" type="rssSkipDays"/><xs:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/><xs:element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="rssItem"/></xs:all></xs:complexType>
 <xs:complexType name="rssCategory"><xs:simpleContent><xs:extension base="xs:string"><xs:attribute name="domain" type="xs:string"/></xs:extension></xs:simpleContent></xs:complexType>
-<xs:complexType name="rssCloud"><xs:sequence/><xs:attribute name="domain" type="xs:string" use="required"/><xs:attribute name="port" type="xs:int" use="required"/><xs:attribute name="path" type="xs:string" use="required"/><xs:attribute name="registerProcedure" type="xs:string" use="required"/><xs:attribute name="protocol" type="xs:string" use="required"/></xs:complexType>
-<xs:complexType name="rssImage"><xs:all><xs:element name="url" type="xs:string"/><xs:element name="title" type="xs:string"/><xs:element name="link" type="xs:anyURI"/><xs:element default="88" minOccurs="0" name="width" type="xs:int"/><xs:element default="31" minOccurs="0" name="height" type="xs:int"/><xs:element minOccurs="0" name="description" type="xs:string"/></xs:all></xs:complexType>
 <xs:complexType name="rssTextInput"><xs:all><xs:element name="title" type="xs:string"/><xs:element name="description" type="xs:string"/><xs:element name="name" type="xs:string"/><xs:element name="link" type="xs:anyURI"/></xs:all></xs:complexType>
-<xs:complexType name="rssSkipHours"><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="hour" nillable="true" type="xs:string"/></xs:sequence></xs:complexType>
 <xs:complexType name="rssSource"><xs:simpleContent><xs:extension base="xs:string"><xs:attribute name="url" type="xs:string" use="required"/></xs:extension></xs:simpleContent></xs:complexType>
 <xs:complexType name="rssEnclosure"><xs:sequence/><xs:attribute name="url" type="xs:string" use="required"/><xs:attribute name="length" type="xs:string" use="required"/><xs:attribute name="type" type="xs:string" use="required"/></xs:complexType>
 <xs:complexType name="rssGuid"><xs:simpleContent><xs:extension base="xs:string"><xs:attribute name="isPermaLink" type="xs:boolean"/></xs:extension></xs:simpleContent></xs:complexType>
@@ -42,12 +42,12 @@
     <wsdl:part name="getDeploymentZoneInfoResponse" element="nms1:DeploymentZoneInfo">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getDeploymentZoneInfoRequestMessage">
-    <wsdl:part name="dzInfoID" type="xs:string">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="deleteDeploymentZoneInfoResponseMessage">
     <wsdl:part name="deleteDeploymentZoneInfoResponse" type="xs:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getDeploymentZoneInfoRequestMessage">
+    <wsdl:part name="dzInfoID" type="xs:string">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="updateDeploymentZoneResponseMessage">
@@ -117,18 +117,6 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="DeploymentZoneAPIPortType">
-    <wsdl:operation name="listDeploymentZones">
-      <wsdl:input message="tns:listDeploymentZonesRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:listDeploymentZonesResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getDeploymentZoneInfo">
-      <wsdl:input message="tns:getDeploymentZoneInfoRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getDeploymentZoneInfoResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="updateDeploymentZone">
       <wsdl:input message="tns:updateDeploymentZoneRequestMessage">
     </wsdl:input>
@@ -153,46 +141,33 @@
       <wsdl:output message="tns:getDeploymentZoneAssociationsResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getDeploymentZones">
-      <wsdl:input message="tns:getDeploymentZonesRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getDeploymentZonesResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="addDeploymentZone">
       <wsdl:input message="tns:addDeploymentZoneRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:addDeploymentZoneResponseMessage">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getDeploymentZoneInfo">
+      <wsdl:input message="tns:getDeploymentZoneInfoRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getDeploymentZoneInfoResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDeploymentZones">
+      <wsdl:input message="tns:getDeploymentZonesRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getDeploymentZonesResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listDeploymentZones">
+      <wsdl:input message="tns:listDeploymentZonesRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:listDeploymentZonesResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="DeploymentZoneAPIBinding" type="tns:DeploymentZoneAPIPortType">
     <shttp:binding/>
-    <wsdl:operation name="listDeploymentZones">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /deploymentzones</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/deploymentzones" method="GET" outputSerialization="application/vnd.soa.v81+json,application/vnd.soa.v81+xml,application/vnd.soa.v84+xml,application/vnd.soa.v84+json"/>
-      <wsdl:input>
-    <shttp:input name="Implementation" part="Implementation" type="query"/>
-    <shttp:input name="Environment" part="Environment" type="query"/>
-    <shttp:input name="APIImplementationPattern" part="APIImplementationPattern" type="query"/>
-    <shttp:input name="DzoneID" part="DzoneID" type="query"/>
-    <shttp:input name="ContextID" part="ContextID" type="query"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The Context Id. If this parameter is included, the deployment zones permissions will be checked against this context. Tenant context will be used otherwise. The OrgKey will supersede this context.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-    <shttp:input name="OrgKey" part="OrgKey" type="query"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The Context Organization Key. If this parameter is included, the deployment zones permissions will be checked against this context.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="listDeploymentZonesResponse" part="listDeploymentZonesResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getDeploymentZoneInfo">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /deploymentzones/{dzInfoID}</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/deploymentzones/{dzInfoID}" method="GET" outputSerialization="application/vnd.soa.v81+json,application/vnd.soa.v81+xml"/>
-      <wsdl:input>
-    <shttp:input name="dzInfoID" part="dzInfoID" type="path"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getDeploymentZoneInfoResponse" part="getDeploymentZoneInfoResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="updateDeploymentZone">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /deploymentzones/{DZoneID}</sdoc:displayName></wsdl:documentation>
     <shttp:operation inputSerialization="application/json,application/xml,application/vnd.soa.v81+json,application/vnd.soa.v81+xml" location="/deploymentzones/{DZoneID}" method="PUT" outputSerialization="application/json,application/xml,application/vnd.soa.v81+json,application/vnd.soa.v81+xml"/>
@@ -235,6 +210,26 @@
     <shttp:output name="getDeploymentZoneAssociationsResponse" part="getDeploymentZoneAssociationsResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="addDeploymentZone">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /deploymentzones</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="application/json,application/xml,application/vnd.soa.v81+json,application/vnd.soa.v81+xml" location="/deploymentzones" method="POST" outputSerialization="application/json,application/xml,application/vnd.soa.v81+json,application/vnd.soa.v81+xml"/>
+      <wsdl:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="addDeploymentZoneResponse" part="addDeploymentZoneResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDeploymentZoneInfo">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /deploymentzones/{dzInfoID}</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/deploymentzones/{dzInfoID}" method="GET" outputSerialization="application/vnd.soa.v81+json,application/vnd.soa.v81+xml"/>
+      <wsdl:input>
+    <shttp:input name="dzInfoID" part="dzInfoID" type="path"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getDeploymentZoneInfoResponse" part="getDeploymentZoneInfoResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getDeploymentZones">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /deploymentzones</sdoc:displayName></wsdl:documentation>
     <shttp:operation location="/deploymentzones" method="GET" outputSerialization="text/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml"/>
@@ -247,14 +242,19 @@
     <shttp:output name="getDeploymentZonesResponse" part="getDeploymentZonesResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="addDeploymentZone">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /deploymentzones</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="application/json,application/xml,application/vnd.soa.v81+json,application/vnd.soa.v81+xml" location="/deploymentzones" method="POST" outputSerialization="application/json,application/xml,application/vnd.soa.v81+json,application/vnd.soa.v81+xml"/>
+    <wsdl:operation name="listDeploymentZones">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /deploymentzones</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/deploymentzones" method="GET" outputSerialization="application/vnd.soa.v81+json,application/vnd.soa.v81+xml,application/vnd.soa.v84+xml,application/vnd.soa.v84+json"/>
       <wsdl:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"/>
+    <shttp:input name="Implementation" part="Implementation" type="query"/>
+    <shttp:input name="Environment" part="Environment" type="query"/>
+    <shttp:input name="APIImplementationPattern" part="APIImplementationPattern" type="query"/>
+    <shttp:input name="DzoneID" part="DzoneID" type="query"/>
+    <shttp:input name="ContextID" part="ContextID" type="query"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The Context Id. If this parameter is included, the deployment zones permissions will be checked against this context. Tenant context will be used otherwise. The OrgKey will supersede this context.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+    <shttp:input name="OrgKey" part="OrgKey" type="query"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The Context Organization Key. If this parameter is included, the deployment zones permissions will be checked against this context.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
       </wsdl:input>
       <wsdl:output>
-    <shttp:output name="addDeploymentZoneResponse" part="addDeploymentZoneResponse" type="entity"/>
+    <shttp:output name="listDeploymentZonesResponse" part="listDeploymentZonesResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>

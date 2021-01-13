@@ -29,14 +29,14 @@
     <wsdl:part name="parameter0" element="nms1:Process">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="addProcessResponseMessage">
+    <wsdl:part name="addProcessResponse" element="nms1:Process">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="updateProcessRequestMessage">
     <wsdl:part name="processKey" type="xs:string">
     </wsdl:part>
     <wsdl:part name="parameter0" element="nms1:Process">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="addProcessResponseMessage">
-    <wsdl:part name="addProcessResponse" element="nms1:Process">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getProcessesRequestMessage">
@@ -48,16 +48,22 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="ProcessAPIPortType">
+    <wsdl:operation name="getProcess">
+      <wsdl:input message="tns:getProcessRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getProcessResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getProcesses">
       <wsdl:input message="tns:getProcessesRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:getProcessesResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getProcess">
-      <wsdl:input message="tns:getProcessRequestMessage">
+    <wsdl:operation name="addProcess">
+      <wsdl:input message="tns:addProcessRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:getProcessResponseMessage">
+      <wsdl:output message="tns:addProcessResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="deleteProcess">
@@ -72,118 +78,9 @@
       <wsdl:output message="tns:updateProcessResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="addProcess">
-      <wsdl:input message="tns:addProcessRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:addProcessResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="ProcessAPIBinding" type="tns:ProcessAPIPortType">
     <shttp:binding/>
-    <wsdl:operation name="getProcesses">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /processes</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Returns the processes for the given organization key.</p>
-<h4>Request:</h4>
-<pre><code>GET /rest/processes?organizationKey=uddi:e3d4ea51-f4ad-11e6-880d-9b52c44f1958 HTTP/1.1
-Accept: application/json
-</code></pre>
-<h4>Response:</h4>
-<pre><code>HTTP/1.1 200 OK
-
-[ {
-  "any" : {
-    "process" : {
-      "partnerLinks" : {
-        "partnerLink" : [ {
-          "otherAttributes" : {
-          },
-          "name" : "borrowerPartnerLink",
-          "partnerLinkType" : "{http://soa.com/processs}borrowerConsumer",
-          "myRole" : "Consumer"
-        } ],
-        "otherAttributes" : {
-        }
-      },
-      "variables" : {
-        "variable" : [ {
-          "name" : "message",
-          "messageType" : "{http://soa.com/process/activity}ActivityMessage",
-          "otherAttributes" : {
-          }
-        }, {
-          "name" : "fault",
-          "messageType" : "{http://soa.com/process/activity}ActivityMessage",
-          "otherAttributes" : {
-          }
-        } ],
-        "otherAttributes" : {
-        }
-      },
-      "faults" : {
-        "otherAttributes" : {
-        }
-      },
-      "sequence" : {
-        "activity" : [ {
-          "invoke" : {
-            "InvocationExt" : {
-              "IdentitySpec" : {
-                "UseInboundIdentities" : true,
-                "UseServiceIdentityForHTTPS" : false
-              },
-              "ParameterAssignments" : {
-              },
-              "service" : "{http://demo.soa.com}RESTBorrower",
-              "otherAttributes" : {
-              }
-            },
-            "otherAttributes" : {
-            },
-            "name" : "Invoke1",
-            "partnerLink" : "borrowerPartnerLink",
-            "portType" : "{http://demo.soa.com}borrower",
-            "operation" : "listBorrowers",
-            "inputVariable" : "message",
-            "outputVariable" : "message"
-          }
-        }, {
-          "reply" : {
-            "otherAttributes" : {
-            },
-            "name" : "Reply1",
-            "variable" : "message"
-          }
-        } ],
-        "otherAttributes" : {
-        }
-      },
-      "partnerLinkType" : {
-        "role" : [ {
-          "portType" : {
-            "name" : "{http://demo.soa.com}borrower"
-          },
-          "name" : "Consumer"
-        } ],
-        "name" : "borrowerConsumer"
-      },
-      "otherAttributes" : {
-        "{http://soa.com/bpel/ext}processKey" : "bpel:4c7eae8f-f578-11e6-a4d1-927c4aaab2be"
-      },
-      "name" : "p1",
-      "targetNamespace" : "http://soa.com/processs"
-    }
-  },
-  "BpelProcessKey" : "bpel:4c7eae8f-f578-11e6-a4d1-927c4aaab2be"
-} ]
-</code></pre>]]></sdoc:description></wsdl:documentation>
-    <shttp:operation location="/processes" method="GET" outputSerialization="application/json,application/xml,text/xml"/>
-      <wsdl:input>
-    <shttp:input name="organizationKey" part="organizationKey" type="query"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The organizationKey.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getProcessesResponse" part="getProcessesResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getProcess">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /processes/{processKey}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Returns the process.</p>
 <h4>Request:</h4>
@@ -329,6 +226,140 @@ Accept: application/json
     <shttp:output name="getProcessResponse" part="getProcessResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getProcesses">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /processes</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Returns the processes for the given organization key.</p>
+<h4>Request:</h4>
+<pre><code>GET /rest/processes?organizationKey=uddi:e3d4ea51-f4ad-11e6-880d-9b52c44f1958 HTTP/1.1
+Accept: application/json
+</code></pre>
+<h4>Response:</h4>
+<pre><code>HTTP/1.1 200 OK
+
+[ {
+  "any" : {
+    "process" : {
+      "partnerLinks" : {
+        "partnerLink" : [ {
+          "otherAttributes" : {
+          },
+          "name" : "borrowerPartnerLink",
+          "partnerLinkType" : "{http://soa.com/processs}borrowerConsumer",
+          "myRole" : "Consumer"
+        } ],
+        "otherAttributes" : {
+        }
+      },
+      "variables" : {
+        "variable" : [ {
+          "name" : "message",
+          "messageType" : "{http://soa.com/process/activity}ActivityMessage",
+          "otherAttributes" : {
+          }
+        }, {
+          "name" : "fault",
+          "messageType" : "{http://soa.com/process/activity}ActivityMessage",
+          "otherAttributes" : {
+          }
+        } ],
+        "otherAttributes" : {
+        }
+      },
+      "faults" : {
+        "otherAttributes" : {
+        }
+      },
+      "sequence" : {
+        "activity" : [ {
+          "invoke" : {
+            "InvocationExt" : {
+              "IdentitySpec" : {
+                "UseInboundIdentities" : true,
+                "UseServiceIdentityForHTTPS" : false
+              },
+              "ParameterAssignments" : {
+              },
+              "service" : "{http://demo.soa.com}RESTBorrower",
+              "otherAttributes" : {
+              }
+            },
+            "otherAttributes" : {
+            },
+            "name" : "Invoke1",
+            "partnerLink" : "borrowerPartnerLink",
+            "portType" : "{http://demo.soa.com}borrower",
+            "operation" : "listBorrowers",
+            "inputVariable" : "message",
+            "outputVariable" : "message"
+          }
+        }, {
+          "reply" : {
+            "otherAttributes" : {
+            },
+            "name" : "Reply1",
+            "variable" : "message"
+          }
+        } ],
+        "otherAttributes" : {
+        }
+      },
+      "partnerLinkType" : {
+        "role" : [ {
+          "portType" : {
+            "name" : "{http://demo.soa.com}borrower"
+          },
+          "name" : "Consumer"
+        } ],
+        "name" : "borrowerConsumer"
+      },
+      "otherAttributes" : {
+        "{http://soa.com/bpel/ext}processKey" : "bpel:4c7eae8f-f578-11e6-a4d1-927c4aaab2be"
+      },
+      "name" : "p1",
+      "targetNamespace" : "http://soa.com/processs"
+    }
+  },
+  "BpelProcessKey" : "bpel:4c7eae8f-f578-11e6-a4d1-927c4aaab2be"
+} ]
+</code></pre>]]></sdoc:description></wsdl:documentation>
+    <shttp:operation location="/processes" method="GET" outputSerialization="application/json,application/xml,text/xml"/>
+      <wsdl:input>
+    <shttp:input name="organizationKey" part="organizationKey" type="query"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The organizationKey.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getProcessesResponse" part="getProcessesResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addProcess">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /processes</sdoc:displayName><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Creates a process]]></sdoc:summary><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Adds the given process.</p>
+<h4>Request:</h4>
+<pre><code>POST /rest/processes HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+"Name": "Aren Process",
+"Description": "dddd",
+"OrganizationKey": "uddi:e3d4ea51-f4ad-11e6-880d-9b52c44f1958"
+}
+</code></pre>
+<h4>Response:</h4>
+<pre><code>HTTP/1.1 200 OK
+
+{
+"Name": "Aren Process",
+"Description": "dddd",
+"OrganizationKey": "uddi:e3d4ea51-f4ad-11e6-880d-9b52c44f1958",
+"BpelProcessKey": "bpel:53f05434-0067-11e7-a7ce-d5bbd0b935f2"
+}
+</code></pre>]]></sdoc:description></wsdl:documentation>
+    <shttp:operation inputSerialization="application/json,application/xml,text/xml" location="/processes" method="POST" outputSerialization="application/json,application/xml,text/xml"/>
+      <wsdl:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The process]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="addProcessResponse" part="addProcessResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="deleteProcess">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">DELETE /processes/{processKey}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Returns the process key.</p>
 <h4>Request:</h4>
@@ -378,37 +409,6 @@ Accept: application/json
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="updateProcessResponse" part="updateProcessResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="addProcess">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /processes</sdoc:displayName><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Creates a process]]></sdoc:summary><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Adds the given process.</p>
-<h4>Request:</h4>
-<pre><code>POST /rest/processes HTTP/1.1
-Content-Type: application/json
-Accept: application/json
-
-{
-"Name": "Aren Process",
-"Description": "dddd",
-"OrganizationKey": "uddi:e3d4ea51-f4ad-11e6-880d-9b52c44f1958"
-}
-</code></pre>
-<h4>Response:</h4>
-<pre><code>HTTP/1.1 200 OK
-
-{
-"Name": "Aren Process",
-"Description": "dddd",
-"OrganizationKey": "uddi:e3d4ea51-f4ad-11e6-880d-9b52c44f1958",
-"BpelProcessKey": "bpel:53f05434-0067-11e7-a7ce-d5bbd0b935f2"
-}
-</code></pre>]]></sdoc:description></wsdl:documentation>
-    <shttp:operation inputSerialization="application/json,application/xml,text/xml" location="/processes" method="POST" outputSerialization="application/json,application/xml,text/xml"/>
-      <wsdl:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The process]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="addProcessResponse" part="addProcessResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>

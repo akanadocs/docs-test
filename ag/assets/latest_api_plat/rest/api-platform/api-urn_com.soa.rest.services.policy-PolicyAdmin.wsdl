@@ -104,8 +104,6 @@
     <wsdl:part name="child" type="xs:string">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="performWorkflowActionResponseMessage">
-  </wsdl:message>
   <wsdl:message name="addPolicyChildResponseMessage">
     <wsdl:part name="addPolicyChildResponse" element="nms1:PolicySpec">
     </wsdl:part>
@@ -115,6 +113,8 @@
     </wsdl:part>
     <wsdl:part name="includeState" type="xs:boolean">
     </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="performWorkflowActionResponseMessage">
   </wsdl:message>
   <wsdl:message name="getWorkflowActionsRequestMessage">
     <wsdl:part name="key" type="xs:string">
@@ -130,6 +130,8 @@
     <wsdl:part name="type" type="xs:string">
     </wsdl:part>
     <wsdl:part name="subType" type="xs:string">
+    </wsdl:part>
+    <wsdl:part name="keyword" type="xs:string">
     </wsdl:part>
     <wsdl:part name="org" type="xs:string">
     </wsdl:part>
@@ -179,12 +181,6 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="PolicyAdminPortType">
-    <wsdl:operation name="performWorkflowAction">
-      <wsdl:input message="tns:performWorkflowActionRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:performWorkflowActionResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getPolicyTypes">
       <wsdl:input message="tns:getPolicyTypesRequestMessage">
     </wsdl:input>
@@ -275,10 +271,10 @@
       <wsdl:output message="tns:getWorkflowActionsResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getPolicies">
-      <wsdl:input message="tns:getPoliciesRequestMessage">
+    <wsdl:operation name="performWorkflowAction">
+      <wsdl:input message="tns:performWorkflowActionRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:getPoliciesResponseMessage">
+      <wsdl:output message="tns:performWorkflowActionResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getPolicy">
@@ -287,30 +283,15 @@
       <wsdl:output message="tns:getPolicyResponseMessage">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getPolicies">
+      <wsdl:input message="tns:getPoliciesRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getPoliciesResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="PolicyAdminBinding" type="tns:PolicyAdminPortType">
     <shttp:binding/>
-    <wsdl:operation name="performWorkflowAction">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /policies/{key}/versions/{version}/workflow</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Performs a workflow action on a policy.</p>
-<h4>Request:</h4>
-<pre><code>PUT /rest/policies/urn:uuid:b7f45df7-a864-11e6-9425-9d4da1227f85/versions/1.0/workflow HTTP/1.1
-
-{
-  "Action" : "Activate",
-  "Comment" : "Putting policy into production.",
-  "UserName" : "jdoe"
-}
-</code></pre>
-<h4>Response:</h4>
-<pre><code>HTTP/1.1 200 OK
-</code></pre>]]></sdoc:description></wsdl:documentation>
-    <shttp:operation inputSerialization="application/json,application/xml,text/xml" location="/policies/{key}/versions/{version}/workflow" method="PUT"/>
-      <wsdl:input>
-    <shttp:input name="key" part="key" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Key of the policy to perform the action on.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-    <shttp:input name="version" part="version" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Version of the policy to perform the action on.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The action to perform.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-      </wsdl:input>
-    </wsdl:operation>
     <wsdl:operation name="getPolicyTypes">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /policies/types</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Returns the supported policy types in the system. Policy types are returned as a list of symbolic names.</p>
 <h4>Request:</h4>
@@ -598,17 +579,26 @@ Accept: application/json
     <shttp:output name="getWorkflowActionsResponse" part="getWorkflowActionsResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getPolicies">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /policies</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Returns all policies of a given type and optionally those of a specified subtype and/or within a given organization.PolicySpecs a returned without any policy content. A usage example that requests all the audit operational policies from the acme org is as follows:</p><p>Request:<BR>GET /rest/policies?type=Operational%20Policy&subType=policy.audit&org=acme</p><p>Response:<BR>HTTP/1.1 200 OK<BR>[<BR>	{<BR>		"Id" : "policy.audit",<BR>		"Key" : "urn:uuid:e4aac04e-d8c5-11e4-ade8-b60ac1246d7",<BR>		"Name" : "My Audit Policy",<BR>		"OrganizationKey" : "uddi:f005b0b2-1079-11e5-a330-a83ecc4e96f2",<BR>		"PolicyType" : "Operational Policy",<BR>		"PolicySubType" : "policy.audit",<BR>		"Description" : "Audits all messages when there is an error.",<BR>	}<BR>]</p>]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Returns a list of policies.]]></sdoc:summary></wsdl:documentation>
-    <shttp:operation location="/policies" method="GET" outputSerialization="application/json,application/xml,text/xml"/>
+    <wsdl:operation name="performWorkflowAction">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /policies/{key}/versions/{version}/workflow</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Performs a workflow action on a policy.</p>
+<h4>Request:</h4>
+<pre><code>PUT /rest/policies/urn:uuid:b7f45df7-a864-11e6-9425-9d4da1227f85/versions/1.0/workflow HTTP/1.1
+
+{
+  "Action" : "Activate",
+  "Comment" : "Putting policy into production.",
+  "UserName" : "jdoe"
+}
+</code></pre>
+<h4>Response:</h4>
+<pre><code>HTTP/1.1 200 OK
+</code></pre>]]></sdoc:description></wsdl:documentation>
+    <shttp:operation inputSerialization="application/json,application/xml,text/xml" location="/policies/{key}/versions/{version}/workflow" method="PUT"/>
       <wsdl:input>
-    <shttp:input name="type" part="type" type="query"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The policy type. If not specified all types are returned.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-    <shttp:input name="subType" part="subType" type="query"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The policy subtype. If not specified all subtypes are returned.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-    <shttp:input name="org" part="org" type="query"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The organization key.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+    <shttp:input name="key" part="key" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Key of the policy to perform the action on.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+    <shttp:input name="version" part="version" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Version of the policy to perform the action on.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The action to perform.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
       </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getPoliciesResponse" part="getPoliciesResponse" type="entity"/>
-      </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getPolicy">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /policies/{key}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Get details for a specific policy including the actual WS-Policy representation of the policy content.</p>
@@ -644,6 +634,19 @@ Accept: application/json
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="getPolicyResponse" part="getPolicyResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPolicies">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /policies</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Returns all policies of a given type and optionally those of a specified subtype and/or within a given organization.PolicySpecs a returned without any policy content. A usage example that requests all the audit operational policies from the acme org is as follows:</p><p>Request:<BR>GET /rest/policies?type=Operational%20Policy&subType=policy.audit&org=acme</p><p>Response:<BR>HTTP/1.1 200 OK<BR>[<BR>	{<BR>		"Id" : "policy.audit",<BR>		"Key" : "urn:uuid:e4aac04e-d8c5-11e4-ade8-b60ac1246d7",<BR>		"Name" : "My Audit Policy",<BR>		"OrganizationKey" : "uddi:f005b0b2-1079-11e5-a330-a83ecc4e96f2",<BR>		"PolicyType" : "Operational Policy",<BR>		"PolicySubType" : "policy.audit",<BR>		"Description" : "Audits all messages when there is an error.",<BR>	}<BR>]</p>]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Returns a list of policies.]]></sdoc:summary></wsdl:documentation>
+    <shttp:operation location="/policies" method="GET" outputSerialization="application/json,application/xml,text/xml"/>
+      <wsdl:input>
+    <shttp:input name="type" part="type" type="query"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The policy type. If not specified all types are returned.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+    <shttp:input name="subType" part="subType" type="query"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The policy subtype. If not specified all subtypes are returned.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+    <shttp:input name="keyword" part="keyword" type="query"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The search string.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+    <shttp:input name="org" part="org" type="query"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The organization key.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getPoliciesResponse" part="getPoliciesResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>

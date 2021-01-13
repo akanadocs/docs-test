@@ -41,7 +41,7 @@
 									</div>
 							<div class="property">
 					<strong class='propertyname'>Session Idle Timeout (session.manager.factory.sessionTimeout)</strong>
-											<p class='propertydesc'>The session idle timeout in seconds.  This applies only to web applications.</p>
+											<p class='propertydesc'>The default session idle timeout in seconds.  This applies only to web applications.  Note that this value may be overridden by applications.  Changes to this value require a restart.</p>
 										
 											<p class='propertydefault'>Default: 3600</p>
 									</div>
@@ -76,12 +76,12 @@
 									</div>
 							<div class="property">
 					<strong class='propertyname'>SSL Cipher Suites (http.incoming.transport.config.cipherSuites)</strong>
-											<p class='propertydesc'>The set of SSL cipher suites allow. Note that this property is only used at the time a listener is created.  If a listener is already configured, changes will not take effect until the following restart.</p>
+											<p class='propertydesc'>The set of SSL cipher suites allow. Note that this property is only used at the time a listener is created.  If a listener is already configured, changes will not take effect until the following restart or the listener is reconfigured. The value is a  comma-separated list where each item in the list can be a string matching a specific cipher  suite, according to the defined values for the JRE at  https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html#ciphersuites. Alternatively, values can be a regular expression used to identify a set of cipher suites.   The regular expression uses the Java java.util.regex.Pattern syntax.</p>
 										
 									</div>
 							<div class="property">
 					<strong class='propertyname'>Excluded SSL Cipher Suites (http.incoming.transport.config.excludeCipherSuites)</strong>
-											<p class='propertydesc'>The set of SSL cipher suites to exclude. Note that this property is only used at the time a listener is created.  If a listener is already configured, changes will not take effect until the following restart.</p>
+											<p class='propertydesc'>The set of SSL cipher suites to exclude. Note that this property is only used at the time a listener is created.  If a listener is already configured, changes will not take effect until the following restart or the listener is reconfigured. The value is a  comma-separated list where each item in the list can be a string matching a specific cipher  suite, according to the defined values for the JRE at  https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html#ciphersuites. Alternatively, values can be a regular expression used to identify a set of cipher suites.   The regular expression uses the Java java.util.regex.Pattern syntax.</p>
 										
 									</div>
 							<div class="property">
@@ -91,38 +91,32 @@
 											<p class='propertydefault'>Default: true</p>
 									</div>
 							<div class="property">
-					<strong class='propertyname'>Non-Blocking I/O (http.incoming.transport.config.useNio)</strong>
-											<p class='propertydesc'>Should blocking I/O or non-blocking I/O be used?  Note that this property is only used at the time a listener is created.  If a listener is already configured, changes will not take effect until the following restart.</p>
-										
-											<p class='propertydefault'>Default: true</p>
-									</div>
-							<div class="property">
 					<strong class='propertyname'>Enable SSL Renegotiation (http.incoming.transport.config.allowRenegotiate)</strong>
-											<p class='propertydesc'>Enable/disable all client SSL renegotiations. Note that this property is only used at the time a listener is created.  If a listener is already configured, changes will not take effect until the following restart.</p>
+											<p class='propertydesc'>Enable/disable all client SSL renegotiations. Note that this property is only used at the time a listener is created.  If a listener is already configured, changes will not take effect until the following restart or the listener is reconfigured.</p>
 										
 											<p class='propertydefault'>Default: true</p>
 									</div>
 							<div class="property">
 					<strong class='propertyname'>Incoming Request Buffer Size (http.incoming.transport.config.requestBufferSize)</strong>
-											<p class='propertydesc'>Set the size of the incoming request buffer in bytes.  A value of 0 will use the Jetty internal default of 16K.</p>
+											<p class='propertydesc'>Set the size of the incoming request buffer in bytes.  This must be set to a valid value.</p>
 										
-											<p class='propertydefault'>Default: 0</p>
+											<p class='propertydefault'>Default: 32768</p>
 									</div>
 							<div class="property">
 					<strong class='propertyname'>Incoming Header Buffer Size (http.incoming.transport.config.requestHeaderSize)</strong>
-											<p class='propertydesc'>Set the size of the incoming header buffer in bytes.  A value of 0 will use the Jetty internal default of 6K.  This buffer is used to hold the request line and headers.</p>
+											<p class='propertydesc'>Set the size of the incoming header buffer in bytes.  This must be set to a valid value. This buffer is used to hold the request line and headers.</p>
 										
 											<p class='propertydefault'>Default: 32768</p>
 									</div>
 							<div class="property">
 					<strong class='propertyname'>Response Buffer Size (http.incoming.transport.config.responseBufferSize)</strong>
-											<p class='propertydesc'>Set the size of the response buffer in bytes.  A value of 0 will use the Jetty internal default of 16K.</p>
+											<p class='propertydesc'>Set the size of the response buffer in bytes.  This must be set to a valid value.</p>
 										
-											<p class='propertydefault'>Default: 0</p>
+											<p class='propertydefault'>Default: 32768</p>
 									</div>
 							<div class="property">
 					<strong class='propertyname'>Response Header Buffer Size (http.incoming.transport.config.responseHeaderSize)</strong>
-											<p class='propertydesc'>Set the size of the response header buffer in bytes.  A value of 0 will use the Jetty internal default of 6K.</p>
+											<p class='propertydesc'>Set the size of the response header buffer in bytes.  This must be set to a valid value.</p>
 										
 											<p class='propertydefault'>Default: 32768</p>
 									</div>
@@ -173,6 +167,12 @@
 											<p class='propertydesc'>Set the SO_LINGER value for a connection.  This value is in milliseconds, but Jetty will divide this by 1000 before setting the value on the socket.</p>
 										
 											<p class='propertydefault'>Default: 10000</p>
+									</div>
+							<div class="property">
+					<strong class='propertyname'>Enable HTTP2 (http.incoming.transport.config.enableHttp2)</strong>
+											<p class='propertydesc'>Enable/disable incoming HTTP2 connections.</p>
+										
+											<p class='propertydefault'>Default: false</p>
 									</div>
 							<div class="property">
 					<strong class='propertyname'>Enable NCSA Access Log (ncsa.access.log.writer.enable)</strong>
@@ -226,13 +226,13 @@
 					<strong class='propertyname'>Max Form Keys (context.manager.maxFormKeys)</strong>
 											<p class='propertydesc'>Set the max number of keys allowed in a form. If not specified or 0, the default of 1000 is used.</p>
 										
-											<p class='propertydefault'>Default: 0</p>
+											<p class='propertydefault'>Default: 1000</p>
 									</div>
 							<div class="property">
 					<strong class='propertyname'>Max Form Size (context.manager.maxFormSize)</strong>
-											<p class='propertydesc'>Set the max size in bytes allowed in a form. If not specified or less than 0, the default of 200K is used.</p>
+											<p class='propertydesc'>Set the max size in bytes allowed in a form. If not specified or 0, the default of 200K is used.</p>
 										
-											<p class='propertydefault'>Default: 0</p>
+											<p class='propertydefault'>Default: 200000</p>
 									</div>
 							<div class="property">
 					<strong class='propertyname'>Enable Sessions (context.manager.enableSessions)</strong>
@@ -266,7 +266,7 @@
 									</div>
 							<div class="property">
 					<strong class='propertyname'>Response Header Templates (response.header.generator.templates)</strong>
-											<p class='propertydesc'>Response headers that will be generated based on the value of a template.  Valid template property  names are: incoming.scheme, incoming.hostname, incoming.port, incoming.path, incoming.uri,  now (the current time as a long value), or the name of any available request header (case-insensitive).  Template properties are enclosed in braces, e.g. {now}.  If a variable cannot be found then the template variable will appear as the header value.  If allowSystemProperties is set to true, any system properties  may also be included. Note that blocked header rules in the transport do not impact these headers. The  value is a comma-separated list.</p>
+											<p class='propertydesc'>Templates used to generate response headers.  The value is a comma-separated list where each item in the list has the format name:value.  The header value can be generated either using a static string, or  dynamically based on template parameters.  Valid template parameter names are: incoming.scheme, incoming.hostname,  incoming.port, incoming.path, incoming.uri, now (the current time as a long value), or the name of any available  request header (case-insensitive). Template parameters are enclosed in braces, e.g. {now}.  If a specified parameter  cannot be found, the parameter name appears as the header value.  If allowSystemProperties is set to true, any system  properties can also be included. Note that blocked header rules in the transport do not impact these headers. Response  header generation is only applicable to Web applications, such as the Policy Manager user interface, and is not used  for API invocations.</p>
 										
 											<p class='propertydefault'>Default: Strict-Transport-Security:max-age=31536000;includeSubDomains</p>
 									</div>
@@ -298,6 +298,12 @@
 											<p class='propertydesc'>Message to use when logging Jetty errors.</p>
 										
 											<p class='propertydefault'>Default: HTTP Request Error</p>
+									</div>
+							<div class="property">
+					<strong class='propertyname'>Deploy Managed Endpoints (endpoint.factory.deployManaged)</strong>
+											<p class='propertydesc'>Should endpoints defined in the ConfigAdmin as managed endpoints be deployed?  If this is set to false, endpoints defined in the Config Admin will be published to Policy Manager when the container is registered, and will be controlled from there.  These endpoints will not be exposed until instructed  by PM.</p>
+										
+											<p class='propertydefault'>Default: false</p>
 									</div>
 						</table>
 		</div>

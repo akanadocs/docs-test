@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://soa.com/wsdl/follow/1.0" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://soa.com/wsdl/follow/1.0" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nms1="http://soa.com/xsd/follower/1.0" xmlns:shttp="http://soa.com/wsdl/http">
+  <wsdl:types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/follower/1.0" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="FollowRequest"><xs:complexType><xs:sequence><xs:element name="FollowerID" type="xs:string"/><xs:element name="FollowedID" type="xs:string"/><xs:element minOccurs="0" name="FollowingID" type="xs:string"/></xs:sequence></xs:complexType></xs:element>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="followRequestMessage">
+    <wsdl:part name="parameter0" element="nms1:FollowRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getFollowFDNResponseMessage">
+    <wsdl:part element="xs:any">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="stopFollowRequestMessage">
+    <wsdl:part name="FollowID" type="xs:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="followResponseMessage">
+    <wsdl:part name="followResponse" type="xs:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getFollowFDNRequestMessage">
+    <wsdl:part name="objectDN" type="xs:string">
+    </wsdl:part>
+    <wsdl:part name="userDN" type="xs:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="stopFollowResponseMessage">
+    <wsdl:part name="stopFollowResponse" type="xs:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="FollowingAPIPortType">
+    <wsdl:operation name="getFollowFDN">
+      <wsdl:input message="tns:getFollowFDNRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getFollowFDNResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="stopFollow">
+      <wsdl:input message="tns:stopFollowRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:stopFollowResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="follow">
+      <wsdl:input message="tns:followRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:followResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="FollowingAPIBinding" type="tns:FollowingAPIPortType">
+    <shttp:binding/>
+    <wsdl:operation name="getFollowFDN">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /followings/followobject</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="*/*" location="/followings/followobject" method="GET" outputSerialization="text/plain"/>
+      <wsdl:input>
+    <shttp:input name="objectDN" part="objectDN" type="query"/>
+    <shttp:input name="userDN" part="userDN" type="query"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="" part="" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="stopFollow">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">DELETE /followings/{FollowID}</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="*/*" location="/followings/{FollowID}" method="DELETE" outputSerialization="text/plain"/>
+      <wsdl:input>
+    <shttp:input name="FollowID" part="FollowID" type="path"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="stopFollowResponse" part="stopFollowResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="follow">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /followings</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json" location="/followings" method="POST" outputSerialization="text/plain"/>
+      <wsdl:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="followResponse" part="followResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="FollowingAPI">
+<wsdl:documentation><sdoc:title xmlns:sdoc="http://soa.com/wsdl/doc">Following API</sdoc:title><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>The following API allows clients to query and manage following behavior.</p>]]></sdoc:description></wsdl:documentation>
+    <wsdl:port name="FollowingAPI_rest_port_https" binding="tns:FollowingAPIBinding">
+    <shttp:address location="https://0.0.0.0/api"/>
+    </wsdl:port>
+    <wsdl:port name="FollowingAPI_rest_port_http" binding="tns:FollowingAPIBinding">
+    <shttp:address location="http://0.0.0.0/api"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

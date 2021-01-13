@@ -27,8 +27,8 @@
     <wsdl:part name="getScriptTypesResponse" type="tns:List">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="deleteScriptRequestMessage">
-    <wsdl:part name="key" type="xs:string">
+  <wsdl:message name="changeScriptResponseMessage">
+    <wsdl:part name="changeScriptResponse" element="nms1:ScriptSpec">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="addScriptResponseMessage">
@@ -39,8 +39,8 @@
     <wsdl:part name="parameter0" element="nms1:ScriptSpec">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="changeScriptResponseMessage">
-    <wsdl:part name="changeScriptResponse" element="nms1:ScriptSpec">
+  <wsdl:message name="deleteScriptRequestMessage">
+    <wsdl:part name="key" type="xs:string">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getScriptResponseMessage">
@@ -54,6 +54,18 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="ScriptAdminPortType">
+    <wsdl:operation name="changeScript">
+      <wsdl:input message="tns:changeScriptRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:changeScriptResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addScript">
+      <wsdl:input message="tns:addScriptRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:addScriptResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getScripts">
       <wsdl:input message="tns:getScriptsRequestMessage">
     </wsdl:input>
@@ -64,18 +76,6 @@
       <wsdl:input message="tns:deleteScriptRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:deleteScriptResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="addScript">
-      <wsdl:input message="tns:addScriptRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:addScriptResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="changeScript">
-      <wsdl:input message="tns:changeScriptRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:changeScriptResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getScriptTypes">
@@ -93,6 +93,27 @@
   </wsdl:portType>
   <wsdl:binding name="ScriptAdminBinding" type="tns:ScriptAdminPortType">
     <shttp:binding/>
+    <wsdl:operation name="changeScript">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /pmscripts/{key}</sdoc:displayName><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Updates a script]]></sdoc:summary></wsdl:documentation>
+    <shttp:operation inputSerialization="application/xml,text/xml,application/json" location="/pmscripts/{key}" method="PUT" outputSerialization="application/json,application/xml,text/xml"/>
+      <wsdl:input>
+    <shttp:input name="key" part="key" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The script key.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The changed script]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="changeScriptResponse" part="changeScriptResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addScript">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /pmscripts</sdoc:displayName><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Creates a script]]></sdoc:summary></wsdl:documentation>
+    <shttp:operation inputSerialization="application/json,application/xml,text/xml" location="/pmscripts" method="POST" outputSerialization="application/json,application/xml,text/xml"/>
+      <wsdl:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The script spec]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="addScriptResponse" part="addScriptResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getScripts">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /pmscripts</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Returns all scripts within a given organization, without any script content.</p>]]></sdoc:description><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Returns a list of scripts.]]></sdoc:summary></wsdl:documentation>
     <shttp:operation location="/pmscripts" method="GET" outputSerialization="application/json"/>
@@ -111,27 +132,6 @@
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="" part="" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="addScript">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /pmscripts</sdoc:displayName><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Creates a script]]></sdoc:summary></wsdl:documentation>
-    <shttp:operation inputSerialization="application/json,application/xml,text/xml" location="/pmscripts" method="POST" outputSerialization="application/json,application/xml,text/xml"/>
-      <wsdl:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The script spec]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="addScriptResponse" part="addScriptResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="changeScript">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /pmscripts/{key}</sdoc:displayName><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Updates a script]]></sdoc:summary></wsdl:documentation>
-    <shttp:operation inputSerialization="application/xml,text/xml,application/json" location="/pmscripts/{key}" method="PUT" outputSerialization="application/json,application/xml,text/xml"/>
-      <wsdl:input>
-    <shttp:input name="key" part="key" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The script key.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The changed script]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="changeScriptResponse" part="changeScriptResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getScriptTypes">
