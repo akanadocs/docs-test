@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wsdl:definitions targetNamespace="urn:com.soa.devconsole.api" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:com.soa.devconsole.api" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nms1="http://soa.com/xsd/oauth/1.0" xmlns:shttp="http://soa.com/wsdl/http">
   <wsdl:types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/api/1.0" version="1.0" xmlns:tns="http://soa.com/xsd/api/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="AuthorizationEndpointParameters"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="Parameter" type="xs:string"/></xs:sequence></xs:complexType></xs:element>
+<xs:element name="OAuth10aSettings"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="RequestTokenEndpointURL" type="xs:anyURI"/><xs:element minOccurs="0" name="AuthorizationEndpointURL" type="xs:anyURI"/><xs:element minOccurs="0" name="AccessTokenEndpointURL" type="xs:anyURI"/><xs:element minOccurs="0" name="TokenEndpointRequestVerb" type="xs:string"/><xs:element minOccurs="0" name="TokenParameterTransmissionMethods"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" name="TokenParameterTransmissionMethod" type="xs:string"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
+<xs:element name="OAuth20Settings"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="AuthorizationEndpointURL" type="xs:anyURI"/><xs:element minOccurs="0" name="TokenEndpointURL" type="xs:anyURI"/><xs:element minOccurs="0" name="TokenEndpointRequestVerb" type="xs:string"/><xs:element minOccurs="0" name="BearerTokenMethods"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" name="BearerTokenMethod" type="xs:string"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
+<xs:element name="OAuthTokenResourceURISettings"><xs:complexType><xs:sequence><xs:element name="OAuthTokenResourceURIOption" type="xs:string"/><xs:element minOccurs="0" name="OAuthTokenRequestURI" type="xs:string"/></xs:sequence></xs:complexType></xs:element>
+<xs:element name="TokenEndpointParameters"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="Parameter" type="xs:string"/></xs:sequence></xs:complexType></xs:element>
+<xs:complexType name="EndpointOAuthDetails"><xs:sequence><xs:element name="OAuthProvider" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="SupportedGrant" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="ClientAuthPolicyOption" type="xs:string"/><xs:element default="true" minOccurs="0" name="OAuth10aSupported" type="xs:boolean"/><xs:element minOccurs="0" ref="tns:OAuth10aSettings"/><xs:element default="true" minOccurs="0" name="OAuth20Supported" type="xs:boolean"/><xs:element minOccurs="0" ref="tns:OAuth20Settings"/><xs:element maxOccurs="unbounded" minOccurs="0" name="Resource" type="xs:string"/><xs:element minOccurs="0" ref="tns:AuthorizationEndpointParameters"/><xs:element minOccurs="0" ref="tns:TokenEndpointParameters"/><xs:element minOccurs="0" ref="tns:OAuthTokenResourceURISettings"/><xs:element minOccurs="0" name="PlatformAppIdentitiesInUse" type="xs:boolean"/></xs:sequence></xs:complexType>
+</xs:schema>
     <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/oauth/1.0" version="1.0" xmlns:ns1="http://soa.com/xsd/api/1.0" xmlns:tns="http://soa.com/xsd/oauth/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:import namespace="http://soa.com/xsd/api/1.0"/>
 <xs:element name="AccessTokenResponse"><xs:complexType><xs:sequence><xs:element name="State" type="xs:string"/></xs:sequence></xs:complexType></xs:element>
@@ -20,20 +28,12 @@
 <xs:simpleType name="AuthPolicyType"><xs:restriction base="xs:string"><xs:enumeration value="OAuth 2.0"/><xs:enumeration value="OAuth 1.0a"/><xs:enumeration value="Atmosphere"/><xs:enumeration value="OAuth"/><xs:enumeration value="Jose"/><xs:enumeration value="HttpSecurity"/></xs:restriction></xs:simpleType>
 <xs:simpleType name="Subject"><xs:restriction base="xs:string"><xs:enumeration value="atmosphere"/><xs:enumeration value="external"/></xs:restriction></xs:simpleType>
 </xs:schema>
-    <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/api/1.0" version="1.0" xmlns:tns="http://soa.com/xsd/api/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-<xs:element name="AuthorizationEndpointParameters"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="Parameter" type="xs:string"/></xs:sequence></xs:complexType></xs:element>
-<xs:element name="OAuth10aSettings"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="RequestTokenEndpointURL" type="xs:anyURI"/><xs:element minOccurs="0" name="AuthorizationEndpointURL" type="xs:anyURI"/><xs:element minOccurs="0" name="AccessTokenEndpointURL" type="xs:anyURI"/><xs:element minOccurs="0" name="TokenEndpointRequestVerb" type="xs:string"/><xs:element minOccurs="0" name="TokenParameterTransmissionMethods"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" name="TokenParameterTransmissionMethod" type="xs:string"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
-<xs:element name="OAuth20Settings"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="AuthorizationEndpointURL" type="xs:anyURI"/><xs:element minOccurs="0" name="TokenEndpointURL" type="xs:anyURI"/><xs:element minOccurs="0" name="TokenEndpointRequestVerb" type="xs:string"/><xs:element minOccurs="0" name="BearerTokenMethods"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" name="BearerTokenMethod" type="xs:string"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>
-<xs:element name="OAuthTokenResourceURISettings"><xs:complexType><xs:sequence><xs:element name="OAuthTokenResourceURIOption" type="xs:string"/><xs:element minOccurs="0" name="OAuthTokenRequestURI" type="xs:string"/></xs:sequence></xs:complexType></xs:element>
-<xs:element name="TokenEndpointParameters"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="Parameter" type="xs:string"/></xs:sequence></xs:complexType></xs:element>
-<xs:complexType name="EndpointOAuthDetails"><xs:sequence><xs:element name="OAuthProvider" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="SupportedGrant" type="xs:string"/><xs:element maxOccurs="unbounded" minOccurs="0" name="ClientAuthPolicyOption" type="xs:string"/><xs:element default="true" minOccurs="0" name="OAuth10aSupported" type="xs:boolean"/><xs:element minOccurs="0" ref="tns:OAuth10aSettings"/><xs:element default="true" minOccurs="0" name="OAuth20Supported" type="xs:boolean"/><xs:element minOccurs="0" ref="tns:OAuth20Settings"/><xs:element maxOccurs="unbounded" minOccurs="0" name="Resource" type="xs:string"/><xs:element minOccurs="0" ref="tns:AuthorizationEndpointParameters"/><xs:element minOccurs="0" ref="tns:TokenEndpointParameters"/><xs:element minOccurs="0" ref="tns:OAuthTokenResourceURISettings"/><xs:element minOccurs="0" name="PlatformAppIdentitiesInUse" type="xs:boolean"/></xs:sequence></xs:complexType>
-</xs:schema>
   </wsdl:types>
+  <wsdl:message name="getFinalRedirectUrlRequestMessage">
+  </wsdl:message>
   <wsdl:message name="createSessionKeyRequestMessage">
     <wsdl:part name="parameter0" type="tns:BufferedInMultiPart">
     </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="getFinalRedirectUrlRequestMessage">
   </wsdl:message>
   <wsdl:message name="getRequestResponseMessage">
     <wsdl:part name="getRequestResponse" element="nms1:OAuthRequest">
@@ -61,10 +61,6 @@
     <wsdl:part name="session_key" type="xs:string">
     </wsdl:part>
     <wsdl:part name="state" type="xs:string">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="getEffectiveAuthPolicyResponseMessage">
-    <wsdl:part name="getEffectiveAuthPolicyResponse" element="nms1:AuthPolicies">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getRequestTokenRequestMessage">
@@ -95,6 +91,10 @@
     <wsdl:part name="scope" type="xs:string">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getEffectiveAuthPolicyResponseMessage">
+    <wsdl:part name="getEffectiveAuthPolicyResponse" element="nms1:AuthPolicies">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getRequestTokenResponseMessage">
     <wsdl:part name="getRequestTokenResponse" element="nms1:RequestTokenResponse">
     </wsdl:part>
@@ -111,12 +111,12 @@
     <wsdl:part name="parameter0" element="nms1:ResourceRequest">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="createSessionKeyWithAppSecretResponseMessage">
-    <wsdl:part element="xs:any">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="getAccessTokenPOSTResponseMessage">
     <wsdl:part name="getAccessTokenPOSTResponse" element="nms1:AccessTokenResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createSessionKeyWithAppSecretResponseMessage">
+    <wsdl:part element="xs:any">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="createSessionKeyWithAppSecretRequestMessage">
@@ -142,28 +142,10 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="OAuthClientApiPortType">
-    <wsdl:operation name="getEffectiveAuthPolicy">
-      <wsdl:input message="tns:getEffectiveAuthPolicyRequestMessage">
+    <wsdl:operation name="getAccessTokenPOST">
+      <wsdl:input message="tns:getAccessTokenPOSTRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:getEffectiveAuthPolicyResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="createSessionKey">
-      <wsdl:input message="tns:createSessionKeyRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:createSessionKeyResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="renewAccessTokenPOST">
-      <wsdl:input message="tns:renewAccessTokenPOSTRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:renewAccessTokenPOSTResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="createSessionKeyWithAppSecret">
-      <wsdl:input message="tns:createSessionKeyWithAppSecretRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:createSessionKeyWithAppSecretResponseMessage">
+      <wsdl:output message="tns:getAccessTokenPOSTResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getFinalRedirectUrl">
@@ -172,10 +154,22 @@
       <wsdl:output message="tns:getFinalRedirectUrlResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getAccessTokenPOST">
-      <wsdl:input message="tns:getAccessTokenPOSTRequestMessage">
+    <wsdl:operation name="createSessionKeyWithAppSecret">
+      <wsdl:input message="tns:createSessionKeyWithAppSecretRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:getAccessTokenPOSTResponseMessage">
+      <wsdl:output message="tns:createSessionKeyWithAppSecretResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="renewAccessTokenPOST">
+      <wsdl:input message="tns:renewAccessTokenPOSTRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:renewAccessTokenPOSTResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRequestToken">
+      <wsdl:input message="tns:getRequestTokenRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getRequestTokenResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getAccessToken">
@@ -184,10 +178,16 @@
       <wsdl:output message="tns:getAccessTokenResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getRequestToken">
-      <wsdl:input message="tns:getRequestTokenRequestMessage">
+    <wsdl:operation name="createSessionKey">
+      <wsdl:input message="tns:createSessionKeyRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:getRequestTokenResponseMessage">
+      <wsdl:output message="tns:createSessionKeyResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getEffectiveAuthPolicy">
+      <wsdl:input message="tns:getEffectiveAuthPolicyRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:getEffectiveAuthPolicyResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getRequest">
@@ -199,24 +199,29 @@
   </wsdl:portType>
   <wsdl:binding name="OAuthClientApiBinding" type="tns:OAuthClientApiPortType">
     <shttp:binding/>
-    <wsdl:operation name="getEffectiveAuthPolicy">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /devconsole/authpolicy</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="*/*" location="/devconsole/authpolicy" method="GET" outputSerialization="text/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+json,application/vnd.soa.v81+xml"/>
+    <wsdl:operation name="getAccessTokenPOST">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /devconsole/oauth/accesstoken</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="application/x-www-form-urlencoded" location="/devconsole/oauth/accesstoken" method="POST" outputSerialization="application/json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
       <wsdl:input>
-    <shttp:input name="apiVersionDN" part="apiVersionDN" type="query"/>
-    <shttp:input name="environment" part="environment" type="query"/>
-    <shttp:input name="ImplementationCode" part="ImplementationCode" type="query"/>
+    <shttp:input name="appIdentityToken" part="appIdentityToken" type="form"/>
+    <shttp:input name="sessionKey" part="sessionKey" type="form"/>
+    <shttp:input name="session_key" part="session_key" type="form"/>
+    <shttp:input name="state" part="state" type="query"/>
       </wsdl:input>
       <wsdl:output>
-    <shttp:output name="getEffectiveAuthPolicyResponse" part="getEffectiveAuthPolicyResponse" type="entity"/>
+    <shttp:output name="getAccessTokenPOSTResponse" part="getAccessTokenPOSTResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="createSessionKey">
+    <wsdl:operation name="getFinalRedirectUrl">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /devconsole/oauth/redirect</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/devconsole/oauth/redirect" method="GET" outputSerialization="application/json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
+      <wsdl:output>
+    <shttp:output name="" part="" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createSessionKeyWithAppSecret">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /devconsole/sessions</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="multipart/form-data" location="/devconsole/sessions" method="POST" outputSerialization="text/plain"/>
-      <wsdl:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"/>
-      </wsdl:input>
+    <shttp:operation inputSerialization="application/x-www-form-urlencoded" location="/devconsole/sessions" method="POST" outputSerialization="text/plain"/>
       <wsdl:output>
     <shttp:output name="" part="" type="entity"/>
       </wsdl:output>
@@ -231,46 +236,6 @@
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="renewAccessTokenPOSTResponse" part="renewAccessTokenPOSTResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="createSessionKeyWithAppSecret">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /devconsole/sessions</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="application/x-www-form-urlencoded" location="/devconsole/sessions" method="POST" outputSerialization="text/plain"/>
-      <wsdl:output>
-    <shttp:output name="" part="" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getFinalRedirectUrl">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /devconsole/oauth/redirect</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/devconsole/oauth/redirect" method="GET" outputSerialization="application/json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
-      <wsdl:output>
-    <shttp:output name="" part="" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getAccessTokenPOST">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /devconsole/oauth/accesstoken</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="application/x-www-form-urlencoded" location="/devconsole/oauth/accesstoken" method="POST" outputSerialization="application/json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
-      <wsdl:input>
-    <shttp:input name="appIdentityToken" part="appIdentityToken" type="form"/>
-    <shttp:input name="sessionKey" part="sessionKey" type="form"/>
-    <shttp:input name="session_key" part="session_key" type="form"/>
-    <shttp:input name="state" part="state" type="query"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getAccessTokenPOSTResponse" part="getAccessTokenPOSTResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getAccessToken">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /devconsole/oauth/accesstoken</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/devconsole/oauth/accesstoken" method="GET" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
-      <wsdl:input>
-    <shttp:input name="appIdentityToken" part="appIdentityToken" type="query"/>
-    <shttp:input name="sessionKey" part="sessionKey" type="query"/>
-    <shttp:input name="session_key" part="session_key" type="query"/>
-    <shttp:input name="state" part="state" type="query"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getAccessTokenResponse" part="getAccessTokenResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getRequestToken">
@@ -293,6 +258,41 @@
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="getRequestTokenResponse" part="getRequestTokenResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAccessToken">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /devconsole/oauth/accesstoken</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/devconsole/oauth/accesstoken" method="GET" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
+      <wsdl:input>
+    <shttp:input name="appIdentityToken" part="appIdentityToken" type="query"/>
+    <shttp:input name="sessionKey" part="sessionKey" type="query"/>
+    <shttp:input name="session_key" part="session_key" type="query"/>
+    <shttp:input name="state" part="state" type="query"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getAccessTokenResponse" part="getAccessTokenResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createSessionKey">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /devconsole/sessions</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="multipart/form-data" location="/devconsole/sessions" method="POST" outputSerialization="text/plain"/>
+      <wsdl:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="" part="" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getEffectiveAuthPolicy">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /devconsole/authpolicy</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="*/*" location="/devconsole/authpolicy" method="GET" outputSerialization="text/xml,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v71+xml,application/vnd.soa.v72+xml,application/vnd.soa.v80+xml,application/vnd.soa.v81+json,application/vnd.soa.v81+xml"/>
+      <wsdl:input>
+    <shttp:input name="apiVersionDN" part="apiVersionDN" type="query"/>
+    <shttp:input name="environment" part="environment" type="query"/>
+    <shttp:input name="ImplementationCode" part="ImplementationCode" type="query"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="getEffectiveAuthPolicyResponse" part="getEffectiveAuthPolicyResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getRequest">
