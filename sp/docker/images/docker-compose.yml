@@ -1,0 +1,243 @@
+version: '3.8'
+
+services:
+#
+# Define Pre-Req Services
+#
+  elasticsearch:
+    user: 1000:1000
+    environment:
+      - discovery.type=single-node
+    image: "docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.1"
+    expose:
+      - "9200"
+    networks:
+      - akanacompose
+  mysql:
+    user: 1000:1000
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - TZ=GMT
+    image: "${THIRDPARTY_IMAGE_REGISTRY}mysql:8.0"
+    expose:
+      - "3306"
+    volumes:
+      - ./:/var/lib
+    networks:
+      - akanacompose
+    cap_add:
+      - SYS_NICE  # CAP_SYS_NICE
+ 
+#
+# Define Akana Services
+#
+  portal:
+    image: "${AKANA_IMAGE_HOST:-localhost}/akana/docker/portal:${AKANA_VERSION:?AKANA_VERSION must be defined in .env or shell environment}"
+    environment:
+      - AKANA_DEBUG=9999
+    expose:
+      - "9900"
+    ports:
+      - "9920:9901" # Admin Port (non-secure)
+      - "9901:9900" # Secure Port
+      - "9999:9999"
+    volumes:
+      - ./:/opt/akana/etc/keystore/
+      - ./:/var/log/akana
+    networks:
+      - akanacompose
+  gateway:
+    image: "${AKANA_IMAGE_HOST:-localhost}/akana/docker/gateway:${AKANA_VERSION:?AKANA_VERSION must be defined in .env or shell environment}"
+    environment:
+      - AKANA_DEBUG=9999
+    expose:
+      - "9900"
+    ports:
+      - "9910:9901" # Admin Port (non-secure)
+      - "9900:9900" # Secure Port
+      - "9998:9999"
+    volumes:
+      - ./:/opt/akana/etc/keystore/
+      - ./:/var/log/akana
+    networks:
+      - akanacompose
+    depends_on:
+      - portal
+
+#
+# Run Automation to Setup Akana
+#
+  pki_setup:
+    user: 1000:1000
+    image: "${THIRDPARTY_IMAGE_REGISTRY}openjdk:8"
+    environment: 
+      - HOST
+    command:   >-
+      /bin/sh -c 
+      'cd /host-files && 
+
+      keytool -genkeypair -keystore ca.jks -alias ca -keyalg rsa -keysize 4096 -storepass password -keypass password -dname "CN=Akana CA,OU=Akana,O=Perforce,L=Minneapolis,ST=Minnesota,C=US" -ext bc:c &&
+      keytool -keystore ca.jks -alias ca -storepass password -keypass password -exportcert -rfc   > ca.pem &&
+
+      keytool -noprompt -importcert -trustcacerts -keystore portal.pkcs12 -storetype pkcs12 -storepass password -alias "Akana CA" -file ca.pem &&
+      keytool -noprompt -importcert -trustcacerts -keystore gateway.pkcs12 -storetype pkcs12 -storepass password -alias "Akana CA" -file ca.pem &&
+
+      keytool -genkeypair -keyalg rsa -keysize 2048 -keystore portal.pkcs12 -storetype pkcs12 -storepass password -keypass password -alias portal -dname "CN=portal,OU=Akana,O=Perforce,L=Minneapolis,ST=Minnesota,C=US" &&
+      keytool -genkeypair -keyalg rsa -keysize 2048 -keystore gateway.pkcs12 -storetype pkcs12 -storepass password -keypass password -alias gateway -dname "CN=gateway,OU=Akana,O=Perforce,L=Minneapolis,ST=Minnesota,C=US" &&
+
+      keytool -storepass password -keypass password -keystore portal.pkcs12 -storetype pkcs12 -certreq -alias portal | keytool -storepass password -keypass password -keystore ca.jks -gencert -validity 365 -alias ca -ext ku:c=dig,keyEncipherment -ext eku=serverAuth -ext san=dns:localhost,dns:portal,dns:$HOST,dns:portal.$HOST -rfc   > portal.pem &&
+      keytool -storepass password -keypass password -keystore gateway.pkcs12 -storetype pkcs12 -certreq -alias gateway | keytool -storepass password -keypass password -keystore ca.jks -gencert -validity 365 -alias ca -ext ku:c=dig,keyEncipherment -ext eku=serverAuth -ext san=dns:localhost,dns:gateway,dns:$HOST,dns:gateway.$HOST -rfc   > gateway.pem &&
+
+      cat ca.pem portal.pem   > portalchain.pem &&
+      cat ca.pem gateway.pem   > gatewaychain.pem &&
+
+      keytool -noprompt -keystore portal.pkcs12 -storetype pkcs12 -storepass password -keypass password -importcert -alias portal -file portalchain.pem &&
+      keytool -noprompt -keystore gateway.pkcs12 -storetype pkcs12 -storepass password -keypass password -importcert -alias gateway -file gatewaychain.pem'
+    volumes:
+      - ./:/host-files
+
+  portal_setup:
+    image: "${THIRDPARTY_IMAGE_REGISTRY}docker:latest"
+    command:   >-      
+      /bin/sh -c 
+      'docker wait ${COMPOSE_PROJECT_NAME:-docker}_pki_setup_1 &&
+      while [ "`docker inspect -f {{.State.Health.Status}} ${COMPOSE_PROJECT_NAME:-docker}_portal_1`" != "healthy" ]; do     sleep 2; done &&
+      docker exec ${COMPOSE_PROJECT_NAME:-docker}_portal_1
+      curl -i -X DELETE -u administrator:password http://localhost:9901/admin/features/installed/com.soa.feature.external.keystore &&
+      docker exec ${COMPOSE_PROJECT_NAME:-docker}_portal_1
+      curl -i -X DELETE -u administrator:password http://localhost:9901/admin/features/installed/com.soa.persistence.plugin &&
+      docker exec ${COMPOSE_PROJECT_NAME:-docker}_portal_1
+      curl -i -X POST -u administrator:password http://localhost:9901/admin/system/restart &&
+      sleep 10 &&
+      docker exec -w /opt/akana/bin
+      -e CONTAINER_IDENTITY_ACTION=import.pki.key.and.x509
+      -e IDENTITY_KEYSTORE_TYPE=JKS
+      -e IDENTITY_KEYSTORE=/opt/akana/etc/keystore/portal.pkcs12
+      -e IDENTITY_KEYSTORE_PASSWORD=password
+      -e IDENTITY_KEY_ALIAS=portal
+      -e IDENTITY_KEY_PASSWORD=password
+      -e TRUSTSTORE_LOCATION=file:///opt/akana/etc/keystore/portal.pkcs12
+      -e TRUSTSTORE_PASSWORD=password
+      ${COMPOSE_PROJECT_NAME:-docker}_portal_1
+      ./jython.sh 
+      -Dorg.slf4j.simpleLogger.defaultLogLevel=info
+      -m akana.container
+      --props container.properties 
+      --recipe ../recipes/tasks/container-identity-task.json
+      --recipe ../recipes/docker-shared/bootstrap-keystore.json
+      && docker exec -w /opt/akana/bin
+      -e ES_MODE=rest.client
+      -e ES_TRANSPORT_URL=http://elasticsearch:9200
+      -e DB_DRIVER_LOCATION=https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.22/mysql-connector-java-8.0.22.jar
+      -e DB_SERVER=mysql
+      -e CONTAINER_IDENTITY_ACTION=import.pki.key.and.x509
+      -e IDENTITY_KEYSTORE_TYPE=JKS
+      -e IDENTITY_KEYSTORE=/opt/akana/etc/keystore/portal.pkcs12
+      -e IDENTITY_KEYSTORE_PASSWORD=password
+      -e IDENTITY_KEY_ALIAS=portal
+      -e IDENTITY_KEY_PASSWORD=password
+      -e TENANT_EMAIL=${TENANT_EMAIL}
+      -e TENANT_PASSWORD=${TENANT_PASSWORD}
+      -e TENANT_THEME=${TENANT_THEME}
+      -e TENANT_THEME_IMPL=${TENANT_THEME_IMPL}
+      -e TENANT_ID=${TENANT_ID}
+      -e TENANT_NAME=${TENANT_NAME}
+      -e TENANT_HOST=${TENANT_HOST}
+      -e TENANT_CONSOLE_HOST=${TENANT_CONSOLE_HOST}
+      -e TENANT_VHOSTS=${TENANT_VHOSTS}
+      -e PM_ADMIN=${PM_ADMIN}
+      -e PM_PASSWORD=${PM_PASSWORD}
+      -e CONTAINER_ADMIN=administrator
+      -e CONTAINER_ADMIN_PASSWORD=password
+      -e CONTAINER_ADMIN_NEW=${CONTAINER_ADMIN_NEW}
+      -e CONTAINER_ADMIN_PASSWORD_NEW=${CONTAINER_ADMIN_PASSWORD_NEW}
+      ${COMPOSE_PROJECT_NAME:-docker}_portal_1
+      ./jython.sh 
+      -Dorg.slf4j.simpleLogger.defaultLogLevel=info
+      -m akana.container       
+      --props container.properties 
+      --recipe ../recipes/tasks/container-identity-task.json
+      --recipe ../recipes/db-new.json
+      --recipe ../recipes/db-schemas.json
+      --recipe ../recipes/pm-tasks.json
+      --recipe ../recipes/cm-tasks.json
+      --recipe ../recipes/cm-tenant.json
+      --recipe ../recipes/restart.json
+      --recipe ../recipes/docker-shared/admin-user.json
+      && docker exec -w /opt/akana/bin
+      -e CONTAINER_ADMIN=${CONTAINER_ADMIN_NEW}
+      -e CONTAINER_ADMIN_PASSWORD=${CONTAINER_ADMIN_PASSWORD_NEW}
+      -e TENANT_EMAIL=${TENANT_EMAIL}
+      -e TENANT_PASSWORD=${TENANT_PASSWORD}
+      -e TENANT_THEME=${TENANT_THEME}
+      -e TENANT_THEME_IMPL=${TENANT_THEME_IMPL}
+      -e TENANT_ID=${TENANT_ID}
+      -e TENANT_NAME=${TENANT_NAME}
+      -e TENANT_HOST=${TENANT_HOST}
+      -e TENANT_CONSOLE_HOST=${TENANT_CONSOLE_HOST}
+      -e TENANT_VHOSTS=${TENANT_VHOSTS}
+      -e CSRFENABLED=false   
+      -e CSRFENABLEDAJAX=false   
+      ${COMPOSE_PROJECT_NAME:-docker}_portal_1
+      ./jython.sh 
+      -Dorg.slf4j.simpleLogger.defaultLogLevel=info
+      -m akana.container 
+      --props container.properties
+      --recipe ../recipes/cm-theme.json
+      --recipe ../recipes/docker-shared/csrf-defaults.json'
+    networks:
+      - akanacompose
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock  
+    depends_on:
+      - pki_setup
+      - portal
+  gateway_setup:
+    image: "${THIRDPARTY_IMAGE_REGISTRY}docker:latest"
+    command:   >-
+      /bin/sh -c 
+      'docker wait ${COMPOSE_PROJECT_NAME:-docker}_portal_setup_1 &&
+      while [ "`docker inspect -f {{.State.Health.Status}} ${COMPOSE_PROJECT_NAME:-docker}_gateway_1`" != "healthy" ]; do     sleep 2; done &&
+      wget -q -O - http://portal:9901/admin/health/measurables/akana.system.health?brief=true | grep "NORMAL" &&
+      docker exec ${COMPOSE_PROJECT_NAME:-docker}_gateway_1
+      curl -i -X DELETE -u administrator:password http://localhost:9901/admin/features/installed/com.soa.feature.external.keystore &&
+      docker exec ${COMPOSE_PROJECT_NAME:-docker}_gateway_1
+      curl -i -X POST -u administrator:password http://localhost:9901/admin/system/restart &&
+      while [ "`docker inspect -f {{.State.Health.Status}} ${COMPOSE_PROJECT_NAME:-docker}_gateway_1`" != "healthy" ]; do     sleep 2; done &&
+      sleep 5 &&
+      docker exec -w /opt/akana/bin 
+      -e CONTAINER_IDENTITY_ACTION=import.pki.key.and.x509
+      -e IDENTITY_KEYSTORE_TYPE=PKCS12
+      -e IDENTITY_KEYSTORE=/opt/akana/etc/keystore/gateway.pkcs12
+      -e IDENTITY_KEYSTORE_PASSWORD=password
+      -e IDENTITY_KEY_ALIAS=gateway
+      -e IDENTITY_KEY_PASSWORD=password
+      -e PM_SCHEME=https
+      -e PM_HOST=portal
+      -e PM_PORT=9900
+      -e CONTAINER_ADMIN=administrator
+      -e CONTAINER_ADMIN_PASSWORD=password
+      -e CONTAINER_ADMIN_NEW=${CONTAINER_ADMIN_NEW}
+      -e CONTAINER_ADMIN_PASSWORD_NEW=${CONTAINER_ADMIN_PASSWORD_NEW}
+      -e TRUSTSTORE_LOCATION=file:///opt/akana/etc/keystore/gateway.pkcs12
+      -e TRUSTSTORE_PASSWORD=password
+      ${COMPOSE_PROJECT_NAME:-docker}_gateway_1 
+      ./jython.sh 
+      -Dorg.slf4j.simpleLogger.defaultLogLevel=info
+      -m akana.container 
+      --props container.properties 
+      --recipe ../recipes/tasks/container-identity-task.json
+      --recipe ../recipes/docker-shared/bootstrap-keystore.json
+      --recipe ../recipes/docker-shared/wsmex.json
+      --recipe ../recipes/db-driver.json
+      --recipe ../recipes/docker-shared/admin-user.json'
+    networks:
+      - akanacompose
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - portal_setup
+      - gateway
+
+networks:
+  akanacompose: {}
