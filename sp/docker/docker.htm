@@ -183,9 +183,8 @@ TENANT_NAME=t1
 TENANT_HOST=localhost
 TENANT_CONSOLE_HOST=localhost
 TENANT_VHOSTS=localhost</pre></li>
-	<li><span class="apidoc_red">Use this <a href="images/docker-compose.yml">sample compose script for a simple local deployment</a></span> to define your Akana containers, and save it to a local file named ./akana/docker-compose.yml 
-version: '3.8'.</li>
-	<li>Run docker-compose <span class="apidoc_red">-d</span> up from command-line in the ./akana directory. <span class="apidoc_red">{PR: Does "up from command line" make sense to you in this context? If it just means run it from the command line I would like to reword this as follows "In the ./akana directory, from the command line, run </span><span class="apidoc_code">docker-compose -d</span><span class="apidoc_red">". Does that work for you? I need to be sure I'm not changing the meaning. Let me know what you think.}</span> </li>
+	<li>Use this <a href="images/docker-compose.yml">sample compose script for a simple local deployment</a> to define your Akana containers, and save it to a local file named ./akana/docker-compose.yml version: '3.8'.</li>
+	<li>From the command line in the ./akana directory, run <span class="apidoc_code">docker-compose -d up</span></li>
 	<li>In your browser, verify that Community Manager is running and you can log in using the credentials defined in your ./akana/.env file:
 		<pre>https://localhost:9901/atmosphere</pre></li>
 </ol>
@@ -193,7 +192,7 @@ version: '3.8'.</li>
 <h4 id="proc_docker_proxied_api_create">Create your first proxied API</h4>
 <p>Review how to create an API. See <a href="../../cm/learnmore/apiadmin_api_add.htm">Adding an API</a>.</p>
 <p><strong>Localhost Services</strong>: If you are proxying a service running on the same host, take notice of how Docker networking will affect your configuration. You will find that the common hostname (localhost) and loopback address (127.0.0.1) will not reference your service. This is because within the context of the Akana Docker images, your service does not exist at the network's loopback address. Instead you must use the external IP address for your host to allow the network traffic from Akana out of the Docker network and back to the host machine.</p>
-<p><span class="apidoc_red"><strong>SSH Tunneling</strong>: If you have firewall security, you can use SSH tunneling to circumvent the firewall. {PR: just adding "the firewall" here, let me know if you're OK with that.}</span></p>
+<p><strong>SSH Tunneling</strong>: If you have firewall security, you can use SSH tunneling to circumvent the firewall.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -241,7 +240,7 @@ version: '3.8'.</li>
   -e CONTAINER_NAME=gw1 \
   -e CONTAINER_ID=gw1 \
   -e CONTAINER_KEYSTORE_PASSWORD=changeit \
-  -v ./<span class="apidoc_red">&lt;keystore-file&gt;</span>:/opt/akana/etc/keystore \
+  -v ./&lt;keystore-file&gt;:/opt/akana/etc/keystore \
   {registry}/gateway:{version}
 efa10..
 $} docker exec -w /opt/akana/bin \
@@ -338,8 +337,8 @@ ENV CONTAINER_KEYSTORE_PROVIDER=
  
 COPY --from=build-instance /opt/akana/ /opt/akana/
 # Do some security hardening
-RUN adduser -D -u 1001 akana && \
-    chown akana:akana -R /opt/akana && \
+RUN adduser -D -u 1001 akana &amp;&amp; \
+    chown akana:akana -R /opt/akana &amp;&amp; \
     find / -perm +6000 -type f -exec chmod a-s {} \;
 USER akana
  
