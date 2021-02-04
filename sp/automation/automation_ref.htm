@@ -20,7 +20,11 @@ nav-title: Automation Reference
 <ol class="table_of_contents">
 	<li><a href="#overview">Overview</a></li>
 	<li><a href="#recipe_benefits">Benefits of using automation recipes</a></li>
-	<li><a href="#ov_automation_windows">Running automation recipes on Windows</a></li>
+	<li><a href="#ov_automation_windows">Running automation recipes on Windows</a>
+		<ol>
+			<li><a href="#automation_windows_filepath">Windows file path in automation properties files</a></li>
+		</ol>
+	</li>
 	<li><a href="#recipe_structure">Recipe Structure</a>
 		<ol>
 			<li><a href="#includes">Includes</a></li>
@@ -31,7 +35,7 @@ nav-title: Automation Reference
 			<li><a href="#bundles">Bundles</a></li>
 			<li><a href="#configurations">Configurations</a></li>
 			<li><a href="#tasks">Tasks</a></li>
-		</ol>
+			</ol>
 	</li>
 	<li><a href="#property_substitution">Property Substitution</a></li>
 	<li><a href="#recipes_running">Running Recipes: Configuring Containers</a>
@@ -80,6 +84,17 @@ nav-title: Automation Reference
 <h2 id="ov_automation_windows">Running automation recipes on Windows</h2>
 <p>There is a limitation to running automation recipes to create containers on Windows, due to an issue with starting and stopping the Windows process as part of automation. The process of creating a container on Windows includes starting and stopping Windows processes. Currently, for creating containers, you'll need to follow the manual installation process or use Linux.</p>
 <p>All other automation recipes run equally well on Windows or Linux.</p>
+
+
+<h3 id="automation_windows_filepath">Windows file path in automation properties files</h3>
+<p>In general, of course, slashes in file paths are forward slashes on Linux and backslashes on Windows.</p>
+<p>There are a couple of instances in properties files where if you are running your recipes on Windows you'll need to use forward slashes rather than the usual backslashes.</p>
+<p>The example below shows the IDENTITY_KEYSTORE property, the value of which is a file on the local filesystem. Although this is being run on Windows, the properties file must use forward slashes in the path, as shown.</p>
+<pre>IDENTITY_KEYSTORE=c:/akana/apiplatform/automation/automation.jks</pre>
+<p>The example below shows the INSTALL_DIR property. Again, because the value refers to a file location on the local filesystem, it must use forward slashes.</p>
+<pre>INSTALL_DIR=c:/akana/apiplatform/2020_2_0</pre>
+<p>The example below shows the DB_DRIVER_LOCATION, the path to the database driver. This example provides the path and filename using the File URI scheme: see <a href="https://en.wikipedia.org/wiki/File_URI_scheme#Windows" title="https://en.wikipedia.org/wiki/File_URI_scheme#Windows" target="_blank">https://en.wikipedia.org/wiki/File_URI_scheme#Windows</a>.</p>
+<pre>DB_DRIVER_LOCATION=file:///c:/akana/apiplatform/automation/ojdbc8.jar</pre>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -563,6 +578,7 @@ DEFAULT_PORT=${default.port}</pre>
 <p><strong>Windows file path in the properties file</strong>: The example below shows a property that includes a file path for the value, when running recipes on Windows:</p>
 <pre>IDENTITY_KEYSTORE=c:/akana/apiplatform/automation/automation.jks</pre>
 <p>If the recipe is executed from the installation's <span class="apidoc_code">bin</span> directory, INSTALL_DIR is the top-level installation folder. In the same way, you can define the <span class="apidoc_code">container.name</span> and <span class="apidoc_code">default.port</span> properties as system properties or environment variables. You could even hard-code the values in the recipe.</p>
+<p>For more information about representing Windows file paths in properties files, see <a href="#automation_windows_filepath">Windows file path in automation properties files</a>.</p>
 
 
 <h3 id="phases_running">Phases</h3>
