@@ -25,7 +25,13 @@ nav-title: Docker
 	<li><a href="#docker_images">Available Docker Images</a></li>
 	<li><a href="#docker_security_def">Security by Default</a></li>
 	<li><a href="#docker_img_inspect">Inspecting Images</a></li>
-	<li><a href="#docker_gs">Getting Started</a></li>
+	<li><a href="#docker_gs">Getting Started</a>
+		<ol>
+			<li><a href="#proc_docker_env_get_ready">Get your system environment ready</a></li>
+			<li><a href="#proc_docker_define_deployment">Define and run your Akana test deployment</a></li>
+			<li><a href="#proc_docker_proxied_api_create">Create your first proxied API</a></li>
+		</ol>
+	</li>
 </ol>
 
 
@@ -40,15 +46,22 @@ nav-title: Docker
 	<li><a href="#recipe_config">Recipe Configuration</a></li>
 	<li><a href="#persisting_config">Persisting Container Configuration</a></li>
 	<li><a href="#customizing_images">Customizing Akana Docker Images</a></li>
-	<li><a href="#docker_eg_modify_features">Example: Modifying Installed Features</a></li>
+	<li><a href="#docker_eg_modify_features">Example: Modifying Installed Features</a>
+		<ol>
+			<li><a href="#docker_add_jdbc_driver">Dockerfile : Adding JDBC Driver</a></li>
+		</ol>
+	</li>
 </ol>
-
 
 
 
 <h4 style="color: gray;"><a href="#h_appendix">Appendix</a></h4>
 <ol class="table_of_contents">
-	<li><a href="#docker_external_pki_setup_eg">Simple external PKI setup for Akana</a></li>
+	<li><a href="#docker_external_pki_setup_eg">Simple external PKI setup for Akana</a>
+		<ol>
+			<li><a href="#docker_generate_pki">Generate private PKI</a></li>
+		</ol>
+	</li>
 </ol>
 
 
@@ -124,7 +137,7 @@ nav-title: Docker
 
 
 <h2 id="docker_gs">Getting Started</h2>
-<p>Docker is freely available making it easy to get started anywhere it can run. These steps will set up a local Community Manager and API Gateway to help you get familiar with running Akana with Docker as well as with basic concepts for proxying services.</p>
+<p>Docker is freely available, making it easy to get started anywhere it can run. These steps will set up a local Community Manager and API Gateway, to help you get familiar with running Akana with Docker as well as with basic concepts for proxying services.</p>
 <p>There are three basic steps:</p>
 <ol>
 	<li><a href="#proc_docker_env_get_ready">Get your system environment ready</a></li>
@@ -135,17 +148,30 @@ nav-title: Docker
 <h4 id="proc_docker_env_get_ready">Get your system environment ready</h4>
 <ol>
 	<li>Install the Docker engine: see <a href="https://docs.docker.com/get-docker/" title="Link to Docker doc" target="_blank">https://docs.docker.com/get-docker/</a>.</li>
-	<li>Obtain access to the Akana Docker registry or image downloads.
+	<li>Obtain access to the Akana Docker registry or image downloads. For instructions, see <a href="#proc_docker_download_zips">To download the Docker images</a> below.
 		<ol>
-			<li>Load images from file using: docker load -i 
-				{path-to-download}.</li>
-			<li>Pull images from repository using: docker pull 
-				{repo}/{image-name}:{version-tag}.</li>
+			<li>Load images from file using:
+					<pre>docker load -i {path-to-download}</pre>
+				</li>
+			<li>Pull images from repository using:
+					<pre>docker pull {repo}/{image-name}:{version-tag}</pre>
+				</li>
 		</ol>
 	</li>
 	<li>Install Docker Compose: see <a href="https://docs.docker.com/compose/install/" title="Link to Docker installation doc" target="_blank">https://docs.docker.com/compose/install/</a>.</li>
-	<li>Make sure your current user has id 1000, or create a user with this id and give permissions to your working directory; for example, <strong>./akana</strong>. We make use of Docker volumes to unburden the filesystem driver as well as separate the non-ephemeral data from the ephemeral container. This comes with the need to link the base operating system's access control with the Docker container's access control. By using a common user identifier in both Linux operating systems, they look like the same user, and the Docker container can access the files.</li>
+	<li>Make sure that your current user has id 1000, or create a user with this id and give permissions to your working directory; for example, <strong>./akana</strong>. We make use of Docker volumes to unburden the filesystem driver as well as separate the non-ephemeral data from the ephemeral container. This comes with the need to link the base operating system's access control with the Docker container's access control. When you use a common user identifier in both Linux operating systems, they look like the same user, and the Docker container can therefore access the files.</li>
 </ol>
+
+<h4 id="proc_docker_download_zips">To download the Docker images</h4>
+<ol>
+	<li>Log in to the Support Center (<a href="https://library.roguewave.com" target="_blank">https://library.roguewave.com</a>).
+		<p><strong>Note</strong>: If you don't have login credentials for the site, <a href="../support/support.htm#s01_02_01">contact technical support</a> to get access.</p>
+		</li>
+	<li>Go to <strong>Product Downloads</strong> &gt; <strong>Akana - Product Downloads</strong> &gt; <strong>Akana 2020.2.x Product Downloads</strong>.</li>
+	<li>Download the applicable version of the Docker ZIP file.</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
 <h4 id="proc_docker_define_deployment">Define and run your Akana test deployment</h4>
 <ol>
 	<li>Define your environment in a local file: ./akana/.env.
@@ -301,7 +327,8 @@ $} docker exec -w /opt/akana/bin \
 
 <h2 id="docker_eg_modify_features">Example: Modifying Installed Features</h2>
 <p>Akana container images come with the most common features installed, but many are omitted to keep the size small and reduce the threat surface for most customers. You may need to add or remove features or individual OSGi bundles to meet your organization's individual needs. For example, most customers will need to install a proprietary database driver to be able to connect to their RDBMS. You can customize the Akana Docker Images to "bake" this into your organization's images.</p>
-<h4>Dockerfile : Adding JDBC Driver</h4>
+
+<h4 id="docker_add_jdbc_driver">Dockerfile : Adding JDBC Driver</h4>
 <pre>FROM {repo}/portal:{version} AS build-instance
  
 # Recopy recipes incase they've changed and we're doing an expidited build of just one image, without rebuilding the akana-base image
@@ -361,7 +388,7 @@ ENTRYPOINT ["/bin/bash", "/opt/akana/bin/akana-entrypoint.sh", "akana"]</pre>
 	<li>Adding third-party agent software</li>
 	<li>Running any customization recipe (see security note below)</li>
 </ul>
-<p><strong>Container Security Scanning</strong>: When adding open source software, it is recommended to use a component scanning tool to identify known vulnerabilities so that you can make an educated risk assessment and upgrade as appropriate.</p>
+<p><strong>Container Security Scanning</strong>: When adding open source software, it is recommended to use a component scanning tool to identify known vulnerabilities. You can then make an educated risk assessment and upgrade as appropriate.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -374,7 +401,7 @@ ENTRYPOINT ["/bin/bash", "/opt/akana/bin/akana-entrypoint.sh", "akana"]</pre>
 
 
 <h2 id="docker_external_pki_setup_eg">Simple external PKI setup for Akana</h2>
-<p>It may be helpful to learn more about PKI and/or provide a more realistic deployment environment using software-based cryptography. For example, you can leverage the external keystore feature in Akana by using the keytool command provided with the Java JDK. This setup can be replaced with a hardware security module (HSM) in the future, if needed, using the same configurations.</p>
+<p>In most or all cases, a realistic deployment environment will use software-based cryptography, using PKI and/or HSM. For example, you can leverage the external keystore feature in Akana by using the keytool command provided with the Java JDK. This setup can be replaced with a hardware security module (HSM) in the future, if needed, using the same configurations.</p>
 <p>The steps involved are:</p>
 <ol>
 	<li>Create a private certificate authority (CA).</li>
@@ -385,7 +412,7 @@ ENTRYPOINT ["/bin/bash", "/opt/akana/bin/akana-entrypoint.sh", "akana"]</pre>
 <p>Below is a script that performs steps 1-3 as an example. Just run the following:</p>
 <pre>./gen-pki.sh &lt;hostname&gt; &lt;keystorePassword&gt;</pre>
 
-<h4>Generate private PKI</h4>
+<h4 id="docker_generate_pki">Generate private PKI</h4>
 <pre>#!/bin/bash
  
 # Clean
