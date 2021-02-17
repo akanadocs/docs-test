@@ -100,7 +100,7 @@ nav-title: Docker
 	<li>Common hardening configurations are enabled by default. See <a href="../platform_management/platform-hardening.htm" title="Link to Hardening Guide">Akana Platform Hardening Guide</a>.</li>
 	<li>Industry best practices for Docker image hardening.</li>
 	<li>The Akana Administration Console is deployed on a separate port (9901). This allows network rules to block access to the Akana Administration Console.</li>
-	<li>TLS is enabled by default on standard port 9900 with external keystore feature installed by default. For more information, see <a href="..\key_management/using_external_keystore.htm" title="Link to Using the External Keystore Feature">Using the External Keystore Feature</a>.[MDL: Previous copy said: "ref: configuring container identity/external keystore" -- do I have the correct link? Or, is there a doc re configuring container identity we should be linking to?]</li>
+	<li>TLS is enabled by default on standard port 9900 with external keystore feature installed by default. For more information, see <a href="..\key_management/using_external_keystore.htm" title="Link to Using the External Keystore Feature">Using the External Keystore Feature</a>.</li>
 </ul>
 <p><a href="#top">Back to top</a></p>
 
@@ -256,7 +256,7 @@ TENANT_VHOSTS=localhost</pre></li>
 <h2 id="container_identity">Container Identity and External Keystore</h2>
 <p>Each Akana container must have a unique identity and should use a unique key pair. Akana images define environment variables and a volume for the keystore file that should be defined during container creation that will give the Akana instance an identity and trust with other Akana instances in the deployment. Notes:</p>
 <ul>
-	<li>Whether you're using JCEKS/PKCS12 or an HSM as a keystore, make sure you have keys defined for each container. See <a href="#docker_external_pki_setup_eg">Simple external PKI setup for Akana</a>.</li>
+	<li>Whether you're using JCEKS/<a href="../../cm/learnmore/basics_glossary.htm#gl_pkcs12">PKCS12</a> or an HSM as a keystore, make sure you have keys defined for each container. See <a href="#docker_external_pki_setup_eg">Simple external PKI setup for Akana</a>.</li>
 	<li>Use the volume /opt/akana/etc/keystore to mount your keystore file (you can override the location using environment variable CONTAINER_KEYSTORE_LOCATION if necessary).</li>
 	<li>Specify the password to access the keystore CONATINER_KEYSTORE_PASSWORD as well as your container's CONTAINER_NAME and CONTAINER_ID as environment variables.</li>
 	<li>Run the container-identity-task.json recipe to select the key to be used for this container via its alias in the keystore (or HSM).</li>
@@ -401,7 +401,8 @@ ENTRYPOINT ["/bin/bash", "/opt/akana/bin/akana-entrypoint.sh", "akana"]</pre>
 
 
 <h2 id="docker_external_pki_setup_eg">Simple external PKI setup for Akana</h2>
-<p>In most or all cases, a realistic deployment environment will use software-based cryptography, using PKI and/or HSM. For example, you can leverage the external keystore feature in Akana by using the keytool command provided with the Java JDK. This setup can be replaced with a hardware security module (HSM) in the future, if needed, using the same configurations.</p>
+<p>In general, a less secure deployment environment might use use software-based cryptography, such as JCEKS and <a href="../../cm/learnmore/basics_glossary.htm#gl_pkcs12">PKCS12</a>, and a more secure deployment environment might use HSM. You can leverage the external keystore feature in Akana by using the keytool command provided with the Java JDK. This setup can be replaced with a hardware security module (HSM) in the future, if needed, using the same configurations.</p>
+<p>The example below uses software-based cryptography to illustrate configuring an external keystore. However, it's likely that a production environment would use an HSM rather than a keystore file.</p>
 <p>The steps involved are:</p>
 <ol>
 	<li>Create a private certificate authority (CA).</li>
