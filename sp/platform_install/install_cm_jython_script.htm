@@ -10,14 +10,19 @@ type: page
 nav-title: Tenant Installation Jython Script
 ---
 <h1 id="top">Community Manager Tenant Installation Jython Script</h1>
-<p>Provides reference information and examples relating to the installation Jython script used to create an instance of the Akana API Platform Community Manager developer portal (tenant).</p>
+<p>Provides reference information and examples relating to the installation Jython script used to create a tenant&#8212;an instance of the Akana API Platform Community Manager developer portal.</p>
 <hr class="divide_hr" />
 
 
 
 <h2 style="color: gray;">Table of Contents</h2>
 <ol class="table_of_contents">
-	<li><a href="#jython_script_elements">Jython Script Elements</a></li>
+	<li><a href="#jython_script_elements">Jython Script Elements</a>
+		<ul>
+			<li><a href="#script_elements_required">Required Jython script elements</a></li>
+			<li><a href="#script_elements_optional">Optional Jython script elements</a></li>
+		</ul>
+	</li>
 	<li><a href="#theme_themeimpl">Using theme and themeImpl to specify a theme</a></li>
 	<li><a href="#cloning_themes">Extending a platform theme</a></li>
 	<li><a href="#installation_scripts_with_examples">Installation scripts with examples</a></li>
@@ -28,22 +33,23 @@ nav-title: Tenant Installation Jython Script
 
 
 <h2 id="jython_script_elements">Jython Script Elements</h2>
-<p>The various Jython script elements allow you to specify tenant configuration values, to tailor the installation to your requirements. Some of the elements determine the look and feel of the resulting installation. Review the available options before writing your tenant Jython script. Script elements are explained below:</p>
+<p>The various Jython script elements allow you to specify tenant configuration values, to tailor the installation to your requirements. Some of the elements determine the look and feel of the resulting installation. Review the available options before writing your tenant Jython script:</p>
 <ul>
-	<li><a href="#script_elements_required">Required Jython Script Elements </a></li>
-	<li><a href="#script_elements_optional">Optional Jython Script Elements</a></li>
+	<li><a href="#script_elements_required">Required Jython script elements</a></li>
+	<li><a href="#script_elements_optional">Optional Jython script elements</a></li>
 </ul>
 
 
-<h3 id="script_elements_required">Required Jython Script Elements</h3>
+<h3 id="script_elements_required">Required Jython script elements</h3>
 <p>Required script elements are given below, with an explanation of each.</p>
 <dl>
 
 
 
 <dt>--url</dt>
-<dd>The hostname for the container that the Community Manager developer portal is running on. The URL is normally structured along these lines: <strong>{protocol}://{hostname}:{port}</strong></dd>
+<dd>The URL for the container that the <strong>Akana Community Manager APIs</strong> feature is installed on. Can be a container URL or load balancer URL. The URL is normally structured along these lines: <strong>{protocol}://{hostname}:{port}</strong></dd>
 <dd>Example: <strong>http://server-10.acmepaymentscorp.com</strong></dd>
+<dd>For a more detailed example, see <a href="#jython_script_elements_url_example">URL values in the Jython script elements: example</a> below.</dd>
 <dd>There is normally no context unless the product is running in an application server.</dd>
 
 
@@ -56,7 +62,7 @@ nav-title: Tenant Installation Jython Script
 
 
 <dt>--tenantId</dt>
-<dd>The internal ID of the tenant. When choosing the TenantID, it's best to choose an ID that's as short as possible, since it's used in many other IDs, URLs, and message payload content. It cannot have spaces or special characters, and should be lowercase. Keep it simple. The tenantID is normally the lowercase version of the tenant name above (without spaces); for example, <strong>acmepaymentscorp</strong>. It will appear in all object IDs and the URLs in the system.</dd>
+<dd>The internal ID of the tenant. When choosing the TenantID, it's best to choose an ID that's as short as possible, since it's used in many other IDs (such as AppID, APIID), in URLs, and in message payload content. It cannot have spaces or special characters, and should be lowercase. Keep it simple. The tenantID is normally the lowercase version of the tenant name above (without spaces); for example, <strong>acmepaymentscorp</strong>. It will appear in all object IDs and the URLs in the system.</dd>
 <dd><strong>Note</strong>: Once the tenant is created, the <strong>tenantId</strong> value cannot be changed.</dd>
 
 
@@ -66,25 +72,27 @@ nav-title: Tenant Installation Jython Script
 <dd>This is the default address from which the tenant is accessed. Multiple additional virtual hostnames are allowed, but the hostname provided in this element is the primary hostname.</dd>
 <dd>This value is used in certain notifications that provide a URL for accessing the tenant; for example, the signup confirmation email.</dd>
 <dd>Example: <strong>http://acmepaymentscorp:9901</strong></dd>
+<dd>For a more detailed example, see <a href="#jython_script_elements_url_example">URL values in the Jython script elements: examples</a> below.</dd>
 <dd><strong>Note</strong>: Hostnames in the Jython script must be lowercase.</dd>
 
 
 
 <dt>--consoleAddress</dt>
-<dd>The same as the --address element, but includes the context in which the Community Manager developer portal is running, if a context is specified. Context could be a value, such as <strong>acmepaymentscorp</strong>, or could just be root (<strong>/</strong>). This is the address of the Community Manager developer portal; the full URL that will be used in the browser when accessing the Community Manager developer portal user interface. The browser then redirects to the default login page.</dd>
+<dd>The same as the --address element, but includes the context in which the Community Manager developer portal is running, if a context is specified. Context could be a value, such as <strong>acmepaymentscorp</strong>, or could just be root (<strong>/</strong>). This is the address of the Community Manager developer portal&#8212;the full URL that will be used in the browser when accessing the Community Manager developer portal user interface. The browser then redirects to the default login page.</dd>
 <dd>Examples: <strong>http://acmepaymentscorp:9901/acmepaymentscorp</strong>, <strong>http://acmepaymentscorp:9901/</strong>.</dd>
-<dd><strong>Notes:</strong>: Hostnames in the Jython script <strong>must</strong> be lowercase.</dd>
+<dd>For a more detailed example, see <a href="#jython_script_elements_url_example">URL values in the Jython script elements: examples</a> below.</dd>
+<dd><strong>Note:</strong>: Hostnames in the Jython script <strong>must</strong> be lowercase.</dd>
 <dd><strong>Note</strong>: This parameter corresponds to the <strong>atmosphere.context.root</strong> settings in the underlying Administration Console. See <a href="../../cm/learnmore/site_admin_admin_console_settings.htm#com_soa_atmosphere_console">com.soa.atmosphere.console</a> (Community Manager developer portal Site Admin doc). There are certain values that are reserved for other uses. They include: /portal, /api. If you're choosing a custom value for this setting, do <strong>not</strong> use these values.</dd>
 
 
 
-<dt>--username (Version 8.3 and later)</dt>
+<dt>--username</dt>
 <dd>Username for authorized user. Needed, along with the <strong>userpassword</strong> element, for the BasicAuth security required for adding a tenant.</dd>
 <dd>Example: <strong>johnsmith</strong></dd>
 
 
 
-<dt>--userpassword (Version 8.3 and later)</dt>
+<dt>--userpassword</dt>
 <dd>Password for authorized user. Needed, along with the <strong>username</strong> element, for the BasicAuth security required for adding a tenant.</dd>
 <dd>Example: <strong>securepassword_976</strong></dd>
 
@@ -93,14 +101,14 @@ nav-title: Tenant Installation Jython Script
 </dl>
 
 
-<h3 id="script_elements_optional">Optional Jython Script Elements</h3>
+<h3 id="script_elements_optional">Optional Jython script elements</h3>
 <p>Optional script elements are given below, with an explanation of each.</p>
 <dl>
 
 
 
 <dt>--contactEmailAddress</dt>
-<dd>The email address that users should contact for help with any issues in the tenant. This address is used in some links in tenant pages; for example, in the footer template for pages on the Community Manager developer portal.</dd>
+<dd>The email address that users should contact for help with any issues in the tenant. This address is used in some links in tenant pages&#8212;for example, in the footer template for pages on the Community Manager developer portal.</dd>
 
 
 
@@ -113,7 +121,7 @@ nav-title: Tenant Installation Jython Script
 
 <dt>--esIndexName</dt>
 <dd>Optional: the name of the Elasticsearch index. This is only needed if you're using some advanced options in a larger deployment, to have a separate, independent Elasticsearch index for each tenant. By default, an index with the name <strong>default</strong> is used. If this parameter is not included, the <strong>default</strong> index is used for the tenant.</dd>
-<dd>Generally, this is only applicable to a very large installation with multiple tenants.</dd>
+<dd>Generally, this parameter is only applicable to a very large installation with multiple tenants.</dd>
 
 
 
@@ -132,26 +140,81 @@ nav-title: Tenant Installation Jython Script
 
 <dt>--theme</dt>
 <dd>A value that determines which of the available themes is used for the Community Manager developer portal user interface.</dd>
-<dd>There are three possible values: <strong>default</strong>, <strong>simpledev</strong>, and <strong>hermosa</strong>. For default and simpledev theme, specifying the <strong>theme</strong> parameter is all you need to do to specify your theme. For Hermosa theme, you must also include the <strong>themeImpl</strong> parameter with a value of <strong>default</strong> (see below). For more information, see <a href="#theme_themeimpl">Using theme and themeImpl to specify a theme</a> and <a href="#cloning_themes">Extending a platform theme</a>.</dd>
+<dd>Possible values depend on the product version you're using: <strong>bonita</strong>, <strong>default</strong>, <strong>devops</strong>, <strong>hermosa</strong>, <strong>simpledev</strong>. For default and simpledev theme, specifying the <strong>theme</strong> parameter is all you need to do to specify your theme. For Hermosa and Bonita, you must also include the <strong>themeImpl</strong> parameter with a value of <strong>default</strong> (see below). For more information, see <a href="#theme_themeimpl">Using theme and themeImpl to specify a theme</a> and <a href="#cloning_themes">Extending a platform theme</a>.</dd>
 
 
 
 <dt>--themeImpl</dt>
 <dd>An element that works with the <strong>theme</strong> element to support the ability to extend Community Manager developer portal user interface themes, so that you can have multiple instances of one theme with separate customization for each. However, extending themes is most easily accomplished via the Community Manager developer portal user interface. See <a href="../../cm/learnmore/site_admin_site.htm#settings_theme_clone">How do I extend a platform theme?</a> (Community Manager developer portal help).</dd>
-<dd>There are three possible values: <strong>default</strong>, <strong>simpledev</strong>, and <strong>hermosa</strong>. If you're installing Hermosa theme, use <strong>theme</strong> value of <strong>hermosa</strong> and <strong>themeImpl</strong> value of <strong>default</strong>. If you're installing Default or Simple Dev theme, you don't need to use themeImpl at all.</dd>
+<dd>Possible values: <strong>bonita</strong>, <strong>default</strong>, <strong>devops</strong>, <strong>hermosa</strong>, <strong>simpledev</strong>. If you're installing Hermosa theme, use <strong>theme</strong> value of <strong>hermosa</strong> and <strong>themeImpl</strong> value of <strong>default</strong>. If you're installing Default or Simple Dev theme, you don't need to use themeImpl at all.</dd>
 
 
 
 <dt>--virtualHosts</dt>
 <dd>A comma-separated list of host names that the portal can be accessed from. For example:</dd>
 <dd><strong>--virtualHosts open.acmepaymentscorp.com,open.example.com</strong> </dd>
+<dd>For a more detailed example, see <a href="#jython_script_elements_url_example">URL values in the Jython script elements: examples</a> below.</dd>
 <dd><strong>Note</strong>: Hostnames in the Jython script must be lowercase.</dd>
 
 
 
 <dt>--ignoreCerts</dt>
-<dd>An optional parameter you can use if you want to ignore SSL certs when creating the tenant. Defaults to <strong>False</strong>; if you include this parameter with value <strong>True</strong> (case sensitive), the code will accept all certs when calling an HTTPS endpoint to create a new tenant.</dd>
+<dd>An optional parameter you can use if you want to ignore SSL certs when creating the tenant. Defaults to <strong>False</strong>; if you include this parameter with value <strong>True</strong> (case sensitive), the platform accepts all certs when calling an HTTPS endpoint to create a new tenant.</dd>
 </dl>
+
+<h4 id="jython_script_elements_url_example">URL values in the Jython script elements: examples</h4>
+<ul>
+	<li><a href="#jython_script_elements_url_eg_01">Example #1 (with virtual hosts)</a></li>
+	<li><a href="#jython_script_elements_url_eg_02">Example #2 (simple example)</a></li>
+</ul>
+
+
+<h5 id="jython_script_elements_url_eg_01">Example #1 (with virtual hosts)</h5>
+<p> Let's say for example you create a container on http://cmcontainer:9000, and install the <strong>Akana Community Manager APIs</strong> feature. In this example, the values might be as shown below.</p>
+<table class="doctable">
+	<thead>
+		<tr>
+			<th>Element...</th>
+			<th>Possible value...</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Container URL</td>
+			<td>https://cmcontainer:9000</td>
+		</tr>
+		<tr>
+			<td>--url</td>
+			<td>https://cmcontainer:9000
+			<p><strong>Note</strong>: The load balancing URL could also be used, if load balancing is already set up. For example: https://cmloadbalancerurl.</p></td>
+		</tr>
+		<tr>
+			<td>--address</td>
+			<td>https://cmloadbalancerurl</td>
+		</tr>
+		<tr>
+			<td>--consoleAddress</td>
+			<td>https://cmloadbalancerurl/enterpriseapi</td>
+		</tr>
+		<tr>
+			<td>--virtualHosts</td>
+			<td>cmcontainer,cmloadbalancerurl,cmcontainer2</td>
+		</tr>
+		<tr>
+			<td>Akana Administration Console</td>
+			<td>http://cmcontainer:9005/admin (It's a good idea to have the Akana Administration Console on a different port, for security reasons.)</td>
+		</tr>
+	</tbody>
+</table>
+
+<h5 id="jython_script_elements_url_eg_02">Example #2 (simple example)</h5>
+<p>A very simple example might not use load balancing or virtual hosts. For example:</p>
+<ul>
+	<li>--url http://localhost:9000</li>
+	<li>--address http://localhost:9000</li>
+	<li>--consoleAddress http://localhost:9000/enterpriseapi</li>
+</ul>
+<p>In this example, --virtualhost is not needed.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -183,6 +246,16 @@ nav-title: Tenant Installation Jython Script
 			<td>simpledev</td>
 			<td>{none; not needed}</td>
 		</tr>
+		<tr>
+			<td>Bonita Theme</td>
+			<td>bonita</td>
+			<td><span class="apidoc_red">xxx</span></td>
+		</tr>
+		<tr>
+			<td>DevOps Theme</td>
+			<td>devops</td>
+			<td><span class="apidoc_red">xxx</span></td>
+		</tr>
 	</tbody>
 </table>
 <p><a href="#top">Back to top</a></p>
@@ -190,26 +263,29 @@ nav-title: Tenant Installation Jython Script
 
 
 <h2 id="cloning_themes">Extending a platform theme</h2>
-<p>You can have multiple versions of a single platform themes by extending the theme. When you extend the theme, you essentially create one or more additional, custom themes, each with a different name. The steps are:</p>
+<p>You can have multiple versions of a single platform theme by extending the theme. When you extend the theme, you essentially create one or more additional, custom themes, each with a different name. The steps are:</p>
 <ol>
 	<li>Defining the custom theme.</li>
 	<li>Specifying the standard theme that it's based on.</li>
 	<li>Modifying the custom theme.</li>
 </ol>
 <p>Each instance has its own URL (virtual host) and can be separately customized, but they all use the same code base and database. This allows you to provide a different user experience to different user groups.</p>
-<p>The platform supports extending of all three themes: <strong>default theme</strong>, <strong>simple dev</strong>, and <strong>hermosa</strong>.</p>
-<p>You can also extend themes via the Community Manager developer portal user interface; <strong>Administration</strong> &gt; <strong>Site</strong> &gt; <strong>Add Theme</strong>, and choose the <strong>Custom Theme</strong> option.</p>
-<p>Extending Hermosa theme is supported from version 2018.0.0 onwards.</p>
-<p>For instructions, see <a href="../../cm/learnmore/site_admin_site.htm#settings_theme_clone">How do I extend a platform theme?</a> (Community Manager developer portal help).</p>
+<p>The platform supports extending of all themes {<span class="apidoc_red">verify. Previously it said extending of all three themes}</span>.</p>
+<p>You can also extend themes via the Community Manager developer portal user interface: <strong>Administration</strong> &gt; <strong>Site</strong> &gt; <strong>Add Theme</strong>, and choose the <strong>Custom Theme</strong> option.</p>
+<p>Extending Hermosa theme is supported from version 2018.0.0 onwards. For instructions, see <a href="../../cm/learnmore/site_admin_site.htm#settings_theme_clone">How do I extend a platform theme?</a> (Community Manager developer portal help).</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
 <h2 id="installation_scripts_with_examples">Installation scripts with examples</h2>
-<p>From the /bin folder of your installation, run the applicable Jython script below, using appropriate values for your installation. For definitions, refer to the tables above.</p>
+<p>From the /bin folder of your installation, run the applicable Jython script below, using appropriate values for your installation. For definitions, refer to the sections above.Choose the section for your operating system:</p>
+<ul>
+	<li><a href="#install_script_eg_windows">Windows</a></li>
+	<li><a href="#install_script_eg_unix">Unix</a></li>
+</ul>
 
 
-<h3>Windows</h3>
+<h3 id="install_script_eg_windows">Windows</h3>
 <p><strong>Script:</strong></p>
 <p>Line breaks have been added for display purposes. Remove line breaks when copying and pasting.</p>
 <pre>Jython.bat ../scripts/Lib/soa/atmosphere/tenant.py -a -v 
@@ -229,7 +305,9 @@ nav-title: Tenant Installation Jython Script
 --userpassword {user password}</pre>
 <p><strong>Example:</strong></p>
 <pre>jython.bat ../scripts/Lib/soa/atmosphere/tenant.py -a -v --url http://enterprise.soa.local:9900 --tenantName EnterpriseAPI --tenantId enterpriseapi --address http://enterpriseapi.soa.local:9900 --consoleAddress http://enterpriseapi.soa.local:9900/enterpriseapi --theme default --themeImpl {default} --email administrator@{yoursite}.com --password password --contactEmailAddress yourname@acmepaymentscorp.com --fromEmailAddress yourname@acmepaymentscorp.com --virtualHosts open.acmepaymentscorp.com,open.example.com --username janemead --userpassword <strong>buckpwdbuckpwnFk24y1iY3U4dpwd</strong></pre>
-<h3>UNIX</h3>
+
+
+<h3 id="install_script_eg_unix">UNIX</h3>
 <p><strong>Script:</strong></p>
 <pre>/jython.sh../scripts/Lib/soa/atmosphere/tenant.py -a -v --url {url} --tenantName {tenantName} --tenantId {tenantId} --address {tenantAddress} --consoleAddress {consoleAddress} --theme {theme} --themeImpl {themeImpl} --email {default tenant administrator} --password {default tenant administrator password} --contactEmailAddress {contactEmailAddress} --fromEmailAddress {fromEmailAddress} --virtualHosts {virtualHosts} --username {username} --userpassword {user password}</pre>
 <p><strong>Example:</strong></p>
@@ -247,28 +325,31 @@ nav-title: Tenant Installation Jython Script
 <li>The certificate is generated by the Akana platform's internal CA.</li>
 <li>The certificate is generated by a non-commercial issuer.</li>
 </ul>
+
+
 <h3>Setting up security for an Akana API Platform tenant with HTTPS URLs</h3>
 <p>To add the issuer to the certificate file, you must get the certificate issuer of the container, set the path, and then set the Jython <strong>ops</strong> command. You can then run the Jython script. Follow the steps below.</p>
+
 <h4>To set up security for a CM tenant with HTTPS URLs</h4>
 <ol>
-<li>In Akana Policy Manager, create a keystore with the issuer certificate of API Platform SSL Certificate.
-<p>You could use a tool such as the Java Keytool utility (http://sourceforge.net/projects/keytool) or the Elysian Keytool Advanced GUI (http://sourceforge.net/projects/ssltools) to create the keystore. An example using Keytool is shown below:</p>
-<pre>keytool -genkey -alias mydomain -keyalg RSA -keystore keystore.jks -keysize 2048</pre></li>
-<li>Import the trusted certificate into the keystore. An example is shown below. Substitute values such as filename and location and keystore name and location.
-<pre>keytool -importcert -v -trustcacerts -alias atmo -file C:/akana/CA.cer -keystore c:/akana/keystore.jks -storepass password -storetype JKS</pre>
-<p>Once this step is complete, the keystore is ready with the API Platform SSL certificate.</p>
-<p><strong>Note</strong>: As an alternative to the above step, which uses the default <strong>cacerts</strong> keystore and adds the new certificate issuer, you could create a blank <strong>cacerts</strong> file with just this issuer, the API Platform certificate issuer. If you take this approach you would still have to follow Step 3 below, and then run the Jython script.</p></li>
-<li>In the <strong>bin</strong> folder for your installation, at the command line, execute the following command, substituting the keystore path and filename:
-<pre>set JYTHON_OPTS="-Djavax.net.ssl.trustStore={keystore_path_and_filename}"</pre>
-<p>An example is shown below.</p>
-<pre>set JYTHON_OPTS="-Djavax.net.ssl.trustStore=C:/testdata/mykeystore.jks"</pre></li>
-<li>Run the Jython script with the values for your installation.
-<p><strong>Windows:</strong></p>
-<pre>jython.bat ../scripts/Lib/soa/atmosphere/tenant.py -a -v --url https://enterprise.soa.local:9443 --tenantName EnterpriseAPI--tenantId enterpriseapi --address https://enterpriseapi.soa.local:9443 --consoleAddress https://enterpriseapi.soa.local:9443/enterpriseapi --theme default --email administrator@{yoursite}.com --password password --contactEmailAddress yourname@acmepaymentscorp.com --fromEmailAddress yourname@acmepaymentscorp.com --virtualHosts open.acmepaymentscorp.com,open.example.com --username janemead --userpassword buckpwdbuckpwnFk24y1iY3U4dpwd</pre>
-<p><strong>UNIX:</strong> </p>
-<pre>./jython.sh ../scripts/Lib/soa/atmosphere/tenant.py -a -v --url https:// enterpriseapi.soa.local:9443 --tenantName EnterpriseAPI --tenantId enterpriseapi--address https://enterpriseapi.soa.local:9443 --consoleAddress https://enterpriseapi.soa.local:9443/enterpriseapi --theme default --email administrator@{yoursite}.com --password password --contactEmailAddress yourname@acmepaymentscorp.com --fromEmailAddress yourname@acmepaymentscorp.com --virtualHosts open.acmepaymentscorp.com,open.example.com --username janemead --userpassword buckpwdbuckpwnFk24y1iY3U4dpwd</pre>
-<p>An example is shown below.</p>
-<pre>jython ../scripts/Lib/soa/atmosphere/tenant.py -a -v --url https://acmepaymentscorp.com:9443 --tenantName acmepaymentscorp --tenantId acmepaymentscorp --address https://acmepaymentscorp.com:9443 --consoleAddress https://acmepaymentscorp.com:9443/atmosphere --theme default --contactEmailAddress admin@acmepaymentscorp.com --fromEmailAddress admin@acmepaymentscorp.com --virtualHosts acmepaymentscorp.com --username janemead --userpassword buckpwdbuckpwnFk24y1iY3U4dpwd</pre></li>
+	<li>In Akana Policy Manager, create a keystore with the issuer certificate of API Platform SSL Certificate.
+		<p>You could use a tool such as the Java Keytool utility (http://sourceforge.net/projects/keytool) or the Elysian Keytool Advanced GUI (http://sourceforge.net/projects/ssltools) to create the keystore. An example using Keytool is shown below:</p>
+		<pre>keytool -genkey -alias mydomain -keyalg RSA -keystore keystore.jks -keysize 2048</pre></li>
+	<li>Import the trusted certificate into the keystore. Substitute the correct values for filename, file location, keystore name, and keystore location. An example is shown below.
+		<pre>keytool -importcert -v -trustcacerts -alias atmo -file C:/akana/CA.cer -keystore c:/akana/keystore.jks -storepass password -storetype JKS</pre>
+		<p>Once this step is complete, the keystore is ready with the API Platform SSL certificate.</p>
+		<p><strong>Note</strong>: As an alternative to the above step, which uses the default <strong>cacerts</strong> keystore and adds the new certificate issuer, you could create a blank <strong>cacerts</strong> file with just this issuer, the API Platform certificate issuer. If you take this approach you would still have to follow Step 3 below, and then run the Jython script.</p></li>
+	<li>In the <strong>bin</strong> folder for your installation, at the command line, execute the following command, substituting the keystore path and filename:
+		<pre>set JYTHON_OPTS="-Djavax.net.ssl.trustStore={keystore_path_and_filename}"</pre>
+		<p>An example is shown below.</p>
+		<pre>set JYTHON_OPTS="-Djavax.net.ssl.trustStore=C:/testdata/mykeystore.jks"</pre></li>
+	<li>Run the Jython script with the values for your installation.
+		<p><strong>Windows:</strong></p>
+		<pre>jython.bat ../scripts/Lib/soa/atmosphere/tenant.py -a -v --url https://enterprise.soa.local:9443 --tenantName EnterpriseAPI--tenantId enterpriseapi --address https://enterpriseapi.soa.local:9443 --consoleAddress https://enterpriseapi.soa.local:9443/enterpriseapi --theme default --email administrator@{yoursite}.com --password password --contactEmailAddress yourname@acmepaymentscorp.com --fromEmailAddress yourname@acmepaymentscorp.com --virtualHosts open.acmepaymentscorp.com,open.example.com --username janemead --userpassword buckpwdbuckpwnFk24y1iY3U4dpwd</pre>
+		<p><strong>UNIX:</strong> </p>
+		<pre>./jython.sh ../scripts/Lib/soa/atmosphere/tenant.py -a -v --url https:// enterpriseapi.soa.local:9443 --tenantName EnterpriseAPI --tenantId enterpriseapi--address https://enterpriseapi.soa.local:9443 --consoleAddress https://enterpriseapi.soa.local:9443/enterpriseapi --theme default --email administrator@{yoursite}.com --password password --contactEmailAddress yourname@acmepaymentscorp.com --fromEmailAddress yourname@acmepaymentscorp.com --virtualHosts open.acmepaymentscorp.com,open.example.com --username janemead --userpassword buckpwdbuckpwnFk24y1iY3U4dpwd</pre>
+		<p>An example is shown below.</p>
+		<pre>jython ../scripts/Lib/soa/atmosphere/tenant.py -a -v --url https://acmepaymentscorp.com:9443 --tenantName acmepaymentscorp --tenantId acmepaymentscorp --address https://acmepaymentscorp.com:9443 --consoleAddress https://acmepaymentscorp.com:9443/atmosphere --theme default --contactEmailAddress admin@acmepaymentscorp.com --fromEmailAddress admin@acmepaymentscorp.com --virtualHosts acmepaymentscorp.com --username janemead --userpassword buckpwdbuckpwnFk24y1iY3U4dpwd</pre></li>
 </ol>
 <p>If you are not sure how to do SSL configuration for your listener, follow the instructions below.</p>
 <h3>Configure HTTPS listener when using the Akana Platform internal Certificate Authority</h3>
@@ -282,7 +363,8 @@ nav-title: Tenant Installation Jython Script
 
 <h3 id="s01_configure_ca">Step 1: In Policy Manager, configure the Certificate Authority</h3>
 <p>The first step is to configure the Certificate Authority.</p>
-<h4>To configure the CA in Policy Manager</h4>
+
+<h4 id="proc_pm_config_ca">To configure the CA in Policy Manager</h4>
 <ol>
 <li>In Policy Manager, go to <strong>Configure</strong>, then <strong>Security</strong>, then <strong>Certificates</strong>, then <strong>Certificate Authority</strong>.</li>
 <li>Click <strong>Configure Certificate Authority</strong>. </li>
@@ -310,9 +392,9 @@ nav-title: Tenant Installation Jython Script
 <h4>To manage PKI keys for the HTTPS Listener</h4>
 <ol>
 <li>In the Policy Manager Organization Tree, under <strong>API Platform</strong>, <strong>Containers</strong>, <strong>CM Container</strong>, <strong>Details</strong>, choose <strong>Inbound Listeners</strong>.</li>
-<li>From the Actions drop-down menu, click <strong>Manage PKI Keys</strong>.</li>
+<li>From the <strong>Actions</strong> drop-down menu, click <strong>Manage PKI Keys</strong>.</li>
 <li>In the <strong>Select Key Management Options</strong> page, under <strong>Key Management Options</strong>, choose <strong>Generate PKI Keys and X.509 Certificate</strong>. Click <strong>Next</strong>.</li>
-<li>In the <strong>Generate PKI Keys and X.509 Certificate</strong> page, provide the same details you set up for the Certificate Authority's Subject DN (see To configure the CA in Policy Manager, Step 3).</li>
+<li>In the <strong>Generate PKI Keys and X.509 Certificate</strong> page, provide the same details you set up for the Certificate Authority's Subject DN (see <a href="#proc_pm_config_ca">To configure the CA in Policy Manager</a>).</li>
 <li>Click <strong>Finish</strong>.</li>
 <li>In the summary page, in the <strong>Certificate Details</strong> section, verify that the values for <strong>Subject DN</strong> and <strong>Issuer DN</strong> match.</li>
 </ol>
