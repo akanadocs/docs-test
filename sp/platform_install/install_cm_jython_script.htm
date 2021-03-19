@@ -48,7 +48,7 @@ nav-title: Tenant Installation Jython Script
 
 <dt>--url</dt>
 <dd>The URL for the container that the <strong>Akana Community Manager APIs</strong> feature is installed on. Can be a container URL or load balancer URL. The URL is normally structured along these lines: <strong>{protocol}://{hostname}:{port}</strong></dd>
-<dd>Example: <strong>http://server-10.acmepaymentscorp.com</strong></dd>
+<dd>Example: <strong>http://server-10.acmepaymentscorp.com:9901</strong></dd>
 <dd>For a more detailed example, see <a href="#jython_script_elements_url_example">URL values in the Jython script elements: example</a> below.</dd>
 <dd>There is normally no context unless the product is running in an application server.</dd>
 
@@ -71,7 +71,7 @@ nav-title: Tenant Installation Jython Script
 <dd>The base URL of the tenant. The hostname must be unique. There is normally no context unless the product is running in an application server.</dd>
 <dd>This is the default address from which the tenant is accessed. Multiple additional virtual hostnames are allowed, but the hostname provided in this element is the primary hostname.</dd>
 <dd>This value is used in certain notifications that provide a URL for accessing the tenant; for example, the signup confirmation email.</dd>
-<dd>Example: <strong>http://acmepaymentscorp:9901</strong></dd>
+<dd>Example: <strong>http://server-10.acmepaymentscorp.com</strong></dd>
 <dd>For a more detailed example, see <a href="#jython_script_elements_url_example">URL values in the Jython script elements: examples</a> below.</dd>
 <dd><strong>Note</strong>: Hostnames in the Jython script must be lowercase.</dd>
 
@@ -79,7 +79,7 @@ nav-title: Tenant Installation Jython Script
 
 <dt>--consoleAddress</dt>
 <dd>The same as the --address element, but includes the context in which the Community Manager developer portal is running, if a context is specified. Context could be a value, such as <strong>acmepaymentscorp</strong>, or could just be root (<strong>/</strong>). This is the address of the Community Manager developer portal&#8212;the full URL that will be used in the browser when accessing the Community Manager developer portal user interface. The browser then redirects to the default login page.</dd>
-<dd>Examples: <strong>http://acmepaymentscorp:9901/acmepaymentscorp</strong>, <strong>http://acmepaymentscorp:9901/</strong>.</dd>
+<dd>Example: <strong>http://acmepaymentscorp.com/apiportal</strong> or <strong>http://acmepaymentscorp.com/</strong>.{<span class="apidoc_red">Query TJ do we need the trailing forward slash here?</span>}</dd>
 <dd>For a more detailed example, see <a href="#jython_script_elements_url_example">URL values in the Jython script elements: examples</a> below.</dd>
 <dd><strong>Note:</strong>: Hostnames in the Jython script <strong>must</strong> be lowercase.</dd>
 <dd><strong>Note</strong>: This parameter corresponds to the <strong>atmosphere.context.root</strong> settings in the underlying Administration Console. See <a href="../../cm/learnmore/site_admin_admin_console_settings.htm#com_soa_atmosphere_console">com.soa.atmosphere.console</a> (Community Manager developer portal Site Admin doc). There are certain values that are reserved for other uses. They include: /portal, /api. If you're choosing a custom value for this setting, do <strong>not</strong> use these values.</dd>
@@ -152,7 +152,7 @@ nav-title: Tenant Installation Jython Script
 
 <dt>--virtualHosts</dt>
 <dd>A comma-separated list of host names that the portal can be accessed from. For example:</dd>
-<dd><strong>--virtualHosts open.acmepaymentscorp.com,open.example.com</strong> </dd>
+<dd><strong>--virtualHosts server-10.acmepaymentscorp.com,acmepaymentscorp.com</strong> </dd>
 <dd>For a more detailed example, see <a href="#jython_script_elements_url_example">URL values in the Jython script elements: examples</a> below.</dd>
 <dd><strong>Note</strong>: Hostnames in the Jython script must be lowercase.</dd>
 
@@ -170,39 +170,31 @@ nav-title: Tenant Installation Jython Script
 
 
 <h5 id="jython_script_elements_url_eg_01">Example #1 (with virtual hosts)</h5>
-<p> Let's say for example you create a container on http://cmcontainer:9000, and install the <strong>Akana Community Manager APIs</strong> feature. In this example, the values might be as shown below.</p>
+<p> Let's say for example you create a container on http://cmcontainer:9000, and install the <strong>Akana Community Manager APIs</strong> feature. You might choose to have the Akana Administration Console on a different port, for security reasons, so the URL might be http://cmcontainer:9005/admin.</p>
+<p>In this example, the values for the Jython script elements might be as shown below.</p>
 <table class="doctable">
 	<thead>
 		<tr>
-			<th>Element...</th>
+			<th>Jython script element...</th>
 			<th>Possible value...</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr>
-			<td>Container URL</td>
-			<td>https://cmcontainer:9000</td>
-		</tr>
-		<tr>
 			<td>--url</td>
-			<td>https://cmcontainer:9000
-			<p><strong>Note</strong>: The load balancing URL could also be used, if load balancing is already set up. For example: https://cmloadbalancerurl.</p></td>
+			<td>http://server-10.acmepaymentscorp.com:9901</td>
 		</tr>
 		<tr>
 			<td>--address</td>
-			<td>https://cmloadbalancerurl</td>
+			<td>http://server-10.acmepaymentscorp.com</td>
 		</tr>
 		<tr>
 			<td>--consoleAddress</td>
-			<td>https://cmloadbalancerurl/enterpriseapi</td>
+			<td>http://acmepaymentscorp.com/apiportal</td>
 		</tr>
 		<tr>
 			<td>--virtualHosts</td>
-			<td>cmcontainer,cmloadbalancerurl,cmcontainer2</td>
-		</tr>
-		<tr>
-			<td>Akana Administration Console</td>
-			<td>http://cmcontainer:9005/admin (It's a good idea to have the Akana Administration Console on a different port, for security reasons.)</td>
+			<td>server-10.acmepaymentscorp.com,acmepaymentscorp.com</td>
 		</tr>
 	</tbody>
 </table>
@@ -304,14 +296,14 @@ nav-title: Tenant Installation Jython Script
 --username {username} 
 --userpassword {user password}</pre>
 <p><strong>Example:</strong></p>
-<pre>jython.bat ../scripts/Lib/soa/atmosphere/tenant.py -a -v --url http://enterprise.soa.local:9900 --tenantName EnterpriseAPI --tenantId enterpriseapi --address http://enterpriseapi.soa.local:9900 --consoleAddress http://enterpriseapi.soa.local:9900/enterpriseapi --theme default --themeImpl {default} --email administrator@{yoursite}.com --password password --contactEmailAddress yourname@acmepaymentscorp.com --fromEmailAddress yourname@acmepaymentscorp.com --virtualHosts open.acmepaymentscorp.com,open.example.com --username janemead --userpassword <strong>buckpwdbuckpwnFk24y1iY3U4dpwd</strong></pre>
+<pre>jython.bat ../scripts/Lib/soa/atmosphere/tenant.py -a -v --url http://enterprise.soa.local:9900 --tenantName EnterpriseAPI --tenantId enterpriseapi --address http://server-10.acmepaymentscorp.com --consoleAddress http://enterpriseapi.soa.local:9900/enterpriseapi --theme default --themeImpl {default} --email administrator@{yoursite}.com --password password --contactEmailAddress yourname@acmepaymentscorp.com --fromEmailAddress yourname@acmepaymentscorp.com --virtualHosts server-10.acmepaymentscorp.com,acmepaymentscorp.com --username janemead --userpassword <strong>buckpwdbuckpwnFk24y1iY3U4dpwd</strong></pre>
 
 
 <h3 id="install_script_eg_unix">UNIX</h3>
 <p><strong>Script:</strong></p>
 <pre>/jython.sh../scripts/Lib/soa/atmosphere/tenant.py -a -v --url {url} --tenantName {tenantName} --tenantId {tenantId} --address {tenantAddress} --consoleAddress {consoleAddress} --theme {theme} --themeImpl {themeImpl} --email {default tenant administrator} --password {default tenant administrator password} --contactEmailAddress {contactEmailAddress} --fromEmailAddress {fromEmailAddress} --virtualHosts {virtualHosts} --username {username} --userpassword {user password}</pre>
 <p><strong>Example:</strong></p>
-<pre>./jython.sh ../scripts/Lib/soa/atmosphere/tenant.py -a -v --url http:// enterpriseapi.soa.local:9900 --tenantName EnterpriseAPI --tenantId enterpriseapi --address http://enterpriseapi.soa.local:9900 --consoleAddress http://enterpriseapi.soa.local:9900/enterpriseapi --theme default --themeImpl default --email administrator@{yoursite}.com --password password --contactEmailAddress yourname@acmepaymentscorp.com --fromEmailAddress yourname@acmepaymentscorp.com --virtualHosts open.acmepaymentscorp.com,open.example.com --username janemead --userpassword buckpwdbuckpwnFk24y1iY3U4dpwd</pre>
+<pre>./jython.sh ../scripts/Lib/soa/atmosphere/tenant.py -a -v --url http:// enterpriseapi.soa.local:9900 --tenantName EnterpriseAPI --tenantId enterpriseapi --address http://server-10.acmepaymentscorp.com --consoleAddress http://enterpriseapi.soa.local:9900/enterpriseapi --theme default --themeImpl default --email administrator@{yoursite}.com --password password --contactEmailAddress yourname@acmepaymentscorp.com --fromEmailAddress yourname@acmepaymentscorp.com --virtualHosts server-10.acmepaymentscorp.com,acmepaymentscorp.com --username janemead --userpassword buckpwdbuckpwnFk24y1iY3U4dpwd</pre>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -345,11 +337,11 @@ nav-title: Tenant Installation Jython Script
 		<pre>set JYTHON_OPTS="-Djavax.net.ssl.trustStore=C:/testdata/mykeystore.jks"</pre></li>
 	<li>Run the Jython script with the values for your installation.
 		<p><strong>Windows:</strong></p>
-		<pre>jython.bat ../scripts/Lib/soa/atmosphere/tenant.py -a -v --url https://enterprise.soa.local:9443 --tenantName EnterpriseAPI--tenantId enterpriseapi --address https://enterpriseapi.soa.local:9443 --consoleAddress https://enterpriseapi.soa.local:9443/enterpriseapi --theme default --email administrator@{yoursite}.com --password password --contactEmailAddress yourname@acmepaymentscorp.com --fromEmailAddress yourname@acmepaymentscorp.com --virtualHosts open.acmepaymentscorp.com,open.example.com --username janemead --userpassword buckpwdbuckpwnFk24y1iY3U4dpwd</pre>
+		<pre>jython.bat ../scripts/Lib/soa/atmosphere/tenant.py -a -v --url https://enterprise.soa.local:9443 --tenantName EnterpriseAPI--tenantId enterpriseapi --address http://server-10.acmepaymentscorp.com --consoleAddress https://enterpriseapi.soa.local:9443/enterpriseapi --theme default --email administrator@{yoursite}.com --password password --contactEmailAddress yourname@acmepaymentscorp.com --fromEmailAddress yourname@acmepaymentscorp.com --virtualHosts server-10.acmepaymentscorp.com,acmepaymentscorp.com --username janemead --userpassword buckpwdbuckpwnFk24y1iY3U4dpwd</pre>
 		<p><strong>UNIX:</strong> </p>
-		<pre>./jython.sh ../scripts/Lib/soa/atmosphere/tenant.py -a -v --url https:// enterpriseapi.soa.local:9443 --tenantName EnterpriseAPI --tenantId enterpriseapi--address https://enterpriseapi.soa.local:9443 --consoleAddress https://enterpriseapi.soa.local:9443/enterpriseapi --theme default --email administrator@{yoursite}.com --password password --contactEmailAddress yourname@acmepaymentscorp.com --fromEmailAddress yourname@acmepaymentscorp.com --virtualHosts open.acmepaymentscorp.com,open.example.com --username janemead --userpassword buckpwdbuckpwnFk24y1iY3U4dpwd</pre>
+		<pre>./jython.sh ../scripts/Lib/soa/atmosphere/tenant.py -a -v --url https:// enterpriseapi.soa.local:9443 --tenantName EnterpriseAPI --tenantId enterpriseapi--address http://server-10.acmepaymentscorp.com --consoleAddress https://enterpriseapi.soa.local:9443/enterpriseapi --theme default --email administrator@{yoursite}.com --password password --contactEmailAddress yourname@acmepaymentscorp.com --fromEmailAddress yourname@acmepaymentscorp.com --virtualHosts server-10.acmepaymentscorp.com,acmepaymentscorp.com --username janemead --userpassword buckpwdbuckpwnFk24y1iY3U4dpwd</pre>
 		<p>An example is shown below.</p>
-		<pre>jython ../scripts/Lib/soa/atmosphere/tenant.py -a -v --url https://acmepaymentscorp.com:9443 --tenantName acmepaymentscorp --tenantId acmepaymentscorp --address https://acmepaymentscorp.com:9443 --consoleAddress https://acmepaymentscorp.com:9443/atmosphere --theme default --contactEmailAddress admin@acmepaymentscorp.com --fromEmailAddress admin@acmepaymentscorp.com --virtualHosts acmepaymentscorp.com --username janemead --userpassword buckpwdbuckpwnFk24y1iY3U4dpwd</pre></li>
+		<pre>jython ../scripts/Lib/soa/atmosphere/tenant.py -a -v --url https://acmepaymentscorp.com:9443 --tenantName acmepaymentscorp --tenantId acmepaymentscorp --address http://server-10.acmepaymentscorp.com --consoleAddress https://acmepaymentscorp.com:9443/atmosphere --theme default --contactEmailAddress admin@acmepaymentscorp.com --fromEmailAddress admin@acmepaymentscorp.com --virtualHosts server-10.acmepaymentscorp.com,acmepaymentscorp.com --username janemead --userpassword buckpwdbuckpwnFk24y1iY3U4dpwd</pre></li>
 </ol>
 <p>If you are not sure how to do SSL configuration for your listener, follow the instructions below.</p>
 <h3>Configure HTTPS listener when using the Akana Platform internal Certificate Authority</h3>
