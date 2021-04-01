@@ -38,13 +38,14 @@ nav-title: Detailed Customization Document
 	<li><a href="#s04">Customizing Site Pages</a>
 	<ol>
 		<li><a href="#s04_01">Landing Page</a></li>
-		<li><a href="#s04_02">Login Entry Page</a>
+		<li><a href="#s04_02b">Login Entry Page</a> (valid in version: 2020.2.4 and later)</li>
+		<li><a href="#s04_02">Login Entry Page</a> (versions prior to 2020.2.4)
 		<ol>
-			<li><a href="#s04_02_01">Step 1: Determine the page you want users to be taken to</a></li>
-			<li><a href="#s04_02_02">Step 2: Generate the starter customization files and download the customization ZIP file</a></li>
-			<li><a href="#s04_02_03">Step 3: Set up a custom_en-us.json file</a></li>
-			<li><a href="#s04_02_04">Step 4: Upload the custom_en-us.json file to the Community Manager developer portal</a></li>
-			<li><a href="#s04_02_05">Step 5: Test</a></li>
+			<li><a href="#s04_02a_01">Step 1: Determine the page you want users to be taken to</a></li>
+			<li><a href="#s04_02a_02">Step 2: Generate the starter customization files and download the customization ZIP file</a></li>
+			<li><a href="#s04_02a_03">Step 3: Set up a custom_en-us.json file</a></li>
+			<li><a href="#s04_02a_04">Step 4: Upload the custom_en-us.json file to the Community Manager developer portal</a></li>
+			<li><a href="#s04_02a_05">Step 5: Test</a></li>
 		</ol>
 		</li>
 		<li><a href="#s04_03">Support Page</a></li>
@@ -320,24 +321,56 @@ nav-title: Detailed Customization Document
 <p><a href="#top">Back to top</a></p>
 
 
-<h3 id="s04_02">Login Entry Page</h3>
-<p>You can customize the API Platform user interface so that after logging in, rather than being taken to the Action Dashboard <strong>(home/dashboard)</strong>, which is the usual behavior, users are taken to a different page that you specify.</p>
+<h3 id="s04_02b">Login Entry Page (valid in version: 2020.2.4 and later) xxx</h3>
+<p>You can customize the Community Manager developer portal user interface so that after logging in, rather than being taken to the Action Dashboard <strong>(home/dashboard)</strong>, which is the default behavior, users are taken to a different page that you specify.</p>
+<p>The customization ZIP file includes a working example of files that you can use as starter files, and a <strong>readme.md</strong> file with detailed instructions. The customization example includes separate file sets for Hermosa theme and for Bonita/Simple Dev theme, since the steps are a little different in Bonita/Simple Dev. Notes:</p>
+<ul>
+	<li>To get the customization ZIP file: see <a href="#s03_01">Starter Files</a>.</li>
+	<li>The specific customization example inside the ZIP file is in this folder: <strong>post_login_redirection</strong>.</li>
+</ul>
+<p>At a high level, the steps are the same as for earlier versions (see <a href="#s04_02">Login Entry Page (versions prior to 2020.2.4)</a> below), with some differences:</p>
+<ul>
+	<li>The file you create is a different file, <strong>init.js</strong>.</li>
+	<li>It references a new variable, <strong>customLoginPage</strong>, that you can use to specify the new post-login page.</li>
+	<li>It belongs in a different part of the folder structure.</li>
+</ul>
+<p>The basic steps are as follows:</p>
+<ol>
+	<li>Step 1: Determine the page you want users to be taken to.
+	<p>For Bonita/Simple Dev, you'll have to use the browser tools and the <span class="apidoc_code">can.route.attr()</span> method to determine the <strong>route</strong> value for the new page. You will use this value in Step 3 below.</p></li>
+	<li>Step 2: Generate the starter customization files and download the customization ZIP file.
+	<p>See <a href="#s04_02a_02">Step 2: Generate the starter customization files and download the customization ZIP file</a> below.</p></li>
+	<li>Step 3: Set up an <strong>init.js</strong> file.
+		<p>For file content, review the customization example. For Hermosa theme, that's all you need. For Simple Dev/Bonita, use the <strong>route</strong> value from Step 2 below.</p></li>
+	<li>Step 4: Upload the <strong>init.js</strong> file to the Community Manager developer portal.
+		<p>Path for Hermosa: <strong>/resources/theme/{theme_name}/SOA/CM/extensions/init.js</strong>.</p>
+	<p>Path for Simple Dev/Bonita: <strong>/resources/theme/{theme_name}/SOA/Dev/extensions/init.js</strong>.</p>
+	</li>
+	<li>Step 5: Test.
+		<p>See <a href="#s04_02a_05">Step 5: Test</a> below.</p>
+	</li>
+</ol>
+<p><a href="#top">Back to top</a></p>
+
+
+<h3 id="s04_02">Login Entry Page (versions prior to 2020.2.4)</h3>
+<p>You can customize the Community Manager developer portal user interface so that after logging in, rather than being taken to the Action Dashboard <strong>(home/dashboard)</strong>, which is the usual behavior, users are taken to a different page that you specify.</p>
 <p>To set this up, you'll need to perform these high-level tasks (see procedures below):</p>
 <ol>
-	<li><a href="#s04_02_01">Step 1: Determine the page you want users to be taken to</a></li>
-	<li><a href="#s04_02_03">Step 3: Set up a custom_en-us.json file</a></li>
-	<li><a href="#s04_02_04">Step 4: Upload the custom_en-us.json file to the Community Manager developer portal</a></li>
-	<li><a href="#s04_02_05">Step 5: Test</a></li>
+	<li><a href="#s04_02a_01">Step 1: Determine the page you want users to be taken to</a></li>
+	<li><a href="#s04_02a_03">Step 3: Set up a custom_en-us.json file</a></li>
+	<li><a href="#s04_02a_04">Step 4: Upload the custom_en-us.json file to the Community Manager developer portal</a></li>
+	<li><a href="#s04_02a_05">Step 5: Test</a></li>
 </ol>
 
-<h4 id="s04_02_01">Step 1: Determine the page you want users to be taken to</h4>
+<h4 id="s04_02a_01">Step 1: Determine the page you want users to be taken to</h4>
 <p>You might decide that you want users to be taken to the <strong>Apps</strong> &gt; <strong>My Apps</strong> page, or the <strong>APIs</strong> &gt; <strong>My APIs</strong> page, or the Help page.</p>
 <p>Decide which page you want users to be taken to and note the URL.</p>
 <p>The example below takes users to the <strong>Apps</strong> &gt; <strong>My Apps</strong> page after login.</p>
 
 
-<h4 id="s04_02_02">Step 2: Generate the starter customization files and download the customization ZIP file</h4>
-<P>As a starting point, complete these two basic steps in the Community Manager developer portal user interface (unless already done):</p>
+<h4 id="s04_02a_02">Step 2: Generate the starter customization files and download the customization ZIP file</h4>
+<p>As a starting point, complete these two basic steps in the Community Manager developer portal user interface (unless already done):</p>
 <ul>
 	<li>Generate a set of customization files. This creates the folder structure for the customization files, and puts placeholder files in place. </li>
 	<li>Download the customization ZIP file, which contains the customization starter files. You will customize those files in the next few steps.</li>
@@ -346,7 +379,7 @@ nav-title: Detailed Customization Document
 
 
 
-<h4 id="s04_02_03">Step 3: Set up a custom_en-us.json file</h4>
+<h4 id="s04_02a_03">Step 3: Set up a custom_en-us.json file</h4>
 <p>You will need to create a <strong>custom_en-us.json</strong> file; if this file exists, it overrides platform defaults.</p>
 <p>In this file, you can set up some custom code so that users are taken to a different page after login, rather than the default <strong>/home/dashboard</strong> page.</p>
 <p>As an example, let's say you want users to be directed to the <strong>Apps</strong> &gt; <strong>My Apps</strong> page. The example below modifies the platform to direct users to this page after login.</p>
@@ -360,7 +393,7 @@ nav-title: Detailed Customization Document
 "errors": {}
 }
 }</pre>
-<p>Save the file, which you will upload to the platform in Step 3.</p>
+<p>Save the file, which you will upload to the platform in the next step.</p>
 <p>Platform location for this file: <strong>/resources/theme/{theme_name}/locales/custom_en-us.json</strong>.</p>
 <p><strong>Additional examples</strong></p>
 <p>Some other examples of how the login page entry could look are shown below.</p>
@@ -370,13 +403,13 @@ nav-title: Detailed Customization Document
 //"labels": {"customLoginPage": "/home/apis" }, -&gt; Login takes user to My APIs
 </pre>
 
-<h4 id="s04_02_04">Step 4: Upload the custom_en-us.json file to the Community Manager developer portal</h4>
+<h4 id="s04_02a_04">Step 4: Upload the custom_en-us.json file to the Community Manager developer portal</h4>
 <p>In the Community Manager developer portal user interface, go to <strong>More</strong> &gt; <strong>Admin</strong> &gt; <strong>File Manager</strong>. In the <strong>Resources</strong> section, click <strong>File Manager</strong>. The File Manager window opens at the <strong>resources</strong> folder.</p>
 <p>Make sure you know the name of the theme you are customizing. If your platform version doesn't have customized theme names, the main Community Manager developer portal theme name is <strong>default</strong>. If you're not sure of the theme name, see <a href="../learnmore/site_admin_customization.htm#determine_theme_name">How can I determine the theme name?</a></p>
 <p>Upload the <strong>custom_en-us.json</strong> file to /resources/theme/{theme_name}/locales.</p>
 
 
-<h4 id="s04_02_05">Step 5: Test</h4>
+<h4 id="s04_02a_05">Step 5: Test</h4>
 <p>Once you've uploaded the files, it's time to test.</p>
 
 <h4>To test the custom login:</h4>
@@ -871,7 +904,7 @@ nav-title: Detailed Customization Document
 <h4 id="s05_04_02">Removing a link from the header in Hermosa theme</h4>
 <p><strong>Note</strong>: If you haven't already done so, generate the customization files and also download the customization ZIP. For instructions, see <a href="#s03_01">Starter Files</a>.</p>
 <p>You cannot modify a link in the header, or remove a link from the header, by modifying the <strong>nav_extensions.ejs</strong> or <strong>quick_links_extensions.ejs</strong> files. Instead, update the original files with the links&#8212;<strong>nav.ejs</strong> or <strong>quick_links.ejs</strong>. For information on where these files are located, see <a href="#s11">Hermosa Custom File Structure</a>.</p>
-<p>When you've done the updates, upload your files to these folders:
+<p>When you've done the updates, upload your files to these folders:</p>
 <ul>
 	<li><strong>nav.ejs</strong>: <strong>theme/hermosa/SOA/CM/nav/views</strong></li>
 	<li><strong>quick_links.ejs</strong>: <strong>theme/hermosa/SOA/CM/quick_links/views</strong></li>
@@ -1880,7 +1913,7 @@ com.soa.atmosphere.footer.legal= &copy; 2019-2020 ACME Payments, Inc. All Rights
 <h4 class="stamp">Valid in Version: 2019.1.31 and later</h4>
 <p>A third-party portal can be configured to display API documentation from the Community Manager developer portal, including Swagger documentation, OpenAPI documentation, and Test Client.</p>
 <p>The customization ZIP file includes a working example, including step-by-step instructions, all the files you need, and a sample HTML file with the applicable code in place. If you don't have the customization ZIP file, or don't have the latest version, contact <a href="../../sp/support/support.htm">Customer Support</a>.</p>
-<p>All you need to do is:
+<p>All you need to do is:</p>
 <ol>
 	<li>Download and unzip the ZIP file.</li>
 	<li>Go to the <strong>\test_client\external_portal</strong> folder.</li>
