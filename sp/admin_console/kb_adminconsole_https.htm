@@ -26,11 +26,11 @@ nav-title: Enable HTTPS Access to the Administration Console
 
 
 <h2 id="introduction">Introduction</h2>
-<p>If you would like to facilitate your own role-based access to the Akana Administration Console, you can do so by enabling an HTTPS port.</p>
-<p>This process involves:</p>
+<p>You can set up role-based access to the Akana Administration Console by enabling an HTTPS port.</p>
+<p>There are two main steps</p>
 <ul>
-	<li><strong>Adding an HTTPS listener to Policy Manager or Network Director container instance folders ({release_directory}\instances):</strong> You can do this by adding an HTTPS port to the <strong>system.properties</strong> file (for UI browsing only), or by adding an HTTPS listener to the Policy Manager Management Console and to the <strong>system.properties</strong> file (for hosting services and UI browsing). </li>
-	<li><strong>Adding a new configuration category to the Akana Administration Console to control whether you want \admin access for both HTTP and HTTPS, or HTTPS only:</strong> This can be done by manually adding a .cfg file to the \deploy folder of the {release_directory}\instances\{container name}\deploy folder. </li>
+	<li><strong>Adding an HTTPS listener to Policy Manager or Network Director container instance folders ({release_directory}\instances)</strong>: To do this, add an HTTPS port to the <strong>system.properties</strong> file (for UI browsing only), or by adding an HTTPS listener to the Policy Manager Management Console and to the <strong>system.properties</strong> file (for hosting services and UI browsing). </li>
+	<li><strong>Adding a new configuration category to the Akana Administration Console to control whether you want \admin access for both HTTP and HTTPS, or HTTPS only</strong>: To do this, add a .cfg file to the \deploy folder of the {release_directory}\instances\{container name}\deploy folder. </li>
 </ul>
 
 <h4>Notes on Configuring an HTTPS Listener</h4>
@@ -38,7 +38,7 @@ nav-title: Enable HTTPS Access to the Administration Console
 <ul>
 	<li>If you add an HTTPS listener to the <strong>system.properties</strong> file (as described in the following scenarios) <em>before</em> you install the Policy Manager features, the HTTPS listener will be registered automatically in the database when you install the Policy Manager features and the listener will be present in the <strong>Containers</strong> section of the Policy Manager Management Console. </li>
 	<li>If you add an HTTPS listener to the <strong>system.properties</strong> file <em>after</em> you install the Policy Manager features, the HTTPS listener will not registered automatically in the database and you will need to add an HTTPS listener using the <strong>Add Container Listener</strong> function in the Policy Manager <strong>Containers</strong> section in order to update the container metadata. Note that the HTTPS listener configuration should have <strong>Bind to all interfaces</strong> checked, and you can optionally choose to clone services hosted on other listeners. You must also generate a certificate for the listener after it is defined using the <strong>Manage PKI Keys</strong> option. See screen examples below. </li>
-	<li>If you add a UI-Browsing listener to the <strong>system.properties</strong> file, Policy Manager will get the listener information from the <strong>system.properties</strong> file. </li>
+	<li>If you add a UI-Browsing listener to the <strong>system.properties</strong> file, Policy Manager gets the listener information from this file. </li>
 </ul>
 <p><img src="images/kb_adminconsole_https_add_https_listener.jpg" alt="" /></p>
 <p><img src="images/kb_adminconsole_https_manage_pki_keys.jpg" alt="" /></p>
@@ -50,7 +50,7 @@ nav-title: Enable HTTPS Access to the Administration Console
 <p>Let's take a quick walkthrough of the HTTPS configuration process to get you started.</p>
 
 <h4>Step 1: Add HTTPS Listener (Options)</h4>
-<p>To enable an HTTPS listener you must update the <strong>system.properties</strong> file in the \{release_directory}\instances  folder. Load the <strong>system.properties</strong> file into an editor and configure it based on the following Akana Administration Console access scenarios. We use port 9446 in these examples.</p>
+<p>To enable an HTTPS listener, you must update the <strong>system.properties</strong> file in the \{release_directory}\instances  folder. Load the <strong>system.properties</strong> file into an editor and configure it based on the following Akana Administration Console access scenarios. In these examples, we use port 9446.</p>
 <p><img src="images/kb_adminconsole_https_system_properties_folder.jpg" alt="" /></p>
 
 <h4>Option 1: HTTPS Access / UI Browsing Only</h4>
@@ -59,20 +59,20 @@ nav-title: Enable HTTPS Access to the Administration Console
 <p>Settings:</p>
 
 <ul>
-	<li><strong>com.soa.http.bind.all=true</strong> (Remove for HTTPS access ONLY)</li>
+	<li><strong>com.soa.http.bind.all=true</strong> (Remove for HTTPS access only)</li>
 	<li><strong>com.soa.http.bind.all.secure=true</strong> (Add to enable HTTPS access)</li>
 	<li><strong>org.osgi.service.http.port=9000</strong> (Remove for HTTPS access only)</li>
 	<li><strong>org.osgi.service.http.port.secure=9446</strong> (Add to enable HTTPS access)</li>
 </ul>
 <h4>Option 2: HTTPS and HTTP Access</h4>
 <p>This option restricts access to the Akana Administration Console to the specified HTTPS listener and the default HTTP listener defined in the Policy Manager Management Console. You can have a UI browsing only HTTPS listener (i.e., listener is not configured in Policy Manager), or a listener that can host services (i.e., listener must be configured in Policy Manager ).</p>
-<p><strong>Note</strong>: If you would like your HTTPS listener to host services, you must manually add it to the Policy Manager Management Console. You must also configure keys for this listener using the Manage PKI Keys function.</p>
+<p><strong>Note</strong>: If you would like your HTTPS listener to host services, you must manually add it to the Policy Manager Management Console. You must also configure keys for this listener using the <strong>Manage PKI Keys</strong> function.</p>
 <p><strong>com.soa.http.bind.all.secure=true (Add to enable HTTPS access)</strong></p>
 <p><strong>org.osgi.service.http.port.secure=9446 (Add to enable HTTPS access)</strong></p>
 
 <h4>Option 3: Multiple HTTPS Listeners</h4>
-<p>If you would like to have multiple HTTPS listeners, you can add one UI browsing only HTTPS listener, and one HTTPS listener to the Policy Manager Management Console and specify both listeners in the <strong>system.properties</strong> file.</p>
-<p><strong>Note</strong>: You must add a certificate to the listener in Policy Manager using the <strong>Manage PKI Keys</strong> function.</p>
+<p>You can configure multiple HTTPS listeners. For example, you could add one UI browsing-only HTTPS listener, and one HTTPS listener to the Policy Manager Management Console, and specify both listeners in the <strong>system.properties</strong> file.</p>
+<p><strong>Note</strong>: You must add a certificate to the listener in Policy Manager, using the <strong>Manage PKI Keys</strong> function.</p>
 <p>Settings:</p>
 <ul>
 	<li><strong>com.soa.http.bind.all.secure=true</strong> (Add to enable HTTPS access)</li>
