@@ -327,6 +327,15 @@ nav-title: Multi-Regional Deployment
 	<li>The collection of shards provides the complete set of application data.</li>
 	<li>So far, this document has described a scenario that includes is a single primary database, or shard, in each data center. However, it is possible to have multiple shards in a single data center.</li>
 	<li>The query routers will direct inserts and queries to the server instances based on shard keys. In this architecture, the shard key is the key of the container generating the record to be stored.</li>
+	<li id="shard_audit_msg">By default, the <strong>Audit_Msg</strong> collection, which collects message payloads when the <a href="../../ag/policies/policy_op_detailed_auditing.htm">Detailed Auditing</a> policy is added to an endpoint, is not sharded, but can be sharded if needed; for example, for performance reasons.
+		<p>If you are sharding the <strong>Audit_Msg</strong> collection for performance reasons only, the only statement needed for the Audit_Msg collection is this:</p>
+		<pre>> sh.shardCollection("PM_AUDIT.AUDIT_MSG",{"containerKey":1})</pre>
+		<p>If you also need to separate shards by region/physical location, include the following two (or more) statements:</p>
+		<pre>> sh.addTagRange("PM_AUDIT.AUDIT_MSG",{"containerKey":"100"},{"containerKey":"199"}, "ShardTagA")
+> sh.addTagRange("PM_AUDIT.AUDIT_MSG",{"containerKey":"200"},{"containerKey":"299"}, "ShardTagB")</pre>
+		<p>The above statements are shown in the examples in Step 6 and Step 7 below.</p>
+		<p><strong>Note</strong>: The <strong>Audit_Msg</strong> collection is only applicable if the <a href="../../ag/policies/policy_op_detailed_auditing.htm">Detailed Auditing</a> policy is being used.</p>
+	</li>
 </ul>
 <p><img src="assets/mrd_03_02.jpg" alt="" /></p>
 <p>To configure the shards, complete the following steps:</p>
@@ -352,7 +361,9 @@ nav-title: Multi-Regional Deployment
 > sh.shardCollection("PM.CONTAINER_STATE", { "containerKey" : 1 })</pre>
 <pre>> sh.shardCollection("PM.SECURITY_AUDIT_TRAIL", { "containerKey" : 1 })
 > sh.shardCollection("PM.ALERT_AUDIT_TRAIL", { "containerKey" : 1 })</pre>
-<pre>> sh.shardCollection("PM_AUDIT.AUDIT", { "containerKey" : 1 })</pre>
+<pre>> sh.shardCollection("PM_AUDIT.AUDIT", { "containerKey" : 1 })
+
+> sh.shardCollection("PM_AUDIT.AUDIT_MSG",{"containerKey":1})</pre>
 <pre>> sh.shardCollection("PM_AUDIT.TRANSACTION_METRIC", { "containerKey" : 1 })
 > sh.shardCollection("METRIC_RAW_DATA.OPERATIONAL_METRIC", { "containerKey" : 1 })
 > sh.shardCollection("METRIC_ROLLUP_DATA.OPERATIONAL_METRIC", { "_id" : 1 })</pre>
@@ -360,14 +371,19 @@ nav-title: Multi-Regional Deployment
 <ul>
 	<li>The first argument of each command is the collection name prefixed by the database name.</li>
 	<li>The second argument is a structure identifying the name of the property to use as the key and the type of property it is.</li>
+	<li><strong> PM_AUDIT.AUDIT_MSG</strong> is optional. See <a href="#shard_audit_msg">Audit_Msg</a> information above.</li>
 </ul>
 <p>Step 7: From the shell, designate the range of shard tags that should be directed to each shard. You can have a shard per Network Director/Policy Manager container, one for the data center, or any combination in between. It is easier to have only one for the data center. The easiest approach is to create each of the Network Director/Policy Manager containers with numeric keys (for example, use keys 100&#8211;199 for data center A and 200&#8211;299 for data center B) so that one range can be configured only once. To define shard tag ranges, perform the following commands for each shard:</p>
 <pre>> sh.addTagRange("PM.ALERTS", { "containerKey": "100" }, { "containerKey" : "200" }, "ShardA")
 > sh.addTagRange("PM.CONTAINER_STATE", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")</pre>
 <pre>> sh. addTagRange ("PM.SECURITY_AUDIT_TRAIL", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")
 > sh. addTagRange ("PM.ALERT_AUDIT_TRAIL", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")
-> sh. addTagRange ("PM_AUDIT.AUDIT", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")</pre>
-<pre>> sh. addTagRange ("PM_AUDIT.AUDIT_TRANSACTION_METRIC", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")
+> sh. addTagRange ("PM_AUDIT.AUDIT", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")
+
+> sh.addTagRange("PM_AUDIT.AUDIT_MSG",{"containerKey":"100"},{"containerKey":"199"}, "ShardTagA")
+> sh.addTagRange("PM_AUDIT.AUDIT_MSG",{"containerKey":"200"},{"containerKey":"299"}, "ShardTagB")
+
+> sh. addTagRange ("PM_AUDIT.AUDIT_TRANSACTION_METRIC", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")
 > sh. addTagRange ("METRIC_RAW_DATA.OPERATIONAL_METRIC", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")
 > sh. addTagRange ("METRIC_ROLLUP_DATA.OPERATIONAL_METRIC", { "_id" : { "containerKey" : "100" } }, 
 { "_id" : { "containerKey" : "200" } }, "ShardA")</pre>
@@ -377,6 +393,7 @@ nav-title: Multi-Regional Deployment
 	<li>The second argument is the lower inclusive bound of the range.</li>
 	<li>The third argument is the exclusive upper bound of the range.</li>
 	<li>In this example, we are directing all records from containers with keys of 100&#8211;199 to be part of this shard. The final argument is the tag of the shard created in Step 6.</li>
+	<li><strong> PM_AUDIT.AUDIT_MSG</strong> is optional. See <a href="#shard_audit_msg">Audit_Msg</a> information above.</li>
 </ul>
 <p><strong>Note</strong>: It is important to make sure the keys of all containers in the system (including Policy Manager containers) are covered by a tag range. If not, the query routers will choose the server to store the records without guidance, and might store them on servers in a different data center entirely.</p>
 <p>Execute the <strong>addTagRange</strong> commands for each tag, or shard, with a different range. Do not create ranges that overlap with other shard tags.</p>
@@ -464,7 +481,7 @@ nav-title: Multi-Regional Deployment
 <p>In certain instances, on starting up the configuration server you might encounter the following error:</p>
 <p><img src="assets/deploy_error_local_voted_doc.jpg" alt="Configuration server startup error" /></p>
 <pre>Did not find local voted for document at startup.
-Did not find local replica set cofiguration document at startup. Did not find replica set configuration document in local.system.replset</pre>
+Did not find local replica set configuration document at startup. Did not find replica set configuration document in local.system.replset</pre>
 <p>If you encounter this error, connect to the configuration database and do an <span class="apidoc_code">rs.initiate()</span>. An example is shown below.</p>
 <pre>rs.initiate(
   {
