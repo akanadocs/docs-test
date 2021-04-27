@@ -116,7 +116,8 @@ nav-title: Detailed Customization Document
 	<ol>
 		<li><a href="#s11_01">Creating New Pages in Hermosa Theme</a>
 	<ol>
-			<li><a href="#s11_01_01">Example 1: Creating a New Static View in Hermosa Theme</a></li>
+			<li><a href="#s11_01_01">Example 1a: Creating a New Static View in Hermosa Theme</a></li>
+			<li><a href="#s11_01_01b">Example 1b: Creating a New Static View in Hermosa Theme, with override of default redirect behavior</a></li>
 			<li><a href="#s11_01_02">Example 2: Creating a New Dynamic View with a Controller in Hermosa Theme</a></li>
 		</ol>
 		</li>
@@ -1488,11 +1489,12 @@ com.soa.atmosphere.footer.legal= &copy; 2019-2020 ACME Payments, Inc. All Rights
 <h3 id="s11_01">Creating New Pages in Hermosa Theme</h3>
 <p>In this section:</p>
 <ol>
-	<li><a href="#s11_01_01">Example 1: Creating a New Static View in Hermosa Theme</a></li>
+	<li><a href="#s11_01_01">Example 1a: Creating a New Static View in Hermosa Theme</a></li>
+	<li><a href="#s11_01_01b">Example 1b: Creating a New Static View in Hermosa Theme, with override of default redirect behavior</a></li>
 	<li><a href="#s11_01_02">Example 2: Creating a New Dynamic View with a Controller in Hermosa Theme</a></li>
 </ol>
 
-<h4 id="s11_01_01">Example 1: Creating a New Static View in Hermosa Theme</h4>
+<h4 id="s11_01_01">Example 1a: Creating a New Static View in Hermosa Theme</h4>
 <p>A common customization task is to add a new view in the Community Manager developer portal to support static content from the Community Manager developer portal content file structure. For example, you might want to add a "Showcases" page that lists all the best apps that have been built and provides links to them.</p>
 <p>To set this up you'd have to create and upload two files:</p>
 <ol>
@@ -1506,10 +1508,13 @@ com.soa.atmosphere.footer.legal= &copy; 2019-2020 ACME Payments, Inc. All Rights
 </li>
 	<li>Create the new content page and upload it to the platform in Content (see <a href="#s03_02">Uploading Content</a> for more information):
 <ol>
-	<li>Offline, develop your <strong>index.htm</strong> content file. Note the file extension should be <strong>htm</strong>, not html.</li>
+	<li>Offline, develop your <strong>index.htm</strong> content file.
+		<p><strong>Note</strong>: The new page must be named <strong>index.htm</strong>. The filename must be <strong>index</strong>, and the file extension must be <strong>htm</strong>, not html.</p>
+	</li>
 	<li>In the Community Manager developer portal: <strong>More</strong> &gt; <strong>Admin</strong> &gt; File Manager. In the <strong>Content</strong> section, click <strong>File Manager</strong>.</li>
-	<li>In the <strong>content</strong> folder, create additional folders to create this path: <strong>content/home/showcases</strong>.</li>
-	<li><strong>Note</strong>: the path is defined, in the sample file below, by the value of <strong>objType</strong>, which is <strong>home</strong>, and the value of <strong>view</strong>, which is <strong>showcases</strong>.</li>
+	<li>In the <strong>content</strong> folder, create additional folders to create this path: <strong>content/home/showcases</strong>.
+		<p><strong>Note</strong>: the path is defined, in the sample file below, by the value of <strong>objType</strong>, which is <strong>home</strong>, and the value of <strong>view</strong>, which is <strong>showcases</strong>.</p>
+	</li>
 	<li>In the <strong>showcases</strong> folder, upload the <strong>index.htm</strong> file.</li>
 </ol>
 </li>
@@ -1562,6 +1567,77 @@ com.soa.atmosphere.footer.legal= &copy; 2019-2020 ACME Payments, Inc. All Rights
     }
   ]
 }</pre>
+
+
+<h4 id="s11_01_01b">Example 1b: Creating a New Static View in Hermosa Theme, with override of default redirect behavior</h4>
+<h4 class="stamp">Valid in Version: 2020.2.0 and later</h4>
+<p>It is a feature of the Community Manager developer portal page behavior that if a user is on a specific public page, and then logs in, the user is taken back to the same page after login. This behavior is designed for maximum usability. For example, the user might be on an API Details page, and there might be many APIs. If the user then logs in, it's likely that the user might want to be redirected to the same API page.</p>
+<p>There are a few developer portal pages that are excluded from this behavior. These are instances where the user, after login, is taken to the <strong>Action Dashboard</strong> page instead (/home/dashboard). A couple of examples of these pages are:</p>
+<ul>
+	<li>The main landing page.</li>
+	<li>The login page itself.</li>
+	<li>The support page.</li>
+</ul>
+<p>In the example above, <a href="#s11_01_01">Example 1a: Creating a New Static View in Hermosa Theme</a>, if a user is on the custom page that you added, and then logs in, the user is taken back to the custom page.</p>
+<p>If you do not want this behavior, you can add a line of code into your <strong>metadata.json</strong> file to exclude the custom page from this behavior. The extra line, within the <strong>layoutStructure</strong> element and below the <strong>view</strong> element in the <strong>metadata.json</strong> file, is:</p>
+<pre>"defaultPageAfterLogin" : true,</pre>
+<p>The information below outlines an example that includes this line of code in the <strong>metadata.json</strong> file. This example adds a &quot;What's New?&quot; page to the developer portal content.</p>
+<p>The steps for uploading the custom files, and for testing, are the same as in <a href="#s11_01_01">Example 1a: Creating a New Static View in Hermosa Theme</a> above. The only functional difference is Line 6 in the <strong>metadata.json</strong> file. This example uses a different value for <strong>view</strong> (line 5 in the <strong>metadata.json</strong> file) to illustrate a slightly different usage scenario. The value of <strong>view</strong> can be whatever you need, but the file name in the specified folder must be <strong>index.htm</strong>. </p>
+<p><strong>HTML file name and location:</strong></p>
+<pre>/content/home/whatsnew/index.htm</pre>
+<p><strong>Metadata.json file name and location:</strong></p>
+<pre>/resources/theme/hermosa/SOA/CM/extensions/metadata.json</pre>
+<p><strong>Metadata.json file content:</strong></p>
+<pre>{
+  "layoutStructure":[
+    {
+      "objType":"home",
+      "view":"whatsnew",
+      "defaultPageAfterLogin" : true, 
+      "layout":[
+  {
+    "widgetInstance":"Main",
+    "widget":"widget.horiz.tiling",
+    "priority":"100"
+  },
+  {
+    "widgetInstance":"Header",
+    "widget":"widget.header",
+    "parentWidgetInstance":"Main",
+    "parent":"widget.horiz.tiling",
+    "priority":"1000"
+  },
+  {
+    "widgetInstance":"Content-Widest",
+    "widget":"widget.horiz.tiling",
+    "parentWidgetInstance":"Main",
+    "parent":"widget.horiz.tiling",
+    "priority":"2200"
+  },
+  {
+    "widgetInstance":"Landing",
+    "widget":"widget.document",
+    "parentWidgetInstance":"Content-Widest",
+    "parent":"widget.horiz.tiling",
+    "priority":"2202"
+  },
+  {
+    "widgetInstance":"Footer",
+    "widget":"widget.footer",
+    "parentWidgetInstance":"Main",
+    "parent":"widget.horiz.tiling",
+    "priority":"3000"
+  }
+      ]
+    }
+  ]
+}</pre>
+<p>In the above:</p>
+<ul>
+	<li>Line 5, <strong>view</strong>, defines the name of the folder where the custom <strong>index.htm</strong> page resides.</li>
+	<li>Line 6, <strong>defaultPageAfterLogin</strong>, defines the behavior, so that a user logging in from that page is not taken back to it after login.</li>
+</ul>
+
 
 <h4 id="s11_01_02">Example 2: Creating a New Dynamic View with a Controller in Hermosa Theme</h4>
 <p>If your new view requires dynamic content, this can be achieved as well.</p>
