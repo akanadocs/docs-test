@@ -77,12 +77,12 @@ nav-title: Multi-Regional Deployment
 
 <h3 id="primary_secondary_deploy">Primary/secondary deployment</h3>
 <ul>
-	<li>One data center will host the primary RDBMS that the cohosted Policy Manager processes will read and write to.</li>
-	<li>The RDBMS will utilize replication to propagate changes made through the primary Policy Manager to the secondary databases in the other data centers.</li>
+	<li>One data center will host the primary RDBMS that the co-hosted Policy Manager processes will read from and write to.</li>
+	<li>The RDBMS will use replication to propagate changes made through the primary Policy Manager to the secondary databases in the other data centers.</li>
 	<li>The Policy Manager processes in data centers with secondary databases are secondary containers themselves, only supporting read activities, no writes.</li>
 </ul>
 <p><img src="assets/mrd_02_01.jpg" alt="" /></p>
-<p>In case of a disaster that renders the data center hosting the primary Policy Manager or Policy Managers inoperable, the fail-over capabilities of the RDBMS are used to promote a different data center's database to be the new primary. The Policy Managers in this data center will now become the primaries as well.</p>
+<p>In case of a disaster that renders the data center that is hosting the primary Policy Manager or Policy Managers inoperable, the fail-over capabilities of the RDBMS are used to promote a different data center's database to be the new primary. The Policy Managers in this data center will now become the primaries as well.</p>
 <p>The limitation of using a primary/secondary RDBMS for persisting data becomes an issue for the Network Directors. The goal of the Akana architecture is for the Network Directors in each data center to be primaries, meaning that they have the exact same functionality as any other Network Director in other data centers. This functionality includes the persisting of data. Examples of data that a Network Director persists, or writes, are:</p>
 <ul>
 	<li>Metrics</li>
@@ -95,16 +95,21 @@ nav-title: Multi-Regional Deployment
 
 <h3 id="incorp_nosql">Incorporation of NoSQL databases that use sharding</h3>
 <p>Using the primary/secondary RDBMS architecture for writing data would require the Network Directors in all data centers to communicate directly with the single primary Policy Manager/RDBMS. This would lead to obvious problems with performance, compounded by the volume of data needing to be written during heavy client traffic periods.</p>
-<p>To avoid this limitation the multi-regional architecture introduces a second persistence system, a NoSQL database, for the storage of the data that the Network Directors write. A NoSQL database provides more flexibility than an RDBMS in that it can support sharding.</p>
+<p>To avoid this limitation, the multi-regional architecture introduces a second persistence system, a NoSQL database, for the storage of the data that the Network Directors write. A NoSQL database supports sharding, and therefore provides more flexibility than an RDBMS. With sharding:</p>
 <ul>
-	<li>Sharding allows rows of the same table, or collection, to be stored in different servers in different data centers.</li>
+	<li>Rows of the same table, or collection, can be stored in different servers in different data centers.</li>
 	<li>The rows are segmented by a shard key.</li>
 	<li>Each shard server is the primary of rows written with a certain set of keys.</li>
 	<li>In the Akana architecture, the shard key is the Network Director key.</li>
 	<li>Each shard can be the primary for multiple keys (to support Network Director clusters) but no more than one shard can be the primary for a single key.</li>
 </ul>
 <p><img src="assets/mrd_02_02.jpg" alt="" /></p>
-<p>In the diagram above, each data center has its own shard of a NoSQL data store. For metrics and usage data the Network Director can write directly to the shard or use a RESTful service hosted by the Policy Manager which would write to the NoSQL shard. For the other data, which the Network Director writes, there are services on the Policy Manager that the Network Director calls to insert the data into the shard. Note that even though the Policy Manager processes in data center B are secondary instances, they can still write to their local shard. This architecture tries to ensure good performance by keeping all database writes local to the same data center.</p>
+<p>In the diagram above, each data center has its own shard of a NoSQL data store. For metrics and usage data the Network Director can write to the NoSQL database in either of two ways:</p>
+<ul>
+	<li>Write directly to the shard.</li>
+	<li>Use a RESTful service hosted by the Policy Manager which would write to the NoSQL shard.</li>
+</ul>
+<p>For the other data, which the Network Director writes, there are services on the Policy Manager that the Network Director calls to insert the data into the shard. Note that even though the Policy Manager processes in data center B are secondary instances, they can still write to their local shard. This architecture tries to ensure good performance by keeping all database writes local to the same data center.</p>
 <p>The use of the NoSQL database is very well suited for the data the Network Director needs to write because the data tends to be historical data that does not have relationships to other data in the Policy Manager data model that must be kept in sync. The data does reference the Policy Manager data model to reference containers, services, and operations, but there aren't relational queries that Policy Manager needs to perform that would join with the historical data that the Network Director is writing.</p>
 
 
