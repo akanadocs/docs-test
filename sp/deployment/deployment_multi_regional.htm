@@ -110,11 +110,11 @@ nav-title: Multi-Regional Deployment
 	<li>Use a RESTful service hosted by the Policy Manager which would write to the NoSQL shard.</li>
 </ul>
 <p>For the other data, which the Network Director writes, there are services on the Policy Manager that the Network Director calls to insert the data into the shard. Note that even though the Policy Manager processes in data center B are secondary instances, they can still write to their local shard. This architecture tries to ensure good performance by keeping all database writes local to the same data center.</p>
-<p>The use of the NoSQL database is very well suited for the data the Network Director needs to write, because the data tends to be historical data that does not have relationships to other data in the Policy Manager data model that must be kept in sync. The data does reference the Policy Manager data model to reference containers, services, and operations, but there aren't relational queries that Policy Manager needs to perform that would join with the historical data that the Network Director is writing.</p>
+<p>The use of the NoSQL database is very well suited for the data that the Network Director needs to write, because the data tends to be historical data that does not have relationships to other data in the Policy Manager data model that must be kept in sync. The data does reference the Policy Manager data model to reference containers, services, and operations, but there are no relational queries that Policy Manager needs to perform that would join with the historical data that the Network Director is writing.</p>
 
 
 <h3 id="propagating_nd_config">Propagating Network Director configuration information</h3>
-<p>There is still a need for a relational stateful model for Policy Manager, which is why the RDBMS is still an important part of the architecture. The Network Director configuration information, such as listener and virtual service configuration, is persisted in the RDBMS. Therefore, the Network Directors still query their configuration indirectly through the Policy Manager to the RDBMS. When changes need to be made to the Network Director configuration, they must be made using another Policy Manager. The changes are then replicated to the secondary database servers so that Network Directors needing that information in different data centers can read it from their local secondary database server.</p>
+<p>There is still a need for a relational stateful model for Policy Manager, which is why the RDBMS is still an important part of the architecture. The Network Director configuration information, such as listener and virtual service configuration, is persisted in the RDBMS. Therefore, the Network Directors still query their configuration indirectly through the Policy Manager to the RDBMS. When changes need to be made to the Network Director configuration, they must be made using another Policy Manager. The changes are then replicated to the secondary database servers, so that Network Directors needing that information in different data centers can read it from their local secondary database server.</p>
 <p><img src="assets/mrd_02_03.jpg" alt="" /></p>
 
 
@@ -130,7 +130,7 @@ nav-title: Multi-Regional Deployment
 
 
 <h2 id="data_stores_setup">Setting up the data stores</h2>
-<p>Both a relational database and a NoSQL database must be installed and configured. The relational database is configured with a single primary and replication to the Secondary data centers. Because the relational database vendor is a customer choice, the setup of the primary and secondary relational databases is out of scope for this guide. Please refer to the documentation from your vendor of choice.</p>
+<p>Both a relational database and a NoSQL database must be installed and configured. The relational database is configured with a single primary and replication to the secondary data centers. Because the relational database vendor is a customer choice, the setup of the primary and secondary relational databases is out of scope for this guide. Please refer to the documentation from your vendor of choice.</p>
 <p>The only NoSQL database vendor currently supported by the API Gateway is MongoDB. This section outlines the steps for setting up MongoDB instances in different data centers using sharding and replication.</p>
 <p>For information on supported MongoDB versions, go to <a href="../system_requirements/system_requirements_all.htm">System Requirements (all versions)</a> and choose the version of the Akana Platform that you're using.</p>
 <p>We highly recommend that you use MongoDB Enterprise Advanced, especially if you're running the API Gateway to support production or mission-critical applications. MongoDB Enterprise Advanced offers enterprise-grade security, operational automation, proactive support, and disaster recovery to run the API Gateway in a secure and reliable way.</p>
@@ -147,18 +147,18 @@ nav-title: Multi-Regional Deployment
 
 
 <h3 id="config_servers">Configuration servers</h3>
-<p>A cluster of sharded MongoDB instances requires a set of three config servers. In order to make sharding configuration changes, all three config servers must be available.</p>
-<p><strong>Note</strong>:</p>
+<p>A cluster of sharded MongoDB instances requires a set of three configuration servers. In order to make sharding configuration changes, all three configuration servers must be available.</p>
+<p><strong>Notes</strong>:</p>
 <ul>
 	<li>The MongoDB query routers will make use of these configuration servers for query routing.</li>
-	<li>At least one config server will need to be available to a query router at all times.</li>
-	<li>To ensure they are available for query routers in case of a disaster, it is recommended that the config servers be installed in the different data centers, along with the query routers in each data center.</li>
-	<li>Remember that the three config servers need to be available for configuring the sharded cluster.</li>
+	<li>At least one configuration server will need to be available to a query router at all times.</li>
+	<li>To ensure they are available for query routers in case of a disaster, it is recommended that the configuration servers be installed in the different data centers, along with the query routers in each data center.</li>
+	<li>Remember that the three configuration servers need to be available for configuring the sharded cluster.</li>
 </ul>
 <p><img src="assets/mrd_03_01.jpg" alt="" /></p>
-<p>The following outlines the steps for configuring a config server.</p>
-<p>Step 1 - Create a directory where the config server will store its data.</p>
-<p>Step 2 - Create a configuration file that the config server will read on startup. This file will include the path to the data directory created in Step 1, the role of this process in the cluster, and the network address of the server. An example file is shown below.</p>
+<p>The following outlines the steps for setting up a configuration server.</p>
+<p>Step 1 - Create a directory where the configuration server will store its data.</p>
+<p>Step 2 - Create a configuration file that the configuration server will read on startup. This file will include the path to the data directory created in Step 1, the role of this process in the cluster, and the network address of the server. An example file is shown below.</p>
 <pre>01) storage:
 02)     dbPath: /data/configdb
 03) sharding:
@@ -168,17 +168,17 @@ nav-title: Multi-Regional Deployment
 07)     port: 27019</pre>
 <p>In the above:</p>
 <ul>
-	<li>On line 04, the cluster role is <strong>configsvr</strong>, which tells MongoDB to run as a config server and not as a database server.</li>
-	<li>Lines 06 and 07 identify the host and port that the config server is listening on. The default port for all MongoDB processes is 27017.</li>
+	<li>On line 04, the cluster role is <strong>configsvr</strong>, which tells MongoDB to run as a configuration server and not as a database server.</li>
+	<li>Lines 06 and 07 identify the host and port that the configuration server is listening on. The default port for all MongoDB processes is 27017.</li>
 </ul>
-<p>Step 3: Start the config server process, referencing the config file as shown in the example below (where <strong>confserver.cfg</strong> is the name of the file created in Step 2):</p>
+<p>Step 3: Start the configuration server process, referencing the config file as shown in the example below (where <strong>confserver.cfg</strong> is the name of the file created in Step 2):</p>
 <pre>mongod – config confserver.cfg</pre>
-<p>Repeat these steps for each of the config servers in the different data centers.</p>
+<p>Repeat these steps for each of the configuration servers in the different data centers.</p>
 
 
 <h3 id="query_routers">Query routers</h3>
-<p>A query router must be configured in each data center that will route inserts and queries to the correct database servers in the MongoDB cluster. The query routers must all use the same set of config servers, so that queries and inserts work on consistent data across the data centers. The following are the steps to configure a query router:</p>
-<p>Step 1 - Create a configuration file that the query router will read on startup. The configuration file will include the addresses of the config servers and the network address of the server. An example file is shown below.</p>
+<p>A query router must be configured in each data center that will route inserts and queries to the correct database servers in the MongoDB cluster. The query routers must all use the same set of configuration servers, so that queries and inserts work on consistent data across the data centers. The following are the steps to configure a query router:</p>
+<p>Step 1 - Create a configuration file that the query router will read on startup. The configuration file will include the addresses of the configuration servers and the network address of the server. An example file is shown below.</p>
 <pre>01) sharding:
 02)     configDB: &lt;replica set name&gt;/hostA:27019,hostB:27019,hostC:27019
 03) net:
@@ -207,9 +207,9 @@ nav-title: Multi-Regional Deployment
 	<li>To enhance read performance in all data centers, the goal is to ensure that from a single data center no read or write is performed against a server in a different data center. All interactions with the data store are local to a single data center. At the same time, the API Gateway in a single data center should have read access to all data written by all data centers.</li>
 	<li>To achieve this, each primary database will replicate its data to secondary databases in all the other data centers. When reads are performed, the query router of the local data center will direct the reads to the local primary database and the local secondary databases. The only data traffic between data centers is replication traffic.</li>
 </ul>
-<p>There is one replica set per primary database. The following are the steps for creating a database replica set.</p>
+<p>There is one replica set for each primary database. The following are the steps for creating a database replica set.</p>
 <p>Step 1 - Create a directory where the database server will store its data. Do this on the host for each database server.</p>
-<p>Step 2 - Create a configuration file the database server will read on startup. The configuration file will include the path to the data directory created in Step 1, the role of this process in the cluster, and the network address of the server. An example file is shown below.</p>
+<p>Step 2 - Create a configuration file that the database server will read on startup. The configuration file will include the path to the data directory created in Step 1, the role of this process in the cluster, and the network address of the server. An example file is shown below.</p>
 <pre>01) storage:
 02)     dbPath: /data/configdb
 03) sharding:
@@ -225,12 +225,12 @@ nav-title: Multi-Regional Deployment
 	<li>Lines 03&#8211;04 are the sharding configuration. That is discussed in the next section, <a href="#shards">Shards</a>.</li>
 	<li>Lines 05&#8211;07 are the replication configuration.</li>
 	<li>On Line 6, the oplogSizeMB is the amount of space available for performing replication, and should be roughly 5% of the total space used by the database.</li>
-	<li>Line 07 gives a name to the replica set that this database is part of. There is one primary database per data center and one replica set per primary, so it's a good idea to name the replica set after the primary database's data center.</li>
+	<li>Line 07 gives a name to the replica set that this database is part of. There is one primary database for each data center and one replica set for each primary, so it's a good idea to name the replica set after the primary database's data center.</li>
 	<li>Lines 09 and 10 identify the host and port that the shard server is listening on. The default port for all MongoDB processes is 27017.</li>
 </ul>
 <p>Step 3: Start the database server process, referencing the config file, as shown in the example below.</p>
 <pre>mongod – config shardserver.cfg</pre>
-<p>Step 4: In each of the other data centers create a secondary database. For fault tolerance, you can create more than one in each data center, including the same data center as the primary database. However, if you create a secondary database in the same data center as the primary, it is possible that the secondary database is used when performing reads which may have stale data. On each of the hosts for the secondary database, create new data directories for the replicated data.</p>
+<p>Step 4: In each of the other data centers, create a secondary database. For fault tolerance, you can create more than one secondary database in each data center, including the same data center as the primary database. However, if you create a secondary database in the same data center as the primary, it is possible that the secondary database is used when performing reads, and the secondary database might have stale data. On each of the hosts for the secondary database, create new data directories for the replicated data.</p>
 <p>Step 5: Create configuration files for each of the secondary shards in the local and remote data centers. The configuration files will include the path to the data directory created in Step 2, and will identify:</p>
 <ul>
 	<li>The replica set they are part of.</li>
@@ -330,9 +330,9 @@ nav-title: Multi-Regional Deployment
 	<li>Each data center will have at least one primary MongoDB database server instance.</li>
 	<li>Each primary server is a shard.</li>
 	<li>The collection of shards provides the complete set of application data.</li>
-	<li>So far, this document has described a scenario that includes is a single primary database, or shard, in each data center. However, it is possible to have multiple shards in a single data center.</li>
+	<li>So far, this document has described a scenario that includes a single primary database, or shard, in each data center. However, it is possible to have multiple shards in a single data center.</li>
 	<li>The query routers will direct inserts and queries to the server instances based on shard keys. In this architecture, the shard key is the key of the container generating the record to be stored.</li>
-	<li id="shard_audit_msg">By default, the <strong>Audit_Msg</strong> collection, which collects message payloads when the <a href="../../ag/policies/policy_op_detailed_auditing.htm">Detailed Auditing</a> policy is added to an endpoint, is not sharded, but can be sharded if needed; for example, for performance reasons.
+	<li id="shard_audit_msg"><strong>Valid in version: 2020.1.0 and later</strong>: By default, the <strong>Audit_Msg</strong> collection, which collects message payloads when the <a href="../../ag/policies/policy_op_detailed_auditing.htm">Detailed Auditing</a> policy is added to an endpoint, is not sharded, but can be sharded if needed; for example, for performance reasons.
 		<p>If you are sharding the <strong>Audit_Msg</strong> collection for performance reasons only, the only statement needed for the Audit_Msg collection is this:</p>
 		<pre>> sh.shardCollection("PM_AUDIT.AUDIT_MSG",{"containerKey":1})</pre>
 		<p>If you also need to separate shards by region/physical location, include the following statement (one or more):</p>
@@ -376,10 +376,11 @@ nav-title: Multi-Regional Deployment
 	<li>The second argument is a structure identifying the name of the property to use as the key and the type of property it is.</li>
 	<li><strong> PM_AUDIT.AUDIT_MSG</strong> is optional. See <a href="#shard_audit_msg">Audit_Msg</a> information above.</li>
 </ul>
-<p>Step 7: From the shell, designate the range of shard tags that should be directed to each shard. You can have a shard per Network Director/Policy Manager container, one for the data center, or any combination in between. It is easier to have only one for the data center. The easiest approach is to create each of the Network Director/Policy Manager containers with numeric keys (for example, use keys 100&#8211;199 for data center A and 200&#8211;299 for data center B) so that one range can be configured only once. To define shard tag ranges, perform the following commands for each shard:</p>
+<p>Step 7: From the shell, designate the range of shard tags that should be directed to each shard. You can have a shard for each Network Director/Policy Manager container, one for the data center, or any combination in between. It is easier to have only one for the data center. The easiest approach is to create each of the Network Director/Policy Manager containers with numeric keys (for example, use keys 100&#8211;199 for data center A and 200&#8211;299 for data center B) so that one range can be configured only once. To define shard tag ranges, perform the following commands for each shard:</p>
 <pre>> sh.addTagRange("PM.ALERTS", { "containerKey": "100" }, { "containerKey" : "200" }, "ShardA")
-> sh.addTagRange("PM.CONTAINER_STATE", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")</pre>
-<pre>> sh. addTagRange ("PM.SECURITY_AUDIT_TRAIL", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")
+> sh.addTagRange("PM.CONTAINER_STATE", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")
+
+> sh. addTagRange ("PM.SECURITY_AUDIT_TRAIL", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")
 > sh. addTagRange ("PM.ALERT_AUDIT_TRAIL", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")
 > sh. addTagRange ("PM_AUDIT.AUDIT", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")
 
@@ -404,9 +405,9 @@ nav-title: Multi-Regional Deployment
 
 <h3 id="db_driver_settings">Database driver settings</h3>
 <p>When a read is performed through a query router, the default settings would have the query router route the query to each of the primary shards in the cluster. This would not be ideal, because it would cause the queries to span data centers. To avoid this, you can configure the database driver with a read preference.</p>
-<p>The read preference is configured as a query parameter of the URI of the MongoDB connection used by a database client. Creating the URI is part of the configuration steps in the next section; see <a href="#proc_install_nd">Installing Network Director</a>. The database URI and the possible settings are described in detail in the MongoDB documentation: <a href="https://docs.mongodb.org/manual/reference/connection-string/" title="Link to MongoDB documentation" target="_blank">https://docs.mongodb.org/manual/reference/connection-string/</a>.</p>
+<p>The read preference is configured as a query parameter of the URI of the MongoDB connection used by a database client. Creating the URI is part of the configuration steps in the next section, <a href="#proc_install_nd">Installing Network Director</a>. The database URI and the possible settings are described in detail in the MongoDB documentation: <a href="https://docs.mongodb.org/manual/reference/connection-string/" title="Link to MongoDB documentation" target="_blank">https://docs.mongodb.org/manual/reference/connection-string/</a>.</p>
 <p>The readPreference setting supports a variety of options. The option we are using is the <strong>nearest</strong> option. This tells the query router to direct all reads to the closest member of a replica set, regardless of whether the member is a primary or secondary shard. For more information on the <strong>nearest</strong> read preference, see <a href="https://docs.mongodb.org/manual/reference/read-preference/#nearest" title="https://docs.mongodb.org/manual/reference/read-preference/#nearest" target="_blank">https://docs.mongodb.org/manual/reference/read-preference/#nearest</a>.</p>
-<p><strong>Note</strong>: If you choose to have a secondary replica in the same data center as the primary, and then, based on this read preference, the database driver determines that the secondary replica is closer than the primary, the reads is performed against the secondary replica.</p>
+<p><strong>Note</strong>: If you choose to have a secondary replica in the same data center as the primary, and then, based on this read preference, the database driver determines that the secondary replica is closer than the primary, the read is performed against the secondary replica.</p>
 <p>An example of a MongoDB URI with this setting is shown in the example below.</p>
 <pre>monogdb://routerHost:27017/AKANA?readPreference=nearest</pre>
 <p>To be tolerant of query router outages, you can deploy multiple query routers in a data center, creating a cluster of query routers. If the primary goes down, the database driver will fail over to a different query router in the cluster. To make use of this functionality, the driver must be configured with the addresses of each of the query routers by providing a comma-separated list of <strong>host:port</strong> values in the MongoDB URI. An example is shown below.</p>
@@ -417,10 +418,10 @@ nav-title: Multi-Regional Deployment
 	<li><strong>socketTimeoutMS</strong>&#8212;The time, in milliseconds, to attempt a send or receive on a socket before the attempt times out. The default is never to timeout, though different drivers might vary.</li>
 	<li><strong>maxPoolSize</strong>&#8212;The maximum number of connections in the connection pool. Default: 100.</li>
 	<li><strong>minPoolSize</strong>&#8212;The minimum number of connections in the connection pool. Default: 0.</li>
-	<li><strong>waitQueueMultiple</strong>&#8212;A number that the driver multiples the maxPoolSize value to, to provide the maximum number of threads allowed to wait for a connection to become available from the pool.</li>
+	<li><strong>waitQueueMultiple</strong>&#8212;A number that the driver multiplies the maxPoolSize value to, to provide the maximum number of threads allowed to wait for a connection to become available from the pool.</li>
 	<li><strong>waitQueueTimeoutMS</strong>&#8212;The maximum time, in milliseconds, that a thread can wait for a connection to become available.</li>
 </ul>
-<p>An example of using these options is shown in the example below.</p>
+<p>An example of using these options is shown below.</p>
 <pre>monogdb://routerHost1:27017/AKANA?connectTimeoutMS=15000&amp;socketTimeoutMS=1500000&amp;maxPoolSize=100&amp;waitQueueMultiple=5&amp;waitQueueTimeoutMS=10000</pre>
 
 
@@ -428,15 +429,15 @@ nav-title: Multi-Regional Deployment
 <p>The following sections outline steps to help diagnose problems with the data store configuration:</p>
 
 <ul>
-	<li><a href="#verify_shard_config">Verify Shard Configuration</a></li>
-	<li><a href="#verify_data_distrib">Verify Proper Data Distribution across Shards</a></li>
-	<li><a href="#check_mongodb_logs">Check MongoDB Process Logs</a></li>
-	<li><a href="#flush_query_router_config">Flush a Query Router's Configuration</a></li>
+	<li><a href="#verify_shard_config">Verify shard configuration</a></li>
+	<li><a href="#verify_data_distrib">Verify proper data distribution across shards</a></li>
+	<li><a href="#check_mongodb_logs">Check MongoDB process logs</a></li>
+	<li><a href="#flush_query_router_config">Flush a query router's configuration</a></li>
 	<li><a href="#error_local_voted_doc">Error: Did not find local voted for document at startup</a></li>
 </ul>
 
 
-<h4 id="verify_shard_config">Verify Shard Configuration</h4>
+<h4 id="verify_shard_config">Verify shard configuration</h4>
 <p>Step 1: Connect to the admin shell of the local query router, as shown in the example below.</p>
 <pre>mongo hostA:27018/admin</pre>
 <p>Step 2: From the shell, change the current database to the config database, as shown in the example below.</p>
@@ -450,7 +451,7 @@ nav-title: Multi-Regional Deployment
 <p>Step 7: Verify the shard key is correct.</p>
 <p>Step 8: Verify that the tags are split amongst the shards correctly.</p>
 
-<h4 id="verify_data_distrib">Verify Proper Data Distribution across Shards</h4>
+<h4 id="verify_data_distrib">Verify proper data distribution across shards</h4>
 <p>Step 1: Connect to the admin shell of the local query router, as shown in the example below.</p>
 <pre>mongo hostA:27018/admin</pre>
 <p>Step 2: From the shell, change the current database to the database that you want to verify, as shown in the example below.</p>
@@ -461,7 +462,7 @@ nav-title: Multi-Regional Deployment
 <p>Step 4: Verify that the statistics for each of the shards match with your expectations based on the data being stored.</p>
 
 
-<h4 id="check_mongodb_logs">Check MongoDB Process Logs</h4>
+<h4 id="check_mongodb_logs">Check MongoDB process logs</h4>
 <p>By default, each MongoDB process (query router, configuration server, database server, and arbiter) writes diagnostic and error information to the shell it was started from. Each process can be configured to write this information to a log file instead.</p>
 <p>To instruct a process to write to a log, add a <strong>systemLog</strong> section in its configuration file, as shown in the example below.</p>
 <pre>01) systemLog:
@@ -472,7 +473,7 @@ nav-title: Multi-Regional Deployment
 	<li>Line 02 provides a location to which log files will be written. There are several other options for logging, described in detail at <a href="https://docs.mongodb.org/manual/reference/configuration-options/" title="https://docs.mongodb.org/manual/reference/configuration-options/" target="_blank">https://docs.mongodb.org/manual/reference/configuration-options/</a>.</li>
 </ul>
 
-<h4 id="flush_query_router_config">Flush a Query Router's Configuration</h4>
+<h4 id="flush_query_router_config">Flush a query router's configuration</h4>
 <p>If there is a concern that a query router is using stale information because its cache is out of date, you can flush the cache and force the query router to re-read the config database. To flush a query router's cache, perform the following steps.</p>
 <p>Step 1: Connect to the admin shell of the query router, as shown in the example below.</p>
 <pre>mongo hostA:27018/admin</pre>
@@ -516,7 +517,7 @@ Did not find local replica set configuration document at startup. Did not find r
 <p>This section includes:</p>
 	<ul>
 			<li><a href="#dc_primary">Primary data center</a></li>
-			<li><a href="#dc_secondary">Secondary Data Center</a></li>
+			<li><a href="#dc_secondary">Secondary </a><a href="#dc_primary">data</a><a href="#dc_primary">center</a><a href="#dc_secondary"></a></li>
 		</ul>
 
 
@@ -619,7 +620,7 @@ Did not find local replica set configuration document at startup. Did not find r
 
 
 <h3 id="dc_secondary">Secondary data center</h3>
-<p>The installation and configuration of the containers in the Secondary Data Center is very similar to the primary data center. All of the steps in the Primary Data Center section apply, with two differences:</p>
+<p>The installation and configuration of the containers in the secondary data center is very similar to the primary data center. All of the steps in the Primary Data Center section apply, with two differences:</p>
 <ul>
 	<li>The connection is to the local secondary RDBMS and local MongoDB query router.</li>
 	<li>There is a difference in how the services of the secondary Policy Manager are provisioned, outlined below.</li>
