@@ -378,17 +378,16 @@ nav-title: Multi-Regional Deployment
 </ul>
 <p>Step 7: From the shell, designate the range of shard tags that should be directed to each shard. You can have a shard for each Network Director/Policy Manager container, one for the data center, or any combination in between. It is easier to have only one for the data center. The easiest approach is to create each of the Network Director/Policy Manager containers with numeric keys (for example, use keys 100&#8211;199 for data center A and 200&#8211;299 for data center B) so that one range can be configured only once. To define shard tag ranges, perform the following commands for each shard:</p>
 <pre>> sh.addTagRange("PM.ALERTS", { "containerKey": "100" }, { "containerKey" : "200" }, "ShardA")
-> sh.addTagRange("PM.CONTAINER_STATE", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")
+> sh.addTagRange("PM.CONTAINER_STATE", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")</pre>
 
-> sh. addTagRange ("PM.SECURITY_AUDIT_TRAIL", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")
-> sh. addTagRange ("PM.ALERT_AUDIT_TRAIL", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")
-> sh. addTagRange ("PM_AUDIT.AUDIT", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")
+<pre>> sh. addTagRange("PM.SECURITY_AUDIT_TRAIL", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")
+> sh. addTagRange("PM.ALERT_AUDIT_TRAIL", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")
+> sh. addTagRange("PM_AUDIT.AUDIT", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")
+> sh.addTagRange("PM_AUDIT.AUDIT_MSG",{"containerKey":"100"},{"containerKey":"199"}, "ShardTagA")</pre>
 
-> sh.addTagRange("PM_AUDIT.AUDIT_MSG",{"containerKey":"100"},{"containerKey":"199"}, "ShardTagA")
-
-> sh. addTagRange ("PM_AUDIT.AUDIT_TRANSACTION_METRIC", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")
-> sh. addTagRange ("METRIC_RAW_DATA.OPERATIONAL_METRIC", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")
-> sh. addTagRange ("METRIC_ROLLUP_DATA.OPERATIONAL_METRIC", { "_id" : { "containerKey" : "100" } }, 
+<pre>> sh. addTagRange("PM_AUDIT.AUDIT_TRANSACTION_METRIC", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")
+> sh. addTagRange("METRIC_RAW_DATA.OPERATIONAL_METRIC", { "containerKey" : "100" }, { "containerKey" : "200" }, "ShardA")
+> sh. addTagRange("METRIC_ROLLUP_DATA.OPERATIONAL_METRIC", { "_id" : { "containerKey" : "100" } }, 
 { "_id" : { "containerKey" : "200" } }, "ShardA")</pre>
 <p>In the above:</p>
 <ul>
@@ -470,8 +469,9 @@ nav-title: Multi-Regional Deployment
 <p>In the above:</p>
 <ul>
 	<li>Line 01 starts the systemLog section.</li>
-	<li>Line 02 provides a location to which log files will be written. There are several other options for logging, described in detail at <a href="https://docs.mongodb.org/manual/reference/configuration-options/" title="https://docs.mongodb.org/manual/reference/configuration-options/" target="_blank">https://docs.mongodb.org/manual/reference/configuration-options/</a>.</li>
+	<li>Line 02 provides a location to which log files will be written.</li>
 </ul>
+		<p>There are several other options for logging, described in detail at <a href="https://docs.mongodb.org/manual/reference/configuration-options/" title="https://docs.mongodb.org/manual/reference/configuration-options/" target="_blank">https://docs.mongodb.org/manual/reference/configuration-options/</a>.</p>
 
 <h4 id="flush_query_router_config">Flush a query router's configuration</h4>
 <p>If there is a concern that a query router is using stale information because its cache is out of date, you can flush the cache and force the query router to re-read the config database. To flush a query router's cache, perform the following steps.</p>
@@ -509,7 +509,7 @@ Did not find local replica set configuration document at startup. Did not find r
 	<li>A walk through of the steps for installing and configuring the Policy Manager and Network Director processes in two different data centers.</li>
 	<li>Designating one data center as the primary data center and the other as the secondary data center to denote the location of the primary relational database.</li>
 </ul>
-<p>Basic installation steps are omitted, as they are in the standard installation instructions for the product. See:</p>
+<p>Basic installation steps are omitted, because they are in the standard installation instructions for the product. See:</p>
 <ul>
 	<li><a href="../platform_install/installing_akana_api_platform_all.htm">Installing the Akana API Platform (all versions)</a></li>
 	<li> <a href="../../ev/envision_install/installing_envision.htm">Installing Envision</a></li>
@@ -522,7 +522,7 @@ Did not find local replica set configuration document at startup. Did not find r
 
 
 <h3 id="dc_primary">Primary data center</h3>
-<p>The primary data center is home to the primary relational database. This is the only database instance that can support writes. The following subsections outline the steps for setting up the Primary Data Center. The processes include:</p>
+<p>The primary data center is home to the primary relational database, which is the only database instance that can support writes. The following subsections outline the steps for setting up the primary data center. The processes include:</p>
 <ul>
 	<li><a href="#proc_pm_install">Installing Policy Manager</a></li>
 	<li><a href="#proc_pm_cluster_create">Creating a Policy Manager cluster</a></li>
@@ -563,15 +563,15 @@ Did not find local replica set configuration document at startup. Did not find r
 	<li>If only one Policy Manager container is installed in the data center, you can just copy the listener information for the Policy Manager container.</li>
 	<li>If more than one Policy Manager container is used, a load balancer should be used between the Network Directors and the Policy Managers. Then, you can model the load balancer's interface for the cluster's listener.</li>
 </ul>
-<ol>
-	<li>To create a listener, click the <strong>Add Container Listener</strong> button in the <strong>Inbound Listeners</strong> portlet, as shown below. This starts the <strong>Add Container Listener</strong> wizard.
-		<p><img src="assets/mrd_04_08.jpg" alt="" /></p></li>
-	<li>This document does not include details for all the pages of the <strong>Add Container Listener</strong> wizard. However, very importantly:
-		<ul>
-			<li>For the cluster listener, make sure you use the same name as the listener of the Policy Manager container that is in the cluster. If there are multiple Policy Manager containers in the cluster, they MUST all share the same listener names.</li>
-		</ul>
-		</li>
-</ol>
+<p>To create a listener, click the <strong>Add Container Listener</strong> button in the <strong>Inbound Listeners</strong> portlet, as shown below. This starts the <strong>Add Container Listener</strong> wizard.
+	</p>
+<p><img src="assets/mrd_04_08.jpg" alt="" /></p>
+<p>This document does not include details for all the pages of the <strong>Add Container Listener</strong> wizard. However, very importantly:</p>
+	<ul>
+		<li>For the cluster listener, make sure you use the same name as the listener of the Policy Manager container that is in the cluster. If there are multiple Policy Manager containers in the cluster, they MUST all share the same listener names.</li>
+	</ul>
+
+
 <h4 id="proc_pm_services_host">Hosting Policy Manager services on the cluster</h4>
 <p>The next step is to host all the Policy Manager services on the cluster.</p>
 <ol>
@@ -741,11 +741,11 @@ sh.shardCollection("METRIC_ROLLUP_DATA.OPERATIONAL_METRIC",
 
 sh.addTagRange("PM.ALERTS",{ "containerKey": "$minKey"},{ "containerKey": "5000000"}, "DCWest")
 
-sh.addTagRange ("PM_AUDIT.AUDIT",{ "containerKey": "$minKey"},{ "containerKey": "5000000"}, "DCWest")
+sh.addTagRange("PM_AUDIT.AUDIT",{ "containerKey": "$minKey"},{ "containerKey": "5000000"}, "DCWest")
 
-sh.addTagRange ("METRIC_RAW_DATA.OPERATIONAL_METRIC",{ "containerKey": "$minKey"},{ "containerKey": "5000000"}, "DCWest")
+sh.addTagRange("METRIC_RAW_DATA.OPERATIONAL_METRIC",{ "containerKey": "$minKey"},{ "containerKey": "5000000"}, "DCWest")
 
-sh.addTagRange ("METRIC_ROLLUP_DATA.OPERATIONAL_METRIC", { "_id" : { "containerKey": "$minKey"}},{ "_id" :{ "containerKey": "5000000" }}, "DCWest")
+sh.addTagRange("METRIC_ROLLUP_DATA.OPERATIONAL_METRIC", { "_id" : { "containerKey": "$minKey"}},{ "_id" :{ "containerKey": "5000000" }}, "DCWest")
 
 sh.addTagRange("PM.ALERT_AUDIT_TRAIL", { "containerKey": "$minKey"},{ "containerKey": "5000000"}, "DCWest")
 
@@ -760,11 +760,11 @@ sh.addTagRange("PM_AUDIT.AUDIT_TRANSACTION_METRIC", { "containerKey": "$minKey"}
 
 sh.addTagRange("PM.ALERTS",{ "containerKey": "5000000"},{ "containerKey": "6000000"}, "DCEast")
 
-sh.addTagRange ("PM_AUDIT.AUDIT",{ "containerKey": "5000000"},{ "containerKey": "6000000"}, "DCEast")
+sh.addTagRange("PM_AUDIT.AUDIT",{ "containerKey": "5000000"},{ "containerKey": "6000000"}, "DCEast")
 
-sh.addTagRange ("METRIC_RAW_DATA.OPERATIONAL_METRIC",{ "containerKey": "5000000"},{ "containerKey": "6000000"}, "DCEast")
+sh.addTagRange("METRIC_RAW_DATA.OPERATIONAL_METRIC",{ "containerKey": "5000000"},{ "containerKey": "6000000"}, "DCEast")
 
-sh.addTagRange ("METRIC_ROLLUP_DATA.OPERATIONAL_METRIC", { "_id" : { "containerKey": "5000000"}},{ "_id" :{ "containerKey": "6000000" }}, "DCEast")
+sh.addTagRange("METRIC_ROLLUP_DATA.OPERATIONAL_METRIC", { "_id" : { "containerKey": "5000000"}},{ "_id" :{ "containerKey": "6000000" }}, "DCEast")
 
 sh.addTagRange("PM.ALERT_AUDIT_TRAIL", { "containerKey": "5000000"},{ "containerKey": "6000000"}, "DCEast")
 
