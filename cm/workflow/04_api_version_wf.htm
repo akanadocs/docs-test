@@ -364,17 +364,20 @@ nav-title: API Version Workflow
 
 <h3 id="apiv_ra_disallowapiaccess">@DisallowApiAccess</h3>
 <p><strong>Valid in version: 2019.1.32 and later</strong></p>
-<p>You can control the visibility of the <strong>Access</strong> button that allows an app to request access to an API in the Community Manager developer portal (API Overview page) based on the user's role.</p>
-<p>To do this:</p>
+<p>You can control the visibility of the <strong>Access</strong> button that allows an app to request access to an API in the Community Manager developer portal (API Overview page) by using the <strong>@DisallowApiAccess</strong> reserved action.</p>
+<p>If you use this reserved action, only the Site Admin and Business Admin will be able to request API access. In addition, you could create a custom role, and add that custom role into your custom API Version workflow, so that users with the custom role will also be able to request API access. A template for the custom workflow is provided with this document; see <a href="#apiv_workflow_template">API Version Workflow: Custom Workflow Template</a> below.</p>
+
+
+<h4>To implement custom API version workflow to restrict API access using @DisallowApiAccess</h4>
 <ol>
 	<li>In Policy Manager, create a custom role. For instructions, see <a href="../../ag/security_admin/roles.htm">Security Roles and Role Memberships</a>.
 		<p>The custom role defined in the download sample is <strong>APIAccessor</strong>, as per Line 13 of the workflow:</p>
 			<pre>&lt;!ENTITY AtmoRoleApiAccessor &quot;APIAccessor&quot; &gt;</pre>
-		<p>If you define a different role name, you must change this line in the custom workflow to use the role name you defined.</p>
+		<p><strong>Note</strong>: If you define a different role name, you must change this line in the custom workflow to use the role name you defined (Step 2.2 below). If you only want the Business Admin and Site Admin to be able to request API access, skip this step and remove line 13 from the custom workflow.</p>
 	</li>
-	<li>In the Community Manager developer portal, create and assign a custom API version workflow that uses the <strong>@DisallowApiAccess</strong> reserved action to disable the <strong>Access</strong> button and also defines the new custom role that will be authorized to see and use the <strong>Access</strong> button:
-<ol>
-	<li>If you don't have any custom API version workflow already in place, download the sample, from the link in this document: see <a href="#apiv_workflow_template">API Version Workflow: Custom Workflow Template</a> below. Make sure you choose a version that supports <strong>@DisallowApiAccess</strong>, as noted.</li>
+	<li>In the Community Manager developer portal, create and assign a custom API version workflow that uses the <strong>@DisallowApiAccess</strong> reserved action to remove visibility of the <strong>Access</strong> button and also defines the new custom role that will be authorized to see and use the <strong>Access</strong> button:
+		<ol>
+	<li>If you don't have any custom API version workflow already in place, download the sample from the link in this document: see <a href="#apiv_workflow_template">API Version Workflow: Custom Workflow Template</a> below. Make sure you choose a version that supports <strong>@DisallowApiAccess</strong>, as noted.</li>
 	<li>Modify the custom workflow as needed. For example:
 		<ul>
 			<li>Change the role name if you are not using the default role name of <strong>APIAccessor</strong>.</li>
@@ -382,15 +385,15 @@ nav-title: API Version Workflow
 		</ul>
 		</li>
 	
-	<li>Upload the custom workflow&nbsp;to the Community Manager developer portal, following the instructions in <a href="01_overview_cm_wf.htm#s01_06_uploading">Uploading a New Custom Workflow</a>. </li>
+	<li>Upload the custom workflow to the Community Manager developer portal, following the instructions in <a href="01_overview_cm_wf.htm#s01_06_uploading">Uploading a New Custom Workflow</a>. </li>
 	<li>Assign the new custom workflow as the default for APIs, in API Settings &gt; <strong>API Workflow Definition</strong> field. For instructions, see <a href="01_overview_cm_wf.htm#s01_08_implementing">Implementing a New Custom Workflow</a>.</li>
 </ol>
 </li>
 	</ol>
-<p>If you have custom API version workflow already in place, use the customized sections of this workflow to add to your existing workflow. If you are not making any changes, just un-comment the section with action ID 420 as shown below.</p>
-<p>The example below shows the customized sections. Line numbers are from the version 2019.1.32 custom workflow document. Line 13, below, shows the custom role that will be allowed API access.</p>
+<p>If you have custom API version workflow already in place, use the customized sections of this workflow to add to your existing workflow. If you are not making any changes, just un-comment the section with action id 420 as shown below.</p>
+<p>In the example below, line numbers are from the version 2019.1.32 custom workflow document. Line 13, below, shows the custom role that will be allowed API access.</p>
 <pre>13)  &lt;!ENTITY AtmoRoleApiAccessor &quot;APIAccessor&quot; &gt;</pre>
-<p>The example below shows the section that implements the <strong>@DisallowApiAccess</strong> reserved action to disable the <strong>Access</strong> button.  This section is commented out, but if you remove the opening and closing comment tags, the <strong>Access</strong> button is disabled for all users except the specified roles, which include the new role, &AtmoRoleApiAccessor, as well as the Business Admin and API Admin.</p>
+<p>The example below shows the section that implements the <strong>@DisallowApiAccess</strong> reserved action to hide the <strong>Access</strong> button.  This section is commented out, but if you remove the opening and closing comment tags, the <strong>Access</strong> button is not visible to any users except the specified roles, which include the new role, &AtmoRoleApiAccessor, as well as the Business Admin and API Admin.</p>
 <pre>625)          &lt;!-- action id="420" name="@DisallowApiAccess"&gt;
 626)           &lt;restrict-to&gt;
 627)             &lt;conditions type="AND"&gt;
