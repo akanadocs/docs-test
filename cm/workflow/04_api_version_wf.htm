@@ -364,24 +364,33 @@ nav-title: API Version Workflow
 
 <h3 id="apiv_ra_disallowapiaccess">@DisallowApiAccess</h3>
 <p><strong>Valid in version: 2019.1.32 and later</strong></p>
-<p>You can control the visibility of the <strong>Access</strong> button that allows an app to request access to an API in the Community Manager developer portal (API Overview page) by using the <strong>@DisallowApiAccess</strong> reserved action.</p>
-<p>If you use this reserved action, only the Site Admin and Business Admin will be able to request API access. In addition, you could create a custom role, and add that custom role into your custom API Version workflow, so that users with the custom role will also be able to request API access. A template for the custom workflow is provided with this document; see <a href="#apiv_workflow_template">API Version Workflow: Custom Workflow Template</a> below.</p>
+<p>By default, any user who has visibility of an API can request API access via the <strong>Access</strong> button on the API <strong>Overview</strong> page.</p>
+<p>If needed, you can change this default behavior via custom workflow. You can create and implement a custom API version workflow that uses the reserved action, <strong>@DisallowApiAccess</strong>, to disable the <strong>Access</strong> button.</p>
+<p> In the custom workflow, you can define a set of users who will still see the <strong>Access</strong> button.  In addition, you could create a custom role, and add that custom role into the workflow, so that users with the custom role will also be able to request API access.</p>
+<p> A template for the custom workflow is provided with this document; see <a href="#apiv_workflow_template">API Version Workflow: Custom Workflow Template</a> below. In this template, this reserved action is used to disallow API access for all users except those with one of the following roles:</p>
+<ul>
+	<li><strong>APIAccessor</strong>: A new custom role defined in Policy Manager; see steps below.</li>
+	<li><strong>AtmoRoleBusinessAdmin</strong>: Users with the Business Admin role.</li>
+	<li><strong>AtmoRoleApiAdmin</strong>: Users with the API Admin role for the specific API.</li>
+	<li><strong>Modify</strong>: Users with a role that includes Modify permission&nbsp;for the API.</li>
+</ul>
+<p>The workflow template provided includes a custom role, which you must create in Policy Manager in Step 1 below. In the workflow, the role name is <strong>APIAccessor</strong>. You can use a different name, but if you don't use the default you must modify the workflow as covered in Step 1 below.</p>
 
 
-<h4>To implement custom API version workflow to restrict API access using @DisallowApiAccess</h4>
+<h4 id="proc_wf_apiversion_implement">To implement custom API version workflow to restrict API access using @DisallowApiAccess</h4>
 <ol>
-	<li>In Policy Manager, create a custom role. For instructions, see <a href="../../ag/security_admin/roles.htm">Security Roles and Role Memberships</a>.
+	<li>Administrator: In Policy Manager, create a custom role with READ permission on both API and API Version. For instructions on creating a new role, see <a href="../../ag/security_admin/roles.htm">Security Roles and Role Memberships</a>.
 		<p>The custom role defined in the download sample is <strong>APIAccessor</strong>, as per Line 13 of the workflow:</p>
 			<pre>&lt;!ENTITY AtmoRoleApiAccessor &quot;APIAccessor&quot; &gt;</pre>
-		<p><strong>Note</strong>: If you define a different role name, you must change this line in the custom workflow to use the role name you defined (Step 2.2 below). If you only want the Business Admin and Site Admin to be able to request API access, skip this step and remove line 13 from the custom workflow.</p>
+		<p><strong>Note</strong>: If you define a different role name, you must change the value in the custom workflow, <strong>APIAccessor</strong> as shown above, to use the role name you defined (Step 2.2 below).</p>
 	</li>
-	<li>In the Community Manager developer portal, create and assign a custom API version workflow that uses the <strong>@DisallowApiAccess</strong> reserved action to remove visibility of the <strong>Access</strong> button and also defines the new custom role that will be authorized to see and use the <strong>Access</strong> button:
+	<li>Site Admin: In the Community Manager developer portal, create and assign a custom API version workflow that uses the <strong>@DisallowApiAccess</strong> reserved action to remove visibility of the <strong>Access</strong> button and also defines the roles that will be authorized to see and use the <strong>Access</strong> button:
 		<ol>
 	<li>If you don't have any custom API version workflow already in place, download the sample from the link in this document: see <a href="#apiv_workflow_template">API Version Workflow: Custom Workflow Template</a> below. Make sure you choose a version that supports <strong>@DisallowApiAccess</strong>, as noted.</li>
 	<li>Modify the custom workflow as needed. For example:
 		<ul>
-			<li>Change the role name if you are not using the default role name of <strong>APIAccessor</strong>.</li>
-			<li>Un-comment the section that implements the <strong>@DisallowApiAccess</strong> reserved action. An example is shown below.</li>
+			<li>If you are using a different role name, change the <strong>APIAccessor</strong> role name on Line 13 and also on line 629 as shown below.<strong></strong>.</li>
+			<li>Un-comment the section that implements the <strong>@DisallowApiAccess</strong> reserved action; lines 625 to 646 in the example below.</li>
 		</ul>
 		</li>
 	
@@ -389,11 +398,16 @@ nav-title: API Version Workflow
 	<li>Assign the new custom workflow as the default for APIs, in API Settings &gt; <strong>API Workflow Definition</strong> field. For instructions, see <a href="01_overview_cm_wf.htm#s01_08_implementing">Implementing a New Custom Workflow</a>.</li>
 </ol>
 </li>
+	<li>Business Admin: In the Community Manager developer portal, assign the new role (<strong>APIAccessor</strong> in the template) to one or more users. For instructions, see <a href="../learnmore/bus_admin_org_roles.htm#business_assign_roles_to_users">How do I assign security roles to users for my organization?</a></li>
 	</ol>
-<p>If you have custom API version workflow already in place, use the customized sections of this workflow to add to your existing workflow. If you are not making any changes, just un-comment the section with action id 420 as shown below.</p>
+
+
+<h4 id="wf_apiversion_custom">Modifying the template API version workflow</h4>
+<p>To get the template, see <a href="#apiv_workflow_template">API Version Workflow: Custom Workflow Template</a> below.</p>
+<p>f you have custom API version workflow already in place, use the customized sections of this workflow to add to your existing workflow. If you are not making any changes, use the template provided, and un-comment the section with action id 420 as shown below.</p>
 <p>In the example below, line numbers are from the version 2019.1.32 custom workflow document. Line 13, below, shows the custom role that will be allowed API access.</p>
 <pre>13)  &lt;!ENTITY AtmoRoleApiAccessor &quot;APIAccessor&quot; &gt;</pre>
-<p>The example below shows the section that implements the <strong>@DisallowApiAccess</strong> reserved action to hide the <strong>Access</strong> button.  This section is commented out, but if you remove the opening and closing comment tags, the <strong>Access</strong> button is not visible to any users except the specified roles, which include the new role, &AtmoRoleApiAccessor, as well as the Business Admin and API Admin.</p>
+<p>The example below shows the section that implements the <strong>@DisallowApiAccess</strong> reserved action to disallow API access.  By default, this section is commented out. If you remove the opening and closing comment tags, and then implement the workflow, the <strong>Access</strong> button is not visible to any users except the specified roles: the new <strong>APIAccessor</strong> role (lines 628&#8211;630), <strong>Business Admin</strong> (lines 631&#8211;633), <strong>API Admin</strong> (lines 634&#8211;636), and users with Modify permission for the specific resource type (lines 637&#8211;639).</p>
 <pre>625)          &lt;!-- action id="420" name="@DisallowApiAccess"&gt;
 626)           &lt;restrict-to&gt;
 627)             &lt;conditions type="AND"&gt;
@@ -417,6 +431,7 @@ nav-title: API Version Workflow
 645)           &lt;/results&gt;
 646)         &lt;/action --&gt;  
 </pre>
+<p><strong>Note</strong>: as always, when you implement a new API Version workflow, it is effective for new API versions only. Existing API versions are unaffected.</p>
 <p><a href="#top">Back to top</a></p>
 
 
