@@ -9,7 +9,7 @@ sub-nav-class: Automation
 type: page
 nav-title: Automation Examples
 ---
-<h1 id="top">Automation Examples </h1>
+<h1 id="top">Automation Examples</h1>
 <p>Simple examples of using automation to install the platform.</p>
 <p><strong>Note</strong>: Always use the automation recipes for the major product version that you're using.</p>
 <hr class="divide_hr" />
@@ -66,7 +66,7 @@ nav-title: Automation Examples
 	<li><a href="#resource_download_extract">Downloading and extracting the installation files</a></li>
 	<li><a href="#cluster_support">Cluster support</a></li>
 	<li><a href="#recipe_create_smtp">Setting up an SMTP email host using an automation recipe</a></li>
-	<li><a href="#recipe_register_container_nd_to_cluster">Using the register-container recipe to add a Network Director to a non-existing cluster</a></li>
+	<li><a href="#recipe_register_container_nd_to_cluster">Using the register-container recipe to create a cluster and register an ND container at the same time</a></li>
 </ol>
 <hr class="divide_hr" />
 
@@ -129,6 +129,7 @@ nav-title: Automation Examples
 <p>So, the next step is to copy the <strong>slf4j-simple-1.7.19.jar</strong> logger file, which is part of the installation, to the $INSTALL_DIR/lib/script folder.</p>
 <p>For this example, from the/home/user/akana folder, run the following:</p>
 <pre>cp lib/ext/slf4j-simple-1.7.19.jar lib/script/</pre>
+	<p>For an example of calling an automation script and using logging, see <a href="#nd_register_script">Registering the ND container: automation script</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -347,7 +348,7 @@ PM_HOST=ubu1664qa-17.akana.roguewave.com</pre>
 	<li>Recipe: <strong>register-container.json</strong></li>
 	<li>Properties file in this example: <strong>register-container.properties</strong></li>
 </ul>
-<p><strong>Note</strong>: If you want to register an ND container to a cluster, and create the cluster at the same time, see <a href="#recipe_register_container_nd_to_cluster">Using the register-container recipe to add a Network Director to a non-existing cluster</a>.</p>
+<p><strong>Note</strong>: If you want to register an ND container to a cluster, and create the cluster at the same time, see <a href="#recipe_register_container_nd_to_cluster">Using the register-container recipe to create a cluster and register an ND container at the same time</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -475,7 +476,7 @@ CONTAINER_NAME=pm01</pre>
 	<li>Recipes can be executed remotely, allowing for fine-grained control of cluster members.</li>
 	<li>The use of recipes allows configuration tasks to be automated across the cluster, in addition to remote management of container configuration properties.</li>
 </ul>
-<p><strong>Note</strong>: If you want to register an ND container to a cluster, and create the cluster at the same time, see <a href="#recipe_register_container_nd_to_cluster">Using the register-container recipe to add a Network Director to a non-existing cluster</a>.</p>
+<p><strong>Note</strong>: If you want to register an ND container to a cluster, and create the cluster at the same time, see <a href="#recipe_register_container_nd_to_cluster">Using the register-container recipe to create a cluster and register an ND container at the same time</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -547,7 +548,7 @@ SMTP_PASSWORD=mypassword</pre>
 
 <h4 id="recipe_smtp_running">Creating an SMTP server: running the recipe</h4>
 <p>The command to run this recipe is shown below.</p>
-<pre>./jython.sh -m akana.recipe --recipe ../recipes/tasks/smtp-settings.json --url http://akana-qa-41.aws.akana.roguewave.com:7900 --user administrator --password mypassword --props ./smtp.properties</pre>
+<pre>./jython.sh -m akana.recipe --recipe ../recipes/tasks/smtp-settings.json --url http://akana-qa-41.aws.akana.roguewave.com:7900 --user administrator --password mypassword --props smtp.properties</pre>
 
 <h4 id="recipe_smtp_result">Creating an SMTP server: viewing the result in Policy Manager</h4>
 <p>Log in to Policy Manager and go to <strong>Configure</strong> &gt; <strong>Email</strong> &gt; <strong>Modify SMTP Email Host</strong>. The result of running the example in this use case is shown below.</p>
@@ -556,8 +557,8 @@ SMTP_PASSWORD=mypassword</pre>
 
 
 
-<h2 id="recipe_register_container_nd_to_cluster">Using the register-container recipe to add a Network Director to a non-existing cluster</h2>
-<p>Section <a href="#h_container_nd_register">Registering the ND container</a> above gives an example of using the register-container recipe to register a Network Director container that you created in the previous section.</p>
+<h2 id="recipe_register_container_nd_to_cluster">Using the register-container recipe to create a cluster and register an ND container at the same time</h2>
+<p>Section <a href="#h_container_nd_register">Registering the ND container</a> above gives an example of using the <strong>register-container</strong> recipe to register a Network Director container created in the previous section.</p>
 <p>You can also use this recipe to register a Network Director container to a cluster that doesn't yet exist, creating the new cluster and registering the Network Director container at the same time. </p>
 <p>In this scenario, you'll need to provide the following additional properties:</p>
 <pre>CLUSTER_NAME={cluster_name}
@@ -565,11 +566,10 @@ CREATE_CLUSTER=true
 CLUSTER_URL={cluster URL including name:host} </pre>
 <p>In this section:</p>
 <ul>
-	<li><a href="#recipe_register_container_https_no">Example #1: Registering a Network Director container and creating a cluster&#8212;no HTTPS</a></li>
-	<li><a href="#recipe_register_container_https">Example #2: Registering a Network Director container and creating a cluster&#8212;with HTTPS</a></li>
-	<li><a href="#recipe_register_container_running">Registering a Network Director container and creating a cluster: running the recipe</a></li>
+	<li><a href="#recipe_register_container_https_no">Registering a Network Director container and creating a cluster (HTTP): properties</a></li>
+	<li><a href="#recipe_register_container_running">Registering a Network Director container and creating a cluster (HTTP): running the recipe</a></li>
 </ul>
-<h4 id="recipe_register_container_https_no">Example #1: Registering a Network Director container and creating a cluster&#8212;no HTTPS</h4>
+<h4 id="recipe_register_container_https_no">Registering a Network Director container and creating a cluster (HTTP): properties</h4>
 <p>The example below shows the properties in a properties file, <strong>nd_new_cluster.properties</strong>, used for this recipe. This example creates a cluster named c11 and registers a Network Director container named eapNd to the new cluster.</p>
 <pre>INSTALL_DIR=abs:..
 DEFAULT_PORT=7905
@@ -583,30 +583,14 @@ CLUSTER_URL=default-http0:http://${hostname()}:7905/
 CLUSTER_NAME=cl1
 CLUSTER_KEY=cl1</pre>
 
-<h4 id="recipe_register_container_https">Example #2: Registering a Network Director container and creating a cluster&#8212;with HTTPS</h4>
+<!--<h4 id="recipe_register_container_https">Example #2: Registering a Network Director container and creating a cluster&#8212;with HTTPS</h4>
 <p>The example below shows a properties file, <strong>nd_new_cluster.properties</strong>, for the same recipe, including the keystore values needed for an HTTPS cluster.</p>
-<pre>INSTALL_DIR=abs:..
-DEFAULT_PORT=7905
-CONTAINER_NAME=eapNd
-PM_PORT=7900
-PM_HOST=localhost
-ORG_KEY=uddi:soa.com:registryorganization
-DB_DRIVER_LOCATION=https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.21/mysql-connector-java-8.0.21.jar
-CREATE_CLUSTER=true
-CLUSTER_URL=default-http0:http://${hostname()}:7905/
-CLUSTER_NAME=cl1
-CLUSTER_KEY=cl1
-CONTAINER_IDENTITY_ACTION=import.pki.key.and.x509
-IDENTITY_KEYSTORE_TYPE=JKS
-IDENTITY_KEYSTORE=/home/user/qa-nd-keystore.jks
-IDENTITY_KEYSTORE_PASSWORD=password
-IDENTITY_KEY_ALIAS=nd
-IDENTITY_KEY_PASSWORD=password
-CONTAINER_KEY=${CONTAINER_NAME}</pre>
+<p>5/6/21 ATMO-32092: Per GG HTTPS example will be later. Commenting out this section.</p>-->
 
-<h4 id="recipe_register_container_running">Registering a Network Director container and creating a cluster: running the recipe</h4>
+<h4 id="recipe_register_container_running">Registering a Network Director container and creating a cluster (HTTP): running the recipe</h4>
 <p>The command to run this recipe is shown below.</p>
-<pre>./jython.sh -m akana.container --recipe ../recipes/register-container.json --props ./nd_new_cluster.properties -Dorg.slf4j.simpleLogger.logFile=System.out </pre>
+<pre>./jython.sh -m akana.container --recipe ../recipes/register-container.json --props nd_new_cluster.properties</pre>
+<p><strong>Note</strong>: You can also include the optional <strong>-Dorg.slf4j.simpleLogger.logFile=System.out</strong> if you want logging. See <a href="#logging_file_place">Put the logging file in place to enable logging</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
