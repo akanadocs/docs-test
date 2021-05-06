@@ -33,7 +33,6 @@ nav-title: API Gateway Analytics
 			<li><a href="#s04_01">Akana MongoDB Support Plugin</a></li>
 			<li><a href="#s04_01b">Akana Administration Console Configuration Settings for MongoDB</a></li>
 			<li><a href="#s04_01c">Managing the Map/Reduce maxBatchSize Settings</a></li>
-			<li><a href="#s04_01_aggregation_pipeline">Using the Aggregation Pipeline for data rollups</a> (2021.1.0 and later)</li>
 		</ul>
 		</li>
 	<li><a href="#s05_00">Usage/Enhancements</a>
@@ -176,7 +175,7 @@ nav-title: API Gateway Analytics
 <h3 id="s04_01b">Akana Administration Console Configuration Settings for MongoDB</h3>
 <p>This section includes information on the settings you might need to review or adjust for MongoDB management.</p>
 
-<h4 id="com_soa_persistence_mongodb">Configuration category: com.soa.persistence.mongodb</h4>
+<h4>Configuration category: com.soa.persistence.mongodb</h4>
 <dl>
 <dt>persistence.mongodb.async.thread</dt>
 <dd>The number of threads allocated for processing asynchronous requests.</dd>
@@ -232,17 +231,6 @@ nav-title: API Gateway Analytics
 <dd>The number of iterations to skip before running the recovery jobs.</dd>
 
 
-<dt id="persistence_mongodb_rollup_strategy">persistence.mongodb.rollup.strategy</dt>
-<dd>The strategy for rollup of MongoDB data. Choices:
-	<ul>
-		<li>Aggregation
-		<p><strong>Note</strong>: Aggregation requires MongoDB version 4.2 or later.</p></li>
-		<li>Map/Reduce (deprecated)</li>
-	</ul>
-	<p>For more information about these options, see <a href="#s04_01_aggregation_pipeline">Using the Aggregation Pipeline for data rollups</a> below.</p>
-</dd>
-
-
 <dt>persistence.mongodb.username</dt>
 <dd>The username for connecting to the MongoDB database.</dd>
 </dl>
@@ -254,44 +242,6 @@ nav-title: API Gateway Analytics
 <p>Of course, execution time varies according to the size and number of records to be processed. In general, it's a good idea to keep execution time below one minute.</p>
 <p>As an administrator, it's helpful to be able to control the number of records that a Mongo <a href="../../cm/learnmore/basics_glossary.htm#gl_mapreduce">MapReduce</a> operation will attempt at any one time. If there is too much data for the MongoDB cluster to handle in one go, this could cause a crash or at least delay the processing of the information. In version 2020.2.0 and later, you can adjust the size of the batch size using the <strong>maxBatchSize</strong> configuration property.</p>
 <p>If the batch size is too small for the throughput requirements of the deployment, the best solution is to add additional MongoDB shards to share the load.</p>
-
-
-<h3 id="s04_01_aggregation_pipeline">Using the Aggregation Pipeline for data rollups</h3>
-<h4 class="stamp">Valid in Version: 2021.1.0 and later</h4>
-<p>In versions prior to 2021.1.0, the data rollup mechanism is Map/Reduce.</p>
-<p>In 2021.1.0, there are two options:</p>
-<ul>
-	<li>The legacy Map/Reduce option. This might still be the default setting, depending on the MongoDB version you are running, but it will be deprecated in a future version.</li>
-	<li>A new option to perform data rollups using a MongoDB <a href="../../cm/learnmore/basics_glossary.htm#gl_aggregationpipeline">Aggregation Pipeline</a> (requires MongoDB 4.2 or later).
-		<p>The Aggregation Pipeline strategy for rollups is recommended, to enable better performance and reduce server costs in maintaining the analytic rollups.</p>
-	</li>
-</ul>
-<p>Notes about the MongoDB Aggregation Pipeline strategy for rollups:</p>
-<ul>
-	<li>It produces the same analytic results in both Community Manager and Envision.</li>
-	<li>It supports the same error recovery scenarios implemented for the Map/Reduce strategy.</li>
-	<li>It uses the same batching mechanism as the Map/Reduce strategy.</li>
-	<li>It uses the same error recovery as the Map/Reduce strategy.</li>
-	<li>It requires MongoDB 4.2 or later.</li>
-</ul>
-<p>Aggregation rollup strategy can be enabled via configuration settings in the Akana Administration Console. See <a href="#proc_mongodb_rollup_switch">To switch to the Aggregation Pipeline strategy for MongoDB data rollups</a> below.</p>
-<p>In 2021.1.0, the default value depends on your MongoDB version:</p>
-<ul>
-	<li>MongoDB Server 4.2 or later&#8212;Aggregation Pipeline rollup mechanism is the default.</li>
-	<li>MongoDB Server versions prior to 4.2&#8212;Map/Reduce rollup mechanism is the only option..</li>
-</ul>
-<p><strong>Note</strong>: If you switch to the Aggregation Pipeline rollup mechanism, you can switch back to the Map/Reduce strategy at any time until it is deprecated in a future version.</p>
-
-<h4 id="proc_mongodb_rollup_switch">To switch to the Aggregation Pipeline strategy for MongoDB data rollups</h4>
-<ol>
-	<li>Install the product. For instructions, go to <a href="../../sp/platform_install/installing_akana_api_platform_all.htm">Installing the Akana API Platform (all versions)</a> and choose your version.</li>
-	
-	<li>Log in to the Akana Administration Console.</li>
-	<li>Click the <strong>Configuration</strong> tab.</li>
-	<li>On the left, under <strong>Configuration Categories</strong>, scroll down to find the <strong>com.soa.persistence.mongodb</strong> configuration category.</li>
-	<li>In the <strong>persistence.mongodb.rollup.strategy</strong> field, change the value from <strong>Map/Reduce (deprecated)</strong> to <strong>Aggregation</strong>.</li>
-	<li>Click <strong>Apply Changes</strong>.</li>
-</ol>
 <p><a href="#top">Back to top</a></p>
 
 
