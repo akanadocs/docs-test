@@ -63,8 +63,9 @@ nav-title: LC Promotion Guide
 		</li>
 	<li><a href="#topology_api">Topology API</a>
 		<ul>
-			<li><a href="#topologyapi_01">Finding the Topology API Documentation</a></li>
+			<li><a href="#topologyapi_01">Finding the Topology API documentation</a></li>
 			<li><a href="#topologyapi_02">Using the Topology API</a></li>
+			<li><a href="#topologyapi_auth">Authentication on the Topology API</a></li>
 			</ul>
 		</li>
 	<li><a href="#lm_console">Lifecycle Manager Console</a>
@@ -1225,12 +1226,13 @@ vsep.listenerName = "https"</td>
 <h2 id="topology_api">Topology API</h2>
 <p>In this section:</p>
 <ul>
-	<li><a href="#topologyapi_01">Finding the Topology API Documentation</a></li>
+	<li><a href="#topologyapi_01">Finding the Topology API documentation</a></li>
 	<li><a href="#topologyapi_02">Using the Topology API</a></li>
+	<li><a href="#topologyapi_auth">Authentication on the Topology API</a></li>
 </ul>
 
 
-<h3 id="topologyapi_01">Finding the Topology API Documentation</h3>
+<h3 id="topologyapi_01">Finding the Topology API documentation</h3>
 <p>You can find the Topology API documentation in the following locations:</p>
 <ul>
 	<li>In your deployment:
@@ -1246,9 +1248,39 @@ vsep.listenerName = "https"</td>
 
 
 <h3 id="topologyapi_02">Using the Topology API</h3>
-<p>The first step is to create a Topology. This is done by POST-ing the complete Topology JSON document to <strong>...lc/api/topologies</strong>. This can be done programmatically or with a browser plugin such as Firefox RESTClient:</p>
+<p>This section includes a few examples of using different operations from the Topology API. For more information refer to the Topology API documentation referenced above. Operations covered here:</p>
+<ul>
+	<li><a href="#topology_create">Create a topology</a> (POST <span class="apidoc_code">/lc/api/topologies</span>)</li>
+	<li><a href="#topology_get">View information about a topology</a> (GET <span class="apidoc_code">/lc/api/topologies/{topology_name}</span>)</li>
+	<li><a href="#topology_updaterules">Update topology rules</a> (PUT <span class="apidoc_code">/lc/api/topologies/{topology-name}/environments/{environment-name}/profiles/{promotionProfile-name}/rules</span>)</li>
+</ul>
+
+<h4 id="topology_create">Create a topology</h4>
+<p>The first step is to create a topology. To do this, use the POST operation to send the topology information in JSON format. You can do this programmatically or with a browser plugin such as Firefox RESTClient as shown in the example below.</p>
 <p><img src="images/promotion_10.jpg" alt="Creating the topology" /></p>
 <p>Note the inclusion of the content-type and basicAuth headers.</p>
+<p>In the above:</p>
+<ul>
+	<li><strong>HTTP operation</strong>: POST.</li>
+	<li><strong>URL</strong>: {protocol}://{hostname}/lc/api/topologies.
+		<p>For example: <strong>https://janemead01.apiportal-smoke.akana.com/lc/api/topologies</strong></p></li>
+	<li><strong>Body</strong>: Construct as needed. For example, <a href="promotion_samples.htm#lc_ex_2_local">Simple two-environment topology with local tenants</a> with values updated as needed.</li>
+	<li><strong>Content-Type</strong>: application/json</li>
+	<li><strong>Authorization</strong>: Basic Auth (authentication is via your login credentials, which are sent with the API call) or as specified for your installation.</li>
+</ul>
+
+<h4 id="topology_get">View information about a topology</h4>
+<p>To view information about an existing topology, you'll need the name of the topology you already created. Properties of the API call:</p>
+<ul>
+	<li><strong>HTTP operation</strong>: GET.</li>
+	<li><strong>URL</strong>: {protocol}://{hostname}/lc/api/topologies/{topology_name}
+		<p>For example: <strong>https://janemead01.apiportal-smoke.akana.com/lc/api/topologies/Topology1</strong></p>
+	</li>
+	<li><strong>Accept</strong>: application/json</li>
+	<li><strong>Authorization</strong>: Basic Auth (authentication is via your login credentials, which are sent with the API call) or as specified for your installation.</li>
+</ul>
+
+<h4 id="topology_updaterules">Update topology rules</h4>
 <p>Updates to the topology can be performed on the topology as a whole, or on specific properties within the document. For example, the Rules for a PromotionProfile can be updated with a PUT of an array of Rules such as:</p>
 <pre>[
   {
@@ -1259,6 +1291,24 @@ vsep.listenerName = "https"</td>
 ]</pre>
 <p>To:</p>
 <pre>http://myHost:9900/lc/api/topologies/{topology-name}/environments/{environment-name}/profiles/{promotionProfile-name}/rules</pre>
+<p>In the above:</p>
+<ul>
+	<li><strong>HTTP operation</strong>: PUT.</li>
+	<li><strong>URL</strong>: {protocol}://{hostname}/lc/api/topologies/{topology-name}/environments/{environment-name}/profiles/{promotionProfile-name}/rules
+		<p>For example: <strong>https://janemead01.apiportal-smoke.akana.com/lc/api/topologies/Topology1/environments/Development/profiles/PromotionProfile_01/rules</strong></p>
+	</li>
+	<li><strong>Body</strong>: As shown in the example above. Update values as needed.</li>
+	<li><strong>Content-Type</strong>: application/json</li>
+	<li><strong>Authorization</strong>: Basic Auth (authentication is via your login credentials, which are sent with the API call) or as specified for your installation.</li>
+</ul>
+
+
+<h3 id="topologyapi_auth">Authentication on the Topology API</h3>
+<p>Authentication on the Topology API is set by means of a configuration task in the Akana Administration Console.</p>
+<ul>
+	<li>Information about reviewing this task as part of the installation process: See <a href="../../sp/admin_console/config_actions.htm#aac_ca_set_topology_api_credentials">Set Topology API Credentials</a>.</li>
+	<li>General information about this task: See <a href="../../sp/install_lc/install_promotion.htm#lc_install_secure_api">Securing the Topology REST API</a>.</li>
+</ul>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -1359,7 +1409,7 @@ vsep.listenerName = "https"</td>
 
 <h4>To promote assets for a decoupled tenant</h4>
 <ol>
-	<li>Request promotion of the API to the decoupled environment in the normal way, using the API Platform user interface or via the TopologyAPI promote operation (see <a href="#topologyapi_01" target="_blank">Finding the Topology API Documentation</a>).
+	<li>Request promotion of the API to the decoupled environment in the normal way, using the API Platform user interface or via the TopologyAPI promote operation (see <a href="#topologyapi_01" target="_blank">Finding the Topology API documentation</a>).
 		<p>When the promotion is complete, the status of the asset for the decoupled environment shows as <strong>promoted</strong>. In this case, the <strong>promoted</strong> status indicates that all processing of the archive has been completed and the archive is ready for importing into the target environment.</p></li>
 	<li>Use the <strong>getPackage</strong> method in the TopologyAPI to retrieve the processed import package from Lifecycle Coordinator:
 		<pre>GET {host:port}/lc/api/topologies/{topology-name}/environments/{environment-name}/assets/{asset-id}/package</pre>
