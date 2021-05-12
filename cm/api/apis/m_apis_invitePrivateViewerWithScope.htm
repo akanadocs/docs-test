@@ -338,22 +338,21 @@
 					<div class="apidocContent">
 <!-- InstanceBeginEditable name="Heading" -->
 <h1 id="top">POST&#160;/api/apis/versions/{APIVersionID}/viewers</h1>
-<!-- InstanceEndEditable -->
-
-<!-- InstanceBeginEditable name="Intro_AuthRoles" -->
 <p>
-Invites a group to have visibility of an API version, with visibility limited to one or more specified scopes.</p>
-<p>Currently, the user interface offers a two-step process to invite a private viewer with scope:</p>
+Invites a group to have visibility of an API version, and also specifies visibility permissions&#8212;one or more specific licenses, or unlimited visibility.</p>
+<p>Currently, the user interface offers a two-step process to invite a group to have visibility of an API, and then limit the licenses available to the group:</p>
 <ol>
-	<li>First, invite a private viewer (group), without scope specification, using the <span class="apidoc_code"><a href="m_apis_invitePrivateViewer.htm">POST&#160;/api/apis/versions/{APIVersionID}/viewers/{ViewerID}</a></span> operation.</li>
-	<li>Then, modify the scope for the group, using the: <span class="apidoc_code"><a href="m_apis_savePrivateViewerScope.htm">PUT&#160;/api/apis/versions/{APIVersionID}/viewers/{ViewerID}</a></span> operation.</li>
+	<li>First, invite a private viewer (group), without specifying licenses, using the <span class="apidoc_code"><a href="m_apis_invitePrivateViewer.htm">POST&#160;/api/apis/versions/{APIVersionID}/viewers/{ViewerID}</a></span> operation.
+		<p>Corresponds to <strong>API</strong> &gt; <strong>Visibility</strong> &gt; <strong>Groups</strong> &gt; <strong>Invite Group</strong> in the user interface.</p></li>
+	<li>Then, modify the visibility of the group to view one or more licenses or all licenses, using the: <span class="apidoc_code"><a href="m_apis_savePrivateViewerScope.htm">PUT&#160;/api/apis/versions/{APIVersionID}/viewers/{ViewerID}</a></span> operation.
+		<p>Corresponds to <strong>API</strong> &gt; <strong>Visibility</strong> &gt; <strong>Groups</strong> &gt; choose group &gt; <strong>Edit Licenses</strong> in the user interface.</p></li>
 </ol>
-<p>You can accomplish both the above steps in one using this operation.</p>
+<p>You can accomplish both the above steps in one action using this operation.</p>
 <p id="id_roles"><strong>Authorization Roles/Permissions</strong>: Must be <a href="../Ref_Glossary_CommunityPlatform.htm#gl_login">logged in</a>. Must have permission to modify the API; an <a href="../aaref/Ref_AuthorizationRolesOnThePlatform.htm#authroles_apiadmin">API Admin</a> or <a href="../aaref/Ref_AuthorizationRolesOnThePlatform.htm#authroles_bizadmin">Business Admin</a>.</p>
 <p><strong>Authorization token renewal</strong>: This operation changes information that is reflected in the authorization token; therefore, when invoking this operation, you must also renew the token.</p>
 <p id="indexmetadata"><strong>Metadata indexing</strong>: When this operation is run successfully, the platform metadata is automatically reindexed. Since the API documentation might include a metadata.xml file that directs visibility, the index must be updated when the API documentation resources are updated, to ensure the correct API documentation visibility settings are implemented.</p>
 
-<!-- InstanceEndEditable -->
+
 <p>This topic includes the following sections:</p>
 <div class="relatedlinks">
 <ul>
@@ -372,41 +371,40 @@ Invites a group to have visibility of an API version, with visibility limited to
 </ul>
 </div>
 <h2 id="httpmethod">HTTP Method</h2>
-<!-- InstanceBeginEditable name="HTTP Method" -->
 <p class="httpverb">POST</p>
-<!-- InstanceEndEditable -->
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
+
+
 
 <h2 id="endpoint">URL</h2>
-<!-- InstanceBeginEditable name="URL" -->
 <pre class="soaapidoc_endpoint">https://{hostname}/api/apis/versions/{APIVersionID}/viewers</pre>
-<!-- InstanceEndEditable -->
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
 
 
-<!-- InstanceBeginEditable name="Sample Request" -->
+
 <h2 id="samplerequest">Sample Request</h2>
-<p id="id_samplerequest">The example below invites a specific group to have visibility of an API version, limited to a single specified scope.</p>
+<p id="id_samplerequest">The example below invites a specific group to have visibility of an API version, limited to a single license.</p>
 <p><strong>Request URL</strong></p>
-<pre>https://{hostname}/api/apis/versions/9e3846ee-bbbf-4982-82ca-5a2411ec619b.acmepaymentscorp/viewers</pre>
+<pre>https://{hostname}/api/apis/versions/74ae5862-de41-4779-818e-a40b7bed0c68.rcoaless/viewers</pre>
 <p><strong>Sample request headers</strong></p>
 <pre>Accept: application/json
-X-Csrf-Token_rcoaless":"TokenID%3D8ed70a13-8469-11e8-b37a-b155e4eabeb8%2CexpirationTime%3D153...</pre>
+Content-Type: application/json
+AtmoAuthToken_rcoaless=TokenID%3D1edb9803-f56d-4a5a-b705-44acb77bd3e6%2Cclaimed_id%3Durn%3Aa...
+X-Csrf-Token_rcoaless: TokenID%3D8ed70a13-8469-11e8-b37a-b155e4eabeb8%2CexpirationTime%3D153...</pre>
 <p><strong>Sample request body</strong></p>
 <pre>{
-  &quot;ResourceID&quot;:&quot;9e3846ee-bbbf-4982-82ca-5a2411ec619b.acmepaymentscorp&quot;,
-  &quot;ViewerID&quot;:&quot;53d6c4cc-4e3a-42e2-a7d6-d12707f613d4.acmepaymentscorp&quot;,
-  &quot;ViewerType&quot;:&quot;group&quot;,
-  &quot;RestrictedScope&quot;:&quot;true&quot;,
-  &quot;LicenseID&quot;:[
-    &quot;759aa82d-aeb7-4fa0-8dd1-e62d7f38e858.acmepaymentscorp&quot;
+  "ResourceID":"74ae5862-de41-4779-818e-a40b7bed0c68.rcoaless",
+  "ViewerID":"cd519032-b0a3-47f8-9fb6-987e0d85432c.rcoaless",
+  "ViewerType":"group",
+  "RestrictedScope":"true",
+  "LicenseID":[
+    "08f2f183-d3d7-48b9-bd1d-8f5301eaf8ae.rcoaless"
   ]
 }</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
-<!-- InstanceEndEditable -->
 
 
-<!-- InstanceBeginEditable name="Request Headers" -->
+
 <h2 id="requestheaders">Request Headers</h2>
 <p>For general information on request header values, refer to <a href="../aaref/Ref_HTTPHeaders.htm#ref_httprequestheaders">HTTP Request Headers</a>.</p>
 <table class="tableparmsresponse">
@@ -445,10 +443,9 @@ X-Csrf-Token_rcoaless":"TokenID%3D8ed70a13-8469-11e8-b37a-b155e4eabeb8%2Cexpirat
 	</tbody>
 </table>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
-<!-- InstanceEndEditable -->
 
 
-<!-- InstanceBeginEditable name="Request Parameters" -->
+
 <h2 id="requestparameters">Request Parameters</h2>
 <table class="tableparmsresponse">
 	<thead>
@@ -469,61 +466,65 @@ X-Csrf-Token_rcoaless":"TokenID%3D8ed70a13-8469-11e8-b37a-b155e4eabeb8%2Cexpirat
 			<td>The unique ID for a specific API version.</td>
 		</tr>
 		<tr>
-			<td>visibilityScope</td>
+			<td>VisibilityContract</td>
 			<td>Body</td>
 			<td><a href="../obj/o_resource_VisibilityContract.htm">VisibilityContract</a></td>
 			<td>Required</td>
-			<td>Contains information about a visibility contract between a resource and a viewer.</td>
+			<td>Contains information about a visibility contract between a resource and a viewer. It includes the API version, the group that has visibility, and the visibility permissions&#8212;one or more specific licenses, or unlimited visibility.</td>
 		</tr>
 	</tbody>
 </table>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
-<!-- InstanceEndEditable -->
 
 
-<!-- InstanceBeginEditable name="Response Description" -->
+
 <h2 id="response">Response</h2>
 <p id="id_successstatement">If successful, this operation returns HTTP status code 200, with information about the group's visibility of the API version.</p>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
-<!-- InstanceEndEditable -->
 
 
-<!-- InstanceBeginEditable name="Sample Response" -->
+
 <h2 id="sampleresponse">Sample Response</h2>
-<p id="id_sampleresponse">The sample response below shows successful completion of this operation. The specified group has been granted visibility of the API version, limited to one specified scope.</p>
+<p id="id_sampleresponse">The sample response below shows successful completion of this operation. The specified group has been granted visibility of the API version, limited to one specified license.</p>
 <p><strong>Sample response headers: application/json</strong></p>
 <pre>Status Code: 200 OK
 Atmo-Renew-Token: renew
 Content-Type: application/json
-Expires: Mon, 23 Jun 2014 10:43:27 GMT</pre>
+Date: Wed, 12 May 2021 18:26:58 GMT
+Set-Cookie: AtmoAuthToken_rcoaless=TokenID%3D54276169-8903-4a6d-90d3-8e42878138ad...</pre>
 <p><strong>Sample response body: application/json</strong></p>
 <pre>{
-  &quot;ResourceID&quot; : &quot;9e3846ee-bbbf-4982-82ca-5a2411ec619b.acmepaymentscorp&quot;,
-  &quot;ResourceType&quot; : &quot;apiversion&quot;,
-  &quot;ViewerID&quot; : &quot;53d6c4cc-4e3a-42e2-a7d6-d12707f613d4.acmepaymentscorp&quot;,
-  &quot;ViewerType&quot; : &quot;group&quot;,
-  &quot;RestrictedScope&quot; : true,
-  &quot;License&quot; : [ {
-    &quot;LicenseID&quot; : &quot;759aa82d-aeb7-4fa0-8dd1-e62d7f38e858.acmepaymentscorp&quot;,
-    &quot;Name&quot; : &quot;Bronze&quot;,
-    &quot;Description&quot; : &quot;Read-only access at no charge. Both environments, public, approval required.&quot;,
-    &quot;Visibility&quot; : &quot;Public&quot;,
-    &quot;SandboxAccessAutoApproved&quot; : false,
-    &quot;ProductionAccessAutoApproved&quot; : false,
-    &quot;LicenseParts&quot; : {
-      &quot;LicensePart&quot; : [ {
-        &quot;Name&quot; : &quot;060718d2-03f0-4bc5-bc3d-67218bed0ad9&quot;,
-        &quot;ResourceID&quot; : [ &quot;2f8604c3-8ffe-4f0e-b3ea-2c4e3fbd3138.acmepaymentscorp&quot; ]
-      } ]
-    },
-    &quot;BusinessID&quot; : &quot;tenantbusiness.acmepaymentscorp&quot;
-  } ]
+  "ResourceID":"74ae5862-de41-4779-818e-a40b7bed0c68.rcoaless",
+  "ResourceType":"apiversion",
+  "ViewerID":"cd519032-b0a3-47f8-9fb6-987e0d85432c.rcoaless",
+  "ViewerType":"group",
+  "RestrictedScope":true,
+  "License":[
+    {
+      "LicenseID":"08f2f183-d3d7-48b9-bd1d-8f5301eaf8ae.rcoaless",
+      "Name":"Bronze",
+      "Description":"Bronze",
+      "Visibility":"Public",
+      "SandboxAccessAutoApproved":true,
+      "ProductionAccessAutoApproved":false,
+      "LicenseParts":{
+        "LicensePart":[
+          {
+            "Name":"5d8c46e5-b981-44cd-883a-a11790181651",
+            "ResourceID":[
+              "42b97e0a-322a-43c1-b335-969d6ec6ed39.rcoaless"
+            ]
+          }
+        ]
+      },
+      "BusinessID":"tenantbusiness.rcoaless"
+    }
+  ]
 }</pre>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
-<!-- InstanceEndEditable -->
 
 
-<!-- InstanceBeginEditable name="Response Headers" -->
+
 <h2 id="responseheaders">Response Headers</h2>
 <p>For general information on response header values, refer to <a href="../aaref/Ref_HTTPHeaders.htm#ref_httpresponseheaders">HTTP Response Headers</a>.</p>
 <table class="tableparmsresponse">
@@ -549,10 +550,9 @@ Expires: Mon, 23 Jun 2014 10:43:27 GMT</pre>
 	</tbody>
 </table>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
-<!-- InstanceEndEditable -->
 
 
-<!-- InstanceBeginEditable name="Response Body" -->
+
 <h2 id="responsebody">Response Body</h2>
 <table class="tableparmsresponse">
 	<thead>
@@ -571,7 +571,7 @@ Expires: Mon, 23 Jun 2014 10:43:27 GMT</pre>
 	</tbody>
 </table>
 <p class="apidoc_backtotop"><a href="#top">Back to top</a></p>
-<!-- InstanceEndEditable -->
+
 
 
 <h2 id="errorcodes">Error Codes/Messages</h2>
