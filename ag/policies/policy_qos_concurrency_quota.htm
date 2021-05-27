@@ -131,9 +131,9 @@ nav-title: Concurrency Quota
 
 <h4 id="uc_policy_qos_concurrency_quota_behavior_01">Summary</h4>
 <p>When the Concurrency Quota policy is in use, there is a counter to determine whether the concurrency limit has been reached. </p>
-<p>If  the policy is attached at the contract level (license), the counter name is derived from the contract key. If the policy is attached at the service level, the counter name is based on the service key.</p>
+<p>If  the policy is attached at the contract level, the counter name is derived from the contract key. If the policy is attached at the service level, the counter name is based on the service key.</p>
 <p><strong>Note</strong>: For contracts, the Concurrency Quota policy works only at the service contract level; it cannot be applied granularly at the operation level.</p>
-<p>When this policy is attached to a service or contract (license), the Network Director does the following:</p>
+<p>When this policy is attached to a service or contract, the Network Director does the following:</p>
 <ol>
 	<li>When a message request is received:
 		<ol>
@@ -148,15 +148,16 @@ nav-title: Concurrency Quota
 </ol>
 
 <h4 id="uc_policy_qos_concurrency_quota_behavior_02">Runtime behavior -- no cluster</h4>
-<p>If there is no cluster, the Concurrency Quota policy settings apply to messages processed by the container. For example, if the policy allows 16 concurrent requests, and the Network Director container receives an additional request while 16 requests are still open, alert processing is initiated.</p>
+<p>If there is no cluster, the Concurrency Quota policy settings apply to messages processed by the container.</p>
+<p>For example, if the policy allows 16 concurrent requests, and the Network Director container receives an additional request while 16 requests are still open, alert processing is initiated.</p>
 
 <h4 id="uc_policy_qos_concurrency_quota_behavior_03">Runtime behavior -- cluster without clustered cache</h4>
 <p>If Network Director containers are in a cluster, but clustered cache is not enabled, the behavior is the same as when there is no cluster. The limits specified in the policy settings, and the counters that are created, apply only to the container processing the request message and its corresponding response message.</p>
+<p>For example, if the policy allows 16 concurrent requests, each Network Director instance in the cluster can accept 16 requests before reaching the error limit.</p>
 
 <h4 id="uc_policy_qos_concurrency_quota_behavior_04">Runtime behavior -- cluster with clustered cache enabled</h4>
 <p>With clustered cache enabled, the counter is shared across all Network Director containers in the cluster.</p>
 <p>For example, if the Concurrency Quota policy is set to 16 requests, and there are four Network Director containers, the limit is 16 requests between all four Network Director containers.</p>
-<p>In the same scenario, if clustered cache is not used, each Network Director instance can accept 16 requests before reaching the error limit.</p>
 <p>For more information about clustered cache, see <a href="../performance/using_clusterable_cache.htm">Using a Clusterable Cache</a>.</p>
 <p>{<span class="apidoc_red">Note: Not sure I've said the above correctly given this from Gerry: &quot;The concurrency quota policy handler does not use the clustered cache, it does require the clustered counter service.  &quot; Please advise.</span>}</p>
 
