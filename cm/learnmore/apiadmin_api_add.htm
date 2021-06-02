@@ -44,8 +44,13 @@ nav-title: Add an API
 	<li><a href="#api_approval_required">Should I require approval for API access requests?</a></li>
 	<li><a href="#what_is_a_proxy_api">Why would I use the platform to proxy my API?</a></li>
 	<li><a href="#platform_support_of_overloaded_operations">Does the platform support overloaded operations?</a></li>
-	<li><a href="#api_search_results">How can I control the search results entry for my API?</a></li>
-</ol>
+	<li><a href="#api_search_results">How can I control the search results entry for my API?</a>
+		<ul>
+			<li><a href="#search_results_entry_construction">How the search results entry is constructed</a></li>
+			<li><a href="#search_results_entry_examples">Search entry results: examples</a></li>
+		</ul>
+	</li>
+	</ol>
 
 
 
@@ -552,53 +557,80 @@ nav-title: Add an API
 <h4 class="stamp">Valid in Version: 2019.1.32 and later</h4>
 <p>When users search for your API in the <strong>All APIs</strong> list, or perform any search that will include your API in the search results, a snippet of information is displayed about your API in the search results.</p>
 <p>The search results entry is an opportunity to showcase your API in a brief summary.</p>
-<p>In earlier versions, the Community Manager developer portal displayed information from the <strong>API Description</strong> field for the search results entry. In version 2019.1.32 and later, it constructs the copy for the search results entry by pulling information (depending on the term or terms that the user searches on) from either or both of these two fields in the API definition:</p>
+<p>In versions prior to 2019.1.32, the Community Manager developer portal displayed information from the <strong>API Description</strong> field for the search results entry. In version 2019.1.32 and later, it supports keyword search in the <strong>Summary</strong> field also. To match a search term, it pulls the copy for the search results entry from a concatenation of both these fields in the API definition:</p>
 <ol>
 	<li>Summary</li>
-	<li>API Description
-	<p><strong>Note</strong>: When you create an API, if you don't provide a value in the Description field, the <strong>API Name</strong> is used for the <strong>API Description</strong>.</p></li>
+	<li>API Description (or API Name if no API Description is provided)</li>
 </ol>
-<p>Some examples of search entries are shown below.</p>
-<p>In constructing the search results entry, the platform looks for the search string across all APIs that the user has access to, and applies the following logic:</p>
+	<p><strong>Note</strong>: For information about setting up the <strong>Summary</strong> and <strong>API Description</strong> fields, see <a href="#proc_api_edit">To edit basic data about an API or API version</a> above.</p>
+
+<h3 id="search_results_entry_construction">How the search results entry is constructed</h3>
+<p>For the search results entry, the Search feature pulls from a concatenated string of the Summary and Description fields, using an ellipsis (...) as a delimiter if information is pulled from different sections.</p>
+<p>There are two basic scenarios:</p>
 <ul>
-	<li>If there is a match only in the Summary, the search results entry includes the whole <strong>Summary</strong> if it is short, or the part of the <strong>Summary</strong> that includes the search string. See <a href="#app_search_results_example_01">example #1</a> below.</li>
-	<li>If there is a match only in the <strong>API Description</strong>, the search results entry includes the whole <strong>API Description</strong> if it is short, or the part of the <strong>API Description</strong> that includes the search string. See <a href="#app_search_results_example_02">example #2</a> below.</li>
-	<li>If there is a match in both <strong>Summary</strong> and <strong>API Description</strong>, the search results entry includes a snippet from each field, separated by an ellipsis. See <a href="#app_search_results_example_03">example #3</a> below.</li>
+	<li><strong>With no search string provided:</strong>
+		<p>In the All APIs list, if no search term is specified, the Search feature lists the Summary, if provided, then an ellipsis (...), then the Description (or API Name if Description is not provided). If the concatenation of these two fields is very long, only a segment of the Description is shown.</p></li>
+	<li><strong>With search string:</strong>
+<p>The Search feature pulls from the concatenated Summary and Description fields to create the search results entry. Where a match is found, a few words are included before or after the search word or string to provide context. If the search results entry includes information from both Summary and Description, an ellipsis is used as a separator. The word or words from the search string are bolded in the search results entry.</p>
+<p>The exact format of the search results entry depends on the terms searched for, where they fall in the Summary and/or Description, and the amount of copy in the Summary and Description fields.	</p>
+	</li>
 </ul>
-<p>Notes:</p>
+<p>Depending on where the search term or terms appear in the concatenated string of Summary + Description, as well as the amount of copy, the search results entry might include:</p>
 <ul>
-	<li>For information about setting up the <strong>Summary</strong> and <strong>API Description</strong> fields, see <a href="#proc_api_edit">To edit basic data about an API or API version</a> above.</li>
-	<li>After you've defined values for these fields and saved your API, it's a good idea to check how your API will appear in search results. To do this, just go to <strong>APIs</strong> &gt; <strong>All APIs</strong> and perform one or more test searches. If you want to adjust the snippet of information in the search results, modify the values for one or both of these fields, save, and then check again.</li>
+	<li>Only words from the Summary.</li>
+	<li>Only words from the Description.</li>
+	<li>Segments (or the entire copy, if short) from both Summary and Description.</li>
 </ul>
-<h4 id="app_search_results_example_01">Example #1: Only the Summary includes a match for the search term </h4>
+
+<h3 id="search_results_entry_examples">Search entry results: examples</h3>
+<p>The examples below illustrate the following scenarios:</p>
+<ul>
+	<li><a href="#app_search_results_example_01">Example #1: No search term</a></li>
+	<li><a href="#app_search_results_example_02">Example #2: Only the Summary includes a match for the search term</a></li>
+	<li><a href="#app_search_results_example_03">Example #3: Only the Description includes a match for the search term</a></li>
+	<li><a href="#app_search_results_example_04">Example #4: Both Summary and Description include a match for the search term</a></li>
+</ul>
+
+<h4 id="app_search_results_example_01">Example #1: No search term</h4>
+<p>In this example:</p>
+<ul>
+	<li>Search term: None</li>
+	<li><strong>Summary</strong> text: ACME Payments API Summary: Encompasses all ACME Payments APIs</li>
+	<li><strong>API Description</strong> text: ACME Payments API Description: Includes functions from all ACME Payments APIs including Billing, Collections, and Credit Processing.</li>
+</ul>
+<p>In this example, no search term was specified. Because the copy is not very long, the search results include the full Summary text, an ellipsis, and the full Description text.</p>
+<p><strong>Note</strong>: If the total text string is very long, only a segment of it is included in the search results.</p>
+<p><img src="assets/api_search_results_01.png" alt="Search results entry for an API, example #1" /></p>
+
+<h4 id="app_search_results_example_02">Example #2: Only the Summary includes a match for the search term </h4>
 <p>In this example:</p>
 <ul>
 	<li>Search term: collections</li>
-	<li><strong>Summary</strong> text: None provided, so the API Name is used.</li>
-	<li><strong>API Description</strong> text: None provided</li>
-	</ul>
-<p>The search term appears only in the <strong>API Name</strong>, which is the default for the <strong>Summary</strong> field if summary is not specified, so all APIs with the search term in the <strong>Name</strong> are returned, with matching search results content as shown below.</p>
-<p><img src="assets/api_search_results_01.png" alt="Search results entry for an API, example #1" /></p>
+	<li><strong>Summary</strong> text: Summary: ACME Payments Corp collections API</li>
+	<li><strong>API Description</strong> text: API Description: Includes all functions for activities related to collecting funds.
+	</li>
+</ul>
+<p>In this example, the search term appears in the summary. In the search results, it is highlighted. The search entry also includes the ellipsis and a fragment of the API Description. At least a few words are include before and after the search term in the search results, to provide context.</p>
+<p><img src="assets/api_search_results_02.png" alt="Search results entry for an API, example #2" /></p>
 
-<h4 id="app_search_results_example_02">Example #2: Only the Description includes a match for the search term </h4>
+<h4 id="app_search_results_example_03">Example #3: Only the Description includes a match for the search term</h4>
 <p>In this example:</p>
 <ul>
 	<li>Search term: subscription</li>
 	<li><strong>Summary</strong> text: Top-level API for all ACME Payments customers</li>
 	<li><strong>API Description</strong> text: Includes many features including access to operations in all secondary ACME Payments APIs; collections, invoicing, billing, and many other functions. Cloud-based; subscription-based; a mature product with a tight iterative lifecycle.</li></ul>
-<p>In this example, only the part of the API Description that includes the search keyword is shown in the search results..</p>
-<p><img src="assets/api_search_results_02.png" alt="Search results entry for an API, example #2" /></p>
+<p>In this example, because of the length of the string of Summary + Description, partial copy is included in the search results. Only the segment of the API Description that includes the search keyword is included. At least a few words are included before and after the search term in the search results, to provide context.</p>
+<p><img src="assets/api_search_results_03.png" alt="Search results entry for an API, example #3" /></p>
 
-<h4 id="app_search_results_example_03">Example #3: Both Summary and Description include a match for the search term </h4>
+<h4 id="app_search_results_example_04">Example #4: Both Summary and Description include a match for the search term </h4>
 <p>In this example:</p>
 <ul>
 	<li>Search term: professional</li>
 	<li><strong>Summary</strong> text: ACME Payments professional collections API</li>
 	<li><strong>API Description</strong> text: A full-featured collections API for finance professionals in Fortune 500 companies who want to use Cloud-based software for their collections activities, linking to banks and other financial institutions as well as customer databases.</li>
 </ul>
-<p>In the search results entry, segments of the two fields, each containing the search term, are separated by an ellipsis (...) as shown below.</p>
-<p><strong>Note</strong>: Up to 199 characters are included in the search results. If there are less than 199 characters in total in both fields, Summary + API Description combined, and there is a match in one of the fields, all Summary and Description text is included in the search results entry. The example below has more than 199 characters.</p>
-<p><img src="assets/api_search_results_03.png" alt="Search results entry for an API, example #3" /></p>
+<p>In the search results entry, segments of the two fields, each containing the search term, are separated by an ellipsis (...) as shown below. Because the string of Summary + Description is longer, only applicable sections of the copy are included in the search results entry. As with earlier examples, at least a few words are include before and after the search term in the search results, to provide context. The search term is highlighted.</p>
+<p><img src="assets/api_search_results_04.png" alt="Search results entry for an API, example #4" /></p>
 <p><a href="#top">Back to top</a></p>
 
 
