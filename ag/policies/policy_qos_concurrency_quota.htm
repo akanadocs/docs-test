@@ -23,17 +23,11 @@ nav-title: Concurrency Quota
 	<li><a href="#options">Concurrency Quota policy options</a></li>
 	<li><a href="#configuration">Configuration</a></li>
 	<li><a href="#policy_activating">Activating a policy</a></li>
-	<li><a href="#policy_attach">Attaching a policy</a>
-		<ol>
-			<li><a href="#policy_attachment_counter_pm">Policy attachment options/concurrency counter: Policy Manager</a></li>
-			<li><a href="#policy_attachment_counter_Cm">Policy attachment options/concurrency counter: Community manager develope portal</a></li>
-</ol>
-	</li>
+	<li><a href="#policy_attach">Attaching a policy</a>	</li>
 	<li><a href="#uc_policy_qos_concurrency_quota_behavior">Concurrency Quota policy behavior</a>
 		<ol>
-			<li><a href="#uc_policy_qos_concurrency_terminology">Terminology</a></li>
 <li><a href="#uc_policy_qos_concurrency_quota_behavior_01">Policy behavior&#8212;summary</a></li>
-			<li><a href="#uc_policy_qos_concurrency_quota_behavior_02">Runtime behavior without grid services (com.soa.grid)</a></li>
+			<li><a href="#uc_policy_qos_concurrency_quota_behavior_02">Runtime behavior: default</a></li>
 			<li><a href="#uc_policy_qos_concurrency_quota_behavior_04">Runtime behavior with grid services enabled (com.soa.grid)</a></li>
 			<li><a href="#uc_policy_qos_concurrency_quota_behavior_05">Response time effect on concurrency quota counter</a></li>
 		</ol>
@@ -62,7 +56,7 @@ nav-title: Concurrency Quota
 <h2 id="introduction">Introduction</h2>
 <p>A Concurrency Quota policy is a Quality of Service (QoS) policy that allows you to:</p>
 <ul>
-	<li>Specify a limit (quota) for the number of concurrent  requests allowed to the API/service.</li>
+	<li>Specify a limit (quota) for the number of concurrent requests allowed to the API/service.</li>
 	<li>Configure a fault message that is returned to the consumer, and an alert that is generated, if a request exceeds the predefined quota.</li>
 </ul>
 <p>You can define a fault message by specifying the following values:</p>
@@ -152,7 +146,7 @@ nav-title: Concurrency Quota
 	<li>A service
 	<p><strong>Note</strong>: Although the Community Manager developer portal user interface allows attaching a policy at the operation level, the Concurrency Quota policy works correctly only when attached to the service, not to an individual operation.</p></li>
 </ul>
-<p>Depending on where the policy is attached, the concurrency counter is activated for the service or for the contract.</p>
+<p>Depending on where the policy is attached, the concurrency counter, which tracks the number of open requests, is activated for the service or for the contract.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -160,38 +154,16 @@ nav-title: Concurrency Quota
 <h2 id="uc_policy_qos_concurrency_quota_behavior">Concurrency Quota policy behavior</h2>
 <p>In this section:</p>
 <ul>
-	<li><a href="#uc_policy_qos_concurrency_terminology">Terminology</a></li>
 	<li><a href="#uc_policy_qos_concurrency_quota_behavior_01">Policy behavior&#8212;summary</a></li>
-	<li><a href="#uc_policy_qos_concurrency_quota_behavior_02">Runtime behavior without grid services (com.soa.grid)</a></li>
+	<li><a href="#uc_policy_qos_concurrency_quota_behavior_02">Runtime behavior: default</a></li>
 	<li><a href="#uc_policy_qos_concurrency_quota_behavior_04">Runtime behavior with grid services enabled (com.soa.grid)</a></li>
 	<li><a href="#uc_policy_qos_concurrency_quota_behavior_05">Response time effect on concurrency quota counter</a></li>
 </ul>
 
-<h3 id="uc_policy_qos_concurrency_terminology">Terminology {<span class="apidoc_red">new from HK</span>}</h3>
-<dl>
-<dt id="def_entry_time">Entry Time</dt>
-	<dd>The time that the API Gateway picks up the request.</dd>
-
-<dt id="def_total_response_time">Total Response Time</dt>
-	<dd>The total time from the point that the API Gateway picks up the request to the point that it delivers the response back to the client.</dd>
-
-<dt id="def_exit_time">Exit Time</dt>
-	<dd>The time that the API response is delivered to the client. This is the time when the transaction leaves the exchange.</dd>
-	<dd>Exit Time = <a href="#def_entry_time">Entry Time</a> + Total Response Time.</dd>
-
-<dt id="def_active_request">Active Request</dt>
-	<dd>An API transaction that is being processed by the API Gateway, between its <a href="#def_entry_time">entry time</a> and <a href="#def_exit_time">exit time</a>.</dd>
-
-<dt id="def_concurrent_requests">Concurrent Requests</dt>
-	<dd>The total number of active requests for an API/service or for a contract, and therefore the value of the applicable counter (<strong>service name counter</strong> or <strong>contract key counter</strong>).</dd>
-
-<dt id="def_concurrency_counter">Concurrency Counter</dt>
-	<dd>The counter that holds the count of Concurrent Requests. The counter is defined based on the attachment type and their relevant counters as explained above. It will be a <strong>service name counter</strong> or a <strong>contract key counter</strong>.</dd></dl>
-
 
 <h3 id="uc_policy_qos_concurrency_quota_behavior_01">Policy behavior&#8212;summary</h3>
 <p>When the Concurrency Quota policy is in use, there is a counter to determine whether the concurrency limit has been reached. </p>
-<p>If  the policy is attached at the contract level, the counter name is derived from the contract key. If the policy is attached at the service level, the counter name is based on the service key.</p>
+<p>If the policy is attached at the contract level, the counter name is derived from the contract key. If the policy is attached at the service level, the counter name is based on the service key.</p>
 <p>When this policy is attached to a service or contract, the Network Director does the following:</p>
 <ol>
 	<li>When a message request is received:
@@ -243,17 +215,19 @@ nav-title: Concurrency Quota
 	<li>Using <strong>Virtualize Service</strong>, virtualize and host the physical service on Network Director (<strong>ND1</strong>), and assign a name (for example, V<strong>s1</strong>).</li>
 	<li>Navigate to <strong>Organization</strong> &gt; <strong>Policies</strong> &gt; <strong>QoS Policies</strong> and use <strong>Add Policy</strong> to create a Concurrency Quota policy.</li>
 	<li>Configure the Concurrency Quota policy with 10 Concurrency Limit and a custom Fault message.
-    <p><img src="images/concurrency_quota_uc_pm_01.jpg" alt="" /></p>
-  </li>
+		<p><img src="images/concurrency_quota_uc_pm_01.jpg" alt="" /></p>
+	</li>
 	<li>Activate the policy, and attach it to the Vs1 service in the <strong>Service Details</strong> &gt; <strong>Policy Attachments</strong> &gt; <strong>QoS</strong> section.</li>
 	<li>Send 20 concurrent requests from the application/client to the Vs1 service.</li>
 	<li>When the concurrency limit has been exceeded, the Fault Message is returned to the service consumer and an alert is logged at the service level.
-  	<p><img src="images/concurrency_quota_uc_pm_02.jpg" alt="" /></p></li>
+		<p><img src="images/concurrency_quota_uc_pm_02.jpg" alt="" /></p></li>
 	<li>The details in the usage logs show the error being displayed as configured in the policy.
-  <p><img src="images/concurrency_quota_uc_pm_03.jpg" alt="" /></p></li>
+		<p><img src="images/concurrency_quota_uc_pm_03.jpg" alt="" /></p>
+	</li>
 	<li>In the alert code, an email must be configured that will be sent to the administrator(s).</li>
 	<li>Timeline
-  <p><img src="images/concurrency_quota_uc_pm_04.jpg" alt="" /></p></li>
+		<p><img src="images/concurrency_quota_uc_pm_04.jpg" alt="" /></p>
+	</li>
 </ol>
 
 
@@ -265,26 +239,26 @@ nav-title: Concurrency Quota
 	<li>Using <strong>Virtualize Service</strong>, virtualize and host the physical service on Network Director (<strong>ND1</strong>), and assign a name (for example, V<strong>s1</strong>).</li>
 	<li>Navigate to <strong>Organization</strong> &gt; <strong>Policies</strong> &gt; <strong>QoS Policies</strong> and use <strong>Add Policy</strong> to create a Concurrency Quota policy.</li>
 	<li>Configure the Concurrency Quota policy with 10 Concurrency Limit and a custom Fault message. Set Remainder Alert interval to 10 seconds and Clear alert time interval to 100 seconds.
-    <p><img src="images/concurrency_quota_uc_pm_05.jpg" alt="" /></p>
-  </li>
+		<p><img src="images/concurrency_quota_uc_pm_05.jpg" alt="" /></p>
+	</li>
 	<li>Activate the policy, and attach it to the Vs1 service in the <strong>Service Details</strong> &gt; <strong>Policy Attachments</strong> &gt; <strong>QoS</strong> section.</li>
 	<li>Send 20 concurrent requests from the application/client to the Vs1 service. Results:
-    <ol>
-      <li>When the concurrency limit has been exceeded, the Fault Message is returned to the service consumer and an alert is logged at the service level.</li>
-      <li>The details in the usage logs show the error being displayed as configured in the policy.</li>
-    </ol>
-  </li>
+		<ol>
+			<li>When the concurrency limit has been exceeded, the Fault Message is returned to the service consumer and an alert is logged at the service level.</li>
+			<li>The details in the usage logs show the error being displayed as configured in the policy.</li>
+		</ol>
+	</li>
 	<li>Keep sending 20 concurrent requests from the application/client to the Vs1 service. Results:
-    <ol>
-      <li>During the first 10 seconds no alert is shown.</li>
-      <li>If the concurrency hits are seen after 10 seconds, a remainder alert is thrown which is valid for the next 10 seconds.</li>
-      <li>After the first interval of 10 seconds, if the concurrency hits are still observed, there is another remainder alert.
-        <p><img src="images/concurrency_quota_uc_pm_06.jpg" alt="" /></p></li>
-      <li>Within the clear interval, for every 10 seconds, this alert is thrown if validation crosses</li>
-      <li>In the Alert code, a script can be configured to run (for example, to store any sort of information related to the alert).</li>
-    </ol>
-  </li>
-  </ol>
+		<ol>
+			<li>During the first 10 seconds no alert is shown.</li>
+			<li>If the concurrency hits are seen after 10 seconds, a remainder alert is thrown which is valid for the next 10 seconds.</li>
+			 <li>After the first interval of 10 seconds, if the concurrency hits are still observed, there is another remainder alert.
+				<p><img src="images/concurrency_quota_uc_pm_06.jpg" alt="" /></p></li>
+			<li>Within the clear interval, for every 10 seconds, this alert is thrown if validation crosses</li>
+			<li>In the Alert code, a script can be configured to run (for example, to store any sort of information related to the alert).</li>
+		</ol>
+	</li>
+</ol>
 
 
 <h3 id="uc_policy_qos_concurrency_quota_pm_03">Scenario 3: Generate alert when using contracts</h3>
@@ -296,14 +270,14 @@ nav-title: Concurrency Quota
 	<li>Navigate to <strong>Organization</strong> &gt; <strong>Policies</strong> &gt; <strong>QoS Policies</strong> and use <strong>Add Policy</strong> to create a Concurrency Quota policy.</li>
 	<li>Configure the Concurrency Quota policy with 15 Concurrency Limit and a custom Fault message.</li>
 	<li>Activate the policy, and attach the Concurrency Quota policy to a contract which serves Vs1 and Vs2 services.
-    <p><img src="images/concurrency_quota_uc_pm_07.jpg" alt="" /></p></li>
+		<p><img src="images/concurrency_quota_uc_pm_07.jpg" alt="" /></p></li>
 	<li>Send 25 concurrent requests from the application/client to Vs1 and Vs2 services all together
-    <ol>
-      <li>When the concurrency limit has been exceeded, the Fault Message is returned to the service consumer and an alert is logged at contract level.</li>
-      <li>The details in the usage logs show the error being displayed as configured in the policy.</li>
-    </ol>
-  </li>
-  </ol>
+		<ol>
+			<li>When the concurrency limit has been exceeded, the Fault Message is returned to the service consumer and an alert is logged at contract level.</li>
+			<li>The details in the usage logs show the error being displayed as configured in the policy.</li>
+		</ol>
+	</li>
+</ol>
 
 
 <h3 id="uc_policy_qos_concurrency_quota_pm_04">Scenario 4: Generate clear alert when concurrency exceeds specified interval</h3>
@@ -316,14 +290,14 @@ nav-title: Concurrency Quota
 	<li>Configure the Concurrency Quota policy with 10 Concurrency Limit and a custom Fault message.</li>
 	<li>Activate the policy, and attach it to the Vs1 service in the <strong>Service Details</strong> &gt; <strong>Policy Attachments</strong> &gt; <strong>QoS</strong> section.</li>
 	<li>Send 20 concurrent requests from the application/client to the Vs1 service.
-    <ol>
-      <li>When the concurrency limit has been exceeded, the Fault Message is returned to the service consumer and an alert is logged at the service level.</li>
-      <li>The details in the usage logs show the error being displayed as configured in the policy.</li>
-      <li>In the next 100 seconds, if the policy is not violated, a clear alert is sent.
-        <p><img src="images/concurrency_quota_uc_pm_08.jpg" alt="" /></p></li>
-      <li>In the clear alert code, an email must be configured that will be sent to the administrator(s).</li>
-      </ol>
-    </li>
+		<ol>
+			<li>When the concurrency limit has been exceeded, the Fault Message is returned to the service consumer and an alert is logged at the service level.</li>
+			<li>The details in the usage logs show the error being displayed as configured in the policy.</li>
+			<li>In the next 100 seconds, if the policy is not violated, a clear alert is sent.
+				<p><img src="images/concurrency_quota_uc_pm_08.jpg" alt="" /></p></li>
+			<li>In the clear alert code, an email must be configured that will be sent to the administrator(s).</li>
+		</ol>
+	</li>
 </ol>
 <h3>Timeline (Scenarios 2 and 4)</h3>
 <p><img src="images/concurrency_quota_uc_pm_09.jpg" alt="" /></p>
@@ -350,14 +324,18 @@ nav-title: Concurrency Quota
 	<li>Go to the Policy Manager Management Console &gt; Tenant Organization &gt; <strong>Policies</strong> &gt; <strong>QoS Policies</strong> and click <strong>Add Policy</strong>.
 <p><img src="images/concurrency_quota_uc_cm_01.jpg" alt="" /></p></li>
 	<li>Specify Policy Name, Policy Type (Concurrency Quota policy), click <strong>Finish</strong>, and then click <strong>Close</strong>.
-  <p><img src="images/concurrency_quota_uc_cm_02.jpg" alt="" /></p></li>
+		<p><img src="images/concurrency_quota_uc_cm_02.jpg" alt="" /></p>
+	</li>
 	<li>On the <strong>Concurrency Quota policy Details</strong> screen, click <strong>Modify</strong>.
-  <p><img src="images/concurrency_quota_uc_cm_03.jpg" alt="" /></p></li>
+		<p><img src="images/concurrency_quota_uc_cm_03.jpg" alt="" /></p>
+	</li>
 	<li>Provide the policy details and click <strong>Finish</strong>.
-  <p><img src="images/concurrency_quota_uc_cm_04.jpg" alt="" /></p></li>
+		<p><img src="images/concurrency_quota_uc_cm_04.jpg" alt="" /></p>
+	</li>
 	<li>Activate the policy.
-    <p><img src="images/concurrency_quota_uc_cm_05.jpg" alt="" /></p>
-  <p><img src="images/concurrency_quota_uc_cm_06.jpg" alt="" /></p></li>
+		<p><img src="images/concurrency_quota_uc_cm_05.jpg" alt="" /></p>
+		<p><img src="images/concurrency_quota_uc_cm_06.jpg" alt="" /></p>
+	</li>
 </ol>
 
 
@@ -365,29 +343,36 @@ nav-title: Concurrency Quota
 <ol>
 	<li>Launch Community Manager.</li>
 	<li>Attach the Concurrency Quota policy to the API implementation.
-    <p><img src="images/concurrency_quota_uc_cm_07.jpg" alt="" /></p></li>
+		<p><img src="images/concurrency_quota_uc_cm_07.jpg" alt="" /></p>
+	</li>
 	<li>Request API access. Verify that the contract is activated.
-  <p><img src="images/concurrency_quota_uc_cm_08.jpg" alt="" /></p></li>
+		<p><img src="images/concurrency_quota_uc_cm_08.jpg" alt="" /></p></li>
 	<li>Go to Test Client and send continuous requests. This policy condition is met only when hitting concurrent requests (i.e., sending multiple requests in 1 second). This behavior is shown below using SoapUI and Test Client.</li>
 	<li>Start one load test to send continuous requests from SoapUI. Also send requests from Test Client one by one. When multiple requests are received, the policy condition is met and you'll see a fault message in the response window.
-    <p><img src="images/concurrency_quota_uc_cm_09.jpg" alt="" /></p></li>
+		<p><img src="images/concurrency_quota_uc_cm_09.jpg" alt="" /></p>
+	</li>
 	<li>Alerts are displayed in the Community Manager API &gt; board (as shown below).
-		<p><img src="images/concurrency_quota_uc_cm_10.jpg" alt="" /></p></li>
+		<p><img src="images/concurrency_quota_uc_cm_10.jpg" alt="" /></p>
+	</li>
 </ol>
 
 
 <h3 id="uc_policy_qos_concurrency_quota_cm_02">Scenario 2: How do I verify Concurrency Quota policy at the contract level?</h3>
 <ol>
 	<li>Attach the Concurrency Quota policy at the Contract Level and activate the contract.
-  <p><img src="images/concurrency_quota_uc_cm_11.jpg" alt="" /></p></li>
+		<p><img src="images/concurrency_quota_uc_cm_11.jpg" alt="" /></p>
+	</li>
 	<li>Now Go to Test Client and send continuous requests. This policy condition will meet only when hitting concurrent requests (i.e., sending multiple requests in 1 second).</li>
 	<li>This behavior is shown below using SoapUI and Test Client.</li>
 	<li>Start one load test to send continuous requests from SoapUI. Also send requests from Test Client one by one. When multiple requests are received, the policy condition is met and you'll see a fault message in the response window.
-  <p><img src="images/concurrency_quota_uc_cm_12.jpg" alt="" /></p></li>
+		<p><img src="images/concurrency_quota_uc_cm_12.jpg" alt="" /></p>
+	</li>
 	<li>Alerts are displayed in the Board for the API.
-    <p><img src="images/concurrency_quota_uc_cm_13.jpg" alt="" /></p></li>
+		<p><img src="images/concurrency_quota_uc_cm_13.jpg" alt="" /></p>
+	</li>
 	<li>Alerts will also be displayed in the Policy Manager Registry.
-  <p><img src="images/concurrency_quota_uc_cm_14.jpg" alt="" /></p></li>
+		<p><img src="images/concurrency_quota_uc_cm_14.jpg" alt="" /></p>
+	</li>
 </ol>
 
 
@@ -395,18 +380,18 @@ nav-title: Concurrency Quota
 <p><strong>Note</strong>: The Concurrency Quota policy works correctly with licenses when the policy is assigned at the API level. It does not work for operation-level policy assignments.</p>
 <ol>
 	<li>Edit License and attach Concurrency Quota policy.
-  <p><img src="images/concurrency_quota_uc_cm_15.jpg" alt="" /></p></li>
+		<p><img src="images/concurrency_quota_uc_cm_15.jpg" alt="" /></p></li>
 	<li>Next, test the Concurrency Quota policy at the License term level. This assumes that the same scope (as above) is used for Scope mapping, and the same license is selected while requesting API access.</li>
 	<li>Go to Test Client and send continuous requests. This policy condition is met only when hitting concurrent requests (that is, sending multiple requests in 1 second).</li>
 	<li>This behavior is shown below using SoapUI and Test Client.</li>
 	<li>Start one load test to send continuous requests from SoapUI. Also send requests from Test Client one by one. When multiple requests are received, the policy condition is met and you'll see a fault message in the response window.
-  <p><img src="images/concurrency_quota_uc_cm_16.jpg" alt="" /></p></li>
+		<p><img src="images/concurrency_quota_uc_cm_16.jpg" alt="" /></p></li>
 	<li>Alerts are displayed in Community Manager, in the Board for the API.
-  <p><img src="images/concurrency_quota_uc_cm_17.jpg" alt="" /></p>
-  <p><img src="images/concurrency_quota_uc_cm_18.jpg" alt="" /></p>
-  <p><img src="images/concurrency_quota_uc_cm_19.jpg" alt="" /></p>
-  <p>In the API Monitoring Logs, the following logs will display for concurrency faults.</p>
-    <p><img src="images/concurrency_quota_uc_cm_20.jpg" alt="" /></p></li>
+		<p><img src="images/concurrency_quota_uc_cm_17.jpg" alt="" /></p>
+		<p><img src="images/concurrency_quota_uc_cm_18.jpg" alt="" /></p>
+		<p><img src="images/concurrency_quota_uc_cm_19.jpg" alt="" /></p>
+		<p>In the API Monitoring Logs, the following logs will display for concurrency faults.</p>
+		<p><img src="images/concurrency_quota_uc_cm_20.jpg" alt="" /></p></li>
 </ol>
 <p><a href="#top">Back to top</a></p>
 
