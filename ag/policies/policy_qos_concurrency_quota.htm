@@ -24,12 +24,12 @@ nav-title: Concurrency Quota
 	<li><a href="#configuration">Configuration</a></li>
 	<li><a href="#policy_activating">Activating a policy</a></li>
 	<li><a href="#policy_attach">Attaching a policy</a>	</li>
-	<li><a href="#uc_policy_qos_concurrency_quota_behavior">Concurrency Quota policy behavior</a>
+	<li><a href="#policy_qos_concurrency_quota_behavior_00">Concurrency Quota policy behavior</a>
 		<ol>
-<li><a href="#uc_policy_qos_concurrency_quota_behavior_01">Policy behavior&#8212;summary</a></li>
-			<li><a href="#uc_policy_qos_concurrency_quota_behavior_02">Runtime behavior: default</a></li>
-			<li><a href="#uc_policy_qos_concurrency_quota_behavior_04">Runtime behavior with grid services enabled (com.soa.grid)</a></li>
-			<li><a href="#uc_policy_qos_concurrency_quota_behavior_05">Response time effect on concurrency quota counter</a></li>
+<li><a href="#policy_qos_concurrency_quota_behavior_01">Policy behavior&#8212;summary</a></li>
+			<li><a href="#policy_qos_concurrency_quota_behavior_02">Runtime behavior: default</a></li>
+			<li><a href="#policy_qos_concurrency_quota_behavior_04">Runtime behavior with grid services enabled (com.soa.grid)</a></li>
+			<li><a href="#policy_qos_concurrency_quota_behavior_05">Response time effect on concurrency quota counter</a></li>
 		</ol>
 	</li>
 	<li><a href="#uc_policy_qos_concurrency_quota_pm">Concurrency Quota policy: use cases for Policy Manager</a></li>
@@ -139,17 +139,17 @@ nav-title: Concurrency Quota
 
 
 
-<h2 id="uc_policy_qos_concurrency_quota_behavior">Concurrency Quota policy behavior</h2>
+<h2 id="policy_qos_concurrency_quota_behavior_00">Concurrency Quota policy behavior</h2>
 <p>In this section:</p>
 <ul>
-	<li><a href="#uc_policy_qos_concurrency_quota_behavior_01">Policy behavior&#8212;summary</a></li>
-	<li><a href="#uc_policy_qos_concurrency_quota_behavior_02">Runtime behavior: default</a></li>
-	<li><a href="#uc_policy_qos_concurrency_quota_behavior_04">Runtime behavior with grid services enabled (com.soa.grid)</a></li>
-	<li><a href="#uc_policy_qos_concurrency_quota_behavior_05">Response time effect on concurrency quota counter</a></li>
+	<li><a href="#policy_qos_concurrency_quota_behavior_01">Policy behavior&#8212;summary</a></li>
+	<li><a href="#policy_qos_concurrency_quota_behavior_02">Runtime behavior: default</a></li>
+	<li><a href="#policy_qos_concurrency_quota_behavior_04">Runtime behavior with grid services enabled (com.soa.grid)</a></li>
+	<li><a href="#policy_qos_concurrency_quota_behavior_05">Response time effect on concurrency quota counter</a></li>
 </ul>
 
 
-<h3 id="uc_policy_qos_concurrency_quota_behavior_01">Policy behavior&#8212;summary</h3>
+<h3 id="policy_qos_concurrency_quota_behavior_01">Policy behavior&#8212;summary</h3>
 <p>When the Concurrency Quota policy is in use, there is a counter to determine whether the concurrency limit has been reached. </p>
 <p>If the policy is attached at the contract level, the counter name is derived from the contract key. If the policy is attached at the service level, the counter name is based on the service key.</p>
 <p>When this policy is attached to a service or contract, the Network Director does the following:</p>
@@ -167,15 +167,15 @@ nav-title: Concurrency Quota
 </ol>
 
 
-<h3 id="uc_policy_qos_concurrency_quota_behavior_02">Runtime behavior: default</h3>
+<h3 id="policy_qos_concurrency_quota_behavior_02">Runtime behavior: default</h3>
 <p>By default, the Concurrency Quota policy settings apply only to messages processed by the container, even if the container is in a cluster.</p>
 <p>For example, if the policy allows 16 concurrent requests, and the Network Director container receives an additional request while 16 requests are still open, alert processing is initiated.</p>
 
-<h3 id="uc_policy_qos_concurrency_quota_behavior_04">Runtime behavior with grid services enabled (com.soa.grid)</h3>
+<h3 id="policy_qos_concurrency_quota_behavior_04">Runtime behavior with grid services enabled (com.soa.grid)</h3>
 <p>With grid services enabled, the counter is shared across all Network Director containers in a cluster.</p>
 <p>For example, if the Concurrency Quota policy is set to 16 requests, and there are four Network Director containers, the limit is 16 requests between all four Network Director containers.</p>
 <p>For more information about enabling grid services, see <a href="../../sp/platform_management/using_clusterable_cache.htm">Using the Grid Cache Service for Clustered Cache</a>.</p>
-<h3 id="uc_policy_qos_concurrency_quota_behavior_05">Response time effect on concurrency quota counter</h3>
+<h3 id="policy_qos_concurrency_quota_behavior_05">Response time effect on concurrency quota counter</h3>
 <p>The counter is incremented for each request, and decremented when each response is complete. Therefore, if the response time is longer, it is more likely that the error limit will be reached since the counter is not decremented until the response is sent back to the client and the handlers are closed.</p>
 <p>Let's say for example you attach this policy to two APIs, one of which has a significantly slower response time. With the same number of messages to both APIs, the API with the slower response time is likely to reach the concurrency limit sooner than the API with the faster response time.</p>
 <p>In addition, if the policy is attached to an API that has multiple operations, and one of the operations has a higher response time, taking longer to process, the total number of requests for this one operation could keep the counter value high for a longer duration. This could result in calls to the other operations being rejected, even though the other operations have a much faster response time.</p>
