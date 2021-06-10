@@ -23,7 +23,7 @@ nav-title: User Workflow
 	<li><a href="#user_c_00">User Workflow: Conditions</a></li>
 	<li><a href="#user_vr_00">User Workflow: Variable Resolvers</a></li>
 	<li><a href="#user_wf_2fa_ex">User Workflow: Implementing two-factor authentication</a></li>
-	<li><a href="#user_wf_f_addroletouser">User Workflow: Assigning a default role to users of a specific login domain</a></li>
+	<li><a href="#user_wf_f_addroletouser_ex">User Workflow: Assigning a default role to users of a specific login domain</a></li>
 </ol>
 <hr class="divide_hr" />
 <!--<p>{com.soa.atmosphere.impl\META-INF\resources\templates}</p>-->
@@ -322,7 +322,7 @@ nav-title: User Workflow
 	<li><a href="#user_f_14">terminateSession</a></li>
 	<li><a href="#user_f_15">acceptAgreementForDomainUsers</a></li>
 	<li><a href="#user_f_16">acceptAgreementForUsersBelongToRoles</a></li>
-	<li><a href="#user_f_addroletouser">addRoleToUser</a></li>
+	<li><a href="#user_f_addroletouser">addRoleToUser</a>  (Valid in version: 2019.1.34 and later)</li>
 </ul>
 <!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\UserWorkflowFunctions.java}</p>-->
 
@@ -742,9 +742,9 @@ nav-title: User Workflow
 
 <h3 id="user_f_addroletouser">addRoleToUser</h3>
 <h4 class="stamp">Valid in Version: 2019.1.34 and later</h4>
-<p>By default, when a new user logs in using a login domain set up in the Community Manager developer portal, the user starts without a role assignment.</p>
-<p>The <strong>addRoleToUser</strong> function allows customization of the workflow to modify this default behavior so that a new user, logging in to the Community Manager developer portal with a specific login domain, is automatically assigned to a specific role.</p>
-<p>To implement this custom workflow function, as  well as adding the <strong>addRoleToUser</strong> function to the workflow, you'll need to specify valid values for the login domain and the role to assign to users logging in with that domain. For instructions and an example, see <a href="#user_wf_f_addroletouser">User Workflow: Assigning a default role to users of a specific login domain</a>.</p>
+<p>By default, when a new user logs in for the first time using a login domain set up in the Community Manager developer portal, the user starts without a role assignment.</p>
+<p>The <strong>addRoleToUser</strong> function allows customization of the workflow to modify this default behavior so that a new user, logging in for the first time with a specific login domain, is automatically assigned to a specific role.</p>
+<p>To implement this custom workflow function, add the <strong>addRoleToUser</strong> function to the workflow. You'll also need to specify valid values for the login domain and the role to assign to users logging in with that domain. For instructions and an example, see <a href="#user_wf_f_addroletouser">User Workflow: Assigning a default role to users of a specific login domain</a>.</p>
 
 
 <h4>Examples/Notes/Additional Information</h4>
@@ -775,7 +775,7 @@ nav-title: User Workflow
 </pre>
 <p>In the above:</p>
 <ul>
-	<li><strong>DomainType</strong> value is defined on line 56, and <strong>DomainName</strong> value is defined on line 59. For information about getting these values, see <a href="#h3user_wf_f_addroletouser_example">Workflow example implementing a default role to users of a specific login domain</a>.</li>
+	<li><strong>DomainType</strong> value is defined on line 56, and <strong>DomainName</strong> value is defined on line 59. For information about getting these values, see <a href="#user_wf_f_addroletouser_ex">User Workflow: Assigning a default role to users of a specific login domain</a>.</li>
 	<li><strong>Role</strong> is defined on line 64.</li>
 </ul>
 <p><strong>Note</strong>: To see where this fits into the workflow document, you can download the user workflow from the Community Manager developer portal. The example above is taken from the <strong>workflow:definition:user:v2</strong> user workflow document available within the Community Manager developer portal (filename <strong>default-user-workflow-v2.xml</strong>) {<span class="apidoc_red">GJ is that the final name? The name I downloaded and the name of your file were different</span>}. The new function is in the default workflow, but is commented out. </p>
@@ -809,6 +809,8 @@ nav-title: User Workflow
 	<li><a href="#user_c_21">is2FACodeValid</a></li>
 	<li><a href="#user_c_22">is2FATerminated</a></li>
 	<li><a href="#user_c_23">doesUserBelongToDomain</a></li>
+	<li><a href="#user_c_isdomaintype">isDomainType</a>  (Valid in version: 2019.1.34 and later)</li>
+	<li><a href="#user_c_isdomainname">isDomainName</a>  (Valid in version: 2019.1.34 and later)</li>
 </ul>
 <!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\UserWorkflowConditions.java}</p>-->
 
@@ -1075,6 +1077,8 @@ nav-title: User Workflow
 <h3 id="user_c_22">is2FATerminated</h3>
 <p>Checks to make sure that the 2FA session has not been terminated. 2FA is terminated if conditions are violated such as if the number of attempts with an invalid code has been exceeded or if the code has expired. If the session has been terminated, this condition returns <strong>true</strong>.</p>
 <p><strong>Note</strong>: The valid number of attempts for a specific instance of the platform, and the timeout period for the cookie, are determined by the Site Admin in the 2FA settings.</p>
+
+
 <h4>Examples/Notes/Additional Information</h4>
 <p>In the example below, if <strong>is2FATerminated</strong> resolves to <strong>Yes</strong>, <strong>2fa.required</strong> is set as a pending task, the current auth token property is removed, and the user's session is terminated. The user must start the login process from the beginning.</p>
 <pre>&lt;result old-status="registered" status="registered" step="400"&gt;
@@ -1117,6 +1121,23 @@ nav-title: User Workflow
   &lt;/results&gt;
 &lt;/action&gt;</pre>
 <p>To see where these fit into the workflow document, you can download the user workflow from the Community Manager developer portal. The new initial action and condition are in the default workflow, but commented out.</p>
+
+
+
+<h3 id="user_c_isdomaintype">isDomainType</h3>
+<h4 class="stamp">Valid in Version: 2019.1.34 and later</h4>
+<p>Checks if the domain type that a new user is logging in on matches the domain specified in the custom workflow, so that further actions can be taken depending on the result of the condition.</p>
+<p>The domain type is the back-end value for the domain type; for example, <strong>com.soa.securitydomain.openidconnect.relyingparty</strong>.</p>
+<p>Use <strong>isDomainType</strong> in combination with <strong><a href="#user_c_isdomainname">isDomainName</a></strong> (see below) and the user workflow function, <a href="#user_f_addroletouser">addRoleToUser</a>, so that a new user, logging in to the Community Manager developer portal for the first time with a specific login domain, is automatically assigned to a specific role.</p>
+<p>For an example, see <a href="#user_f_addroletouser">addRoleToUser</a>.</p>
+
+
+<h3 id="user_c_isdomainname">isDomainName</h3>
+<h4 class="stamp">Valid in Version: 2019.1.34 and later</h4>
+<p>Checks if the domain name that a new user is logging in on matches the domain name specified in the custom workflow, so that further actions can be taken depending on the result of the condition.</p>
+<p>The domain name value is the text name for the domain type as displayed in the Community Manager developer portal (<strong>More</strong> &gt; <strong>Admin</strong> &gt; <strong>Domains</strong>, <strong>Type</strong> column); for example, <strong>Google OIDC RP Domain</strong>.</p>
+<p>Use <strong>isDomainName</strong> in combination with <strong><a href="#user_c_isdomaintype">isDomainType</a></strong> (see above) and the user workflow function, <a href="#user_f_addroletouser">addRoleToUser</a>, so that a new user, logging in to the Community Manager developer portal for the first time with a specific login domain, is automatically assigned to a specific role.</p>
+<p>For an example, see <a href="#user_f_addroletouser">addRoleToUser</a>.</p>
 <!--<p>{com.soa.atmosphere.impl\src\com\soa\user\workflow\twofa\UserTwoFAWorkflowConditions.java}</p>-->
 <p><a href="#top">Back to top</a></p>
 
@@ -1516,24 +1537,29 @@ nav-title: User Workflow
 
 
 
-<h2 id="user_wf_f_addroletouser">User Workflow: Assigning a default role to users of a specific login domain</h2>
-<p>You can use the <strong>addRoleToUser</strong> user workflow function to automatically assign a specific role to a user logging in with a specific login domain..</p>
-<p>To set this up, as well as creating and implementing the custom workflow the custom workflow, you'll need to get the correct values for the login domain, and include them in the workflow..</p>
+<h2 id="user_wf_f_addroletouser_ex">User Workflow: Assigning a default role to users of a specific login domain</h2>
+<p>You can use the <strong>addRoleToUser</strong> user workflow function to automatically assign a specific role to a user logging in with a specific login domain.</p>
+
 <h4>Steps:</h4>
 <ol>
 	<li>In the Community Manager developer portal, go to <strong>More</strong> &gt; <strong>Admin</strong>&nbsp;&gt; <strong>Domains</strong> and get these two values for the login domain that you want to use:
-<ul>
-			<li><strong>DomainName</strong>: Copy the plain text name in the Type column. For example, <strong>OpenID Connect Relying Party</strong>.</li>
-			<li><strong>DomainType</strong>: The back-end value for the type of domain. For an OpenID Connect Relying Party domain,&nbsp;the value is <strong>com.soa.securitydomain.openidconnect.relyingparty</strong>. To be sure, you can, turn on developer tools and click the <strong>Modify</strong> button for the domain. In the developer tools you'll see a GET call with the DomainName value in it. In the response, take the <strong>IdentitySystemType</strong> value.</li>
+	<ul>
+		<li><strong>DomainName</strong>: The plain text name in the Type column. For example, <strong>OpenID Connect Relying Party</strong>.</li>
+		<li><strong>DomainType</strong>: The back-end value for the type of domain. For an OpenID Connect Relying Party domain,&nbsp;the value is <strong>com.soa.securitydomain.openidconnect.relyingparty</strong>. To be sure, you can, turn on developer tools and click the <strong>Modify</strong> button for the domain. In the developer tools you'll see a GET call with the DomainName value in it. In the response, take the <strong>IdentitySystemType</strong> value.
+			<p>Copy both values so that you can use them in the custom workflow.</p></li>
 		</ul>
 		</li>
-	<li>Implement custom workflow, following the steps in <a href="01_overview_cm_wf.htm#s01_05_steps">Steps for Implementing a Custom Workflow</a>. In the custom workflow, put in the values for your domain, and modify the role if needed, then upload and activate as explained in that procedure.</li>
+	<li>Implement and test custom workflow, following the steps in <a href="01_overview_cm_wf.htm#s01_05_steps">Steps for Implementing a Custom Workflow</a>. In the custom workflow, put in the values for your domain, modify the role if needed, and then upload and activate as explained in that procedure. Notes:
+		<ul>
+			<li>For Step 1, download this workflow: <strong>default-user-workflow-v2.xml</strong>.</li>
+			<li>For Step 4, assign the workflow in <strong>More</strong> &gt; <strong>Admin</strong> &gt; <strong>Settings</strong> &gt; <strong>Users</strong>.</li>
+		</ul>
+	</li>
 </ol>
-<p>The example below has a custom section, lines 53 to 67 (beginning with <span class="apidoc_code">&lt;result old-status="none" status="unknown" step="30"&gt;</span>), that implement this functionality. This section of the workflow:</p>
+<p>The example below, a portion of a custom workflow, includes a custom section, lines 53 to 67 (beginning with <span class="apidoc_code">&lt;result old-status="none" status="unknown" step="30"&gt;</span>), that implements this functionality. This section of the workflow:</p>
 <ul>
-	<li>Specifies the <strong>DomainType</strong> and <strong>DomainName</strong> values, which must match a valid login domain set up in the Community Manager developer portal.	</li>
-	<li>Tests to see that the <strong>DomainType</strong> and <strong>DomainName</strong> values match a valid login domain (two separate conditions).</li>
-	<li>If the conditions are met: assigns the specified role to the user who is logging in for the first time from that login domain. {<span class="apidoc_red">GJ please confirm it is first login? If a user gets different roles, and is logging in at a later time, the roles are not updated... right?</span>}</li>
+	<li>Uses the <a href="#user_c_isdomaintype">isDomainType</a> and <a href="#user_c_isdomainname">isDomainName</a> conditions to test whether the <strong>DomainType</strong> and <strong>DomainName</strong> values match a valid login domain.</li>
+	<li>If the conditions are met: Assigns the specified role to the user who is logging in for the first time from that login domain.</li>
 </ul>
 <pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;!DOCTYPE workflow PUBLIC 
@@ -1585,8 +1611,8 @@ nav-title: User Workflow
     &lt;/action&gt;
     &lt;action id="4" name="@Setup"&gt;
       &lt;results&gt;
-&lt;!--      Enhancement ATMO-37659 :
-         when an new OIDC user registers/logs in they need to be mapped to a specific PM role via the workflow--&gt;
+
+
         &lt;result old-status="none" status="unknown" step="30"&gt;
           &lt;conditions type="AND"&gt;
             &lt;condition type="isDomainType"&gt;
@@ -1605,793 +1631,8 @@ nav-title: User Workflow
         &lt;unconditional-result old-status="none" status="registered" step="30"/&gt;
       &lt;/results&gt;
     &lt;/action&gt;
-&lt;!--      &lt;action id="25" name="@UserPhoneNotRequired"&gt;
-      &lt;restrict-to&gt;      
-        &lt;conditions type="AND"&gt;
-          &lt;condition type="doesUserBelongToDomain"&gt;
-            &lt;arg name="DomainName"&gt;AkanaLdap&lt;/arg&gt;
-          &lt;/condition&gt;
-        &lt;/conditions&gt;
-      &lt;/restrict-to&gt;
-      &lt;results&gt;
-        &lt;unconditional-result old-status="none" status="init-phone-check" step="-1"/&gt;
-      &lt;/results&gt;
-    &lt;/action&gt; --&gt;
-  &lt;/initial-actions&gt;
-  &lt;common-actions&gt;
-    &lt;action id="5" name="@ResolveLoginPendingTask"&gt;
-      &lt;restrict-to&gt;          
-        &lt;conditions type="AND"&gt;
-          &lt;condition type="isSessionInLoginProcess"/&gt;
-          &lt;condition type="authTokenPropertyExists"&gt;              
-            &lt;arg name="PropertyName"&gt;LoginInProcess&lt;/arg&gt;
-            &lt;arg name="message"&gt;2FA not initiated&lt;/arg&gt;
-          &lt;/condition&gt;
-          &lt;condition negate="true" type="authTokenPropertyMatches"&gt;
-              &lt;arg name="PropertyName"&gt;2FAComplete&lt;/arg&gt;
-              &lt;arg name="PropertyValue"&gt;Yes&lt;/arg&gt;
-          &lt;/condition&gt;
-          &lt;condition type="argumentExists"&gt;
-            &lt;arg name="ArgName"&gt;Action&lt;/arg&gt;
-            &lt;arg name="message"&gt;Action is required&lt;/arg&gt;
-          &lt;/condition&gt;
-        &lt;/conditions&gt;
-      &lt;/restrict-to&gt;
-      &lt;pre-functions&gt;
-        &lt;function type="setTwofaDeliveryOptions"&gt;
-          &lt;arg name="VoiceSupported"&gt;false&lt;/arg&gt;
-          &lt;arg name="TextSupported"&gt;false&lt;/arg&gt;
-          &lt;arg name="EmailSupported"&gt;true&lt;/arg&gt;              
-        &lt;/function&gt;
-        &lt;function type="handle2FATask"&gt;
-          &lt;arg name="PropertyName"&gt;2FAData&lt;/arg&gt;
-          &lt;arg name="2FAData"&gt;${authtoken.property.2FAData}&lt;/arg&gt;
-          &lt;arg name="2FACode"&gt;${arg.2fa.code}&lt;/arg&gt;
-          &lt;arg name="2FASalt"&gt;${authtoken.property.2FASalt}&lt;/arg&gt;
-        &lt;/function&gt;            
-      &lt;/pre-functions&gt;
-      &lt;results&gt;
-        &lt;result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt;
-          &lt;conditions type="AND"&gt;
-            &lt;condition type="argumentValueEquals"&gt;
-              &lt;arg name="ArgName"&gt;Action&lt;/arg&gt;
-              &lt;arg name="Value"&gt;generate&lt;/arg&gt;
-            &lt;/condition&gt;            
-            &lt;condition type="is2FACodeGenerated"/&gt;
-            &lt;condition type="isDeliveryTypeEmail"/&gt;
-          &lt;/conditions&gt;
-          &lt;pre-functions&gt;
-            &lt;function type="send2FACodeToEmail"&gt;
-              &lt;arg name="DeliveryTargetAddress"&gt;${arg.twofa.delivery.target.address}&lt;/arg&gt;
-              &lt;arg name="DeliveryMechanism"&gt;${arg.DeliveryMechanism}&lt;/arg&gt;
-              &lt;arg name="2FAData"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-              &lt;arg name="2FAVerificationCode"&gt;${arg.verificationCode}&lt;/arg&gt;
-              &lt;arg name="2FAVerificationCodeValidMinutes"&gt;${arg.2fa.verification.code.valid.minutes}&lt;/arg&gt;
-            &lt;/function&gt;
-            &lt;function type="setAuthTokenProperty"&gt;
-              &lt;arg name="PropertyName"&gt;2FAData&lt;/arg&gt;
-              &lt;arg name="PropertyValue"&gt;${arg.2fa.authtoken.property}&lt;/arg&gt;
-            &lt;/function&gt;
-            &lt;function type="setPendingTask"&gt;
-              &lt;arg name="PendingTask"&gt;2fa.required&lt;/arg&gt;
-              &lt;arg name="TaskData"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-            &lt;/function&gt;
-          &lt;/pre-functions&gt;
-        &lt;/result&gt;
-        &lt;result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt;
-          &lt;conditions type="AND"&gt;
-            &lt;condition type="argumentValueEquals"&gt;
-              &lt;arg name="ArgName"&gt;Action&lt;/arg&gt;
-              &lt;arg name="Value"&gt;generate&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition type="is2FACodeGenerated"/&gt;
-            &lt;condition type="isDeliveryTypeVoice"/&gt;              
-          &lt;/conditions&gt;
-          &lt;pre-functions&gt;
-            &lt;!-- &lt;function type="send2FACodeToPhone"&gt; custom workflow function
-              &lt;arg name="DeliveryTargetAddress"&gt;${arg.twofa.delivery.target.address}&lt;/arg&gt;
-              &lt;arg name="DeliveryMechanism"&gt;${arg.DeliveryMechanism}&lt;/arg&gt;
-              &lt;arg name="userPhoneNumber"&gt;${sessionuser.phone.number}&lt;/arg&gt;
-              &lt;arg name="2FAData"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-              &lt;arg name="2FAVerificationCode"&gt;${arg.verificationCode}&lt;/arg&gt;
-              &lt;arg name="2FAVerificationCodeValidMinutes"&gt;${arg.2fa.verification.code.valid.minutes}&lt;/arg&gt;
-            &lt;/function&gt; --&gt;
-            &lt;function type="setAuthTokenProperty"&gt;
-              &lt;arg name="PropertyName"&gt;2FAData&lt;/arg&gt;
-              &lt;arg name="PropertyValue"&gt;${arg.2fa.authtoken.property}&lt;/arg&gt;
-            &lt;/function&gt;
-            &lt;function type="setPendingTask"&gt;
-              &lt;arg name="PendingTask"&gt;2fa.required&lt;/arg&gt;
-              &lt;arg name="TaskData"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-            &lt;/function&gt;
-          &lt;/pre-functions&gt;
-        &lt;/result&gt;
-        &lt;result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt;
-          &lt;conditions type="AND"&gt;
-            &lt;condition type="isDeliveryTypeText"/&gt;
-            &lt;condition type="argumentValueEquals"&gt;
-              &lt;arg name="ArgName"&gt;Action&lt;/arg&gt;
-              &lt;arg name="Value"&gt;generate&lt;/arg&gt;
-            &lt;/condition&gt;      
-            &lt;condition type="is2FACodeGenerated"/&gt;
-          &lt;/conditions&gt;
-          &lt;pre-functions&gt;
-            &lt;!-- &lt;function type="send2FACodeToPhone"&gt; custom workflow function
-              &lt;arg name="DeliveryTargetAddress"&gt;${arg.twofa.delivery.target.address}&lt;/arg&gt;
-              &lt;arg name="DeliveryMechanism"&gt;${arg.DeliveryMechanism}&lt;/arg&gt;
-              &lt;arg name="userPhoneNumber"&gt;${sessionuser.phone.number}&lt;/arg&gt;
-              &lt;arg name="2FAData"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-              &lt;arg name="2FAVerificationCode"&gt;${arg.verificationCode}&lt;/arg&gt;
-              &lt;arg name="2FAVerificationCodeValidMinutes"&gt;${arg.2fa.verification.code.valid.minutes}&lt;/arg&gt;
-            &lt;/function&gt; --&gt;
-            &lt;function type="setAuthTokenProperty"&gt;
-              &lt;arg name="PropertyName"&gt;2FAData&lt;/arg&gt;
-              &lt;arg name="PropertyValue"&gt;${arg.2fa.authtoken.property}&lt;/arg&gt;
-            &lt;/function&gt;
-            &lt;function type="setPendingTask"&gt;
-              &lt;arg name="PendingTask"&gt;2fa.required&lt;/arg&gt;
-              &lt;arg name="TaskData"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-            &lt;/function&gt;
-          &lt;/pre-functions&gt;
-        &lt;/result&gt;                      
-        &lt;result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt;
-          &lt;conditions type="AND"&gt;
-            &lt;condition type="argumentValueEquals"&gt;
-              &lt;arg name="ArgName"&gt;Action&lt;/arg&gt;
-              &lt;arg name="Value"&gt;validate&lt;/arg&gt;
-            &lt;/condition&gt;            
-            &lt;condition type="is2FACodeValid"/&gt;
-          &lt;/conditions&gt;
-          
-          &lt;!-- success --&gt;              
-          &lt;pre-functions&gt;
-            &lt;function type="removeAuthTokenProperty"&gt;
-              &lt;arg name="PropertyName"&gt;2FAData&lt;/arg&gt;
-            &lt;/function&gt;
-            &lt;function type="setAuthTokenProperty"&gt;
-              &lt;arg name="PropertyName"&gt;2FAComplete&lt;/arg&gt;
-              &lt;arg name="PropertyValue"&gt;Yes&lt;/arg&gt;
-            &lt;/function&gt;
-          &lt;/pre-functions&gt;
-        &lt;/result&gt;
-        &lt;result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt;
-          &lt;conditions type="AND"&gt;
-            &lt;condition type="argumentValueEquals"&gt;
-              &lt;arg name="ArgName"&gt;Action&lt;/arg&gt;
-              &lt;arg name="Value"&gt;validate&lt;/arg&gt;
-            &lt;/condition&gt;            
-            &lt;condition negate="true" type="is2FACodeValid"/&gt;
-            &lt;conditions type="OR"&gt;
-              &lt;condition type="is2FACodeExpired"/&gt;
-              &lt;condition type="is2FAMaxAttemptsExceeded"/&gt;
-            &lt;/conditions&gt;
-          &lt;/conditions&gt;
-          &lt;pre-functions&gt;
-            &lt;function type="setPendingTask"&gt;
-              &lt;arg name="PendingTask"&gt;2fa.required&lt;/arg&gt;
-              &lt;arg name="TaskData"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-            &lt;/function&gt;
-            &lt;function type="terminateSession"/&gt;
-          &lt;/pre-functions&gt;
-        &lt;/result&gt;            
-        &lt;result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt;
-          &lt;conditions type="AND"&gt;
-            &lt;condition type="argumentValueEquals"&gt;
-              &lt;arg name="ArgName"&gt;Action&lt;/arg&gt;
-              &lt;arg name="Value"&gt;validate&lt;/arg&gt;
-            &lt;/condition&gt;            
-            &lt;condition negate="true" type="is2FACodeValid"/&gt;
-          &lt;/conditions&gt;
-          &lt;pre-functions&gt;
-            &lt;function type="setAuthTokenProperty"&gt;
-              &lt;arg name="PropertyName"&gt;2FAData&lt;/arg&gt;
-              &lt;arg name="PropertyValue"&gt;${arg.2fa.authtoken.property}&lt;/arg&gt;
-            &lt;/function&gt;
-            &lt;function type="setPendingTask"&gt;
-              &lt;arg name="PendingTask"&gt;2fa.required&lt;/arg&gt;
-              &lt;arg name="TaskData"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-            &lt;/function&gt;
-          &lt;/pre-functions&gt;
-        &lt;/result&gt;            
-        &lt;unconditional-result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt;
-          &lt;!-- should never reach here --&gt;
-        &lt;/unconditional-result&gt;
-        
-      &lt;/results&gt;
-    &lt;/action&gt;
-    &lt;action id="6" name="@Login"&gt;
-      &lt;pre-functions&gt;
-        &lt;function type="setTwofaDeliveryOptions"&gt;
-          &lt;arg name="VoiceSupported"&gt;false&lt;/arg&gt;
-          &lt;arg name="TextSupported"&gt;false&lt;/arg&gt;
-          &lt;arg name="EmailSupported"&gt;true&lt;/arg&gt;              
-        &lt;/function&gt;
-        &lt;!-- &lt;function type="acceptAgreementForDomainUsers"&gt;
-          &lt;arg name="DomainName"&gt;Ldap&lt;/arg&gt;        
-        &lt;/function&gt;
-        &lt;function type="acceptAgreementForUsersBelongToRoles"&gt;
-          &lt;arg name="role"&gt;Business Administrator&lt;/arg&gt;        
-        &lt;/function&gt; --&gt;
-      &lt;/pre-functions&gt;
-      &lt;results&gt;
-        &lt;result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt; &lt;!-- send 2FA code by email --&gt;
-          &lt;conditions type="AND"&gt;
-            &lt;condition type="is2FAEnabled"/&gt;
-            &lt;condition type="is2FARequired"/&gt;
-            &lt;condition negate="true" type="authorizeByAtmosphereRole"&gt;
-              &lt;arg name="role"&gt;&RoleTwoFADisabled;&lt;/arg&gt;
-              &lt;arg name="IncludeInProcessLogins"&gt;true&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition type="isDeliveryOptionsOnlyOne"&gt;
-              &lt;arg name="PropertyName"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition type="isDeliveryOptionsOnlyEmail"&gt;
-              &lt;arg name="PropertyName"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition negate="true" type="authTokenPropertyMatches"&gt;
-                &lt;arg name="PropertyName"&gt;2FAComplete&lt;/arg&gt;
-                &lt;arg name="PropertyValue"&gt;Yes&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition negate="true" type="authTokenPropertyMatches"&gt;
-                &lt;arg name="PropertyName"&gt;2FASkipped&lt;/arg&gt;
-                &lt;arg name="PropertyValue"&gt;Yes&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition negate="true" type="authTokenPropertyExists"&gt;
-                &lt;arg name="PropertyName"&gt;2FAData&lt;/arg&gt;
-            &lt;/condition&gt;
-          &lt;/conditions&gt;
-          
-          &lt;pre-functions&gt;
-            &lt;function type="setTwoFADeliveryTarget"&gt;
 
-              &lt;arg name="DeliveryOptions"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-              &lt;arg name="DeliveryMechanism"&gt;Email&lt;/arg&gt; 
-              &lt;!--&lt;arg name="Index"&gt;0&lt;/arg&gt;--&gt;&lt;!-- Either or --&gt;                  
-            &lt;/function&gt;
-            &lt;function type="generate2FACode"/&gt;
-            &lt;!-- Implement sendToPhone custom function similar to this function --&gt;
-            &lt;function type="send2FACodeToEmail"&gt;
-              &lt;arg name="DeliveryTargetAddress"&gt;${arg.twofa.delivery.target.address}&lt;/arg&gt;
-              &lt;arg name="DeliveryMechanism"&gt;${arg.DeliveryMechanism}&lt;/arg&gt;
-              &lt;arg name="2FAData"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-              &lt;arg name="2FAVerificationCode"&gt;${arg.verificationCode}&lt;/arg&gt;
-              &lt;arg name="2FAVerificationCodeValidMinutes"&gt;${arg.2fa.verification.code.valid.minutes}&lt;/arg&gt;
-            &lt;/function&gt;                
-            &lt;function type="setAuthTokenProperty"&gt;
-              &lt;arg name="PropertyName"&gt;2FAData&lt;/arg&gt;
-              &lt;arg name="PropertyValue"&gt;${arg.2fa.authtoken.property}&lt;/arg&gt;
-            &lt;/function&gt;
-            &lt;function type="setPendingTask"&gt;
-              &lt;arg name="PendingTask"&gt;2fa.required&lt;/arg&gt;
-              &lt;arg name="TaskData"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-            &lt;/function&gt;
-          &lt;/pre-functions&gt;
-        &lt;/result&gt;
-        &lt;result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt; &lt;!-- send by Text: not supported out of the box --&gt;
-          &lt;conditions type="AND"&gt;
-            &lt;condition type="is2FAEnabled"/&gt;
-            &lt;condition type="is2FARequired"/&gt;
-            &lt;condition negate="true" type="authorizeByAtmosphereRole"&gt;
-              &lt;arg name="role"&gt;&RoleTwoFADisabled;&lt;/arg&gt;
-              &lt;arg name="IncludeInProcessLogins"&gt;true&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition type="isDeliveryOptionsOnlyOne"&gt;
-              &lt;arg name="PropertyName"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition type="isDeliveryOptionsOnlyText"&gt;
-              &lt;arg name="PropertyName"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition negate="true" type="authTokenPropertyMatches"&gt;
-                &lt;arg name="PropertyName"&gt;2FAComplete&lt;/arg&gt;
-                &lt;arg name="PropertyValue"&gt;Yes&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition negate="true" type="authTokenPropertyMatches"&gt;
-                &lt;arg name="PropertyName"&gt;2FASkipped&lt;/arg&gt;
-                &lt;arg name="PropertyValue"&gt;Yes&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition negate="true" type="authTokenPropertyExists"&gt;
-                &lt;arg name="PropertyName"&gt;2FAData&lt;/arg&gt;
-            &lt;/condition&gt;
-          &lt;/conditions&gt;
-          
-          &lt;pre-functions&gt;
-            &lt;function type="setTwoFADeliveryTarget"&gt;
-              &lt;arg name="DeliveryOptions"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-              &lt;arg name="DeliveryMechanism"&gt;Text&lt;/arg&gt; 
-              &lt;!--&lt;arg name="Index"&gt;0&lt;/arg&gt;--&gt;&lt;!-- Either or --&gt;                  
-            &lt;/function&gt;
-            &lt;function type="generate2FACode"/&gt;
-            &lt;!-- &lt;function type="send2FACodeToPhone"&gt; custom workflow function to send text                  
-              &lt;arg name="DeliveryTargetAddress"&gt;${arg.twofa.delivery.target.address}&lt;/arg&gt;
-              &lt;arg name="DeliveryMechanism"&gt;${arg.DeliveryMechanism}&lt;/arg&gt;                  
-              &lt;arg name="2FAData"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-              &lt;arg name="2FAVerificationCode"&gt;${arg.verificationCode}&lt;/arg&gt;
-              &lt;arg name="2FAVerificationCodeValidMinutes"&gt;${arg.2fa.verification.code.valid.minutes}&lt;/arg&gt;
-            &lt;/function&gt; --&gt;
-            &lt;function type="setAuthTokenProperty"&gt;
-              &lt;arg name="PropertyName"&gt;2FAData&lt;/arg&gt;
-              &lt;arg name="PropertyValue"&gt;${arg.2fa.authtoken.property}&lt;/arg&gt;
-            &lt;/function&gt;
-            &lt;function type="setPendingTask"&gt;
-              &lt;arg name="PendingTask"&gt;2fa.required&lt;/arg&gt;
-              &lt;arg name="TaskData"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-            &lt;/function&gt;
-          &lt;/pre-functions&gt;
-        &lt;/result&gt;
-        &lt;result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt; &lt;!-- send by Voice: not supported out of the box --&gt;
-          &lt;conditions type="AND"&gt;
-            &lt;condition type="is2FAEnabled"/&gt;
-            &lt;condition type="is2FARequired"/&gt;
-            &lt;condition negate="true" type="authorizeByAtmosphereRole"&gt;
-              &lt;arg name="role"&gt;&RoleTwoFADisabled;&lt;/arg&gt;
-              &lt;arg name="IncludeInProcessLogins"&gt;true&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition type="isDeliveryOptionsOnlyOne"&gt;
-              &lt;arg name="PropertyName"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition type="isDeliveryOptionsOnlyVoice"&gt;
-              &lt;arg name="PropertyName"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition negate="true" type="authTokenPropertyMatches"&gt;
-                &lt;arg name="PropertyName"&gt;2FAComplete&lt;/arg&gt;
-                &lt;arg name="PropertyValue"&gt;Yes&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition negate="true" type="authTokenPropertyMatches"&gt;
-                &lt;arg name="PropertyName"&gt;2FASkipped&lt;/arg&gt;
-                &lt;arg name="PropertyValue"&gt;Yes&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition negate="true" type="authTokenPropertyExists"&gt;
-                &lt;arg name="PropertyName"&gt;2FAData&lt;/arg&gt;
-            &lt;/condition&gt;
-          &lt;/conditions&gt;
-          
-          &lt;pre-functions&gt;
-            &lt;function type="setTwoFADeliveryTarget"&gt;
-              &lt;arg name="DeliveryOptions"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-              &lt;arg name="DeliveryMechanism"&gt;Voice&lt;/arg&gt; 
-              &lt;!--&lt;arg name="Index"&gt;0&lt;/arg&gt;--&gt;&lt;!-- Either or --&gt;                  
-            &lt;/function&gt;
-            &lt;function type="generate2FACode"/&gt;
-            &lt;!-- &lt;function type="send2FACodeToPhone"&gt; custom workflow function to send voice
-              &lt;arg name="DeliveryTargetAddress"&gt;${arg.twofa.delivery.target.address}&lt;/arg&gt;
-              &lt;arg name="DeliveryMechanism"&gt;${arg.DeliveryMechanism}&lt;/arg&gt;
-              &lt;arg name="2FAData"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-              &lt;arg name="2FAVerificationCode"&gt;${arg.verificationCode}&lt;/arg&gt;
-              &lt;arg name="2FAVerificationCodeValidMinutes"&gt;${arg.2fa.verification.code.valid.minutes}&lt;/arg&gt;
-            &lt;/function&gt; --&gt;
-            &lt;function type="setAuthTokenProperty"&gt;
-              &lt;arg name="PropertyName"&gt;2FAData&lt;/arg&gt;
-              &lt;arg name="PropertyValue"&gt;${arg.2fa.authtoken.property}&lt;/arg&gt;
-            &lt;/function&gt;
-            &lt;function type="setPendingTask"&gt;
-              &lt;arg name="PendingTask"&gt;2fa.required&lt;/arg&gt;
-              &lt;arg name="TaskData"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-            &lt;/function&gt;
-          &lt;/pre-functions&gt;
-        &lt;/result&gt;            
-        &lt;result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt; &lt;!-- Multiple delivery options for 2fA. send options in pending task data --&gt;
-          &lt;conditions type="AND"&gt;
-            &lt;condition type="is2FAEnabled"/&gt;
-            &lt;condition type="is2FARequired"/&gt;  
-            &lt;condition negate="true" type="authorizeByAtmosphereRole"&gt;
-              &lt;arg name="role"&gt;&RoleTwoFADisabled;&lt;/arg&gt;
-              &lt;arg name="IncludeInProcessLogins"&gt;true&lt;/arg&gt;
-            &lt;/condition&gt;            
-            &lt;condition type="isDeliveryOptionsMultiple"&gt;
-              &lt;arg name="PropertyName"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition negate="true" type="authTokenPropertyMatches"&gt;
-                &lt;arg name="PropertyName"&gt;2FAComplete&lt;/arg&gt;
-                &lt;arg name="PropertyValue"&gt;Yes&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition negate="true" type="authTokenPropertyMatches"&gt;
-                &lt;arg name="PropertyName"&gt;2FASkipped&lt;/arg&gt;
-                &lt;arg name="PropertyValue"&gt;Yes&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition negate="true" type="authTokenPropertyExists"&gt;
-                &lt;arg name="PropertyName"&gt;2FAData&lt;/arg&gt;
-            &lt;/condition&gt;
-          &lt;/conditions&gt;
-          &lt;pre-functions&gt;
-            &lt;!-- returns delivery options --&gt;
-            &lt;function type="setPendingTask"&gt;
-              &lt;arg name="PendingTask"&gt;2fa.required&lt;/arg&gt;
-              &lt;arg name="TaskData"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-            &lt;/function&gt;
-          &lt;/pre-functions&gt;
-        &lt;/result&gt;
-        &lt;result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt; &lt;!-- to handle get login status  after 2FA is initiated --&gt;
-          &lt;conditions type="AND"&gt;
-            &lt;condition type="is2FAEnabled"/&gt;
-            &lt;condition negate="true" type="authorizeByAtmosphereRole"&gt;
-              &lt;arg name="role"&gt;&RoleTwoFADisabled;&lt;/arg&gt;
-              &lt;arg name="IncludeInProcessLogins"&gt;true&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition negate="true" type="authTokenPropertyMatches"&gt;
-                &lt;arg name="PropertyName"&gt;2FAComplete&lt;/arg&gt;
-                &lt;arg name="PropertyValue"&gt;Yes&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition negate="true" type="authTokenPropertyMatches"&gt;
-                &lt;arg name="PropertyName"&gt;2FASkipped&lt;/arg&gt;
-                &lt;arg name="PropertyValue"&gt;Yes&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition type="authTokenPropertyExists"&gt;
-                &lt;arg name="PropertyName"&gt;2FAData&lt;/arg&gt;
-            &lt;/condition&gt;
-          &lt;/conditions&gt;
-          &lt;pre-functions&gt;
-            &lt;function type="unmarshall2FACode"/&gt;
-            &lt;function type="setPendingTask"&gt;
-              &lt;arg name="PendingTask"&gt;2fa.required&lt;/arg&gt;
-              &lt;arg name="TaskData"&gt;${arg.2fa.task.data}&lt;/arg&gt;
-            &lt;/function&gt;
-          &lt;/pre-functions&gt;
-        &lt;/result&gt;            
-        &lt;result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt;
-          &lt;conditions type="AND"&gt;
-            &lt;condition type="isLocalDomainUser"/&gt;
-            &lt;condition type="isChangePasswordRequired"/&gt;
-          &lt;/conditions&gt;
-          &lt;pre-functions&gt;
-            &lt;function type="setProperty"&gt;
-              &lt;arg name="PendingTask"&gt;&ChangePassword;&lt;/arg&gt;
-            &lt;/function&gt;
-          &lt;/pre-functions&gt;
-        &lt;/result&gt;
-        &lt;result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt;
-          &lt;conditions type="AND"&gt;
-            &lt;condition negate="true" type="isChangePasswordRequired"/&gt;
-            &lt;condition negate="true" type="agreementsAccepted"/&gt;
-          &lt;/conditions&gt;
-          &lt;pre-functions&gt;
-            &lt;function type="setProperty"&gt;
-              &lt;arg name="PendingTask"&gt;&ForceAcceptAgreements;&lt;/arg&gt;
-            &lt;/function&gt;
-          &lt;/pre-functions&gt;
-        &lt;/result&gt;
-        &lt;result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt;
-          &lt;conditions type="AND"&gt;
-            &lt;condition type="isLocalDomainUser"/&gt;
-              &lt;condition negate="true" type="isChangePasswordRequired"/&gt;
-            &lt;condition type="agreementsAccepted"/&gt;
-            &lt;condition negate="true" type="securityQuestionsAnswered"/&gt;
-            &lt;condition type="isForceChallengeQuestionsAnsweredOnLoginSetup"/&gt;
-          &lt;/conditions&gt;
-          &lt;pre-functions&gt;
-            &lt;function type="setProperty"&gt;
-              &lt;arg name="PendingTask"&gt;&CollectSecurityQuestionAnswers;&lt;/arg&gt;
-            &lt;/function&gt;
-          &lt;/pre-functions&gt;
-        &lt;/result&gt;
-        &lt;result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt;
-          &lt;conditions type="AND"&gt;
-            &lt;condition negate="true" type="isChangePasswordRequired"/&gt;
-            &lt;condition type="agreementsAccepted"/&gt;
-            &lt;conditions type="OR"&gt;
-              &lt;condition negate="true" type="isForceChallengeQuestionsAnsweredOnLoginSetup"/&gt;
-              &lt;condition type="securityQuestionsAnswered"/&gt;
-            &lt;/conditions&gt;
-            &lt;condition type="isLaaSIntegrationEnabled"/&gt;
-            &lt;condition negate="true" type="requiredPropertiesEntered"/&gt;
-          &lt;/conditions&gt;
-          &lt;pre-functions&gt;
-            &lt;function type="setProperty"&gt;
-              &lt;arg name="PendingTask"&gt;&CollectRequiredProperties;&lt;/arg&gt;
-            &lt;/function&gt;
-          &lt;/pre-functions&gt;
-        &lt;/result&gt;
-        &lt;result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt;
-          &lt;conditions type="AND"&gt;
-            &lt;condition type="isLastLoginEmpty"/&gt;
-            &lt;condition type="class"&gt;
-              &lt;arg name="class.name"&gt;com.opensymphony.workflow.util.StatusCondition&lt;/arg&gt;
-              &lt;arg name="status"&gt;managed&lt;/arg&gt;
-            &lt;/condition&gt;
-          &lt;/conditions&gt;
-          &lt;post-functions&gt;
-            &lt;function type="markUserPermanent"/&gt;
-            &lt;function type="addBoardItem"&gt;
-              &lt;arg name="boardItemTemplateId"&gt;com.soa.board.item.user.logged.in.first.time&lt;/arg&gt;
-              &lt;arg name="visibility"&gt;Limited&lt;/arg&gt;
-              &lt;arg name="type"&gt;Discussion&lt;/arg&gt;
-              &lt;arg name="author"&gt;${site.dn}&lt;/arg&gt;
-              &lt;arg name="targetBoard.apiversion"&gt;${connected.apiversion.ids}&lt;/arg&gt;
-              &lt;arg name="targetBoard.api"&gt;${connected.apis.id}&lt;/arg&gt;
-              &lt;arg name="viewers"&gt;${connected.apis.id},${business.dn},${site.admin.dn}&lt;/arg&gt;
-              &lt;arg name="assignments"&gt;${site.admin.dn}&lt;/arg&gt;
-            &lt;/function&gt;
-            &lt;function type="sendNotification"&gt;
-              &lt;arg name="role"&gt;ApiAdmins,SiteAdmin,BusinessAdmin&lt;/arg&gt;
-              &lt;arg name="notificationType"&gt;com.soa.notification.type.user.logged.in.first.time&lt;/arg&gt;
-            &lt;/function&gt;
-            &lt;function type="markLoginComplete"/&gt;
-          &lt;/post-functions&gt;
-        &lt;/result&gt;
-        &lt;unconditional-result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt;
-          &lt;pre-functions&gt;
-            &lt;function type="markUserPermanent"/&gt;
-            &lt;function type="markLoginComplete"/&gt;            
-            &lt;!--  invoke send Notification on first time login.  --&gt;
-          &lt;/pre-functions&gt;
-        &lt;/unconditional-result&gt;
-      &lt;/results&gt;
-    &lt;/action&gt;
-    &lt;action id="7" name="@PasswordChanged"&gt;
-      &lt;restrict-to&gt;
-        &lt;conditions type="AND"&gt;
-          &lt;condition type="isLocalDomainUser"/&gt;
-        &lt;/conditions&gt;
-      &lt;/restrict-to&gt;
-      &lt;results&gt;
-        &lt;unconditional-result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"/&gt;
-      &lt;/results&gt;
-    &lt;/action&gt;
-    &lt;action id="8" name="@ForcedPasswordChanged"&gt;
-      &lt;restrict-to&gt;
-        &lt;conditions type="AND"&gt;
-          &lt;condition type="isLocalDomainUser"/&gt;
-          &lt;!-- &lt;condition type="isChangePasswordRequired"/&gt; --&gt;
-        &lt;/conditions&gt;
-      &lt;/restrict-to&gt;
-      &lt;results&gt;
-        &lt;unconditional-result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"/&gt;
-      &lt;/results&gt;
-    &lt;/action&gt;
-    &lt;action id="9" name="@AgreementsAccepted"&gt;
-      &lt;restrict-to&gt;
-        &lt;!-- &lt;conditions type="AND"&gt;
-          &lt;condition negate="true" type="agreementsAccepted"/&gt;
-        &lt;/conditions&gt; --&gt;
-      &lt;/restrict-to&gt;
-      &lt;results&gt;
-        &lt;unconditional-result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"/&gt;
-      &lt;/results&gt;
-    &lt;/action&gt;
-    &lt;action id="10" name="@ChallengeQuestionsAnswered"&gt;
-      &lt;restrict-to&gt;
-        &lt;!-- &lt;conditions type="AND"&gt;
-          &lt;condition negate="true" type="securityQuestionsAnswered"/&gt;
-        &lt;/conditions&gt; --&gt;
-      &lt;/restrict-to&gt;
-      &lt;results&gt;
-        &lt;unconditional-result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"/&gt;
-      &lt;/results&gt;
-    &lt;/action&gt;
-    &lt;action id="11" name="@AddAPI"&gt;
-      &lt;restrict-to&gt;
-        &lt;conditions type="AND"&gt;
-          &lt;condition type="authorizeByAtmosphereAction"&gt;
-            &lt;arg name="Action"&gt;Add&lt;/arg&gt;
-                &lt;arg name="ResourceType"&gt;api&lt;/arg&gt;
-          &lt;/condition&gt;
-        &lt;/conditions&gt;
-      &lt;/restrict-to&gt;
-      &lt;results&gt;
-        &lt;unconditional-result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"/&gt;
-      &lt;/results&gt;
-    &lt;/action&gt;
-    &lt;action id="12" name="@AddApp"&gt;
-      &lt;results&gt;
-        &lt;unconditional-result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"/&gt;
-      &lt;/results&gt;
-    &lt;/action&gt;
-    &lt;action id="13" name="@AddGroup"&gt;
-      &lt;results&gt;
-        &lt;unconditional-result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"/&gt;
-      &lt;/results&gt;
-    &lt;/action&gt;
-    &lt;action id="14" name="@UserEnabled"&gt;
-      &lt;results&gt;
-        &lt;unconditional-result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt;
-          &lt;post-functions&gt;
-            &lt;function type="addBoardItem"&gt;
-              &lt;arg name="boardItemTemplateId"&gt;com.soa.board.item.user.enabled&lt;/arg&gt;
-              &lt;arg name="visibility"&gt;Limited&lt;/arg&gt;
-              &lt;arg name="type"&gt;Discussion&lt;/arg&gt;
-              &lt;!-- &lt;arg name="author"&gt;${site.admin.dn}&lt;/arg&gt; --&gt;
-              &lt;arg name="viewers"&gt;${site.admin.dn}&lt;/arg&gt;&lt;!-- ${workflow.user.dn}, --&gt;
-              &lt;!-- &lt;arg name="assignments"&gt;${workflow.user.dn}&lt;/arg&gt; --&gt;
-                &lt;/function&gt;
-            &lt;function type="sendNotification"&gt;
-              &lt;arg name="role"&gt;User&lt;/arg&gt;
-              &lt;arg name="notificationType"&gt;com.soa.notification.type.user.enabled&lt;/arg&gt;
-            &lt;/function&gt;
-            &lt;function type="sendNotification"&gt;
-              &lt;arg name="role"&gt;SiteAdmin&lt;/arg&gt;
-              &lt;arg name="notificationType"&gt;com.soa.notification.type.user.account.status.change&lt;/arg&gt;
-            &lt;/function&gt;                
-          &lt;/post-functions&gt;
-        &lt;/unconditional-result&gt;
-      &lt;/results&gt;
-    &lt;/action&gt;
-    &lt;action id="15" name="@UserDisabled"&gt;
-      &lt;results&gt;
-        &lt;unconditional-result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt;
-          &lt;post-functions&gt;
-            &lt;function type="addBoardItem"&gt;
-              &lt;arg name="boardItemTemplateId"&gt;com.soa.board.item.user.disabled&lt;/arg&gt;
-              &lt;arg name="visibility"&gt;Limited&lt;/arg&gt;
-              &lt;arg name="type"&gt;Discussion&lt;/arg&gt;
-              &lt;!-- &lt;arg name="author"&gt;${site.admin.dn}&lt;/arg&gt; --&gt;
-              &lt;arg name="viewers"&gt;${site.admin.dn}&lt;/arg&gt;&lt;!-- ${workflow.user.dn}, --&gt;
-              &lt;!-- &lt;arg name="assignments"&gt;${workflow.user.dn}&lt;/arg&gt; --&gt;
-                &lt;/function&gt;
-            &lt;function type="sendNotification"&gt;
-              &lt;arg name="role"&gt;User&lt;/arg&gt;
-              &lt;arg name="notificationType"&gt;com.soa.notification.type.user.disabled&lt;/arg&gt;
-            &lt;/function&gt;
-            &lt;function type="sendNotification"&gt;
-              &lt;arg name="role"&gt;SiteAdmin&lt;/arg&gt;
-              &lt;arg name="notificationType"&gt;com.soa.notification.type.user.account.status.change&lt;/arg&gt;
-            &lt;/function&gt;                
-          &lt;/post-functions&gt;
-        &lt;/unconditional-result&gt;
-      &lt;/results&gt;
-    &lt;/action&gt;
-    &lt;action id="16" name="@UserLocked"&gt;
-      &lt;results&gt;
-        &lt;unconditional-result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt;
-          &lt;post-functions&gt;
-            &lt;function type="addBoardItem"&gt;
-              &lt;arg name="boardItemTemplateId"&gt;com.soa.board.item.user.locked&lt;/arg&gt;
-              &lt;arg name="visibility"&gt;Limited&lt;/arg&gt;
-              &lt;arg name="type"&gt;Discussion&lt;/arg&gt;
-              &lt;!-- &lt;arg name="author"&gt;${site.admin.dn}&lt;/arg&gt; --&gt;
-              &lt;arg name="viewers"&gt;${site.admin.dn}&lt;/arg&gt;&lt;!-- ${workflow.user.dn}, --&gt;
-              &lt;!-- &lt;arg name="assignments"&gt;${workflow.user.dn}&lt;/arg&gt; --&gt;
-                &lt;/function&gt;
-            &lt;function type="sendNotification"&gt;
-              &lt;arg name="role"&gt;User&lt;/arg&gt;
-              &lt;arg name="notificationType"&gt;com.soa.notification.type.user.locked&lt;/arg&gt;
-            &lt;/function&gt;
-            &lt;function type="sendNotification"&gt;
-              &lt;arg name="role"&gt;SiteAdmin&lt;/arg&gt;
-              &lt;arg name="notificationType"&gt;com.soa.notification.type.user.account.status.change&lt;/arg&gt;
-            &lt;/function&gt;                
-          &lt;/post-functions&gt;
-        &lt;/unconditional-result&gt;
-      &lt;/results&gt;
-    &lt;/action&gt;
-    &lt;action id="17" name="@UserUnlocked"&gt;
-      &lt;results&gt;
-        &lt;unconditional-result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt;
-          &lt;post-functions&gt;
-            &lt;function type="addBoardItem"&gt;
-              &lt;arg name="boardItemTemplateId"&gt;com.soa.board.item.user.unlocked&lt;/arg&gt;
-              &lt;arg name="visibility"&gt;Limited&lt;/arg&gt;
-              &lt;arg name="type"&gt;Discussion&lt;/arg&gt;
-              &lt;!-- &lt;arg name="author"&gt;${site.admin.dn}&lt;/arg&gt; --&gt;
-              &lt;arg name="viewers"&gt;${site.admin.dn}&lt;/arg&gt;&lt;!-- ${workflow.user.dn}, --&gt;
-              &lt;!-- &lt;arg name="assignments"&gt;${workflow.user.dn}&lt;/arg&gt; --&gt;
-                &lt;/function&gt;
-            &lt;function type="sendNotification"&gt;
-              &lt;arg name="role"&gt;User&lt;/arg&gt;
-              &lt;arg name="notificationType"&gt;com.soa.notification.type.user.unlocked&lt;/arg&gt;
-            &lt;/function&gt;
-            &lt;function type="sendNotification"&gt;
-              &lt;arg name="role"&gt;SiteAdmin&lt;/arg&gt;
-              &lt;arg name="notificationType"&gt;com.soa.notification.type.user.account.status.change&lt;/arg&gt;
-            &lt;/function&gt;                
-          &lt;/post-functions&gt;
-        &lt;/unconditional-result&gt;
-      &lt;/results&gt;
-    &lt;/action&gt;
-    &lt;action id="18" name="@ModifyProfile"&gt;
-      &lt;restrict-to&gt;
-        &lt;conditions type="OR"&gt;
-          &lt;conditions type="AND"&gt;
-            &lt;condition type="authorizeSelf"/&gt;
-            &lt;condition type="userSettingsAllowModifyProfile"/&gt;
-          &lt;/conditions&gt;
-          &lt;conditions type="AND"&gt;
-            &lt;condition type="authorizeByAtmosphereRole"&gt;
-              &lt;arg name="role"&gt;&RoleSiteAdmin;&lt;/arg&gt;
-            &lt;/condition&gt;
-            &lt;condition negate="true" type="authorizeSelf"/&gt;                
-          &lt;/conditions&gt;              
-        &lt;/conditions&gt;
-      &lt;/restrict-to&gt;
-      &lt;results&gt;
-        &lt;unconditional-result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"/&gt;        
-      &lt;/results&gt;
-    &lt;/action&gt;
-    &lt;action id="19" name="@UserActivated"&gt;
-      &lt;results&gt;
-        &lt;unconditional-result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt;
-          &lt;post-functions&gt;
-            &lt;function type="sendNotification"&gt;
-              &lt;arg name="role"&gt;User&lt;/arg&gt;
-              &lt;arg name="notificationType"&gt;com.soa.notification.type.user.activated&lt;/arg&gt;
-            &lt;/function&gt;
-            &lt;!--&lt;function type="sendNotification"&gt;
-              &lt;arg name="role"&gt;SiteAdmin&lt;/arg&gt;
-              &lt;arg name="notificationType"&gt;com.soa.notification.type.user.account.state.change&lt;/arg&gt;
-            &lt;/function&gt;--&gt;                
-          &lt;/post-functions&gt;
-        &lt;/unconditional-result&gt;
-      &lt;/results&gt;
-    &lt;/action&gt;                                                            
-  &lt;/common-actions&gt;
-
-  &lt;steps&gt;
-    &lt;step id="20" name="Route Admin Add" &gt;
-      &lt;actions&gt;
-        &lt;action id="21" name="init-admin-add" auto="TRUE"&gt;
-          &lt;results&gt;
-            &lt;result old-status="none" status="managed" step="400" &gt;
-              &lt;conditions type="AND"&gt;
-                &lt;!-- &lt;condition type="requiredProfileExists" /&gt; --&gt;
-                &lt;condition type="isLocalDomainUser"/&gt;
-              &lt;/conditions&gt;
-              &lt;!-- &lt;pre-functions&gt;
-                &lt;function type="updateUserStatus"&gt;
-                  &lt;arg name="status"&gt;registered&lt;/arg&gt;
-                &lt;/function&gt;
-              &lt;/pre-functions&gt; --&gt;
-              &lt;post-functions&gt;
-                &lt;function type="sendNotification"&gt;
-                  &lt;arg name="notificationType"&gt;com.soa.notification.type.user.admin.added&lt;/arg&gt;
-                  &lt;arg name="role"&gt;Self&lt;/arg&gt;
-                &lt;/function&gt;
-              &lt;/post-functions&gt;
-            &lt;/result&gt;
-            &lt;unconditional-result old-status="none" status="unknown" step="-1"/&gt;
-             &lt;/results&gt;
-        &lt;/action&gt;
-      &lt;/actions&gt;
-    &lt;/step&gt;
-
-    &lt;step id="30" name="Route Registered User" &gt;
-      &lt;actions&gt;
-        &lt;action id="31" name="SetupRegisteredUser" auto="TRUE"&gt;
-          &lt;results&gt;
-            &lt;unconditional-result old-status="none" status="registered" step="450"/&gt;
-             &lt;/results&gt;
-        &lt;/action&gt;
-      &lt;/actions&gt;
-    &lt;/step&gt;
-
-    &lt;step id="400" name="managed"&gt;
-      &lt;actions&gt;
-        &lt;common-action id="5" /&gt;
-        &lt;common-action id="6" /&gt;
-        &lt;common-action id="7" /&gt;
-        &lt;common-action id="8" /&gt;
-        &lt;common-action id="9" /&gt;
-        &lt;common-action id="10" /&gt;
-        &lt;common-action id="11" /&gt;
-        &lt;common-action id="12" /&gt;
-        &lt;common-action id="13" /&gt;
-        &lt;common-action id="14" /&gt;
-        &lt;common-action id="15" /&gt;
-        &lt;common-action id="16" /&gt;
-        &lt;common-action id="17" /&gt;
-        &lt;common-action id="18" /&gt;
-      &lt;/actions&gt;
-    &lt;/step&gt;
-
-    &lt;step id="450" name="registered"&gt;
-      &lt;actions&gt;
-        &lt;common-action id="5" /&gt;
-        &lt;common-action id="6" /&gt;
-        &lt;common-action id="7" /&gt;
-        &lt;common-action id="8" /&gt;
-        &lt;common-action id="9" /&gt;
-        &lt;common-action id="10" /&gt;
-        &lt;common-action id="11" /&gt;
-        &lt;common-action id="12" /&gt;
-        &lt;common-action id="13" /&gt;
-        &lt;common-action id="14" /&gt;
-        &lt;common-action id="15" /&gt;
-        &lt;common-action id="16" /&gt;
-        &lt;common-action id="17" /&gt;
-        &lt;common-action id="18" /&gt;
-        &lt;!-- &lt;common-action id="19" /&gt; --&gt;
-      &lt;/actions&gt;
-    &lt;/step&gt;
-  &lt;/steps&gt;
-&lt;/workflow&gt;
-</pre>
+...</pre>
 <p><a href="#top">Back to top</a></p>
 
 
