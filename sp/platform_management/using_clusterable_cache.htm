@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Akana Grid Services
-description: Learn how to increase performance on a multiple Network Director deployment using a clusterable cache.
+description: Learn how to use the Akana grid services to manage shared cache and counter services on a multiple Network Directory deployment across a cluster (clusterable cache).
 product: sp
 category: ref
 sub-nav-class: Platform Management
@@ -19,7 +19,7 @@ nav-title: Akana Grid Services
 <ol class="table_of_contents">
 	<li><a href="#introduction">Introduction</a></li>
 	<li><a href="#grid_overview">Grid service&#8212;overview</a></li>
-	<li><a href="#grid_setup">Activating Akana grid services</a></li>
+	<li><a href="#grid_setup">Configuring the Akana grid services framework</a></li>
 	<li><a href="#grid_counter_enable_policy">Enabling the grid counter service for the Throughput Quota policy</a></li>
 	<li><a href="#grid_cache_enable">Configuring the grid cache service for the WS-Security Asymmetric Binding policy</a></li>
 	<li><a href="#step4">Step 4: Synchronize Clocks</a></li>
@@ -33,10 +33,11 @@ nav-title: Akana Grid Services
 <p>For example, you can have a shared counter that's atomic so that all nodes in the cluster can share the counter value and atomically increment it.</p>
 <p>There are two main grid services in the Akana platform:</p>
 <ul>
-	<li><a href="#grid_counter">Grid counter service</a>&#8212;Maintains a shared counter across all nodes in the cluster, for certain events. For example, this service is used by the <a href="../../ag/policies/policy_qos_concurrency_quota.htm">Concurrency Quota policy</a>. See <a href="#grid_counter">Grid counter service</a> below.</li>
-	<li><a href="#grid_cache">Grid cache service</a>&#8212;Maintains a shared cache across all nodes in the cluster. See <a href="#grid_cache">Grid cache service</a> below.</li>
+	<li><strong>Grid counter servic</strong>e&#8212;Enables atomic incrementing and decrementing of shared counters across all nodes in the cluster, for certain events. For example, this service is used by the <a href="../../ag/policies/policy_qos_concurrency_quota.htm">Concurrency Quota policy</a>. See <a href="#grid_counter">Grid counter service</a> below.</li>
+	<li><strong>Grid cache service</strong>&#8212;Maintains a shared <a href="../../cm/learnmore/basics_glossary.htm#gl_distributedcache">distributed cache</a>, to share cached data and resources across all nodes in the cluster. See <a href="#grid_cache">Grid cache service</a> below.</li>
 </ul>
 <p>The cache is set up and managed via configuration settings in the Akana Administration Console for each Network Director instance in the cluster.</p>
+<p><strong>Note</strong>: Clocks should always be synchronized across machines in a cluster; however, it's more important if grid services are enabled. Clocks must be synchronized for services such as the grid counter service to work correctly.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -59,7 +60,7 @@ nav-title: Akana Grid Services
 <p>The grid cache service is used by multiple handlers within the Akana product, including the OAuth handler and the LDAP handler, as well as for other caching services.</p>
 <p>Several of the Akana policies use the grid caching service. For example:</p>
 <ul>
-	<li><strong>WS-Security Policies</strong>&#8212;Using a clusterable cache, you can share nonces to prevent getting duplicate messages across all NDs in a cluster. Supported WS-Security policies include WS-Security Message, WS-Security Asymmetric Binding, and WS-Security Transport policies.
+	<li><strong>WS-Security Policies</strong>&#8212;Using the grid cache service, you can share nonces to prevent getting duplicate messages across all NDs in a cluster. Supported WS-Security policies include WS-Security Message, WS-Security Asymmetric Binding, and WS-Security Transport policies.
 		<p>For an example of one of these policies, see <a href="../../ag/policies/policy_op_ws_security_asymmetric_binding.htm">WS-Security Asymmetric Binding Policy</a>.</p>
 	</li>
 	<li><strong>HTTP Caching Policy</strong>&#8212;Allows you to increase performance by storing responses to previous requests so that they can be served as a response to similar new requests that come in, often without requiring the overhead of a downstream server round-trip.
@@ -70,13 +71,14 @@ nav-title: Akana Grid Services
 
 
 
-<h2 id="grid_setup">Activating Akana grid services</h2>
+<h2 id="grid_setup">Configuring the Akana grid services framework</h2>
 <p>To activate Akana grid services, follow the steps below for each Network Director instance in the cluster.</p>
 
 
-<h4 id="proc_grid_services_enable">To update configuration properties for the Akana grid</h4>
+<h4 id="proc_grid_services_enable">To update configuration properties for the Akana grid framework</h4>
 <ol>
-	<li>Select <strong>com.soa.grid</strong>.</li>
+	<li>Log in to the Akana Administration Console and go to the <strong>Configuration</strong> tab. </li>
+	<li>In the <strong>Configuration Categories</strong> section, select <strong>com.soa.grid</strong>.</li>
 	<li>Modify/verify the following settings, as shown below. Note that the Multicast option (grid.network.config.enableMulticast) is currently not supported:
 		<ul>
 			<li>Set <strong>grid.network.config.enableMulticast</strong> to <strong>false</strong>.</li>
@@ -98,7 +100,7 @@ nav-title: Akana Grid Services
 		<p><strong>Note</strong>: Do not include a comma (,) at the end of the list as the platform would interpret it as an empty member and return an exception.</p>
 	</li>
 	<li>Click <strong>Apply Changes</strong>.</li>
-	</ol>
+</ol>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -108,26 +110,17 @@ nav-title: Akana Grid Services
 <p>The procedure below explains how to enable this service for the Throughput Quota policy. The procedure is similar for other policies. Just look for the correct configuration properties for the policy that uses the counter service. For example, for the Concurrency Quota policy the configuration category is <strong>com.soa.policy.handle.quota.bandwidth</strong>.</p>
 
 
-<h4 id="proc_grid_counter_enable">To update the grid counter service for the Throughput Quota policy</h4>
+<h4 id="proc_grid_counter_enable">To enable the grid counter service for the Throughput Quota policy</h4>
 <ol>
 	<li>Log in to the Akana Administration Console and go to the <strong>Configuration</strong> tab. </li>
 	<li>In the <strong>Configuration Categories</strong> section, select properties for the <strong>Throughput Quota Policy</strong> (<strong>com.soa.policy.handle.quota.throughput</strong>).</li>
 	<li>Change <strong>use.clustered.cache</strong> to <strong>True</strong>, as shown below.
 		<p><img src="images_grid/ac_com_soa_policy_handle_quota_throughput.png" alt="Throughput Quota Policy (com.soa.policyhandle.quota.throughput)" /></p></li>
 	<li>Click <strong>Apply Changes</strong>.</li>
-	<li>Optional: test using the procedure below.</li>
-</ol>
-
-<h4 id="proc_grid_counter_enable_test">To test policy enforcement with the Throughput Quota Policy</h4>
-<ol>
-	<li>Configure a Throughput Quota Policy to process 10 requests per minute.</li>
-	<li>Virtualize a service.</li>
-	<li>Attach the policy to the virtual service.</li>
-	<li>Call the virtual service from a client such as SOAP UI.</li>
-	<li>Call the virtual service 10&#8211;20 times. </li>
-	<li>In approximately one minute, ten requests will be successful and the remainder will fail.</li>
-	<li>Review the alerts. All requests failed past the 10 requests per minute will show a quota exceeded alert. </li>
-</ol>
+	<li>Restart the Network Director instance.<!--{GW 6/9/21 ATMO-38665: We can leave that in there just for safety but in reality you shoudldn't have to restart.}--></li>
+	</ol>
+<p>To test the policy, follow the procedure in the policy documentation: <a href="../../ag/policies/policy_qos_throughput_quota.htm#uc_policy_qos_throughput_quota_pm_00">Generate Alert When Throughput Exceeds Limit</a>.</p>
+<p><a href="#top">Back to top</a></p>
 
 
 
@@ -136,7 +129,7 @@ nav-title: Akana Grid Services
 <p>The procedure below explains how to enable this service for WS-Security Asymmetric Binding Policies.</p>
 
 
-<h3 id="proc_grid_cache_configure">Configuring the nonce expiration interval for the WS-Security Asymmetric Binding Policies</h3>
+<h3 id="proc_grid_cache_configure">To configure the nonce expiration interval for the WS-Security Asymmetric Binding Policies</h3>
 <ol>
 	<li>Log in to the Akana Administration Console and go to the <strong>Configuration</strong> tab. </li>
 	<li>In the <strong>Configuration Categories</strong> section, find the category for the WS-Security Policy (<strong>com.soa.policy.handle.wssp.noncecache</strong>).
@@ -148,22 +141,3 @@ nav-title: Akana Grid Services
 	</li>
 	<li>Click <strong>Apply Changes</strong>.</li>
 </ol>
-
-
-<h3 id="step3">Step 3: Restart Network Director Instances</h3>
-<ol>
-	<li>Before you can successfully use the clusterable cache, you must restart all Network Director instances after completing the configuration category changes outlined in the previous steps. </li>
-</ol>
-
-
-<h3 id="step4">Step 4: Synchronize Clocks </h3>
-<ol>
-	<li>The Policy Manager clusterable caching logic is based on the system clock. To ensure there is not a lag in one of the Network Director instances while processing requests, you must synchronize all system clocks so they match (i.e., by milliseconds and seconds).</li>
-</ol>
-
-
-<p>------------------------------------------------------</p>
-<p>{<span class="apidoc_red">GW: below is legacy content from the old introduction -- any of this that you think we should keep?</span>} xxx</p>
-<p>The processing of requests can be synchronized across a cluster of multiple ND instances within a single deployment by creating a <strong>clusterable cache</strong>. A clusterable cache is memory that different processes can share.</p>
-<p>For example, if you want the entire cluster to collectively only allow 10 requests per minute you can configure the NDs to share memory (a clusterable cache) which will hold information using counters. Then, when one node receives a message and increments a counter, it's the same counter that the other nodes are using. {<span class="apidoc_red">GW: this sounds as though you could set the counter just for the ND... is that correct? I suspect not. But if so the update doesn't cover it. It only covers using the counter service in the context of policy usage.</span>}</p>
-<p>------------------------------------------------------</p>
