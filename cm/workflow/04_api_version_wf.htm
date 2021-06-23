@@ -125,7 +125,7 @@ nav-title: API Version Workflow
 	<li><strong>Pending Approval</strong></li>
 </ul>
 <p>The Business Admin for the organization, or the API Approver, can approve or reject an API version.</p>
-<p>The example below shows a section of the template workflow showing steps and actions when an API version is pending approval. Valid actions are Approve (<strong>apiversion.action.approve</strong>) or Reject (<strong>apiversion.action.reject</strong>). When the action is <strong>apiversion.action.approve</strong> (line 3), the applicable conditions are applied as shown below.</p>
+<p>The example below shows a section of the template workflow showing steps and actions when an API version is pending approval. Valid actions are Approve (<strong>apiversion.action.approve</strong>) or Reject (<strong>apiversion.action.reject</strong>). When the action is <strong>apiversion.action.approve</strong> (third line below), the applicable conditions are applied as shown below.</p>
 <pre>&lt;step id="300" name="Pending Approval!"&gt;
   &lt;actions&gt;
     &lt;action id="301" name="apiversion.action.approve"&gt;
@@ -369,7 +369,7 @@ nav-title: API Version Workflow
 <p>Using the API custom workflow, you an define users that are not allowed to have visibility to the <strong>Access</strong> button and define the users that are able to see the <strong>Access</strong> button using the API workflow.  The visibility to the <strong>Access</strong> button can be controlled by Role, Domain or Actions assigned to the user.</p>
 <p>By default, if you are not using custom API workflow, when an API is added to the Community Manager developer portal, it is automatically in <strong>Active</strong> state. This documentation includes two versions of a custom API workflow doc, for version 2019.1.32 and later (see <a href="#apiv_workflow_template">API Version Workflow: Custom Workflow Template Examples</a> below):</p>
 <ul>
-	<li><a href="#api_v_wf_example_01">Example 1</a>: Shows how the <strong>Access</strong> button can be disabled for all users who are <strong>not</strong> added to the <strong>APIAccessor</strong> role. When the API is created, the state of the API is <strong>Draft</strong> (custom behavior).
+	<li><a href="#api_v_wf_example_01">Example 1</a>: Shows how the <strong>Access</strong> button can be disabled for all roles, with specified exceptions. When an API is created using this workflow, the state of the API is <strong>Draft</strong> (custom behavior).
 		<p>In this example, the <strong>@DisallowApiAccess</strong> Reserved Action is used to disallow API access for all users <strong>except</strong> those with one of the following roles:</p>
 			<ul>
 			<li><strong>APIAccessor</strong>: A new custom role defined in Policy Manager; see steps below.</li>
@@ -378,7 +378,7 @@ nav-title: API Version Workflow
 			<li><strong>Modify</strong>: Users with a role that includes Modify permission for the API.</li>
 		</ul>
 	</li>
-	<li><a href="#api_v_wf_example_02">Example 2</a>: Shows how the <strong>Access</strong> button can be disabled for users that <strong>are</strong> added to the <strong>DisableAccessForAPI</strong> role. When the API is created, the state of the API is <strong>Active</strong> (default behavior).
+	<li><a href="#api_v_wf_example_02">Example 2</a>: Shows how the <strong>Access</strong> button can be disabled for users who <strong>are</strong> added to the <strong>DisableAccessForAPI</strong> role. When an API is created using this workflow, the state of the API is <strong>Active</strong> (default behavior).
 		<p>In this example, the <strong>@DisallowApiAccess</strong> Reserved Action is used to disallow API access for all users who have the following role:</p>
 		<ul>
 			<li><strong>DisableAccessForAPI</strong>: A new custom role defined in Policy Manager; see steps below.</li>
@@ -425,29 +425,29 @@ nav-title: API Version Workflow
 <p><strong>Note</strong>: as always, when you implement a new API Version workflow, it is effective for new API versions only. Existing API versions are unaffected.</p>
 
 <p><strong>Example 1</strong></p>
-<p>The example below, from the <a href="#api_v_wf_example_01">Example 1</a> custom template example, shows the section that implements the <strong>@DisallowApiAccess</strong> reserved action to disallow API access.  By default, this section is commented out. If you remove the opening and closing comment tags, and then implement the workflow, the <strong>Access</strong> button is not visible to any users except the specified roles: the new <strong>APIAccessor</strong> role (lines 631&#8211;633), <strong>Business Admin</strong> (lines 634&#8211;636), <strong>API Admin</strong> (lines 637&#8211;639), and users with Modify permission for the specific resource type (lines 640&#8211;642).</p>
-<pre>628)          &lt;!-- action id="420" name="@DisallowApiAccess"&gt;
-629)           &lt;restrict-to&gt;
-630)             &lt;conditions type="AND"&gt;
-631)               &lt;condition negate="true" type="authorizeByAtmosphereRole"&gt;
-632)                 &lt;arg name="role"&gt;&AtmoRoleApiAccessor;&lt;/arg&gt;
-633)               &lt;/condition&gt;
-634)               &lt;condition negate="true" type="authorizeByAtmosphereRole"&gt;
-635)                 &lt;arg name="role"&gt;&AtmoRoleBusinessAdmin;&lt;/arg&gt;
-636)               &lt;/condition&gt;
-637)               &lt;condition negate="true" type="authorizeByAtmosphereRole"&gt;
-638)                 &lt;arg name="role"&gt;&AtmoRoleApiAdmin;&lt;/arg&gt;
-639)               &lt;/condition&gt;
-640)               &lt;condition negate="true" type="authorizeByAtmosphereAction"&gt;
-641)                 &lt;arg name="Action"&gt;Modify&lt;/arg&gt;
-642)                 &lt;arg name="ResourceType"&gt;apiversion&lt;/arg&gt;
-643)               &lt;/condition&gt;
-644)             &lt;/conditions&gt;
-645)           &lt;/restrict-to&gt;
-646)           &lt;results&gt;
-647)             &lt;unconditional-result old-status="Active" status="Active" step="400" /&gt;
-648)           &lt;/results&gt;
-649)         &lt;/action --&gt;  
+<p>The example below, from the <a href="#api_v_wf_example_01">Example 1</a> custom template example, shows the section that implements the <strong>@DisallowApiAccess</strong> reserved action to disallow API access.  By default, this section is commented out. If you remove the opening and closing comment tags, and then implement the workflow, the <strong>Access</strong> button is not visible to any users except the specified roles: the new <strong>APIAccessor</strong> role (fifth line below), <strong>Business Admin</strong>, <strong>API Admin</strong>, and users with Modify permission for the specific resource type.</p>
+<pre>         &lt;!-- action id="420" name="@DisallowApiAccess"&gt;
+          &lt;restrict-to&gt;
+            &lt;conditions type="AND"&gt;
+              &lt;condition negate="true" type="authorizeByAtmosphereRole"&gt;
+                &lt;arg name="role"&gt;&AtmoRoleApiAccessor;&lt;/arg&gt;
+              &lt;/condition&gt;
+              &lt;condition negate="true" type="authorizeByAtmosphereRole"&gt;
+                &lt;arg name="role"&gt;&AtmoRoleBusinessAdmin;&lt;/arg&gt;
+              &lt;/condition&gt;
+              &lt;condition negate="true" type="authorizeByAtmosphereRole"&gt;
+                &lt;arg name="role"&gt;&AtmoRoleApiAdmin;&lt;/arg&gt;
+              &lt;/condition&gt;
+              &lt;condition negate="true" type="authorizeByAtmosphereAction"&gt;
+                &lt;arg name="Action"&gt;Modify&lt;/arg&gt;
+                &lt;arg name="ResourceType"&gt;apiversion&lt;/arg&gt;
+              &lt;/condition&gt;
+            &lt;/conditions&gt;
+          &lt;/restrict-to&gt;
+          &lt;results&gt;
+            &lt;unconditional-result old-status="Active" status="Active" step="400" /&gt;
+          &lt;/results&gt;
+        &lt;/action --&gt;  
 </pre>
 
 <p><strong>Example 2</strong></p>
@@ -709,11 +709,11 @@ nav-title: API Version Workflow
 	<li>Valid in version 2019.1.32:
 		<ul>
 			<li id="api_v_wf_example_01"><strong>Example 1</strong>: <a href="assets/apiversion-workflow-template_v20190132_example_01.zip" target="_blank">API Workflow Template for Customization</a> (includes new Reserved Action <a href="#apiv_ra_disallowapiaccess">@DisallowApiAccess</a>, commented out)
-				<p>Shows how you can disable the <strong>Access</strong> button for all users, and then define exceptions for specific roles including users that have the <strong>APIAccessor</strong> role. When the API is created, the state of the API is <strong>Draft</strong>.</p>
+				<p>Shows how you can disable the <strong>Access</strong> button for all users, and then define exceptions for specific roles including users that have the <strong>APIAccessor</strong> role. When an API is created using this workflow, the state of the API is <strong>Draft</strong>.</p>
 				<p>For instructions on implementing, see <a href="#proc_wf_apiversion_implement">To implement custom API version workflow to restrict API access using @DisallowApiAccess</a>.</p>
 			</li>
 			<li id="api_v_wf_example_02"><strong>Example 2</strong>: <a href="assets/apiversion-workflow-template_example_02.zip" target="_blank">API Workflow Template for Customization</a> (includes new Reserved Action <a href="#apiv_ra_disallowapiaccess">@DisallowApiAccess</a>)
-				<p>Shows how you can disable the <strong>Access</strong> button for users that are added to the <strong>DisableAccessForAPI</strong> role. When the API is created, the state of the API is <strong>Active</strong>.</p>
+				<p>Shows how you can disable the <strong>Access</strong> button for users who have the <strong>DisableAccessForAPI</strong> role. When an API is created using this workflow the state of the API is <strong>Active</strong>.</p>
 				<p>For instructions on implementing, see <a href="#proc_wf_apiversion_implement">To implement custom API version workflow to restrict API access using @DisallowApiAccess</a>.</p>
 			</li>
 		</ul>
