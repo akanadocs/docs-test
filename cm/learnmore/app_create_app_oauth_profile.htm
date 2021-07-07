@@ -21,6 +21,7 @@ nav-title: App OAuth Profile
 	<li><a href="#app_oauth_profile_options">What is the OAuth Profile and what choices should I make?</a></li>
 	<li><a href="#app_oauth_profile_config_howto">How do I configure my app's OAuth profile settings?</a></li>
 	<li><a href="#app_oauth_profile_settings">What are the settings available on the App OAuth Profile page?</a></li>
+	<li><a href="#app_oauth_profile_signed_requests">Signing OAuth authentication requests</a></li>
 	<li><a href="#tc_redirect_uri">What is the redirect URI for Test Client?</a></li>
 	<li><a href="#tc_redirect_uri_register">Registering the Test Client redirect URI with your OAuth Authentication Provider</a></li>
 	<li><a href="#app_oauth_config_credentials">How do I configure OAuth credentials?</a></li>
@@ -180,12 +181,12 @@ nav-title: App OAuth Profile
 		</tr>
 		<tr>
 			<td id="app_oauth_profile_private_key_replay_prevent">Replay Prevention</td>
-			<td> Applicable if the authentication method is Private Key JWT. Check this box if the client uses signed JWTs for client authentication or transmission of request parameters, or both, and the JWT should be unique for each request. </td>
+			<td> Applicable if the client authentication method is Private Key JWT. Check this box if the client uses signed JWTs for client authentication or transmission of request parameters, or both, and the JWT should be unique for each request. </td>
 		</tr>
 		<tr>
 			<td id="app_oauth_profile_private_key_jwt_algo"><p>Private Key JWT Signing Algorithm</p>
 				<p>(Version: 2020.2.8 and later</span>)</p></td>
-			<td><p>Applicable if the authentication method is Private Key JWT. The signing algorithm that the client must use to sign the JWTs for client authentication. Available values:</p>
+			<td><p>Applicable if the client authentication method is Private Key JWT: The signing algorithm that the client must use to sign the JWTs for client authentication. Available values:</p>
 				<ul>
 					<li>RSA using SHA-256</li>
 					<li>RSA using SHA-384</li>
@@ -193,25 +194,26 @@ nav-title: App OAuth Profile
 					<li>ECDSA using P256 Curve and SHA-256</li>
 					<li>ECDSA using P384 Curve and SHA-384</li>
 					<li>ECDSA using P521 Curve and SHA-512</li>
-					<li>RSASSA-PSS using SHA-256</li>
-					<li>RSASSA-PSS using SHA-384</li>
-					<li>RSASSA-PSS using SHA-512</li>
+					<li>RSASSA-PSS using SHA-256 (only available with <a href="basics_glossary.htm#gl_hsm">HSM</a>)</li>
+					<li>RSASSA-PSS using SHA-384 (only available with HSM)</li>
+					<li>RSASSA-PSS using SHA-512 (only available with HSM)</li>
 		</ul>
 			</td>
 		</tr>
 		<tr>
 			<td>Require Signed Requests</td>
-			<td><p>If you want to make sure that API requests from this app will always be signed, check the box. If you choose this option, you must also provide the app's Client Registration JWKS URL.</p>
-				<p>The JWKS URL is required for private Key JWT client authentication and for signed requests.</p>
-				<p>{<span class="apidoc_red">DK: This section needs more details or explanation of the request parameter</span>}</p>
-				<p>If this box is not checked, signed requests are not required&nbsp;and the corresponding parameter in the request is not provided. {<span class="apidoc_red">DK</span>}</p></td>
+			<td><p>If API requests from this app should always be signed, check the box. If you choose this option, you must also provide the app's Client Registration JWKS URL. The JWKS URL is required for private Key JWT client authentication and for signed requests.</p>
+				<p>If you choose this option, the parameter named <strong>request</strong>, containing claim information as a JWT token, must be included with API requests that the app sends, per the OpenID Connect specification: <a href="https://openid.net/specs/openid-connect-core-1_0.html#RequestParameter" title="Link to OpenID Connect specification, section 6" target="_blank">Section 6, Passing Request Parameters as JWTs</a>.</p>
+				<p>For more information, see <a href="#app_oauth_profile_signed_requests">Signing OAuth authentication requests</a> below.</p>
+				<p>If this box is not checked, a value of <strong>false</strong> is assumed.</p></td>
 		</tr>
 	</thead>
 	<tbody>
 		<tr>
 			<td><p>Request Object Signing Algorithm</p>
 				<p>(Version: 2020.2.8 and later)</p></td>
-			<td><p>Applicable if <strong>Require Signed Requests</strong> is selected. The signing algorithm that the client must use to sign its request objects for transmission of request parameters. This is applicable only when the client might send its authorization requests using request objects. Available values: </p>
+			<td><p>Applicable if <strong>Require Signed Requests</strong> is selected: The signing algorithm that the client must use to sign the <strong>request</strong> object that is sent as a JWT for transmission of request parameters. For more information, refer to the OpenID Connect specification: <a href="https://openid.net/specs/openid-connect-core-1_0.html#RequestParameter" title="Link to OpenID Connect specification, section 6" target="_blank">Section 6, Passing Request Parameters as JWTs</a>.</p>
+				<p>Available values: </p>
 				<ul>
 					<li>RSA using SHA-256</li>
 					<li>RSA using SHA-384</li>
@@ -219,11 +221,11 @@ nav-title: App OAuth Profile
 					<li>ECDSA using P256 Curve and SHA-256</li>
 					<li>ECDSA using P384 Curve and SHA-384</li>
 					<li>ECDSA using P521 Curve and SHA-512</li>
-					<li>RSASSA-PSS using SHA-256</li>
-					<li>RSASSA-PSS using SHA-384</li>
-					<li>RSASSA-PSS using SHA-512</li>
-				</ul>
-				<p>If a value is not specified, the client can use any of the supported signing algorithms.{<span class="apidoc_red">DK</span>}</td>
+					<li>RSASSA-PSS using SHA-256 (only available with <a href="basics_glossary.htm#gl_hsm">HSM</a>)</li>
+					<li>RSASSA-PSS using SHA-384 (only available with HSM)</li>
+					<li>RSASSA-PSS using SHA-512 (only available with HSM)</li>
+		</ul>
+		<p>If a value is not specified, the client can use any of the supported signing algorithms.</td>
 		</tr>
 		<tr>
 			<td>JWKS URL</td>
@@ -299,6 +301,30 @@ nav-title: App OAuth Profile
 		</tr>
 	</tbody>
 </table>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="app_oauth_profile_signed_requests">Signing OAuth authentication requests</h2>
+<p>Typically, when a client application sends a request to an authorization server to get an OAuth access token, the client app sends the <strong>client_id</strong>, <strong>response_type</strong>, and other values, as plain text parameters in the API call.</p>
+<p>The OpenID specification provides an option to enable the authentication request to be signed, and optionally also to be encrypted.</p>
+<p>The parameters are passed as a single parameter object named <strong>request</strong>, and the value of the parameter is a signed <a href="basics_glossary.htm#gl_jsonwebtoken">JWT</a>. The claims inside the signed JWT are the parameters of the authorization request.</p>
+<p>For more information, refer to the OpenID Connect specification: <a href="https://openid.net/specs/openid-connect-core-1_0.html#RequestParameter" title="Link to OpenID Connect specification, section 6" target="_blank">Section 6, Passing Request Parameters as JWTs</a>.</p>
+<p>If API requests are signed, the <strong>request</strong> parameter must be included with API requests that the app sends.</p>
+<p>In the <strong>App OAuth Profile</strong> page, if you check <strong>Require Signed Requests</strong>, this indicates that the app is not sending the <strong>client_id</strong> and <strong>response_type</strong> as plain text, as they are sent in a typical request. Instead, the claims are signed and sent as a JWT in the <strong>request</strong> parameter.</p>
+<p>In version 2020.2.8 and later, you can also specify the algorithm that you want to use for signing the <strong>request</strong> object (JWT).</p>
+<p>There are two valid values for the <strong>Require Signed Requests</strong> field:</p>
+<ul>
+	<li><strong>true</strong>: There is a <strong>request</strong> object present in the request message to the authorization server&nbsp;(a signed JWT).</li>
+	<li><strong>false</strong>: There is no <strong>request</strong> object. Parameters are provided in plain text, and the call to the authorization server executes in the standard way.</li>
+</ul>
+<p>If this parameter is not provided with request messages, a value of <strong>false</strong> is assumed.</p>
+
+
+<h3 id="signed_request_scenarios">Signed request: scenarios</h3>
+<p>{<span class="apidoc_red">DK: this section is for future development -- notes below on what we discussed 7/7</span>}</p>
+<p><strong>What happens if I send request parameters in the normal way and also send the request object?</strong></p>
+<p>You could choose to send the <strong>client_id</strong> and <strong>response_type</strong> parameters in the URL, in the usual way, as well as including all parameters and claims in the <strong>request</strong> object. In this scenario, the platform checks the values provided in the URL against the values provided in the <strong>request</strong> object. If the values match, the request is processed. If they do not match, the platform returns an error message.</p>
 <p><a href="#top">Back to top</a></p>
 
 
