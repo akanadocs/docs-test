@@ -27,17 +27,17 @@ nav-title: Enable HTTPS Access to the Administration Console
 
 <h2 id="introduction">Introduction</h2>
 <p>You can set up HTTPS access to the Akana Administration Console by enabling an HTTPS port.</p>
-<p>There is just one step:</p>
-<ul>
-	<li><strong>Adding an HTTPS listener to the applicable system.properties file</strong>: Go to the {release_directory}/instances/{containername} folder, open the system.properties file, and add an HTTPS listener.</li>
-</ul>
+<p>All you need to do is define the HTTPS listener in the <strong>system.properties</strong> file for the container.</p>
+
 
 <h4>Notes on Configuring an HTTPS Listener</h4>
+<p>{<span class="apidoc_red">maybe call this &quot;notes on sequence of actions&quot; or something -- at least, the first two points are about that. And what is a UI-Browsing listener? I'd like to define that or take it out -- and also add a brief explanation of the system.properties file and what it does? -- also, we give the before and after scenarios, but, do we have a recommendation?</span>}</p>
 <p>Several important points to note on configuring an HTTPS listener:</p>
 <ul>
-	<li>If you add an HTTPS listener to the <strong>system.properties</strong> file (as described in the following scenarios) <em>before</em> you install the Policy Manager features, the HTTPS listener will be registered automatically in the database when you install the Policy Manager features and the listener will be present in the <strong>Containers</strong> section of the Policy Manager Management Console. </li>
-	<li>If you add an HTTPS listener to the <strong>system.properties</strong> file <em>after</em> you install the Policy Manager features, the HTTPS listener will not registered automatically in the database and you will need to add an HTTPS listener using the <strong>Add Container Listener</strong> function in the Policy Manager <strong>Containers</strong> section in order to update the container metadata. Note that the HTTPS listener configuration should have <strong>Bind to all interfaces</strong> checked, and you can optionally choose to clone services hosted on other listeners. You must also generate a certificate for the listener after it is defined using the <strong>Manage PKI Keys</strong> option. See screen examples below. </li>
-	<li>If you add a UI-Browsing listener to the <strong>system.properties</strong> file, Policy Manager gets the listener information from this file. </li>
+	<li>If you add an HTTPS listener to the <strong>system.properties</strong> file <em>before</em> you install the Policy Manager features, the HTTPS listener will be registered automatically in the database when you install the Policy Manager features, and the listener will be present in the <strong>Containers</strong> section of the Policy Manager Management Console. </li>
+	<li>If you add an HTTPS listener to the <strong>system.properties</strong> file <em>after</em> you install the Policy Manager features, the HTTPS listener will not be registered automatically in the database, and you will need to add an HTTPS listener using the <strong>Add Container Listener</strong> function in the Policy Manager <strong>Containers</strong> section in order to update the container metadata. Note that the HTTPS listener configuration should have <strong>Bind to all interfaces</strong> checked, and you can optionally choose to clone services hosted on other listeners. You must also generate a certificate for the listener after it is defined using the <strong>Manage PKI Keys</strong> option. For instructions and illustrations, see <a href="../../ag/listeners/about_listeners.htm">About Listeners</a> and <a href="../key_management/key_management.htm">Managing Keys and Certificates</a>. </li>
+	<li>the Policy Manager help.</li>
+	<li>If you add a UI-Browsing listener {<span class="apidoc_red">what does this mean and will users know?</span>} to the <strong>system.properties</strong> file, Policy Manager gets the listener information from this file. </li>
 </ul>
 <p><a href="#top">Back to top</a></p>
 
@@ -47,14 +47,16 @@ nav-title: Enable HTTPS Access to the Administration Console
 <p>Let's take a quick walkthrough of the HTTPS configuration process to get you started.</p>
 
 <h4>Step 1: Add HTTPS Listener</h4>
-<p>To enable an HTTPS listener, you must update the <strong>system.properties</strong> file in the {release_directory}/instances/{containername} folder, as shown below. Load the <strong>system.properties</strong> file into an editor and configure it based on the following Akana Administration Console access scenario. In this example, we use port 9446.</p>
-<p><img src="images/ac_folder_system_properties.png" alt="Akana Administration Console folder structure: location of system.properties file" /></p>
+<p>To enable an HTTPS listener, you must update the <strong>system.properties</strong> file in the {release_directory}/instances/{containername} folder, as shown below. In this example, we use port 9446.</p>
+
 <p>With the settings below, access to the Akana Administration Console is limited to the specified HTTPS listener.</p>
-<p><strong>Note:</strong> <span class="apidoc_red">You must also delete the HTTP listener defined in the Policy Manager Management Console</span>.</p>
+<p><strong>Note:</strong> <span class="apidoc_red">You must also delete the HTTP listener defined in the Policy Manager Management Console</span>. {<span class="apidoc_red">TJ?</span>}</p>
 
 <h4>To modify the system.properties file to enable an HTTPS listener</h4>
 <ol>
-	<li>Open the <strong>{release_directory}/instances/{containername}/system.properties</strong> file in a text editor.</li>
+	<li>Open the <strong>{release_directory}/instances/{containername}/system.properties</strong> file in a text editor. An example is shown below.
+		<p><img src="images/ac_folder_system_properties.png" alt="Akana Administration Console folder structure: location of system.properties file" /></p>
+	</li>
 	<li>Remove the following settings:
 		<ul>
 			<li><strong>org.osgi.service.http.port=9000</strong></li>
@@ -76,8 +78,13 @@ nav-title: Enable HTTPS Access to the Administration Console
 
 <h4>Step 2: Optional configuration to restrict Akana Administration Console access to ports defined in the system.properties file</h4>
 <p>When the container is up and running, launch the Akana Administration Console (<strong>https://localhost:{port}/admin/</strong>). It should only be accessible on the port you defined in Step 1, and should comply with the rules for the configuration category you defined, as follows:</p>
-<p><strong>admin.console.access.restricted=true</strong>: You can access the Akana Administration Console only through the port defined only in the <strong>system.properties</strong> file.</p>
-<p>The default value for this property is <strong>false</strong>: If set to <strong>false</strong>, you can access the Akana Administration Console through the port defined in the system.properties file and also through the listeners defined in the Policy Manager workbench (see <a href="../../ag/listeners/about_listeners.htm">About Listeners</a> in the Policy Manager help).</p>
+<p><strong>admin.console.access.restricted=true</strong>: You can access the Akana Administration Console only through the port defined only in the <strong>system.properties</strong> file. {<span class="apidoc_red">are they supposed to look for this property somewhere?</span>}</p>
+<p>The default value for this property is <strong>false</strong>. When set to <strong>false</strong>, you can access the Akana Administration Console in two ways:</p>
+<ul>
+	<li>Through the port defined in the <strong>system.properties</strong> file.</li>
+	<li>Through the listeners defined in the Policy Manager workbench (see <a href="../../ag/listeners/about_listeners.htm">About Listeners</a> in the Policy Manager help).</li>
+</ul>
+<p>{<span class="apidoc_red">I'm not getting how this section is optional configuration... it seems like just information... is there something they should be doing? I think, they go into the Admin Console, go to that config category, and then, we are explaining the various settings. Is that correct?</span>}</p>
 <h4>com.soa.admin.console.cfg enabled (True)</h4>
 <ul>
 	<li>You can only access the Akana Administration Console through the HTTPS port defined in the <strong>system.properties</strong> file. </li>
@@ -97,7 +104,7 @@ nav-title: Enable HTTPS Access to the Administration Console
 <p>If everything appears to be configured correctly and you are still seeing 404 errors when you try to launch the Akana Administration Console, review the following steps to attempt to troubleshoot the problem.</p>
 
 <h4>Step 1: Inspect Log</h4>
-<p>Inspect the container logs in {release_directory}\instances\{containername}\logs and search for the following errors which occur near the startup:</p>
+<p>Inspect the container logs in the {release_directory}\instances\{containername}\logs folder and search for the following errors near the startup:</p>
 <pre>Caused by: java.net.BindException: Address already in use
   at java.net.PlainSocketImpl.socketBind(Native Method)
   at java.net.PlainSocketImpl.bind(Unknown Source)
@@ -108,12 +115,12 @@ nav-title: Enable HTTPS Access to the Administration Console
 <h4>Step 2: Resolve</h4>
 <ol>
 	<li>Stop the container and check to make sure that nothing is running on the port that the container is configured to run on. <strong>If nothing is running</strong>, it means that the container is trying to start <strong>TWO</strong> listeners on the same port. </li>
-	<li>Check <strong>system.properties</strong> in the container directory. It will have the listeners specified that the container uses on initial startup. For example:
+	<li>Check <strong>system.properties</strong> in the container directory. It will specify listeners that the container uses on initial startup. For example:
 <pre>com.soa.http.host=hostname
 org.osgi.service.http.port.secure=9446
 com.soa.http.bind.all.secure=true</pre>
 </li>
-	<li>Compare the host, port and bind settings above with the actual Policy Manager listeners defined in the Policy Manager Management Console. If the ports specified in the <strong>system.properties</strong> file are different from the ports specified in Policy Manager, the problem must exist elsewhere. If the port numbers match, then ONE of the following must occur:
+	<li>Compare the host, port, and bind settings above with the actual Policy Manager listeners defined in the Policy Manager Management Console. If the ports specified in the <strong>system.properties</strong> file are different from the ports specified in Policy Manager, the problem must exist elsewhere. If the port numbers match, then ONE of the following must occur:
 <ul>
 			<li><strong>com.soa.http.bind.all.secure</strong> in the system.properties file AND the <strong>Bind to All Interfaces</strong> option for the HTTPS container listener in the Policy Manager Management Console must both be set.</li>
 			<li>The <strong>com.soa.http.host</strong> value in the <strong>system.properties</strong> file and the <strong>hostname</strong> in the Policy Manager Management Console must match.</li>
