@@ -61,10 +61,13 @@ nav-title: User Workflow
 
 <h3 id="user_ia_allowmarkuserasregistered">@AllowMarkUserAsRegistered</h3>
 <h4 class="stamp">Valid in version: 2019.1.35 and later</h4>
-<p>Overrides the default behavior for external domain users, which requires them to complete an abbreviated registration process so that the user is present in the database. Instead, this initial action sets the user state for an external domain user to <strong>registered</strong>.</p>
-<p>This initial action is not there as the default in the product, but can be added if needed.</p>
+<p>Overrides the default behavior for external domain users, which requires them to complete an abbreviated registration process before the user is moved to a <strong>registered</strong> state.</p>
+<p>By default, when a user logs in to the Community Manager developer portal for the first time using a third-party domain, the user is in a <strong>pending_validation</strong> state. Instead, this initial action sets the user to a <strong>registered</strong> state.</p>
+<p>This initial action is not the default, but can be added if needed via custom workflow. It only applies to external domain users.</p>
+<p><strong>Note</strong>: This initial action relies on the third-party provider returning the user's email after authentication, which is generally the case. The Community Manager developer portal must have the user email information to register the user.</p>
+
 <h4>Examples/Notes/Additional Information</h4>
-<p>In the example below, <strong>@AllowMarkUserAsRegistered</strong> is used to identify users who are logging in via a specific OpenID Connect Relying Party domain and marking them as Registered Users.</p>
+<p>In the example below, <strong>@AllowMarkUserAsRegistered</strong> is used to identify users who are logging in via a specific domain type or domain name, and mark them as Registered Users. This example uses two conditions with OR, which requires only one of the conditions to be met. With AND, the <strong>DomainType</strong> and <strong>DomainName</strong> values must both meet the condition. Another way that this could be implemented is to remove the entire <span class="apidoc_code">&lt;restrict-to&gt;</span> section. In this scenario, the initial action would apply to all users who log in via a third-party login domain.</p>
 <pre>&lt;action id="500" name="@AllowMarkUserAsRegistered"&gt;
   &lt;restrict-to&gt;
     &lt;conditions type="OR"&gt;
@@ -76,33 +79,28 @@ nav-title: User Workflow
       &lt;/condition&gt;
     &lt;/conditions&gt;
   &lt;/restrict-to&gt;
-  &lt;results&gt;     &lt;unconditional-result old-status="none" status="unknown" step="-1"/&gt;  
+  &lt;results&gt;
+    &lt;unconditional-result old-status="none" status="unknown" step="-1"/&gt;
   &lt;/results&gt;
 &lt;/action&gt;
 </pre>
 <p>In the above: </p>
 <ul>
 	
-	<li><strong>DomainType</strong> value is the back-end value for the domain. Must be one of the following: {<span class="apidoc_red">MM_01: please verify re possible Domain values. Maybe I should leave out the Google option since it is deprecated later?</span>}
-		<ul>
-			<li>OpenID Connect Relying Party domain: <strong>com.soa.securitydomain.openidconnect.relyingparty</strong>. </li>
-			<li>Google Connector domain: <strong>com.soa.securitydomain.google.connector</strong> (for 2019.1.35 and later 2019.1.x versions only. Deprecated in version: 2020.1.0)</li>
-		</ul>
-	</li>
-	<li><strong>DomainName</strong> must match a domain name set up in the Community Manager developer portal, and the domain must be of the type specified in the <strong>DomainType</strong> argument.</li>
+	<li><strong>DomainType</strong> value is the back-end value for the domain. To meet this condition, the domain must be an OpenID Connect Relying Party domain: <strong>com.soa.securitydomain.openidconnect.relyingparty</strong>.	</li>
+	<li><strong>DomainName</strong> value is the name of a third-party login domain set up in the Community Manager developer portal.</li>
 </ul>
 
 <h4 id="proc_allowmarkuserasregistered">To set up custom workflow to change registration status of third-party domain users on first login</h4>
 <ol>
 	<li>In the Community Manager developer portal, go to <strong>Admin</strong> &gt; <strong>Workflows</strong> and download the <strong>workflow:definition:user:v2</strong> workflow.</li>
-	<li>In the workflow, in the section where the <strong>@Setup</strong>  initial action is, add the workflow section shown above. {<span class="apidoc_red">MM_02 instead of @setup? before? after?</span>}</li>
+	<li>In the workflow, add the workflow section shown above, or some version of it, inside the <span class="apidoc_code">&lt;initial-actions&gt;</span> section.</li>
 	<li>Update the values for <strong>DomainType</strong> and <strong>DomainName</strong> so that they are correct for your installation.</li>
 	<li>Rename the workflow (for example, to <strong>default-user-workflow-v2-3p-auto-login.xml</strong>).</li>
 	<li>Upload the modified user workflow. See <a href="../learnmore/site_admin_workflows.htm#to_upload_a_custom_workflow">To upload a custom workflow</a>.</li>
 	<li>Assign the updated workflow as the default for user workflow. See <a href="../learnmore/site_admin_workflows.htm#workflow_custom_specify_users">How do I specify a custom workflow for platform users?</a></li>
 </ol>
-<p>When these steps are complete, test. A new user, logging in with the specified domain, should automatically be moved to a Registered state. If you are displaying API documentation in a third-party portal (see <a href="../customization/cm_customization_202020.htm#s_external_portal_integration">Rendering API documentation in a third-party portal</a>), the user will be able to see the API documentation as an authenticated user without having to log in to the Community Manager develoepr portal.</p>
-<p>{<span class="apidoc_red">MM_03 does this modify doc done already for this feature in 2019.1.34? for example in <a href="http://docs.akana.com/cm/customization/cm_customization_202020.htm#s_sso_3p_portal_oidc_sso_sequence_diagram" target="_blank">http://docs.akana.com/cm/customization/cm_customization_202020.htm#s_sso_3p_portal_oidc_sso_sequence_diagram</a> we say user should already be logged in to developer portal.</span>}</p>
+<p>When these steps are complete, test. A new user, logging in with the specified domain, should automatically be moved to a Registered state. If you are displaying API documentation in a third-party portal (see <a href="../customization/cm_customization_202020.htm#s_external_portal_integration">Rendering API documentation in a third-party portal</a>), the user will be able to see the API documentation as an authenticated user without having to log in to the Community Manager developer portal.</p>
 <p><a href="#top">Back to top</a></p>
 
 
