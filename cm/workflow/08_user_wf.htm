@@ -34,6 +34,7 @@ nav-title: User Workflow
 <p>The following initial actions are valid for Akana API Platform workflows relating to users:</p>
 <ul>
 	<li><a href="#user_ia_01">@UserPhoneNotRequired</a></li>
+	<li><a href="#user_ia_allowmarkuserasregistered">@AllowMarkUserAsRegistered</a>  (Valid in version: 2019.1.35 and later)</li>
 </ul>
 
 
@@ -55,6 +56,48 @@ nav-title: User Workflow
   &lt;/results&gt;
 &lt;/action&gt;</pre>
 <p>To see where these fit into the workflow document, you can download the user workflow from the Community Manager developer portal. The new initial action and condition are in the default workflow, but commented out.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+<h3 id="user_ia_allowmarkuserasregistered">@AllowMarkUserAsRegistered</h3>
+<h4 class="stamp">Valid in version: 2019.1.35 and later</h4>
+<p>Overrides the default behavior for external domain users, which requires them to complete an abbreviated registration process so that the user is present in the database. Instead, this initial action sets the user state for an external domain user to <strong>registered</strong>.</p>
+<p>This initial action is not there as the default in the product, but can be added if needed.</p>
+<h4>Examples/Notes/Additional Information</h4>
+<p>In the example below, <strong>@AllowMarkUserAsRegistered</strong> is used to identify users who are logging in via a specific OpenID Connect Relying Party domain and marking them as Registered Users.</p>
+<pre>&lt;action id="500" name="@AllowMarkUserAsRegistered"&gt;
+  &lt;restrict-to&gt;
+    &lt;conditions type="OR"&gt;
+      &lt;condition type="isDomainType"&gt;
+        &lt;arg name="DomainType"&gt;com.soa.securitydomain.openidconnect.relyingparty&lt;/arg&gt;
+      &lt;/condition&gt;
+      &lt;condition type="isDomainName"&gt;
+        &lt;arg name="DomainName"&gt;GoogleRP&lt;/arg&gt;
+      &lt;/condition&gt;
+    &lt;/conditions&gt;
+  &lt;/restrict-to&gt;
+  &lt;results&gt;     &lt;unconditional-result old-status="none" status="unknown" step="-1"/&gt;  
+  &lt;/results&gt;
+&lt;/action&gt;
+</pre>
+<p>In the above: </p>
+<ul>
+	
+	<li><strong>DomainType</strong> value is the back-end value for the OpenID Connect Relying Party domain: <strong>com.soa.securitydomain.openidconnect.relyingparty</strong>. {<span class="apidoc_red">MM: are there other possible values? List of domain type values: <a href="02_general.htm#s02_03_04">authorizeByDomainType</a> (General Use Conditions section)</span>}</li>
+	<li><strong>DomainName</strong> must match a domain name set up in the Community Manager developer portal, and the domain must be of the type specified in the <strong>DomainType</strong> argument.</li>
+</ul>
+
+<h4 id="proc_allowmarkuserasregistered">To set up custom workflow to change registration status of third-party domain users on first login</h4>
+<ol>
+	<li>In the Community Manager developer portal, go to <strong>Admin</strong> &gt; <strong>Workflows</strong> and download the <strong>workflow:definition:user:v2</strong> workflow.</li>
+	<li>In the workflow, in the section where the <strong>@Setup</strong>  initial action is, add the workflow section shown above. {<span class="apidoc_red">instead of @setup? before? after?</span>}</li>
+	<li>Update the values for <strong>DomainType</strong> and <strong>DomainName</strong> so that they are correct for your installation.</li>
+	<li>Rename the workflow (for example, to <strong>default-user-workflow-v2-3p-auto-login.xml</strong>).</li>
+	<li>Upload the modified user workflow. See <a href="../learnmore/site_admin_workflows.htm#to_upload_a_custom_workflow">To upload a custom workflow</a>.</li>
+	<li>Assign the updated workflow as the default for user workflow. See <a href="../learnmore/site_admin_workflows.htm#workflow_custom_specify_users">How do I specify a custom workflow for platform users?</a></li>
+</ol>
+<p>When these steps are complete, test. A new user, logging in with the specified domain, should automatically be moved to a Registered state. If you are displaying API documentation in a third-party portal (see <a href="../customization/cm_customization_202020.htm#s_external_portal_integration">Rendering API documentation in a third-party portal</a>), the user will be able to see the API documentation as an authenticated user without having to log in to the Community Manager develoepr portal.</p>
+<p>{<span class="apidoc_red">MM does this modify doc done already for this feature in 2019.1.34? for example in <a href="http://docs.akana.com/cm/customization/cm_customization_202020.htm#s_sso_3p_portal_oidc_sso_sequence_diagram" target="_blank">http://docs.akana.com/cm/customization/cm_customization_202020.htm#s_sso_3p_portal_oidc_sso_sequence_diagram</a> we say user should already be logged in to developer portal.</span>}</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -297,7 +340,7 @@ nav-title: User Workflow
 	<li>Remove the comment tag from line 834.</li>
 	<li>Rename the workflow (for example, to <strong>default-user-workflow-v2-useractivated.xml</strong>).</li>
 	<li>Upload the modified user workflow. See <a href="../learnmore/site_admin_workflows.htm#to_upload_a_custom_workflow">To upload a custom workflow</a>.</li>
-	<li>Make the modified workflow the default user workflow. See <a href="../learnmore/site_admin_workflows.htm#workflow_custom_specify_users">How do I specify a custom workflow for platform users?</a></li>
+	<li>Assign the updated workflow as the default for user workflow. See <a href="../learnmore/site_admin_workflows.htm#workflow_custom_specify_users">How do I specify a custom workflow for platform users?</a></li>
 </ol>
 <p><a href="#top">Back to top</a></p>
 
