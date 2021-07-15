@@ -150,12 +150,20 @@ nav-title: HTTP Caching
 
 
 <dt>maxIdleSeconds</dt>
-<dd>The default maximum idle time for an entry, in seconds. If an entry is in the cache longer than the <strong>maxIdleSeconds</strong> time, without being used, it is removed. {<span class="apidoc_red">Is this correct?</span>}</dd>
+<dd>The default maximum idle time for an entry, in seconds. If an entry is in the cache longer than the <strong>maxIdleSeconds</strong> time, without being used, it is removed.</dd>
 <dd>Default value: 0</dd>
 
 
 <dt>maxSize</dt>
-<dd>The maximum number of entries allowed in the cache. If <strong>maxSize</strong> is reached, some entries are evicted. How entries are counted is  determined by the <strong>sizePolicy</strong> property (see below).</dd>
+<dd>The maximum size of the cache. If <strong>maxSize</strong> is reached, some entries are evicted. How it's determined that maxSize is reached is  determined by the <strong>sizePolicy</strong> property (see below):
+	<ul>
+		<li>If sizePolicy is <strong>used-heap</strong>: maxSize is volume.</li>
+		
+		<li>If sizePolicy is <strong>percent-heap</strong>: maxSize is a percent. Provide a value up to 100.</li>
+		
+		<li>If sizePolicy is <strong>entry-count</strong>: maxSize is the number of entries.</li>
+	</ul>
+</dd>
 <dd>Default value: 100000000</dd>
 
 
@@ -164,11 +172,11 @@ nav-title: HTTP Caching
 
 
 <dt>sizePolicy</dt>
-<dd>The value of the sizePolicy property determines the way in which the maxSize property (see above) is calculated. Possible values:{<span class="apidoc_red">missing info on how this works. Also, when we choose percent-heap or entry-count, there is no way to specify those values unless it takes maxSize for entry-count.</span>}
+<dd>Determines the way in which the maxSize property (see above) is calculated, to determine when the allowable maximum cache size has been reached and some items must be evicted from the cache. Possible values:
 	<ul>
-	<li>used-heap (default)&#8212;xxx</li>
-	<li>percent-heap&#8212;Percentage of total heap allocation</li>
-	<li>entry-count&#8212;{<span class="apidoc_red">The number of entries in the heap?</span>}</li>
+		<li>used-heap (default)&#8212;When the cache size reaches the maxSize value, some entries are evicted.</li>
+	<li>percent-heap&#8212;When a percentage value specified in maxSize is reached, some entries are evicted; for example, if maxSize is set to 75 and 75% of the total heap allocation is used.</li>
+	<li>entry-count&#8212;When a count specified in MaxSize is reached, some entries are evicted.</li>
 </ul>
 </dd>
 </dl>
