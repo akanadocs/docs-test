@@ -371,16 +371,15 @@ nav-title: Roles
 
 
 <h2 id="uc_roles_monitor_only">Use case: creating a custom role with only Monitor permission</h2>
-<p>You might want to create a custom role so that certain users can have <strong>Monitor</strong> permission, to view an API's analytics information in the Community Manager developer portal, without those users being able to view the full API information.</p>
-<p>By default, when you add <strong>Monitor</strong> permission, the system automatically adds <strong>Read</strong> permission so that users can view the API. In most cases, <strong>Read</strong> is the lowest level of access and <strong>Monitor</strong> is one step up from that. However, if you want to create a scenario where users with <strong>Monitor</strong> permission can only view API analytics, and cannot see other information about the API, you can do that. For example, you might want to manage view permission via Private API groups, or you might have personnel dedicated only to viewing analytics information.</p>
-<p>To create a custom role that has <strong>Monitor</strong> permission but does <strong>not</strong> have <strong>View</strong> permission, follow the procedures below:</p>
+<p>You might want to create a custom role so that certain users can have <strong>Monitor</strong> permission, to view an API's analytics information in the Community Manager developer portal, without those users being able to view and modify private APIs unless invited.</p>
+<p>By default, when you add <strong>Monitor</strong> permission, the system automatically adds <strong>Read</strong> permission so that users can view APIs. In most cases, <strong>Read</strong> is the lowest level of access and <strong>Monitor</strong> is one step up from that. However, if you want to create a scenario where users with <strong>Monitor</strong> permission can only view API analytics, and cannot view private APIs, you can do that. For example, you might want to manage view permission via Private API groups, or you might have personnel dedicated only to viewing analytics information.</p>
+<p>To create and assign a custom role with only <strong>Monitor</strong> permission allowed, follow the procedures below:</p>
 <ol>
-	<li>Create the custom role with Monitor permission, which will also have View permission: <a href="#proc_roles_custom_monitor">To create a custom role with Monitor permission</a></li>
-	<li>Remove View permission: <a href="#proc_roles_remove_permission">To remove View permission from the custom role</a></li>
+	<li>Create the custom role: <a href="#proc_roles_custom_monitor">To create a custom role with only Monitor permission</a></li>
 	<li>Assign the new role to a user: <a href="#proc_custom_role_assign_to_user">To assign the new custom role to a specific user</a></li>
 </ol>
 
-<h4 id="proc_roles_custom_monitor">To create a custom role with Monitor permission</h4>
+<h4 id="proc_roles_custom_monitor">To create a custom role with only Monitor permission</h4>
 <ol>
 	<li>Log in to the Policy Manager Management Console as the Administrator.</li>
 	<li>Click the <strong>Workbench</strong> tab and then, on the left, click <strong>Registry</strong>.</li>
@@ -400,44 +399,36 @@ nav-title: Roles
 	</li>
 	<li>On the <strong>Select Object Actions</strong> page, specify the following, as shown below:
 		<ul>
-			<li>Object Actions: Choose <strong>Monitor</strong>.</li>
+			<li>Object Actions: Choose <strong>Read</strong> and <strong>Monitor</strong>.</li>
 			<li>Permissions: Leave the default, which is <strong>Allow selected actions</strong>.</li>
 		</ul>
 		<p><img src="images/pm_role_add_privilege_select_object_actions.png" alt="Adding a privilege to a role: Select Object Actions page" /></p>
 	</li>
 	<li>Click <strong>Next</strong>.</li>
-	<li>Click <strong>Add Privilege</strong> again, choose the <strong>apiversion</strong> object type, and click <strong>Next</strong>.</li>
+	<li>Click <strong>Add Privilege</strong> again. Choose the <strong>apiversion</strong> object type, and click <strong>Next</strong>.</li>
 	<li>Assign the same permissions as you did for the <strong>api</strong> object type in Step 8, and click <strong>Next</strong>.</li>
-	<li>Review the changes on the <strong>Modify Role Definition</strong> page, and then click <strong>Finish</strong>.</li>
-</ol>
-<p>At this point, since the default behavior is to allow users with <strong>Monitor</strong> permission to view the API, <strong>View</strong> permission is automatically added. The next step is to remove <strong>View</strong> permission. Follow the steps in <a href="#proc_roles_remove_permission">To remove View permission from the custom role</a> below.</p>
-
-<h4 id="proc_roles_remove_permission">To remove View permission from the custom role</h4>
-<p>This procedure follows on from <a href="#proc_roles_custom_monitor">To create a custom role with Monitor permission</a> above.</p>
-<ol>
-	<li>On the security summary page, find the new role that you just created. In this example: <strong>API Monitoring-Custom</strong>.</li>
-	<li>On the right, click the <strong>Modify</strong> button. The <strong>Modify Role Definition</strong> page appears, as shown below. For the first object type specified, <strong>api</strong>, the permissions <strong>Read</strong> and <strong>Monitor</strong> are listed as <strong>allow</strong>. Click <strong>Modify</strong>.
-		<p><img src="images/pm_role_modify_role_definition.png" alt="Roles: Modify Role Definition page" /></p>
+	<li>Click <strong>Add Privilege</strong> again. Choose the <strong>api</strong> object type, and click <strong>Next</strong>.</li>
+	<li>On the <strong>Select Object Actions</strong> page, specify the following:
+		<ul>
+			<li>Object Actions: Choose <strong>Read</strong>.</li>
+			<li>Permissions: Choose <strong>Deny selected actions</strong>.</li>
+		</ul>
+		<p><img src="images/pm_role_modify_role_definition_read_deny.png" alt="Roles: Role Details, removing Monitor permission" /></p>
 	</li>
-	<li>{<span class="apidoc_red">query do we actually have to add monitor permission for both api and also api version. If so, do we need to deny Read on both?</span>}</li>
-	<li>In the <strong>Select Object Actions</strong> page:
-		<ol>
-			<li>Remove the check for <strong>Monitor</strong>, so that only <strong>Read</strong> permission is selected.</li>
-			<li>Click <strong>Deny Selected Actions</strong>.</li>
-		</ol>
+	<li>Click <strong>Next</strong> to return to the <strong>Modify Role Definition</strong> page. The permissions should look something like the below.
+		<p><img src="images/pm_role_modify_role_definition_result.png" alt="Roles: Custom permissions after configuring" /></p>
 	</li>
-	<li>Click <strong>Next</strong>.</li>
-	<li>Repeat for the <strong>apiversion</strong> object.</li>
-	<li>When done, click <strong>Finish</strong>.</li>
+	<li>Click <strong>Finish</strong>.</li>
 </ol>
-<p>At this point, you've defined the behavior to allow <strong>Monitor</strong> permission and deny <strong>View</strong> permission. To put this custom role into use, assign it to a user. See <a href="#proc_custom_role_assign_to_user">To assign the new custom role to a user</a> below.</p>
+<p>At this point, you've defined a role that allows users to view and monitor APIs, but does not allow users to view private APIs unless they are invited.</p>
+<p>To put this custom role into use, assign it to a user. See <a href="#proc_custom_role_assign_to_user">To assign the new custom role to a user</a> below.</p>
 
 <h4 id="proc_custom_role_assign_to_user">To assign the new custom role to a user</h4>
 <p>In this procedure you are assigning the new custom role to a specific user, within the context of a specific API. See also: <a href="#role_assign">Assign a role to a user</a>.</p>
 <ol>
 	<li>Log in to the Policy Manager Management Console as the Administrator.</li>
 	<li>Click the <strong>Workbench</strong> tab and then, on the left, navigate to API Platform Tenants, then your tenant, then the API for which you want to grant monitoring-only access.</li>
-	<li>On the right, click the <strong>Security</strong> tab, find the custom role you created in <a href="#proc_roles_custom_monitor">To create a custom role with Monitor permission</a> above, and click the <strong>Manage Role</strong> button, as shown below.
+	<li>On the right, click the <strong>Security</strong> tab, find the custom role you created in <a href="#proc_roles_custom_monitor">To create a custom role with only Monitor permission</a> above, and click the <strong>Manage Role</strong> button, as shown below.
 		<p><img src="images/pm_role_assign_custom_role_to_user.png" alt="Roles: Assigning custom role to a user" /></p>
 	</li>
 	<li>In the <strong>Object Based Security Role</strong> page, use the search feature to locate the user. Click the username in the left pane and click the arrow icon (>>) to move the user to the right pane, to assign the role. For an illustration, see <a href="#s03_06_01">To grant System Administrator permission</a> (Step 5).</li>
