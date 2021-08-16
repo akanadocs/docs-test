@@ -422,12 +422,40 @@ nav-title: Akana OAuth/OIDC Provider Domain
 
 
 
-<h2 id="should_i_choose_verify_jwt_token_with_auth_server">Should I choose to verify the access token with the Authorization Server?</h2>
-<p>As an alternative to including userinfo in the token, you might choose to verify the token with the Authorization Server. When you include userinfo in the token, a call to the Authorization Server is not needed; however, this approach has drawbacks of its own, including size and the need for encryption (see <a href="#resource_owner_userinfo_in_bearer_token_why">Why choose to include resource owner userinfo in the Bearer Access token?</a>).</p>
-<p>If you choose to verify the access token with the Authorization Server, this adds a processing step, but means that you can keep the token size fairly small, without the userinfo and the associated encryption that might be needed to protect it.</p>
-<p>In this scenario, you are no longer taking advantage of a key feature of the access token, which is the ability for the Resource Server to validate the token. For this reason, you might consider choosing the Referenced Bearer option instead, which has a more compact token size.</p>
-<p>One reason why you might prefer to place a call with the Authorization Server is to ensure any grant revocations are considered when validating the access token. In a scenario where the user has revoked the grant, that information might be at the Authorization Server but not at the Resource Server. For more information, see <a href="#how_manage_grant_revoked_cancelled">How does the platform manage validation of the JWT access tokens in the resource server when the grant is revoked or cancelled?</a></p>
-<p>Each approach has different advantages. The choice that's best for you will depend on your unique scenario.</p>
+<h2 id="should_i_choose_reference_bearer_or_jwt_bearer">Should I choose Referenced Bearer or JWT Bearer Access token?</h2>
+<p>The answer is, &quot;it depends.&quot; The type of bearer token to choose depends on how you want to validate the access token. Do you want to validate access token locally or remotely? Both of these methods to validate access tokens offer different benefits in terms of ease of use, cost, and performance. Security is also a key factor. It's important to find a good balance between security, operational efficiency, and cost, that will meet the security standards of your enterprise.</p>
+<p>Some differences between the two are shown in the table below.</p>
+<table class="doctable">
+	<thead>
+		<tr>
+			<th>JWT Bearer access token</th>
+			<th>Referenced Bearer access token</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>The token has readable content. You can decode the token and read the information in it.</td>
+			<td><p>The token is just a string that is used for authorization, with no intrinsic meaning (otherwise known as an opaque token). The format is not intended to be read by a person.</p></td>
+		</tr>
+		<tr>
+			<td>Size: Much larger than Referenced Bearer.</td>
+			<td>Size: Much smaller in side than JWT.</td>
+		</tr>
+		<tr>
+			<td>JWT format is standard and well known.</td>
+			<td>Only the issuer knows the format.</td>
+		</tr>
+		<tr>
+			<td><p>Can be validated locally / </p>
+				<p>Optionally, can be validated remotely by calling the Authorization server that issued the token.</p></td>
+			<td>Cannot be validated locally. For token validation, the recipient must call the Authorization server that issued the token. This comes with the cost of adding latency in the application because an HTTP request to the Authorization server is needed each time the token is validated.</td>
+		</tr>
+		<tr>
+			<td>You can write a piece of code to decrypt the message, verify the signature, and then validate.</td>
+			<td>{<span class="apidoc_red">DK what is the comparable text here? Maybe something like: &quot;The token cannot be decrypted and can only be validated by the Authorization server&quot;?</span>}</td>
+		</tr>
+	</tbody>
+</table>
 <p><a href="#top">Back to top</a></p>
 
 
