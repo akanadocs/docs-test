@@ -19,14 +19,9 @@ nav-title: Configure Java Runtime
 <ul class="table_of_contents">
 	<li><a href="#introduction">Introduction</a></li>
 	<li><a href="#supported_jre_version">Supported JRE version</a></li>
-
-	<li><a href="#config_jre_external">Configuring the Akana Platform to use an external JRE</a>
-		<ul>
-			<li><a href="#finding_java">Find your Java installation</a></li>
-			<li><a href="#update_keystore">Save the keystore/truststore and update the path</a></li>
-			<li><a href="#update_setdemsenv">Update the setDEMSenv.sh/setDEMSenv.bat file</a></li>
-		</ul>
-	</li>
+	<li><a href="#finding_java">Find your Java installation / set JAVA_HOME environment variable</a></li>
+	<li><a href="#update_keystore">Save the keystore/truststore and update the path {<span class="apidoc_red">query</span>}</a></li>
+	<li><a href="#update_setdemsenv">Update the setDEMSenv.sh/setDEMSenv.bat file</a></li>
 </ul>
 <hr class="divide_hr" />
 
@@ -54,39 +49,28 @@ nav-title: Configure Java Runtime
 
 
 
-<h2 id="config_jre_external">Configuring the Akana Platform to use an external JRE</h2>
-<p><strong>Note</strong>: If you're pointing to an external version, choose an installation ZIP file that does <strong>not</strong> include a bundled JRE, as covered in <a href="#introduction">Introduction</a> above. The instructions below assume that you have done that.</p>
-<p>To configure the platform to use an external JRE, follow these high-level steps:</p>
-<ol>
-	<li><a href="#finding_java">Find your Java installation</a></li>
-<!--	<li><a href="#update_java_security">Update the java.security file</a></li>-->
-	<li><a href="#update_keystore">Save the keystore/truststore and update the path</a></li>
-	<li><a href="#update_setdemsenv">Update the setDEMSenv.sh/setDEMSenv.bat file</a></li>
-</ol>
-
-
-
-<h3 id="finding_java">Find your Java installation</h3>
-<p>Depending on your operating system and how you installed your JRE, there are different ways of finding it. If you're on a Mac you could use this command:</p>
+<h2 id="finding_java">Find your Java installation / set JAVA_HOME environment variable</h2>
+<p>Depending on the operating system and how you installed the JRE, there are different ways of finding it. If you're on a Mac you could use this command:</p>
 <pre>/usr/libexec/java_home</pre>
-<p>This will show you the folder where Java is installed, and will also tell you what you should set in your profile for the <strong>JAVA_HOME</strong> variable. In fact, this is a good time to set JAVA_HOME.</p>
-<p>Once you've found your installation, you can continue with the process of adding the Bouncy Castle security provider. On a Mac, it will look something like this:</p>
-<pre>Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home</pre>
+<p>This will show you the folder where Java is installed, and will also tell you what you should set in your profile for the <strong>JAVA_HOME</strong> variable. Then, set <strong>JAVA_HOME</strong>.</p>
+<p><a href="#top">Back to top</a></p>
 
 
 
-<h3 id="update_keystore">Save the keystore/truststore and update the path</h3>
+<h2 id="update_keystore">Save the keystore/truststore and update the path {<span class="apidoc_red">query</span>}</h2>
+<p>{<span class="apidoc_red">GWo: Moved this, see link in second para. But does it need to be in here at all? You mentioned referencing the procedure.</span>}</p>
 <p>By default, when you install the Akana platform, the platform settings point to the default keystore/truststore location where the <strong>cacerts</strong> file is stored. This is inside the <strong>/{install_folder}/jre/lib/security</strong> folder, which is the packaged JRE.</p>
 <p>For instructions on changing the default configuration, see <a href="installing_akana_api_platform_v20202.htm#update_keystore">Saving the keystore/truststore and updating the path</a> (install doc).</p>
 <p>If you change the JRE, you must also copy the <strong>cacerts</strong> file to a new location, and update the settings so that the container can find the certificates.</p>
 <p>For example, you could create a new folder, <strong>/{install_folder}/keystore</strong>, and copy the <strong>/{install_folder}/jre/lib/security/cacerts</strong> file to the <strong>/{install_folder}/keystore</strong> folder.</p>
 <p><strong>Note</strong>: If you don't set up the new location for this file and update the properties as above, when you restart the container there will be issues due to missing certificates.</p>
+<p><a href="#top">Back to top</a></p>
 
 
 
-<h3 id="update_setdemsenv">Update the setDEMSenv.sh/setDEMSenv.bat file</h3>
-<!--<p>{<span class="apidoc_red">HK ATMO-29790</span>}</p>-->
-<p>In an environment where you're using the default packaged JRE version and then want to switch to using your own JRE at an external path, there is one other file in the Akana install directory that you'll need to change, so that it will not override your JAVA_HOME path when the container is started using the startup script.</p>
+<h2 id="update_setdemsenv">Update the setDEMSenv.sh/setDEMSenv.bat file</h2>
+<p>{<span class="apidoc_red">CR info: I don’t update the setDEMSEnv.sh script. I set the JAVA_HOME in startup.sh and jython.sh scripts for Barclays. / I think the JIRA was to set the JAVA_HOME in setDEMSEnv.sh so the startup.sh and jython.sh can read this and use the JAVA_HOME variable set. / I don’t think we should use the environment variable, since there are times where the Ops group may install a JRE on the box and then the customer will want to install a separate JRE on the machine specific to Akana.</span> }</p>
+<p>{<span class="apidoc_red">GWo: Not sure from the above whether we should say to do the same as CR says in the above... seems like more instructions. The below would work the same and is valid for now I think?</span>}</p>
 <p>In Akana, the <strong><strong>startup</strong></strong> script used to start the Akana container executes the <strong>setDEMSEnv</strong> file as a part of the startup process, and this <strong>setDEMSEnv</strong> file sets the <strong>JAVA_HOME</strong> variable to use the JRE version installed with the product. This resets/overrides the JAVA_HOME value set at the operating system level.</p>
 <p>To avoid that and to use the JAVA_HOME path (pointing to an external JRE) already set at the operating system level, you'll need to comment a few lines of code in the <strong>setDEMSEnv</strong> file.</p>
 <p>Follow the steps below.</p>
