@@ -21,16 +21,15 @@ nav-title: Installing Akana API Platform 2020.2.x
 
 
 <h4 style="color: gray;"><a href="#h_install_planning">Planning the Installation</a></h4>
-<ol class="table_of_contents">
+<ul class="table_of_contents">
 	<li><a href="#overview">Overview</a></li>
 	<li><a href="#s01_01">Step 1-1: Plan the installation</a></li>
 	<li><a href="#s01_02">Step 1-2: Install and configure Elasticsearch (if not already done)</a></li>
-</ol>
-
+</ul>
 
 
 <h4 style="color: gray;"><a href="#h_install_procedure">Performing the Installation:</a></h4>
-<ol class="table_of_contents">
+<ul class="table_of_contents">
 	<li><a href="#gather_zip_files">Step 2-1: Download ZIP files</a></li>
 	<li><a href="#unzip_files">Step 2-2: Extract installation files</a></li>
 	<li><a href="#run_configurator_pm">Step 2-3: Run Configurator to create the first container</a></li>
@@ -41,12 +40,11 @@ nav-title: Installing Akana API Platform 2020.2.x
 	<li><a href="#add_nd_to_pm">Step 2-8: Add Network Director to Policy Manager</a></li>
 	<li><a href="#create_cm_tenant_using_jython">Step 2-9: Create Community Manager tenant using the Jython script</a></li>
 	<li><a href="#run_portal">Step 2-10: Run the Community Manager developer portal</a></li>
-</ol>
-
+</ul>
 
 
 <h4 style="color: gray;"><a href="#h_install_tasks_reference">Installation Tasks/Reference:</a></h4>
-<ol class="table_of_contents">
+<ul class="table_of_contents">
 	<li><a href="#supported_databases">Supported databases</a></li>
 	<li><a href="#database_notes">Database notes</a>
 		<ul>
@@ -54,10 +52,8 @@ nav-title: Installing Akana API Platform 2020.2.x
 			<li><a href="#notes_database_oracle">Database notes: Oracle</a></li>
 			<li><a href="#notes_database_ms_sql_server">Database notes: Microsoft SQL Server</a></li>
 			<li><a href="#notes_database_mysql">Database notes: MySQL</a></li>
-
 		</ul>
-		</li>
-	
+	</li>
 	<li><a href="#database_drivers">Database drivers</a></li>
 	<li><a href="#installation_folder_structure">Installation folder structure (Akana Platform)</a></li>
 	<li><a href="#clear_configurator_cache">Clear Configurator cache</a></li>
@@ -67,6 +63,7 @@ nav-title: Installing Akana API Platform 2020.2.x
 	<li><a href="#creating_container_silent">Creating a container using silent install (Linux)</a></li>
 	<li><a href="#unregister_reregister_windows_service">Unregistering and re-registering the Windows service</a></li>
 	<li><a href="#linux_java_home_variable">Linux install: exporting the JAVA_HOME variable</a></li>
+	<li><a href="#update_keystore">Saving the keystore/truststore and updating the path</a></li>
 	<li><a href="#install_tasks_manage_pki_keys">Installation wizard: Manage PKI Keys</a></li>
 	<li><a href="#install_tasks_add_database">Installation wizard: Add Database</a></li>
 	<li><a href="#install_tasks_manage_schemas">Installation wizard: Manage Schemas</a></li>
@@ -88,8 +85,11 @@ nav-title: Installing Akana API Platform 2020.2.x
 	<li><a href="#optional_additional_features">Optional additional features</a></li>
 	<li><a href="#install_rc">Installing Repository Client (for the Lifecycle Coordinator or Extended Properties features)</a></li>
 	<li><a href="#install_troubleshooting">Troubleshooting</a></li>
-</ol>
+</ul>
 <hr class="divide_hr" />
+
+
+
 <h2 id="h_install_planning">Planning the Installation:</h2>
 
 
@@ -1027,6 +1027,39 @@ container.key=aap202020</pre>
 <p>For example:</p>
 <pre>export JAVA_HOME=/opt/akana/aap202020/jre</pre>
 <p>If you omit this step, you'll get an error during the installation.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="update_keystore">Saving the keystore/truststore and updating the path</h2>
+<p>By default, when you install the Akana platform, the platform settings point to the default keystore/truststore location where the <strong>cacerts</strong> file is stored. This is inside the <strong>/{install_folder}/jre/lib/security</strong> folder, which is the packaged JRE.</p>
+<p>The default settings are shown below.</p>
+<p><img src="images/ac_jre_config_keystore_settings.png" alt="Configuring the keystore and truststore location" /></p>
+<p>If you change the JRE, you must also copy the <strong>cacerts</strong> file to a new location, and update the settings so that the container can find the certificates.</p>
+<p>{<span class="apidoc_red">GWo: do we need more explanation? This is written as though you only have to do it if you change the JRE. How does it fit into regular install?</span>}</p>
+<p>For example, you could create a new folder, <strong>/{install_folder}/keystore</strong>, and copy the <strong>/{install_folder}/jre/lib/security/cacerts</strong> file to the <strong>/{install_folder}/keystore</strong> folder.</p>
+<p>Follow the steps below.</p>
+<h4>To create a new keystore/truststore location and update the platform settings</h4>
+<ol>
+	<li>Optional: check that the existing settings are the defaults. In the Akana Administration Console, choose <strong>Configuration</strong>. Find the <strong>com.soa.security</strong> category and note these two values:
+		<ul>
+			<li>bootstrap.keystore.location (default value: <strong>META-INF/keystore/keystore-default.jks</strong>)</li>
+			<li>bootstrap.truststore.location (default value: <strong>META-INF/keystore/keystore-default.jks</strong>)</li>
+		</ul>
+	</li>
+	<li>In your installation, copy the <strong>/{install_folder}/jre/lib/security</strong> folder to a safe place.</li>
+	<li>In your installation, create a new folder, <strong>/{install_folder}/keystore</strong>.
+	<p><strong>Note</strong>: the folder name used here is just an example. You can use a different name.</p></li>
+	<li>Copy the <strong>/{install_folder}/jre/lib/security/cacerts</strong> file to the new folder you created in Step 3.</li>
+	<li>In the Akana Administration Console, choose <strong>Configuration</strong>. Find the <strong>com.soa.security</strong> category and update these two settings to the new location:
+		<ul>
+			<li>bootstrap.keystore.location. New value in this example: <strong>file:///{install_folder}/keystore/cacerts.jks</strong>.</li>
+			<li>bootstrap.truststore.location New value in this example: <strong>file:///{install_folder}/keystore/cacerts.jks</strong>.</li>
+		</ul>
+	</li>
+	<li>Save the changes.</li>
+</ol>
+<p><strong>Note</strong>: If you don't set up the new location for this file and update the properties as above, when you restart the container there will be issues due to missing certificates.</p>
 <p><a href="#top">Back to top</a></p>
 
 

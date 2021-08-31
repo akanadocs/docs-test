@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Configure Java Runtime
-description: A guide to how to set up the Akana Platform to use an external JRE rather than the version included with installation (versions earlier than 2019.0.0).
+description: A guide to how to set up the Akana Platform to use an external JRE rather than the version included with installation.
 product: sp
 category: gs
 sub-nav-class: Installation - Akana API Platform
@@ -11,47 +11,55 @@ nav-title: Configure Java Runtime
 ---
 <h1 id="top">Configure Java Runtime</h1>
 <p>A guide to how to set up the Akana Platform to use an external JRE rather than the version included with installation.</p>
-<p><strong>Note</strong>: These instructions are only applicable for versions <strong>earlier than</strong> 2019.0.0. These steps are <strong>not</strong> valid for version 2019.0.0 and later.</p>
 <hr class="divide_hr" />
 
 
 
 <h2 style="color: gray;">Table of Contents</h2>
-<ol class="table_of_contents">
+<ul class="table_of_contents">
 	<li><a href="#introduction">Introduction</a></li>
+	<li><a href="#supported_jre_version">Supported JRE version</a></li>
+
 	<li><a href="#config_jre_external">Configuring the Akana Platform to use an external JRE</a>
-		<ol>
+		<ul>
 			<li><a href="#finding_java">Find your Java installation</a></li>
-			<li><a href="#copy_provider_jar">Copy the provider jar file</a></li>
-			<li><a href="#update_java_security">Update the java.security file</a></li>
 			<li><a href="#update_keystore">Save the keystore/truststore and update the path</a></li>
 			<li><a href="#update_setdemsenv">Update the setDEMSenv.sh/setDEMSenv.bat file</a></li>
-		</ol>
+		</ul>
 	</li>
-	<li><a href="#config_jre_embed_update">Configuring the Akana Platform to use a different embedded JRE version</a></li>
-</ol>
+</ul>
 <hr class="divide_hr" />
 
 
 
 <h2 id="introduction">Introduction</h2>
-<p>In versions prior to 2019.0.0, the Akana Platform is offered with with an embedded JRE that is part of the installation. Akana doesn't use the JAVA_HOME environment variable. Instead, it uses Java runtime, installed in the {platform_install}/jre installation folder. If you want to use a different JRE version, you can do either of two things:</p>
+<p>With regard to JRE, you can choose to install the Akana Platform:</p>
 <ul>
-	<li>Configure Akana to point to a different JRE version, installed in another location, using the JAVA_HOME variable. See <a href="#config_jre_external">Configure the Akana Platform to use an external JRE</a>.</li>
-	<li>Configure Akana to use a different embedded JRE rather than the default version that was shipped with it. See <a href="#config_jre_embed_update">Configure the Akana Platform to use a different embedded JRE version</a>.</li>
+	<li>With embedded JRE: for example, for 2020.2.0, the file for Windows is <strong>api-platform-win-jre-2020.2.2.zip</strong>. For information about the bundled JRE version, see <a href="../system_requirements/system_requirements_akana_platform_20202x.htm#sysreq_2020x_jre">JRE Version</a>. For the Java version bundled with other platform versions, refer to the applicable System Requirements document: go to <a href="../system_requirements/system_requirements_all.htm">System Requirements (all versions)</a> and choose your version.</li>
+	<li>Without embedded JRE: for example, for 2020.2.0, the file is <strong>api-platform-no-jre-2020.2.2.zip</strong>. In this scenario, you must provide a compatible Java version and update your platform installation to point to your Java version.</li>
 </ul>
-<p><strong>Note</strong>: In versions earlier than 2019.0.0, to use an external JRE (that is, not the version provided by Akana), it's necessary to ensure that you extend the Java security providers with the Bouncy Castle provider. This provider ships with the Akana Platform in the <strong>/jreupdate</strong> folder.</p>
+<p>{<span class="apidoc_red">GWo: Linux comes only with JRE, no other option available. Does this affect this doc?</span>}</p>
+<p>The Akana Platform with bundled JRE doesn't use the JAVA_HOME environment variable. Instead, it uses Java runtime, installed in the {platform_install}/jre folder. When you choose the installation ZIP file without embedded JRE, this folder does not exist in the installation.</p>
 <p>If you have an existing installation and you're not sure which JRE version the platform is using, you can check it in your installation. See <a href="../../ag/troubleshooting/ts_pm_nd_02.htm#s02_08_05">Checking the JRE version</a> (troubleshooting guide).</p>
 
 
 
+<h2 id="supported_jre_version">Supported JRE version</h2>
+<p>For information about the Java version compatible with your Akana Platform version, refer to the applicable System Requirements document: go to <a href="../system_requirements/system_requirements_all.htm">System Requirements (all versions)</a> and choose your version. For example:</p>
+<ul>
+	<li>2020.2.x: <a href="../system_requirements/system_requirements_akana_platform_20202x.htm#sysreq_2020x_jre">JRE version</a></li>
+	<li>2020.1.x: <a href="../system_requirements/system_requirements_akana_platform_20201x.htm#sysreq_2020x_jre">JRE version</a></li>
+</ul>
+<p><a href="#top">Back to top</a></p>
+
+
+
 <h2 id="config_jre_external">Configuring the Akana Platform to use an external JRE</h2>
-<p><strong>Note</strong>: If you're pointing to an external version, choose an installation ZIP file that does <strong>not</strong> include a bundled JRE. The instructions below assume that you have done that.</p>
+<p><strong>Note</strong>: If you're pointing to an external version, choose an installation ZIP file that does <strong>not</strong> include a bundled JRE, as covered in <a href="#introduction">Introduction</a> above. The instructions below assume that you have done that.</p>
 <p>To configure the platform to use an external JRE, follow these high-level steps:</p>
 <ol>
 	<li><a href="#finding_java">Find your Java installation</a></li>
-	<li><a href="#copy_provider_jar">Copy the provider jar file</a></li>
-	<li><a href="#update_java_security">Update the java.security file</a></li>
+<!--	<li><a href="#update_java_security">Update the java.security file</a></li>-->
 	<li><a href="#update_keystore">Save the keystore/truststore and update the path</a></li>
 	<li><a href="#update_setdemsenv">Update the setDEMSenv.sh/setDEMSenv.bat file</a></li>
 </ol>
@@ -66,60 +74,18 @@ nav-title: Configure Java Runtime
 <pre>Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home</pre>
 
 
-<h3 id="copy_provider_jar">Copy the provider jar file</h3>
-<p>Copy the following file from your Akana Platform installation folder to the <strong>$JAVA_HOME/lib/ext</strong> folder in your Java installation.</p>
-<ul>
-	<li>File: <strong>bcprov-jdkon-XXX.jar</strong></li>
-	<li>Source folder: <strong>{install_folder}/jreupdate/ext</strong></li>
-	<li>Target folder: <strong>$JAVA_HOME/lib/ext</strong></li>
-	<li>Example:
-		<pre>sudo cp ~/Downloads/akana-platform-8.1.39/jreupdate/ext/bcprov-jdk15on-147.jar $JAVA_HOME/lib/ext/</pre> </li>
-</ul>
-
-
-<h3 id="update_java_security">Update the java.security file</h3>
-<ol>
-	<li>Open the sample <strong>java.security</strong> file from your Akana Platform installation (in <strong>jreupdate/security</strong>).</li>
-	<li>Find and copy the line that references the Bouncy Castle provider, something like the following:
-		<pre>security.provider.10=org.bouncycastle.jce.provider.BouncyCastleProvider</pre></li>
-	<li>Then edit the <strong>java.security</strong> file (it's normally a root owned file, so remember to use <strong>sudo</strong>) in your Java installation <strong>$JAVA_HOME/jre/lib/security/java.security</strong>, and add the line you just copied to the end of the provider list.
-	<p><strong>NOTE</strong>: make sure you change the number of the provider to be one greater than the previous entry in the list. In the case of the default Apple JRE installation, you'll see a list ending in 10, so you'll need to use <strong>security.provider.11=...</strong>.</p></li>
-</ol>
-
 
 <h3 id="update_keystore">Save the keystore/truststore and update the path</h3>
 <p>By default, when you install the Akana platform, the platform settings point to the default keystore/truststore location where the <strong>cacerts</strong> file is stored. This is inside the <strong>/{install_folder}/jre/lib/security</strong> folder, which is the packaged JRE.</p>
-<p>The default settings are shown below.</p>
-<p><img src="images/ac_jre_config_keystore_settings.png" alt="Configuring the keystore and truststore location" /></p>
+<p>For instructions on changing the default configuration, see <a href="installing_akana_api_platform_v20202.htm#update_keystore">Saving the keystore/truststore and updating the path</a> (install doc).</p>
 <p>If you change the JRE, you must also copy the <strong>cacerts</strong> file to a new location, and update the settings so that the container can find the certificates.</p>
 <p>For example, you could create a new folder, <strong>/{install_folder}/keystore</strong>, and copy the <strong>/{install_folder}/jre/lib/security/cacerts</strong> file to the <strong>/{install_folder}/keystore</strong> folder.</p>
-<p>Follow the steps below.</p>
-<h4>To create a new keystore/truststore location and update the platform settings</h4>
-<ol>
-	<li>Optional: check that the existing settings are the defaults. In the Akana Administration Console, choose <strong>Configuration</strong>. Find the <strong>com.soa.security</strong> category and note these two values:
-		<ul>
-			<li>bootstrap.keystore.location (default value: <strong>META-INF/keystore/keystore-default.jks</strong>)</li>
-			<li>bootstrap.truststore.location (default value: <strong>META-INF/keystore/keystore-default.jks</strong>)</li>
-		</ul>
-	</li>
-	<li>In your installation, copy the <strong>/{install_folder}/jre/lib/security</strong> folder to a safe place.</li>
-	<li>In your installation, create a new folder, <strong>/{install_folder}/keystore</strong>.
-	<p><strong>Note</strong>: the folder name used here is just an example. You can use a different name.</p></li>
-	<li>Copy the <strong>/{install_folder}/jre/lib/security/cacerts</strong> file to the new folder you created in Step 3.</li>
-	<li>In the Akana Administration Console, choose <strong>Configuration</strong>. Find the <strong>com.soa.security</strong> category and update these two settings to the new location:
-		<ul>
-			<li>bootstrap.keystore.location. New value in this example: <strong>file:///{install_folder}/keystore/cacerts.jks</strong>.</li>
-			<li>bootstrap.truststore.location New value in this example: <strong>file:///{install_folder}/keystore/cacerts.jks</strong>.</li>
-		</ul>
-	</li>
-	<li>Save the changes.</li>
-	<li>Continue with the next step, <a href="#update_setdemsenv">Update the setDEMSenv.sh/setDEMSenv.bat file</a> below.</li>
-</ol>
 <p><strong>Note</strong>: If you don't set up the new location for this file and update the properties as above, when you restart the container there will be issues due to missing certificates.</p>
 
 
 
 <h3 id="update_setdemsenv">Update the setDEMSenv.sh/setDEMSenv.bat file</h3>
+<!--<p>{<span class="apidoc_red">HK ATMO-29790</span>}</p>-->
 <p>In an environment where you're using the default packaged JRE version and then want to switch to using your own JRE at an external path, there is one other file in the Akana install directory that you'll need to change, so that it will not override your JAVA_HOME path when the container is started using the startup script.</p>
 <p>In Akana, the <strong><strong>startup</strong></strong> script used to start the Akana container executes the <strong>setDEMSEnv</strong> file as a part of the startup process, and this <strong>setDEMSEnv</strong> file sets the <strong>JAVA_HOME</strong> variable to use the JRE version installed with the product. This resets/overrides the JAVA_HOME value set at the operating system level.</p>
 <p>To avoid that and to use the JAVA_HOME path (pointing to an external JRE) already set at the operating system level, you'll need to comment a few lines of code in the <strong>setDEMSEnv</strong> file.</p>
@@ -150,25 +116,11 @@ fi</pre>
 	<li>Restart the container.</li>
 </ol>
 <p>And that's it! Your Akana Platform will run on the external JRE you configured.</p>
-<p>As a reminder, from version 2019.0.0 the above instructions are <strong>not</strong> applicable.</p>
 <p><a href="#top">Back to top</a></p>
 
 
 
-<h2 id="config_jre_embed_update">Configuring the Akana Platform to use a different embedded JRE version</h2>
-<p>Another approach for changing the JRE is to configure the product itself to use a different JRE.</p>
-<p>One easy approach is given below.</p>
-<p><strong>Note</strong>: these instructions apply to versions prior to 2019.0.0 only. 2019.0.0 does <strong>not</strong> use the Bouncy Castle artifacts referenced below.</p>
 
-<h4>To change the JRE version that came with the product</h4>
-<ol>
-	<li>Rename the existing JRE folder; for example, rename <strong>{install_folder}/jre</strong> to <strong>{install_folder}/jre-old</strong>.</li>
-	<li>Create a new jre folder (<strong>{install_folder}/jre</strong>) and install your new Java version there. The correct location of the <strong>java.exe</strong> file must be: <strong>{install_folder}/jre/bin/java.exe</strong>.</li>
-	<li>Make the following additional changes:
-		<ul>
-			<li>Copy the provider JAR file. See <a href="#copy_provider_jar">Copy the provider jar file</a> above.</li>
-			<li>Update the Java security file. See <a href="#update_java_security">Update the java.security file</a> above.</li>
-		</ul>
-		</li>
-</ol>
-<p><a href="#top">Back to top</a></p>
+</div>
+</body>
+</html>
