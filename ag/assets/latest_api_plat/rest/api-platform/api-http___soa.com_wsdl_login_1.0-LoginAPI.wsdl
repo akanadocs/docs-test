@@ -38,16 +38,16 @@
   </wsdl:message>
   <wsdl:message name="processLogoutPostRequestMessage">
   </wsdl:message>
-  <wsdl:message name="endSessionRequestMessage">
-    <wsdl:part name="returninstructions" type="xs:boolean">
-    </wsdl:part>
-    <wsdl:part name="event" type="xs:string">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="ssoLoginRequestMessage">
     <wsdl:part name="domain" type="xs:string">
     </wsdl:part>
     <wsdl:part name="domainid" type="xs:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="endSessionRequestMessage">
+    <wsdl:part name="returninstructions" type="xs:boolean">
+    </wsdl:part>
+    <wsdl:part name="event" type="xs:string">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="ssoLoginResponseMessage">
@@ -86,14 +86,14 @@
     <wsdl:part element="xs:any">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="loginWithSSORequestMessage">
+    <wsdl:part name="provider" type="xs:string">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="appLoginRequestMessage">
     <wsdl:part name="appID" type="xs:string">
     </wsdl:part>
     <wsdl:part name="secretKey" type="xs:string">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="loginWithSSORequestMessage">
-    <wsdl:part name="provider" type="xs:string">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="resolveLoginPendingTaskRequestMessage">
@@ -212,12 +212,12 @@
     <wsdl:part name="fedmemberId" type="xs:string">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="loginWithSSOResponseMessage">
-    <wsdl:part name="loginWithSSOResponse" type="xs:string">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="initiateSSOLoginResponseMessage">
     <wsdl:part name="initiateSSOLoginResponse" type="xs:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="loginWithSSOResponseMessage">
+    <wsdl:part name="loginWithSSOResponse" type="xs:string">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="authenticateWithPasswordResetCodeRequestMessage">
@@ -237,16 +237,52 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="LoginAPIPortType">
-    <wsdl:operation name="appLogin">
-      <wsdl:input message="tns:appLoginRequestMessage">
+    <wsdl:operation name="ssoLoginInstructions">
+      <wsdl:input message="tns:ssoLoginInstructionsRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:appLoginResponseMessage">
+      <wsdl:output message="tns:ssoLoginInstructionsResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="renewToken">
       <wsdl:input message="tns:renewTokenRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:renewTokenResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="renewTokenGet">
+      <wsdl:input message="tns:renewTokenGetRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:renewTokenGetResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="logoutGet">
+      <wsdl:input message="tns:logoutGetRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:logoutGetResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="initiateSSOLogin">
+      <wsdl:input message="tns:initiateSSOLoginRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:initiateSSOLoginResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="loginWithSSO">
+      <wsdl:input message="tns:loginWithSSORequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:loginWithSSOResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ssoLogin">
+      <wsdl:input message="tns:ssoLoginRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:ssoLoginResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="appLogin">
+      <wsdl:input message="tns:appLoginRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:appLoginResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="federatedLogin">
@@ -265,24 +301,6 @@
       <wsdl:input message="tns:ssoLoginPostRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:ssoLoginPostResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="ssoLoginInstructions">
-      <wsdl:input message="tns:ssoLoginInstructionsRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:ssoLoginInstructionsResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="renewTokenGet">
-      <wsdl:input message="tns:renewTokenGetRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:renewTokenGetResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="logoutGet">
-      <wsdl:input message="tns:logoutGetRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:logoutGetResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="logout">
@@ -357,24 +375,6 @@
       <wsdl:output message="tns:endSessionResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="loginWithSSO">
-      <wsdl:input message="tns:loginWithSSORequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:loginWithSSOResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="ssoLogin">
-      <wsdl:input message="tns:ssoLoginRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:ssoLoginResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="initiateSSOLogin">
-      <wsdl:input message="tns:initiateSSOLoginRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:initiateSSOLoginResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="processLogoutGet">
       <wsdl:input message="tns:processLogoutGetRequestMessage">
     </wsdl:input>
@@ -396,15 +396,14 @@
   </wsdl:portType>
   <wsdl:binding name="LoginAPIBinding" type="tns:LoginAPIPortType">
     <shttp:binding/>
-    <wsdl:operation name="appLogin">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /appLogin</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="application/x-www-form-urlencoded" location="/appLogin" method="POST" outputSerialization="text/plain"/>
+    <wsdl:operation name="ssoLoginInstructions">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /ssoLoginInstructions</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="*/*" location="/ssoLoginInstructions" method="GET" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
       <wsdl:input>
-    <shttp:input name="appID" part="appID" type="form"/>
-    <shttp:input name="secretKey" part="secretKey" type="form"/>
+    <shttp:input name="domain" part="domain" type="query"/>
       </wsdl:input>
       <wsdl:output>
-    <shttp:output name="" part="" type="entity"/>
+    <shttp:output name="ssoLoginInstructionsResponse" part="ssoLoginInstructionsResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="renewToken">
@@ -412,6 +411,62 @@
     <shttp:operation inputSerialization="application/x-www-form-urlencoded" location="/renewToken" method="POST" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
       <wsdl:input>
     <shttp:input name="federationLogins" part="federationLogins" type="form"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="" part="" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="renewTokenGet">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /renewToken</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="*/*" location="/renewToken" method="GET" outputSerialization="application/json,text/javascript,application/javascript,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
+      <wsdl:output>
+    <shttp:output name="" part="" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="logoutGet">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /logout</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="*/*" location="/logout" method="GET" outputSerialization="application/json,text/javascript,application/javascript,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
+      <wsdl:output>
+    <shttp:output name="logoutGetResponse" part="logoutGetResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="initiateSSOLogin">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /initiateSSOLogin</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="*/*" location="/initiateSSOLogin" method="GET" outputSerialization="text/plain"/>
+      <wsdl:input>
+    <shttp:input name="provider" part="provider" type="query"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="initiateSSOLoginResponse" part="initiateSSOLoginResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="loginWithSSO">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /loginWithSSO</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="*/*" location="/loginWithSSO" method="GET" outputSerialization="application/javascript,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
+      <wsdl:input>
+    <shttp:input name="provider" part="provider" type="query"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="loginWithSSOResponse" part="loginWithSSOResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ssoLogin">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /ssoLogin{domainid:(/[^/]+?)?}</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="*/*" location="/ssoLogin{domainid:(/[^/]+?)?}" method="GET" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
+      <wsdl:input>
+    <shttp:input name="domain" part="domain" type="query"/>
+    <shttp:input name="domainid" part="domainid" type="path"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="" part="" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="appLogin">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /appLogin</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="application/x-www-form-urlencoded" location="/appLogin" method="POST" outputSerialization="text/plain"/>
+      <wsdl:input>
+    <shttp:input name="appID" part="appID" type="form"/>
+    <shttp:input name="secretKey" part="secretKey" type="form"/>
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="" part="" type="entity"/>
@@ -445,30 +500,6 @@
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="" part="" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="ssoLoginInstructions">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /ssoLoginInstructions</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="*/*" location="/ssoLoginInstructions" method="GET" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
-      <wsdl:input>
-    <shttp:input name="domain" part="domain" type="query"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="ssoLoginInstructionsResponse" part="ssoLoginInstructionsResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="renewTokenGet">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /renewToken</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="*/*" location="/renewToken" method="GET" outputSerialization="application/json,text/javascript,application/javascript,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
-      <wsdl:output>
-    <shttp:output name="" part="" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="logoutGet">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /logout</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="*/*" location="/logout" method="GET" outputSerialization="application/json,text/javascript,application/javascript,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
-      <wsdl:output>
-    <shttp:output name="logoutGetResponse" part="logoutGetResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="logout">
@@ -591,37 +622,6 @@
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="" part="" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="loginWithSSO">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /loginWithSSO</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="*/*" location="/loginWithSSO" method="GET" outputSerialization="application/javascript,application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
-      <wsdl:input>
-    <shttp:input name="provider" part="provider" type="query"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="loginWithSSOResponse" part="loginWithSSOResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="ssoLogin">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /ssoLogin{domainid:(/[^/]+?)?}</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="*/*" location="/ssoLogin{domainid:(/[^/]+?)?}" method="GET" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
-      <wsdl:input>
-    <shttp:input name="domain" part="domain" type="query"/>
-    <shttp:input name="domainid" part="domainid" type="path"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="" part="" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="initiateSSOLogin">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /initiateSSOLogin</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="*/*" location="/initiateSSOLogin" method="GET" outputSerialization="text/plain"/>
-      <wsdl:input>
-    <shttp:input name="provider" part="provider" type="query"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="initiateSSOLoginResponse" part="initiateSSOLoginResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="processLogoutGet">

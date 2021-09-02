@@ -8,10 +8,10 @@
 <xs:element name="RolePrivilege" type="tns:rolePrivilege"/>
 <xs:element name="RoleUsers" type="tns:roleUsers"/>
 <xs:element name="User"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="userID" type="xs:string"/><xs:element minOccurs="0" name="domainName" type="xs:string"/><xs:element minOccurs="0" name="fullName" type="xs:string"/></xs:sequence></xs:complexType></xs:element>
-<xs:complexType name="roleUsers"><xs:sequence><xs:element minOccurs="0" name="users"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="user"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="userID" type="xs:string"/><xs:element minOccurs="0" name="domainName" type="xs:string"/><xs:element minOccurs="0" name="fullName" type="xs:string"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element><xs:element maxOccurs="unbounded" minOccurs="0" name="users" nillable="true"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="userID" type="xs:string"/><xs:element minOccurs="0" name="domainName" type="xs:string"/><xs:element minOccurs="0" name="fullName" type="xs:string"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType>
+<xs:complexType name="role"><xs:sequence><xs:element minOccurs="0" name="roleName" type="xs:string"/><xs:element minOccurs="0" name="resourceID" type="xs:string"/><xs:element minOccurs="0" name="users"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="user"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="userID" type="xs:string"/><xs:element minOccurs="0" name="domainName" type="xs:string"/><xs:element minOccurs="0" name="fullName" type="xs:string"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element><xs:element minOccurs="0" name="Link" type="ns1:atomLink"/></xs:sequence></xs:complexType>
 <xs:complexType name="addRole"><xs:sequence><xs:element minOccurs="0" name="roleName" type="xs:string"/><xs:element minOccurs="0" name="rolePrivileges"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="rolePrivilege" type="tns:rolePrivilege"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType>
 <xs:complexType name="rolePrivilege"><xs:sequence><xs:element minOccurs="0" name="type" type="xs:string"/><xs:element name="deny" type="xs:boolean"/><xs:element minOccurs="0" name="actions"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="action" type="xs:string"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType>
-<xs:complexType name="role"><xs:sequence><xs:element minOccurs="0" name="roleName" type="xs:string"/><xs:element minOccurs="0" name="resourceID" type="xs:string"/><xs:element minOccurs="0" name="users"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="user"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="userID" type="xs:string"/><xs:element minOccurs="0" name="domainName" type="xs:string"/><xs:element minOccurs="0" name="fullName" type="xs:string"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element><xs:element minOccurs="0" name="Link" type="ns1:atomLink"/></xs:sequence></xs:complexType>
+<xs:complexType name="roleUsers"><xs:sequence><xs:element minOccurs="0" name="users"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="user"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="userID" type="xs:string"/><xs:element minOccurs="0" name="domainName" type="xs:string"/><xs:element minOccurs="0" name="fullName" type="xs:string"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element><xs:element maxOccurs="unbounded" minOccurs="0" name="users" nillable="true"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="userID" type="xs:string"/><xs:element minOccurs="0" name="domainName" type="xs:string"/><xs:element minOccurs="0" name="fullName" type="xs:string"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType>
 </xs:schema>
     <xs:schema elementFormDefault="qualified" targetNamespace="http://www.w3.org/2005/Atom" version="1.0" xmlns:tns="http://www.w3.org/2005/Atom" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:import namespace="http://www.w3.org/XML/1998/namespace"/>
@@ -47,12 +47,12 @@
     <wsdl:part name="parameter0" element="nms1:RoleUsers">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getRolesResponseMessage">
-    <wsdl:part name="getRolesResponse" type="tns:List">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="deleteRoleResponseMessage">
     <wsdl:part name="deleteRoleResponse" type="xs:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRolesResponseMessage">
+    <wsdl:part name="getRolesResponse" type="tns:List">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getRoleRequestMessage">
@@ -76,10 +76,10 @@
       <wsdl:output message="tns:addRoleResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getRoles">
-      <wsdl:input message="tns:getRolesRequestMessage">
+    <wsdl:operation name="deleteRole">
+      <wsdl:input message="tns:deleteRoleRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:getRolesResponseMessage">
+      <wsdl:output message="tns:deleteRoleResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateUsersAssignedToRole">
@@ -88,10 +88,10 @@
       <wsdl:output message="tns:updateUsersAssignedToRoleResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="deleteRole">
-      <wsdl:input message="tns:deleteRoleRequestMessage">
+    <wsdl:operation name="getRoles">
+      <wsdl:input message="tns:getRolesRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:deleteRoleResponseMessage">
+      <wsdl:output message="tns:getRolesResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getRole">
@@ -142,53 +142,24 @@ Accept: application/json or application/vnd.soa.v83+json
     <shttp:output name="addRoleResponse" part="addRoleResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getRoles">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /roles/{resourceID}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Returns the roles available in the system.</p>
+    <wsdl:operation name="deleteRole">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">DELETE /roles/{roleName}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Deletes a role</p>
 <h4>Request:</h4>
-<pre><code>GET /api/roles/{ResourceDN} HTTP/1.1
-Content-Type: application/json or application/vnd.soa.v83+json
-Accept: application/json or application/vnd.soa.v83+json
+<pre><code>DELETE /api/roles/{roleName} HTTP/1.1
+Content-Type: */*
+Accept: text/plain
 </code></pre>
 <h4>Response:</h4>
 <pre><code>HTTP/1.1 200 OK
 
-[{
-  "roleName" : "2FA-exempt users",
-  "resourceID" : "tenantbusiness.eap",
-  "Link" : {
-    "rel" : "self",
-    "href" : "http://{hostname}/api/roles/{ResourceDN}/2FA-exempt%20users"
-  }
-}, {
-  "roleName" : "API Administrator",
-  "resourceID" : "tenantbusiness.eap",
-  "Link" : {
-    "rel" : "self",
-    "href" : "http://{hostname}/api/roles/{ResourceDN}/API%20Administrator"
-  }
-}, {
-  "roleName" : "API Developer",
-  "resourceID" : "tenantbusiness.eap",
-  "Link" : {
-    "rel" : "self",
-   "href" : "http://{hostname}/api/roles/{ResourceDN}/API%20Developer"
-  }
-},
- {
-  "roleName" : "Tenant Manager",
-  "resourceID" : "tenantbusiness.eap",
-  "Link" : {
-    "rel" : "self",
-    "href" : http://{hostname}/api/roles/{ResourceDN}/Tenant%20Manager"
-  }
-} ]
+TestRole
 </code></pre>]]></sdoc:description></wsdl:documentation>
-    <shttp:operation location="/roles/{resourceID}" method="GET" outputSerialization="application/json,application/vnd.soa.v81+json,application/xml,application/vnd.soa.v81+xml,application/vnd.soa.v83+json,application/vnd.soa.v83+xml"/>
+    <shttp:operation inputSerialization="*/*" location="/roles/{roleName}" method="DELETE" outputSerialization="text/plain"/>
       <wsdl:input>
-    <shttp:input name="resourceID" part="resourceID" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Parameter for DN of Business or API or App]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+    <shttp:input name="roleName" part="roleName" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Role Name]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
       </wsdl:input>
       <wsdl:output>
-    <shttp:output name="getRolesResponse" part="getRolesResponse" type="entity"/>
+    <shttp:output name="deleteRoleResponse" part="deleteRoleResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateUsersAssignedToRole">
@@ -239,24 +210,53 @@ Accept: application/json or application/vnd.soa.v83+json
     <shttp:output name="updateUsersAssignedToRoleResponse" part="updateUsersAssignedToRoleResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="deleteRole">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">DELETE /roles/{roleName}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Deletes a role</p>
+    <wsdl:operation name="getRoles">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /roles/{resourceID}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Returns the roles available in the system.</p>
 <h4>Request:</h4>
-<pre><code>DELETE /api/roles/{roleName} HTTP/1.1
-Content-Type: */*
-Accept: text/plain
+<pre><code>GET /api/roles/{ResourceDN} HTTP/1.1
+Content-Type: application/json or application/vnd.soa.v83+json
+Accept: application/json or application/vnd.soa.v83+json
 </code></pre>
 <h4>Response:</h4>
 <pre><code>HTTP/1.1 200 OK
 
-TestRole
+[{
+  "roleName" : "2FA-exempt users",
+  "resourceID" : "tenantbusiness.eap",
+  "Link" : {
+    "rel" : "self",
+    "href" : "http://{hostname}/api/roles/{ResourceDN}/2FA-exempt%20users"
+  }
+}, {
+  "roleName" : "API Administrator",
+  "resourceID" : "tenantbusiness.eap",
+  "Link" : {
+    "rel" : "self",
+    "href" : "http://{hostname}/api/roles/{ResourceDN}/API%20Administrator"
+  }
+}, {
+  "roleName" : "API Developer",
+  "resourceID" : "tenantbusiness.eap",
+  "Link" : {
+    "rel" : "self",
+   "href" : "http://{hostname}/api/roles/{ResourceDN}/API%20Developer"
+  }
+},
+ {
+  "roleName" : "Tenant Manager",
+  "resourceID" : "tenantbusiness.eap",
+  "Link" : {
+    "rel" : "self",
+    "href" : http://{hostname}/api/roles/{ResourceDN}/Tenant%20Manager"
+  }
+} ]
 </code></pre>]]></sdoc:description></wsdl:documentation>
-    <shttp:operation inputSerialization="*/*" location="/roles/{roleName}" method="DELETE" outputSerialization="text/plain"/>
+    <shttp:operation location="/roles/{resourceID}" method="GET" outputSerialization="application/json,application/vnd.soa.v81+json,application/xml,application/vnd.soa.v81+xml,application/vnd.soa.v83+json,application/vnd.soa.v83+xml"/>
       <wsdl:input>
-    <shttp:input name="roleName" part="roleName" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Role Name]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+    <shttp:input name="resourceID" part="resourceID" type="path"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Parameter for DN of Business or API or App]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
       </wsdl:input>
       <wsdl:output>
-    <shttp:output name="deleteRoleResponse" part="deleteRoleResponse" type="entity"/>
+    <shttp:output name="getRolesResponse" part="getRolesResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getRole">

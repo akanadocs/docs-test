@@ -26,14 +26,14 @@
     <wsdl:part name="parameter0" type="tns:BufferedInMultiPart">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="addPictureResponseMessage">
-    <wsdl:part name="addPictureResponse" type="xs:string">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="getPictureRequestMessage">
     <wsdl:part name="pictureId" type="xs:long">
     </wsdl:part>
     <wsdl:part name="size" type="xs:integer">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addPictureResponseMessage">
+    <wsdl:part name="addPictureResponse" type="xs:string">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="readUrlRequestMessage">
@@ -74,12 +74,12 @@
     <wsdl:part name="wsdlUrl" type="xs:string">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="readUrlResponseMessage">
-    <wsdl:part name="readUrlResponse" element="nms1:DropboxFileDetails">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="getPictureResponseMessage">
     <wsdl:part element="xs:any">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="readUrlResponseMessage">
+    <wsdl:part name="readUrlResponse" element="nms1:DropboxFileDetails">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="readWsdlZipResponseMessage">
@@ -91,22 +91,10 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="DropboxApiPortType">
-    <wsdl:operation name="readUrl">
-      <wsdl:input message="tns:readUrlRequestMessage">
+    <wsdl:operation name="getPicture">
+      <wsdl:input message="tns:getPictureRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:readUrlResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="addPicture">
-      <wsdl:input message="tns:addPictureRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:addPictureResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="cropPicture">
-      <wsdl:input message="tns:cropPictureRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:cropPictureResponseMessage">
+      <wsdl:output message="tns:getPictureResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="readWsdlZip">
@@ -115,10 +103,10 @@
       <wsdl:output message="tns:readWsdlZipResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getPicture">
-      <wsdl:input message="tns:getPictureRequestMessage">
+    <wsdl:operation name="cropPicture">
+      <wsdl:input message="tns:cropPictureRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:getPictureResponseMessage">
+      <wsdl:output message="tns:cropPictureResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="readWsdl">
@@ -133,46 +121,33 @@
       <wsdl:output message="tns:readFileDetailsResponseMessage">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="addPicture">
+      <wsdl:input message="tns:addPictureRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:addPictureResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="readZipFileDetails">
       <wsdl:input message="tns:readZipFileDetailsRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:readZipFileDetailsResponseMessage">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="readUrl">
+      <wsdl:input message="tns:readUrlRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:readUrlResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="DropboxApiBinding" type="tns:DropboxApiPortType">
     <shttp:binding/>
-    <wsdl:operation name="readUrl">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /dropbox/readurl</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="application/x-www-form-urlencoded" location="/dropbox/readurl" method="POST" outputSerialization="application/json,application/vnd.soa.v81+json"/>
-      <wsdl:input>
-    <shttp:input name="FileUrl" part="FileUrl" type="form"/>
-    <shttp:input name="userName" part="userName" type="form"/>
-    <shttp:input name="password" part="password" type="form"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="readUrlResponse" part="readUrlResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="addPicture">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /dropbox/pictures</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="multipart/form-data" location="/dropbox/pictures" method="POST" outputSerialization="text/plain"/>
-      <wsdl:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="addPictureResponse" part="addPictureResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="cropPicture">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /dropbox/pictures/{pictureId}</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="application/x-www-form-urlencoded" location="/dropbox/pictures/{pictureId}" method="PUT" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
+    <wsdl:operation name="getPicture">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /dropbox/pictures/{pictureId}</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="*/*" location="/dropbox/pictures/{pictureId}" method="GET" outputSerialization="image/jpeg"/>
       <wsdl:input>
     <shttp:input name="pictureId" part="pictureId" type="path"/>
-    <shttp:input name="x" part="x" type="form"/>
-    <shttp:input name="y" part="y" type="form"/>
-    <shttp:input name="w" part="w" type="form"/>
-    <shttp:input name="h" part="h" type="form"/>
+    <shttp:input name="size" part="size" type="query"/>
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="" part="" type="entity"/>
@@ -189,12 +164,15 @@
     <shttp:output name="" part="" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getPicture">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /dropbox/pictures/{pictureId}</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="*/*" location="/dropbox/pictures/{pictureId}" method="GET" outputSerialization="image/jpeg"/>
+    <wsdl:operation name="cropPicture">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">PUT /dropbox/pictures/{pictureId}</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="application/x-www-form-urlencoded" location="/dropbox/pictures/{pictureId}" method="PUT" outputSerialization="application/json,application/vnd.soa.v71+json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
       <wsdl:input>
     <shttp:input name="pictureId" part="pictureId" type="path"/>
-    <shttp:input name="size" part="size" type="query"/>
+    <shttp:input name="x" part="x" type="form"/>
+    <shttp:input name="y" part="y" type="form"/>
+    <shttp:input name="w" part="w" type="form"/>
+    <shttp:input name="h" part="h" type="form"/>
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="" part="" type="entity"/>
@@ -221,6 +199,16 @@
     <shttp:output name="readFileDetailsResponse" part="readFileDetailsResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="addPicture">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /dropbox/pictures</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="multipart/form-data" location="/dropbox/pictures" method="POST" outputSerialization="text/plain"/>
+      <wsdl:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="addPictureResponse" part="addPictureResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="readZipFileDetails">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /dropbox/readfiledetails</sdoc:displayName></wsdl:documentation>
     <shttp:operation inputSerialization="*/*" location="/dropbox/readfiledetails" method="GET" outputSerialization="application/json,application/vnd.soa.v81+json"/>
@@ -230,6 +218,18 @@
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="readZipFileDetailsResponse" part="readZipFileDetailsResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readUrl">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /dropbox/readurl</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="application/x-www-form-urlencoded" location="/dropbox/readurl" method="POST" outputSerialization="application/json,application/vnd.soa.v81+json"/>
+      <wsdl:input>
+    <shttp:input name="FileUrl" part="FileUrl" type="form"/>
+    <shttp:input name="userName" part="userName" type="form"/>
+    <shttp:input name="password" part="password" type="form"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="readUrlResponse" part="readUrlResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
