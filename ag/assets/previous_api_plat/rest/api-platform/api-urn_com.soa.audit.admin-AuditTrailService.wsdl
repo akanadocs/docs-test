@@ -7,11 +7,11 @@
 <xs:element name="AuditTrail" type="tns:auditTrail"/>
 <xs:element name="AuditWorkflow" type="tns:auditWorkflow"/>
 <xs:element name="AuditWorkflowAction" type="tns:auditWorkflowAction"/>
+<xs:complexType name="auditRecord"><xs:sequence><xs:element default="auto-generated" minOccurs="0" name="id" type="xs:string"/><xs:element minOccurs="0" name="userName" type="xs:string"/><xs:element minOccurs="0" name="appName" type="xs:string"/><xs:element name="action" type="xs:string"/><xs:element minOccurs="0" name="description" type="xs:string"/><xs:element default="received time" minOccurs="0" name="generatedAt" type="xs:dateTime"/><xs:element default="auto-generated" minOccurs="0" name="workflow" type="tns:auditWorkflow"/></xs:sequence></xs:complexType>
 <xs:complexType name="auditWorkflow"><xs:sequence><xs:element minOccurs="0" name="state" type="tns:AuditState"/><xs:element minOccurs="0" name="receivedAt" type="xs:dateTime"/><xs:element minOccurs="0" name="observedBy" type="xs:string"/><xs:element minOccurs="0" name="observedAt" type="xs:dateTime"/><xs:element minOccurs="0" name="resolvedBy" type="xs:string"/><xs:element minOccurs="0" name="resolvedAt" type="xs:dateTime"/><xs:element minOccurs="0" name="comments"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="comment" type="tns:auditComment"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType>
 <xs:complexType name="auditComment"><xs:sequence><xs:element minOccurs="0" name="comment" type="xs:string"/><xs:element minOccurs="0" name="userName" type="xs:string"/><xs:element default="received time" minOccurs="0" name="createdDts" type="xs:dateTime"/><xs:element default="auto-generated" name="commentId" type="xs:long"/></xs:sequence></xs:complexType>
-<xs:complexType name="auditTrail"><xs:sequence><xs:element name="totalCount" type="xs:int"/><xs:element minOccurs="0" name="records"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="record" type="tns:auditRecord"/></xs:sequence></xs:complexType></xs:element><xs:element name="listIncomplete" type="xs:boolean"/></xs:sequence></xs:complexType>
-<xs:complexType name="auditRecord"><xs:sequence><xs:element default="auto-generated" minOccurs="0" name="id" type="xs:string"/><xs:element minOccurs="0" name="userName" type="xs:string"/><xs:element minOccurs="0" name="appName" type="xs:string"/><xs:element name="action" type="xs:string"/><xs:element minOccurs="0" name="description" type="xs:string"/><xs:element default="received time" minOccurs="0" name="generatedAt" type="xs:dateTime"/><xs:element default="auto-generated" minOccurs="0" name="workflow" type="tns:auditWorkflow"/></xs:sequence></xs:complexType>
 <xs:complexType name="auditWorkflowAction"><xs:sequence><xs:element name="action" type="tns:action"/><xs:element minOccurs="0" name="comment" type="xs:string"/><xs:element minOccurs="0" name="userName" type="xs:string"/></xs:sequence></xs:complexType>
+<xs:complexType name="auditTrail"><xs:sequence><xs:element name="totalCount" type="xs:int"/><xs:element minOccurs="0" name="records"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="record" type="tns:auditRecord"/></xs:sequence></xs:complexType></xs:element><xs:element name="listIncomplete" type="xs:boolean"/></xs:sequence></xs:complexType>
 <xs:simpleType name="AuditState"><xs:restriction base="xs:string"><xs:enumeration value="UNOBSERVED"/><xs:enumeration value="OBSERVED"/><xs:enumeration value="RESOLVED"/></xs:restriction></xs:simpleType>
 <xs:simpleType name="action"><xs:restriction base="xs:string"><xs:enumeration value="OBSERVE"/><xs:enumeration value="RESOLVE"/><xs:enumeration value="UNRESOLVE"/><xs:enumeration value="UNOBSERVE"/></xs:restriction></xs:simpleType>
 </xs:schema>
@@ -57,16 +57,16 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="AuditTrailServicePortType">
-    <wsdl:operation name="addAuditTrail">
-      <wsdl:input message="tns:addAuditTrailRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:addAuditTrailResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getAuditTrail">
       <wsdl:input message="tns:getAuditTrailRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:getAuditTrailResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addAuditTrail">
+      <wsdl:input message="tns:addAuditTrailRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:addAuditTrailResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="performWorkflowAction">
@@ -78,49 +78,6 @@
   </wsdl:portType>
   <wsdl:binding name="AuditTrailServiceBinding" type="tns:AuditTrailServicePortType">
     <shttp:binding/>
-    <wsdl:operation name="addAuditTrail">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /audittrail</sdoc:displayName><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Add Audit Record]]></sdoc:summary><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Adds an audit trail record.</p>
-<h4>Sample Request</h4>
-<pre><code>POST /rest/audittrail HTTP/1.1
-Content-Type: application/json
-
-{
-    "userName" : "jdoe",
-    "appName" : "console-1",
-    "action" : "Add Policy",
-    "description" : "Policy [P1] added.",
-    "generatedAt" : "2015-05-01T16:21:17
-}
-</code></pre>
-<h4>Sample Response</h4>
-<pre><code>HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-    "id" : "10001",
-    "userName" : "jdoe",
-    "appName" : "console-1",
-    "action" : "Add Policy",
-    "description" : "Policy [P1] added.",
-    "generatedAt" : "2015-05-01T16:21:17
-    "workflow" : {
-      "state" : "UNOBSERVED
-      "receivedAt" : "2015-05-01T16:21:18",
-    }
-}
-</code></pre>
-<p>Note the <em>id</em> property is not provided in the request but is provided in the
-response message. The <em>id</em> can then be used when performing workflow actions.
-The workflow is also auto-generated and provided in the response where it indicates
-the initial state and when the system received the record.</p>]]></sdoc:description></wsdl:documentation>
-    <shttp:operation inputSerialization="application/json,application/xml,text/xml" location="/audittrail" method="POST"/>
-      <wsdl:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The audit trail record to add.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="addAuditTrailResponse" part="addAuditTrailResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="getAuditTrail">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /audittrail</sdoc:displayName><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Get Audit Trail]]></sdoc:summary><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Retrieves the audit records meeting the given criteria. The following usage example
 illustrates a query for all OBSERVED or RESOLVED records operated on by jdoe between
@@ -188,6 +145,49 @@ beyond the 50 that match the given criteria.
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="getAuditTrailResponse" part="getAuditTrailResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addAuditTrail">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /audittrail</sdoc:displayName><sdoc:summary xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[Add Audit Record]]></sdoc:summary><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Adds an audit trail record.</p>
+<h4>Sample Request</h4>
+<pre><code>POST /rest/audittrail HTTP/1.1
+Content-Type: application/json
+
+{
+    "userName" : "jdoe",
+    "appName" : "console-1",
+    "action" : "Add Policy",
+    "description" : "Policy [P1] added.",
+    "generatedAt" : "2015-05-01T16:21:17
+}
+</code></pre>
+<h4>Sample Response</h4>
+<pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "id" : "10001",
+    "userName" : "jdoe",
+    "appName" : "console-1",
+    "action" : "Add Policy",
+    "description" : "Policy [P1] added.",
+    "generatedAt" : "2015-05-01T16:21:17
+    "workflow" : {
+      "state" : "UNOBSERVED
+      "receivedAt" : "2015-05-01T16:21:18",
+    }
+}
+</code></pre>
+<p>Note the <em>id</em> property is not provided in the request but is provided in the
+response message. The <em>id</em> can then be used when performing workflow actions.
+The workflow is also auto-generated and provided in the response where it indicates
+the initial state and when the system received the record.</p>]]></sdoc:description></wsdl:documentation>
+    <shttp:operation inputSerialization="application/json,application/xml,text/xml" location="/audittrail" method="POST"/>
+      <wsdl:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"><wsdl:documentation><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[The audit trail record to add.]]></sdoc:description><sdoc:required xmlns:sdoc="http://soa.com/wsdl/doc">true</sdoc:required><sdoc:multiple xmlns:sdoc="http://soa.com/wsdl/doc">false</sdoc:multiple></wsdl:documentation></shttp:input>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="addAuditTrailResponse" part="addAuditTrailResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="performWorkflowAction">

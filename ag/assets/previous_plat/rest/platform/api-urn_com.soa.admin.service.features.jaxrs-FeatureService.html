@@ -1743,8 +1743,263 @@ Content-Type:application/json; charset=UTF-8
 					</div>
 				</div>
 				
-				<div class="DELETE operation container-fluid">
+				<div class="GET operation container-fluid">
 					<div class='operation-heading clickable row' data-target="operation-10-details">
+						<h5>
+							<strong class="http-method">GET</strong>
+												            <span class="path">/install/{id}</span>
+							                             														<span class="pull-right">Get Install Status</span>
+													</h5>
+					</div>
+
+					<div id="operation-10-details" class="container-fluid operation-detail" style="display: none">
+
+												<div class="row">
+							<p><p>Get the status of an install job.  When an install is started using the install() operation,
+a &ldquo;job&rdquo; is created that performs the actual work of resolving and installing the selected
+features and their dependencies.  Because this can take some time, the job is executed asynchronously.<br  />
+This operation allows the status of a background install job to be retrieved.</p>
+<p>The normal sequence of states for an install job are:
+UNKNOWN -> RESOLVING -> RESOLVED -> INSTALLING -> COMPLETING -> COMPLETE</p>
+<p>These states have the following meaning:</p>
+<ul>
+<li><strong>UNKNOWN</strong> Indicates that the installation job is queued but has not started.</li>
+<li><strong>RESOLVING</strong> Even if the features to be installed have been resolved earlier, the install
+job performs a resolve before starting installation.</li>
+<li><strong>RESOLVED</strong> When the resolve operation completes successfully.</li>
+<li><strong>INSTALLING</strong> Bundles and features are actively being installed to the system.  The returned
+status object contains a count of the total number of bundles to be installed, and the number
+successfully installed so far.</li>
+<li><strong>COMPLETING</strong> All bundles have been installed, and the job is gathering any configuration
+tasks.</li>
+<li><strong>COMPLETE</strong> The install has completed successfully and all features are now available for
+configuration, if necessary.  The returned status contains a final report on the installation.</li>
+</ul>
+<h4>Sample Request</h4>
+<pre><code>GET /admin/features/install/c8e29be1-19c0-4132-a6bb-01b2a3a3efc6 HTTP/1.1
+Accept: application/json
+</code></pre>
+<h4>Sample Response</h4>
+<p>The following response shows an installation in progress.</p>
+<pre><code>HTTP/1.1 200 OK
+Content-Type:application/json; charset=UTF-8
+
+{
+  "id" : "c8e29be1-19c0-4132-a6bb-01b2a3a3efc6",
+  "total" : 213,
+  "installed" : 211,
+  "status" : "INSTALLING",
+  "links" : [ {
+    "href" : "http://localhost:9900/admin/features/install/c8e29be1-19c0-4132-a6bb-01b2a3a3efc6",
+    "rel" : "self"
+  } ]
+}
+</code></pre></p>
+						</div>
+						
+												<div>
+							<h5>Parameters</h5>
+							
+													</div>
+												
+						<div class="container-fluid">
+							<div class="underline row">
+								<div class="col-md-2">Name</div>
+								<div class="col-md-2">Type</div>
+								<div class="col-md-4">Description</div>
+								<div class="col-md-4">Model</div>
+							</div>
+														<div class="row">
+								<div class="col-md-2">id</div>
+								<div class="col-md-2">path</div>
+																<div class="col-md-4"></div>
+																																		<div class="col-md-4">string</div>
+																								</div>
+													</div>
+						
+												<div class="">
+							<h5>Reponse</h5>
+
+														<div class="row">
+								<div class="col-md-12">
+									<strong>Produces </strong>
+																			<span>application/json</span>
+																			<span>application/xml</span>
+																			<span>text/xml</span>
+																	</div>
+							</div>
+							
+						</div>
+						
+												<div class="container-fluid">
+							<div class="underline row">
+								<div class="col-md-2">Status Code</div>
+								<div class="col-md-6">Reason</div>
+								<div class="col-md-4">Model</div>
+							</div>
+														<div class="row">
+								<div class="col-md-2">200</div>
+								<div class="col-md-6"></div>
+																											<div class="col-md-4 clickable link" data-target="getInstallStatus-response-200">installStatus</div>
+										<div id="getInstallStatus-response-200" class="container-fluid col-md-12 well model" style="display: none; margin-left:8px;">
+																					<strong>installStatus {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">installed</strong>
+																									<span class="property-type">( int )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">total</strong>
+																									<span class="property-type">( int )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">report</strong>
+																									<span class="property-type">( resolutionReport )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">links</strong>
+																									<span class="property-type">( Collection of  link )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">id</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">message</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">status</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>resolutionReport {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">addedResources</strong>
+																									<span class="property-type">( Collection of  resourceInfo )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">unsatisfiedRequirements</strong>
+																									<span class="property-type">( Collection of  resourceRequirements )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">optionalResources</strong>
+																									<span class="property-type">( Collection of  resourceInfo )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">links</strong>
+																									<span class="property-type">( Collection of  link )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">id</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">requiredResources</strong>
+																									<span class="property-type">( Collection of  resourceInfo )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">status</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>resourceInfo {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">bundleUrl</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">presentationName</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">size</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">provides</strong>
+																									<span class="property-type">( Collection of  string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">symbolicName</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">description</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">id</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">version</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">properties</strong>
+																									<span class="property-type">( Collection of  nameValuePair )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">repositoryUrl</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">requires</strong>
+																									<span class="property-type">( Collection of  string )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>nameValuePair {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">name</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">value</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>resourceRequirements {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">requirements</strong>
+																									<span class="property-type">( Collection of  string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">resource</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>link {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">rel</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">href</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">title</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">type</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																				</div>
+																								</div>
+														<div class="row">
+								<div class="col-md-2">404</div>
+								<div class="col-md-6">The specified job cannot be found.  If the job has completed, it will eventually be removed from the system.</div>
+																	<div class="col-md-4"></div>
+															</div>
+													</div>
+						
+					</div>
+				</div>
+				
+				<div class="DELETE operation container-fluid">
+					<div class='operation-heading clickable row' data-target="operation-11-details">
 						<h5>
 							<strong class="http-method">DELETE</strong>
 												            <span class="path">/installed/{id}</span>
@@ -1752,7 +2007,7 @@ Content-Type:application/json; charset=UTF-8
 													</h5>
 					</div>
 
-					<div id="operation-10-details" class="container-fluid operation-detail" style="display: none">
+					<div id="operation-11-details" class="container-fluid operation-detail" style="display: none">
 
 												<div class="row">
 							<p><p>Remove a specific feature and its dependencies from the system.</p>
@@ -1809,7 +2064,7 @@ Content-Type:application/json; charset=UTF-8
 				</div>
 				
 				<div class="GET operation container-fluid">
-					<div class='operation-heading clickable row' data-target="operation-11-details">
+					<div class='operation-heading clickable row' data-target="operation-12-details">
 						<h5>
 							<strong class="http-method">GET</strong>
 												            <span class="path">/resolve/{id}</span>
@@ -1817,7 +2072,7 @@ Content-Type:application/json; charset=UTF-8
 													</h5>
 					</div>
 
-					<div id="operation-11-details" class="container-fluid operation-detail" style="display: none">
+					<div id="operation-12-details" class="container-fluid operation-detail" style="display: none">
 
 												<div class="row">
 							<p><p>As with the installation process, resolution can take some time. Feature resolution is performed
@@ -2075,261 +2330,6 @@ Content-Type:application/json; charset=UTF-8
 														<div class="row">
 								<div class="col-md-2">404</div>
 								<div class="col-md-6">A resolution job with the specified ID could not be found.</div>
-																	<div class="col-md-4"></div>
-															</div>
-													</div>
-						
-					</div>
-				</div>
-				
-				<div class="GET operation container-fluid">
-					<div class='operation-heading clickable row' data-target="operation-12-details">
-						<h5>
-							<strong class="http-method">GET</strong>
-												            <span class="path">/install/{id}</span>
-							                             														<span class="pull-right">Get Install Status</span>
-													</h5>
-					</div>
-
-					<div id="operation-12-details" class="container-fluid operation-detail" style="display: none">
-
-												<div class="row">
-							<p><p>Get the status of an install job.  When an install is started using the install() operation,
-a &ldquo;job&rdquo; is created that performs the actual work of resolving and installing the selected
-features and their dependencies.  Because this can take some time, the job is executed asynchronously.<br  />
-This operation allows the status of a background install job to be retrieved.</p>
-<p>The normal sequence of states for an install job are:
-UNKNOWN -> RESOLVING -> RESOLVED -> INSTALLING -> COMPLETING -> COMPLETE</p>
-<p>These states have the following meaning:</p>
-<ul>
-<li><strong>UNKNOWN</strong> Indicates that the installation job is queued but has not started.</li>
-<li><strong>RESOLVING</strong> Even if the features to be installed have been resolved earlier, the install
-job performs a resolve before starting installation.</li>
-<li><strong>RESOLVED</strong> When the resolve operation completes successfully.</li>
-<li><strong>INSTALLING</strong> Bundles and features are actively being installed to the system.  The returned
-status object contains a count of the total number of bundles to be installed, and the number
-successfully installed so far.</li>
-<li><strong>COMPLETING</strong> All bundles have been installed, and the job is gathering any configuration
-tasks.</li>
-<li><strong>COMPLETE</strong> The install has completed successfully and all features are now available for
-configuration, if necessary.  The returned status contains a final report on the installation.</li>
-</ul>
-<h4>Sample Request</h4>
-<pre><code>GET /admin/features/install/c8e29be1-19c0-4132-a6bb-01b2a3a3efc6 HTTP/1.1
-Accept: application/json
-</code></pre>
-<h4>Sample Response</h4>
-<p>The following response shows an installation in progress.</p>
-<pre><code>HTTP/1.1 200 OK
-Content-Type:application/json; charset=UTF-8
-
-{
-  "id" : "c8e29be1-19c0-4132-a6bb-01b2a3a3efc6",
-  "total" : 213,
-  "installed" : 211,
-  "status" : "INSTALLING",
-  "links" : [ {
-    "href" : "http://localhost:9900/admin/features/install/c8e29be1-19c0-4132-a6bb-01b2a3a3efc6",
-    "rel" : "self"
-  } ]
-}
-</code></pre></p>
-						</div>
-						
-												<div>
-							<h5>Parameters</h5>
-							
-													</div>
-												
-						<div class="container-fluid">
-							<div class="underline row">
-								<div class="col-md-2">Name</div>
-								<div class="col-md-2">Type</div>
-								<div class="col-md-4">Description</div>
-								<div class="col-md-4">Model</div>
-							</div>
-														<div class="row">
-								<div class="col-md-2">id</div>
-								<div class="col-md-2">path</div>
-																<div class="col-md-4"></div>
-																																		<div class="col-md-4">string</div>
-																								</div>
-													</div>
-						
-												<div class="">
-							<h5>Reponse</h5>
-
-														<div class="row">
-								<div class="col-md-12">
-									<strong>Produces </strong>
-																			<span>application/json</span>
-																			<span>application/xml</span>
-																			<span>text/xml</span>
-																	</div>
-							</div>
-							
-						</div>
-						
-												<div class="container-fluid">
-							<div class="underline row">
-								<div class="col-md-2">Status Code</div>
-								<div class="col-md-6">Reason</div>
-								<div class="col-md-4">Model</div>
-							</div>
-														<div class="row">
-								<div class="col-md-2">200</div>
-								<div class="col-md-6"></div>
-																											<div class="col-md-4 clickable link" data-target="getInstallStatus-response-200">installStatus</div>
-										<div id="getInstallStatus-response-200" class="container-fluid col-md-12 well model" style="display: none; margin-left:8px;">
-																					<strong>installStatus {</strong>
-																						<div class="api-response-property">
-												<strong class="property-name">installed</strong>
-																									<span class="property-type">( int )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">total</strong>
-																									<span class="property-type">( int )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">report</strong>
-																									<span class="property-type">( resolutionReport )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">links</strong>
-																									<span class="property-type">( Collection of  link )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">id</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">message</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">status</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<strong>}</strong><br/>
-																					<strong>resolutionReport {</strong>
-																						<div class="api-response-property">
-												<strong class="property-name">addedResources</strong>
-																									<span class="property-type">( Collection of  resourceInfo )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">unsatisfiedRequirements</strong>
-																									<span class="property-type">( Collection of  resourceRequirements )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">optionalResources</strong>
-																									<span class="property-type">( Collection of  resourceInfo )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">links</strong>
-																									<span class="property-type">( Collection of  link )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">id</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">requiredResources</strong>
-																									<span class="property-type">( Collection of  resourceInfo )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">status</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<strong>}</strong><br/>
-																					<strong>resourceInfo {</strong>
-																						<div class="api-response-property">
-												<strong class="property-name">bundleUrl</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">presentationName</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">size</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">provides</strong>
-																									<span class="property-type">( Collection of  string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">symbolicName</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">description</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">id</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">version</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">properties</strong>
-																									<span class="property-type">( Collection of  nameValuePair )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">repositoryUrl</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">requires</strong>
-																									<span class="property-type">( Collection of  string )</span>
-																							</div>
-																						<strong>}</strong><br/>
-																					<strong>nameValuePair {</strong>
-																						<div class="api-response-property">
-												<strong class="property-name">name</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">value</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<strong>}</strong><br/>
-																					<strong>resourceRequirements {</strong>
-																						<div class="api-response-property">
-												<strong class="property-name">requirements</strong>
-																									<span class="property-type">( Collection of  string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">resource</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<strong>}</strong><br/>
-																					<strong>link {</strong>
-																						<div class="api-response-property">
-												<strong class="property-name">rel</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">href</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">title</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">type</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<strong>}</strong><br/>
-																				</div>
-																								</div>
-														<div class="row">
-								<div class="col-md-2">404</div>
-								<div class="col-md-6">The specified job cannot be found.  If the job has completed, it will eventually be removed from the system.</div>
 																	<div class="col-md-4"></div>
 															</div>
 													</div>
