@@ -13,14 +13,14 @@
 <xs:complexType name="rolePrivilege"><xs:sequence><xs:element minOccurs="0" name="type" type="xs:string"/><xs:element name="deny" type="xs:boolean"/><xs:element minOccurs="0" name="actions"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="action" type="xs:string"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType>
 <xs:complexType name="roleUsers"><xs:sequence><xs:element minOccurs="0" name="users"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="user"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="userID" type="xs:string"/><xs:element minOccurs="0" name="domainName" type="xs:string"/><xs:element minOccurs="0" name="fullName" type="xs:string"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element><xs:element maxOccurs="unbounded" minOccurs="0" name="users" nillable="true"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="userID" type="xs:string"/><xs:element minOccurs="0" name="domainName" type="xs:string"/><xs:element minOccurs="0" name="fullName" type="xs:string"/></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType>
 </xs:schema>
+    <xs:schema targetNamespace="http://www.w3.org/XML/1998/namespace" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:attribute name="base" type="xs:anyURI"/>
+<xs:attribute name="lang" type="xs:string"/>
+</xs:schema>
     <xs:schema elementFormDefault="qualified" targetNamespace="http://www.w3.org/2005/Atom" version="1.0" xmlns:tns="http://www.w3.org/2005/Atom" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:import namespace="http://www.w3.org/XML/1998/namespace"/>
 <xs:complexType name="atomLink"><xs:complexContent><xs:extension base="tns:atomCommonAttributes"><xs:sequence/><xs:attribute name="length" type="xs:string"/><xs:attribute name="title" type="xs:string"/><xs:attribute name="hreflang" type="xs:string"/><xs:attribute name="rel" type="xs:string"/><xs:attribute name="type" type="xs:string"/><xs:attribute name="href" type="xs:anyURI" use="required"/><xs:anyAttribute namespace="##other" processContents="skip"/></xs:extension></xs:complexContent></xs:complexType>
 <xs:complexType name="atomCommonAttributes"><xs:sequence/><xs:attribute ref="xml:base"/><xs:attribute ref="xml:lang"/><xs:anyAttribute namespace="##other" processContents="skip"/></xs:complexType>
-</xs:schema>
-    <xs:schema targetNamespace="http://www.w3.org/XML/1998/namespace" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-<xs:attribute name="base" type="xs:anyURI"/>
-<xs:attribute name="lang" type="xs:string"/>
 </xs:schema>
   </wsdl:types>
   <wsdl:message name="addRoleRequestMessage">
@@ -70,12 +70,6 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="RoleAPIPortType">
-    <wsdl:operation name="addRole">
-      <wsdl:input message="tns:addRoleRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:addRoleResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="deleteRole">
       <wsdl:input message="tns:deleteRoleRequestMessage">
     </wsdl:input>
@@ -86,6 +80,12 @@
       <wsdl:input message="tns:updateUsersAssignedToRoleRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:updateUsersAssignedToRoleResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addRole">
+      <wsdl:input message="tns:addRoleRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:addRoleResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getRoles">
@@ -103,45 +103,6 @@
   </wsdl:portType>
   <wsdl:binding name="RoleAPIBinding" type="tns:RoleAPIPortType">
     <shttp:binding/>
-    <wsdl:operation name="addRole">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /roles</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Creates a new Role</p>
-<h4>Request:</h4>
-<pre><code>POST /api/roles HTTP/1.1
-Content-Type: application/json or application/vnd.soa.v83+json
-Accept: application/json or application/vnd.soa.v83+json
-</code></pre>
-<p><strong>Sample Request Body (application/json):</strong></p>
-<pre><code>{
-   "roleName" : "TestRole",
-   "rolePrivileges":[
-        {
-            "type": "api",
-            "deny": "false",
-            "actions" : ["FullControl"]
-        },
-        {
-            "type": "group",
-            "deny": "false",
-            "actions": ["Read", "Add", "Modify", "Delete"]
-        }
-    ]
-}
-</code></pre>
-<h4>Response:</h4>
-<pre><code>HTTP/1.1 200 OK
-
-{
-  "roleName" : "TestRole",
-}
-</code></pre>]]></sdoc:description></wsdl:documentation>
-    <shttp:operation inputSerialization="application/json,application/vnd.soa.v81+json,application/xml,application/vnd.soa.v81+xml,application/vnd.soa.v83+json,application/vnd.soa.v83+xml" location="/roles" method="POST" outputSerialization="application/json,application/vnd.soa.v81+json,application/xml,application/vnd.soa.v81+xml,application/vnd.soa.v83+json,application/vnd.soa.v83+xml"/>
-      <wsdl:input>
-    <shttp:input name="parameter0" part="parameter0" type="entity"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="addRoleResponse" part="addRoleResponse" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="deleteRole">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">DELETE /roles/{roleName}</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Deletes a role</p>
 <h4>Request:</h4>
@@ -208,6 +169,45 @@ Accept: application/json or application/vnd.soa.v83+json
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="updateUsersAssignedToRoleResponse" part="updateUsersAssignedToRoleResponse" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addRole">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /roles</sdoc:displayName><sdoc:description xmlns:sdoc="http://soa.com/wsdl/doc"><![CDATA[<p>Creates a new Role</p>
+<h4>Request:</h4>
+<pre><code>POST /api/roles HTTP/1.1
+Content-Type: application/json or application/vnd.soa.v83+json
+Accept: application/json or application/vnd.soa.v83+json
+</code></pre>
+<p><strong>Sample Request Body (application/json):</strong></p>
+<pre><code>{
+   "roleName" : "TestRole",
+   "rolePrivileges":[
+        {
+            "type": "api",
+            "deny": "false",
+            "actions" : ["FullControl"]
+        },
+        {
+            "type": "group",
+            "deny": "false",
+            "actions": ["Read", "Add", "Modify", "Delete"]
+        }
+    ]
+}
+</code></pre>
+<h4>Response:</h4>
+<pre><code>HTTP/1.1 200 OK
+
+{
+  "roleName" : "TestRole",
+}
+</code></pre>]]></sdoc:description></wsdl:documentation>
+    <shttp:operation inputSerialization="application/json,application/vnd.soa.v81+json,application/xml,application/vnd.soa.v81+xml,application/vnd.soa.v83+json,application/vnd.soa.v83+xml" location="/roles" method="POST" outputSerialization="application/json,application/vnd.soa.v81+json,application/xml,application/vnd.soa.v81+xml,application/vnd.soa.v83+json,application/vnd.soa.v83+xml"/>
+      <wsdl:input>
+    <shttp:input name="parameter0" part="parameter0" type="entity"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="addRoleResponse" part="addRoleResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getRoles">
