@@ -21,16 +21,15 @@ nav-title: Installing Akana API Platform 2020.1.x
 
 
 <h4 style="color: gray;"><a href="#h_install_planning">Planning the Installation</a></h4>
-<ol class="table_of_contents">
+<ul class="table_of_contents">
 	<li><a href="#overview">Overview</a></li>
 	<li><a href="#s01_01">Step 1-1: Plan the installation</a></li>
 	<li><a href="#s01_02">Step 1-2: Install and configure Elasticsearch (if not already done)</a></li>
-</ol>
-
+</ul>
 
 
 <h4 style="color: gray;"><a href="#h_install_procedure">Performing the Installation:</a></h4>
-<ol class="table_of_contents">
+<ul class="table_of_contents">
 	<li><a href="#gather_zip_files">Step 2-1: Download ZIP files</a></li>
 	<li><a href="#unzip_files">Step 2-2: Extract installation files</a></li>
 	<li><a href="#run_configurator_pm">Step 2-3: Run Configurator to create the first container</a></li>
@@ -41,12 +40,11 @@ nav-title: Installing Akana API Platform 2020.1.x
 	<li><a href="#add_nd_to_pm">Step 2-8: Add Network Director to Policy Manager</a></li>
 	<li><a href="#create_cm_tenant_using_jython">Step 2-9: Create Community Manager tenant using the Jython script</a></li>
 	<li><a href="#run_portal">Step 2-10: Run the Community Manager developer portal</a></li>
-</ol>
-
+</ul>
 
 
 <h4 style="color: gray;"><a href="#h_install_tasks_reference">Installation Tasks/Reference:</a></h4>
-<ol class="table_of_contents">
+<ul class="table_of_contents">
 	<li><a href="#supported_databases">Supported databases</a></li>
 	<li><a href="#database_notes">Database notes</a>
 		<ul>
@@ -54,10 +52,8 @@ nav-title: Installing Akana API Platform 2020.1.x
 			<li><a href="#notes_database_oracle">Database notes: Oracle</a></li>
 			<li><a href="#notes_database_ms_sql_server">Database notes: Microsoft SQL Server</a></li>
 			<li><a href="#notes_database_mysql">Database notes: MySQL</a></li>
-
 		</ul>
-		</li>
-	
+	</li>
 	<li><a href="#database_drivers">Database drivers</a></li>
 	<li><a href="#installation_folder_structure">Installation folder structure (Akana Platform)</a></li>
 	<li><a href="#clear_configurator_cache">Clear Configurator cache</a></li>
@@ -67,7 +63,7 @@ nav-title: Installing Akana API Platform 2020.1.x
 	<li><a href="#creating_container_silent">Creating a container using silent install (Linux)</a></li>
 	<li><a href="#unregister_reregister_windows_service">Unregistering and re-registering the Windows service</a></li>
 	<li><a href="#linux_java_home_variable">Linux install: exporting the JAVA_HOME variable</a></li>
-	<li><a href="#install_tasks_manage_pki_keys">Installation wizard: Manage PKI Keys</a></li>
+	<li><a href="#update_keystore">Saving the keystore/truststore and updating the path</a></li>	<li><a href="#install_tasks_manage_pki_keys">Installation wizard: Manage PKI Keys</a></li>
 	<li><a href="#install_tasks_add_database">Installation wizard: Add Database</a></li>
 	<li><a href="#install_tasks_manage_schemas">Installation wizard: Manage Schemas</a></li>
 	<li><a href="#install_tasks_create_pm_admin_user">Installation wizard: Define Policy Manager Administrator Credentials</a></li>
@@ -87,8 +83,11 @@ nav-title: Installing Akana API Platform 2020.1.x
 	<li><a href="#fn_embedded_es_node">Feature Notes: Akana Embedded Elasticsearch Node feature</a></li>
 	<li><a href="#optional_additional_features">Optional additional features</a></li>
 	<li><a href="#install_troubleshooting">Troubleshooting</a></li>
-</ol>
+</ul>
 <hr class="divide_hr" />
+
+
+
 <h2 id="h_install_planning">Planning the Installation:</h2>
 
 
@@ -1027,6 +1026,31 @@ container.key=aap202010</pre>
 <pre>export JAVA_HOME=/opt/akana/aap202010/jre</pre>
 <p>If you omit this step, you'll get an error during the installation.</p>
 <p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="update_keystore">Saving the keystore/truststore and updating the path</h2>
+<p>The default settings for the keystore/truststore are shown below.</p>
+<p><img src="images/ac_jre_config_keystore_settings.png" alt="Configuring the keystore and truststore location" /></p>
+<p>If you change the JRE, you must update these settings so that the Akana Platform can access the truststore with the trusted certificates.</p>
+<p>For example, you could create a new folder, <strong>/{install_folder}/keystore</strong>, and copy certs into that folder.</p>
+<h4>To update the com.soa.security settings</h4>
+<ol>
+	<li>Install the product. For instructions, go to <a href="../../sp/platform_install/installing_akana_api_platform_all.htm">Installing the Akana API Platform (all versions)</a> and choose your version.</li>
+	<li>Log in to the Akana Administration Console.</li>
+	<li>Click the <strong>Configuration</strong> tab.</li>
+	<li>Update these two settings to the new location:
+		<ul>
+		<li>bootstrap.keystore.location. For example: <strong>file:///{install_folder}/keystore/certs.jks</strong>.</li>
+		<li>bootstrap.truststore.location. For example: <strong>file:///{install_folder}/keystore/certs.jks</strong>.</li>
+		</ul>
+	</li>
+	<li>Update other properties as needed. For example, you must set the correct passwords for the new keystore and truststore locations.	</li>
+	<li>Save the changes.</li>
+</ol>
+<p><strong>Note</strong>: If you don't set up the new location for this file and update the properties as above, when you restart the container there will be issues due to missing certificates.</p>
+<p><a href="#top">Back to top</a></p>
+
 
 
 
