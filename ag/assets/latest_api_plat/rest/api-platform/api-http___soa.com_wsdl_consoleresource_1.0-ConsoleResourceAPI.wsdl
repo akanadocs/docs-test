@@ -10,6 +10,10 @@
 <xs:complexType name="Theme"><xs:sequence><xs:element name="Theme" type="xs:string"/><xs:element maxOccurs="unbounded" name="VirtualHosts" type="xs:string"/><xs:element name="ConsoleAddress" type="xs:string"/><xs:element name="SiteTitle" type="xs:string"/><xs:element name="SiteDescription" type="xs:string"/><xs:element name="TenantID" type="xs:long"/><xs:element name="FedmemberID" type="xs:string"/><xs:element name="ThemeImpl" type="xs:string"/><xs:element name="Alias" type="xs:string"/></xs:sequence></xs:complexType>
 <xs:complexType name="SupportedTheme"><xs:sequence><xs:element name="Theme" type="xs:string"/><xs:element name="Cloneable" type="xs:boolean"/><xs:element name="ThemeImpl" type="xs:string"/></xs:sequence></xs:complexType>
 </xs:schema>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/login/1.0" version="1.0" xmlns:tns="http://soa.com/xsd/login/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="LoginDomain"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="LoginDomainID" type="xs:string"/><xs:element name="DomainName" type="xs:string"/><xs:element name="FedmemberId" type="xs:string"/><xs:element name="DisplayMode" type="xs:string"/><xs:element name="Title" type="xs:string"/><xs:element name="Sequence" type="xs:int"/><xs:element maxOccurs="unbounded" name="VirtualHost" type="xs:string"/><xs:element name="IdSystemType" type="xs:string"/><xs:element name="LogoAssigned" type="xs:boolean"/><xs:element default="true" name="Enabled" type="xs:boolean"/><xs:element minOccurs="0" name="LogoId" type="xs:long"/></xs:sequence></xs:complexType></xs:element>
+<xs:element name="LoginDomains"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" ref="tns:LoginDomain"/></xs:sequence></xs:complexType></xs:element>
+</xs:schema>
     <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/business/1.0" version="1.0" xmlns:tns="http://soa.com/xsd/business/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:element name="AlertSettings"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="AlertWorkflowDefKey" type="xs:string"/><xs:element minOccurs="0" name="AlertCommentWorkflowDefKey" type="xs:string"/><xs:element minOccurs="0" name="AutoPublish" type="xs:boolean"/><xs:element minOccurs="0" name="MarkdownSupport" type="xs:string"/><xs:element minOccurs="0" name="ExternalLinkSupport" type="xs:string"/></xs:sequence></xs:complexType></xs:element>
 <xs:element name="AllowedSpecialCharacters"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="AllowedSpecialCharacter" type="xs:string"/></xs:sequence></xs:complexType></xs:element>
@@ -36,10 +40,6 @@
     <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/fedmember/1.0" version="1.0" xmlns:tns="http://soa.com/xsd/fedmember/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:element name="FedMember"><xs:complexType><xs:sequence><xs:element name="FedMemberID" type="xs:string"/><xs:element minOccurs="0" name="Address" type="xs:string"/><xs:element minOccurs="0" name="ProxyAddress" type="xs:string"/><xs:element minOccurs="0" name="IsLocal" type="xs:boolean"/><xs:element minOccurs="0" name="CmApiVersion" type="xs:string"/><xs:element minOccurs="0" name="ESIndexName" type="xs:string"/></xs:sequence></xs:complexType></xs:element>
 <xs:element name="FedMembers"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" ref="tns:FedMember"/></xs:sequence></xs:complexType></xs:element>
-</xs:schema>
-    <xs:schema elementFormDefault="qualified" targetNamespace="http://soa.com/xsd/login/1.0" version="1.0" xmlns:tns="http://soa.com/xsd/login/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-<xs:element name="LoginDomain"><xs:complexType><xs:sequence><xs:element minOccurs="0" name="LoginDomainID" type="xs:string"/><xs:element name="DomainName" type="xs:string"/><xs:element name="FedmemberId" type="xs:string"/><xs:element name="DisplayMode" type="xs:string"/><xs:element name="Title" type="xs:string"/><xs:element name="Sequence" type="xs:int"/><xs:element maxOccurs="unbounded" name="VirtualHost" type="xs:string"/><xs:element name="IdSystemType" type="xs:string"/><xs:element name="LogoAssigned" type="xs:boolean"/><xs:element default="true" name="Enabled" type="xs:boolean"/><xs:element minOccurs="0" name="LogoId" type="xs:long"/></xs:sequence></xs:complexType></xs:element>
-<xs:element name="LoginDomains"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" ref="tns:LoginDomain"/></xs:sequence></xs:complexType></xs:element>
 </xs:schema>
   </wsdl:types>
   <wsdl:message name="getRequestMessage">
@@ -187,16 +187,16 @@
       <wsdl:output message="tns:uploadRootResponseMessage">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="scaffold">
+      <wsdl:input message="tns:scaffoldRequestMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:scaffoldResponseMessage">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="generateStyles">
       <wsdl:input message="tns:generateStylesRequestMessage">
     </wsdl:input>
       <wsdl:output message="tns:generateStylesResponseMessage">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getSettings">
-      <wsdl:input message="tns:getSettingsRequestMessage">
-    </wsdl:input>
-      <wsdl:output message="tns:getSettingsResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getPostLoginSettings">
@@ -211,10 +211,10 @@
       <wsdl:output message="tns:getResourceVersionKeyResponseMessage">
     </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="scaffold">
-      <wsdl:input message="tns:scaffoldRequestMessage">
+    <wsdl:operation name="getSettings">
+      <wsdl:input message="tns:getSettingsRequestMessage">
     </wsdl:input>
-      <wsdl:output message="tns:scaffoldResponseMessage">
+      <wsdl:output message="tns:getSettingsResponseMessage">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="add">
@@ -273,6 +273,16 @@
     <shttp:output name="" part="" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="scaffold">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /branding/scaffold</sdoc:displayName></wsdl:documentation>
+    <shttp:operation inputSerialization="application/x-www-form-urlencoded" location="/branding/scaffold" method="POST" outputSerialization="application/json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.akana.v2020+json"/>
+      <wsdl:input>
+    <shttp:input name="theme" part="theme" type="form"/>
+      </wsdl:input>
+      <wsdl:output>
+    <shttp:output name="" part="" type="entity"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="generateStyles">
 <wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /branding/generatestyles</sdoc:displayName></wsdl:documentation>
     <shttp:operation inputSerialization="application/x-www-form-urlencoded" location="/branding/generatestyles" method="POST" outputSerialization="application/json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
@@ -281,17 +291,6 @@
       </wsdl:input>
       <wsdl:output>
     <shttp:output name="" part="" type="entity"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getSettings">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /{ResourceVersionKey}/settings</sdoc:displayName></wsdl:documentation>
-    <shttp:operation location="/{ResourceVersionKey}/settings" method="GET" outputSerialization="application/json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
-      <wsdl:input>
-    <shttp:input name="If-Modified-Since" part="If-Modified-Since" type="header"/>
-    <shttp:input name="ResourceVersionKey" part="ResourceVersionKey" type="path"/>
-      </wsdl:input>
-      <wsdl:output>
-    <shttp:output name="getSettingsResponse" part="getSettingsResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getPostLoginSettings">
@@ -312,14 +311,15 @@
     <shttp:output name="getResourceVersionKeyResponse" part="getResourceVersionKeyResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="scaffold">
-<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">POST /branding/scaffold</sdoc:displayName></wsdl:documentation>
-    <shttp:operation inputSerialization="application/x-www-form-urlencoded" location="/branding/scaffold" method="POST" outputSerialization="application/json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json,application/vnd.akana.v2020+json"/>
+    <wsdl:operation name="getSettings">
+<wsdl:documentation><sdoc:displayName xmlns:sdoc="http://soa.com/wsdl/doc">GET /{ResourceVersionKey}/settings</sdoc:displayName></wsdl:documentation>
+    <shttp:operation location="/{ResourceVersionKey}/settings" method="GET" outputSerialization="application/json,application/vnd.soa.v72+json,application/vnd.soa.v80+json,application/vnd.soa.v81+json"/>
       <wsdl:input>
-    <shttp:input name="theme" part="theme" type="form"/>
+    <shttp:input name="If-Modified-Since" part="If-Modified-Since" type="header"/>
+    <shttp:input name="ResourceVersionKey" part="ResourceVersionKey" type="path"/>
       </wsdl:input>
       <wsdl:output>
-    <shttp:output name="" part="" type="entity"/>
+    <shttp:output name="getSettingsResponse" part="getSettingsResponse" type="entity"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="add">

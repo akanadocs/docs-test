@@ -138,6 +138,7 @@ nav-title: Installing Akana API Platform 2020.2.x
 		<p>The option packs are in a separate ZIP file within the Akana Platform ZIP file.</p>
 	</li>
 </ul>
+<p><strong>Note</strong>: If you are using an external JRE, you'll need to make sure that a compatible JRE version is installed and that you have your PATH set to include the correct JAVA_HOME. After installation, as part of configuration, you'll also need to update the <strong>com.soa.security</strong> configuration settings. For instructions, refer to <a href="configure-jre.htm">Configuring an External JRE</a>.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -1032,35 +1033,27 @@ container.key=aap202020</pre>
 
 
 <h2 id="update_keystore">Saving the keystore/truststore and updating the path</h2>
-<p>By default, when you install the Akana platform, the platform settings point to the default keystore/truststore location where the <strong>cacerts</strong> file is stored. This is inside the <strong>/{install_folder}/jre/lib/security</strong> folder, which is the packaged JRE.</p>
-<p>The default settings are shown below.</p>
+<p>The default settings for the keystore/truststore are shown below.</p>
 <p><img src="images/ac_jre_config_keystore_settings.png" alt="Configuring the keystore and truststore location" /></p>
-<p>If you change the JRE, you must also copy the <strong>cacerts</strong> file to a new location, and update the settings so that the container can find the certificates.</p>
-<p>{<span class="apidoc_red">GWo: do we need more explanation? This is written as though you only have to do it if you change the JRE. How does it fit into regular install?</span>}</p>
-<p>For example, you could create a new folder, <strong>/{install_folder}/keystore</strong>, and copy the <strong>/{install_folder}/jre/lib/security/cacerts</strong> file to the <strong>/{install_folder}/keystore</strong> folder.</p>
-<p>Follow the steps below.</p>
-<h4>To create a new keystore/truststore location and update the platform settings</h4>
+<p>If you change the JRE, you must update these settings so that the Akana Platform can access the truststore with the trusted certificates.</p>
+<p>For example, you could create a new folder, <strong>/{install_folder}/keystore</strong>, and copy certs into that folder.</p>
+<h4>To update the com.soa.security settings</h4>
 <ol>
-	<li>Optional: check that the existing settings are the defaults. In the Akana Administration Console, choose <strong>Configuration</strong>. Find the <strong>com.soa.security</strong> category and note these two values:
+	<li>Install the product. For instructions, go to <a href="../../sp/platform_install/installing_akana_api_platform_all.htm">Installing the Akana API Platform (all versions)</a> and choose your version.</li>
+	<li>Log in to the Akana Administration Console.</li>
+	<li>Click the <strong>Configuration</strong> tab.</li>
+	<li>Update these two settings to the new location:
 		<ul>
-			<li>bootstrap.keystore.location (default value: <strong>META-INF/keystore/keystore-default.jks</strong>)</li>
-			<li>bootstrap.truststore.location (default value: <strong>META-INF/keystore/keystore-default.jks</strong>)</li>
+		<li>bootstrap.keystore.location. For example: <strong>file:///{install_folder}/keystore/certs.jks</strong>.</li>
+		<li>bootstrap.truststore.location. For example: <strong>file:///{install_folder}/keystore/certs.jks</strong>.</li>
 		</ul>
 	</li>
-	<li>In your installation, copy the <strong>/{install_folder}/jre/lib/security</strong> folder to a safe place.</li>
-	<li>In your installation, create a new folder, <strong>/{install_folder}/keystore</strong>.
-	<p><strong>Note</strong>: the folder name used here is just an example. You can use a different name.</p></li>
-	<li>Copy the <strong>/{install_folder}/jre/lib/security/cacerts</strong> file to the new folder you created in Step 3.</li>
-	<li>In the Akana Administration Console, choose <strong>Configuration</strong>. Find the <strong>com.soa.security</strong> category and update these two settings to the new location:
-		<ul>
-			<li>bootstrap.keystore.location. New value in this example: <strong>file:///{install_folder}/keystore/cacerts.jks</strong>.</li>
-			<li>bootstrap.truststore.location New value in this example: <strong>file:///{install_folder}/keystore/cacerts.jks</strong>.</li>
-		</ul>
-	</li>
+	<li>Update other properties as needed. For example, you must set the correct passwords for the new keystore and truststore locations.	</li>
 	<li>Save the changes.</li>
 </ol>
 <p><strong>Note</strong>: If you don't set up the new location for this file and update the properties as above, when you restart the container there will be issues due to missing certificates.</p>
 <p><a href="#top">Back to top</a></p>
+
 
 
 
