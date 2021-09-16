@@ -20,15 +20,13 @@ nav-title: Admin Console Settings
 
 
 <h2 style="color: gray;">Table of Contents</h2>
-<ol class="table_of_contents">
+<ul class="table_of_contents">
 	<li><a href="#ac_settings_cm_navigation">How do I get to the Akana API Platform Configuration Settings in the Akana Administration Console?</a></li>
 	<li><a href="#ac_settings_cm_explanation">What are the Akana API Platform Configuration Settings in the Akana Administration Console?</a></li>
+	<li><a href="#ac_com_soa_api_atmosphere_mime_types">How do I add the configuration property so that the Community Manager developer portal uses the mime.types file?</a></li>
 	<li><a href="#ac_settings_mongodb_installation">How do I get to the MongoDB Configuration Settings in the Akana Administration Console?</a></li>
 	<li><a href="#ac_settings_security">What are the configuration options to guard against potential security vulnerabilities in the platform?</a></li>
-</ol>
-
-
-
+</ul>
 <hr class="divide_hr" />
 
 
@@ -162,6 +160,11 @@ nav-title: Admin Console Settings
 <dd>Internal use only.</dd>
 
 
+<dt>atmosphere.config.useMimeTypesFile (Valid in version: 2020.2.12 and later)</dt>
+<dd>A property that is not there by default, but which you can add if you want to use the <strong>mime.types</strong> file. See <a href="#ac_com_soa_api_atmosphere_mime_types">How do I add the configuration property so that the Community Manager developer portal uses the mime.types file?</a>.</dd>
+<dd>Default: False.</dd>
+
+
 	<dt>atmosphere.config.userRolesDenied</dt>
 	<dd>Allows you to set up one or more roles that cannot use this implementation. For example, you might want to dedicate a special container for administrator use only.</dd>
 	<dd>Use comma separators as needed. For example:
@@ -248,7 +251,7 @@ nav-title: Admin Console Settings
 <dd>Allows you to specify one or more hosts that are allowed for forward proxy. Any other hosts are rejected as unauthorized, with a message that the host is not allowed. To allow all, use the asterisk wildcard (*). To allow multiple hosts, use a comma separator; for example, host1,host2,host3.</dd>
 <dd><strong>Note</strong>: This setting applies only to the current container. If you want to set the same value for all containers that are running Akana API Platform, there is a database script you can run to change the setting in the database. For help, <a href="basics_support.htm#support_contact">contact Technical Support</a>.</dd>
 <dd>Default value: * (allow all).</dd>
-<dd>The Site Admin can set up specific allowed hosts in the user interface: <strong>More</strong> &gt; <strong>Admin</strong> &gt; <strong>Site</strong> &gt; <strong>Limit forward proxy feature to allow only these hosts</strong> field. However, this field in the Akana Administration Console takes precedence. The setting in the Community Manager developer portal works only if this Admin Console property is set to * (allow all). For more information, see <a href="site_admin_site.htm#settings_config_site">How do I configure site settings?</a></dd>
+<dd>The Site Admin can set up specific allowed hosts in the user interface: <strong>More</strong> &gt; <strong>Admin</strong> &gt;<strong>Site</strong> &gt; <strong>Limit forward proxy feature to allow only these hosts</strong> field. However, this field in the Akana Administration Console takes precedence. The setting in the Community Manager developer portal works only if this Admin Console property is set to * (allow all). For more information, see <a href="site_admin_site.htm#settings_config_site">How do I configure site settings?</a></dd>
 </dl>
 <p><a href="#top">Back to top</a></p>
 
@@ -384,6 +387,36 @@ nav-title: Admin Console Settings
 
 
 
+<h2 id="ac_com_soa_api_atmosphere_mime_types">How do I add the configuration property so that the Community Manager developer portal uses the mime.types file?</h2>
+<h4 class="stamp">Valid in Version: 2020.2.12 and later</h4>
+<p>For additional security, you can add a configuration setting to the Akana Administration Console, <strong>com.soa.atmosphere</strong> category, to configure the platform to reference the <strong>mime.types</strong> file, a file that maps Internet media types to unique file extensions. For example, this file maps the file extensions <strong>htm</strong> and <strong>html</strong> to the MIME type <strong>text/html</strong>.</p>
+<p>If this file is in use, the platform performs the following checks against the file, for security purposes:</p>
+<ol>
+	<li>The platform checks the file extension and uses the <strong>mime.types</strong> file to determine the MIME type. If the MIME type is not on the list of file types allowed for upload, in the Community Manager developer portal security settings (see <a href="site_admin_settings.htm#settings_config_security_business">How do I configure settings for business security?</a>, <strong>Limit file types allowed for upload</strong> setting), the file is rejected.</li>
+	<li>If the file matches a valid MIME type that is allowed in the security settings. the platform checks the content of the file to ensure that the file is actually the declared file type. If it is not, the file is rejected. For example, if a file is named <strong>index.htm</strong> but is not a valid HTML file, it is rejected. This helps prevent malicious file content being passed as a supported file type.</li>
+</ol>
+<p>To use this file, you'll need to manually add a configuration setting with a value of <strong>true</strong>. Follow the steps below.</p>
+
+<h4 id="proc_ac_com_soa_api_atmosphere_mime_types">To add a configuration property to use the mime-types file</h4>
+<ol>
+	<li>Log in to the Akana Administration Console for the Community Manager developer portal instance.</li>
+	<li>Click the <strong>Configuration</strong> tab.</li>
+	<li>In the <strong>Configuration Categories</strong> section on the left, choose <<strong>com.soa.atmosphere</strong>.</li>
+	<li>At the bottom right, click <strong>Add Property</strong>. The <strong>Add Configuration Property</strong> overlay appears.</li>
+	<li>Enter the following:
+		<ul>
+			<li>Property Name: <strong>atmosphere.config.useMimeTypesFile</strong></li>
+			<li>Property Value: <strong>true</strong></li>
+			</ul>
+	</li>
+		<li>Click <strong>Apply</strong> to save the change and close the overlay.</li>
+	<li>Click <strong>Apply Changes</strong>.</li>
+</ol>
+<p>By default, the <strong>mime.types</strong> file is not used, which equates to a setting of <strong>false</strong>.</p>
+<p><a href="#top">Back to top</a></p>
+
+
+
 <h2 id="ac_settings_mongodb_installation">How do I get to the MongoDB Configuration Settings in the Akana Administration Console?</h2>
 <p>Before you can access the MongoDB configuration settings, you'll need to install an additional optional product feature. This provides connectivity to a MongoDB instance for features that have NoSQL persistence capabilities.</p>
 <p>Once the add-on is installed, in the Akana Administration Console, go to <strong>Configuration</strong> &gt; <strong>com.soa.persistence.mongodb</strong> and configure the settings as needed. For additional information, refer to <a href="../../sp/mongodb/using_mongodb_support.htm" title="Link to Using the MongoDB Support Feature">Using the MongoDB Support Feature</a>. Notes on a few settings are below:</p>
@@ -432,5 +465,4 @@ nav-title: Admin Console Settings
 	<li><a href="site_admin_tc.htm">Test Client</a></li>
 	<li><a href="site_admin_es.htm">Elasticsearch Configuration</a></li>
 	<li><a href="basics_glossary.htm">Glossary of Terms</a></li>
-</ul>
-</div>
+</ul></div>
