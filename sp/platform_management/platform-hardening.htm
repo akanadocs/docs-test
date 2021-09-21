@@ -16,16 +16,17 @@ nav-title: Platform Hardening
 
 
 <h2 style="color: gray;">Table of Contents</h2>
-<ol class="table_of_contents">
+<ul class="table_of_contents">
 	<li><a href="#introduction">Introduction</a></li>
 	<li><a href="#deployment_architecture">Deployment Architecture</a>
-	<ul>
-		<li><a href="#install_network_director_on_a_separate_container">Install Network Director on a separate container</a></li>
-		<li><a href="#install_internet_facing_and_administration_applications_on_separate_containers">Install Internet-facing and administration applications on separate containers</a></li>
-		<li><a href="#configure_all_listeners_internal_and_external_as_htts_only">Configure all listeners, internal and external as HTTPS only</a></li>
-		<li><a href="#config_admin_sep_port">Configure the Akana Administration Console (/admin) on a separate port</a></li>
-		<li><a href="#admin_console_domain_disable_login">Disable the Akana Administration Console domain as a login domain</a></li>
-	</ul></li>
+		<ul>
+			<li><a href="#install_network_director_on_a_separate_container">Install Network Director on a separate container</a></li>
+			<li><a href="#install_internet_facing_and_administration_applications_on_separate_containers">Install Internet-facing and administration applications on separate containers</a></li>
+			<li><a href="#configure_all_listeners_internal_and_external_as_htts_only">Configure all listeners, internal and external as HTTPS only</a></li>
+			<li><a href="#config_admin_sep_port">Configure the Akana Administration Console (/admin) on a separate port</a></li>
+			<li><a href="#admin_console_domain_disable_login">Disable the Akana Administration Console domain as a login domain</a></li>
+		</ul>
+	</li>
 	<li><a href="#h_config_settings_container">Configuration Settings in the Admin Console for the Container</a>
 	<ul>
 		<li><a href="#jre_unlimited_strength">Add the unlimited strength policy to the JDK</a></li>
@@ -47,6 +48,7 @@ nav-title: Platform Hardening
 		<li><a href="#configuring_server_header">Configuring Server Header</a></li>
 		<li><a href="#metadata_service_secure">Securing the metadata service</a></li>
 		<li><a href="#config_xslt_limit">Configuration setting to limit XSLT transformation</a></li>
+		<li><a href="#config_mime_types">Configuration property so that the Community Manager developer portal uses the mime.types file</a></li>
 	</ul></li>
 	<li><a href="#h_config_settings_cm_ui">Configuration Settings in the Community Manager developer portal User Interface</a>
 	<ul>
@@ -61,7 +63,7 @@ nav-title: Platform Hardening
 		<li><a href="#malicious_pattern_policy_on_apis">Adding the Malicious Pattern Detection policy to Community Manager developer portal APIs that support file upload</a></li>
 	</ul>
 	</li>
-</ol>
+</ul>
 <hr class="divide_hr" />
 
 
@@ -203,6 +205,7 @@ container.name={container_name}</pre>
 	<li><a href="#configuring_server_header">Configuring Server Header</a></li>
 	<li><a href="#metadata_service_secure">Securing the metadata service</a></li>
 	<li><a href="#config_xslt_limit">Configuration setting to limit XSLT transformation</a></li>
+	<li><a href="#config_mime_types">Configuration property so that the Community Manager developer portal uses the mime.types file</a></li>
 </ul>
 </div>
 
@@ -595,6 +598,19 @@ java.extension.enabled=false</pre>
 <p>By default, this is set to <strong>false</strong>, to disallow XSLT transformation.</p>
 <p><a href="#top">Back to top</a></p>
 
+
+
+<h3 id="config_mime_types">Configuration property so that the Community Manager developer portal uses the mime.types file</h3>
+<h4 class="stamp">Valid in Version: 2020.2.12 and later</h4>
+<p>For additional security, you can add a configuration setting to the Akana Administration Console, <strong>com.soa.atmosphere</strong> category, to configure the platform to reference the <strong>mime.types</strong> file, a file that maps Internet media types to unique file extensions. For example, this file maps the file extensions <strong>htm</strong> and <strong>html</strong> to the MIME type <strong>text/html</strong>.</p>
+<p>If this file is in use, the platform performs the following checks against the file, for security purposes:</p>
+<ol>
+	<li>The platform checks the file extension and uses the <strong>mime.types</strong> file to determine the MIME type. If the MIME type is not on the list of file types allowed for upload, in the Community Manager developer portal security settings (see <a href="../../cm/learnmore/site_admin_settings.htm#settings_config_security_business">How do I configure settings for business security?</a>, <strong>Limit file types allowed for upload</strong> setting), the file is rejected.</li>
+	<li>For more information on the developer portal setting, see <a href="#comments_limit_file_type">Limiting file types allowed for upload</a> below.</li>
+	<li>If the file matches a valid MIME type that is allowed in the security settings. the platform checks the content of the file to ensure that the file is actually the declared file type. If it is not, the file is rejected. For example, if a file is named <strong>index.htm</strong> but is not a valid HTML file, it is rejected. This helps prevent malicious file content being passed as a supported file type.</li>
+</ol>
+<p>For instructions to use the mime-types file, see <a href="../../cm/learnmore/site_admin_admin_console_settings.htm#ac_com_soa_api_atmosphere_mime_types">How do I add the configuration property so that the Community Manager developer portal uses the mime.types file?</a></p>
+<p><a href="#top">Back to top</a></p>
 
 
 
