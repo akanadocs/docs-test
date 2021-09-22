@@ -42,7 +42,7 @@ nav-title: User Workflow
 <p>Used to define custom workflow for a scenario where phone number is not required for users who meet one or more specified conditions. For example, using <strong>@UserPhoneNotRequired</strong> in combination with the workflow condition, <a href="#user_c_23">doesUserBelongToDomain</a>, customizes the user workflow so that users belonging to a specific login domain are not required to provide a telephone number. If this functionality is in place, and the condition is met, the phone number field is not required, and is not shown to the user.</p>
 <h4>Examples/Notes/Additional Information</h4>
 <p>In the example below, <strong>@UserPhoneNotRequired</strong> is used in combination with <strong>doesUserBelongToDomain</strong>. If the user belongs to the specified domain, the condition is met, and the new user is allowed to log in without providing a phone number on the user profile.</p>
-<p><strong>Note</strong>: during domain configuration, the <strong>mail</strong> attribute must be mapped in the setting for the referenced domain so that the user can be identified. In the OpenID Connect Relying Party domain in the Community Manager developer portal (<strong>Admin</strong> &gt; <strong>Domains</strong>), it's Tab 7. See <a href="../learnmore/bus_admin_domains_oidc.htm#oidcrp_domain_tab7">Tab 7: User</a> (Site Admin help).</p>
+<p class="Note"><strong>Note</strong>: during domain configuration, the <strong>mail</strong> attribute must be mapped in the setting for the referenced domain so that the user can be identified. In the OpenID Connect Relying Party domain in the Community Manager developer portal (<strong>Admin</strong> &gt; <strong>Domains</strong>), it's Tab 7. See <a href="../learnmore/bus_admin_domains_oidc.htm#oidcrp_domain_tab7">Tab 7: User</a> (Site Admin help).</p>
 <pre>&lt;action id=&quot;25&quot; name=&quot;@UserPhoneNotRequired&quot;&gt;
   &lt;restrict-to&gt;
     &lt;conditions type=&quot;AND&quot;&gt;
@@ -64,7 +64,7 @@ nav-title: User Workflow
 <p>Overrides the default behavior for external domain users, which requires them to complete an abbreviated registration process before the user is moved to a <strong>registered</strong> state.</p>
 <p>By default, when a user logs in to the Community Manager developer portal for the first time using a third-party domain, the user is in a <strong>pending_validation</strong> state. Instead, this initial action sets the user to a <strong>registered</strong> state.</p>
 <p>This initial action is not the default, but can be added if needed via custom workflow. It only applies to external domain users.</p>
-<p><strong>Note</strong>: This initial action relies on the third-party provider returning the user's email after authentication, which is generally the case. The Community Manager developer portal must have the user email information to register the user.</p>
+<p class="Note"><strong>Note</strong>: This initial action relies on the third-party provider returning the user's email after authentication, which is generally the case. The Community Manager developer portal must have the user email information to register the user.</p>
 
 <h4>Examples/Notes/Additional Information</h4>
 <p>In the example below, <strong>@AllowMarkUserAsRegistered</strong> is used to identify users who are logging in via a specific domain type or domain name, and mark them as Registered Users. This example uses two conditions with OR, which requires only one of the conditions to be met. With AND, the <strong>DomainType</strong> and <strong>DomainName</strong> values must both meet the condition. Another way that this could be implemented is to remove the entire <span class="apidoc_code">&lt;restrict-to&gt;</span> section. In this scenario, the initial action would apply to all users who log in via a third-party login domain.</p>
@@ -174,7 +174,7 @@ nav-title: User Workflow
 
 <h3 id="user_ra_08">@Login</h3>
 <p>This reserved action is invoked whenever the user tries to log in.</p>
-<p><strong>Note</strong>: this is currently used only for platform users, not third-party domain users.</p>
+<p class="Note"><strong>Note</strong>: this is currently used only for platform users, not third-party domain users.</p>
 <p>When the user logs in, the workflow determines the status value returned in the login response&#8212;which then determines the next step. If there is a pending task to be performed, these are prompted before login is complete. The possible pending tasks for @Login are:</p>
 <ul>
 	<li><strong>ChangePassword</strong>: forces the user to change password as part of the login process. In the default workflow, this is applicable when the Site Admin has provided a temporary password for initial user login.</li>
@@ -319,7 +319,7 @@ nav-title: User Workflow
 
 <p>If you remove the comment from line 834, as shown above, the workflow action below comes into effect. Then, if the Site Admin activates a user, the notification <strong>com.soa.notification.type.user.activated</strong> is sent to the user.</p>
 <p>The example below shows the segment of the default user workflow that implements the <strong>@UserActivated</strong> reserved action when the comment tag is removed from line 834.</p>
-<p><strong>Note</strong>: The section of the workflow doc below also shows an additional function to send a notification to the Site Admin. To activate this function, you would also need to add the notification, which is not currently part of the product.</p>
+<p class="Note"><strong>Note</strong>: The section of the workflow doc below also shows an additional function to send a notification to the Site Admin. To activate this function, you would also need to add the notification, which is not currently part of the product.</p>
 <pre>&lt;action id="19" name="@UserActivated"&gt;
   &lt;results&gt;
     &lt;unconditional-result old-status="${workflow.step.name}" status="${workflow.step.name}" step="-1"&gt;
@@ -476,7 +476,7 @@ nav-title: User Workflow
 
 <h3 id="user_f_04">sendNotification</h3>
 <p>Triggers the specified email/Dashboard notification based on an event relating to a user.</p>
-<p><strong>Note</strong>: The email isn't sent instantly; it is queued to be sent. It goes to the notifications queue, and the job runs every 60 seconds. There might be a short delay before the user receives the email.</p>
+<p class="Note"><strong>Note</strong>: The email isn't sent instantly; it is queued to be sent. It goes to the notifications queue, and the job runs every 60 seconds. There might be a short delay before the user receives the email.</p>
 <p>This function can load a message template and dynamically fill in some values into the template with the help of a parameter resolver. When the workflow action is invoked, a comment is added by the user. The parameter resolver can be used to include this comment in the board item title/description, email message subject/body, and/or a dashboard notification. To use this feature, reference the parameter resolver <strong>{action.comment}</strong> in the notification template. When the action is performed, this parameter resolver will be replaced by the comment entered by the user performing the workflow action.</p>
 
 <h4>Parameters</h4>
@@ -559,7 +559,7 @@ nav-title: User Workflow
 
 <h3 id="user_f_06">setTwofaDeliveryOptions</h3>
 <p>When two-factor authentication is in use, indicates the delivery options supported for the 2FA verification code.</p>
-<p><strong>Note</strong>: In the platform's out-of-the-box 2FA use workflow, if more than one delivery option is defined as valid in the workflow, the platform does not generate the verification code immediately. Instead, it returns the valid delivery options. The user can then select an option; based on that, the verification code is generated.</p>
+<p class="Note"><strong>Note</strong>: In the platform's out-of-the-box 2FA use workflow, if more than one delivery option is defined as valid in the workflow, the platform does not generate the verification code immediately. Instead, it returns the valid delivery options. The user can then select an option; based on that, the verification code is generated.</p>
 
 <h4>Parameters</h4>
 <table class="doctable">
@@ -649,7 +649,7 @@ nav-title: User Workflow
 <h3 id="user_f_08">send2FACodeToEmail</h3>
 <p>When two-factor authentication is in use, indicates that the delivery mechanism by which the 2FA verification code will be sent to the user is email, and conveys the applicable information.</p>
 <p>The platform's out-of-the-box user workflow includes support for sending the 2FA code to an email address.</p>
-<p><strong>Note</strong>: The email isn't sent instantly; it is queued to be sent. It goes to the notifications queue, and the job runs every 60 seconds. There might be a short delay before the user receives the email.</p>
+<p class="Note"><strong>Note</strong>: The email isn't sent instantly; it is queued to be sent. It goes to the notifications queue, and the job runs every 60 seconds. There might be a short delay before the user receives the email.</p>
 
 <h4>Parameters</h4>
 <table class="doctable">
@@ -770,7 +770,7 @@ nav-title: User Workflow
 <pre>&lt;function type=&quot;acceptAgreementForDomainUsers&quot;&gt;
   &lt;arg name=&quot;DomainName&quot;&gt;acmepaymentscorp&lt;/arg&gt;
 &lt;/function&gt;</pre>
-<p><strong>Note</strong>: To see where this fits into the workflow document, you can download the user workflow from the Community Manager developer portal. The new function is in the default workflow, but is commented out.</p>
+<p class="Note"><strong>Note</strong>: To see where this fits into the workflow document, you can download the user workflow from the Community Manager developer portal. The new function is in the default workflow, but is commented out.</p>
 
 
 <h3 id="user_f_16">acceptAgreementForUsersBelongToRoles</h3>
@@ -783,7 +783,7 @@ nav-title: User Workflow
 <pre>&lt;function type=&quot;acceptAgreementForUsersBelongToRoles&quot;&gt;
   &lt;arg name=&quot;role&quot;&gt;Business Administrator,API Developer&lt;/arg&gt;
 &lt;/function&gt;</pre>
-<p><strong>Note</strong>: To see where this fits into the workflow document, you can download the user workflow from the Community Manager developer portal. The new function is in the default workflow, but is commented out.</p>
+<p class="Note"><strong>Note</strong>: To see where this fits into the workflow document, you can download the user workflow from the Community Manager developer portal. The new function is in the default workflow, but is commented out.</p>
 
 
 <h3 id="user_f_addroletouser">addRoleToUser</h3>
@@ -824,7 +824,7 @@ nav-title: User Workflow
 	<li><strong>DomainType</strong> value is defined on line 56, and <strong>DomainName</strong> value is defined on line 59. For information about getting these values, see <a href="#user_wf_f_addroletouser_ex">User Workflow: Assigning a default role to users of a specific login domain</a>.</li>
 	<li><strong>Role</strong> is defined on line 64.</li>
 </ul>
-<p><strong>Note</strong>: To see where this fits into the workflow document, you can download the user workflow from the Community Manager developer portal. The example above is taken from the <strong>default-user-workflow-v2</strong> user workflow document available within the Community Manager developer portal. The new function is in the default workflow, but is commented out. </p>
+<p class="Note"><strong>Note</strong>: To see where this fits into the workflow document, you can download the user workflow from the Community Manager developer portal. The example above is taken from the <strong>default-user-workflow-v2</strong> user workflow document available within the Community Manager developer portal. The new function is in the default workflow, but is commented out. </p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -1122,7 +1122,7 @@ nav-title: User Workflow
 
 <h3 id="user_c_22">is2FATerminated</h3>
 <p>Checks to make sure that the 2FA session has not been terminated. 2FA is terminated if conditions are violated such as if the number of attempts with an invalid code has been exceeded or if the code has expired. If the session has been terminated, this condition returns <strong>true</strong>.</p>
-<p><strong>Note</strong>: The valid number of attempts for a specific instance of the platform, and the timeout period for the cookie, are determined by the Site Admin in the 2FA settings.</p>
+<p class="Note"><strong>Note</strong>: The valid number of attempts for a specific instance of the platform, and the timeout period for the cookie, are determined by the Site Admin in the 2FA settings.</p>
 
 
 <h4>Examples/Notes/Additional Information</h4>
@@ -1153,7 +1153,7 @@ nav-title: User Workflow
 <p>Using <strong>doesUserBelongToDomain</strong> in combination with the user workflow initial action, <a href="#user_ia_01">@UserPhoneNotRequired</a>, customizes the user workflow so that users belonging to a specific login domain are not required to provide a telephone number. If this functionality is in place, and the condition is met, the phone number field is not required, and is not shown to the user.</p>
 <h4>Examples/Notes/Additional Information</h4>
 <p>In the example below, <strong>doesUserBelongToDomain</strong> is used in combination with @<strong>UserPhoneNotRequired</strong>. If the user belongs to the specified domain, the condition is met, and the new user is allowed to log in without providing a phone number on the user profile.</p>
-<p><strong>Note</strong>: during domain configuration, the <strong>mail</strong> attribute must be mapped in the setting for the referenced domain so that the user can be identified. In the OpenID Connect Relying Party domain in the Community Manager developer portal (<strong>Admin</strong> &gt; <strong>Domains</strong>), it's Tab 7. See <a href="../learnmore/bus_admin_domains_oidc.htm#oidcrp_domain_tab7">Tab 7: User</a> (Site Admin help).</p>
+<p class="Note"><strong>Note</strong>: during domain configuration, the <strong>mail</strong> attribute must be mapped in the setting for the referenced domain so that the user can be identified. In the OpenID Connect Relying Party domain in the Community Manager developer portal (<strong>Admin</strong> &gt; <strong>Domains</strong>), it's Tab 7. See <a href="../learnmore/bus_admin_domains_oidc.htm#oidcrp_domain_tab7">Tab 7: User</a> (Site Admin help).</p>
 <pre>&lt;action id=&quot;25&quot; name=&quot;@UserPhoneNotRequired&quot;&gt;
   &lt;restrict-to&gt;
     &lt;conditions type=&quot;AND&quot;&gt;
@@ -1273,7 +1273,7 @@ nav-title: User Workflow
 <p>The example below shows the first action of a step in a custom User Workflow that implements two-factor authentication for registered users. This workflow:</p>
 <ul>
 	<li>Sets the 2FA delivery options that will be available to users.
-  <p><strong>Note</strong>: If you want to use the platform default, leave <strong>EmailSupported</strong> set to <strong>true</strong> and set the other two options to <strong>false</strong>.</p></li>
+  <p class="Note"><strong>Note</strong>: If you want to use the platform default, leave <strong>EmailSupported</strong> set to <strong>true</strong> and set the other two options to <strong>false</strong>.</p></li>
 	<li>Tests to see whether the authentication cookie already exists. If so, the workflow step ends.</li>
 	<li>Tests to make sure that the custom property 2FAComplete does <strong>not</strong> exist in the user's auth token; that is, the two-factor authentication process is not complete. If this property does exist, the workflow step ends.</li>
 	<li>Generates the verification code for the second factor of the authentication process.</li>
@@ -1588,7 +1588,7 @@ nav-title: User Workflow
 <p>You can use the <strong>addRoleToUser</strong> user workflow function to automatically assign a specific role to a user logging in with a specific login domain.</p>
 
 <h4 id="proc_wf_custom_domain_login_role">To implement this custom workflow</h4>
-<p><strong>Note</strong>: If you already have a custom workflow in place, follow Step 1, use your own custom workflow in Step 2 below, and add the new custom section shown below in Step 3, updating the values as shown in Step 4, into your custom workflow. Then follow the other steps.</p>
+<p class="Note"><strong>Note</strong>: If you already have a custom workflow in place, follow Step 1, use your own custom workflow in Step 2 below, and add the new custom section shown below in Step 3, updating the values as shown in Step 4, into your custom workflow. Then follow the other steps.</p>
 <ol>
 	<li>In the Community Manager developer portal, go to <strong>More</strong> &gt; <strong>Admin</strong>&nbsp;&gt; <strong>Domains</strong> and get these two values for the login domain that you want to use:
 		<ul>

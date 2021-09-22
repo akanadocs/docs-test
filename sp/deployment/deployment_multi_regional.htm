@@ -247,7 +247,7 @@ nav-title: Multi-Regional Deployment
 08) net:
 09)     bindIp: hostC
 10)     port: 27020</pre>
-<p><strong>Note</strong>: On line 07, the replica set name must be the same as the one named for the primary database.</p>
+<p class="Note"><strong>Note</strong>: On line 07, the replica set name must be the same as the one named for the primary database.</p>
 <p>Step 6: Start the secondary databases.</p>
 <p>Step 7: Connect to the admin shell of the primary database, as shown in the example below.</p>
 <pre>mongo hostA:27017/admin</pre>
@@ -338,7 +338,7 @@ nav-title: Multi-Regional Deployment
 		<p>If you also need to separate shards by region/physical location, include the following statement (one or more):</p>
 		<pre>> sh.addTagRange("PM_AUDIT.AUDIT_MSG",{"containerKey":"100"},{"containerKey":"199"}, "ShardTagA")</pre>
 		<p>The above statements are shown in the examples in Step 6 and Step 7 below.</p>
-		<p><strong>Note</strong>: The <strong>Audit_Msg</strong> collection is only applicable if the <a href="../../ag/policies/policy_op_detailed_auditing.htm">Detailed Auditing</a> policy is being used.</p>
+		<p class="Note"><strong>Note</strong>: The <strong>Audit_Msg</strong> collection is only applicable if the <a href="../../ag/policies/policy_op_detailed_auditing.htm">Detailed Auditing</a> policy is being used.</p>
 	</li>
 </ul>
 <p><img src="assets/mrd_03_02.jpg" alt="" /></p>
@@ -397,7 +397,7 @@ nav-title: Multi-Regional Deployment
 	<li>In this example, we are directing all records from containers with keys of 100&#8211;199 to be part of this shard. The final argument is the tag of the shard created in Step 6.</li>
 	<li><strong> PM_AUDIT.AUDIT_MSG</strong> is optional. See <a href="#shard_audit_msg">Audit_Msg</a> information above.</li>
 </ul>
-<p><strong>Note</strong>: It is important to make sure the keys of all containers in the system (including Policy Manager containers) are covered by a tag range. If not, the query routers will choose the server to store the records without guidance, and might store them on servers in a different data center entirely.</p>
+<p class="Note"><strong>Note</strong>: It is important to make sure the keys of all containers in the system (including Policy Manager containers) are covered by a tag range. If not, the query routers will choose the server to store the records without guidance, and might store them on servers in a different data center entirely.</p>
 <p>Execute the <strong>addTagRange</strong> commands for each tag, or shard, with a different range. Do not create ranges that overlap with other shard tags.</p>
 <p>Perform the shard configuration steps for each replica set. Each replica set represents one shard cluster.</p>
 
@@ -406,7 +406,7 @@ nav-title: Multi-Regional Deployment
 <p>When a read is performed through a query router, the default settings would have the query router route the query to each of the primary shards in the cluster. This would not be ideal, because it would cause the queries to span data centers. To avoid this, you can configure the database driver with a read preference.</p>
 <p>The read preference is configured as a query parameter of the URI of the MongoDB connection used by a database client. Creating the URI is part of the configuration steps in the next section, <a href="#proc_install_nd">Installing Network Director</a>. The database URI and the possible settings are described in detail in the MongoDB documentation: <a href="https://docs.mongodb.org/manual/reference/connection-string/" title="Link to MongoDB documentation" target="_blank">https://docs.mongodb.org/manual/reference/connection-string/</a>.</p>
 <p>The readPreference setting supports a variety of options. The option we are using is the <strong>nearest</strong> option. This tells the query router to direct all reads to the closest member of a replica set, regardless of whether the member is a primary or secondary shard. For more information on the <strong>nearest</strong> read preference, see <a href="https://docs.mongodb.org/manual/reference/read-preference/#nearest" title="https://docs.mongodb.org/manual/reference/read-preference/#nearest" target="_blank">https://docs.mongodb.org/manual/reference/read-preference/#nearest</a>.</p>
-<p><strong>Note</strong>: If you choose to have a secondary replica in the same data center as the primary, and then, based on this read preference, the database driver determines that the secondary replica is closer than the primary, the read is performed against the secondary replica.</p>
+<p class="Note"><strong>Note</strong>: If you choose to have a secondary replica in the same data center as the primary, and then, based on this read preference, the database driver determines that the secondary replica is closer than the primary, the read is performed against the secondary replica.</p>
 <p>An example of a MongoDB URI with this setting is shown in the example below.</p>
 <pre>monogdb://routerHost:27017/AKANA?readPreference=nearest</pre>
 <p>To be tolerant of query router outages, you can deploy multiple query routers in a data center, creating a cluster of query routers. If the primary goes down, the database driver will fail over to a different query router in the cluster. To make use of this functionality, the driver must be configured with the addresses of each of the query routers by providing a comma-separated list of <strong>host:port</strong> values in the MongoDB URI. An example is shown below.</p>
