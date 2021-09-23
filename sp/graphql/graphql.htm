@@ -54,7 +54,7 @@ nav-title: GraphQL
 	<li>The client can request information in a single GraphQL request that might previously have required multiple traditional REST API requests.</li>
 	<li>A traditional API response probably includes, as well as the information that the client needs, additional information that might not be useful. Using GraphQL, the client can request the specific fields/number of values needed, and the GraphQL endpoint returns only that information.</li>
 </ul>
-<p>The Akana Platform supports GraphQL from version 2021.1.0 onwards. The API must already xxx.</p>
+<p>The Akana Platform supports GraphQL from version 2021.1.0 onwards. The API must proxy an existing GraphQL service.</p>
 <p>Additional resources for  information about GraphQL:</p>
 <ul>
 	<li><a href="https://graphql.org/" title="Link to graphql.org" target="_blank">https://graphql.org/</a></li>
@@ -65,8 +65,12 @@ nav-title: GraphQL
 
 
 <h2 id="graphql_platform_support">Akana API Platform support of GraphQL</a></h2>
-<p>In version 2021.1.0, Akana supports GraphQL query operations.</p>
-<p>Mutation operations will be supported in a later release..</p>
+<p>In version 2021.1.0, Akana supports the following GraphQL operations:</p>
+<ul>
+	<li>Query</li>
+	<li>Mutation</li>
+</ul>
+<p>Subscriptions are not supported in version 2021.1.0.</p>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -79,11 +83,12 @@ nav-title: GraphQL
 
 
 <h2 id="graphql_install">Installing GraphQL</h2>
-<p>If you want to support GraphQL APIs in your Akana API Platform, you'll need to install the following feature options:</p>
+<p>If you want to support GraphQL APIs in your Akana API Platform, you'll need to install the following features:</p>
 <ul>
-	<li>In the container running the Policy Manager Management Console: install the <strong>GraphQL Management Support</strong> feature</li>
-	<li>In the container running the Network Director: install the <strong>GraphQL Runtime Support</strong> feature</li>
+	<li>In the container running the Policy Manager Management Console: <strong>GraphQL Management Support</strong></li>
+	<li>In the container running the Network Director: <strong>GraphQL Runtime Support</strong></li>
 </ul>
+<p>{<span class="apidoc_red">MDL comment: &quot;GraphQL Management Support – I thought Samir wanted to start referring to management being installed in the Community Manager container Is “feature options” common throughout the docs, or would “capabilities” be better? &quot; TBD</span>}</p>
 <p>For more information, refer to the installation doc. {<span class="apidoc_red">link TBD</span>}.</p>
 <p>Once you've completed your installation, you can create your first GraphQL API. However, you might want to modify the configuration settings. See <a href="#graphql_config">Configuring GraphQL</a> below.</p>
 <p><a href="#top">Back to top</a></p>
@@ -96,8 +101,10 @@ nav-title: GraphQL
 <dl>
 	<dt>graphql.in.binding.component.graphqlPayloadMaxSizeBytes</dt>
 	<dd>Sets a maximum message size, in bytes, for a GraphQL request, as a security precaution.</dd>
-	<dt>graphql.in.binding.component.virtualhostEndpointSelectionEnabled</dt>
+<dd>Default value: 524288 (512 KB)</dd>
+<dt>graphql.in.binding.component.virtualhostEndpointSelectionEnabled</dt>
 	<dd>Enables/disables virtual host handling when selecting endpoints in GraphQL binding.</dd>
+<dd>Default value: <strong>true</strong></dd>
 </dl>
 <p><a href="#top">Back to top</a></p>
 
@@ -107,7 +114,11 @@ nav-title: GraphQL
 <p>To use GraphQL APIs, first add the API in the Community Manager developer portal as usual.</p>
 <p>Choose the <strong>I have an OAS3/Swagger/RAML/WSDL/WADL/GraphQL document</strong> option, and upload the GraphQL API description file.</p>
 <p>For details, see <a href="../../cm/learnmore/apiadmin_api_add.htm">Adding an API</a> in the developer portal help.</p>
-<p>{<span class="apidoc_red">MDL question do we have a limitation WRT mutations that we only do GETs?</span>}</p>
+<p>Notes:</p>
+<ul>
+	<li>Subscriptions are not supported in 2021.1.0. If the schema includes a subscription, it will be ignored.</li>
+	<li>You must provide the GraphQL endpoint to proxy.</li>
+</ul>
 <p>xxx</p>
 <p><a href="#top">Back to top</a></p>
 
@@ -115,7 +126,7 @@ nav-title: GraphQL
 
 <h2 id="graphql_security">Security with GraphQL APIs</h2>
 <p>The Akana Platform allows you to configure access to operations using licensing or OAuth, for increased security.</p>
-<p>In addition, you can disallow access to mutation operations {<span class="apidoc_red">How does this work -- a) anyway, and b) since we don't support mutation operations?</span>}</p>
+<p>In addition, you can disallow access to mutation operations. Access is controlled by licensing, or by OAuth scopes. Query/Mutation operations are restricted in the Community Manager developer portal in the same way as REST or SOAP APIs.</p>
 <p>Akana offers a rich set of security features that can be applied to any API on the Akana API Platform in a number of ways: for example, through policies attached to the service, configuration settings, and custom workflow.</p>
 <p>Additional security settings specific to GraphQL are also available: see <a href="#graphql_config">Configuring GraphQL</a> above.</p>
 <p><a href="#top">Back to top</a></p>
@@ -129,34 +140,29 @@ nav-title: GraphQL
 
 <h2 id="graphql_exchange_properties">Exchange Properties</h2>
 <p>com.soa.message.EXCHANGE_STARTED_DATE {<span class="apidoc_red">Note 9/21/21: This is listed on the Confluence page and the properties below. Not sure about the relationship between this line item and the properties, b) what to say about the properties. Have a stab and then get MDL input</span>} {<span class="apidoc_red">what's a definition of Exchange Properties? Is it something specific to GraphQL? I couldn't find it defined</span>.}</p>
-<p>Exchange properties are not displayed anywhere. If someone wrote a script policy, they can change these values through the workflow.</p>
-<p>Users can manipulate how GraphQL requests will be processed if they were developing their own orchestration or workflow. These are things that were not documented in the past but people used so it was a challenge for them to do these types of scripting changes.</p>
-<p>But we are not officially suporting orchestration. He says we put the exchange properties and just generically say what they are but not explain how to use them. {TBD}</p>
-<p>xxx</p>
+<p>If you have custom scripting or custom workflow in place, you  can use exchange properties to manipulate how GraphQL requests will be processed. The following properties are available.</p>
 <dl>
-<dt>com.akana.graphql.jbi.component.graphqlPayloadMaxSizeBytes</dt>
-<dd>xxx</dd>
+	<!--<dt>com.akana.graphql.jbi.component.graphqlPayloadMaxSizeBytes</dt>
+<dd>{<span class="apidoc_red">MDL 9/22/21 (email): Exclude, as modifying this will have no impact.</span>}</dd>-->
+	
+	<!--<dt>com.akana.graphql.jbi.component.virtualhostEndpointSelectionEnabled</dt>
+<dd>{<span class="apidoc_red">MDL 9/22/21 (email): Exclude, as modifying this will have no impact.</span>}</dd>-->
+	
+	<!--<dt>com.akana.graphql.jbi.component.validateGraphqlRequestAgainstSchemaGlobally</dt>
+<dd>MDL 9/22/21 (email): Removed</dd>-->
+	
+	<!--<dtcom.akana.graphql.jbi.component.allowMutationOverHttpGet</dt>-->
+	<!--<dd>{<span class="apidoc_red">MDL 9/22/21 (email): Exclude, Intended to be hidden, we reject Mutations that are over HTTP GET by default. If a customer complains we’ll tell them about this property</span>}</dd>--><dd>
 
-<dt>com.akana.graphql.jbi.component.virtualhostEndpointSelectionEnabled</dt>
-<dd>xxx</dd>
-
-<dt>com.akana.graphql.jbi.component.validateGraphqlRequestAgainstSchemaGlobally</dt>
-<dd>xxx</dd>
-
-<dt>com.akana.graphql.jbi.component.allowMutationOverHttpGet</dt>
-<dd>xxx</dd>
-
-<dt>http.requested.url -> Target endpoint to send request to</dt>
-<dd>xxx</dd>
+<dt>http.requested.url</dt>
+<dd>Target endpoint to send request to. Orchestration workflows can adjust this value to control where incoming requests are forwarded.</dd>
 
 <dt>http.version</dt>
-<dd>xxx</dd>
+<dd>The HTTP version to use for downstream service requests. 1.0, 1.1, or 2.0.</dd>
 
 <dt>http.method</dt>
-<dd>xxx</dd>
+<dd>The HTTP method to use when forwarding requests to downstream services. GET or POST are excepted. Defaults to the incoming HTTP method.</dd>
 </dl>
-
-<p>xxx</p>
 <p><a href="#top">Back to top</a></p>
 
 
