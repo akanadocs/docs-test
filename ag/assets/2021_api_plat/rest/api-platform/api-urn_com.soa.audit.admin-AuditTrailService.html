@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<title>Audit Trail Management API Service Information</title>
+
+		<link href="css/bootstrap.min.css" rel="stylesheet"/>
+		<link href="css/default.css" rel="stylesheet"/>
+		<link href="css/api.css" rel="stylesheet"/>
+
+	</head>
+	<body>
+
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="http://docs.akana.com/index.html"><img src="img/logo-akana.svg" height="38px" style="padding-bottom: 16px"/></a>
+                </div>
+                <p class="navbar-text">Audit Trail Management API </p>
+            </div>
+        </nav> 
+		<div class="main container">
+			<div class="info container-fluid">
+				<h2 class="info-title">Audit Trail Management API</h2>
+				<h4 class="info-fullname light">{ urn:com.soa.audit.admin } AuditTrailService</h4>
+
+									<p>The API used to report and manage audit trails.</p>
+							</div>
+
+			<div class="operations container-fluid">
+
+				
+				<div class="GET operation container-fluid">
+					<div class='operation-heading clickable row' data-target="operation-1-details">
+						<h5>
+							<strong class="http-method">GET</strong>
+												            <span class="path">/audittrail</span>
+							                             														<span class="pull-right">Get Audit Trail</span>
+													</h5>
+					</div>
+
+					<div id="operation-1-details" class="container-fluid operation-detail" style="display: none">
+
+												<div class="row">
+							<p><p>Retrieves the audit records meeting the given criteria. The following usage example
+illustrates a query for all OBSERVED or RESOLVED records operated on by jdoe between
+2015-05-01T16:21:17 and now. It also illustrates paging by asking for records starting
+from position 50 and to only return 50 records.</p>
+<h4>Sample Request</h4>
+<pre><code>GET /rest/audittrail?state=OBSERVED&amp;state=RESOLVED&amp;actor=jdoe&amp;from=2015-05-01T16:21:17&amp;start=50&amp;count=50 HTTP/1.1
+Accept: application/json
+</code></pre>
+<h4>Sample Response</h4>
+<pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "totalCount" : "50",
+    "records" : [
+        {
+            "id" : "10001",
+            "userName" : "jdoe",
+            "appName" : "console-1",
+            "action" : "Add Policy",
+            "description" : "Policy [P1] added.",
+            "generatedAt" : "2015-05-01T16:21:17
+            "workflow" : {
+                "state" : "RESOLVED",
+                "receivedAt" : "2015-05-01T16:21:18",
+                "observedBy" : "jdoe",
+                "observedAt" : "2015-05-01T17:20:10",
+                "resolvedBy" : "jdoe",
+                "resolvedAt" : "2015-05-01T18:32:40",
+                "comments" : [
+                    {
+                        "commentId" : "1", 
+                        "comment" : "Will investigate.",
+                        "userName" : "jdoe",
+                        "createdAt" : "2015-05-01T17:20:10"
+                    },
+                    {
+                        "commentId" : "2", 
+                        "comment" : "Figured it out.",
+                        "userName" : "jdoe",
+                        "createdAt" : "2015-05-01T18:32:40"
+                    }
+                ]
+            }
+        },
+        ... not shown for brevity ...
+    ],  
+    "listIncomplete" : "true"
+}
+
+The *listIncomplete* field in the response indicates there are more records 
+beyond the 50 that match the given criteria.
+</code></pre></p>
+						</div>
+						
+												<div>
+							<h5>Parameters</h5>
+							
+													</div>
+												
+						<div class="container-fluid">
+							<div class="underline row">
+								<div class="col-md-2">Name</div>
+								<div class="col-md-2">Type</div>
+								<div class="col-md-4">Description</div>
+								<div class="col-md-4">Model</div>
+							</div>
+														<div class="row">
+								<div class="col-md-2">user</div>
+								<div class="col-md-2">query</div>
+																<div class="col-md-4">Name of the user who's action was audited to filter on.</div>
+																																		<div class="col-md-4">string</div>
+																								</div>
+														<div class="row">
+								<div class="col-md-2">action</div>
+								<div class="col-md-2">query</div>
+																<div class="col-md-4">Action audited to filter on.</div>
+																																		<div class="col-md-4">string</div>
+																								</div>
+														<div class="row">
+								<div class="col-md-2">from</div>
+								<div class="col-md-2">query</div>
+																<div class="col-md-4">Date at which only audit records reported after will be returned.</div>
+																																		<div class="col-md-4">string</div>
+																								</div>
+														<div class="row">
+								<div class="col-md-2">to</div>
+								<div class="col-md-2">query</div>
+																<div class="col-md-4">Date at which only audit records reported before will be returned.</div>
+																																		<div class="col-md-4">string</div>
+																								</div>
+														<div class="row">
+								<div class="col-md-2">state</div>
+								<div class="col-md-2">query</div>
+																<div class="col-md-4">States of the audit records to filter on.</div>
+																																		<div class="col-md-4">string</div>
+																								</div>
+														<div class="row">
+								<div class="col-md-2">actor</div>
+								<div class="col-md-2">query</div>
+																<div class="col-md-4">Indicates only audit records that the user with the given username performed a workflow action on should be returned.</div>
+																																		<div class="col-md-4">string</div>
+																								</div>
+														<div class="row">
+								<div class="col-md-2">start</div>
+								<div class="col-md-2">query</div>
+																<div class="col-md-4">To page the results this integer indicates the first audit record from the full result set to return as the first item of the page.</div>
+																																		<div class="col-md-4">integer</div>
+																								</div>
+														<div class="row">
+								<div class="col-md-2">count</div>
+								<div class="col-md-2">query</div>
+																<div class="col-md-4">To page the results this integer indicates the number of items thatshould be returned in the page.</div>
+																																		<div class="col-md-4">integer</div>
+																								</div>
+													</div>
+						
+												<div class="">
+							<h5>Reponse</h5>
+
+														<div class="row">
+								<div class="col-md-12">
+									<strong>Produces </strong>
+																			<span>application/json</span>
+																			<span>application/xml</span>
+																			<span>text/xml</span>
+																	</div>
+							</div>
+							
+						</div>
+						
+												<div class="container-fluid">
+							<div class="underline row">
+								<div class="col-md-2">Status Code</div>
+								<div class="col-md-6">Reason</div>
+								<div class="col-md-4">Model</div>
+							</div>
+														<div class="row">
+								<div class="col-md-2">200</div>
+								<div class="col-md-6">Success</div>
+																											<div class="col-md-4 clickable link" data-target="getAuditTrail-response-200">auditTrail</div>
+										<div id="getAuditTrail-response-200" class="container-fluid col-md-12 well model" style="display: none; margin-left:8px;">
+																					<strong>auditTrail {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">records</strong>
+																									<span class="property-type">( Collection of  auditRecord )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">listIncomplete</strong>
+																									<span class="property-type">( boolean )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">totalCount</strong>
+																									<span class="property-type">( int )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>auditRecord {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">workflow</strong>
+																									<span class="property-type">( auditWorkflow )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">appName</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">generatedAt</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">action</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">description</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">id</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">userName</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>auditWorkflow {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">observedBy</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">resolvedAt</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">comments</strong>
+																									<span class="property-type">( Collection of  auditComment )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">observedAt</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">resolvedBy</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">state</strong>
+																									<span class="property-type">( AuditState )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">receivedAt</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>auditComment {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">createdDts</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">commentId</strong>
+																									<span class="property-type">( long )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">comment</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">userName</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																				</div>
+																								</div>
+													</div>
+						
+					</div>
+				</div>
+				
+				<div class="POST operation container-fluid">
+					<div class='operation-heading clickable row' data-target="operation-2-details">
+						<h5>
+							<strong class="http-method">POST</strong>
+												            <span class="path">/audittrail</span>
+							                             														<span class="pull-right">Add Audit Record</span>
+													</h5>
+					</div>
+
+					<div id="operation-2-details" class="container-fluid operation-detail" style="display: none">
+
+												<div class="row">
+							<p><p>Adds an audit trail record.</p>
+<h4>Sample Request</h4>
+<pre><code>POST /rest/audittrail HTTP/1.1
+Content-Type: application/json
+
+{
+    "userName" : "jdoe",
+    "appName" : "console-1",
+    "action" : "Add Policy",
+    "description" : "Policy [P1] added.",
+    "generatedAt" : "2015-05-01T16:21:17
+}
+</code></pre>
+<h4>Sample Response</h4>
+<pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "id" : "10001",
+    "userName" : "jdoe",
+    "appName" : "console-1",
+    "action" : "Add Policy",
+    "description" : "Policy [P1] added.",
+    "generatedAt" : "2015-05-01T16:21:17
+    "workflow" : {
+      "state" : "UNOBSERVED
+      "receivedAt" : "2015-05-01T16:21:18",
+    }
+}
+</code></pre>
+<p>Note the <em>id</em> property is not provided in the request but is provided in the
+response message. The <em>id</em> can then be used when performing workflow actions.
+The workflow is also auto-generated and provided in the response where it indicates
+the initial state and when the system received the record.</p></p>
+						</div>
+						
+												<div>
+							<h5>Parameters</h5>
+							
+														<div class="row">
+								<div class="col-md-12">
+									<strong>Accepts </strong>
+																			<span>application/json </span>
+																			<span>application/xml </span>
+																			<span>text/xml </span>
+																	</div>
+							</div>
+													</div>
+												
+						<div class="container-fluid">
+							<div class="underline row">
+								<div class="col-md-2">Name</div>
+								<div class="col-md-2">Type</div>
+								<div class="col-md-4">Description</div>
+								<div class="col-md-4">Model</div>
+							</div>
+														<div class="row">
+								<div class="col-md-2">body</div>
+								<div class="col-md-2">entity</div>
+																<div class="col-md-4">The audit trail record to add.</div>
+																																			<div class="col-md-4"><div class="clickable link" data-target="addAuditTrail-body">auditRecord</div></div>
+										<div id="addAuditTrail-body" class="container-fluid col-md-12 well model" style="display: none;">
+																					<strong>auditRecord {</strong>
+																						<div class="api-parameter-property">
+												<strong class="property-name">workflow</strong>
+																									<span class="property-type">( auditWorkflow )</span>
+																							</div>
+																						<div class="api-parameter-property">
+												<strong class="property-name">appName</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-parameter-property">
+												<strong class="property-name">generatedAt</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-parameter-property">
+												<strong class="property-name">action</strong>
+																									<span class="property-type">( string, <em>required</em> )</span>
+																							</div>
+																						<div class="api-parameter-property">
+												<strong class="property-name">description</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-parameter-property">
+												<strong class="property-name">id</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-parameter-property">
+												<strong class="property-name">userName</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>auditWorkflow {</strong>
+																						<div class="api-parameter-property">
+												<strong class="property-name">observedBy</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-parameter-property">
+												<strong class="property-name">resolvedAt</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-parameter-property">
+												<strong class="property-name">comments</strong>
+																									<span class="property-type">( Collection of  auditComment )</span>
+																							</div>
+																						<div class="api-parameter-property">
+												<strong class="property-name">observedAt</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-parameter-property">
+												<strong class="property-name">resolvedBy</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-parameter-property">
+												<strong class="property-name">state</strong>
+																									<span class="property-type">( AuditState )</span>
+																							</div>
+																						<div class="api-parameter-property">
+												<strong class="property-name">receivedAt</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>auditComment {</strong>
+																						<div class="api-parameter-property">
+												<strong class="property-name">createdDts</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-parameter-property">
+												<strong class="property-name">commentId</strong>
+																									<span class="property-type">( long, <em>required</em> )</span>
+																							</div>
+																						<div class="api-parameter-property">
+												<strong class="property-name">comment</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-parameter-property">
+												<strong class="property-name">userName</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																				</div>
+																								</div>
+													</div>
+						
+												<div class="">
+							<h5>Reponse</h5>
+
+							
+						</div>
+						
+												<div class="container-fluid">
+							<div class="underline row">
+								<div class="col-md-2">Status Code</div>
+								<div class="col-md-6">Reason</div>
+								<div class="col-md-4">Model</div>
+							</div>
+														<div class="row">
+								<div class="col-md-2">200</div>
+								<div class="col-md-6">Success</div>
+																											<div class="col-md-4 clickable link" data-target="addAuditTrail-response-200">auditRecord</div>
+										<div id="addAuditTrail-response-200" class="container-fluid col-md-12 well model" style="display: none; margin-left:8px;">
+																					<strong>auditRecord {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">workflow</strong>
+																									<span class="property-type">( auditWorkflow )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">appName</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">generatedAt</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">action</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">description</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">id</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">userName</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>auditWorkflow {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">observedBy</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">resolvedAt</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">comments</strong>
+																									<span class="property-type">( Collection of  auditComment )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">observedAt</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">resolvedBy</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">state</strong>
+																									<span class="property-type">( AuditState )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">receivedAt</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>auditComment {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">createdDts</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">commentId</strong>
+																									<span class="property-type">( long )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">comment</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">userName</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																				</div>
+																								</div>
+													</div>
+						
+					</div>
+				</div>
+				
+				<div class="PUT operation container-fluid">
+					<div class='operation-heading clickable row' data-target="operation-3-details">
+						<h5>
+							<strong class="http-method">PUT</strong>
+												            <span class="path">/audittrail/{id}/workflow</span>
+							                             														<span class="pull-right">Perform Workflow Action</span>
+													</h5>
+					</div>
+
+					<div id="operation-3-details" class="container-fluid operation-detail" style="display: none">
+
+												<div class="row">
+							<p><p>Performs a workflow action on the audit record with the given ID. A usage example is as follows:</p>
+<h4>Sample Request</h4>
+<pre><code>PUT /rest/audittrail/10001/workflow HTTP/1.1
+{
+    "action" : "OBSERVE",
+    "comment" : "Observed record, no action taken",
+    "userName" : "jdoe"
+}
+</code></pre>
+<h4>Sample Response</h4>
+<pre><code>HTTP/1.1 200 OK
+</code></pre></p>
+						</div>
+						
+												<div>
+							<h5>Parameters</h5>
+							
+														<div class="row">
+								<div class="col-md-12">
+									<strong>Accepts </strong>
+																			<span>application/json </span>
+																			<span>application/xml </span>
+																			<span>text/xml </span>
+																	</div>
+							</div>
+													</div>
+												
+						<div class="container-fluid">
+							<div class="underline row">
+								<div class="col-md-2">Name</div>
+								<div class="col-md-2">Type</div>
+								<div class="col-md-4">Description</div>
+								<div class="col-md-4">Model</div>
+							</div>
+														<div class="row">
+								<div class="col-md-2">id</div>
+								<div class="col-md-2">path</div>
+																<div class="col-md-4">ID of the audit record to perform the action on.</div>
+																																		<div class="col-md-4">string</div>
+																								</div>
+														<div class="row">
+								<div class="col-md-2">body</div>
+								<div class="col-md-2">entity</div>
+																<div class="col-md-4">The action to perform.</div>
+																																			<div class="col-md-4"><div class="clickable link" data-target="performWorkflowAction-body">auditWorkflowAction</div></div>
+										<div id="performWorkflowAction-body" class="container-fluid col-md-12 well model" style="display: none;">
+																					<strong>auditWorkflowAction {</strong>
+																						<div class="api-parameter-property">
+												<strong class="property-name">action</strong>
+																									<span class="property-type">( action, <em>required</em> )</span>
+																							</div>
+																						<div class="api-parameter-property">
+												<strong class="property-name">comment</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-parameter-property">
+												<strong class="property-name">userName</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																				</div>
+																								</div>
+													</div>
+						
+												<div class="">
+							<h5>Reponse</h5>
+
+							
+						</div>
+						
+												<div class="container-fluid">
+							<div class="underline row">
+								<div class="col-md-2">Status Code</div>
+								<div class="col-md-6">Reason</div>
+								<div class="col-md-4">Model</div>
+							</div>
+														<div class="row">
+								<div class="col-md-2">200</div>
+								<div class="col-md-6">Success</div>
+																											<div class="col-md-4 clickable link" data-target="performWorkflowAction-response-200">auditWorkflow</div>
+										<div id="performWorkflowAction-response-200" class="container-fluid col-md-12 well model" style="display: none; margin-left:8px;">
+																					<strong>auditWorkflow {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">observedBy</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">resolvedAt</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">comments</strong>
+																									<span class="property-type">( Collection of  auditComment )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">observedAt</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">resolvedBy</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">state</strong>
+																									<span class="property-type">( AuditState )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">receivedAt</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>auditComment {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">createdDts</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">commentId</strong>
+																									<span class="property-type">( long )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">comment</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">userName</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																				</div>
+																								</div>
+													</div>
+						
+					</div>
+				</div>
+								
+				<div class="light api-footer">
+					<span>[</span>
+					<span>Vendor: <a href="http://www.akana.com">Akana</a></span>
+											<span>, Version: 8.0.0</span>
+																<span>, Base Path: /rest</span>
+										<span>]</span>
+											[<a href="api-urn_com.soa.audit.admin-AuditTrailService.wsdl" type="application/xml">WSDL</a>]
+																[<a href="AuditTrailService.json" type="application/json">Swagger</a>]
+									</div>				
+
+			</div>
+
+		</div>
+
+		<br/><br/><br/>
+
+		<div class='footer'></div>
+
+		<script src="js/jquery-1.8.0.min.js"></script>
+		<script>
+		  	$(document ).ready(function() {
+			    $(".clickable").click(function(event) {
+			    	var target = event.currentTarget.attributes["data-target"];
+			    	if (target) {
+			    		$("#"+target.value).slideToggle("fast");
+			    	}
+			    });
+			});
+		</script>
+	</body>
+</html>
