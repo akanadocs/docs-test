@@ -17,7 +17,7 @@ nav-title: JOSE Security v2
 
 <hr class="divide_hr" />
 <h2 style="color: gray;">Table of Contents</h2>
-<ol class="table_of_contents">
+<ul class="table_of_contents">
 	<li><a href="#introduction">Introduction</a></li>
 	<li><a href="#specifications">Specifications</a></li>
 	<li><a href="#jose_unenc_http_direction">JOSE Security Policy v2: supported HTTP methods</a></li>
@@ -38,7 +38,8 @@ nav-title: JOSE Security v2
 	<li><a href="#jose_unenc_troubleshooting">JOSE Security Policy v2 (Unencoded Payload Support): troubleshooting</a></li>
 	<li><a href="#jose_error_codes_ob">Open Banking error messages for the JOSE Security Policy v2</a></li>
 	<li><a href="#jose_v2_appendix_f">Appendix F configuration in the JOSE Security Policy v2</a> (2019.1.14 and later)</li>
-</ol>
+	<li><a href="#specifying_custom_cipher_suite">Specifying a custom cipher suite</a> (2020.2.13 and later)</li>
+</ul>
 <hr class="divide_hr" />
 
 
@@ -112,11 +113,11 @@ nav-title: JOSE Security v2
 <p><strong>3.0 and earlier:</strong></p>
 <p>For Open Banking 3.0 and earlier, the JOSE policy v2 supports sending the custom <strong>iat</strong> and <strong>iss</strong> claims, and supports specifying those custom claims in the <strong>crit</strong> claim, as per the specification.</p>
 <p>For example, in version 2.0, the <strong>crit</strong> claim is required, and must be a string array of the three specific values shown below:</p>
-<pre>"b64", "http://openbanking.org.uk/iat", "http://openbanking.org.uk/iss"</pre>
+<pre class="pre_plain">"b64", "http://openbanking.org.uk/iat", "http://openbanking.org.uk/iss"</pre>
 <p><strong>3.1:</strong></p>
 <p>In version 3.1, the JOSE Security Policy v2 supports sending the additional <strong>tan</strong> claim which is required, see <a href="#jose_ob_tan"><strong>tan</strong> claim</a> below, and supports including the <strong>tan</strong> claim in the <strong>crit</strong> claim, as per the specification.</p>
 <p>In version 3.1, the <strong>crit</strong> claim is required and must be a string array of the four specific values shown below:</p>
-<pre>"b64", "http://openbanking.org.uk/iat", "http://openbanking.org.uk/iss", "http://openbanking.org.uk/tan"</pre>
+<pre class="pre_plain">"b64", "http://openbanking.org.uk/iat", "http://openbanking.org.uk/iss", "http://openbanking.org.uk/tan"</pre>
 <p>For more information, see the Open Banking 3.1 specification: <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload" title="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload" target="_blank">https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937656404/Read+Write+Data+API+Specification+-+v3.1#Read/WriteDataAPISpecification-v3.1-ProcessforSigningaPayload</a> (Step 2).</p>
 <p class="Note"><strong>Note</strong>: The platform validates the <strong>tan</strong> header using the value configured in the policy. If no value is specified in the policy, the header is validated using the default value, <strong>openbanking.org.uk</strong>.</p>
 
@@ -262,9 +263,9 @@ nav-title: JOSE Security v2
 <dd>If you want the signing/encryption to apply to all parts of the message, including the payload, leave this box cleared (the default).</dd>
 <dd><strong>Note</strong>: If you check this box, for IN messages the client must send the <strong>b64</strong> claim, with a value of <strong>false</strong>; for OUT or FAULT messages, the platform sends the b64 claim with a value of <strong>false</strong>. If the detached payload option is not used, the <strong>b64</strong> claim is not sent.</dd>
 <dd>Sample header for unencoded detached payload:
-<pre>{&quot;kid&quot;:&quot;signKey&quot;,&quot;alg&quot;:&quot;RS256&quot;,&quot;cty&quot;:&quot;application/json&quot;, &quot;b64&quot;:false, &quot;crit&quot;:[&quot;b64&quot;]}</pre></dd>
+<pre class="prettyprint" id="pre_json">{&quot;kid&quot;:&quot;signKey&quot;,&quot;alg&quot;:&quot;RS256&quot;,&quot;cty&quot;:&quot;application/json&quot;, &quot;b64&quot;:false, &quot;crit&quot;:[&quot;b64&quot;]}</pre></dd>
 <dd>Sample header when unencoded detached payload is not selected:
-<pre>{&quot;kid&quot;:&quot;signKey&quot;,&quot;alg&quot;:&quot;RS256&quot;,&quot;cty&quot;:&quot;application/json&quot;}</pre></dd>
+<pre class="prettyprint" id="pre_json">{&quot;kid&quot;:&quot;signKey&quot;,&quot;alg&quot;:&quot;RS256&quot;,&quot;cty&quot;:&quot;application/json&quot;}</pre></dd>
 <dd><strong>Header Parameter Name</strong>—The name of the header containing a detached JWS signature of the body of the payload. For example, <strong>x-jws-signature</strong>. Required if <strong>Unencoded Detached Payload</strong> is checked.</dd>
 <dd><strong>Enforce Appendix F</strong> (2019.1.14 and later)—Optional: check this box if you want the policy to integrity-protect content that is not itself contained in the JWS. For details, refer to the <a href="https://tools.ietf.org/html/rfc7515#appendix-F" title="Link to Appendix F of the JWS specification, RFC-7515" target="_blank">Appendix F (Detached Content) section of the JWS specification (RFC-7515)</a>. This option is available only for Provider role, and only if <strong>Unencoded Detached Payload</strong> is checked.</dd>
 <dd>When this box is checked, the policy applies Base64 encoding to the payload and removes the Base64 header.</dd>
@@ -603,7 +604,7 @@ nav-title: JOSE Security v2
 	<li>The payload is base 64-encoded.</li>
 	<li>The signature signs all those things together.</li>
 </ul>
-<pre>{
+<pre class="prettyprint" id="pre_json">{
   "protected":"eyJraWQiOiJzaWduS2V5IiwiYWxnIjoiUlMyNTYiLCJjdHkiOiJhcHBsaWNhdGlvbi9qc29uIiwiY3JpdCI6WyJiNjQiXX0",
   "payload":"eyJQVVQtcmVzcG9uc2UiOiJzaWduZWQgam9zZSByZXNwb25zZSJ9",
   "signature":"damrs8P_kUGDR0RJ6Vn1aB6VDHgGwZZyFXsYwzGLSXvHg60BNsTNn8geKAA-ObcnEDj_5-FTBt42u8Kt0MGkzWcvxkM4iU8mC
@@ -630,12 +631,12 @@ oCFYaoEOkGZlREUmWcQtQ",
 <p>The example below shows the same response message used in the previous example, in JSON format with detached payload.</p>
 <p>With JSON detached, you put the payload in the body and the rest of the message goes in the header.</p>
 <p><strong>Body (payload)</strong></p>
-<pre>{
+<pre class="prettyprint" id="pre_json">{
   &quot;PUT-response&quot;: &quot;signed JOSE response&quot;
 }</pre>
 <p><strong>Detached header</strong></p>
 <p>This example has a <strong>protected</strong> header, signature, and the headers themselves.</p>
-<pre>{
+<pre class="prettyprint" id="pre_json">{
   &quot;protected&quot;:&quot;eyJraWQiOiJzaWduS2V5IiwiYWxnIjoiUlMyNTYiLCJjdHkiOiJhcHBsaWNhdGlvbi9qc29uIiwiYjY0IjpmYWxzZSwiY3JpdCI6WyJiNjQiXX0&quot;,
   &quot;signature&quot;:&quot;AuwXL1pWxgQfyS7Scim0uhqGyLyehkQtp4sAaW9Fz5X10HkcAWS5zY4F-xwYeiGb21ZrL6yurxfPPKpkwD9F8W6p1jYqOaEX5leu49r0VDWoWE
 lw-X6c9v4PiYRfEu38jwxgbppZkQRke9RyfbO9yQw9ZUgNCo-Q0NIvgcM4JducNz09qsPrHuSJiOQ86TyOyKfug9zsahJ7-rpxxPicvGfVRMlRhGeKNgG57ombDsD
@@ -667,7 +668,7 @@ stmZKsRWrVx-tnmLX7aIhz9NL0jOmRf1deh4HAenk7JKPzUgAxZssylmTCivkuV10yrdlIgyUYELkHNz
 	<li>The payload value, followed by a period separator.</li>
 	<li>The signature (signed with the private key of the sender).</li>
 </ol>
-<pre>eyJraWQiOiJzaWduS2V5IiwiYWxnIjoiUlMyNTYiLCJjdHkiOiJhcHBsaWNhdGlvbi9qc29uIiwiY3JpdCI6WyJiNjQiXX0.eyJQVVQtcmVzcG9uc2UiOiJzaWduZWQgam9zZSByZXNwb25zZSJ9.damrs8P_kUGDR0RJ6Vn1aB6VDHgGwZZyFXsYwzGLSXvHg60BNsTNn8geKAA-ObcnEDj_5-FTBt42u8Kt0MGkzWcvxkM4iU8mCyAaxqpA1zv_4r0I-bk46Odt9VeKXiLezjRoLLctLvD-LRgVvwNG9EMmwe_qV6tWUCChSdw7cAxH9dthqD3sKmHBtVWEzO1PVWIQn46TuWCEeBla0ggiK6UPYD4fnJCpGiq_3r_6Ygb64YjnjSMScoF2-f8z8mGZptOZsojzlI_bcJ3yFRyzit__uwQcyMBQ73maen9gZnXb48RCy-QTdEAQbhOWXYDe8oCFYaoEOkGZlREUmWcQtQ</pre>
+<pre class="pre_plain">eyJraWQiOiJzaWduS2V5IiwiYWxnIjoiUlMyNTYiLCJjdHkiOiJhcHBsaWNhdGlvbi9qc29uIiwiY3JpdCI6WyJiNjQiXX0.eyJQVVQtcmVzcG9uc2UiOiJzaWduZWQgam9zZSByZXNwb25zZSJ9.damrs8P_kUGDR0RJ6Vn1aB6VDHgGwZZyFXsYwzGLSXvHg60BNsTNn8geKAA-ObcnEDj_5-FTBt42u8Kt0MGkzWcvxkM4iU8mCyAaxqpA1zv_4r0I-bk46Odt9VeKXiLezjRoLLctLvD-LRgVvwNG9EMmwe_qV6tWUCChSdw7cAxH9dthqD3sKmHBtVWEzO1PVWIQn46TuWCEeBla0ggiK6UPYD4fnJCpGiq_3r_6Ygb64YjnjSMScoF2-f8z8mGZptOZsojzlI_bcJ3yFRyzit__uwQcyMBQ73maen9gZnXb48RCy-QTdEAQbhOWXYDe8oCFYaoEOkGZlREUmWcQtQ</pre>
 <p><strong>Detached header</strong></p>
 <p>Not applicable.</p>
 
@@ -688,12 +689,12 @@ stmZKsRWrVx-tnmLX7aIhz9NL0jOmRf1deh4HAenk7JKPzUgAxZssylmTCivkuV10yrdlIgyUYELkHNz
 	<li>The signature (signed with a public key).</li>
 </ol>
 <p>The detached version is similar to the previous example, but the payload is sent separately in the body, un-encoded, and is not included as the second section of the detached header. The period separators are preserved.</p>
-<pre>{
+<pre class="prettyprint" id="pre_json">{
   "PUT-response": "signed JOSE response"
 }</pre>
 <p><strong>Detached header</strong></p>
 <p>Note the two consecutive periods on line 4, where the payload is missing.</p>
-<pre>eyJraWQiOiJzaWduS2V5IiwiYWxnIjoiUlMyNTYiLCJjdHkiOiJhcHBsaWNhdGlvbi9qc29uIiwiYjY0IjpmYWxzZSwiY3JpdCI6WyJiNjQiLCJodHRwOi8vb3BlbmJhbmtpbmcub3JnLnVrL2lhdCIsImh0dHA6Ly9vcGVuYmFua2luZy5vcmcudWsvaXNzIl0sImh0dHA6Ly9vcGVuYmFua2luZy5vcmcudWsvaWF0IjoxNTMyNjQzNjExLCJodHRwOi8vb3BlbmJhbmtpbmcub3JnLnVrL2lzcyI6IkNOPW9iam9zZXNpZ25lciwgT1U9QWxpQm9icywgTz1BbGksIEw9TG9uZG9uLCBTVD1Mb25kb24sIEM9R0IgIn0..Eg7LgJakjT9e0eCsin8MtKbtqFxOguvMFA7dT-xpT60nsU1ulZZJvsSYwo_kZxe-06aMIR7dxkXaWT7eH6vPZYSTrzn0KuYRt_VR6uin9D6-QLYLTIDMG8p5VlzqyQlMppzDAJq2plxPoSk2MJC7hMCd76niw-tdnoC4LdhRMZK9YfVt-GUk11a78XarzRGPFJ96tZ4d1qHWTm2eIbIJ10EMHXPPmh5U8HbRuBvFr6UGGnTnuLMVaiPLNHLsbCMNaVm50QjcabxlQWfKgGPSHH-7QmNwRSOubBJD7e7Y-JeLZJ6zGHe4sWECZVwhKFgsBX2jH_ZijIq1jrMdKp5W6w</pre>
+<pre class="pre_plain">eyJraWQiOiJzaWduS2V5IiwiYWxnIjoiUlMyNTYiLCJjdHkiOiJhcHBsaWNhdGlvbi9qc29uIiwiYjY0IjpmYWxzZSwiY3JpdCI6WyJiNjQiLCJodHRwOi8vb3BlbmJhbmtpbmcub3JnLnVrL2lhdCIsImh0dHA6Ly9vcGVuYmFua2luZy5vcmcudWsvaXNzIl0sImh0dHA6Ly9vcGVuYmFua2luZy5vcmcudWsvaWF0IjoxNTMyNjQzNjExLCJodHRwOi8vb3BlbmJhbmtpbmcub3JnLnVrL2lzcyI6IkNOPW9iam9zZXNpZ25lciwgT1U9QWxpQm9icywgTz1BbGksIEw9TG9uZG9uLCBTVD1Mb25kb24sIEM9R0IgIn0..Eg7LgJakjT9e0eCsin8MtKbtqFxOguvMFA7dT-xpT60nsU1ulZZJvsSYwo_kZxe-06aMIR7dxkXaWT7eH6vPZYSTrzn0KuYRt_VR6uin9D6-QLYLTIDMG8p5VlzqyQlMppzDAJq2plxPoSk2MJC7hMCd76niw-tdnoC4LdhRMZK9YfVt-GUk11a78XarzRGPFJ96tZ4d1qHWTm2eIbIJ10EMHXPPmh5U8HbRuBvFr6UGGnTnuLMVaiPLNHLsbCMNaVm50QjcabxlQWfKgGPSHH-7QmNwRSOubBJD7e7Y-JeLZJ6zGHe4sWECZVwhKFgsBX2jH_ZijIq1jrMdKp5W6w</pre>
 <p><a href="#top">Back to top</a></p>
 
 
@@ -729,13 +730,13 @@ stmZKsRWrVx-tnmLX7aIhz9NL0jOmRf1deh4HAenk7JKPzUgAxZssylmTCivkuV10yrdlIgyUYELkHNz
 
 <h3 id="ts_03">Required header is missing</h3>
 <p>If your JOSE policy v2 is set up to require a specific header, and the required header is missing, the following error is generated:</p>
-<pre>Authentication error. No JWS content found with given header name [{header_name}]</pre>
+<pre class="pre_plain">Authentication error. No JWS content found with given header name [{header_name}]</pre>
 <p><strong>Solution</strong>: make sure the required header is present. The header name must be exactly as set up in the policy definition.</p>
 
 
 <h3 id="ts_04">Unexpected character in the payload</h3>
 <p>If there is a problem with the payload, so that the pre-encoding and post-encoding values would not match, the following error is generated:</p>
-<pre>Authentication error. Parsing error: org.jose4j.json.internal.json_simple.parser.ParseException: unexpected 
+<pre class="pre_plain">Authentication error. Parsing error: org.jose4j.json.internal.json_simple.parser.ParseException: unexpected 
 character ({char}) at position ({position}).</pre>
 <p><strong>Solution</strong>: check the sequencing to find out why the beginning and ending values are different, and fix accordingly.</p>
 <p><a href="#top">Back to top</a></p>
@@ -746,7 +747,7 @@ character ({char}) at position ({position}).</pre>
 <p>As part of the UK Open Banking specification 3.1, error messages are returned as JSON objects with a specific format. </p>
 <p>For full details, review the <a href="https://openbanking.atlassian.net/wiki/spaces/DZ/pages/641992418/Read%2BWrite%2BData%2BAPI%2BSpecification%2B-%2Bv3.0#Read/WriteDataAPISpecification-v3.0-ErrorResponseStructure" title="link to Error Response section of the Open Banking 3.1 specification" target="_blank">Error Response section of the Open Banking 3.1 specification</a>.</p>
 <p>This section includes information about the specific error messaging that Akana returns for the JOSE Security Policy v2. An example is given below.</p>
-<pre>{
+<pre class="prettyprint" id="pre_json">{
   "Code":"[400] Bad Request",
   "Id":"94428-19d48b3e-c1ac-404a-9ac3-aaa1bc93e314",
   "Message":"An invalid or no value is supplied in the JOSE header.",
@@ -1536,7 +1537,7 @@ character ({char}) at position ({position}).</pre>
 <p>With the Appendix F option checked, the b64 critical header is not required and <strong>must not</strong> be sent in the JWS header. The differences between these headers is shown below with and without the Appendix F option selected.</p>
 <p><strong>With</strong> UK Open Banking 3.1, <strong>without</strong> Appendix F:</p>
 <p>Without Appendix F selected, the JWS header includes the b64 header.</p>
-<pre>{
+<pre class="prettyprint" id="pre_json">{
   "kid":"joseclient",
   "alg":"PS256",
   "cty":"application/json",
@@ -1553,7 +1554,7 @@ character ({char}) at position ({position}).</pre>
 }</pre>
 <p><strong>With</strong> UK Open Banking 3.1, <strong>with</strong> Appendix F:</p>
 <p>With the Appendix F option selected, the JWS header does <strong>not</strong> include the b64 header, as shown below.</p>
-<pre>{
+<pre class="prettyprint" id="pre_json">{
   "alg": "PS256",
   "kid": "joseclient",
   "typ": "JOSE",
@@ -1572,7 +1573,7 @@ character ({char}) at position ({position}).</pre>
 <p>When the Appendix F option is selected, the b64 header <strong>must not</strong> be sent and <strong>will not</strong> be returned in the response.</p>
 <h4>Error scenario</h4>
 <p>If the b64 header is sent in the request, the following error is returned, with a status code of 400 in a UK Open Banking 3.1 scenario:</p>
-<pre>{
+<pre class="prettyprint" id="pre_json">{
   "Code":"[400] Bad Request",
   "Id":"94477-a6e9a65f-7d89-4293-90cf-c78128743436",
   "Message":"An invalid value is supplied in the JOSE header.",
@@ -1585,6 +1586,27 @@ character ({char}) at position ({position}).</pre>
     }
   ]
 }</pre>
+<p><a href="#top">Back to top</a></p>
+
+
+
+<h2 id="specifying_custom_cipher_suite">Specifying a custom cipher suite</h2>
+<p><strong>Valid in version: 2020.2.13 and later</strong></p>
+<p>You can configure the Akana Platform to explicitly specify an nCipher provider, so that the JOSE Policy v2 calls the specified provider for all cryptographic functions. For example, you can use this to allow the keys to be retrieved from an HSM to sign the response, or just to use a different cryptographic provider. If this property is not specified, a default provider list is used.</p>
+<p>To set this up, there is a new configuration option in the Akana Administration Console. Follow the steps below, or ask an Administrator to update the configuration for you.</p>
+
+<h4>To specify a custom cipher suite in the Akana Administration Console</h4>
+<ol>
+	<li>Log in to the Akana Administration Console.</li>
+	<li>Click the <strong>Configuration</strong> tab.</li>
+	<li>On the left, under <strong>Configuration Categories</strong>, find the <strong>com.akana.jose.config</strong> configuration category.</li>
+	<li>In the <strong>jose.v2.security.handler.factory.joseCryptoProvider</strong> field, change the value, to the provider that you want. Must be a valid provider. For example:</li>
+		<ul>
+			<li>For nCipher: <strong>nCipherKM</strong></li>
+			<li>For Bouncy Castle: <strong>BC</strong></li>
+		</ul>
+	<li>Click <strong>Apply Changes</strong>.</li>
+</ol>
 <p><a href="#top">Back to top</a></p>
 
 
