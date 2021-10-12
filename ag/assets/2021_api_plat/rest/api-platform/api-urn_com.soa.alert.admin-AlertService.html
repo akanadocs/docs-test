@@ -30,8 +30,451 @@
 			<div class="operations container-fluid">
 
 				
-				<div class="POST operation container-fluid">
+				<div class="GET operation container-fluid">
 					<div class='operation-heading clickable row' data-target="operation-1-details">
+						<h5>
+							<strong class="http-method">GET</strong>
+												            <span class="path">/alerts</span>
+							                             														<span class="pull-right">Get Alerts</span>
+													</h5>
+					</div>
+
+					<div id="operation-1-details" class="container-fluid operation-detail" style="display: none">
+
+												<div class="row">
+							<p><p>Retrieves the alerts meeting the given criteria. The following usage example illustrates a query for all UNOBSERVED alerts reported against service with the
+key uddi:f996a248-f061-11e4-924f-f8246128b60a with a severity of MAJOR or CRITICAL that were generated between 2015-05-01T16:21:17 and now. It also illustrates
+paging by asking for records starting from position 50 and to only return 50 records.</p>
+<h4>Request:</h4>
+<pre><code>GET /rest/alerts?state=UNOBSERVED&amp;source=uddi:f996a248-f061-11e4-924f-f8246128b60a&amp;severity=1&amp;severity=2&amp;from=2015-05-01T16:21:17&amp;start=50&amp;count=50 HTTP/1.1
+</code></pre>
+<h4>Response:</h4>
+<pre><code>HTTP/1.1 200 OK
+{
+    "totalCount" : "50",
+    "records" : [
+        {
+            "id" : "1010",
+            "alertType" : "1",
+            "alertCode" : "1000000",
+            "alertCodeInfo" : {
+                "severity" : "2",
+                "description" : "Policy enforcement failure",
+                "componentName" : "Policy Handler Framework",
+                "subsystemName" : "General",
+                "sendEmailEnabled" : "true",
+                "snmpTrapEnabled" : "false"
+            }
+            "description" : "Problem executing custom policy.",
+            "generatedAt" : "2015-05-01T16:21:18"
+            "source" : {
+                "sourceType" : "1",
+                "source" : "uddi:f996a248-f061-11e4-924f-f8246128b60a",
+                "sourceName" : "General\
+            }
+            "transaction" : {
+                "OperationInvocation" : {
+                    "operationName" : "op1",
+                    "operationKey" : "uddi:f996a248-f061-11e4-924f-f8246128b61b",
+                    "serviceName" : "Service1",
+                    "serviceKey"uddi:f996a248-f061-11e4-924f-f8246128b60a",
+                    "contractName" : "Anonymous Access",
+                    "contractKey" : "uddi:f996a248-f061-11e4-924f-f8246128b53c",
+                    "organizationKey" : "uddi:f996a248-f061-11e4-924f-f8246127d45a
+                }
+           }
+           "workflow" : {
+               "state" : "UNOBSERVED
+               "receivedAt" : "2015-05-01T16:21:18",
+           }
+           "alertDispatchStatus" : {
+               "dispatched" : "false"
+           }
+       },
+       ... not shown for brevity ...
+    ],  
+    "listIncomplete" : "true"
+}
+</code></pre>
+<p>The <em>listIncomplete</em> field in the response indicates there are more records beyond the 50 that match the given criteria.</p></p>
+						</div>
+						
+												<div>
+							<h5>Parameters</h5>
+							
+													</div>
+												
+						<div class="container-fluid">
+							<div class="underline row">
+								<div class="col-md-2">Name</div>
+								<div class="col-md-2">Type</div>
+								<div class="col-md-4">Description</div>
+								<div class="col-md-4">Model</div>
+							</div>
+														<div class="row">
+								<div class="col-md-2">code</div>
+								<div class="col-md-2">query</div>
+																<div class="col-md-4">Alert code to filter on.</div>
+																																		<div class="col-md-4">string</div>
+																								</div>
+														<div class="row">
+								<div class="col-md-2">source</div>
+								<div class="col-md-2">query</div>
+																<div class="col-md-4">Source of the alerts to filter on.</div>
+																																		<div class="col-md-4">string</div>
+																								</div>
+														<div class="row">
+								<div class="col-md-2">org</div>
+								<div class="col-md-2">query</div>
+																<div class="col-md-4">Organization key to filter on.</div>
+																																		<div class="col-md-4">string</div>
+																								</div>
+														<div class="row">
+								<div class="col-md-2">from</div>
+								<div class="col-md-2">query</div>
+																<div class="col-md-4">Date at which only alerts generated after will be returned. ISO-8601 format</div>
+																																		<div class="col-md-4">string</div>
+																								</div>
+														<div class="row">
+								<div class="col-md-2">to</div>
+								<div class="col-md-2">query</div>
+																<div class="col-md-4">Date at which only alerts generated before will be returned. ISO-8601 format</div>
+																																		<div class="col-md-4">string</div>
+																								</div>
+														<div class="row">
+								<div class="col-md-2">severity</div>
+								<div class="col-md-2">query</div>
+																<div class="col-md-4">Severities of the alerts to filter on.</div>
+																																		<div class="col-md-4">string</div>
+																								</div>
+														<div class="row">
+								<div class="col-md-2">state</div>
+								<div class="col-md-2">query</div>
+																<div class="col-md-4">States of the alerts to filter on.</div>
+																																		<div class="col-md-4">string</div>
+																								</div>
+														<div class="row">
+								<div class="col-md-2">actor</div>
+								<div class="col-md-2">query</div>
+																<div class="col-md-4">Indicates only alerts that the user with the given username performed a workflow action on should be returned.</div>
+																																		<div class="col-md-4">string</div>
+																								</div>
+														<div class="row">
+								<div class="col-md-2">start</div>
+								<div class="col-md-2">query</div>
+																<div class="col-md-4">To page the results this integer indicates the first alert from the full result set to return as the first item of the page.</div>
+																																		<div class="col-md-4">integer</div>
+																								</div>
+														<div class="row">
+								<div class="col-md-2">count</div>
+								<div class="col-md-2">query</div>
+																<div class="col-md-4">To page the results this integer indicates the number of items thatshould be returned in the page.</div>
+																																		<div class="col-md-4">integer</div>
+																								</div>
+													</div>
+						
+												<div class="">
+							<h5>Reponse</h5>
+
+														<div class="row">
+								<div class="col-md-12">
+									<strong>Produces </strong>
+																			<span>application/json</span>
+																			<span>application/xml</span>
+																			<span>text/xml</span>
+																	</div>
+							</div>
+							
+						</div>
+						
+												<div class="container-fluid">
+							<div class="underline row">
+								<div class="col-md-2">Status Code</div>
+								<div class="col-md-6">Reason</div>
+								<div class="col-md-4">Model</div>
+							</div>
+														<div class="row">
+								<div class="col-md-2">200</div>
+								<div class="col-md-6">Success</div>
+																											<div class="col-md-4 clickable link" data-target="getAlerts-response-200">alertList</div>
+										<div id="getAlerts-response-200" class="container-fluid col-md-12 well model" style="display: none; margin-left:8px;">
+																					<strong>alertList {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">listIncomplete</strong>
+																									<span class="property-type">( boolean )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">Alerts</strong>
+																									<span class="property-type">( Collection of  alert )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">totalCount</strong>
+																									<span class="property-type">( int )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>alert {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">alertDispatchStatus</strong>
+																									<span class="property-type">( AlerstDispatchStatus )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">alertType</strong>
+																									<span class="property-type">( int )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">alertCode</strong>
+																									<span class="property-type">( int )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">workflow</strong>
+																									<span class="property-type">( alertWorkflow )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">alertCodeInfo</strong>
+																									<span class="property-type">( alertCodeInfo )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">generatedAt</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">containerKey</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">description</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">alertSlaInfo</strong>
+																									<span class="property-type">( alertSlaInfo )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">id</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">source</strong>
+																									<span class="property-type">( alertSource )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">transaction</strong>
+																									<span class="property-type">( alertTransaction )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>AlerstDispatchStatus {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">emailStatus</strong>
+																									<span class="property-type">( EmailStatus )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">snmpStatus</strong>
+																									<span class="property-type">( SnmpStatus )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">dispatched</strong>
+																									<span class="property-type">( boolean )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">commandStatus</strong>
+																									<span class="property-type">( CommandStatus )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>EmailStatus {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">executionDate</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">executed</strong>
+																									<span class="property-type">( boolean )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>SnmpStatus {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">executionDate</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">executed</strong>
+																									<span class="property-type">( boolean )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>CommandStatus {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">executionDate</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">executed</strong>
+																									<span class="property-type">( boolean )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>alertWorkflow {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">observedBy</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">resolvedAt</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">observedAt</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">Comments</strong>
+																									<span class="property-type">( Collection of  alertComment )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">resolvedBy</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">state</strong>
+																									<span class="property-type">( AlertState )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">receivedAt</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>alertComment {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">createdDts</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">commentId</strong>
+																									<span class="property-type">( long )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">comment</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">userName</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>alertCodeInfo {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">severity</strong>
+																									<span class="property-type">( int )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">additionalInfo</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">description</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">componentName</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">ScriptCommand</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">subsystemName</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">sendEmailEnabled</strong>
+																									<span class="property-type">( boolean )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">snmpTrapEnabled</strong>
+																									<span class="property-type">( boolean )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>alertSlaInfo {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">ruleValueInterval</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">policyKey</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">ruleOperator</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">policyName</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">ruleMetricName</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">ruleKey</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">ruleValue</strong>
+																									<span class="property-type">( long )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">ruleValueUnit</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">startTime</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">endTime</strong>
+																									<span class="property-type">( dateTime )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">attachmentPointType</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">attachmentPointKey</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">measuredValue</strong>
+																									<span class="property-type">( double )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>alertSource {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">sourceType</strong>
+																									<span class="property-type">( int )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">source</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<div class="api-response-property">
+												<strong class="property-name">sourceName</strong>
+																									<span class="property-type">( string )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																					<strong>alertTransaction {</strong>
+																						<div class="api-response-property">
+												<strong class="property-name">any</strong>
+																									<span class="property-type">( anyType )</span>
+																							</div>
+																						<strong>}</strong><br/>
+																				</div>
+																								</div>
+													</div>
+						
+					</div>
+				</div>
+				
+				<div class="POST operation container-fluid">
+					<div class='operation-heading clickable row' data-target="operation-2-details">
 						<h5>
 							<strong class="http-method">POST</strong>
 												            <span class="path">/alerts</span>
@@ -39,7 +482,7 @@
 													</h5>
 					</div>
 
-					<div id="operation-1-details" class="container-fluid operation-detail" style="display: none">
+					<div id="operation-2-details" class="container-fluid operation-detail" style="display: none">
 
 												<div class="row">
 							<p><p>Adds/reports an alert. An alert is defined by its type, a code, and a source. The alert's type is a numeric value, 0 is for a basic alert, 1 is
@@ -711,74 +1154,17 @@ a dispatch status may be added if the alert code requires any sort of dispatch.<
 					</div>
 				</div>
 				
-				<div class="GET operation container-fluid">
-					<div class='operation-heading clickable row' data-target="operation-2-details">
+				<div class="DELETE operation container-fluid">
+					<div class='operation-heading clickable row' data-target="operation-3-details">
 						<h5>
-							<strong class="http-method">GET</strong>
-												            <span class="path">/alerts</span>
-							                             														<span class="pull-right">Get Alerts</span>
+							<strong class="http-method">DELETE</strong>
+												            <span class="path">/alerts/{id}</span>
+							                             														<span class="pull-right">Delete Alert</span>
 													</h5>
 					</div>
 
-					<div id="operation-2-details" class="container-fluid operation-detail" style="display: none">
+					<div id="operation-3-details" class="container-fluid operation-detail" style="display: none">
 
-												<div class="row">
-							<p><p>Retrieves the alerts meeting the given criteria. The following usage example illustrates a query for all UNOBSERVED alerts reported against service with the
-key uddi:f996a248-f061-11e4-924f-f8246128b60a with a severity of MAJOR or CRITICAL that were generated between 2015-05-01T16:21:17 and now. It also illustrates
-paging by asking for records starting from position 50 and to only return 50 records.</p>
-<h4>Request:</h4>
-<pre><code>GET /rest/alerts?state=UNOBSERVED&amp;source=uddi:f996a248-f061-11e4-924f-f8246128b60a&amp;severity=1&amp;severity=2&amp;from=2015-05-01T16:21:17&amp;start=50&amp;count=50 HTTP/1.1
-</code></pre>
-<h4>Response:</h4>
-<pre><code>HTTP/1.1 200 OK
-{
-    "totalCount" : "50",
-    "records" : [
-        {
-            "id" : "1010",
-            "alertType" : "1",
-            "alertCode" : "1000000",
-            "alertCodeInfo" : {
-                "severity" : "2",
-                "description" : "Policy enforcement failure",
-                "componentName" : "Policy Handler Framework",
-                "subsystemName" : "General",
-                "sendEmailEnabled" : "true",
-                "snmpTrapEnabled" : "false"
-            }
-            "description" : "Problem executing custom policy.",
-            "generatedAt" : "2015-05-01T16:21:18"
-            "source" : {
-                "sourceType" : "1",
-                "source" : "uddi:f996a248-f061-11e4-924f-f8246128b60a",
-                "sourceName" : "General\
-            }
-            "transaction" : {
-                "OperationInvocation" : {
-                    "operationName" : "op1",
-                    "operationKey" : "uddi:f996a248-f061-11e4-924f-f8246128b61b",
-                    "serviceName" : "Service1",
-                    "serviceKey"uddi:f996a248-f061-11e4-924f-f8246128b60a",
-                    "contractName" : "Anonymous Access",
-                    "contractKey" : "uddi:f996a248-f061-11e4-924f-f8246128b53c",
-                    "organizationKey" : "uddi:f996a248-f061-11e4-924f-f8246127d45a
-                }
-           }
-           "workflow" : {
-               "state" : "UNOBSERVED
-               "receivedAt" : "2015-05-01T16:21:18",
-           }
-           "alertDispatchStatus" : {
-               "dispatched" : "false"
-           }
-       },
-       ... not shown for brevity ...
-    ],  
-    "listIncomplete" : "true"
-}
-</code></pre>
-<p>The <em>listIncomplete</em> field in the response indicates there are more records beyond the 50 that match the given criteria.</p></p>
-						</div>
 						
 												<div>
 							<h5>Parameters</h5>
@@ -793,369 +1179,20 @@ paging by asking for records starting from position 50 and to only return 50 rec
 								<div class="col-md-4">Model</div>
 							</div>
 														<div class="row">
-								<div class="col-md-2">code</div>
-								<div class="col-md-2">query</div>
-																<div class="col-md-4">Alert code to filter on.</div>
+								<div class="col-md-2">id</div>
+								<div class="col-md-2">path</div>
+																<div class="col-md-4">ID of the alert to delete.</div>
 																																		<div class="col-md-4">string</div>
-																								</div>
-														<div class="row">
-								<div class="col-md-2">source</div>
-								<div class="col-md-2">query</div>
-																<div class="col-md-4">Source of the alerts to filter on.</div>
-																																		<div class="col-md-4">string</div>
-																								</div>
-														<div class="row">
-								<div class="col-md-2">org</div>
-								<div class="col-md-2">query</div>
-																<div class="col-md-4">Organization key to filter on.</div>
-																																		<div class="col-md-4">string</div>
-																								</div>
-														<div class="row">
-								<div class="col-md-2">from</div>
-								<div class="col-md-2">query</div>
-																<div class="col-md-4">Date at which only alerts generated after will be returned. ISO-8601 format</div>
-																																		<div class="col-md-4">string</div>
-																								</div>
-														<div class="row">
-								<div class="col-md-2">to</div>
-								<div class="col-md-2">query</div>
-																<div class="col-md-4">Date at which only alerts generated before will be returned. ISO-8601 format</div>
-																																		<div class="col-md-4">string</div>
-																								</div>
-														<div class="row">
-								<div class="col-md-2">severity</div>
-								<div class="col-md-2">query</div>
-																<div class="col-md-4">Severities of the alerts to filter on.</div>
-																																		<div class="col-md-4">string</div>
-																								</div>
-														<div class="row">
-								<div class="col-md-2">state</div>
-								<div class="col-md-2">query</div>
-																<div class="col-md-4">States of the alerts to filter on.</div>
-																																		<div class="col-md-4">string</div>
-																								</div>
-														<div class="row">
-								<div class="col-md-2">actor</div>
-								<div class="col-md-2">query</div>
-																<div class="col-md-4">Indicates only alerts that the user with the given username performed a workflow action on should be returned.</div>
-																																		<div class="col-md-4">string</div>
-																								</div>
-														<div class="row">
-								<div class="col-md-2">start</div>
-								<div class="col-md-2">query</div>
-																<div class="col-md-4">To page the results this integer indicates the first alert from the full result set to return as the first item of the page.</div>
-																																		<div class="col-md-4">integer</div>
-																								</div>
-														<div class="row">
-								<div class="col-md-2">count</div>
-								<div class="col-md-2">query</div>
-																<div class="col-md-4">To page the results this integer indicates the number of items thatshould be returned in the page.</div>
-																																		<div class="col-md-4">integer</div>
 																								</div>
 													</div>
 						
-												<div class="">
-							<h5>Reponse</h5>
-
-														<div class="row">
-								<div class="col-md-12">
-									<strong>Produces </strong>
-																			<span>application/json</span>
-																			<span>application/xml</span>
-																			<span>text/xml</span>
-																	</div>
-							</div>
-							
-						</div>
 						
-												<div class="container-fluid">
-							<div class="underline row">
-								<div class="col-md-2">Status Code</div>
-								<div class="col-md-6">Reason</div>
-								<div class="col-md-4">Model</div>
-							</div>
-														<div class="row">
-								<div class="col-md-2">200</div>
-								<div class="col-md-6">Success</div>
-																											<div class="col-md-4 clickable link" data-target="getAlerts-response-200">alertList</div>
-										<div id="getAlerts-response-200" class="container-fluid col-md-12 well model" style="display: none; margin-left:8px;">
-																					<strong>alertList {</strong>
-																						<div class="api-response-property">
-												<strong class="property-name">listIncomplete</strong>
-																									<span class="property-type">( boolean )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">Alerts</strong>
-																									<span class="property-type">( Collection of  alert )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">totalCount</strong>
-																									<span class="property-type">( int )</span>
-																							</div>
-																						<strong>}</strong><br/>
-																					<strong>alert {</strong>
-																						<div class="api-response-property">
-												<strong class="property-name">alertDispatchStatus</strong>
-																									<span class="property-type">( AlerstDispatchStatus )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">alertType</strong>
-																									<span class="property-type">( int )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">alertCode</strong>
-																									<span class="property-type">( int )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">workflow</strong>
-																									<span class="property-type">( alertWorkflow )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">alertCodeInfo</strong>
-																									<span class="property-type">( alertCodeInfo )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">generatedAt</strong>
-																									<span class="property-type">( dateTime )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">containerKey</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">description</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">alertSlaInfo</strong>
-																									<span class="property-type">( alertSlaInfo )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">id</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">source</strong>
-																									<span class="property-type">( alertSource )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">transaction</strong>
-																									<span class="property-type">( alertTransaction )</span>
-																							</div>
-																						<strong>}</strong><br/>
-																					<strong>AlerstDispatchStatus {</strong>
-																						<div class="api-response-property">
-												<strong class="property-name">emailStatus</strong>
-																									<span class="property-type">( EmailStatus )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">snmpStatus</strong>
-																									<span class="property-type">( SnmpStatus )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">dispatched</strong>
-																									<span class="property-type">( boolean )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">commandStatus</strong>
-																									<span class="property-type">( CommandStatus )</span>
-																							</div>
-																						<strong>}</strong><br/>
-																					<strong>EmailStatus {</strong>
-																						<div class="api-response-property">
-												<strong class="property-name">executionDate</strong>
-																									<span class="property-type">( dateTime )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">executed</strong>
-																									<span class="property-type">( boolean )</span>
-																							</div>
-																						<strong>}</strong><br/>
-																					<strong>SnmpStatus {</strong>
-																						<div class="api-response-property">
-												<strong class="property-name">executionDate</strong>
-																									<span class="property-type">( dateTime )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">executed</strong>
-																									<span class="property-type">( boolean )</span>
-																							</div>
-																						<strong>}</strong><br/>
-																					<strong>CommandStatus {</strong>
-																						<div class="api-response-property">
-												<strong class="property-name">executionDate</strong>
-																									<span class="property-type">( dateTime )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">executed</strong>
-																									<span class="property-type">( boolean )</span>
-																							</div>
-																						<strong>}</strong><br/>
-																					<strong>alertWorkflow {</strong>
-																						<div class="api-response-property">
-												<strong class="property-name">observedBy</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">resolvedAt</strong>
-																									<span class="property-type">( dateTime )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">observedAt</strong>
-																									<span class="property-type">( dateTime )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">Comments</strong>
-																									<span class="property-type">( Collection of  alertComment )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">resolvedBy</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">state</strong>
-																									<span class="property-type">( AlertState )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">receivedAt</strong>
-																									<span class="property-type">( dateTime )</span>
-																							</div>
-																						<strong>}</strong><br/>
-																					<strong>alertComment {</strong>
-																						<div class="api-response-property">
-												<strong class="property-name">createdDts</strong>
-																									<span class="property-type">( dateTime )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">commentId</strong>
-																									<span class="property-type">( long )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">comment</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">userName</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<strong>}</strong><br/>
-																					<strong>alertCodeInfo {</strong>
-																						<div class="api-response-property">
-												<strong class="property-name">severity</strong>
-																									<span class="property-type">( int )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">additionalInfo</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">description</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">componentName</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">ScriptCommand</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">subsystemName</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">sendEmailEnabled</strong>
-																									<span class="property-type">( boolean )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">snmpTrapEnabled</strong>
-																									<span class="property-type">( boolean )</span>
-																							</div>
-																						<strong>}</strong><br/>
-																					<strong>alertSlaInfo {</strong>
-																						<div class="api-response-property">
-												<strong class="property-name">ruleValueInterval</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">policyKey</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">ruleOperator</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">policyName</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">ruleMetricName</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">ruleKey</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">ruleValue</strong>
-																									<span class="property-type">( long )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">ruleValueUnit</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">startTime</strong>
-																									<span class="property-type">( dateTime )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">endTime</strong>
-																									<span class="property-type">( dateTime )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">attachmentPointType</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">attachmentPointKey</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">measuredValue</strong>
-																									<span class="property-type">( double )</span>
-																							</div>
-																						<strong>}</strong><br/>
-																					<strong>alertSource {</strong>
-																						<div class="api-response-property">
-												<strong class="property-name">sourceType</strong>
-																									<span class="property-type">( int )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">source</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<div class="api-response-property">
-												<strong class="property-name">sourceName</strong>
-																									<span class="property-type">( string )</span>
-																							</div>
-																						<strong>}</strong><br/>
-																					<strong>alertTransaction {</strong>
-																						<div class="api-response-property">
-												<strong class="property-name">any</strong>
-																									<span class="property-type">( anyType )</span>
-																							</div>
-																						<strong>}</strong><br/>
-																				</div>
-																								</div>
-													</div>
 						
 					</div>
 				</div>
 				
 				<div class="GET operation container-fluid">
-					<div class='operation-heading clickable row' data-target="operation-3-details">
+					<div class='operation-heading clickable row' data-target="operation-4-details">
 						<h5>
 							<strong class="http-method">GET</strong>
 												            <span class="path">/alertcodes/{code}</span>
@@ -1163,7 +1200,7 @@ paging by asking for records starting from position 50 and to only return 50 rec
 													</h5>
 					</div>
 
-					<div id="operation-3-details" class="container-fluid operation-detail" style="display: none">
+					<div id="operation-4-details" class="container-fluid operation-detail" style="display: none">
 
 						
 												<div>
@@ -1268,43 +1305,6 @@ paging by asking for records starting from position 50 and to only return 50 rec
 																				</div>
 																								</div>
 													</div>
-						
-					</div>
-				</div>
-				
-				<div class="DELETE operation container-fluid">
-					<div class='operation-heading clickable row' data-target="operation-4-details">
-						<h5>
-							<strong class="http-method">DELETE</strong>
-												            <span class="path">/alerts/{id}</span>
-							                             														<span class="pull-right">Delete Alert</span>
-													</h5>
-					</div>
-
-					<div id="operation-4-details" class="container-fluid operation-detail" style="display: none">
-
-						
-												<div>
-							<h5>Parameters</h5>
-							
-													</div>
-												
-						<div class="container-fluid">
-							<div class="underline row">
-								<div class="col-md-2">Name</div>
-								<div class="col-md-2">Type</div>
-								<div class="col-md-4">Description</div>
-								<div class="col-md-4">Model</div>
-							</div>
-														<div class="row">
-								<div class="col-md-2">id</div>
-								<div class="col-md-2">path</div>
-																<div class="col-md-4">ID of the alert to delete.</div>
-																																		<div class="col-md-4">string</div>
-																								</div>
-													</div>
-						
-						
 						
 					</div>
 				</div>
