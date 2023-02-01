@@ -39,6 +39,7 @@
 <!-- Don't edit the following comment which will be used by the scripts to add the new version once we are incrementing versions for 2020 -->
 
 <!-- insert new version link -->
+<p class=toc3><a href="#v2020.2.18">Version 2020.2.18</a></p>	  
 <p class=toc3><a href="#v2020.2.17">Version 2020.2.17</a></p>
 <p class=toc3><a href="#v2020.2.16">Version 2020.2.16</a></p>
 <p class=toc3><a href="#v2020.2.15">Version 2020.2.15</a></p>
@@ -149,6 +150,296 @@
   <!-- insert new version content below this comment -->
 
 
+
+
+<!--  Akana Release Notes for version 2020.2.18 -->
+<!--  Created on: 2022-11-11 10:38, Pacific Standard Time -->
+<!--  Number of JIRA issues processed: 35 -->
+<div id="rel_notes_v2020.2.18" class="rel_note_main">
+<h3 id="v2020.2.18">Version 2020.2.18</h3>
+<p class="aa_version-date"><b>November 11, 2022</b>
+<!--  Enhancements Section  -->
+<!--  Number of JIRA issues processed: 6 -->
+<h4 id="e_2020.2.18">Enhancements: 2020.2.18</h4>
+<div id="ATMO-43029" class="rel_note">
+<h5><a name="SAMLWebSSOisnowsupportedonHardwareSecurityModule%28HSM%29"></a>SAML Web SSO is now supported on Hardware Security Module (HSM)</h5>
+
+<p>Policy Manager has added Hardware Security Module (HSM) support for the SAML Web SSO Domain setup.</p><p class="supID"><b>Support ticket: </b>SUPPORT-42350, SUPPORT-50455</p>
+</div>
+
+<div id="ATMO-43014" class="rel_note">
+<h5><a name="TheOpenIDConnectconfigurationnowdisplaysmoreproviderproperties"></a>The OpenID Connect configuration now displays more provider properties</h5>
+
+<p>The discovery URL/well-known configuration URL for OIDC now displays the id token signing algorithm, the id token encryption algorithm and the id token content encryption algorithm, based on the user's selection. Prior to this change, the well-known configuration displayed just the default list of algorithms.</p><p class="supID"><b>Support ticket: </b>SUPPORT-22663</p>
+</div>
+
+<div id="ATMO-42777" class="rel_note">
+<h5><a name="Newvariableinautomationrecipepropertiesfilecontrolsthetenantprotocol"></a>New variable in automation recipe properties file controls the tenant protocol</h5>
+
+<p>A new property TENANT_SCHEME can be included in the pm-cm-all.properties file for the cm-tenant.json recipe to assign a protocol. HTTP is the default if not set. To change it to HTTPS, for instance, include the following in the properties file:</p>
+<p/>
+<div id="syntaxplugin" class="syntaxplugin" style="border: 1px dashed #bbb; border-radius: 5px !important; overflow: auto; max-height: 30em;">
+<table cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 1em; line-height: 1.4em !important; font-weight: normal; font-style: normal; color: black;">
+		<tbody >
+				<tr id="syntaxplugin_code_and_gutter">
+						<td  style=" line-height: 1.4em !important; padding: 0em; vertical-align: top;">
+					<pre style="font-size: 1em; margin: 0 10px;  margin-top: 10px;   margin-bottom: 10px;  width: auto; padding: 0;"><span style="color: black; font-family: 'Consolas', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace !important;">TENANT_SCHEME=https</span></pre>
+			</td>
+		</tr>
+			</tbody>
+</table>
+</div>
+<p/><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-42721" class="rel_note">
+<h5><a name="MongoDBrecoveryjoblogicenhanced%2Cwithnewrecommendedindex"></a>MongoDB recovery job logic enhanced, with new recommended index</h5>
+
+<p>When a MongoDB recovery job failed, it could continue to trigger further rollup jobs, ending up in a perpetual fail state. You can now disable the recovery job to avoid this condition.  In the Admin Console, under the configuration <b>com.soa.persistence.mongodb</b>, set <b>persistence.mongodb.rollup.skipRecoveryIteration = -1</b> to disable the recovery job.</p>
+
+<p>In addition, a new index is recommended to optimize the query while performing recovery jobs:</p>
+<p/>
+<div id="syntaxplugin" class="syntaxplugin" style="border: 1px dashed #bbb; border-radius: 5px !important; overflow: auto; max-height: 30em;">
+<table cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 1em; line-height: 1.4em !important; font-weight: normal; font-style: normal; color: black;">
+		<tbody >
+				<tr id="syntaxplugin_code_and_gutter">
+						<td  style=" line-height: 1.4em !important; padding: 0em; vertical-align: top;">
+					<pre style="font-size: 1em; margin: 0 10px;  margin-top: 10px;   width: auto; padding: 0;"><span style="color: black; font-family: 'Consolas', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace !important;">use METRIC_ROLLUP_DATA</span></pre>
+			</td>
+		</tr>
+				<tr id="syntaxplugin_code_and_gutter">
+						<td  style=" line-height: 1.4em !important; padding: 0em; vertical-align: top;">
+					<pre style="font-size: 1em; margin: 0 10px;   width: auto; padding: 0;"><span style="color: black; font-family: 'Consolas', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace !important;">db.&lt;dataset_name&gt;.createIndex(</span></pre>
+			</td>
+		</tr>
+				<tr id="syntaxplugin_code_and_gutter">
+						<td  style=" line-height: 1.4em !important; padding: 0em; vertical-align: top;">
+					<pre style="font-size: 1em; margin: 0 10px;   width: auto; padding: 0;"><span style="color: black; font-family: 'Consolas', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace !important;">  {"value._rolluptype": 1, "value.rawIds": 1},</span></pre>
+			</td>
+		</tr>
+				<tr id="syntaxplugin_code_and_gutter">
+						<td  style=" line-height: 1.4em !important; padding: 0em; vertical-align: top;">
+					<pre style="font-size: 1em; margin: 0 10px;   width: auto; padding: 0;"><span style="color: black; font-family: 'Consolas', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace !important;">  {name: "&lt;dataset_name&gt;RecoveryIDX"}</span></pre>
+			</td>
+		</tr>
+				<tr id="syntaxplugin_code_and_gutter">
+						<td  style=" line-height: 1.4em !important; padding: 0em; vertical-align: top;">
+					<pre style="font-size: 1em; margin: 0 10px;   margin-bottom: 10px;  width: auto; padding: 0;"><span style="color: black; font-family: 'Consolas', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace !important;">)</span></pre>
+			</td>
+		</tr>
+			</tbody>
+</table>
+</div>
+<p/><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-42466" class="rel_note">
+<h5><a name="Defaultpromotiontimeoutincreased"></a>Default promotion timeout increased</h5>
+
+<p>When promoting an API between Community Manager instances via Lifecycle Coordinator, the default timeout has been increased from 2 minutes to 5 minutes.</p>
+
+<p> </p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-41804" class="rel_note">
+<h5><a name="ElasticsearchnowdefaultstoenablingTCPkeepalives"></a>Elasticsearch now defaults to enabling TCP keepalives</h5>
+
+<p>To avoid timing out HTTP connections between search requests, Elasticsearch now defaults to enabling TCP keepalives. Note that this just <em>enables</em> the Elasticsearch client to use the keep-alive functionality. You may still need to modify your server <tt>sysctl</tt> settings, as described in the Elasticsearch issue <a href="https://github.com/elastic/elasticsearch/issues/65213" class="external-link" target="_blank" rel="nofollow noopener">"Enable TCP keepalives by default in Java REST clients #65213."</a></p><p class="supID"><b>Support ticket: </b>SUPPORT-48512</p>
+</div>
+
+<!--  Bug Fixes Section  -->
+<!--  Number of JIRA issues processed: 29 -->
+<h4 id="b_2020.2.18">Bug Fixes: 2020.2.18</h4>
+<div id="ATMO-43183" class="rel_note">
+<h5><a name="Whenparametermarkersexceed2%2C000%2CjTDSdriverfailstoprocessaquery"></a>When parameter markers exceed 2,000, jTDS driver fails to process a query</h5>
+
+<p>The jTDS driver for Microsoft SQL Server doesn't process a query when the parameter count is more than 2,000. This is a limitation of the driver itself and may also be true of other database drivers.</p><p class="supID"><b>Support ticket: </b>SUPPORT-43866</p>
+</div>
+
+<div id="ATMO-43019" class="rel_note">
+<h5><a name="ImprovedresponsetimesforsomeplatformAPIs"></a>Improved response times for some platform APIs</h5>
+
+<p>Optimization has improved the response times for the following platform APIs: login, app, API, and contract requests.</p><p class="supID"><b>Support ticket: </b>SUPPORT-50212, SUPPORT-50210</p>
+</div>
+
+<div id="ATMO-43018" class="rel_note">
+<h5><a name="ResponsetimeimprovedforsomeRESTAPIrequests"></a>Response time improved for some REST API requests</h5>
+
+<p>A regression in 2020.2.16 could cause increased latency for some REST API requests. This has been corrected.</p><p class="supID"><b>Support ticket: </b>SUPPORT-50210</p>
+</div>
+
+<div id="ATMO-43017" class="rel_note">
+<h5><a name="Oraclereplicationcouldfailduetoproductionerrors"></a>Oracle replication could fail due to production errors</h5>
+
+<p>If APIs or apps were deleted and the Oracle table <b>UDDI_SERVICE</b> did not have the <b>DELETE CASCADE</b> constraint set, the records in the child table <b>UDDI_INST_DETAILS</b> were not deleted, resulting in inconsistent behavior. Now, the <b>DELETE CASCADE</b> constraint has been added to the <b>UDDI_INST_DETAILS</b> table.</p><p class="supID"><b>Support ticket: </b>SUPPORT-50188</p>
+</div>
+
+<div id="ATMO-43016" class="rel_note">
+<h5><a name="Authenticationerrormessageincorrectincertainscenarios"></a>Authentication error message incorrect in certain scenarios</h5>
+
+<p>If a mandatory parameter was not sent with the request when using the OAuth provider and HTTP Form-Based Authentication, a 400 Bad Request error was returned with an <b>invalid_client error</b> code. Now the returned error code has been changed to <b>invalid_request error</b>, which is more accurate.</p><p class="supID"><b>Support ticket: </b>SUPPORT-50092</p>
+</div>
+
+<div id="ATMO-43010" class="rel_note">
+<h5><a name="ValidationdidnotoccurwhenXSSkeywordshadspaces"></a>Validation did not occur when XSS keywords had spaces</h5>
+
+<p>For XSS keywords in Community Manager, validation for an API, app, or group name did not occur if spaces were present between the XSS keyword and the operator. Now, validation recognizes the use of spaces and proceeds as normal.</p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-42980" class="rel_note">
+<h5><a name="CallstoAPIsusingtheSPNEGOpolicycouldfail"></a>Calls to APIs using the SPNEGO policy could fail</h5>
+
+<p>When using the SPNEGO Operational policy with the Kerberos Authentication policy, the service could not successfully get the Kerberos ticket (TGT) due to cache-refresh issues. This subsequently caused the API call to fail. The Kerberos ticket is now refreshed and cached after its expiration. </p><p class="supID"><b>Support ticket: </b>SUPPORT-46684</p>
+</div>
+
+<div id="ATMO-42948" class="rel_note">
+<h5><a name="Someupdatesandimportswerenotupdatingthecontainer"></a>Some updates and imports were not updating the container</h5>
+
+<p>Various updates and imports were not updating the Network Director container, including the import of a new API, attaching new policies to APIs, or modifying the target endpoint. Now, these changes are reflected in Network Director without the need to restart the container.</p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-42941" class="rel_note">
+<h5><a name="OutdatedJavascriptlibrarysecurityvulnerabilities"></a>Outdated Javascript library security vulnerabilities</h5>
+
+<p>The Javascript libraries with security vulnerabilities have been upgraded, as follows:</p>
+<ul>
+	<li>jQuery 3.6.1</li>
+	<li>Handlebars 4.7.7</li>
+	<li>momentjs 2.29.4</li>
+</ul>
+<p class="supID"><b>Support ticket: </b>SUPPORT-31089</p>
+</div>
+
+<div id="ATMO-42742" class="rel_note">
+<h5><a name="NewAPIorappdidnotdisplayversioncorrectlyinPolicyManager"></a>New API or app did not display version correctly in Policy Manager</h5>
+
+<p>After creating a new API or app in Community Manager, its initial version for the "Design entity" did not properly display in Policy Manager. </p><p class="supID"><b>Support ticket: </b>SUPPORT-2223</p>
+</div>
+
+<div id="ATMO-42741" class="rel_note">
+<h5><a name="CustomBonitathemedidnotloadafterdeletingtheoriginaltheme"></a>Custom Bonita theme did not load after deleting the original theme</h5>
+
+<p>A custom theme created by cloning the Bonita theme did not load if the Bonita theme was subsequently deleted.</p>
+
+<p> </p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-42740" class="rel_note">
+<h5><a name="InvokingthePingservicecouldreturnanerror"></a>Invoking the Ping service could return an error</h5>
+
+<p>An error is no longer returned after invoking the Akana Ping Support feature on either a Policy Manager or Community Manager container.</p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-42734" class="rel_note">
+<h5><a name="APInamechangeinCommunityManagernotreflectedinPolicyManager"></a>API name change in Community Manager not reflected in Policy Manager</h5>
+
+<p>When renaming an API in Community Manager, the name change on the physical, virtual, and design entities representing the API in Policy Manager may not have updated.</p><p class="supID"><b>Support ticket: </b>SUPPORT-2223, SUPPORT-29662, SUPPORT-1213, SUPPORT-42250, SUPPORT-44813</p>
+</div>
+
+<div id="ATMO-42732" class="rel_note">
+<h5><a name="Errormessageupdatedwhenclientidismissingfromthetokenrequest"></a>Error message updated when client_id is missing from the token request</h5>
+
+<p>The Akana OAuth Provider token endpoint returned an HTTP "401 Unauthorized" error when the <b>client_id</b> value was missing from the token request. The error message has been corrected and is now an HTTP "400 Bad Request" error.</p><p class="supID"><b>Support ticket: </b>SUPPORT-50092</p>
+</div>
+
+<div id="ATMO-42679" class="rel_note">
+<h5><a name="NewAPIcouldnotbeviewedinAPIDesigner"></a>New API could not be viewed in API Designer</h5>
+
+<p>In Community Manager, a new API created with a YAML file was not properly displayed in the API Design and API Documentation pages.</p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-42653" class="rel_note">
+<h5><a name="UpdateduserdetailswerenotfullyreflectedforOpenIDConnectdomain"></a>Updated user details were not fully reflected for OpenID Connect domain</h5>
+
+<p>If existing users in an OIDC domain changed their details, those changes were not fully reflected in the database. </p><p class="supID"><b>Support ticket: </b>SUPPORT-42390</p>
+</div>
+
+<div id="ATMO-42552" class="rel_note">
+<h5><a name="ErrorscouldbereturnedfromOAuthexternalproviderwhendatawaschunked"></a>Errors could be returned from OAuth external provider when data was chunked</h5>
+
+<p>In some cases, calls to an OAuth external provider could return an error when the encoding method chunked the data. Now, calls to OAuth external providers are made based on the policy's selected transfer encoding, set via a new option <b>HTTP/1.1 Chunked Encoding</b>, available while configuring the OAuth Client Policy. The default is <font color="#172b4d"><b>true</b></font>.</p><p class="supID"><b>Support ticket: </b>SUPPORT-41804, SUPPORT-43789</p>
+</div>
+
+<div id="ATMO-42449" class="rel_note">
+<h5><a name="Theopenbankingintentidwasnotbeingreturned"></a>The openbanking_intent_id was not being returned</h5>
+
+<p>For the Akana OAuth/OIDC domain, the openbanking_intent_id was not being properly returned.</p><p class="supID"><b>Support ticket: </b>SUPPORT-50090</p>
+</div>
+
+<div id="ATMO-42434" class="rel_note">
+<h5><a name="CachedPolicyManagerpublickeyinNetworkDirectorcouldbeinvalidated"></a>Cached Policy Manager public key in Network Director could be invalidated</h5>
+
+<p>Communication between Network Director(s) and Policy Manager failed intermittently due to the cached Policy Manager public key in the Network Director(s) becoming invalid. </p>
+
+<p> </p><p class="supID"><b>Support ticket: </b>SUPPORT-49545</p>
+</div>
+
+<div id="ATMO-42347" class="rel_note">
+<h5><a name="Inactivesessiontimeoutcouldbeignoredifanactivesessiontimeoutwasalsoset"></a>Inactive session timeout could be ignored if an active session timeout was also set</h5>
+
+<p>If both the active and inactive session timeout settings are set, the inactive session timeout setting could be ignored and in some cases, an error could be returned. Session timeout settings now work as expected.</p><p class="supID"><b>Support ticket: </b>SUPPORT-45430</p>
+</div>
+
+<div id="ATMO-42346" class="rel_note">
+<h5><a name="TheContractsAPIusedinconsistentcaseforstartqueryparameters"></a>The Contracts API used inconsistent case for start query parameters</h5>
+
+<p>The <b>GET /api/apis/versions/&lt;apiVersionId&gt;/contracts</b> API mistakenly used title case <b>Start</b> and <b>Count</b> query parameters when all other methods use lower case <b>start</b> and <b>count</b> query parameters. Now, lower case <b>start</b> and <b>count</b> query parameters are allowed, while title case <b>Start</b> and <b>Count</b> have been retained for backward compatibility.</p><p class="supID"><b>Support ticket: </b>SUPPORT-35863</p>
+</div>
+
+<div id="ATMO-42345" class="rel_note">
+<h5><a name="Newconfigpropertycontrolsaschemaobject%27sparsingdepth"></a>New config property controls a schema object's parsing depth</h5>
+
+<p>A new configuration property <b>swagger.config.maxDepth</b> has been added to <b>com.akana.swagger</b>, available in the Admin Console. This property defines how many levels down to parse a schema object's properties/schemas for OAS/Swagger APIs. The default is 10. Increasing the default level may impact performance with large APIs.</p><p class="supID"><b>Support ticket: </b>SUPPORT-49065</p>
+</div>
+
+<div id="ATMO-42101" class="rel_note">
+<h5><a name="Authenticationpolicycreationallowedtheselectionofallcustomerdomains"></a>Authentication policy creation allowed the selection of all customer domains</h5>
+
+<p>When creating an Authentication policy, the domain options incorrectly included all customer domains. Now, only domains associated with organization or tenant are available for selection.</p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-42099" class="rel_note">
+<h5><a name="ReimportedAPIcouldbeaddedtoanincorrectorganization"></a>Reimported API could be added to an incorrect organization</h5>
+
+<p>If an API was previously deleted and imported back into the tenant, the API was not placed in the correct API organization.</p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-41963" class="rel_note">
+<h5><a name="UploadedimagesdidnotalwayssavecorrectlyinCommunityManager"></a>Uploaded images did not always save correctly in Community Manager</h5>
+
+<p>When uploading an image to the API Documentation page in Community Manager, the image was not saved properly in some cases.</p><p class="supID"><b>Support ticket: </b>SUPPORT-48664</p>
+</div>
+
+<div id="ATMO-41893" class="rel_note">
+<h5><a name="CommunityManagercouldreturnanerrorforattachmentslargerthan500MB"></a>Community Manager could return an error for attachments larger than 500MB</h5>
+
+<p>When attaching a file larger than 500MB to an API, the log could report an "out of memory" error. The platform now properly supports attachments, based on the environment, the heap size, and the attachment size.</p><p class="supID"><b>Support ticket: </b>SUPPORT-49122, SUPPORT-42400</p>
+</div>
+
+<div id="ATMO-41710" class="rel_note">
+<h5><a name="CommunityManagerdidnotdisplayanactivepolicyifadrafthadalaterversiondate"></a>Community Manager did not display an active policy if a draft had a later version date</h5>
+
+<p>When a draft version of a policy existed with a newer version than the active policy, the active policy did not display. Now, only active policies appear in the list of policies on the API Implementations &gt; Edit Policies page, regardless of whether there is a draft version that may ultimately supersede it.</p><p class="supID"><b>Support ticket: </b>SUPPORT-46680</p>
+</div>
+
+<div id="ATMO-41690" class="rel_note">
+<h5><a name="OpenAPI3.0versionincorrectlyreturnedintheDeveloperPortal"></a>Open API 3.0 version incorrectly returned in the Developer Portal</h5>
+
+<p>The Open API 3.0 version identified in the OAS 3.0 API definition in the API Designer of the Community Manager Developer Portal was returning an invalid version.</p><p class="supID"><b>Support ticket: </b>SUPPORT-45867</p>
+</div>
+
+<div id="ATMO-41444" class="rel_note">
+<h5><a name="PolicyManagercertificationupdatedidn%27tupdateNetworkDirector"></a>Policy Manager certification update didn't update Network Director</h5>
+
+<p>After an update to the Policy Manager certification, Network Director was not updated, so subsequent API calls would fail.</p><p class="supID"><b>Support ticket: </b>SUPPORT-45966</p>
+</div>
+
+</div>
+
+<!--  End Akana Release Notes for version 2020.2.18 -->
+<!--  Finished on: 2022-11-11 10:38, Pacific Standard Time -->	
+	
+	
 <!--  Akana Release Notes for version 2020.2.17 -->
 <!--  Created on: 2022-02-03 10:46, Pacific Standard Time -->
 <!--  Number of JIRA issues processed: 2 -->
@@ -1354,7 +1645,7 @@
 	
 	
 	
-<h4 id="202010-key-features">Key Features: 2020.2.0</h4>
+<h4 id="202020-key-features">Key Features: 2020.2.0</h4>
 <h5>Technology upgrades </h5>
 <p>This release incorporates several upgrades to technologies and tools. See <a href="http://docs.akana.com/sp/system_requirements/system_requirements_akana_platform_20202x.htm">System Requirements for Akana Platform 2020.2.x</a> for details. These include:</p>
 <ul type="disc">
