@@ -39,7 +39,7 @@
 <!-- Don't edit the following comment which will be used by the scripts to add the new version once we are incrementing versions for 2020 -->
 
 <!-- insert new version link -->
-
+<p class=toc3><a href="#v2022.1.2">Version 2022.1.2</a></p>
 <p class=toc3><a href="#v2022.1.1">Version 2022.1.1</a></p>
 <p class=toc3><a href="#v2022.1.0">Version 2022.1.0</a></p>
 <p class=toc3><a href="#202210-key-features">2022.1.0 Key Features</a></p>
@@ -117,6 +117,539 @@
  <p>&nbsp;</p>
  <!-- Don't edit the following comment used by the scripts to add the new version  -->
   <!-- insert new version content below this comment -->
+
+<!--  Akana Release Notes for version 2022.1.2 -->
+<!--  Created on: 2023-04-17 10:00, Pacific Standard Time -->
+<!--  Number of JIRA issues processed: 59 -->
+<div id="rel_notes_v2022.1.2" class="rel_note_main">
+<h3 id="v2022.1.2">Version 2022.1.2</h3>
+<p class="aa_version-date"><b>April 17, 2023</b>
+<!--  Key Features Section  -->
+<head>
+<link rel="stylesheet" href="../../css/bootstrap.min.css">
+<!--<link href="../../css/akana-styles.css" rel="stylesheet" type="text/css">-->
+<meta charset="utf-8">
+</head>
+
+<body><div class="key features">
+<h4 id="202210-key-features">Key Features: 2022.1.2</h4>
+<!--
+<p class="note"><strong>Note</strong>: The key features here are specific to 2022.1.0 and are not available in earlier 2020.2.x update releases. For features and enhancements also available in 2022.1.0 but delivered in previous 2020.2.x update releases, see each update version below.</p>-->
+
+
+<h5>Support added for AWS CloudHSM</h5>
+<p>This release adds support for AWS CloudHSM (hardware security module). CloudHSM support includes management of identities and certificates via APIs:</p>
+
+<p><strong>APIs that assign PKI keys:</strong></p>
+<ul>
+  <li><strong>Assign PKI keys to Akana PM/ND containers</strong><br>
+    POST /rest/containers/&lt;container_key&gt;/pki/assign</li>
+  <li><strong>Assign PKI keys to Akana PM/ND container's Outbound</strong><br>
+    POST /rest/containers/&lt;container_key&gt;/pki/outbound/assign</li>
+  <li><strong>Assign PKI keys to Akana container&rsquo;s Inbound listeners</strong><br>
+    POST /rest/containers/&lt;container_key&gt;/listeners/&lt;listener_name&gt;/pki/assign</li>
+  <li><strong>Assign PKI keys to Akana user</strong><br>
+    POST /rest/users/&lt;user&gt;/pki/assign</li>
+  <li><strong>Assign PKI keys to Akana service</strong><br>
+    POST /rest/services/&lt;service_key&gt;/pki/assign</li>
+  <li><strong>Assign PKI keys to tenant theme</strong><br>
+    POST /api/tenants/&lt;tenant_id&gt;/themes/&lt;theme_name&gt;/pki/assign</li>
+</ul>
+<p><strong>APIs that manage certificates:</strong></p>
+<ul>
+  <li><strong>Add a certificate (.cer) to Akana&rsquo;s Trusted store</strong><br>
+    POST /rest/trustedca/certificates/</li>
+  <li><strong>Upload all the certificates in a given keystore to Akana&rsquo;s Trusted store</strong><br>
+    This api supports both JKS and PKCS12 file format.<br>
+    POST /rest/trustedca/certificates/keystore</li>
+  <li><strong>List all the certificate from Akana&rsquo;s trusted store</strong><br>
+    GET /rest/trustedca/certificates/</li>
+  <li><strong>List a certificate for a given alias from Akana&rsquo;s trusted store</strong><br>
+    GET /rest/trustedca/certificates/&lt;alias&gt;</li>
+  <li><strong>Delete a certificate from Akana&rsquo;s trusted store</strong><br>
+    DELETE /rest/trustedca/certificates/&lt;alias&gt;</li>
+  <li><strong>Delete all the expired certificates from Akana&rsquo;s trusted store</strong><br>
+    DELETE /rest/trustedca/certificates/expired</li>
+</ul>
+
+
+</div>
+
+<!--  Enhancements Section  -->
+<!--  Number of JIRA issues processed: 19 -->
+<h4 id="e_2022.1.2">Enhancements: 2022.1.2</h4>
+<div id="ATMO-45045" class="rel_note">
+<h5><a name="ImprovedJOSESecurityv2policyresponses"></a>Improved JOSE Security v2 policy responses</h5>
+
+<p>When the crit header is missing, the JOSE Security v2 policy will respond with the HTTP response status code "401 Unauthorized" and the message "Authentication error. crit header is missing."</p>
+
+<p>In addition, the changes below apply to both Detached Non-OpenBanking and Non-Detached Non-OpenBanking scenarios:</p>
+<ul>
+	<li>With Protection Scope selected as IN and OUT; IN Message -&gt; Signed Content is selected, OUT Message -&gt; Sign Content is selected, the policy now returns application/json as response Content-Type for 200, 401, and 500 HTTP response status codes. If Protection Scope includes FAULT response, the Content-Type remains the same; i.e., the policy returns application/json as the response Content-Type.</li>
+	<li>With Protection Scope selected as IN, OUT; IN Message -&gt; Signed Content and Encrypted Content is selected, OUT Message -&gt; Sign Content and Encrypt Content is selected, the policy returns application/jose as response Content-Type for 200 HTTP response status codes. For 401 and 500 HTTP response status codes, the policy returns application/json as the Content-Type. If Protection Scope includes FAULT, then 401 and 500 HTTP response status codes also cause the policy to return application/jose.</li>
+</ul>
+
+
+<h6><a name="%7B%7DCasenumber%7B%7D%3A00634481%C2%A0"></a><b>Case number</b>: 00634481 </h6><p class="supID"><b>Support ticket: </b>SUPPORT-45684</p>
+</div>
+
+<div id="ATMO-44933" class="rel_note">
+<h5><a name="MongoDBindexcreationhasbeenoptimized"></a>MongoDB index creation has been optimized</h5>
+
+<p>Creating MongoDB indices now uses asynchronous APIs to improve performance and avoid situations in which execution could be blocked. Additional log statements have been added to monitor the status of index creation, including "Creating index [index_name]," "Created index [index_name]," and "Index creation failed for [indexName]."</p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-44870" class="rel_note">
+<h5><a name="ElasticsearchLogAppenderPlugInnowsupportssecureconnections"></a>Elasticsearch Log Appender Plug-In now supports secure connections</h5>
+
+<p><font color="#172b4d">Support has been added to support TLS connections with the Elasticsearch Log Appender.</font></p>
+
+<p> </p>
+
+<p> </p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-44766" class="rel_note">
+<h5><a name="ContainernowsupportssecuredconnectionstoElasticsearch%C2%A0"></a>Container now supports secured connections to Elasticsearch </h5>
+
+<p>Akana is now configured to connect securely to Elasticsearch 8.5.3 using credentials and certificates.</p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-44476" class="rel_note">
+<h5><a name="PKCEnowsupportedforPingFederateexternalOAuthprovider"></a>PKCE now supported for PingFederate external OAuth provider</h5>
+
+<p>When using the PingFederate version 9.x or above as the external OAuth provider, PKCE (Proof Key for Code Exchange) is now supported for authorization. This is configured in the OAuth Profile Authorization settings for the app, usually by a site admin.</p>
+<h6><a name="%7B%7DCasenumber%7B%7D%3A00634360"></a><b>Case number</b>: 00634360</h6><p class="supID"><b>Support ticket: </b>SUPPORT-48634</p>
+</div>
+
+<div id="ATMO-44249" class="rel_note">
+<h5><a name="JOSEpolicymodifications"></a>JOSE policy modifications</h5>
+
+<p>In 2022.1.2 the following plugins have been merged into the Akana core product:</p>
+<ul>
+	<li>Akana JOSE Security Profile for RSA Adaptive Authentication for eCommerce</li>
+	<li>Akana JOSE Security Profile for UK Open Banking</li>
+	<li>Akana JOSE Security Profile for VISA Token Services</li>
+	<li>Akana Enhanced JOSE Security Policy Plug-In for Network Director</li>
+</ul>
+
+
+<p>Any existing XML JOSE Extension Policy will continue to work seamlessly as an XML based policy and not as a JOSE Profile-Driven Security policy that is created from the Community Manager UI. </p>
+
+<p>Similarly, any existing JOSE Profile-Driven Security policies will continue to work seamlessly as JOSE Profile-Driven Security policies. </p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-44130" class="rel_note">
+<h5><a name="MongoDBindexesupdatedtoavoidlatencywhenaccessinglogs"></a>MongoDB indexes updated to avoid latency when accessing logs</h5>
+
+<p>Updates have been made to the MongoDB indexes to address timeout and latency issues when retrieving analytics log data.</p>
+<h6><a name="%7B%7DCasenumber%7B%7D%3A00826021"></a><b>Case number</b>: 00826021</h6><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-44013" class="rel_note">
+<h5><a name="ElasticsearchnowdefaultstoenablingTCPkeepalives"></a>Elasticsearch now defaults to enabling TCP keepalives</h5>
+
+<p>To avoid timing out HTTP connections between search requests, Elasticsearch now defaults to enabling TCP keepalives. Note that this just <em>enables</em> the Elasticsearch client to use the keep-alive functionality. You may still need to modify your server <tt>sysctl</tt> settings, as described in the Elasticsearch issue <a href="https://github.com/elastic/elasticsearch/issues/65213" class="external-link" target="_blank" rel="nofollow noopener">"Enable TCP keepalives by default in Java REST clients #65213."</a></p>
+<h6><a name="Case%7B%7Dnumber%7B%7D%3A00602431"></a><b>Case</b> <b>number</b>: 00602431</h6><p class="supID"><b>Support ticket: </b>SUPPORT-48512</p>
+</div>
+
+<div id="ATMO-43992" class="rel_note">
+<h5><a name="Newautomationrecipeforconfiguringanexternalkeystore"></a>New automation recipe for configuring an external keystore</h5>
+
+<p>A new automation recipe has been provided to configure an external keystore, used to manage all the PKI keys and certificates for a container. See <a href="https://help.akana.com/content/previous/sp/automation/automation_examples.htm" class="external-link" target="_blank" rel="nofollow noopener">Automation Examples</a> in the Akana online documentation.</p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-43946" class="rel_note">
+<h5><a name="MongoDB4.4support"></a>MongoDB 4.4 support</h5>
+
+<p>Support has been added for MongoDB 4.4.</p>
+<h6><a name="%7B%7DCasenumbers%7B%7D%3A00829271%2C00826021%2C00771286"></a><b>Case numbers</b>: 00829271, 00826021, 00771286</h6><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-43939" class="rel_note">
+<h5><a name="ElasticSearch8.5.xsupport"></a>ElasticSearch 8.5.x support</h5>
+
+<p>Akana 2022.1.2 has added support for ElasticSearch 8.5.x.  See <a href="https://help.akana.com/content/current/sp/system_requirements/system_requirements_akana_platform.htm?Highlight=platform%20requirements" class="external-link" target="_blank" rel="nofollow noopener">System Requirements</a> in the Akana online documentation.</p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-43824" class="rel_note">
+<h5><a name="Policyattachments%2FdetachmentstoAPIscannowtriggeralerts"></a>Policy attachments/detachments to APIs can now trigger alerts</h5>
+
+<p>Any change in terms of policies attached to or detached from an API can now trigger an alert. Custom alert codes can be created using the Add Alert Code function. See "How to define an Alert Code to Audit an Event section" in the online help at <a href="http://help.akana.com/content/current/ag/alerts/using_alert_codes.htm" class="external-link" target="_blank" rel="nofollow noopener">http://help.akana.com/content/current/ag/alerts/using_alert_codes.htm</a> for more information.</p>
+<h6><a name="%7B%7DCasenumber%7B%7D%3A00770203"></a><b>Case number</b>: 00770203</h6><p class="supID"><b>Support ticket: </b>SUPPORT-50624</p>
+</div>
+
+<div id="ATMO-43774" class="rel_note">
+<h5><a name="TheOpenIDConnectconfigurationnowdisplaysmoreproviderproperties"></a>The OpenID Connect configuration now displays more provider properties</h5>
+
+<p>The discovery URL/well-known configuration URL for OIDC now displays the id token signing algorithm, the id token encryption algorithm and the id token content encryption algorithm, based on the user's selection. Prior to this change, the well-known configuration displayed just the default list of algorithms.</p><p class="supID"><b>Support ticket: </b>SUPPORT-22663</p>
+</div>
+
+<div id="ATMO-43474" class="rel_note">
+<h5><a name="SupportforIPv6wheninvokingdownstreamservices"></a>Support for IPv6 when invoking downstream services</h5>
+
+<p>Internet Protocol version 6 (IPv6) (in addition to existing IPv4) address format is now supported for invoking downstream services.</p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-43406" class="rel_note">
+<h5><a name="Newvariableinautomationrecipepropertiesfilecontrolsthetenantprotocol"></a>New variable in automation recipe properties file controls the tenant protocol</h5>
+
+<p>A new property TENANT_SCHEME can be included in the pm-cm-all.properties file for the cm-tenant.json recipe to assign a protocol. HTTP is the default if not set. To change it to HTTPS, for instance, include the following in the properties file:</p>
+<p/>
+<div id="syntaxplugin" class="syntaxplugin" style="border: 1px dashed #bbb; border-radius: 5px !important; overflow: auto; max-height: 30em;">
+<table cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 1em; line-height: 1.4em !important; font-weight: normal; font-style: normal; color: black;">
+		<tbody >
+				<tr id="syntaxplugin_code_and_gutter">
+						<td  style=" line-height: 1.4em !important; padding: 0em; vertical-align: top;">
+					<pre style="font-size: 1em; margin: 0 10px;  margin-top: 10px;   margin-bottom: 10px;  width: auto; padding: 0;"><span style="color: black; font-family: 'Consolas', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace !important;">TENANT_SCHEME=https</span></pre>
+			</td>
+		</tr>
+			</tbody>
+</table>
+</div>
+<p/><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-43244" class="rel_note">
+<h5><a name="SAMLWebSSOisnowsupportedonHardwareSecurityModule%28HSM%29"></a>SAML Web SSO is now supported on Hardware Security Module (HSM)</h5>
+
+<p>Policy Manager has added Hardware Security Module (HSM) support for the SAML Web SSO Domain setup.</p><p class="supID"><b>Support ticket: </b>SUPPORT-42350, SUPPORT-50455</p>
+</div>
+
+<div id="ATMO-42954" class="rel_note">
+<h5><a name="AkanaOAuthProviderpublishespublickeyswithx5cclaiminJWKSendpoint"></a>Akana OAuth Provider publishes public keys with x5c claim in JWKS endpoint</h5>
+
+<p>Akana OAuth/OIDC Provider, JWKS URL now exposes the public key in the form of JWK (including kid, x5c, x5t, x5t#256) corresponding to the private key used to sign the access token. This is configured in Akana OAuth/OIDC Provider &gt; Token (tab) &gt; Reference Signing Key from Platform Identity. The "kid" value in JWK matches the "Reference Signing Key from Platform Identity" value.</p>
+<h6><a name="%7B%7DCasenumber%7B%7D%3A00617897"></a><b>Case number</b>: 00617897</h6><p class="supID"><b>Support ticket: </b>SUPPORT-27525, SUPPORT-27525</p>
+</div>
+
+<div id="ATMO-42467" class="rel_note">
+<h5><a name="Defaultpromotiontimeoutincreased"></a>Default promotion timeout increased</h5>
+
+<p>When promoting an API between Community Manager instances via Lifecycle Coordinator, the default timeout has been increased from 2 minutes to 5 minutes.</p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-34117" class="rel_note">
+<h5><a name="LatencyimprovedwhenqueryingMongoDBforservicedata"></a>Latency improved when querying MongoDB for service data</h5>
+
+<p>Filtering usage data by service has been improved. </p><p class="supID"><b>Support ticket: </b>SUPPORT-32488</p>
+</div>
+
+<!--  Known Issues Section  -->
+<div class="known issues">
+<h4 id="i_2022.1.2">Known Issues 2022.1.2</h4>   
+<h5>The Throughput Quota policy processes an extra request with the grid counter service</h5>
+   <p>When the Throughout Quota policy is configured with a limit of x requests per time interval, the throughput limit exceeded error is returned for x + two requests instead of x + one request.</p>
+   
+ <h5>API Quota Usage charts are not returned at a license level with intervals in minutes</h5>
+   <p>When a quota policy is attached to a license and the defined interval is in minutes, the API Analytics License page does not return charts for the API Quota Usage. The other charts on API Analytics License page return proper results.</p>  
+   
+ <h5>JRE upgrade results in a new error message regarding untrusted certificates</h5>
+   <p>After upgrading the JRE shipped with the product from 2019.1.36 to 2020.2, the error message returned for untrusted certificates changed.  The new version of the JRE returns a socket error rather than an error specific to an untrusted certificate. This is not a change in Akana; rather, it is a change in the JRE version.</p>
+    <h6><b>Case number</b>: 00797955</h6> 
+ <h5>Envision Business Service Level Policy</h5>
+   <p>The Business Service Level Policy generates only one alert even when multiple alerts are configured.</p>	
+ <h5>The Operational Aggregate Policy could fail when assigned at the operation level</h5>
+   <p>The Operational Aggregate Policy could fail when assigned at the operation level using the HTTP Basic Authentication policy or the OAuth Security policy, returning an HTTP "401 Unauthorized access" error. </p>	
+    <h6><b>Case number</b>: 00847940</h6>   
+ <h5>Container's Admin Console may report duplicate valid session cookie errors</h5>
+   <p>The Admin Console of the container may intermittently display an error dialog reporting duplicate valid session cookies. The Admin Console may then become unresponsive or may return an an HTTP 404 error "File not found." Clearing browser cookies clears this error. </p>	
+ <h5>Duplicate log entries for exceptions and JOSE Profile Policy</h5>
+   <p>Any exception results in two identical stack traces written to the log file.</p>
+   <p>Additionally, when the JOSE Profile Policy is used and Forced Diagnostic Logging is turned on, the trace block is written twice and the second trace block has a stack trace appended even when there is no exception.</p>
+    
+ <h5>The Business Service Level Policy may not work properly when attached to an app</h5>
+   <p>The Business Service Level policy is successfully applied when attached at the API level, but will not function as expected if attached while creating an App contract.</p>
+   
+ <h5>MongoDB data rollups</h5>
+   <p>MongoDB Aggregation Pipeline support for data rollups was introduced in the 2022.1.0 release. In 2022.1.x versions, this is not supported for Akana customers upgrading from a 2020.x or earlier version. Aggregation support will be provided for these customers again in an upcoming patch release.</p>
+
+   <p>For Akana customers who are using MongoDB for the first time with their 2022.1.x deployment, Aggregation is supported.</p>
+
+   <p>MongoDB options are configured in the Admin Console under Configuration > Configuration Categories > com.soa.persistence.mongodb.</p>   
+   
+   
+ <h5>Search based on a tag fails for numeric characters</h5>
+   <p>A search based on a tag fails if the tag search criteria includes numeric characters.</p>   
+
+
+ 
+   
+    
+</div>
+<!--  Bug Fixes Section  -->
+<!--  Number of JIRA issues processed: 40 -->
+<h4 id="b_2022.1.2">Bug Fixes: 2022.1.2</h4>
+<div id="ATMO-45041" class="rel_note">
+<h5><a name="APIdeleteoperationsrequiredapayloadwiththeJOSEv2policy"></a>API delete operations required a payload with the JOSE v2 policy</h5>
+
+<p>No payload is required for delete operations on an API associated with the JOSE v2 policy (Unencoded Payload Support).</p>
+<h6><a name="%7B%7DCasenumber%7B%7D%3A00602226%C2%A0"></a><b>Case number</b>: 00602226 </h6><p class="supID"><b>Support ticket: </b>SUPPORT-49032</p>
+</div>
+
+<div id="ATMO-45011" class="rel_note">
+<h5><a name="Criticalandhighseverityvulnerabilitiesfixed"></a>Critical and high severity vulnerabilities fixed</h5>
+
+<p>All critical and high severity CVEs reported by Prisma through March 20<sup>th</sup>, 2023, have been resolved.</p>
+<h6><a name="%7B%7DCasenumber%7B%7D%3A00772571"></a><b>Case number</b>: 00772571</h6><p class="supID"><b>Support ticket: </b>SUPPORT-51108</p>
+</div>
+
+<div id="ATMO-44823" class="rel_note">
+<h5><a name="Increaseddefaultcachesizeforpolicyscripts"></a>Increased default cache size for policy scripts</h5>
+
+<p>The default cache size has been increased to 1,500 to provide more consistent and reliable gateway performance in deployments with a large number of policy-based scripts and APIs. </p>
+<h6><a name="%7B%7DCasenumber%7B%7D%3A00841743"></a><b>Case number</b>: 00841743</h6><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-44692" class="rel_note">
+<h5><a name="APInamechangeinCommunityManagernotreflectedinPolicyManager"></a>API name change in Community Manager not reflected in Policy Manager</h5>
+
+<p>When renaming an API in Community Manager, the name change on the physical, virtual, and design entities representing the API in Policy Manager may not have updated.</p><p class="supID"><b>Support ticket: </b>SUPPORT-2223, SUPPORT-29662, SUPPORT-1213, SUPPORT-42250, SUPPORT-44813</p>
+</div>
+
+<div id="ATMO-44691" class="rel_note">
+<h5><a name="NewAPIorappdidnotdisplayversioncorrectlyinPolicyManager"></a>New API or app did not display version correctly in Policy Manager</h5>
+
+<p>After creating a new API or app in Community Manager, its initial version for the "Design entity" did not properly display in Policy Manager. </p><p class="supID"><b>Support ticket: </b>SUPPORT-2223</p>
+</div>
+
+<div id="ATMO-44690" class="rel_note">
+<h5><a name="NewAPIcouldnotbeviewedinAPIDesigner"></a>New API could not be viewed in API Designer</h5>
+
+<p>In Community Manager, a new API created with a YAML file was not properly displayed in the API Design and API Documentation pages.</p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-44688" class="rel_note">
+<h5><a name="CustomBonitathemedidnotloadafterdeletingtheoriginaltheme"></a>Custom Bonita theme did not load after deleting the original theme</h5>
+
+<p>A custom theme created by cloning the Bonita theme did not load if the Bonita theme was subsequently deleted.</p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-44614" class="rel_note">
+<h5><a name="Afterupgrade%2CprovisioningcouldtimeoutusingautomationrecipeswhenSiteMinderpluginwasincluded"></a>After upgrade, provisioning could time out using automation recipes when SiteMinder plugin was included</h5>
+
+<p>When upgrading to 2022.1.x and running automation recipes, provisioning could fail to complete, producing a timeout error when the SiteMinder plugin was included.</p>
+<h6><a name="%7B%7DCasenumber%7B%7D%3A00865285"></a><b>Case number</b>: 00865285</h6><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-44524" class="rel_note">
+<h5><a name="PolicyManagerwouldn%27tstartwhenSiteminderpluginswereinstalled"></a>Policy Manager wouldn't start when Siteminder plugins were installed</h5>
+
+<p>When the CA SiteMinder identity system was installed, Policy Manager could fail to start.</p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-44424" class="rel_note">
+<h5><a name="Automationrecipetoupgradeindicesdidnotcorrectlyhandleanyindexprefix"></a>Automation recipe to upgrade indices did not correctly handle any index prefix</h5>
+
+<p>The automation recipe <b>cm-es-index-upgrade.json</b> has been updated to handle Elasticsearch indice upgrades when an index prefix is other than "default".  </p>
+
+<p>Now, this recipe determines the tenants' configured index name prefix and correctly upgrades the indices.</p>
+<h6><a name="%7B%7DCasenumber%7B%7D%3A00634516"></a><b>Case number</b>: 00634516</h6><p class="supID"><b>Support ticket: </b>SUPPORT-44772</p>
+</div>
+
+<div id="ATMO-44412" class="rel_note">
+<h5><a name="Someindexescreatedbytheschemaupdatetaskwerenotruninthebackground"></a>Some indexes created by the schema update task were not run in the background</h5>
+
+<p>Some indexes created by the schema update task were not run in the background. This could cause MongoDB outage problems if there was a lot of data and the index creation was lengthy.</p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-44336" class="rel_note">
+<h5><a name="Errormessagewasincorrectwhenclientidwasmissingfromthetokenrequest"></a>Error message was incorrect when client_id was missing from the token request</h5>
+
+<p>The Akana OAuth Provider token endpoint returned an HTTP "401 Unauthorized" error when the <b>client_id</b> value was missing from the token request. The error message has been corrected and is now an HTTP "400 Bad Request" error.</p><p class="supID"><b>Support ticket: </b>SUPPORT-50092</p>
+</div>
+
+<div id="ATMO-44335" class="rel_note">
+<h5><a name="Theopenbankingintentidwasnotbeingreturned"></a>The openbanking_intent_id was not being returned</h5>
+
+<p>For the Akana OAuth/OIDC domain, the openbanking_intent_id was not properly returned.</p><p class="supID"><b>Support ticket: </b>SUPPORT-50090</p>
+</div>
+
+<div id="ATMO-44331" class="rel_note">
+<h5><a name="TransparentlogoinCommunityManagerdidnotrendercorrectly"></a>Transparent logo in Community Manager did not render correctly</h5>
+
+<p>After configuring Community Manager's login page to have a transparent logo, the logo did not render properly at login.</p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-44322" class="rel_note">
+<h5><a name="PKCEsecurityextensionforOAuthdoesnotrequireclientsecret"></a>PKCE security extension for OAuth does not require client secret</h5>
+
+<p>When using the PKCE security extension for OAuth with the Authorization Code grant type, getting the access token required the client secret. Now, the access token can be obtained without sending the client secret.</p>
+<h6><a name="%7B%7DCasenumber%7B%7D%3A00712935"></a><b>Case number</b>: 00712935</h6><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-44321" class="rel_note">
+<h5><a name="UpdateduserdetailswerenotfullyreflectedforOpenIDConnectdomain"></a>Updated user details were not fully reflected for OpenID Connect domain</h5>
+
+<p>If existing users in an OIDC domain changed their details, those changes were not fully reflected in the database. </p>
+<h6><a name="%7B%7DCasenumber%7B%7D%3A00619260"></a><b>Case number</b>: 00619260</h6><p class="supID"><b>Support ticket: </b>SUPPORT-42390</p>
+</div>
+
+<div id="ATMO-44320" class="rel_note">
+<h5><a name="Authenticationerrormessageincorrectincertainscenarios"></a>Authentication error message incorrect in certain scenarios</h5>
+
+<p>If a mandatory parameter was not sent with the request when using the OAuth provider and HTTP Form-Based Authentication, a 400 Bad Request error was returned with an <b>invalid_client error</b> code. Now the returned error code has been changed to <b>invalid_request error</b>, which is more accurate.</p>
+<h6><a name="%7B%7DCasenumber%7B%7D%3A00769607"></a><b>Case number</b>: 00769607</h6><p class="supID"><b>Support ticket: </b>SUPPORT-50092</p>
+</div>
+
+<div id="ATMO-44011" class="rel_note">
+<h5><a name="Oraclereplicationcouldfailduetoproductionerrors"></a>Oracle replication could fail due to production errors</h5>
+
+<p>If APIs or apps were deleted and the Oracle table <b>UDDI_SERVICE</b> did not have the <b>DELETE CASCADE</b> constraint set, the records in the child table <b>UDDI_INST_DETAILS</b> were not deleted, resulting in inconsistent behavior. Now, the <b>DELETE CASCADE</b> constraint has been added to the <b>UDDI_INST_DETAILS</b> table.</p>
+<h6><a name="%7B%7DCasenumber%7B%7D%3A00769624%C2%A0"></a><b>Case number</b>: 00769624 </h6><p class="supID"><b>Support ticket: </b>SUPPORT-50188</p>
+</div>
+
+<div id="ATMO-43954" class="rel_note">
+<h5><a name="Afterdeletinganapp%2COAuthprofileandaccesstokenremainedavailable"></a>After deleting an app, OAuth profile and access token remained available</h5>
+
+<p>When an app was deleted, its OAuth profile was still available, and requesting access could still return an access token to the app.</p>
+<h6><a name="%7B%7DCasenumber%7B%7D%3A00820078%2C00820458%C2%A0"></a><b>Case number</b>: 00820078, 00820458  </h6><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-43919" class="rel_note">
+<h5><a name="Possibleauthenticationissuesafterproductupgrade"></a>Possible authentication issues after product upgrade</h5>
+
+<p>Authentication between Network Director and Policy Manager could intermittently fail with an invalid credentials error, after upgrading to 2022.1.1.</p>
+<h6><a name="%7B%7DCasenumber%7B%7D%3A00764571"></a><b>Case number</b>: 00764571</h6><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-43874" class="rel_note">
+<h5><a name="WSDLoperationnotcorrectlyidentifiedforsomeContentTypeHTTPheaders"></a>WSDL operation not correctly identified for some Content-Type HTTP headers</h5>
+
+<p>If a WSDL file included a parameter after the "action=" parameter (rather than after the operation) in the HTTP Content-Type header, the WSDL operation was not identified correctly, even though parameters should be allowed at this location in a WSDL file.</p>
+<h6><a name="%7B%7DCasenumber%7B%7D%3A00813334"></a><b>Case number</b>: 00813334</h6><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-43612" class="rel_note">
+<h5><a name="IncorrecterrorheadercouldbereturnedfortheHTTPSecuritypolicy"></a>Incorrect error header could be returned for the HTTP Security policy</h5>
+
+<p>If no certificate was sent when using the HTTP Security policy configured with Client Certificate, the returned error HTTP "401 Unauthorized" included an incorrect header that was specific to Basic Authentication.</p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-43347" class="rel_note">
+<h5><a name="SomeoperationalandQoSpolicieswereautomaticallyremoved"></a>Some operational and QoS policies were automatically removed</h5>
+
+<p>Changes to a physical service in Policy Manager could result in the automatic removal of Operational and/or QoS (Quality of Service) policies attached to the same physical service (a logical representation of an API/service external to the Akana API platform).</p>
+<h6><a name="%7B%7DCasenumber%7B%7D%3A00619475%C2%A0"></a><b>Case number</b>: 00619475 </h6><p class="supID"><b>Support ticket: </b>SUPPORT-41793</p>
+</div>
+
+<div id="ATMO-43075" class="rel_note">
+<h5><a name="CallstoAPIsusingtheSPNEGOpolicycouldfail"></a>Calls to APIs using the SPNEGO policy could fail</h5>
+
+<p>When using the SPNEGO Operational policy with the Kerberos Authentication policy, the service could not successfully get the Kerberos ticket (TGT) due to cache-refresh issues. This subsequently caused the API call to fail. The Kerberos ticket is now refreshed and cached after its expiration. </p><p class="supID"><b>Support ticket: </b>SUPPORT-46684</p>
+</div>
+
+<div id="ATMO-42949" class="rel_note">
+<h5><a name="Someupdatesandimportswerenotupdatingthecontainer"></a>Some updates and imports were not updating the container</h5>
+
+<p>Various updates and imports were not updating the Network Director container, including the import of a new API, attaching new policies to APIs, or modifying the target endpoint. Now, these changes are reflected in Network Director without the need to restart the container.</p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-42926" class="rel_note">
+<h5><a name="OutdatedJavascriptlibrarysecurityvulnerabilities"></a>Outdated Javascript library security vulnerabilities</h5>
+
+<p>The Javascript libraries with security vulnerabilities have been upgraded as follows:</p>
+<ul>
+	<li>jQuery 3.6.1</li>
+	<li>Handlebars 4.7.7</li>
+	<li>momentjs 2.29.4</li>
+</ul>
+
+
+<h6><a name="%7B%7DCasenumber%7B%7D%3A00687904%C2%A0"></a><b>Case number</b>: 00687904 </h6><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-42900" class="rel_note">
+<h5><a name="Somerealtimechartscouldappearmalformed"></a>Some real-time charts could appear malformed</h5>
+
+<p>Real-time charts for 15 and 60-minute intervals no longer appear malformed.</p>
+<h6><a name="%7B%7DCasenumber%7B%7D%3A00798440"></a><b>Case number</b>: 00798440</h6><p class="supID"><b>Support ticket: </b>SUPPORT-41878</p>
+</div>
+
+<div id="ATMO-42829" class="rel_note">
+<h5><a name="InvokingthePingservicecouldreturnanerror"></a>Invoking the Ping service could return an error</h5>
+
+<p>An error is no longer returned after invoking the Akana Ping Support feature on either a Policy Manager or Community Manager container.</p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-42792" class="rel_note">
+<h5><a name="ImprovedresponsetimesforsomeplatformAPIs"></a>Improved response times for some platform APIs</h5>
+
+<p>Optimization has improved the response times for the following platform APIs: login, apps, tickets, and contracts.</p>
+<h6><a name="%7B%7DCasenumber%7B%7D%3A00770035%C2%A0"></a><b>Case number</b>: 00770035 </h6><p class="supID"><b>Support ticket: </b>SUPPORT-50212, SUPPORT-50210</p>
+</div>
+
+<div id="ATMO-42551" class="rel_note">
+<h5><a name="OAuthClientpolicyattachedtoPhysicalServicecouldfailwithouttracelogging"></a>OAuth Client policy attached to Physical Service could fail without trace logging</h5>
+
+<p>When attached to the Physical Service (target), the OAuth Client policy worked only when trace logging was enabled in Network Director.</p>
+<h6><a name="%7B%7DCasenumber%7B%7D%3A00619471%C2%A0"></a><b>Case number</b>: 00619471 </h6><p class="supID"><b>Support ticket: </b>SUPPORT-41804, SUPPORT-43789</p>
+</div>
+
+<div id="ATMO-42433" class="rel_note">
+<h5><a name="CachedPolicyManagerpublickeyinNetworkDirectorcouldbeinvalidated"></a>Cached Policy Manager public key in Network Director could be invalidated</h5>
+
+<p>Communication between Network Director(s) and Policy Manager failed intermittently due to the cached Policy Manager public key in the Network Director(s) becoming invalid. </p><p class="supID"><b>Support ticket: </b>SUPPORT-49545</p>
+</div>
+
+<div id="ATMO-42348" class="rel_note">
+<h5><a name="Newconfigpropertycontrolsaschemaobject%27sparsingdepth"></a>New config property controls a schema object's parsing depth</h5>
+
+<p>A new configuration property <b>swagger.config.maxDepth</b> has been added to <b>com.akana.swagger</b>, available in the Admin Console. This property defines how many levels down to parse a schema object's properties/schemas for OAS/Swagger APIs. The default is 10. Increasing the default level may impact performance with large APIs.</p><p class="supID"><b>Support ticket: </b>SUPPORT-49065</p>
+</div>
+
+<div id="ATMO-42210" class="rel_note">
+<h5><a name="Inactivesessiontimeoutcouldbeignoredifanactivesessiontimeoutwasalsoset"></a>Inactive session timeout could be ignored if an active session timeout was also set</h5>
+
+<p>If both the active and inactive session timeout settings are set, the inactive session timeout setting could be ignored and in some cases, an error could be returned. Session timeout settings now work as expected.</p><p class="supID"><b>Support ticket: </b>SUPPORT-45430</p>
+</div>
+
+<div id="ATMO-42203" class="rel_note">
+<h5><a name="PolicyManagercouldsavethewrongorganizationtype"></a>Policy Manager could save the wrong organization type</h5>
+
+<p>When adding or modifying an organization in the Policy Manager Console, then selecting an organization type, in some cases the type was not saved correctly, resulting in a failure to load the organization overview. </p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-42102" class="rel_note">
+<h5><a name="Authenticationpolicycreationallowedtheselectionofallcustomerdomains"></a>Authentication policy creation allowed the selection of all customer domains</h5>
+
+<p>When creating an Authentication policy, the domain options incorrectly included all customer domains. Now, only domains associated with organization or tenant are available for selection.</p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-42100" class="rel_note">
+<h5><a name="ReimportedAPIcouldbeaddedtoanincorrectorganization"></a>Reimported API could be added to an incorrect organization</h5>
+
+<p>If an API was previously deleted and imported back into the tenant, the API was not placed in the correct API organization.</p><p class="supID"><b>Support ticket: </b>No related support tickets.</p>
+</div>
+
+<div id="ATMO-42029" class="rel_note">
+<h5><a name="TheContractsAPIusedinconsistentcaseforstartqueryparameters"></a>The Contracts API used inconsistent case for start query parameters</h5>
+
+<p>The <b>GET /api/apis/versions/&lt;apiVersionId&gt;/contracts</b> API mistakenly used title case <b>Start</b> and <b>Count</b> query parameters when all other methods use lower case <b>start</b> and <b>count</b> query parameters. Now, lower case <b>start</b> and <b>count</b> query parameters are allowed, while title case <b>Start</b> and <b>Count</b> have been retained for backward compatibility.</p><p class="supID"><b>Support ticket: </b>SUPPORT-35863</p>
+</div>
+
+<div id="ATMO-42002" class="rel_note">
+<h5><a name="UploadedimagesdidnotalwayssavecorrectlyinCommunityManager"></a>Uploaded images did not always save correctly in Community Manager</h5>
+
+<p>When uploading an image to the API Documentation page in Community Manager, the image was not saved properly in some cases.</p><p class="supID"><b>Support ticket: </b>SUPPORT-48664</p>
+</div>
+
+<div id="ATMO-41712" class="rel_note">
+<h5><a name="CommunityManagerdidnotdisplayanactivepolicyifadrafthadalaterversiondate"></a>Community Manager did not display an active policy if a draft had a later version date</h5>
+
+<p>When a draft version of a policy existed with a newer version than the active policy, the active policy did not display. Now, any policy that is active, regardless of whether there is a draft version that would supersede it, displays appropriately in the list of policies on the API Implementations &gt; Edit Policies page.</p><p class="supID"><b>Support ticket: </b>SUPPORT-46680</p>
+</div>
+
+<div id="ATMO-41692" class="rel_note">
+<h5><a name="OpenAPI3.0versionincorrectlyreturnedintheDeveloperPortal"></a>Open API 3.0 version incorrectly returned in the Developer Portal</h5>
+
+<p>The Open API 3.0 version identified in the OAS 3.0 API definition in the API Designer of the Community Manager Developer Portal was returning an invalid version.</p><p class="supID"><b>Support ticket: </b>SUPPORT-45867</p>
+</div>
+
+</div>
+
+<!--  End Akana Release Notes for version 2022.1.2 -->
+<!--  Finished on: 2023-04-17 10:00, Pacific Standard Time -->
 
 
 <!--  Akana Release Notes for version 2022.1.1 -->
