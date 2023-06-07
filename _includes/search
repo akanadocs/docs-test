@@ -1,45 +1,90 @@
-			<div class="soa-ui-dc-topsearch-container">
-				<form class="soa-ui-dc-topsearch">
-					<label for="soa-control-dc-search" class="soa-ui-dc-label soa-ui-dc-label-hidden">Enter Search Text</label>
-					<input type="text" id="soa-control-dc-search-query" name="q" placeholder="Search" autocomplete="off" class="soa-ui-dc-topsearch-input">
-					<button class="soa-ui-dc-topsearch-button soa-ui-dc-icon-imgtxt soa-ui-dc-icon-magnifying-glass" type="button">Search</button>
-				</form>
-				<div id="soa-control-dc-search-results" class="soa-ui-dc-inline-search-div soa-ui-dc-icon" style="display: none;">
-					<ul class="soa-ui-dc-buttons">
-						<li>
-							<button id="soa-control-dc-close-results" type="button" class="soa-ui-dc-icon-imgtxt soa-ui-dc-button soa-ui-dc-button-borderless soa-ui-dc-button-close">Close</button>
-						</li>
-					</ul>
-					<h3 class="soa-ui-dc-content-header">Search Results</h3>
-					<div id="soa-control-dc-search-result-entries">
-					</div>
-				</div>
-			</div>
+<div class="soa-ui-dc-topsearch-container">
+    <div class="soa-ui-dc-topsearch">
+        <input type="text" class="soa-ui-dc-topsearch-input" id="my-search">
+        <button class="soa-ui-dc-topsearch-button soa-ui-dc-icon-imgtxt soa-ui-dc-icon-magnifying-glass" type="button">
+            Search
+        </button>
+    </div>
+    <div id="soa-control-dc-search-results" class="soa-ui-dc-inline-search-div soa-ui-dc-icon" style="display: none;">
+        <ul class="soa-ui-dc-buttons">
+            <li>
+                <button id="soa-control-dc-close-results" type="button" class="soa-ui-dc-icon-imgtxt soa-ui-dc-button soa-ui-dc-button-borderless soa-ui-dc-button-close">
+                    Close
+                </button>
+            </li>
+        </ul>
+        <h3 class="soa-ui-dc-content-header">Search Results</h3>
+        <div id="soa-control-dc-search-results-target"></div>
+    </div>
+</div>
 
-		    {% raw %}
-		    <script id="soa-control-dc-search-results-template" type="text/x-handlebars-template">
-				{{#entries}}
-					<div class="soa-ui-dc-content-catalog">
-						<ul class="soa-ui-dc-content-catalog-items">
-							<li class="soa-ui-dc-content-catalog-item soa-ui-dc-2col-with-avatar soa-ui-dc-clearthis">
-								<div class="soa-ui-dc-avatar-box">
-									<h4 class="soa-ui-dc-icon-imgtxt soa-ui-dc-document-type soa-ui-dc-icon-{{ type }}">
-									Document
-									</h4>
-								</div>
-								<div class="soa-ui-dc-details-box">
-									<div class="soa-ui-dc-section">
-										<h3 class="soa-ui-dc-section-header">
-											<a href="{% endraw %}{{ site.baseurl }}{% raw %}{{ url }}"{{#if_eq type "pdf"}} target="_blank"{{/if_eq}}>{{ title }}</a>
-										</h3>
-										<p class="soa-ui-dc-section-paragraph">
-										{{ description }}
-										</p>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</div>
-				{{/entries}}
-		    </script>
-		    {% endraw %}
+<script type="text/javascript">
+
+	var initGCS = function () {
+		var renderGCSE = function () {
+			google.search.cse.element.render(
+				{
+					div : "soa-control-dc-search-results-target",
+					tag : 'searchresults-only',
+					gname : 'soa-control-dc-search-results-target'
+				});
+		};
+
+		var executeGCSE = function (query, element) {
+			var gcsElement = google.search.cse.element.getElement('soa-control-dc-search-results-target');
+			gcsElement.clearAllResults();
+			gcsElement.execute(query);
+		};
+
+		$("#my-search").on("keyup", function (event) {
+			if(event.keyCode == 13) {
+				executeGCSE($(event.target).val(), 'soa-control-dc-search-results-target');
+				$("#soa-control-dc-search-results").show();
+				$('#soa-control-dc-overlay').addClass('soa-ui-dc-overlay-visible');
+			}
+		});
+
+		$(".soa-ui-dc-topsearch-button").on('click', function () {
+			executeGCSE($("#my-search").val(), 'soa-control-dc-search-results-target');
+			$("#soa-control-dc-search-results").show();
+			$('#soa-control-dc-overlay').addClass('soa-ui-dc-overlay-visible');
+		});
+
+		$("#soa-control-dc-close-results").on('click', function () {
+			$("#soa-control-dc-search-results").hide();
+			$('#soa-control-dc-overlay').removeClass('soa-ui-dc-overlay-visible');
+		});
+
+		$("#soa-control-dc-search-results").click(function (e) {
+			e.stopPropagation();
+		});
+
+		$("body").click(function (e) {
+			if(!$(e.target).hasClass("soa-ui-dc-topsearch-button")) {
+				$('#soa-control-dc-search-results').hide();
+				$('#soa-control-dc-overlay').removeClass('soa-ui-dc-overlay-visible');
+			}
+		});
+
+		document.readyState == 'complete' ? renderGCSE() : google.setOnLoadCallback(function () {
+			renderGCSE();
+		}, true);
+	};
+
+	window.__gcse = {
+		parsetags : 'explicit',
+		callback : initGCS
+	};
+
+	(function () {
+		var cx = '015728184064503700349:jpzy5nvltkm'; // Akana Account
+		// var cx = '008490904345110132257:4iq41vh7or8'; // Demo Akana Account
+		var gcse = document.createElement('script');
+		gcse.type = 'text/javascript';
+		gcse.async = true;
+		gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(gcse, s);
+	})();
+
+</script>
